@@ -73,17 +73,17 @@ export const PomodoroTimer = () => {
         />
       </div>
       <div className="text-center py-4">
-        <h3 className="text-2xl font-bold text-workspace-dark">
+        <h3 className="text-2xl font-bold text-foreground">
           {String(workMinutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
         </h3>
-        <p className="text-sm text-workspace-dark/60">
+        <p className="text-sm text-muted-foreground">
           {isWork ? "Work Time" : "Break Time"}
         </p>
       </div>
       <div className="flex gap-2">
         <Button
           onClick={toggleTimer}
-          className="flex-1 bg-workspace-dark text-white hover:bg-workspace-dark/90"
+          className="flex-1"
         >
           {isActive ? "Pause" : "Start"}
         </Button>
