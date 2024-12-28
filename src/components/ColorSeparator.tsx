@@ -6,15 +6,41 @@ import { useToast } from "@/hooks/use-toast";
 
 export const ColorSeparator = () => {
   const [selectedColor, setSelectedColor] = useState("#000000");
+  const [hexInput, setHexInput] = useState("#000000");
   const { toast } = useToast();
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
+    setHexInput(color);
     toast({
       title: "Color selected",
       description: "Click on text to apply this color",
     });
   };
+
+  const handleHexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setHexInput(value);
+    
+    // Validate hex color format
+    const isValidHex = /^#[0-9A-Fa-f]{6}$/.test(value);
+    if (isValidHex) {
+      handleColorChange(value);
+    }
+  };
+
+  const presetColors = [
+    "#FF0000", // Red
+    "#00FF00", // Green
+    "#0000FF", // Blue
+    "#FFFF00", // Yellow
+    "#FF00FF", // Magenta
+    "#9b87f5", // Primary Purple
+    "#7E69AB", // Secondary Purple
+    "#D6BCFA", // Light Purple
+    "#F2FCE2", // Soft Green
+    "#FEC6A1", // Soft Orange
+  ];
 
   return (
     <div className="p-4 space-y-4">
@@ -22,21 +48,43 @@ export const ColorSeparator = () => {
         <Paintbrush className="w-4 h-4" />
         <h3 className="font-medium">Color Separator</h3>
       </div>
-      <Input
-        type="color"
-        value={selectedColor}
-        onChange={(e) => handleColorChange(e.target.value)}
-        className="w-full h-10"
-      />
-      <div className="grid grid-cols-5 gap-2">
-        {["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"].map((color) => (
-          <Button
-            key={color}
-            className="w-full h-8"
-            style={{ backgroundColor: color }}
-            onClick={() => handleColorChange(color)}
-          />
-        ))}
+      
+      {/* Color Wheel */}
+      <div className="relative">
+        <Input
+          type="color"
+          value={selectedColor}
+          onChange={(e) => handleColorChange(e.target.value)}
+          className="w-full h-40 p-0 border-2 rounded-lg cursor-pointer"
+        />
+      </div>
+
+      {/* Hex Input */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Hex Color</label>
+        <Input
+          type="text"
+          value={hexInput}
+          onChange={handleHexInputChange}
+          placeholder="#000000"
+          className="font-mono"
+          pattern="^#[0-9A-Fa-f]{6}$"
+        />
+      </div>
+
+      {/* Preset Colors */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Preset Colors</label>
+        <div className="grid grid-cols-5 gap-2">
+          {presetColors.map((color) => (
+            <Button
+              key={color}
+              className="w-full h-8 transition-transform hover:scale-105"
+              style={{ backgroundColor: color }}
+              onClick={() => handleColorChange(color)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
