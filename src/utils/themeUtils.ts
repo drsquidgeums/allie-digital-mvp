@@ -34,6 +34,8 @@ export const hexToHSL = (hex: string) => {
 export const applyThemeColors = (colors: { background: string; text: string; button: string }) => {
   const root = document.documentElement;
   document.body.style.backgroundColor = colors.background;
+  
+  // Apply colors to all major theme variables
   root.style.setProperty("--background", hexToHSL(colors.background));
   root.style.setProperty("--foreground", hexToHSL(colors.text));
   root.style.setProperty("--primary", hexToHSL(colors.button));
@@ -44,4 +46,13 @@ export const applyThemeColors = (colors: { background: string; text: string; but
   root.style.setProperty("--popover-foreground", hexToHSL(colors.text));
   root.style.setProperty("--secondary", hexToHSL(colors.button));
   root.style.setProperty("--secondary-foreground", "0 0% 100%");
+  root.style.setProperty("--muted", hexToHSL(colors.background));
+  root.style.setProperty("--muted-foreground", hexToHSL(colors.text));
+  root.style.setProperty("--accent", hexToHSL(colors.button));
+  root.style.setProperty("--accent-foreground", "0 0% 100%");
+  root.style.setProperty("--destructive", "0 84.2% 60.2%");
+  root.style.setProperty("--destructive-foreground", "0 0% 100%");
+  root.style.setProperty("--border", hexToHSL(colors.button));
+  root.style.setProperty("--input", hexToHSL(colors.button));
+  root.style.setProperty("--ring", hexToHSL(colors.button));
 };
