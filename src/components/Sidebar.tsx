@@ -64,7 +64,7 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
       <div className="flex items-center justify-between mb-6">
         <NotificationCenter />
       </div>
-      <div className="space-y-2 pl-2">
+      <div className="space-y-2">
         <input
           type="file"
           ref={fileInputRef}
@@ -74,7 +74,7 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
         />
         <Button
           onClick={() => fileInputRef.current?.click()}
-          className="w-full flex items-center gap-2"
+          className="w-full flex items-center justify-start gap-2 px-2"
         >
           <Upload className="h-4 w-4" />
           Upload Document
@@ -82,7 +82,7 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
 
         <Button 
           variant={activeComponent === "pomodoro" ? "default" : "ghost"} 
-          className="w-full flex items-center gap-2"
+          className="w-full flex items-center justify-start gap-2 px-2"
           onClick={() => setActiveComponent("pomodoro")}
         >
           <Clock className="h-4 w-4" />
@@ -91,7 +91,7 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
 
         <Button 
           variant={activeComponent === "tasks" ? "default" : "ghost"} 
-          className="w-full flex items-center gap-2"
+          className="w-full flex items-center justify-start gap-2 px-2"
           onClick={() => setActiveComponent("tasks")}
         >
           <CheckSquare className="h-4 w-4" />
@@ -100,7 +100,7 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
 
         <Button 
           variant={activeComponent === "tts" ? "default" : "ghost"} 
-          className="w-full flex items-center gap-2"
+          className="w-full flex items-center justify-start gap-2 px-2"
           onClick={() => setActiveComponent("tts")}
         >
           <Headphones className="h-4 w-4" />
@@ -109,7 +109,7 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
 
         <Button 
           variant={activeComponent === "bionic" ? "default" : "ghost"} 
-          className="w-full flex items-center gap-2"
+          className="w-full flex items-center justify-start gap-2 px-2"
           onClick={() => setActiveComponent("bionic")}
         >
           <Eye className="h-4 w-4" />
@@ -118,7 +118,7 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
 
         <Button 
           variant={activeComponent === "focus" ? "default" : "ghost"} 
-          className="w-full flex items-center gap-2"
+          className="w-full flex items-center justify-start gap-2 px-2"
           onClick={() => setActiveComponent("focus")}
         >
           <Focus className="h-4 w-4" />
@@ -127,7 +127,7 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
 
         <Button 
           variant={activeComponent === "irlen" ? "default" : "ghost"} 
-          className="w-full flex items-center gap-2"
+          className="w-full flex items-center justify-start gap-2 px-2"
           onClick={() => setActiveComponent("irlen")}
         >
           <Palette className="h-4 w-4" />
@@ -136,7 +136,7 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
 
         <Button 
           variant={activeComponent === "mindmap" ? "default" : "ghost"} 
-          className="w-full flex items-center gap-2"
+          className="w-full flex items-center justify-start gap-2 px-2"
           onClick={() => setActiveComponent("mindmap")}
         >
           <Brain className="h-4 w-4" />
@@ -145,7 +145,7 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
 
         <Button 
           variant={activeComponent === "ai" ? "default" : "ghost"} 
-          className="w-full flex items-center gap-2"
+          className="w-full flex items-center justify-start gap-2 px-2"
           onClick={() => setActiveComponent("ai")}
         >
           <MessageSquare className="h-4 w-4" />
