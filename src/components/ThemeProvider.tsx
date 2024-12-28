@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Palette } from "lucide-react";
+import { Sun, Moon, Palette, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
@@ -22,6 +22,23 @@ export const ThemeProvider = () => {
   });
   const [selectedFont, setSelectedFont] = React.useState("Inter");
   const { toast } = useToast();
+
+  const defaultColors = {
+    background: "#F6F6F7",
+    text: "#333333",
+    button: "#9b87f5",
+  };
+
+  const resetTheme = () => {
+    setCustomColors(defaultColors);
+    applyThemeColors(defaultColors);
+    document.documentElement.style.setProperty("--font-family", `"Inter", sans-serif`);
+    setSelectedFont("Inter");
+    toast({
+      title: "Theme reset",
+      description: "Theme has been reset to default values",
+    });
+  };
 
   const applyTheme = (newTheme: string) => {
     const root = document.documentElement;
@@ -126,9 +143,14 @@ export const ThemeProvider = () => {
               value={customColors.button}
               onChange={(value) => handleCustomColors({ ...customColors, button: value })}
             />
-            <Button onClick={handleSaveChanges} className="w-full">
-              Save Changes
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={handleSaveChanges} className="flex-1">
+                Save Changes
+              </Button>
+              <Button onClick={resetTheme} variant="outline" size="icon">
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
