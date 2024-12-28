@@ -1,12 +1,9 @@
 import React, { useState } from "react";
-import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Eye } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 export const BionicReader = () => {
   const [text, setText] = useState("");
-  const { toast } = useToast();
 
   const processBionicText = (input: string) => {
     return input.split(' ').map(word => {
@@ -18,21 +15,6 @@ export const BionicReader = () => {
           {' '}
         </span>
       );
-    });
-  };
-
-  const handleProcess = () => {
-    if (!text) {
-      toast({
-        title: "No text provided",
-        description: "Please enter some text to process",
-        variant: "destructive",
-      });
-      return;
-    }
-    toast({
-      title: "Text processed",
-      description: "Your text has been converted to bionic reading format",
     });
   };
 
@@ -51,9 +33,6 @@ export const BionicReader = () => {
       <div className="bg-background/50 p-3 rounded-lg min-h-[100px] text-left">
         {text && processBionicText(text)}
       </div>
-      <Button onClick={handleProcess} className="w-full">
-        Process Text
-      </Button>
     </div>
   );
 };
