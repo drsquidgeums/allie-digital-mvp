@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Paintbrush } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription } from "./ui/alert";
 
 interface ColorSeparatorProps {
   onColorChange?: (color: string) => void;
@@ -19,10 +20,16 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
     if (onColorChange) {
       onColorChange(color);
     }
-    toast({
-      title: "Color selected",
-      description: "Click on text to apply this color",
-    });
+  };
+
+  const handleApplyColor = () => {
+    if (onColorChange) {
+      onColorChange(selectedColor);
+      toast({
+        title: "Color ready to apply",
+        description: "Now click on the text you want to color",
+      });
+    }
   };
 
   const handleHexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +62,18 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
         <Paintbrush className="w-4 h-4" />
         <h3 className="font-medium">Color Separator</h3>
       </div>
+
+      <Alert>
+        <AlertDescription>
+          1. Select a color below
+          <br />
+          2. Click "Apply Color"
+          <br />
+          3. Select the text you want to color
+          <br />
+          4. Click on the selected text to apply the color
+        </AlertDescription>
+      </Alert>
       
       {/* Color Wheel */}
       <div className="relative">
@@ -65,6 +84,15 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
           className="w-full h-40 p-0 border-2 rounded-lg cursor-pointer"
         />
       </div>
+
+      {/* Apply Color Button */}
+      <Button 
+        className="w-full"
+        onClick={handleApplyColor}
+        style={{ backgroundColor: selectedColor }}
+      >
+        Apply Color
+      </Button>
 
       {/* Hex Input */}
       <div className="space-y-2">
