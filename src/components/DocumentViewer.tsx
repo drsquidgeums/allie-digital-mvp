@@ -54,7 +54,6 @@ export const DocumentViewer = ({ file }: DocumentViewerProps) => {
   return (
     <Card className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
       <div className="p-4 border-b border-border flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Document Viewer</h2>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={handleUpload}>
             <Upload className="w-4 h-4" />
