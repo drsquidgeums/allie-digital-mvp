@@ -19,8 +19,8 @@ export default {
     },
     extend: {
       colors: {
-        workspace: "#F6F6F7",
-        "workspace-dark": "#333333",
+        workspace: "#FFFFFF",
+        "workspace-dark": "#222222",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
