@@ -46,7 +46,12 @@ export const NotificationCenter = () => {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-0">
+      <PopoverContent 
+        className="w-80 p-0" 
+        align="end" 
+        alignOffset={-40}
+        sideOffset={8}
+      >
         <div className="p-4 space-y-4">
           <h3 className="font-semibold">Notifications</h3>
           {notifications.length === 0 ? (
