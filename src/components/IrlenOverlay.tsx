@@ -8,20 +8,50 @@ export const IrlenOverlay = () => {
   const { toast } = useToast();
 
   const colors = [
-    { name: "Yellow", value: "rgba(255, 255, 0, 0.2)" },
-    { name: "Blue", value: "rgba(0, 0, 255, 0.2)" },
-    { name: "Green", value: "rgba(0, 255, 0, 0.2)" },
-    { name: "Rose", value: "rgba(255, 192, 203, 0.2)" },
+    { name: "Yellow", value: "rgba(255, 255, 0, 0.3)" },
+    { name: "Blue", value: "rgba(0, 0, 255, 0.3)" },
+    { name: "Rose", value: "rgba(255, 192, 203, 0.3)" }
   ];
 
   const handleOverlayChange = (color: string) => {
     setOverlayColor(color);
-    document.documentElement.style.setProperty('--overlay-color', color);
+    if (color) {
+      document.body.style.position = 'relative';
+      document.body.style.setProperty('--overlay-color', color);
+      document.body.style.setProperty('--overlay-display', 'block');
+    } else {
+      document.body.style.setProperty('--overlay-display', 'none');
+    }
+    
     toast({
-      title: "Overlay applied",
-      description: `Applied ${color} overlay to the workspace`,
+      title: color ? "Overlay applied" : "Overlay removed",
+      description: color ? `Applied ${color} overlay to the workspace` : "Removed overlay from the workspace",
     });
   };
+
+  React.useEffect(() => {
+    // Add overlay styles
+    const style = document.createElement('style');
+    style.textContent = `
+      body::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--overlay-color);
+        pointer-events: none;
+        z-index: 9999;
+        display: var(--overlay-display, none);
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   return (
     <div className="p-4 space-y-4">

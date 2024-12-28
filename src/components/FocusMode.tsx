@@ -11,6 +11,23 @@ export const FocusMode = () => {
     if (!isActive) {
       document.documentElement.requestFullscreen().then(() => {
         setIsActive(true);
+        // Add blocking overlay
+        const style = document.createElement('style');
+        style.id = 'focus-mode-style';
+        style.textContent = `
+          body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            pointer-events: none;
+          }
+        `;
+        document.head.appendChild(style);
         toast({
           title: "Focus mode activated",
           description: "Press ESC to exit focus mode",
@@ -24,6 +41,10 @@ export const FocusMode = () => {
       });
     } else {
       document.exitFullscreen();
+      const style = document.getElementById('focus-mode-style');
+      if (style) {
+        document.head.removeChild(style);
+      }
       setIsActive(false);
       toast({
         title: "Focus mode deactivated",
@@ -35,6 +56,10 @@ export const FocusMode = () => {
   React.useEffect(() => {
     const handleFullscreenChange = () => {
       if (!document.fullscreenElement) {
+        const style = document.getElementById('focus-mode-style');
+        if (style) {
+          document.head.removeChild(style);
+        }
         setIsActive(false);
       }
     };

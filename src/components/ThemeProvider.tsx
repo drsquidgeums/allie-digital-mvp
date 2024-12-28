@@ -1,6 +1,5 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Sun, Moon, Palette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -10,13 +9,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FontSelector } from "./FontSelector";
+import { ColorPicker } from "./ColorPicker";
+import { applyThemeColors } from "@/utils/themeUtils";
 
 export const ThemeProvider = () => {
   const [theme, setTheme] = React.useState("light");
@@ -27,15 +22,6 @@ export const ThemeProvider = () => {
   });
   const [selectedFont, setSelectedFont] = React.useState("Inter");
   const { toast } = useToast();
-
-  const fonts = [
-    { name: "Inter", value: "Inter" },
-    { name: "Roboto", value: "Roboto" },
-    { name: "Open Sans", value: "Open Sans" },
-    { name: "Lato", value: "Lato" },
-    { name: "Source Sans Pro", value: "Source Sans Pro" },
-    { name: "OpenDyslexic", value: "OpenDyslexic" },
-  ];
 
   const applyTheme = (newTheme: string) => {
     const root = document.documentElement;
@@ -48,6 +34,10 @@ export const ThemeProvider = () => {
       root.style.setProperty("--primary-foreground", "0 0% 100%");
       root.style.setProperty("--secondary", "0 0% 15%");
       root.style.setProperty("--secondary-foreground", "0 0% 100%");
+      root.style.setProperty("--card", "240 5% 8%");
+      root.style.setProperty("--card-foreground", "0 0% 100%");
+      root.style.setProperty("--popover", "240 5% 12%");
+      root.style.setProperty("--popover-foreground", "0 0% 100%");
       setTheme("dark");
     } else if (newTheme === "light") {
       root.classList.remove("dark");
@@ -58,60 +48,15 @@ export const ThemeProvider = () => {
       root.style.setProperty("--primary-foreground", "210 40% 98%");
       root.style.setProperty("--secondary", "210 40% 96.1%");
       root.style.setProperty("--secondary-foreground", "222.2 47.4% 11.2%");
+      root.style.setProperty("--card", "0 0% 100%");
+      root.style.setProperty("--card-foreground", "222.2 84% 4.9%");
+      root.style.setProperty("--popover", "0 0% 100%");
+      root.style.setProperty("--popover-foreground", "222.2 84% 4.9%");
       setTheme("light");
     }
     toast({
       title: "Theme updated",
       description: `Switched to ${newTheme} theme`,
-    });
-  };
-
-  const handleCustomColors = (colors: typeof customColors) => {
-    const root = document.documentElement;
-    
-    const hexToHSL = (hex: string) => {
-      hex = hex.replace(/^#/, '');
-      const r = parseInt(hex.slice(0, 2), 16) / 255;
-      const g = parseInt(hex.slice(2, 4), 16) / 255;
-      const b = parseInt(hex.slice(4, 6), 16) / 255;
-      
-      const max = Math.max(r, g, b);
-      const min = Math.min(r, g, b);
-      let h = 0;
-      let s = 0;
-      const l = (max + min) / 2;
-      
-      if (max !== min) {
-        const d = max - min;
-        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        
-        switch (max) {
-          case r:
-            h = (g - b) / d + (g < b ? 6 : 0);
-            break;
-          case g:
-            h = (b - r) / d + 2;
-            break;
-          case b:
-            h = (r - g) / d + 4;
-            break;
-        }
-        h /= 6;
-      }
-      
-      return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
-    };
-
-    document.body.style.backgroundColor = colors.background;
-    root.style.setProperty("--background", hexToHSL(colors.background));
-    root.style.setProperty("--foreground", hexToHSL(colors.text));
-    root.style.setProperty("--primary", hexToHSL(colors.button));
-    root.style.setProperty("--primary-foreground", "0 0% 100%");
-    
-    setCustomColors(colors);
-    toast({
-      title: "Custom theme applied",
-      description: "Your custom colors have been applied",
     });
   };
 
@@ -121,6 +66,18 @@ export const ThemeProvider = () => {
     toast({
       title: "Font updated",
       description: `Changed to ${font} font`,
+    });
+  };
+
+  const handleCustomColors = (colors: typeof customColors) => {
+    setCustomColors(colors);
+  };
+
+  const handleSaveChanges = () => {
+    applyThemeColors(customColors);
+    toast({
+      title: "Custom theme applied",
+      description: "Your custom colors have been applied to the workspace",
     });
   };
 
@@ -150,81 +107,28 @@ export const ThemeProvider = () => {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Customize Theme</DialogTitle>
+            <DialogTitle>Customise Theme</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Font</label>
-              <Select value={selectedFont} onValueChange={handleFontChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a font" />
-                </SelectTrigger>
-                <SelectContent>
-                  {fonts.map((font) => (
-                    <SelectItem key={font.value} value={font.value}>
-                      {font.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Background Color</label>
-              <div className="flex gap-2">
-                <Input
-                  type="color"
-                  value={customColors.background}
-                  onChange={(e) =>
-                    handleCustomColors({ ...customColors, background: e.target.value })
-                  }
-                />
-                <Input
-                  type="text"
-                  value={customColors.background}
-                  onChange={(e) =>
-                    handleCustomColors({ ...customColors, background: e.target.value })
-                  }
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Text Color</label>
-              <div className="flex gap-2">
-                <Input
-                  type="color"
-                  value={customColors.text}
-                  onChange={(e) =>
-                    handleCustomColors({ ...customColors, text: e.target.value })
-                  }
-                />
-                <Input
-                  type="text"
-                  value={customColors.text}
-                  onChange={(e) =>
-                    handleCustomColors({ ...customColors, text: e.target.value })
-                  }
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Button Color</label>
-              <div className="flex gap-2">
-                <Input
-                  type="color"
-                  value={customColors.button}
-                  onChange={(e) =>
-                    handleCustomColors({ ...customColors, button: e.target.value })
-                  }
-                />
-                <Input
-                  type="text"
-                  value={customColors.button}
-                  onChange={(e) =>
-                    handleCustomColors({ ...customColors, button: e.target.value })
-                  }
-                />
-              </div>
-            </div>
+            <FontSelector selectedFont={selectedFont} onFontChange={handleFontChange} />
+            <ColorPicker
+              label="Background Colour"
+              value={customColors.background}
+              onChange={(value) => handleCustomColors({ ...customColors, background: value })}
+            />
+            <ColorPicker
+              label="Text Colour"
+              value={customColors.text}
+              onChange={(value) => handleCustomColors({ ...customColors, text: value })}
+            />
+            <ColorPicker
+              label="Button Colour"
+              value={customColors.button}
+              onChange={(value) => handleCustomColors({ ...customColors, button: value })}
+            />
+            <Button onClick={handleSaveChanges} className="w-full">
+              Save Changes
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
