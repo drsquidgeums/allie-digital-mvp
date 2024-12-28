@@ -73,7 +73,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground min-h-screen;
     font-family: var(--font-family);
     background-image: url('/lovable-uploads/8afafa9e-45b6-4c6e-8da7-33ff4e92243a.png');
     background-size: cover;
@@ -81,6 +81,8 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
     position: relative;
+    min-height: 100vh;
+    width: 100%;
   }
 
   body::before {
