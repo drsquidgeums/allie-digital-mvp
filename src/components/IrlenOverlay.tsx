@@ -71,15 +71,14 @@ export const IrlenOverlay = () => {
           </Button>
         ))}
       </div>
-      {overlayColor && (
-        <Button 
-          onClick={() => handleOverlayChange("")}
-          variant="outline" 
-          className="w-full"
-        >
-          Remove Overlay
-        </Button>
-      )}
+      <Button 
+        onClick={() => handleOverlayChange("")}
+        variant="outline" 
+        className="w-full"
+        disabled={!overlayColor}
+      >
+        Remove Overlay
+      </Button>
     </div>
   );
 };
