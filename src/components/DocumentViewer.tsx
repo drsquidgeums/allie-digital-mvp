@@ -5,6 +5,7 @@ import { ThemeProvider } from "./ThemeProvider";
 import { FileActions } from "./document-viewer/FileActions";
 import { DocumentPreview } from "./document-viewer/DocumentPreview";
 import { Input } from "@/components/ui/input";
+import { ColorSeparator } from "./ColorSeparator";
 
 interface DocumentViewerProps {
   file: File | null;
@@ -12,6 +13,7 @@ interface DocumentViewerProps {
 
 export const DocumentViewer = ({ file }: DocumentViewerProps) => {
   const [url, setUrl] = React.useState<string>("");
+  const [selectedColor, setSelectedColor] = React.useState<string>("#000000");
   const { toast } = useToast();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -52,6 +54,14 @@ export const DocumentViewer = ({ file }: DocumentViewerProps) => {
     });
   };
 
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+    toast({
+      title: "Color selected",
+      description: "Click on text to apply this color",
+    });
+  };
+
   return (
     <Card className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
       <div className="p-4 border-b border-border flex justify-between items-center">
@@ -71,7 +81,14 @@ export const DocumentViewer = ({ file }: DocumentViewerProps) => {
             onChange={(e) => setUrl(e.target.value)}
           />
         </div>
-        <DocumentPreview file={file} url={url} />
+        <div className="flex gap-4 h-full">
+          <div className="w-64 border-r border-border">
+            <ColorSeparator />
+          </div>
+          <div className="flex-1">
+            <DocumentPreview file={file} url={url} selectedColor={selectedColor} />
+          </div>
+        </div>
         <ThemeProvider />
       </div>
       <input
