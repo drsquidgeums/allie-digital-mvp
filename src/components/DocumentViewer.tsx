@@ -1,9 +1,9 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Download, Upload, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ThemeProvider } from "./ThemeProvider";
+import { FileActions } from "./document-viewer/FileActions";
+import { DocumentPreview } from "./document-viewer/DocumentPreview";
 
 interface DocumentViewerProps {
   file: File | null;
@@ -54,42 +54,15 @@ export const DocumentViewer = ({ file }: DocumentViewerProps) => {
   return (
     <Card className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
       <div className="p-4 border-b border-border flex justify-between items-center">
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={handleUpload}>
-            <Upload className="w-4 h-4" />
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleDownload} disabled={!file}>
-            <Download className="w-4 h-4" />
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleDelete} disabled={!file}>
-            <Trash2 className="w-4 h-4" />
-          </Button>
-        </div>
+        <FileActions
+          onUpload={handleUpload}
+          onDownload={handleDownload}
+          onDelete={handleDelete}
+          hasFile={!!file}
+        />
       </div>
       <div className="flex-1 p-4 relative">
-        {!file ? (
-          <div className="h-full flex items-center justify-center">
-            <p className="text-muted-foreground">Upload a document to get started</p>
-          </div>
-        ) : file.type === "application/pdf" ? (
-          <object
-            data={url}
-            type="application/pdf"
-            className="w-full h-full rounded-lg border border-border"
-          >
-            <div className="h-full flex items-center justify-center">
-              <p>Unable to display PDF. Please download and open it locally.</p>
-            </div>
-          </object>
-        ) : (
-          <div className="h-full flex items-center justify-center">
-            <p className="text-muted-foreground">
-              Word documents cannot be previewed directly.
-              <br />
-              Please use the download button to view the file.
-            </p>
-          </div>
-        )}
+        <DocumentPreview file={file} url={url} />
         <ThemeProvider />
       </div>
       <input
