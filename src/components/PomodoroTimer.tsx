@@ -3,6 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 export const PomodoroTimer = () => {
   const [workMinutes, setWorkMinutes] = React.useState(25);
@@ -10,6 +19,7 @@ export const PomodoroTimer = () => {
   const [seconds, setSeconds] = React.useState(0);
   const [isActive, setIsActive] = React.useState(false);
   const [isWork, setIsWork] = React.useState(true);
+  const [showAlert, setShowAlert] = React.useState(false);
   const { toast } = useToast();
 
   React.useEffect(() => {
@@ -21,6 +31,7 @@ export const PomodoroTimer = () => {
           if (workMinutes === 0) {
             setIsWork(!isWork);
             setWorkMinutes(isWork ? breakMinutes : workMinutes);
+            setShowAlert(true);
             toast({
               title: isWork ? "Break time!" : "Back to work!",
               description: `Time for a ${isWork ? "break" : "work"} session`,
@@ -51,52 +62,74 @@ export const PomodoroTimer = () => {
   };
 
   return (
-    <div className="p-2 space-y-3 animate-fade-in">
-      <div className="space-y-1">
-        <Label>Work Duration (minutes)</Label>
-        <Input
-          type="number"
-          value={workMinutes}
-          onChange={(e) => setWorkMinutes(Number(e.target.value))}
-          min="1"
-          disabled={isActive}
-          className="h-8"
-        />
+    <>
+      <div className="p-2 space-y-3 animate-fade-in">
+        <div className="space-y-1">
+          <Label>Work Duration (minutes)</Label>
+          <Input
+            type="number"
+            value={workMinutes}
+            onChange={(e) => setWorkMinutes(Number(e.target.value))}
+            min="1"
+            disabled={isActive}
+            className="h-8"
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>Break Duration (minutes)</Label>
+          <Input
+            type="number"
+            value={breakMinutes}
+            onChange={(e) => setBreakMinutes(Number(e.target.value))}
+            min="1"
+            disabled={isActive}
+            className="h-8"
+          />
+        </div>
+        <div className="text-center py-2">
+          <h3 className="text-2xl font-bold text-foreground">
+            {String(workMinutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            {isWork ? "Work Time" : "Break Time"}
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            onClick={toggleTimer}
+            className="flex-1 h-8 text-sm"
+          >
+            {isActive ? "Pause" : "Start"}
+          </Button>
+          <Button
+            onClick={resetTimer}
+            variant="outline"
+            className="flex-1 h-8 text-sm"
+          >
+            Reset
+          </Button>
+        </div>
       </div>
-      <div className="space-y-1">
-        <Label>Break Duration (minutes)</Label>
-        <Input
-          type="number"
-          value={breakMinutes}
-          onChange={(e) => setBreakMinutes(Number(e.target.value))}
-          min="1"
-          disabled={isActive}
-          className="h-8"
-        />
-      </div>
-      <div className="text-center py-2">
-        <h3 className="text-2xl font-bold text-foreground">
-          {String(workMinutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
-        </h3>
-        <p className="text-sm text-muted-foreground">
-          {isWork ? "Work Time" : "Break Time"}
-        </p>
-      </div>
-      <div className="flex gap-2">
-        <Button
-          onClick={toggleTimer}
-          className="flex-1 h-8 text-sm"
-        >
-          {isActive ? "Pause" : "Start"}
-        </Button>
-        <Button
-          onClick={resetTimer}
-          variant="outline"
-          className="flex-1 h-8 text-sm"
-        >
-          Reset
-        </Button>
-      </div>
-    </div>
+
+      <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {isWork ? "Break Time!" : "Back to Work!"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {isWork 
+                ? "Great work! Take a well-deserved break."
+                : "Break's over! Time to get back to work."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowAlert(false)}>
+              Got it!
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
