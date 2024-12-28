@@ -16,7 +16,20 @@ export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewPro
       const handleClick = (e: MouseEvent) => {
         const target = e.target as HTMLElement;
         if (target.tagName === 'P' || target.tagName === 'SPAN' || target.tagName === 'DIV') {
-          target.style.color = selectedColor;
+          // Only apply color if we're clicking directly on text content
+          if (target.childNodes.length === 1 && target.childNodes[0].nodeType === Node.TEXT_NODE) {
+            target.style.color = selectedColor;
+          } else {
+            // If clicking on a container with multiple nodes, wrap the text in a span
+            target.childNodes.forEach(node => {
+              if (node.nodeType === Node.TEXT_NODE) {
+                const span = document.createElement('span');
+                span.textContent = node.textContent;
+                span.style.color = selectedColor;
+                node.parentNode?.replaceChild(span, node);
+              }
+            });
+          }
         }
       };
 
