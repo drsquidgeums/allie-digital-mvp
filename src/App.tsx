@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import { TaskDashboard } from "./components/dashboard/TaskDashboard";
+import AIAssistant from "./pages/AIAssistant";
+import MindMapDashboard from "./pages/MindMapDashboard";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +19,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/tasks" element={<TaskDashboard />} />
+          <Route path="/ai-assistant" element={<AIAssistant />} />
+          <Route path="/mind-map" element={<MindMapDashboard />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

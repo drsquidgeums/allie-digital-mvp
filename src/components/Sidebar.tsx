@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Upload, CheckSquare } from "lucide-react";
+import { Upload, CheckSquare, Brain, MessageSquare } from "lucide-react";
 import { SidebarTools } from "./sidebar/SidebarTools";
 import { SidebarContent } from "./sidebar/SidebarContent";
 
@@ -29,20 +29,34 @@ export const Sidebar = ({
     }
   };
 
-  const handleTasksClick = () => {
-    navigate('/tasks');
-  };
-
   return (
     <div className="w-64 bg-card border-r border-border p-4 flex flex-col h-full">
       <div className="space-y-2">
         <Button 
           variant="ghost"
           className="w-full flex items-center justify-start gap-2 px-2"
-          onClick={handleTasksClick}
+          onClick={() => navigate('/tasks')}
         >
           <CheckSquare className="h-4 w-4" />
           Task Planner
+        </Button>
+
+        <Button 
+          variant="ghost"
+          className="w-full flex items-center justify-start gap-2 px-2"
+          onClick={() => navigate('/ai-assistant')}
+        >
+          <MessageSquare className="h-4 w-4" />
+          AI Assistant
+        </Button>
+
+        <Button 
+          variant="ghost"
+          className="w-full flex items-center justify-start gap-2 px-2"
+          onClick={() => navigate('/mind-map')}
+        >
+          <Brain className="h-4 w-4" />
+          Mind Map
         </Button>
 
         <input
