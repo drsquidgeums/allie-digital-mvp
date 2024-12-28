@@ -1,5 +1,7 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 
 interface DocumentViewerProps {
   file: File | null;
@@ -37,22 +39,43 @@ export const DocumentViewer = ({ file }: DocumentViewerProps) => {
     );
   }
 
+  const handleDownload = () => {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   return (
     <Card className="h-full p-4 bg-white/50 backdrop-blur-sm animate-fade-in">
       {isPDF ? (
-        <object
-          data={url}
-          type="application/pdf"
-          className="w-full h-full rounded-lg border border-gray-200"
-        >
-          <p>Unable to display PDF. Please ensure you have a PDF viewer installed.</p>
-        </object>
+        <div className="h-full flex flex-col">
+          <div className="flex justify-end mb-2">
+            <Button variant="outline" size="sm" onClick={handleDownload}>
+              <Download className="w-4 h-4 mr-2" />
+              Download PDF
+            </Button>
+          </div>
+          <object
+            data={url}
+            type="application/pdf"
+            className="w-full flex-1 rounded-lg border border-gray-200"
+          >
+            <div className="h-full flex items-center justify-center">
+              <p>Unable to display PDF. Please download and open it locally.</p>
+            </div>
+          </object>
+        </div>
       ) : (
-        <iframe
-          src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`}
-          className="w-full h-full rounded-lg border border-gray-200"
-          title="Document Viewer"
-        />
+        <div className="h-full flex flex-col items-center justify-center space-y-4">
+          <p className="text-workspace-dark/60">Word documents cannot be previewed directly.</p>
+          <Button onClick={handleDownload}>
+            <Download className="w-4 h-4 mr-2" />
+            Download Document
+          </Button>
+        </div>
       )}
     </Card>
   );
