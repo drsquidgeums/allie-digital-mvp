@@ -52,9 +52,9 @@ export const DocumentViewer = ({ file }: DocumentViewerProps) => {
   };
 
   return (
-    <Card className="h-full flex flex-col bg-white/50 backdrop-blur-sm animate-fade-in rounded-xl overflow-hidden relative">
-      <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-        <h2 className="text-lg font-semibold text-workspace-dark">Document Viewer</h2>
+    <Card className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
+      <div className="p-4 border-b border-border flex justify-between items-center">
+        <h2 className="text-lg font-semibold">Document Viewer</h2>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={handleUpload}>
             <Upload className="w-4 h-4" />
@@ -70,13 +70,13 @@ export const DocumentViewer = ({ file }: DocumentViewerProps) => {
       <div className="flex-1 p-4 relative">
         {!file ? (
           <div className="h-full flex items-center justify-center">
-            <p className="text-workspace-dark/60">Upload a document to get started</p>
+            <p className="text-muted-foreground">Upload a document to get started</p>
           </div>
         ) : file.type === "application/pdf" ? (
           <object
             data={url}
             type="application/pdf"
-            className="w-full h-full rounded-lg border border-gray-200"
+            className="w-full h-full rounded-lg border border-border"
           >
             <div className="h-full flex items-center justify-center">
               <p>Unable to display PDF. Please download and open it locally.</p>
@@ -84,7 +84,7 @@ export const DocumentViewer = ({ file }: DocumentViewerProps) => {
           </object>
         ) : (
           <div className="h-full flex items-center justify-center">
-            <p className="text-workspace-dark/60">
+            <p className="text-muted-foreground">
               Word documents cannot be previewed directly.
               <br />
               Please use the download button to view the file.

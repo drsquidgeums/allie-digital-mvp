@@ -69,9 +69,9 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
   };
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 flex flex-col animate-fade-in">
+    <div className="w-64 bg-card border-r border-border flex flex-col animate-fade-in">
       <div className="p-4">
-        <h2 className="text-lg font-semibold text-workspace-dark">Workspace</h2>
+        <h2 className="text-lg font-semibold">Workspace</h2>
       </div>
       <Separator />
       <div className="flex flex-col gap-2 p-2">
