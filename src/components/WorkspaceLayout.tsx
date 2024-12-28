@@ -26,14 +26,16 @@ export const WorkspaceLayout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="flex h-screen bg-background">
       <Sidebar onFileUpload={handleFileUpload} />
-      <main className="flex-1 p-6 overflow-auto">
-        <div className="flex justify-between items-center mb-4">
+      <main className="flex-1 overflow-hidden">
+        <div className="flex justify-between items-center p-4 border-b">
           <h1 className="text-2xl font-semibold">Workspace</h1>
           <NotificationCenter />
         </div>
-        <DocumentViewer file={selectedFile} />
+        <div className="h-[calc(100%-4rem)] overflow-auto">
+          <DocumentViewer file={selectedFile} />
+        </div>
       </main>
     </div>
   );
