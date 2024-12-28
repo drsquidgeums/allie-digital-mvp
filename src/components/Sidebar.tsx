@@ -9,7 +9,8 @@ import {
   Focus,
   Palette,
   Brain,
-  MessageSquare
+  MessageSquare,
+  Paintbrush
 } from "lucide-react";
 import { PomodoroTimer } from "./PomodoroTimer";
 import { TaskPlanner } from "./TaskPlanner";
@@ -19,6 +20,7 @@ import { FocusMode } from "./FocusMode";
 import { IrlenOverlay } from "./IrlenOverlay";
 import { MindMap } from "./MindMap";
 import { AIAssistant } from "./AIAssistant";
+import { ColorSeparator } from "./ColorSeparator";
 
 interface SidebarProps {
   onFileUpload: (file: File) => void;
@@ -53,6 +55,8 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
         return <MindMap />;
       case "ai":
         return <AIAssistant />;
+      case "color":
+        return <ColorSeparator />;
       default:
         return null;
     }
@@ -75,6 +79,15 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
         >
           <Upload className="h-4 w-4" />
           Upload Document
+        </Button>
+
+        <Button 
+          variant={activeComponent === "color" ? "default" : "ghost"} 
+          className="w-full flex items-center justify-start gap-2 px-2"
+          onClick={() => setActiveComponent("color")}
+        >
+          <Paintbrush className="h-4 w-4" />
+          Color Tool
         </Button>
 
         <Button 
