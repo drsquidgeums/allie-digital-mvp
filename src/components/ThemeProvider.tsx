@@ -12,6 +12,7 @@ import {
 import { FontSelector } from "./FontSelector";
 import { ColorPicker } from "./ColorPicker";
 import { applyThemeColors } from "@/utils/themeUtils";
+import { IrlenOverlay } from "./IrlenOverlay";
 
 export const ThemeProvider = () => {
   const [theme, setTheme] = React.useState("light");
@@ -154,6 +155,7 @@ export const ThemeProvider = () => {
           </div>
         </DialogContent>
       </Dialog>
+      <IrlenOverlay />
     </div>
   );
 };

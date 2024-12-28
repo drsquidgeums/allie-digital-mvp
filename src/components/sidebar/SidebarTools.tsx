@@ -5,7 +5,6 @@ import {
   Headphones,
   Eye,
   Focus,
-  Palette,
   Brain,
   MessageSquare,
   Paintbrush,
@@ -26,7 +25,6 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
     { id: "tts", icon: Headphones, label: "Text-to-Speech" },
     { id: "bionic", icon: Eye, label: "Bionic Reader" },
     { id: "focus", icon: Focus, label: "Focus Mode" },
-    { id: "irlen", icon: Palette, label: "Irlen Overlay" },
     { id: "mindmap", icon: Brain, label: "Mind Map" },
     { id: "ai", icon: MessageSquare, label: "AI Assistant" },
   ];
