@@ -24,27 +24,17 @@ export const ThemeProvider = () => {
     const root = document.documentElement;
     if (newTheme === "dark") {
       root.classList.add("dark");
-      // Invert colors for dark mode
-      root.style.setProperty("--background", "222.2 84% 4.9%");
-      root.style.setProperty("--foreground", "210 40% 98%");
-      root.style.setProperty("--card", "222.2 84% 4.9%");
-      root.style.setProperty("--card-foreground", "210 40% 98%");
-      root.style.setProperty("--popover", "222.2 84% 4.9%");
-      root.style.setProperty("--popover-foreground", "210 40% 98%");
-      root.style.setProperty("--primary", "210 40% 98%");
-      root.style.setProperty("--primary-foreground", "222.2 47.4% 11.2%");
-      root.style.setProperty("--secondary", "217.2 32.6% 17.5%");
-      root.style.setProperty("--secondary-foreground", "210 40% 98%");
+      root.style.setProperty("--background", "222.2 84% 4.9%"); // Dark grey
+      root.style.setProperty("--foreground", "0 0% 100%"); // White text
+      root.style.setProperty("--primary", "240 5% 64.9%"); // Lighter grey for buttons
+      root.style.setProperty("--primary-foreground", "0 0% 100%"); // White text on buttons
+      root.style.setProperty("--secondary", "240 3.7% 15.9%"); // Darker grey for secondary elements
+      root.style.setProperty("--secondary-foreground", "0 0% 100%"); // White text on secondary
       setTheme("dark");
     } else if (newTheme === "light") {
       root.classList.remove("dark");
-      // Reset to light mode colors
       root.style.setProperty("--background", "0 0% 100%");
       root.style.setProperty("--foreground", "222.2 84% 4.9%");
-      root.style.setProperty("--card", "0 0% 100%");
-      root.style.setProperty("--card-foreground", "222.2 84% 4.9%");
-      root.style.setProperty("--popover", "0 0% 100%");
-      root.style.setProperty("--popover-foreground", "222.2 84% 4.9%");
       root.style.setProperty("--primary", "222.2 47.4% 11.2%");
       root.style.setProperty("--primary-foreground", "210 40% 98%");
       root.style.setProperty("--secondary", "210 40% 96.1%");
@@ -58,13 +48,53 @@ export const ThemeProvider = () => {
   };
 
   const handleCustomColors = (colors: typeof customColors) => {
-    setCustomColors(colors);
     const root = document.documentElement;
-    root.style.setProperty("--custom-background", colors.background);
-    root.style.setProperty("--custom-text", colors.text);
-    root.style.setProperty("--custom-button", colors.button);
-    document.body.style.backgroundColor = colors.background;
-    document.body.style.color = colors.text;
+    
+    // Convert hex to HSL for consistency with the theme system
+    const hexToHSL = (hex: string) => {
+      // Remove the # if present
+      hex = hex.replace(/^#/, '');
+      
+      // Parse the hex values
+      const r = parseInt(hex.slice(0, 2), 16) / 255;
+      const g = parseInt(hex.slice(2, 4), 16) / 255;
+      const b = parseInt(hex.slice(4, 6), 16) / 255;
+      
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      let h = 0;
+      let s = 0;
+      const l = (max + min) / 2;
+      
+      if (max !== min) {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        
+        switch (max) {
+          case r:
+            h = (g - b) / d + (g < b ? 6 : 0);
+            break;
+          case g:
+            h = (b - r) / d + 2;
+            break;
+          case b:
+            h = (r - g) / d + 4;
+            break;
+        }
+        
+        h /= 6;
+      }
+      
+      return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
+    };
+
+    // Apply the custom colors as HSL values
+    root.style.setProperty("--background", hexToHSL(colors.background));
+    root.style.setProperty("--foreground", hexToHSL(colors.text));
+    root.style.setProperty("--primary", hexToHSL(colors.button));
+    root.style.setProperty("--primary-foreground", "0 0% 100%");
+    
+    setCustomColors(colors);
     toast({
       title: "Custom theme applied",
       description: "Your custom colors have been applied",
