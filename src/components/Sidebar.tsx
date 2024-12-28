@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { 
   Upload,
   Clock,
@@ -14,7 +15,6 @@ import {
   FolderOpen
 } from "lucide-react";
 import { PomodoroTimer } from "./PomodoroTimer";
-import { TaskPlanner } from "./TaskPlanner";
 import { TextToSpeech } from "./TextToSpeech";
 import { BionicReader } from "./BionicReader";
 import { FocusMode } from "./FocusMode";
@@ -34,6 +34,7 @@ interface SidebarProps {
 export const Sidebar = ({ onFileUpload, onColorChange, uploadedFiles, onFileSelect }: SidebarProps) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -46,8 +47,6 @@ export const Sidebar = ({ onFileUpload, onColorChange, uploadedFiles, onFileSele
     switch (activeComponent) {
       case "pomodoro":
         return <PomodoroTimer />;
-      case "tasks":
-        return <TaskPlanner />;
       case "tts":
         return <TextToSpeech />;
       case "bionic":
@@ -67,6 +66,10 @@ export const Sidebar = ({ onFileUpload, onColorChange, uploadedFiles, onFileSele
       default:
         return null;
     }
+  };
+
+  const handleTasksClick = () => {
+    navigate('/tasks');
   };
 
   return (
@@ -98,12 +101,12 @@ export const Sidebar = ({ onFileUpload, onColorChange, uploadedFiles, onFileSele
         </Button>
 
         <Button 
-          variant={activeComponent === "color" ? "default" : "ghost"} 
+          variant="ghost"
           className="w-full flex items-center justify-start gap-2 px-2"
-          onClick={() => setActiveComponent("color")}
+          onClick={handleTasksClick}
         >
-          <Paintbrush className="h-4 w-4" />
-          Color Tool
+          <CheckSquare className="h-4 w-4" />
+          Task Planner
         </Button>
 
         <Button 

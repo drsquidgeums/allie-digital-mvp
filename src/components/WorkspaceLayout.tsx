@@ -2,12 +2,19 @@ import React from "react";
 import { Sidebar } from "./Sidebar";
 import { DocumentViewer } from "./DocumentViewer";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "react-router-dom";
 
 export const WorkspaceLayout = () => {
   const { toast } = useToast();
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [selectedColor, setSelectedColor] = React.useState("#000000");
   const [uploadedFiles, setUploadedFiles] = React.useState<File[]>([]);
+  const location = useLocation();
+
+  // Don't render the workspace layout on the tasks route
+  if (location.pathname === "/tasks") {
+    return null;
+  }
 
   const handleFileUpload = (file: File) => {
     if (file.type === "application/pdf" || file.type === "application/msword" || 
