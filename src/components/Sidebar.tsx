@@ -11,7 +11,6 @@ import {
   Palette,
   Brain,
   MessageSquare,
-  Paintbrush,
   FolderOpen
 } from "lucide-react";
 import { PomodoroTimer } from "./PomodoroTimer";
@@ -75,6 +74,15 @@ export const Sidebar = ({ onFileUpload, onColorChange, uploadedFiles, onFileSele
   return (
     <div className="w-64 bg-card border-r border-border p-4 flex flex-col h-full">
       <div className="space-y-2">
+        <Button 
+          variant="ghost"
+          className="w-full flex items-center justify-start gap-2 px-2"
+          onClick={handleTasksClick}
+        >
+          <CheckSquare className="h-4 w-4" />
+          Task Planner
+        </Button>
+
         <input
           type="file"
           ref={fileInputRef}
@@ -101,30 +109,12 @@ export const Sidebar = ({ onFileUpload, onColorChange, uploadedFiles, onFileSele
         </Button>
 
         <Button 
-          variant="ghost"
-          className="w-full flex items-center justify-start gap-2 px-2"
-          onClick={handleTasksClick}
-        >
-          <CheckSquare className="h-4 w-4" />
-          Task Planner
-        </Button>
-
-        <Button 
           variant={activeComponent === "pomodoro" ? "default" : "ghost"} 
           className="w-full flex items-center justify-start gap-2 px-2"
           onClick={() => setActiveComponent("pomodoro")}
         >
           <Clock className="h-4 w-4" />
           Pomodoro Timer
-        </Button>
-
-        <Button 
-          variant={activeComponent === "tasks" ? "default" : "ghost"} 
-          className="w-full flex items-center justify-start gap-2 px-2"
-          onClick={() => setActiveComponent("tasks")}
-        >
-          <CheckSquare className="h-4 w-4" />
-          Task Planner
         </Button>
 
         <Button 
