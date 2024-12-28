@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 export const WorkspaceLayout = () => {
   const { toast } = useToast();
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const [selectedColor, setSelectedColor] = React.useState("#000000");
 
   const handleFileUpload = (file: File) => {
     if (file.type === "application/pdf" || file.type === "application/msword" || 
@@ -26,9 +27,9 @@ export const WorkspaceLayout = () => {
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
-      <Sidebar onFileUpload={handleFileUpload} />
+      <Sidebar onFileUpload={handleFileUpload} onColorChange={setSelectedColor} />
       <main className="flex-1 p-6 overflow-auto">
-        <DocumentViewer file={selectedFile} />
+        <DocumentViewer file={selectedFile} selectedColor={selectedColor} />
       </main>
     </div>
   );

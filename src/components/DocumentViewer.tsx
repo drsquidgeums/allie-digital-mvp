@@ -8,11 +8,11 @@ import { Input } from "@/components/ui/input";
 
 interface DocumentViewerProps {
   file: File | null;
+  selectedColor: string;
 }
 
-export const DocumentViewer = ({ file }: DocumentViewerProps) => {
+export const DocumentViewer = ({ file, selectedColor }: DocumentViewerProps) => {
   const [url, setUrl] = React.useState<string>("");
-  const [selectedColor, setSelectedColor] = React.useState<string>("#000000");
   const { toast } = useToast();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 

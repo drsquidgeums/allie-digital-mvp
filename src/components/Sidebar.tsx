@@ -24,9 +24,10 @@ import { ColorSeparator } from "./ColorSeparator";
 
 interface SidebarProps {
   onFileUpload: (file: File) => void;
+  onColorChange: (color: string) => void;
 }
 
-export const Sidebar = ({ onFileUpload }: SidebarProps) => {
+export const Sidebar = ({ onFileUpload, onColorChange }: SidebarProps) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
 
@@ -56,7 +57,7 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
       case "ai":
         return <AIAssistant />;
       case "color":
-        return <ColorSeparator />;
+        return <ColorSeparator onColorChange={onColorChange} />;
       default:
         return null;
     }

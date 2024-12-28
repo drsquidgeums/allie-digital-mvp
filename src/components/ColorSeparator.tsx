@@ -1,17 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Paintbrush } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-export const ColorSeparator = () => {
-  const [selectedColor, setSelectedColor] = useState("#000000");
-  const [hexInput, setHexInput] = useState("#000000");
+interface ColorSeparatorProps {
+  onColorChange?: (color: string) => void;
+}
+
+export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
+  const [selectedColor, setSelectedColor] = React.useState("#000000");
+  const [hexInput, setHexInput] = React.useState("#000000");
   const { toast } = useToast();
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
     setHexInput(color);
+    if (onColorChange) {
+      onColorChange(color);
+    }
     toast({
       title: "Color selected",
       description: "Click on text to apply this color",
