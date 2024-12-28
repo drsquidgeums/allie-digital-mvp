@@ -10,7 +10,8 @@ import {
   Palette,
   Brain,
   MessageSquare,
-  Paintbrush
+  Paintbrush,
+  FolderOpen
 } from "lucide-react";
 import { PomodoroTimer } from "./PomodoroTimer";
 import { TaskPlanner } from "./TaskPlanner";
@@ -21,13 +22,16 @@ import { IrlenOverlay } from "./IrlenOverlay";
 import { MindMap } from "./MindMap";
 import { AIAssistant } from "./AIAssistant";
 import { ColorSeparator } from "./ColorSeparator";
+import { FileList } from "./FileList";
 
 interface SidebarProps {
   onFileUpload: (file: File) => void;
   onColorChange: (color: string) => void;
+  uploadedFiles: File[];
+  onFileSelect: (file: File) => void;
 }
 
-export const Sidebar = ({ onFileUpload, onColorChange }: SidebarProps) => {
+export const Sidebar = ({ onFileUpload, onColorChange, uploadedFiles, onFileSelect }: SidebarProps) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
 
@@ -58,6 +62,8 @@ export const Sidebar = ({ onFileUpload, onColorChange }: SidebarProps) => {
         return <AIAssistant />;
       case "color":
         return <ColorSeparator onColorChange={onColorChange} />;
+      case "files":
+        return <FileList files={uploadedFiles} onFileSelect={onFileSelect} />;
       default:
         return null;
     }
@@ -80,6 +86,15 @@ export const Sidebar = ({ onFileUpload, onColorChange }: SidebarProps) => {
         >
           <Upload className="h-4 w-4" />
           Upload Document
+        </Button>
+
+        <Button 
+          variant={activeComponent === "files" ? "default" : "ghost"} 
+          className="w-full flex items-center justify-start gap-2 px-2"
+          onClick={() => setActiveComponent("files")}
+        >
+          <FolderOpen className="h-4 w-4" />
+          Files
         </Button>
 
         <Button 
