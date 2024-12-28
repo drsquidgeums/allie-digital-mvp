@@ -70,6 +70,7 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
         />
         <Button
           onClick={() => fileInputRef.current?.click()}
+          variant="ghost"
           className="w-full flex items-center justify-start gap-2 px-2"
         >
           <Upload className="h-4 w-4" />
