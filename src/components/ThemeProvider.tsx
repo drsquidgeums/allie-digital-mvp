@@ -10,6 +10,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const ThemeProvider = () => {
   const [theme, setTheme] = React.useState("light");
@@ -18,19 +25,29 @@ export const ThemeProvider = () => {
     text: "#333333",
     button: "#9b87f5",
   });
+  const [selectedFont, setSelectedFont] = React.useState("Inter");
   const { toast } = useToast();
+
+  const fonts = [
+    { name: "Inter", value: "Inter" },
+    { name: "Roboto", value: "Roboto" },
+    { name: "Open Sans", value: "Open Sans" },
+    { name: "Lato", value: "Lato" },
+    { name: "Source Sans Pro", value: "Source Sans Pro" },
+    { name: "OpenDyslexic", value: "OpenDyslexic" },
+  ];
 
   const applyTheme = (newTheme: string) => {
     const root = document.documentElement;
     if (newTheme === "dark") {
       root.classList.add("dark");
-      document.body.style.backgroundColor = "#1E1E1E"; // VS Code dark background
-      root.style.setProperty("--background", "0 0% 12%"); // VS Code dark background in HSL
-      root.style.setProperty("--foreground", "0 0% 100%"); // White text
-      root.style.setProperty("--primary", "0 0% 20%"); // Lighter grey for buttons
-      root.style.setProperty("--primary-foreground", "0 0% 100%"); // White text on buttons
-      root.style.setProperty("--secondary", "0 0% 15%"); // Darker grey for secondary elements
-      root.style.setProperty("--secondary-foreground", "0 0% 100%"); // White text on secondary
+      document.body.style.backgroundColor = "#1E1E1E";
+      root.style.setProperty("--background", "0 0% 12%");
+      root.style.setProperty("--foreground", "0 0% 100%");
+      root.style.setProperty("--primary", "0 0% 20%");
+      root.style.setProperty("--primary-foreground", "0 0% 100%");
+      root.style.setProperty("--secondary", "0 0% 15%");
+      root.style.setProperty("--secondary-foreground", "0 0% 100%");
       setTheme("dark");
     } else if (newTheme === "light") {
       root.classList.remove("dark");
@@ -52,7 +69,6 @@ export const ThemeProvider = () => {
   const handleCustomColors = (colors: typeof customColors) => {
     const root = document.documentElement;
     
-    // Convert hex to HSL for consistency with the theme system
     const hexToHSL = (hex: string) => {
       hex = hex.replace(/^#/, '');
       const r = parseInt(hex.slice(0, 2), 16) / 255;
@@ -99,6 +115,15 @@ export const ThemeProvider = () => {
     });
   };
 
+  const handleFontChange = (font: string) => {
+    document.documentElement.style.setProperty("--font-family", `"${font}", sans-serif`);
+    setSelectedFont(font);
+    toast({
+      title: "Font updated",
+      description: `Changed to ${font} font`,
+    });
+  };
+
   return (
     <div className="absolute bottom-4 right-4 flex gap-2">
       <Button
@@ -128,6 +153,21 @@ export const ThemeProvider = () => {
             <DialogTitle>Customize Theme</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Font</label>
+              <Select value={selectedFont} onValueChange={handleFontChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a font" />
+                </SelectTrigger>
+                <SelectContent>
+                  {fonts.map((font) => (
+                    <SelectItem key={font.value} value={font.value}>
+                      {font.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Background Color</label>
               <div className="flex gap-2">
