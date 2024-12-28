@@ -48,8 +48,8 @@ export const NotificationCenter = () => {
       </PopoverTrigger>
       <PopoverContent 
         className="w-80 p-0" 
-        align="end" 
-        alignOffset={-40}
+        align="start" 
+        alignOffset={0}
         sideOffset={8}
       >
         <div className="p-4 space-y-4">
