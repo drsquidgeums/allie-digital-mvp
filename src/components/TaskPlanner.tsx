@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Check, Trash2 } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useToast } from "@/hooks/use-toast";
 
 interface Task {
@@ -12,7 +12,8 @@ interface Task {
   createdAt: Date;
 }
 
-// Create a custom event for task updates
+const COLORS = ['#22c55e', '#94a3b8'];
+
 const emitTaskNotification = (title: string, message: string) => {
   const event = new CustomEvent('taskNotification', {
     detail: { 
@@ -77,7 +78,12 @@ export const TaskPlanner = () => {
     setTasks(tasks.filter(task => task.id !== id));
   };
 
-  const getChartData = () => {
+  const getPieChartData = () => [
+    { name: 'Completed', value: tasks.filter(task => task.completed).length },
+    { name: 'Pending', value: tasks.filter(task => !task.completed).length }
+  ];
+
+  const getBarChartData = () => {
     const today = new Date();
     const lastWeek = Array.from({ length: 7 }, (_, i) => {
       const date = new Date(today);
@@ -91,14 +97,15 @@ export const TaskPlanner = () => {
         task.completed && 
         task.createdAt.toLocaleDateString('en-GB', { weekday: 'short' }) === day
       ).length,
-      total: tasks.filter(task =>
+      pending: tasks.filter(task =>
+        !task.completed &&
         task.createdAt.toLocaleDateString('en-GB', { weekday: 'short' }) === day
       ).length
     }));
   };
 
   return (
-    <div className="p-4 space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in">
       <form onSubmit={addTask} className="flex gap-2">
         <Input
           value={newTask}
@@ -106,10 +113,48 @@ export const TaskPlanner = () => {
           placeholder="Add a new task..."
           className="flex-1"
         />
-        <Button type="submit">
-          Add
-        </Button>
+        <Button type="submit">Add</Button>
       </form>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="h-64">
+          <h3 className="text-lg font-semibold mb-2">Task Status</h3>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={getPieChartData()}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                paddingAngle={5}
+                dataKey="value"
+              >
+                {getPieChartData().map((_, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="h-64">
+          <h3 className="text-lg font-semibold mb-2">Weekly Progress</h3>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={getBarChartData()}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="completed" fill="#22c55e" name="Completed" />
+              <Bar dataKey="pending" fill="#94a3b8" name="Pending" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
 
       <div className="space-y-2">
         {tasks.map((task) => (
@@ -138,19 +183,6 @@ export const TaskPlanner = () => {
             </Button>
           </div>
         ))}
-      </div>
-
-      <div className="h-64 bg-card rounded-lg p-4 border border-border">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={getChartData()}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="completed" fill="#22c55e" name="Completed" />
-            <Bar dataKey="total" fill="#94a3b8" name="Total" />
-          </BarChart>
-        </ResponsiveContainer>
       </div>
     </div>
   );
