@@ -24,15 +24,17 @@ export const ThemeProvider = () => {
     const root = document.documentElement;
     if (newTheme === "dark") {
       root.classList.add("dark");
-      root.style.setProperty("--background", "222.2 84% 4.9%"); // Dark grey
+      document.body.style.backgroundColor = "#1E1E1E"; // VS Code dark background
+      root.style.setProperty("--background", "0 0% 12%"); // VS Code dark background in HSL
       root.style.setProperty("--foreground", "0 0% 100%"); // White text
-      root.style.setProperty("--primary", "240 5% 64.9%"); // Lighter grey for buttons
+      root.style.setProperty("--primary", "0 0% 20%"); // Lighter grey for buttons
       root.style.setProperty("--primary-foreground", "0 0% 100%"); // White text on buttons
-      root.style.setProperty("--secondary", "240 3.7% 15.9%"); // Darker grey for secondary elements
+      root.style.setProperty("--secondary", "0 0% 15%"); // Darker grey for secondary elements
       root.style.setProperty("--secondary-foreground", "0 0% 100%"); // White text on secondary
       setTheme("dark");
     } else if (newTheme === "light") {
       root.classList.remove("dark");
+      document.body.style.backgroundColor = "#F6F6F7";
       root.style.setProperty("--background", "0 0% 100%");
       root.style.setProperty("--foreground", "222.2 84% 4.9%");
       root.style.setProperty("--primary", "222.2 47.4% 11.2%");
@@ -52,10 +54,7 @@ export const ThemeProvider = () => {
     
     // Convert hex to HSL for consistency with the theme system
     const hexToHSL = (hex: string) => {
-      // Remove the # if present
       hex = hex.replace(/^#/, '');
-      
-      // Parse the hex values
       const r = parseInt(hex.slice(0, 2), 16) / 255;
       const g = parseInt(hex.slice(2, 4), 16) / 255;
       const b = parseInt(hex.slice(4, 6), 16) / 255;
@@ -81,14 +80,13 @@ export const ThemeProvider = () => {
             h = (r - g) / d + 4;
             break;
         }
-        
         h /= 6;
       }
       
       return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
     };
 
-    // Apply the custom colors as HSL values
+    document.body.style.backgroundColor = colors.background;
     root.style.setProperty("--background", hexToHSL(colors.background));
     root.style.setProperty("--foreground", hexToHSL(colors.text));
     root.style.setProperty("--primary", hexToHSL(colors.button));
@@ -102,12 +100,12 @@ export const ThemeProvider = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 flex gap-2">
+    <div className="absolute bottom-4 right-4 flex gap-2">
       <Button
         variant="outline"
         size="icon"
         onClick={() => applyTheme("light")}
-        className={theme === "light" ? "bg-secondary" : ""}
+        className={`${theme === "light" ? "bg-secondary" : ""} bg-white/50 backdrop-blur-sm`}
       >
         <Sun className="h-4 w-4" />
       </Button>
@@ -115,13 +113,13 @@ export const ThemeProvider = () => {
         variant="outline"
         size="icon"
         onClick={() => applyTheme("dark")}
-        className={theme === "dark" ? "bg-secondary" : ""}
+        className={`${theme === "dark" ? "bg-secondary" : ""} bg-white/50 backdrop-blur-sm`}
       >
         <Moon className="h-4 w-4" />
       </Button>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" className="bg-white/50 backdrop-blur-sm">
             <Palette className="h-4 w-4" />
           </Button>
         </DialogTrigger>

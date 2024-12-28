@@ -1,7 +1,6 @@
 import React from "react";
 import { Sidebar } from "./Sidebar";
 import { DocumentViewer } from "./DocumentViewer";
-import { ThemeProvider } from "./ThemeProvider";
 import { useToast } from "@/hooks/use-toast";
 
 export const WorkspaceLayout = () => {
@@ -26,12 +25,11 @@ export const WorkspaceLayout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-workspace overflow-hidden">
+    <div className="flex h-screen bg-workspace dark:bg-workspace-dark overflow-hidden">
       <Sidebar onFileUpload={handleFileUpload} />
       <main className="flex-1 p-6 overflow-auto">
         <DocumentViewer file={selectedFile} />
       </main>
-      <ThemeProvider />
     </div>
   );
 };

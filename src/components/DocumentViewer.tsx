@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download, Upload, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { ThemeProvider } from "./ThemeProvider";
 
 interface DocumentViewerProps {
   file: File | null;
@@ -51,7 +52,7 @@ export const DocumentViewer = ({ file }: DocumentViewerProps) => {
   };
 
   return (
-    <Card className="h-full flex flex-col bg-white/50 backdrop-blur-sm animate-fade-in rounded-xl overflow-hidden">
+    <Card className="h-full flex flex-col bg-white/50 backdrop-blur-sm animate-fade-in rounded-xl overflow-hidden relative">
       <div className="p-4 border-b border-gray-200 flex justify-between items-center">
         <h2 className="text-lg font-semibold text-workspace-dark">Document Viewer</h2>
         <div className="flex gap-2">
@@ -66,7 +67,7 @@ export const DocumentViewer = ({ file }: DocumentViewerProps) => {
           </Button>
         </div>
       </div>
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-4 relative">
         {!file ? (
           <div className="h-full flex items-center justify-center">
             <p className="text-workspace-dark/60">Upload a document to get started</p>
@@ -90,6 +91,7 @@ export const DocumentViewer = ({ file }: DocumentViewerProps) => {
             </p>
           </div>
         )}
+        <ThemeProvider />
       </div>
       <input
         type="file"
