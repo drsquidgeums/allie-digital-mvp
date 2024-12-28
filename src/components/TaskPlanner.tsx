@@ -1,22 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Check, Trash2 } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface Task {
   id: string;
   text: string;
   completed: boolean;
+  createdAt: Date;
 }
 
 export const TaskPlanner = () => {
-  const [tasks, setTasks] = React.useState<Task[]>([]);
-  const [newTask, setNewTask] = React.useState("");
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [newTask, setNewTask] = useState("");
 
   const addTask = (e: React.FormEvent) => {
     e.preventDefault();
     if (newTask.trim()) {
-      setTasks([...tasks, { id: Date.now().toString(), text: newTask, completed: false }]);
+      setTasks([...tasks, { 
+        id: Date.now().toString(), 
+        text: newTask, 
+        completed: false,
+        createdAt: new Date()
+      }]);
       setNewTask("");
     }
   };
@@ -31,8 +38,28 @@ export const TaskPlanner = () => {
     setTasks(tasks.filter(task => task.id !== id));
   };
 
+  const getChartData = () => {
+    const today = new Date();
+    const lastWeek = Array.from({ length: 7 }, (_, i) => {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      return date.toLocaleDateString('en-GB', { weekday: 'short' });
+    }).reverse();
+
+    return lastWeek.map(day => ({
+      name: day,
+      completed: tasks.filter(task => 
+        task.completed && 
+        task.createdAt.toLocaleDateString('en-GB', { weekday: 'short' }) === day
+      ).length,
+      total: tasks.filter(task =>
+        task.createdAt.toLocaleDateString('en-GB', { weekday: 'short' }) === day
+      ).length
+    }));
+  };
+
   return (
-    <div className="p-4 space-y-4 animate-fade-in">
+    <div className="p-4 space-y-6 animate-fade-in">
       <form onSubmit={addTask} className="flex gap-2">
         <Input
           value={newTask}
@@ -40,15 +67,16 @@ export const TaskPlanner = () => {
           placeholder="Add a new task..."
           className="flex-1"
         />
-        <Button type="submit" className="bg-workspace-dark text-white hover:bg-workspace-dark/90">
+        <Button type="submit">
           Add
         </Button>
       </form>
+
       <div className="space-y-2">
         {tasks.map((task) => (
           <div
             key={task.id}
-            className="flex items-center gap-2 p-2 rounded-lg bg-white border border-gray-200"
+            className="flex items-center gap-2 p-2 rounded-lg bg-card border border-border"
           >
             <Button
               size="sm"
@@ -58,19 +86,32 @@ export const TaskPlanner = () => {
             >
               <Check className="h-4 w-4" />
             </Button>
-            <span className={`flex-1 ${task.completed ? "line-through text-gray-400" : ""}`}>
+            <span className={`flex-1 ${task.completed ? "line-through text-muted-foreground" : ""}`}>
               {task.text}
             </span>
             <Button
               size="sm"
               variant="ghost"
-              className="p-1 h-6 w-6 text-red-500 hover:text-red-600"
+              className="p-1 h-6 w-6 text-destructive hover:text-destructive/90"
               onClick={() => deleteTask(task.id)}
             >
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
         ))}
+      </div>
+
+      <div className="h-64 bg-card rounded-lg p-4 border border-border">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={getChartData()}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="completed" fill="#22c55e" name="Completed" />
+            <Bar dataKey="total" fill="#94a3b8" name="Total" />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

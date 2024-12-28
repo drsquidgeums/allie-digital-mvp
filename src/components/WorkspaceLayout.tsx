@@ -1,6 +1,7 @@
 import React from "react";
 import { Sidebar } from "./Sidebar";
 import { DocumentViewer } from "./DocumentViewer";
+import { NotificationCenter } from "./NotificationCenter";
 import { useToast } from "@/hooks/use-toast";
 
 export const WorkspaceLayout = () => {
@@ -25,9 +26,13 @@ export const WorkspaceLayout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-workspace dark:bg-workspace-dark overflow-hidden">
+    <div className="flex h-screen bg-background overflow-hidden">
       <Sidebar onFileUpload={handleFileUpload} />
       <main className="flex-1 p-6 overflow-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-semibold">Workspace</h1>
+          <NotificationCenter />
+        </div>
         <DocumentViewer file={selectedFile} />
       </main>
     </div>
