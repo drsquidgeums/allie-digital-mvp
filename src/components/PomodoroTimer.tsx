@@ -51,8 +51,8 @@ export const PomodoroTimer = () => {
   };
 
   return (
-    <div className="p-4 space-y-4 animate-fade-in">
-      <div className="space-y-2">
+    <div className="p-2 space-y-3 animate-fade-in">
+      <div className="space-y-1">
         <Label>Work Duration (minutes)</Label>
         <Input
           type="number"
@@ -60,9 +60,10 @@ export const PomodoroTimer = () => {
           onChange={(e) => setWorkMinutes(Number(e.target.value))}
           min="1"
           disabled={isActive}
+          className="h-8"
         />
       </div>
-      <div className="space-y-2">
+      <div className="space-y-1">
         <Label>Break Duration (minutes)</Label>
         <Input
           type="number"
@@ -70,9 +71,10 @@ export const PomodoroTimer = () => {
           onChange={(e) => setBreakMinutes(Number(e.target.value))}
           min="1"
           disabled={isActive}
+          className="h-8"
         />
       </div>
-      <div className="text-center py-4">
+      <div className="text-center py-2">
         <h3 className="text-2xl font-bold text-foreground">
           {String(workMinutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
         </h3>
@@ -83,14 +85,14 @@ export const PomodoroTimer = () => {
       <div className="flex gap-2">
         <Button
           onClick={toggleTimer}
-          className="flex-1"
+          className="flex-1 h-8 text-sm"
         >
           {isActive ? "Pause" : "Start"}
         </Button>
         <Button
           onClick={resetTimer}
           variant="outline"
-          className="flex-1"
+          className="flex-1 h-8 text-sm"
         >
           Reset
         </Button>

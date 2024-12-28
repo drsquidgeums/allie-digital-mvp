@@ -1,7 +1,6 @@
 import React from "react";
 import { Sidebar } from "./Sidebar";
 import { DocumentViewer } from "./DocumentViewer";
-import { NotificationCenter } from "./NotificationCenter";
 import { useToast } from "@/hooks/use-toast";
 
 export const WorkspaceLayout = () => {

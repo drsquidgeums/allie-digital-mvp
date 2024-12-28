@@ -11,7 +11,6 @@ import {
   Brain,
   MessageSquare
 } from "lucide-react";
-import { NotificationCenter } from "./NotificationCenter";
 import { PomodoroTimer } from "./PomodoroTimer";
 import { TaskPlanner } from "./TaskPlanner";
 import { TextToSpeech } from "./TextToSpeech";
@@ -60,10 +59,7 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
   };
 
   return (
-    <div className="w-64 bg-card border-r border-border p-4">
-      <div className="flex items-center justify-between mb-6">
-        <NotificationCenter />
-      </div>
+    <div className="w-64 bg-card border-r border-border p-4 flex flex-col h-full">
       <div className="space-y-2">
         <input
           type="file"
@@ -152,7 +148,9 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
           AI Assistant
         </Button>
       </div>
-      {renderActiveComponent()}
+      <div className="flex-1 overflow-auto mt-4">
+        {renderActiveComponent()}
+      </div>
     </div>
   );
 };
