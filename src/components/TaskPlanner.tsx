@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Check, Trash2 } from "lucide-react";
+import { Check, Trash2, Trophy } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useToast } from "@/hooks/use-toast";
 
@@ -10,6 +10,7 @@ interface Task {
   text: string;
   completed: boolean;
   createdAt: Date;
+  points: number;
 }
 
 const COLORS = ['#22c55e', '#94a3b8'];
@@ -30,6 +31,7 @@ const emitTaskNotification = (title: string, message: string) => {
 export const TaskPlanner = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState("");
+  const [points, setPoints] = useState(0);
   const { toast } = useToast();
 
   const addTask = (e: React.FormEvent) => {
@@ -39,7 +41,8 @@ export const TaskPlanner = () => {
         id: Date.now().toString(), 
         text: newTask, 
         completed: false,
-        createdAt: new Date()
+        createdAt: new Date(),
+        points: 10
       }]);
       setNewTask("");
       emitTaskNotification(
@@ -57,6 +60,15 @@ export const TaskPlanner = () => {
     setTasks(tasks.map(task => {
       if (task.id === id) {
         const newStatus = !task.completed;
+        if (newStatus) {
+          setPoints(prev => prev + task.points);
+          toast({
+            title: "Points earned!",
+            description: `You earned ${task.points} points for completing this task!`,
+          });
+        } else {
+          setPoints(prev => prev - task.points);
+        }
         emitTaskNotification(
           newStatus ? "Task Completed" : "Task Reopened",
           `Task "${task.text}" has been ${newStatus ? 'completed' : 'reopened'}`
@@ -70,6 +82,9 @@ export const TaskPlanner = () => {
   const deleteTask = (id: string) => {
     const task = tasks.find(t => t.id === id);
     if (task) {
+      if (task.completed) {
+        setPoints(prev => prev - task.points);
+      }
       emitTaskNotification(
         "Task Deleted",
         `Task "${task.text}" has been removed`
@@ -106,6 +121,14 @@ export const TaskPlanner = () => {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      <div className="flex items-center justify-between bg-accent/10 p-4 rounded-lg">
+        <div className="flex items-center gap-2">
+          <Trophy className="h-6 w-6 text-yellow-500" />
+          <span className="font-semibold">Total Points:</span>
+        </div>
+        <span className="text-xl font-bold">{points}</span>
+      </div>
+
       <form onSubmit={addTask} className="flex gap-2">
         <Input
           value={newTask}
@@ -173,6 +196,7 @@ export const TaskPlanner = () => {
             <span className={`flex-1 ${task.completed ? "line-through text-muted-foreground" : ""}`}>
               {task.text}
             </span>
+            <span className="text-sm text-muted-foreground">{task.points} pts</span>
             <Button
               size="sm"
               variant="ghost"

@@ -4,9 +4,11 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Calendar } from "@/components/ui/calendar";
 
 export const TaskDashboard = () => {
   const navigate = useNavigate();
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
 
   return (
     <div className="min-h-screen bg-background">
@@ -23,11 +25,45 @@ export const TaskDashboard = () => {
               <Home className="h-5 w-5" />
             </Button>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="p-6 shadow-lg">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="p-6 shadow-lg lg:col-span-2">
               <h2 className="text-xl font-semibold mb-4">Task Management</h2>
               <TaskPlanner />
             </Card>
+            <div className="space-y-6">
+              <Card className="p-6 shadow-lg">
+                <h2 className="text-xl font-semibold mb-4">Calendar</h2>
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  className="rounded-md border"
+                />
+              </Card>
+              <Card className="p-6 shadow-lg">
+                <h2 className="text-xl font-semibold mb-4">Achievements</h2>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span>Task Master</span>
+                    <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-green-500 w-3/4" />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Streak Champion</span>
+                    <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-blue-500 w-1/2" />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Early Bird</span>
+                    <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-purple-500 w-1/4" />
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </div>
           </div>
         </div>
       </div>
