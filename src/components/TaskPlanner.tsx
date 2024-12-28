@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Check, Trash2 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useToast } from "@/hooks/use-toast";
 
 interface Task {
   id: string;
@@ -11,9 +12,24 @@ interface Task {
   createdAt: Date;
 }
 
+// Create a custom event for task updates
+const emitTaskNotification = (title: string, message: string) => {
+  const event = new CustomEvent('taskNotification', {
+    detail: { 
+      id: Date.now().toString(),
+      title,
+      message,
+      read: false,
+      timestamp: new Date()
+    }
+  });
+  window.dispatchEvent(event);
+};
+
 export const TaskPlanner = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState("");
+  const { toast } = useToast();
 
   const addTask = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,16 +41,39 @@ export const TaskPlanner = () => {
         createdAt: new Date()
       }]);
       setNewTask("");
+      emitTaskNotification(
+        "New Task Added",
+        `Task "${newTask}" has been added to your list`
+      );
+      toast({
+        title: "Task added",
+        description: "New task has been created successfully",
+      });
     }
   };
 
   const toggleTask = (id: string) => {
-    setTasks(tasks.map(task =>
-      task.id === id ? { ...task, completed: !task.completed } : task
-    ));
+    setTasks(tasks.map(task => {
+      if (task.id === id) {
+        const newStatus = !task.completed;
+        emitTaskNotification(
+          newStatus ? "Task Completed" : "Task Reopened",
+          `Task "${task.text}" has been ${newStatus ? 'completed' : 'reopened'}`
+        );
+        return { ...task, completed: newStatus };
+      }
+      return task;
+    }));
   };
 
   const deleteTask = (id: string) => {
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+      emitTaskNotification(
+        "Task Deleted",
+        `Task "${task.text}" has been removed`
+      );
+    }
     setTasks(tasks.filter(task => task.id !== id));
   };
 

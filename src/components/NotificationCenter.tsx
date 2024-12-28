@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +25,18 @@ export const NotificationCenter = () => {
       timestamp: new Date(),
     },
   ]);
+
+  useEffect(() => {
+    const handleTaskNotification = (event: CustomEvent<Notification>) => {
+      setNotifications(prev => [event.detail, ...prev]);
+    };
+
+    window.addEventListener('taskNotification', handleTaskNotification as EventListener);
+
+    return () => {
+      window.removeEventListener('taskNotification', handleTaskNotification as EventListener);
+    };
+  }, []);
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -63,13 +75,13 @@ export const NotificationCenter = () => {
                   key={notification.id}
                   className={`p-3 rounded-lg ${
                     notification.read ? "bg-muted" : "bg-accent"
-                  }`}
+                  } cursor-pointer`}
                   onClick={() => markAsRead(notification.id)}
                 >
                   <div className="flex justify-between items-start">
                     <h4 className="text-sm font-medium">{notification.title}</h4>
                     <span className="text-xs text-muted-foreground">
-                      {notification.timestamp.toLocaleTimeString('en-GB')}
+                      {new Date(notification.timestamp).toLocaleTimeString('en-GB')}
                     </span>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">
