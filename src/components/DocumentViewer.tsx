@@ -12,6 +12,8 @@ export const DocumentViewer = ({ file }: DocumentViewerProps) => {
     if (file) {
       const fileUrl = URL.createObjectURL(file);
       setUrl(fileUrl);
+      
+      // Clean up the URL when component unmounts or file changes
       return () => URL.revokeObjectURL(fileUrl);
     }
   }, [file]);
@@ -26,11 +28,13 @@ export const DocumentViewer = ({ file }: DocumentViewerProps) => {
 
   return (
     <Card className="h-full p-4 bg-white/50 backdrop-blur-sm animate-fade-in">
-      <iframe
-        src={url}
+      <object
+        data={url}
+        type={file.type}
         className="w-full h-full rounded-lg border border-gray-200"
-        title="Document Viewer"
-      />
+      >
+        <p>Unable to display file. Please try downloading it instead.</p>
+      </object>
     </Card>
   );
 };
