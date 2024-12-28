@@ -11,6 +11,7 @@ import {
   Palette,
   Brain,
   MessageSquare,
+  Paintbrush,
   FolderOpen
 } from "lucide-react";
 import { PomodoroTimer } from "./PomodoroTimer";
@@ -106,6 +107,15 @@ export const Sidebar = ({ onFileUpload, onColorChange, uploadedFiles, onFileSele
         >
           <FolderOpen className="h-4 w-4" />
           Files
+        </Button>
+
+        <Button 
+          variant={activeComponent === "color" ? "default" : "ghost"} 
+          className="w-full flex items-center justify-start gap-2 px-2"
+          onClick={() => setActiveComponent("color")}
+        >
+          <Paintbrush className="h-4 w-4" />
+          Color Tool
         </Button>
 
         <Button 
