@@ -1,10 +1,16 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { AlarmClock, File, List, Speaker } from "lucide-react";
+import { AlarmClock, File, List, Speaker, Eye, Focus, Paintbrush, Glasses, Bot, Network } from "lucide-react";
 import { PomodoroTimer } from "./PomodoroTimer";
 import { TaskPlanner } from "./TaskPlanner";
 import { TextToSpeech } from "./TextToSpeech";
+import { BionicReader } from "./BionicReader";
+import { FocusMode } from "./FocusMode";
+import { ColorSeparator } from "./ColorSeparator";
+import { IrlenOverlay } from "./IrlenOverlay";
+import { AIAssistant } from "./AIAssistant";
+import { MindMap } from "./MindMap";
 
 interface SidebarProps {
   onFileUpload: (file: File) => void;
@@ -29,6 +35,18 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
         return <TaskPlanner />;
       case "tts":
         return <TextToSpeech />;
+      case "bionic":
+        return <BionicReader />;
+      case "focus":
+        return <FocusMode />;
+      case "color":
+        return <ColorSeparator />;
+      case "irlen":
+        return <IrlenOverlay />;
+      case "ai":
+        return <AIAssistant />;
+      case "mindmap":
+        return <MindMap />;
       default:
         return (
           <div className="p-4">
@@ -88,6 +106,54 @@ export const Sidebar = ({ onFileUpload }: SidebarProps) => {
         >
           <Speaker className="w-4 h-4 mr-2" />
           Text to Speech
+        </Button>
+        <Button
+          variant={activeTab === "bionic" ? "secondary" : "ghost"}
+          className="justify-start"
+          onClick={() => setActiveTab("bionic")}
+        >
+          <Eye className="w-4 h-4 mr-2" />
+          Bionic Reader
+        </Button>
+        <Button
+          variant={activeTab === "focus" ? "secondary" : "ghost"}
+          className="justify-start"
+          onClick={() => setActiveTab("focus")}
+        >
+          <Focus className="w-4 h-4 mr-2" />
+          Focus Mode
+        </Button>
+        <Button
+          variant={activeTab === "color" ? "secondary" : "ghost"}
+          className="justify-start"
+          onClick={() => setActiveTab("color")}
+        >
+          <Paintbrush className="w-4 h-4 mr-2" />
+          Color Separator
+        </Button>
+        <Button
+          variant={activeTab === "irlen" ? "secondary" : "ghost"}
+          className="justify-start"
+          onClick={() => setActiveTab("irlen")}
+        >
+          <Glasses className="w-4 h-4 mr-2" />
+          Irlen Overlay
+        </Button>
+        <Button
+          variant={activeTab === "ai" ? "secondary" : "ghost"}
+          className="justify-start"
+          onClick={() => setActiveTab("ai")}
+        >
+          <Bot className="w-4 h-4 mr-2" />
+          AI Assistant
+        </Button>
+        <Button
+          variant={activeTab === "mindmap" ? "secondary" : "ghost"}
+          className="justify-start"
+          onClick={() => setActiveTab("mindmap")}
+        >
+          <Network className="w-4 h-4 mr-2" />
+          Mind Map
         </Button>
       </div>
       <Separator />
