@@ -33,26 +33,13 @@ export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewPro
     );
   }
 
-  if (url) {
-    // Handle Google Docs URLs by converting them to embed format
-    if (url.includes('docs.google.com')) {
-      const embedUrl = url.replace('/edit', '/preview');
-      return (
-        <div ref={containerRef} className="w-full h-full">
-          <iframe
-            src={embedUrl}
-            className="w-full h-full rounded-lg border border-border"
-            title="Document Preview"
-          />
-        </div>
-      );
-    }
-
-    // For other URLs, try to display them directly
+  // Handle Google Docs URLs
+  if (url.includes('docs.google.com')) {
+    const embedUrl = url.replace('/edit', '/preview');
     return (
       <div ref={containerRef} className="w-full h-full">
         <iframe
-          src={url}
+          src={embedUrl}
           className="w-full h-full rounded-lg border border-border"
           title="Document Preview"
         />
@@ -60,11 +47,13 @@ export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewPro
     );
   }
 
+  // For PDF files
   if (file?.type === "application/pdf") {
+    const fileUrl = URL.createObjectURL(file);
     return (
       <div ref={containerRef} className="w-full h-full">
         <object
-          data={url}
+          data={fileUrl}
           type="application/pdf"
           className="w-full h-full rounded-lg border border-border"
         >
@@ -76,13 +65,34 @@ export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewPro
     );
   }
 
-  return (
-    <div ref={containerRef} className="h-full flex items-center justify-center">
-      <p className="text-muted-foreground">
-        Word documents cannot be previewed directly.
-        <br />
-        Please use the download button to view the file.
-      </p>
-    </div>
-  );
+  // For Word documents or other files
+  if (file) {
+    return (
+      <div ref={containerRef} className="h-full flex items-center justify-center">
+        <div className="text-left p-4 max-w-2xl w-full">
+          <h2 className="text-xl font-semibold mb-4">{file.name}</h2>
+          <p className="text-muted-foreground">
+            Word documents cannot be previewed directly.
+            <br />
+            Please use the download button to view the file.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // For other URLs
+  if (url) {
+    return (
+      <div ref={containerRef} className="w-full h-full">
+        <iframe
+          src={url}
+          className="w-full h-full rounded-lg border border-border"
+          title="Document Preview"
+        />
+      </div>
+    );
+  }
+
+  return null;
 };

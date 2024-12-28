@@ -69,6 +69,7 @@ export const DocumentViewer = ({ file, selectedColor }: DocumentViewerProps) => 
             type="url"
             placeholder="Paste URL here"
             className="w-full"
+            value={url}
             onChange={(e) => setUrl(e.target.value)}
           />
         </div>
