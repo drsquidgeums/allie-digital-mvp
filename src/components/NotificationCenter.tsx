@@ -34,10 +34,6 @@ export const NotificationCenter = () => {
     ));
   };
 
-  const handleNotificationClick = (id: string) => {
-    markAsRead(id);
-  };
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -60,10 +56,10 @@ export const NotificationCenter = () => {
               {notifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`p-3 rounded-lg cursor-pointer ${
+                  className={`p-3 rounded-lg ${
                     notification.read ? "bg-muted" : "bg-accent"
                   }`}
-                  onClick={() => handleNotificationClick(notification.id)}
+                  onClick={() => markAsRead(notification.id)}
                 >
                   <div className="flex justify-between items-start">
                     <h4 className="text-sm font-medium">{notification.title}</h4>
