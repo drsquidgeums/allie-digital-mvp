@@ -6,7 +6,6 @@ import {
   Eye,
   Focus,
   Brain,
-  MessageSquare,
   Paintbrush,
   FolderOpen
 } from "lucide-react";
@@ -26,7 +25,6 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
     { id: "bionic", icon: Eye, label: "Bionic Reader" },
     { id: "focus", icon: Focus, label: "Focus Mode" },
     { id: "mindmap", icon: Brain, label: "Mind Map" },
-    { id: "ai", icon: MessageSquare, label: "AI Assistant" },
   ];
 
   return (
