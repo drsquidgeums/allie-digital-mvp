@@ -4,6 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ThemeProvider } from "./ThemeProvider";
 import { FileActions } from "./document-viewer/FileActions";
 import { DocumentPreview } from "./document-viewer/DocumentPreview";
+import { Input } from "@/components/ui/input";
 
 interface DocumentViewerProps {
   file: File | null;
@@ -62,6 +63,14 @@ export const DocumentViewer = ({ file }: DocumentViewerProps) => {
         />
       </div>
       <div className="flex-1 p-4 relative">
+        <div className="mb-4">
+          <Input
+            type="url"
+            placeholder="Paste URL here"
+            className="w-full"
+            onChange={(e) => setUrl(e.target.value)}
+          />
+        </div>
         <DocumentPreview file={file} url={url} />
         <ThemeProvider />
       </div>
