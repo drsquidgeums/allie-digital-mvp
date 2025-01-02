@@ -59,7 +59,6 @@ export const ThemeProvider = () => {
       >
         <Moon className="h-4 w-4" />
       </Button>
-      <IrlenOverlay />
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="outline" size="icon" className="bg-white/50 backdrop-blur-sm">
@@ -75,6 +74,7 @@ export const ThemeProvider = () => {
           </div>
         </DialogContent>
       </Dialog>
+      <IrlenOverlay />
     </div>
   );
 };
