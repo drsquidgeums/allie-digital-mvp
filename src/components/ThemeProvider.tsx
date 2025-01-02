@@ -16,62 +16,57 @@ import { IrlenOverlay } from "./IrlenOverlay";
 
 export const ThemeProvider = () => {
   const [theme, setTheme] = React.useState("light");
+  const [previousColors, setPreviousColors] = React.useState({
+    background: "#F6F6F7",
+    text: "#333333",
+    sidebar: "#FFFFFF",
+  });
   const [customColors, setCustomColors] = React.useState({
     background: "#F6F6F7",
     text: "#333333",
-    button: "#9b87f5",
+    sidebar: "#FFFFFF",
   });
   const [selectedFont, setSelectedFont] = React.useState("Inter");
+  const [tempFont, setTempFont] = React.useState("Inter");
   const { toast } = useToast();
 
-  const defaultColors = {
+  const defaultLightColors = {
     background: "#F6F6F7",
     text: "#333333",
-    button: "#9b87f5",
+    sidebar: "#FFFFFF",
+  };
+
+  const defaultDarkColors = {
+    background: "#1E1E1E",
+    text: "#FFFFFF",
+    sidebar: "#222222",
   };
 
   const resetTheme = () => {
-    setCustomColors(defaultColors);
-    applyThemeColors(defaultColors);
-    document.documentElement.style.setProperty("--font-family", `"Inter", sans-serif`);
-    setSelectedFont("Inter");
+    setCustomColors(previousColors);
+    setTempFont(selectedFont);
+    applyThemeColors(previousColors);
     toast({
       title: "Theme reset",
-      description: "Theme has been reset to default values",
+      description: "Theme has been reset to previous values",
     });
   };
 
   const applyTheme = (newTheme: string) => {
     const root = document.documentElement;
+    const colors = newTheme === "dark" ? defaultDarkColors : defaultLightColors;
+    
     if (newTheme === "dark") {
       root.classList.add("dark");
-      document.body.style.backgroundColor = "#1E1E1E";
-      root.style.setProperty("--background", "0 0% 12%");
-      root.style.setProperty("--foreground", "0 0% 100%");
-      root.style.setProperty("--primary", "0 0% 20%");
-      root.style.setProperty("--primary-foreground", "0 0% 100%");
-      root.style.setProperty("--secondary", "0 0% 15%");
-      root.style.setProperty("--secondary-foreground", "0 0% 100%");
-      root.style.setProperty("--card", "240 5% 8%");
-      root.style.setProperty("--card-foreground", "0 0% 100%");
-      root.style.setProperty("--popover", "240 5% 12%");
-      root.style.setProperty("--popover-foreground", "0 0% 100%");
-      setTheme("dark");
-    } else if (newTheme === "light") {
+    } else {
       root.classList.remove("dark");
-      document.body.style.backgroundColor = "#F6F6F7";
-      root.style.setProperty("--background", "0 0% 100%");
-      root.style.setProperty("--foreground", "222.2 84% 4.9%");
-      root.style.setProperty("--primary", "222.2 47.4% 11.2%");
-      root.style.setProperty("--primary-foreground", "210 40% 98%");
-      root.style.setProperty("--secondary", "210 40% 96.1%");
-      root.style.setProperty("--secondary-foreground", "222.2 47.4% 11.2%");
-      root.style.setProperty("--card", "0 0% 100%");
-      root.style.setProperty("--card-foreground", "222.2 84% 4.9%");
-      root.style.setProperty("--popover", "0 0% 100%");
-      root.style.setProperty("--popover-foreground", "222.2 84% 4.9%");
-      setTheme("light");
     }
+
+    setPreviousColors(colors);
+    setCustomColors(colors);
+    applyThemeColors(colors);
+    setTheme(newTheme);
+    
     toast({
       title: "Theme updated",
       description: `Switched to ${newTheme} theme`,
@@ -79,23 +74,29 @@ export const ThemeProvider = () => {
   };
 
   const handleFontChange = (font: string) => {
-    document.documentElement.style.setProperty("--font-family", `"${font}", sans-serif`);
-    setSelectedFont(font);
-    toast({
-      title: "Font updated",
-      description: `Changed to ${font} font`,
-    });
+    setTempFont(font);
   };
 
   const handleCustomColors = (colors: typeof customColors) => {
     setCustomColors(colors);
   };
 
-  const handleSaveChanges = () => {
+  const handleApplyChanges = () => {
+    // Store current values as previous before applying new ones
+    setPreviousColors(customColors);
     applyThemeColors(customColors);
+    document.documentElement.style.setProperty("--font-family", `"${tempFont}", sans-serif`);
     toast({
-      title: "Custom theme applied",
-      description: "Your custom colors have been applied to the workspace",
+      title: "Changes applied",
+      description: "Your custom theme has been applied. Click Save Changes to keep these settings.",
+    });
+  };
+
+  const handleSaveChanges = () => {
+    setSelectedFont(tempFont);
+    toast({
+      title: "Changes saved",
+      description: "Your custom theme settings have been saved",
     });
   };
 
@@ -128,24 +129,27 @@ export const ThemeProvider = () => {
             <DialogTitle>Customise Theme</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <FontSelector selectedFont={selectedFont} onFontChange={handleFontChange} />
+            <FontSelector selectedFont={tempFont} onFontChange={handleFontChange} />
             <ColorPicker
-              label="Background Colour"
+              label="Background Color"
               value={customColors.background}
               onChange={(value) => handleCustomColors({ ...customColors, background: value })}
             />
             <ColorPicker
-              label="Text Colour"
+              label="Text Color"
               value={customColors.text}
               onChange={(value) => handleCustomColors({ ...customColors, text: value })}
             />
             <ColorPicker
-              label="Button Colour"
-              value={customColors.button}
-              onChange={(value) => handleCustomColors({ ...customColors, button: value })}
+              label="Sidebar & Dialog Color"
+              value={customColors.sidebar}
+              onChange={(value) => handleCustomColors({ ...customColors, sidebar: value })}
             />
             <div className="flex gap-2">
-              <Button onClick={handleSaveChanges} className="flex-1">
+              <Button onClick={handleApplyChanges} className="flex-1">
+                Apply Changes
+              </Button>
+              <Button onClick={handleSaveChanges} variant="secondary" className="flex-1">
                 Save Changes
               </Button>
               <Button onClick={resetTheme} variant="outline" size="icon">

@@ -31,28 +31,51 @@ export const hexToHSL = (hex: string) => {
   return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
 };
 
-export const applyThemeColors = (colors: { background: string; text: string; button: string }) => {
+// Calculate contrasting color for buttons based on background
+const getContrastColor = (bgColor: string): string => {
+  const hex = bgColor.replace(/^#/, '');
+  const r = parseInt(hex.slice(0, 2), 16);
+  const g = parseInt(hex.slice(2, 4), 16);
+  const b = parseInt(hex.slice(4, 6), 16);
+  
+  // Calculate relative luminance
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  
+  return luminance > 0.5 ? '#000000' : '#FFFFFF';
+};
+
+export const applyThemeColors = (colors: { background: string; text: string; sidebar: string }) => {
   const root = document.documentElement;
   document.body.style.backgroundColor = colors.background;
+  
+  // Calculate button colors based on text and background
+  const buttonBg = colors.text;
+  const buttonText = getContrastColor(buttonBg);
   
   // Apply colors to all major theme variables
   root.style.setProperty("--background", hexToHSL(colors.background));
   root.style.setProperty("--foreground", hexToHSL(colors.text));
-  root.style.setProperty("--primary", hexToHSL(colors.button));
-  root.style.setProperty("--primary-foreground", "0 0% 100%");
-  root.style.setProperty("--card", hexToHSL(colors.background));
+  root.style.setProperty("--card", hexToHSL(colors.sidebar));
   root.style.setProperty("--card-foreground", hexToHSL(colors.text));
-  root.style.setProperty("--popover", hexToHSL(colors.background));
+  root.style.setProperty("--popover", hexToHSL(colors.sidebar));
   root.style.setProperty("--popover-foreground", hexToHSL(colors.text));
-  root.style.setProperty("--secondary", hexToHSL(colors.button));
-  root.style.setProperty("--secondary-foreground", "0 0% 100%");
+  
+  // Set button colors
+  root.style.setProperty("--primary", hexToHSL(buttonBg));
+  root.style.setProperty("--primary-foreground", hexToHSL(buttonText));
+  
+  // Set secondary colors for hover states
+  root.style.setProperty("--secondary", hexToHSL(colors.sidebar));
+  root.style.setProperty("--secondary-foreground", hexToHSL(colors.text));
+  
+  // Set other theme colors
   root.style.setProperty("--muted", hexToHSL(colors.background));
   root.style.setProperty("--muted-foreground", hexToHSL(colors.text));
-  root.style.setProperty("--accent", hexToHSL(colors.button));
-  root.style.setProperty("--accent-foreground", "0 0% 100%");
+  root.style.setProperty("--accent", hexToHSL(colors.sidebar));
+  root.style.setProperty("--accent-foreground", hexToHSL(colors.text));
   root.style.setProperty("--destructive", "0 84.2% 60.2%");
-  root.style.setProperty("--destructive-foreground", "0 0% 100%");
-  root.style.setProperty("--border", hexToHSL(colors.button));
-  root.style.setProperty("--input", hexToHSL(colors.button));
-  root.style.setProperty("--ring", hexToHSL(colors.button));
+  root.style.setProperty("--destructive-foreground", "0 0% 98%");
+  root.style.setProperty("--border", hexToHSL(colors.sidebar));
+  root.style.setProperty("--input", hexToHSL(colors.sidebar));
+  root.style.setProperty("--ring", hexToHSL(colors.text));
 };
