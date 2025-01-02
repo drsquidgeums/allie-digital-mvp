@@ -1,6 +1,5 @@
 import React from "react";
 import { 
-  Upload,
   Clock,
   Headphones,
   Eye,
@@ -17,7 +16,7 @@ interface SidebarToolsProps {
 
 export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToolsProps) => {
   const tools = [
-    { id: "files", icon: FolderOpen, label: "Files" },
+    { id: "files", icon: FolderOpen, label: "File Uploads" },
     { id: "color", icon: Paintbrush, label: "Color Tool" },
     { id: "pomodoro", icon: Clock, label: "Pomodoro Timer" },
     { id: "tts", icon: Headphones, label: "Text-to-Speech" },

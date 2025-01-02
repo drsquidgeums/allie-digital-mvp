@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Upload, CheckSquare, Brain, MessageSquare } from "lucide-react";
+import { CheckSquare, Brain, MessageSquare } from "lucide-react";
 import { SidebarTools } from "./sidebar/SidebarTools";
 import { SidebarContent } from "./sidebar/SidebarContent";
 
@@ -66,14 +66,6 @@ export const Sidebar = ({
           className="hidden"
           accept=".pdf,.doc,.docx"
         />
-        <Button
-          onClick={() => fileInputRef.current?.click()}
-          variant="ghost"
-          className="w-full flex items-center justify-start gap-2 px-2"
-        >
-          <Upload className="h-4 w-4" />
-          Upload Document
-        </Button>
 
         <SidebarTools 
           activeComponent={activeComponent}
