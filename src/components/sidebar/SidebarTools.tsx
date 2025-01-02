@@ -6,7 +6,8 @@ import {
   Eye,
   Focus,
   Paintbrush,
-  FolderOpen
+  FolderOpen,
+  Glasses
 } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 
@@ -23,6 +24,7 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
     { id: "tts", icon: Headphones, label: "Text-to-Speech" },
     { id: "bionic", icon: Eye, label: "Bionic Reader" },
     { id: "focus", icon: Focus, label: "Focus Mode" },
+    { id: "irlen", icon: Glasses, label: "Irlen Overlay" },
   ];
 
   return (
