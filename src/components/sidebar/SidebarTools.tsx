@@ -5,7 +5,9 @@ import {
   Eye,
   Focus,
   Paintbrush,
-  FolderOpen
+  FolderOpen,
+  Users,
+  LogOut
 } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 
@@ -24,6 +26,11 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
     { id: "focus", icon: Focus, label: "Focus Mode" },
   ];
 
+  const handleLogout = () => {
+    // Add logout logic here when needed
+    console.log("Logout clicked");
+  };
+
   return (
     <div className="space-y-2">
       {tools.map((tool) => (
@@ -35,6 +42,21 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
           onClick={() => setActiveComponent(tool.id)}
         />
       ))}
+      
+      <div className="pt-4 border-t border-border">
+        <SidebarButton
+          icon={Users}
+          label="Community"
+          isActive={activeComponent === "community"}
+          onClick={() => setActiveComponent("community")}
+        />
+        <SidebarButton
+          icon={LogOut}
+          label="Logout"
+          isActive={false}
+          onClick={handleLogout}
+        />
+      </div>
     </div>
   );
 };
