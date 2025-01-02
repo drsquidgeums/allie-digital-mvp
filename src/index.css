@@ -105,3 +105,12 @@
 .dark [class*='lucide-'] {
   @apply text-gray-600;
 }
+
+/* Button hover styles */
+.dark .button-secondary:hover {
+  @apply bg-gray-700;
+}
+
+.button-secondary:hover {
+  @apply bg-gray-200;
+}

@@ -18,27 +18,27 @@ export const FileActions = ({ onUpload, onDownload, onDelete, hasFile }: FileAct
           variant="secondary" 
           size="sm" 
           onClick={onUpload}
-          className="dark:hover:bg-gray-800"
+          className="hover:bg-gray-200 dark:hover:bg-gray-700"
         >
-          <Upload className="w-4 h-4" />
+          <Upload className="w-4 h-4 text-gray-600" />
         </Button>
         <Button 
           variant="secondary" 
           size="sm" 
           onClick={onDownload} 
           disabled={!hasFile}
-          className="dark:hover:bg-gray-800"
+          className="hover:bg-gray-200 dark:hover:bg-gray-700"
         >
-          <Download className="w-4 h-4" />
+          <Download className="w-4 h-4 text-gray-600" />
         </Button>
         <Button 
           variant="secondary" 
           size="sm" 
           onClick={onDelete} 
           disabled={!hasFile}
-          className="dark:hover:bg-gray-800"
+          className="hover:bg-gray-200 dark:hover:bg-gray-700"
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="w-4 h-4 text-gray-600" />
         </Button>
       </div>
       <NotificationCenter />
