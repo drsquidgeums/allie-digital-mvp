@@ -73,28 +73,8 @@
   body {
     @apply bg-background text-foreground min-h-screen;
     font-family: var(--font-family);
-    background-image: url('/lovable-uploads/8afafa9e-45b6-4c6e-8da7-33ff4e92243a.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
     position: relative;
     min-height: 100vh;
     width: 100%;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: inherit;
-    filter: grayscale(100%) opacity(0.1);
-    z-index: -1;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
   }
 }
