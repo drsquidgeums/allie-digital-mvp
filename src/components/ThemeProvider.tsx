@@ -15,17 +15,13 @@ export const ThemeProvider = () => {
   const { theme, setTheme } = useTheme();
   const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground";
 
-  const applyTheme = (newTheme: string) => {
-    setTheme(newTheme);
-  };
-
   return (
     <div className="flex items-center gap-2">
       <div className="flex gap-2">
         <Button
           variant="outline"
           size="sm"
-          onClick={() => applyTheme("light")}
+          onClick={() => setTheme("light")}
           className={`${theme === "light" ? "bg-secondary" : ""} ${buttonClassName}`}
         >
           <Sun className="h-4 w-4" />
@@ -33,7 +29,7 @@ export const ThemeProvider = () => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => applyTheme("dark")}
+          onClick={() => setTheme("dark")}
           className={`${theme === "dark" ? "bg-secondary" : ""} ${buttonClassName}`}
         >
           <Moon className="h-4 w-4" />
@@ -53,8 +49,8 @@ export const ThemeProvider = () => {
               <DialogTitle>Choose a Theme</DialogTitle>
             </DialogHeader>
             <div className="flex flex-col gap-2">
-              <Button onClick={() => applyTheme("light")} className="w-full">Light</Button>
-              <Button onClick={() => applyTheme("dark")} className="w-full">Dark</Button>
+              <Button onClick={() => setTheme("light")} className="w-full">Light</Button>
+              <Button onClick={() => setTheme("dark")} className="w-full">Dark</Button>
             </div>
           </DialogContent>
         </Dialog>
