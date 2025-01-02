@@ -43,9 +43,7 @@ export const FileActions = ({ onUpload, onDownload, onDelete, hasFile }: FileAct
           <Trash2 className="h-4 w-4" />
         </Button>
       </div>
-      <div className="flex gap-2">
-        <NotificationCenter />
-      </div>
+      <NotificationCenter />
     </div>
   );
 };
