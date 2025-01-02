@@ -56,12 +56,15 @@ export const DocumentViewer = ({ file, selectedColor }: DocumentViewerProps) => 
   return (
     <Card className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
       <div className="p-4 border-b border-border flex justify-between items-center">
-        <FileActions
-          onUpload={handleUpload}
-          onDownload={handleDownload}
-          onDelete={handleDelete}
-          hasFile={!!file}
-        />
+        <div className="flex items-center gap-2">
+          <FileActions
+            onUpload={handleUpload}
+            onDownload={handleDownload}
+            onDelete={handleDelete}
+            hasFile={!!file}
+          />
+          <ThemeProvider />
+        </div>
       </div>
       <div className="flex-1 p-4 relative">
         <div className="mb-4">
@@ -76,7 +79,6 @@ export const DocumentViewer = ({ file, selectedColor }: DocumentViewerProps) => 
         <div className="h-full">
           <DocumentPreview file={file} url={url} selectedColor={selectedColor} />
         </div>
-        <ThemeProvider />
       </div>
       <input
         type="file"
