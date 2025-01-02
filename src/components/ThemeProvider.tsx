@@ -23,6 +23,7 @@ export const ThemeProvider = () => {
           size="sm"
           onClick={() => setTheme("light")}
           className={`${theme === "light" ? "bg-secondary" : ""} ${buttonClassName}`}
+          title="Light Mode"
         >
           <Sun className="h-4 w-4" />
         </Button>
@@ -31,6 +32,7 @@ export const ThemeProvider = () => {
           size="sm"
           onClick={() => setTheme("dark")}
           className={`${theme === "dark" ? "bg-secondary" : ""} ${buttonClassName}`}
+          title="Dark Mode"
         >
           <Moon className="h-4 w-4" />
         </Button>
@@ -40,6 +42,7 @@ export const ThemeProvider = () => {
               variant="outline"
               size="sm"
               className={buttonClassName}
+              title="Customize Theme"
             >
               <Palette className="h-4 w-4" />
             </Button>

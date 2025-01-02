@@ -20,12 +20,12 @@ export const IrlenOverlay = () => {
 
   const handleOverlayChange = (color: string) => {
     setOverlayColor(color);
+    
     if (color) {
-      document.body.style.position = 'relative';
-      document.body.style.setProperty('--overlay-color', color);
-      document.body.style.setProperty('--overlay-display', 'block');
+      document.documentElement.style.setProperty('--overlay-color', color);
+      document.documentElement.style.setProperty('--overlay-display', 'block');
     } else {
-      document.body.style.setProperty('--overlay-display', 'none');
+      document.documentElement.style.setProperty('--overlay-display', 'none');
     }
     
     toast({
@@ -37,7 +37,7 @@ export const IrlenOverlay = () => {
   React.useEffect(() => {
     const style = document.createElement('style');
     style.textContent = `
-      body::after {
+      :root::after {
         content: '';
         position: fixed;
         top: 0;
@@ -64,6 +64,7 @@ export const IrlenOverlay = () => {
           variant="outline"
           size="sm"
           className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground"
+          title="Irlen Overlay"
         >
           <Glasses className="h-4 w-4" />
         </Button>
