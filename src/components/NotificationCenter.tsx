@@ -80,7 +80,11 @@ export const NotificationCenter = () => {
                   <div className="flex justify-between items-start">
                     <h4 className="text-sm font-medium">{notification.title}</h4>
                     <span className="text-xs text-muted-foreground">
-                      {new Date(notification.timestamp).toLocaleTimeString('en-GB')}
+                      {new Date(notification.timestamp).toLocaleTimeString('en-GB', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                      })}
                     </span>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">
