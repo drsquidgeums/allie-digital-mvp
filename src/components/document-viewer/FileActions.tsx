@@ -2,7 +2,6 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Upload, Trash2 } from "lucide-react";
 import { NotificationCenter } from "../NotificationCenter";
-import { IrlenOverlay } from "../IrlenOverlay";
 
 interface FileActionsProps {
   onUpload: () => void;
@@ -24,7 +23,6 @@ export const FileActions = ({ onUpload, onDownload, onDelete, hasFile }: FileAct
         <Button variant="outline" size="sm" onClick={onDelete} disabled={!hasFile}>
           <Trash2 className="w-4 h-4" />
         </Button>
-        <IrlenOverlay />
       </div>
       <NotificationCenter />
     </div>

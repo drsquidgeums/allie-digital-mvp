@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { FontSelector } from "./FontSelector";
+import { IrlenOverlay } from "./IrlenOverlay";
 
 export const ThemeProvider = () => {
   const [theme, setTheme] = React.useState("light");
@@ -58,6 +59,7 @@ export const ThemeProvider = () => {
       >
         <Moon className="h-4 w-4" />
       </Button>
+      <IrlenOverlay />
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="outline" size="icon" className="bg-white/50 backdrop-blur-sm">
