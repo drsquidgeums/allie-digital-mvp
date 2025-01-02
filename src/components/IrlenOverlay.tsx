@@ -62,8 +62,8 @@ export const IrlenOverlay = () => {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          size="icon"
-          className={`${overlayColor ? 'bg-secondary' : ''} bg-white/50 backdrop-blur-sm`}
+          size="sm"
+          className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground"
         >
           <Glasses className="h-4 w-4" />
         </Button>
