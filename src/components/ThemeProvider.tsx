@@ -22,13 +22,23 @@ export const ThemeProvider = () => {
     document.documentElement.style.setProperty('--font-family', font);
   };
 
+  const handleDarkMode = () => {
+    setTheme('dark');
+    document.documentElement.classList.add('dark');
+  };
+
+  const handleLightMode = () => {
+    setTheme('light');
+    document.documentElement.classList.remove('dark');
+  };
+
   return (
     <div className="flex items-center gap-2">
       <div className="flex gap-2">
         <Button
           variant="outline"
           size="sm"
-          onClick={() => setTheme("light")}
+          onClick={handleLightMode}
           className={`${theme === "light" ? "bg-secondary" : ""} ${buttonClassName}`}
           title="Light Mode"
         >
@@ -37,7 +47,7 @@ export const ThemeProvider = () => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => setTheme("dark")}
+          onClick={handleDarkMode}
           className={`${theme === "dark" ? "bg-secondary" : ""} ${buttonClassName}`}
           title="Dark Mode"
         >
