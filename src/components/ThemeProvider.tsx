@@ -41,15 +41,13 @@ export const ThemeProvider = () => {
     });
   };
 
-  const buttonClasses = "bg-white/50 backdrop-blur-sm hover:bg-gray-200/70";
-
   return (
     <div className="absolute bottom-4 right-4 flex gap-2">
       <Button
         variant="outline"
         size="icon"
         onClick={() => applyTheme("light")}
-        className={`${theme === "light" ? "bg-secondary" : ""} ${buttonClasses}`}
+        className={`${theme === "light" ? "bg-secondary" : ""} bg-white/50 backdrop-blur-sm`}
       >
         <Sun className="h-4 w-4" />
       </Button>
@@ -57,13 +55,13 @@ export const ThemeProvider = () => {
         variant="outline"
         size="icon"
         onClick={() => applyTheme("dark")}
-        className={`${theme === "dark" ? "bg-secondary" : ""} ${buttonClasses}`}
+        className={`${theme === "dark" ? "bg-secondary" : ""} bg-white/50 backdrop-blur-sm`}
       >
         <Moon className="h-4 w-4" />
       </Button>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline" size="icon" className={buttonClasses}>
+          <Button variant="outline" size="icon" className="bg-white/50 backdrop-blur-sm">
             <Palette className="h-4 w-4" />
           </Button>
         </DialogTrigger>
