@@ -10,10 +10,17 @@ import {
 } from "@/components/ui/dialog";
 import { IrlenOverlay } from "./IrlenOverlay";
 import { useTheme } from "next-themes";
+import { FontSelector } from "./FontSelector";
 
 export const ThemeProvider = () => {
   const { theme, setTheme } = useTheme();
+  const [selectedFont, setSelectedFont] = React.useState("Inter");
   const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground";
+
+  const handleFontChange = (font: string) => {
+    setSelectedFont(font);
+    document.documentElement.style.setProperty('--font-family', font);
+  };
 
   return (
     <div className="flex items-center gap-2">
@@ -42,19 +49,16 @@ export const ThemeProvider = () => {
               variant="outline"
               size="sm"
               className={buttonClassName}
-              title="Customize Theme"
+              title="Customize Font"
             >
               <Palette className="h-4 w-4" />
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Choose a Theme</DialogTitle>
+              <DialogTitle>Choose a Font</DialogTitle>
             </DialogHeader>
-            <div className="flex flex-col gap-2">
-              <Button onClick={() => setTheme("light")} className="w-full">Light</Button>
-              <Button onClick={() => setTheme("dark")} className="w-full">Dark</Button>
-            </div>
+            <FontSelector selectedFont={selectedFont} onFontChange={handleFontChange} />
           </DialogContent>
         </Dialog>
       </div>
