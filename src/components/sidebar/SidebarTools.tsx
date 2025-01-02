@@ -5,7 +5,6 @@ import {
   Headphones,
   Eye,
   Focus,
-  Brain,
   Paintbrush,
   FolderOpen
 } from "lucide-react";
@@ -24,7 +23,6 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
     { id: "tts", icon: Headphones, label: "Text-to-Speech" },
     { id: "bionic", icon: Eye, label: "Bionic Reader" },
     { id: "focus", icon: Focus, label: "Focus Mode" },
-    { id: "mindmap", icon: Brain, label: "Mind Map" },
   ];
 
   return (
