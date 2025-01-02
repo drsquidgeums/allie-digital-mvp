@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Upload, Trash2 } from "lucide-react";
 import { NotificationCenter } from "../NotificationCenter";
+import { IrlenOverlay } from "../IrlenOverlay";
 
 interface FileActionsProps {
   onUpload: () => void;
@@ -44,6 +45,7 @@ export const FileActions = ({ onUpload, onDownload, onDelete, hasFile }: FileAct
         </Button>
       </div>
       <div className="flex gap-2">
+        <IrlenOverlay />
         <NotificationCenter />
       </div>
     </div>
