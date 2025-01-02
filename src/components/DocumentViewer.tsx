@@ -55,7 +55,7 @@ export const DocumentViewer = ({ file, selectedColor }: DocumentViewerProps) => 
 
   return (
     <Card className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
-      <div className="p-4 border-b border-border flex justify-between items-center">
+      <div className="p-4 border-b border-border">
         <div className="flex items-center gap-2">
           <FileActions
             onUpload={handleUpload}

@@ -42,7 +42,7 @@ export const ThemeProvider = () => {
   };
 
   return (
-    <div className="absolute bottom-4 right-4 flex gap-2">
+    <div className="flex gap-2">
       <Button
         variant="outline"
         size="icon"
