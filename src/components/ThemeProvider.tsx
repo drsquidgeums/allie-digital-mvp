@@ -20,43 +20,45 @@ export const ThemeProvider = () => {
   };
 
   return (
-    <div className="flex gap-2">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => applyTheme("light")}
-        className={`${theme === "light" ? "bg-secondary" : ""} ${buttonClassName}`}
-      >
-        <Sun className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => applyTheme("dark")}
-        className={`${theme === "dark" ? "bg-secondary" : ""} ${buttonClassName}`}
-      >
-        <Moon className="h-4 w-4" />
-      </Button>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            size="sm"
-            className={buttonClassName}
-          >
-            <Palette className="h-4 w-4" />
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Choose a Theme</DialogTitle>
-          </DialogHeader>
-          <div className="flex flex-col gap-2">
-            <Button onClick={() => applyTheme("light")} className="w-full">Light</Button>
-            <Button onClick={() => applyTheme("dark")} className="w-full">Dark</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+    <div className="flex items-center gap-2">
+      <div className="flex gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => applyTheme("light")}
+          className={`${theme === "light" ? "bg-secondary" : ""} ${buttonClassName}`}
+        >
+          <Sun className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => applyTheme("dark")}
+          className={`${theme === "dark" ? "bg-secondary" : ""} ${buttonClassName}`}
+        >
+          <Moon className="h-4 w-4" />
+        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className={buttonClassName}
+            >
+              <Palette className="h-4 w-4" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Choose a Theme</DialogTitle>
+            </DialogHeader>
+            <div className="flex flex-col gap-2">
+              <Button onClick={() => applyTheme("light")} className="w-full">Light</Button>
+              <Button onClick={() => applyTheme("dark")} className="w-full">Dark</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
       <IrlenOverlay />
     </div>
   );
