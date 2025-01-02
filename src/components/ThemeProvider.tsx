@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Sun, Moon, Palette } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
   DialogContent,
@@ -9,36 +8,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { FontSelector } from "./FontSelector";
 import { IrlenOverlay } from "./IrlenOverlay";
+import { useTheme } from "next-themes";
 
 export const ThemeProvider = () => {
-  const [theme, setTheme] = React.useState("light");
-  const [selectedFont, setSelectedFont] = React.useState("Inter");
-  const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
+  const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground";
 
   const applyTheme = (newTheme: string) => {
-    const root = document.documentElement;
-    if (newTheme === "dark") {
-      root.classList.add("dark");
-      setTheme("dark");
-    } else if (newTheme === "light") {
-      root.classList.remove("dark");
-      setTheme("light");
-    }
-    toast({
-      title: "Theme updated",
-      description: `Switched to ${newTheme} theme`,
-    });
-  };
-
-  const handleFontChange = (font: string) => {
-    document.documentElement.style.setProperty("--font-family", `"${font}", sans-serif`);
-    setSelectedFont(font);
-    toast({
-      title: "Font updated",
-      description: `Changed to ${font} font`,
-    });
+    setTheme(newTheme);
   };
 
   return (
@@ -47,7 +25,7 @@ export const ThemeProvider = () => {
         variant="outline"
         size="sm"
         onClick={() => applyTheme("light")}
-        className={`${theme === "light" ? "bg-secondary" : ""} bg-background hover:bg-accent hover:text-accent-foreground`}
+        className={`${theme === "light" ? "bg-secondary" : ""} ${buttonClassName}`}
       >
         <Sun className="h-4 w-4" />
       </Button>
@@ -55,7 +33,7 @@ export const ThemeProvider = () => {
         variant="outline"
         size="sm"
         onClick={() => applyTheme("dark")}
-        className={`${theme === "dark" ? "bg-secondary" : ""} bg-background hover:bg-accent hover:text-accent-foreground`}
+        className={`${theme === "dark" ? "bg-secondary" : ""} ${buttonClassName}`}
       >
         <Moon className="h-4 w-4" />
       </Button>
@@ -64,17 +42,18 @@ export const ThemeProvider = () => {
           <Button
             variant="outline"
             size="sm"
-            className="bg-background hover:bg-accent hover:text-accent-foreground"
+            className={buttonClassName}
           >
             <Palette className="h-4 w-4" />
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Customise Theme</DialogTitle>
+            <DialogTitle>Choose a Theme</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <FontSelector selectedFont={selectedFont} onFontChange={handleFontChange} />
+          <div className="flex flex-col gap-2">
+            <Button onClick={() => applyTheme("light")} className="w-full">Light</Button>
+            <Button onClick={() => applyTheme("dark")} className="w-full">Dark</Button>
           </div>
         </DialogContent>
       </Dialog>

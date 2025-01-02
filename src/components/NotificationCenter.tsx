@@ -51,7 +51,11 @@ export const NotificationCenter = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground relative"
+        >
           <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
             <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-xs flex items-center justify-center">

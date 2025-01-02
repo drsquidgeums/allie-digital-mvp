@@ -11,6 +11,8 @@ interface FileActionsProps {
 }
 
 export const FileActions = ({ onUpload, onDownload, onDelete, hasFile }: FileActionsProps) => {
+  const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground";
+
   return (
     <div className="flex justify-between w-full">
       <div className="flex gap-2">
@@ -18,27 +20,27 @@ export const FileActions = ({ onUpload, onDownload, onDelete, hasFile }: FileAct
           variant="outline"
           size="sm"
           onClick={onUpload}
-          className="bg-background hover:bg-accent hover:text-accent-foreground"
+          className={buttonClassName}
         >
-          <Upload className="w-4 h-4" />
+          <Upload className="h-4 w-4" />
         </Button>
         <Button
           variant="outline"
           size="sm"
           onClick={onDownload}
           disabled={!hasFile}
-          className="bg-background hover:bg-accent hover:text-accent-foreground"
+          className={buttonClassName}
         >
-          <Download className="w-4 h-4" />
+          <Download className="h-4 w-4" />
         </Button>
         <Button
           variant="outline"
           size="sm"
           onClick={onDelete}
           disabled={!hasFile}
-          className="bg-background hover:bg-accent hover:text-accent-foreground"
+          className={buttonClassName}
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="h-4 w-4" />
         </Button>
       </div>
       <NotificationCenter />
