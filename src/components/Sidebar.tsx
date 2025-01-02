@@ -37,7 +37,7 @@ export const Sidebar = ({
           className="w-full flex items-center justify-start gap-2 px-2"
           onClick={() => navigate('/tasks')}
         >
-          <CheckSquare className="h-4 w-4" />
+          <CheckSquare className="h-4 w-4 sidebar-icon" />
           Task Planner
         </Button>
 
@@ -46,7 +46,7 @@ export const Sidebar = ({
           className="w-full flex items-center justify-start gap-2 px-2"
           onClick={() => navigate('/ai-assistant')}
         >
-          <MessageSquare className="h-4 w-4" />
+          <MessageSquare className="h-4 w-4 sidebar-icon" />
           AI Assistant
         </Button>
 
@@ -55,7 +55,7 @@ export const Sidebar = ({
           className="w-full flex items-center justify-start gap-2 px-2"
           onClick={() => navigate('/mind-map')}
         >
-          <Brain className="h-4 w-4" />
+          <Brain className="h-4 w-4 sidebar-icon" />
           Mind Map
         </Button>
 
@@ -71,7 +71,7 @@ export const Sidebar = ({
           variant="ghost"
           className="w-full flex items-center justify-start gap-2 px-2"
         >
-          <Upload className="h-4 w-4" />
+          <Upload className="h-4 w-4 sidebar-icon" />
           Upload Document
         </Button>
 

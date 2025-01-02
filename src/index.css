@@ -101,9 +101,13 @@
   }
 }
 
-/* Dark theme button icon colors */
+/* Dark theme styles */
+.dark .sidebar-icon {
+  @apply text-white;
+}
+
 .dark [class*='lucide-'] {
-  @apply text-gray-600;
+  @apply text-gray-500;
 }
 
 /* Button hover styles */
@@ -113,4 +117,9 @@
 
 .button-secondary:hover {
   @apply bg-gray-200;
+}
+
+/* Input styles for dark mode */
+.dark input {
+  @apply bg-gray-800;
 }
