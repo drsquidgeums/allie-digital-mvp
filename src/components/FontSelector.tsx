@@ -20,7 +20,6 @@ export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) 
     { name: "Lato", value: "Lato" },
     { name: "Source Sans Pro", value: "Source Sans Pro" },
     { name: "OpenDyslexic", value: "OpenDyslexic" },
-    { name: "Segoe UI", value: "Segoe UI" },
   ];
 
   return (

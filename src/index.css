@@ -62,7 +62,7 @@
     --destructive-foreground: 0 0% 98%;
 
     --border: 240 3.7% 15.9%;
-    --input: 240 10% 20%;
+    --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
   }
 }
@@ -99,27 +99,4 @@
     background-position: center;
     background-repeat: no-repeat;
   }
-}
-
-/* Dark theme styles */
-.dark .sidebar-icon {
-  @apply text-white;
-}
-
-.dark button [class*='lucide-'] {
-  @apply text-gray-600;
-}
-
-/* Button hover styles */
-.dark .button-secondary:hover {
-  @apply bg-gray-700;
-}
-
-.button-secondary:hover {
-  @apply bg-gray-200;
-}
-
-/* Input styles for dark mode */
-.dark input {
-  @apply bg-gray-800;
 }
