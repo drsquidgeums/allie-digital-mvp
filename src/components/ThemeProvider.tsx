@@ -45,23 +45,27 @@ export const ThemeProvider = () => {
     <div className="flex gap-2">
       <Button
         variant="outline"
-        size="icon"
+        size="sm"
         onClick={() => applyTheme("light")}
-        className={`${theme === "light" ? "bg-secondary" : ""} bg-white/50 backdrop-blur-sm`}
+        className={`${theme === "light" ? "bg-secondary" : ""} bg-background hover:bg-accent hover:text-accent-foreground`}
       >
         <Sun className="h-4 w-4" />
       </Button>
       <Button
         variant="outline"
-        size="icon"
+        size="sm"
         onClick={() => applyTheme("dark")}
-        className={`${theme === "dark" ? "bg-secondary" : ""} bg-white/50 backdrop-blur-sm`}
+        className={`${theme === "dark" ? "bg-secondary" : ""} bg-background hover:bg-accent hover:text-accent-foreground`}
       >
         <Moon className="h-4 w-4" />
       </Button>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline" size="icon" className="bg-white/50 backdrop-blur-sm">
+          <Button
+            variant="outline"
+            size="sm"
+            className="bg-background hover:bg-accent hover:text-accent-foreground"
+          >
             <Palette className="h-4 w-4" />
           </Button>
         </DialogTrigger>
