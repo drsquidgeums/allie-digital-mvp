@@ -14,14 +14,31 @@ export const FileActions = ({ onUpload, onDownload, onDelete, hasFile }: FileAct
   return (
     <div className="flex justify-between w-full">
       <div className="flex gap-2">
-        <Button variant="outline" size="sm" onClick={onUpload}>
-          <Upload className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+        <Button 
+          variant="secondary" 
+          size="sm" 
+          onClick={onUpload}
+          className="dark:hover:bg-gray-800"
+        >
+          <Upload className="w-4 h-4" />
         </Button>
-        <Button variant="outline" size="sm" onClick={onDownload} disabled={!hasFile}>
-          <Download className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+        <Button 
+          variant="secondary" 
+          size="sm" 
+          onClick={onDownload} 
+          disabled={!hasFile}
+          className="dark:hover:bg-gray-800"
+        >
+          <Download className="w-4 h-4" />
         </Button>
-        <Button variant="outline" size="sm" onClick={onDelete} disabled={!hasFile}>
-          <Trash2 className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+        <Button 
+          variant="secondary" 
+          size="sm" 
+          onClick={onDelete} 
+          disabled={!hasFile}
+          className="dark:hover:bg-gray-800"
+        >
+          <Trash2 className="w-4 h-4" />
         </Button>
       </div>
       <NotificationCenter />
