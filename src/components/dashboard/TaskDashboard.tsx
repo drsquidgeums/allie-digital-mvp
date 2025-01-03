@@ -6,6 +6,7 @@ import { Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Calendar } from "@/components/ui/calendar";
 import { TaskListCard } from "./TaskListCard";
+import { useToast } from "@/hooks/use-toast";
 
 interface Task {
   id: string;
@@ -19,6 +20,7 @@ export const TaskDashboard = () => {
   const navigate = useNavigate();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [tasks, setTasks] = React.useState<Task[]>([]);
+  const { toast } = useToast();
 
   const handleToggleTask = (id: string) => {
     setTasks(tasks.map(task => {
