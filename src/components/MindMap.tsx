@@ -25,16 +25,17 @@ const initialNodes: Node[] = [
     data: { label: 'Main Topic' },
     position: { x: 250, y: 0 },
     style: {
-      background: '#f3f4f6',
+      background: 'hsl(var(--background))',
+      color: 'hsl(var(--foreground))',
       padding: '10px',
       borderRadius: '8px',
-      border: '1px solid #e5e7eb',
+      border: '1px solid hsl(var(--border))',
     },
   },
 ];
 
 const colorOptions = [
-  { label: 'Default', value: '#f3f4f6' },
+  { label: 'Default', value: 'hsl(var(--muted))' },
   { label: 'Purple', value: '#E5DEFF' },
   { label: 'Green', value: '#F2FCE2' },
   { label: 'Yellow', value: '#FEF7CD' },
@@ -67,9 +68,10 @@ export const MindMap = () => {
       },
       style: {
         background: selectedColor,
+        color: selectedColor === 'hsl(var(--muted))' ? 'hsl(var(--foreground))' : '#000000',
         padding: '10px',
         borderRadius: '8px',
-        border: '1px solid #e5e7eb',
+        border: '1px solid hsl(var(--border))',
       },
     };
     
@@ -113,7 +115,7 @@ export const MindMap = () => {
 
   return (
     <div className="w-full h-[600px] bg-background rounded-lg border">
-      <div className="p-4 border-b flex items-center justify-between">
+      <div className="p-4 border-b flex items-center justify-between bg-background">
         <div className="flex items-center gap-2">
           <Network className="w-4 h-4" />
           <h3 className="font-medium">Mind Map</h3>
@@ -123,7 +125,7 @@ export const MindMap = () => {
             <select
               value={selectedColor}
               onChange={(e) => setSelectedColor(e.target.value)}
-              className="h-9 px-3 py-1 rounded-md border border-input bg-background text-sm pr-8 appearance-none"
+              className="h-9 px-3 py-1 rounded-md border border-input bg-background text-foreground text-sm pr-8 appearance-none"
               style={{
                 backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                 backgroundRepeat: 'no-repeat',
@@ -143,7 +145,7 @@ export const MindMap = () => {
             value={newNodeText}
             onChange={(e) => setNewNodeText(e.target.value)}
             placeholder="Add a node..."
-            className="w-64"
+            className="w-64 bg-background text-foreground"
             onKeyPress={(e) => e.key === "Enter" && addNode()}
           />
           <Button onClick={addNode} size="icon">
@@ -167,8 +169,8 @@ export const MindMap = () => {
         className="bg-background"
       >
         <Background />
-        <Controls />
-        <MiniMap />
+        <Controls className="bg-background text-foreground fill-foreground stroke-foreground" />
+        <MiniMap className="bg-background" />
       </ReactFlow>
     </div>
   );
