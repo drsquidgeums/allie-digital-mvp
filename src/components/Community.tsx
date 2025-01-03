@@ -73,7 +73,7 @@ export const Community = () => {
         <Card className="p-4 flex flex-col items-center text-center">
           <Users className="h-8 w-8 mb-2" />
           <h3 className="font-semibold">Active Members</h3>
-          <p className="text-2xl font-bold text-primary">1,234</p>
+          <p className="text-2xl font-bold text-primary">892</p>
         </Card>
 
         <Card className="p-4 flex flex-col items-center text-center">
