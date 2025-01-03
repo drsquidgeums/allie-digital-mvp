@@ -1,14 +1,5 @@
 import React from "react";
-import { Button } from "./ui/button";
-import { Focus, Bell, BellOff, Maximize, MinusCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Card,
   CardContent,
@@ -16,23 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-
-interface FocusSettings {
-  blockNotifications: boolean;
-  fullscreen: boolean;
-  blockPopups: boolean;
-}
+import { FocusSettingSwitch } from "./focus/FocusSettingSwitch";
+import { FocusModeActions } from "./focus/FocusModeActions";
+import { useFocusSettings } from "@/hooks/useFocusSettings";
 
 export const FocusMode = () => {
   const [isActive, setIsActive] = React.useState(false);
   const [notificationPermission, setNotificationPermission] = React.useState<NotificationPermission>("default");
-  const [settings, setSettings] = React.useState<FocusSettings>({
-    blockNotifications: true,
-    fullscreen: true,
-    blockPopups: true,
-  });
+  const { settings, updateSetting } = useFocusSettings();
   const { toast } = useToast();
 
   // Check notification permission on mount
@@ -66,7 +48,6 @@ export const FocusMode = () => {
 
   const toggleFocusMode = async () => {
     if (!isActive) {
-      // Enable focus mode
       try {
         // Handle fullscreen
         if (settings.fullscreen) {
@@ -75,14 +56,22 @@ export const FocusMode = () => {
 
         // Handle notifications
         if (settings.blockNotifications && notificationPermission === "granted") {
-          // Store current notification settings to restore later
           localStorage.setItem('previousNotificationState', 'enabled');
         }
 
-        // Set focus mode as active
+        // Handle background dimming
+        if (settings.dimBackground) {
+          document.body.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+        }
+
+        // Handle audio muting
+        if (settings.muteAudio) {
+          document.querySelectorAll('audio, video').forEach((el: HTMLMediaElement) => {
+            el.muted = true;
+          });
+        }
+
         setIsActive(true);
-        
-        // Dispatch custom event to notify other components
         window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: true } }));
 
         toast({
@@ -107,9 +96,15 @@ export const FocusMode = () => {
         localStorage.removeItem('previousNotificationState');
       }
 
+      // Restore background
+      document.body.style.backgroundColor = '';
+
+      // Restore audio
+      document.querySelectorAll('audio, video').forEach((el: HTMLMediaElement) => {
+        el.muted = false;
+      });
+
       setIsActive(false);
-      
-      // Notify other components
       window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: false } }));
 
       toast({
@@ -160,80 +155,62 @@ export const FocusMode = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Block Notifications</Label>
-              <div className="text-sm text-muted-foreground">
-                Mute all notifications during focus mode
-              </div>
-            </div>
-            <Switch
-              checked={settings.blockNotifications}
-              onCheckedChange={(checked) =>
-                setSettings((prev) => ({ ...prev, blockNotifications: checked }))
-              }
-            />
-          </div>
+          <FocusSettingSwitch
+            label="Block Notifications"
+            description="Mute all notifications during focus mode"
+            checked={settings.blockNotifications}
+            onCheckedChange={(checked) => updateSetting('blockNotifications', checked)}
+          />
 
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Fullscreen Mode</Label>
-              <div className="text-sm text-muted-foreground">
-                Enter fullscreen during focus mode
-              </div>
-            </div>
-            <Switch
-              checked={settings.fullscreen}
-              onCheckedChange={(checked) =>
-                setSettings((prev) => ({ ...prev, fullscreen: checked }))
-              }
-            />
-          </div>
+          <FocusSettingSwitch
+            label="Fullscreen Mode"
+            description="Enter fullscreen during focus mode"
+            checked={settings.fullscreen}
+            onCheckedChange={(checked) => updateSetting('fullscreen', checked)}
+          />
 
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Block Popups</Label>
-              <div className="text-sm text-muted-foreground">
-                Prevent popup dialogs during focus mode
-              </div>
-            </div>
-            <Switch
-              checked={settings.blockPopups}
-              onCheckedChange={(checked) =>
-                setSettings((prev) => ({ ...prev, blockPopups: checked }))
-              }
-            />
-          </div>
+          <FocusSettingSwitch
+            label="Block Popups"
+            description="Prevent popup dialogs during focus mode"
+            checked={settings.blockPopups}
+            onCheckedChange={(checked) => updateSetting('blockPopups', checked)}
+          />
+
+          <FocusSettingSwitch
+            label="Block Social Media"
+            description="Hide social media elements during focus mode"
+            checked={settings.blockSocialMedia}
+            onCheckedChange={(checked) => updateSetting('blockSocialMedia', checked)}
+          />
+
+          <FocusSettingSwitch
+            label="Enable Pomodoro"
+            description="Automatically start a Pomodoro timer"
+            checked={settings.enablePomodoro}
+            onCheckedChange={(checked) => updateSetting('enablePomodoro', checked)}
+          />
+
+          <FocusSettingSwitch
+            label="Dim Background"
+            description="Slightly dim the background for better focus"
+            checked={settings.dimBackground}
+            onCheckedChange={(checked) => updateSetting('dimBackground', checked)}
+          />
+
+          <FocusSettingSwitch
+            label="Mute Audio"
+            description="Mute all audio during focus mode"
+            checked={settings.muteAudio}
+            onCheckedChange={(checked) => updateSetting('muteAudio', checked)}
+          />
         </div>
 
-        {notificationPermission === "default" && (
-          <Button
-            variant="outline"
-            onClick={requestNotificationPermission}
-            className="w-full"
-          >
-            <Bell className="w-4 h-4 mr-2" />
-            Enable Notifications
-          </Button>
-        )}
-
-        <Button 
-          onClick={toggleFocusMode}
-          variant={isActive ? "destructive" : "default"}
-          className="w-full"
-        >
-          {isActive ? (
-            <>
-              <MinusCircle className="w-4 h-4 mr-2" />
-              Exit Focus Mode
-            </>
-          ) : (
-            <>
-              <Focus className="w-4 h-4 mr-2" />
-              Enter Focus Mode
-            </>
-          )}
-        </Button>
+        <FocusModeActions
+          isActive={isActive}
+          notificationPermission={notificationPermission}
+          onToggleFocus={toggleFocusMode}
+          onRequestNotifications={requestNotificationPermission}
+        />
       </CardContent>
     </Card>
   );
