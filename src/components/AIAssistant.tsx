@@ -25,34 +25,23 @@ export const AIAssistant = () => {
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
-    try {
-      const openai = createOpenAIClient();
-    } catch (error) {
-      toast({
-        title: "API Key Missing",
-        description: "Please set up your OpenAI API key to use the AI Assistant.",
-        variant: "destructive"
-      });
-      return;
-    }
-
     setIsLoading(true);
     setMessages(prev => [...prev, { text: input, isUser: true }]);
     setInput("");
 
     try {
-      const openai = createOpenAIClient();
+      const openai = await createOpenAIClient();
       const apiMessages: ChatCompletionMessageParam[] = [
-        { role: "system" as const, content: SYSTEM_PROMPT },
+        { role: "system", content: SYSTEM_PROMPT },
         ...messages.map(msg => ({
-          role: msg.isUser ? "user" as const : "assistant" as const,
+          role: msg.isUser ? "user" : "assistant",
           content: msg.text
         })),
-        { role: "user" as const, content: input }
+        { role: "user", content: input }
       ];
 
       const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o-mini",
         messages: apiMessages,
         temperature: 0.7,
         max_tokens: 500
