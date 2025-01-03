@@ -13,12 +13,34 @@ const queryClient = new QueryClient();
 
 const App = () => {
   React.useEffect(() => {
-    // Apply saved overlay on app mount
+    // Apply saved overlay on app mount and add overlay styles
     const savedOverlay = localStorage.getItem('irlenOverlayColor');
     if (savedOverlay) {
       document.documentElement.style.setProperty('--overlay-color', savedOverlay);
       document.documentElement.style.setProperty('--overlay-display', 'block');
     }
+
+    // Add global overlay styles
+    const style = document.createElement('style');
+    style.textContent = `
+      :root::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--overlay-color);
+        pointer-events: none;
+        z-index: 9999;
+        display: var(--overlay-display, none);
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
   }, []);
 
   return (
