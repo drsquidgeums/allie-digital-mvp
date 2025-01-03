@@ -10,6 +10,7 @@ import {
   LogOut
 } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarToolsProps {
   activeComponent: string | null;
@@ -17,6 +18,8 @@ interface SidebarToolsProps {
 }
 
 export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToolsProps) => {
+  const navigate = useNavigate();
+  
   const tools = [
     { id: "files", icon: FolderOpen, label: "File Uploads" },
     { id: "color", icon: Paintbrush, label: "Color Tool" },
@@ -29,6 +32,10 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
   const handleLogout = () => {
     // Add logout logic here when needed
     console.log("Logout clicked");
+  };
+
+  const handleCommunityClick = () => {
+    navigate('/community');
   };
 
   return (
@@ -48,7 +55,7 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
           icon={Users}
           label="Community"
           isActive={activeComponent === "community"}
-          onClick={() => setActiveComponent("community")}
+          onClick={handleCommunityClick}
         />
         <SidebarButton
           icon={LogOut}
