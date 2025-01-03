@@ -123,7 +123,7 @@ export const MindMap = () => {
             <select
               value={selectedColor}
               onChange={(e) => setSelectedColor(e.target.value)}
-              className="h-9 px-3 py-1 rounded-md border border-input bg-background text-sm"
+              className="h-9 px-3 py-1 rounded-md border border-input bg-background text-sm pr-8"
             >
               {colorOptions.map((color) => (
                 <option key={color.value} value={color.value}>
