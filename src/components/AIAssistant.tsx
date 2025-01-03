@@ -36,12 +36,12 @@ export const AIAssistant = () => {
       }
 
       const apiMessages: ChatCompletionMessageParam[] = [
-        { role: "system", content: SYSTEM_PROMPT },
+        { role: "system", content: SYSTEM_PROMPT } as const,
         ...messages.map(msg => ({
           role: msg.isUser ? "user" : "assistant",
           content: msg.text
-        })),
-        { role: "user", content: input }
+        } as const)),
+        { role: "user", content: input } as const
       ];
 
       const response = await openai.chat.completions.create({
