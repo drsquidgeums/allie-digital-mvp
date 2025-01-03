@@ -9,16 +9,13 @@ import {
   addEdge,
   Connection,
   Edge,
-  Node,
-  Panel,
 } from '@xyflow/react';
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Network, Plus, Download, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { MindMapToolbar } from './mindmap/MindMapToolbar';
+import { ColorOption, MindMapNode } from './mindmap/types';
 import '@xyflow/react/dist/style.css';
 
-const initialNodes: Node[] = [
+const initialNodes: MindMapNode[] = [
   {
     id: '1',
     type: 'input',
@@ -34,7 +31,7 @@ const initialNodes: Node[] = [
   },
 ];
 
-const colorOptions = [
+const colorOptions: ColorOption[] = [
   { label: 'Default', value: 'hsl(var(--muted))' },
   { label: 'Purple', value: '#E5DEFF' },
   { label: 'Green', value: '#F2FCE2' },
@@ -115,50 +112,16 @@ export const MindMap = () => {
 
   return (
     <div className="w-full h-[600px] bg-background rounded-lg border">
-      <div className="p-4 border-b flex items-center justify-between bg-background">
-        <div className="flex items-center gap-2">
-          <Network className="w-4 h-4" />
-          <h3 className="font-medium">Mind Map</h3>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 mr-4">
-            <select
-              value={selectedColor}
-              onChange={(e) => setSelectedColor(e.target.value)}
-              className="h-9 px-3 py-1 rounded-md border border-input bg-background text-foreground text-sm pr-8 appearance-none"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right 0.5rem center',
-                backgroundSize: '1.5em 1.5em',
-                paddingRight: '2.5rem'
-              }}
-            >
-              {colorOptions.map((color) => (
-                <option key={color.value} value={color.value}>
-                  {color.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <Input
-            value={newNodeText}
-            onChange={(e) => setNewNodeText(e.target.value)}
-            placeholder="Add a node..."
-            className="w-64 bg-background text-foreground"
-            onKeyPress={(e) => e.key === "Enter" && addNode()}
-          />
-          <Button onClick={addNode} size="icon">
-            <Plus className="w-4 h-4" />
-          </Button>
-          <Button onClick={exportToJson} variant="outline" size="icon">
-            <Download className="w-4 h-4" />
-          </Button>
-          <Button onClick={clearCanvas} variant="outline" size="icon">
-            <Trash2 className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
+      <MindMapToolbar
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
+        newNodeText={newNodeText}
+        setNewNodeText={setNewNodeText}
+        onAddNode={addNode}
+        onExport={exportToJson}
+        onClear={clearCanvas}
+        colorOptions={colorOptions}
+      />
       <ReactFlow
         nodes={nodes}
         edges={edges}
