@@ -34,6 +34,15 @@ export const AIAssistant = () => {
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
     
+    if (!import.meta.env.VITE_OPENAI_API_KEY) {
+      toast({
+        title: "API Key Missing",
+        description: "Please set up your OpenAI API key to use the AI Assistant.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setIsLoading(true);
     setMessages(prev => [...prev, { text: input, isUser: true }]);
     setInput("");
@@ -42,10 +51,10 @@ export const AIAssistant = () => {
       const apiMessages: ChatCompletionMessageParam[] = [
         { role: "system", content: systemPrompt },
         ...messages.map(msg => ({
-          role: msg.isUser ? "user" : "assistant",
+          role: msg.isUser ? "user" as const : "assistant" as const,
           content: msg.text
         })),
-        { role: "user", content: input }
+        { role: "user" as const, content: input }
       ];
 
       const response = await openai.chat.completions.create({
