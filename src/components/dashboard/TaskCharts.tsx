@@ -53,8 +53,8 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div className="h-72"> {/* Increased height from h-64 to h-72 */}
-        <h3 className="text-lg font-semibold mb-4">Task Status</h3>
+      <div className="h-80 p-4"> {/* Increased height and added padding */}
+        <h3 className="text-lg font-semibold mb-6">Task Status</h3>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -76,8 +76,8 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
         </ResponsiveContainer>
       </div>
 
-      <div className="h-72"> {/* Increased height from h-64 to h-72 */}
-        <div className="flex items-center justify-between mb-4">
+      <div className="h-80 p-4"> {/* Increased height and added padding */}
+        <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold">Weekly Progress</h3>
           <div className="flex items-center gap-2">
             <Button
