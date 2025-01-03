@@ -20,6 +20,7 @@ export const AIAssistant = () => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasShownKeyError, setHasShownKeyError] = useState(false);
   const { toast } = useToast();
 
   const handleSend = async () => {
@@ -32,7 +33,19 @@ export const AIAssistant = () => {
     try {
       const openai = await createOpenAIClient();
       if (!openai) {
-        throw new Error("OpenAI client not initialized");
+        if (!hasShownKeyError) {
+          toast({
+            title: "OpenAI API Key Required",
+            description: "Please add your OpenAI API key in the settings to use the AI assistant.",
+            variant: "destructive"
+          });
+          setHasShownKeyError(true);
+        }
+        setMessages(prev => [...prev, { 
+          text: "I'm unable to respond right now. Please add your OpenAI API key in the settings to continue our conversation.", 
+          isUser: false 
+        }]);
+        return;
       }
 
       const apiMessages: ChatCompletionMessageParam[] = [
@@ -55,11 +68,14 @@ export const AIAssistant = () => {
       setMessages(prev => [...prev, { text: aiResponse, isUser: false }]);
     } catch (error) {
       console.error("Error calling OpenAI:", error);
-      toast({
-        title: "Error",
-        description: "Please make sure you've added your OpenAI API key in the settings.",
-        variant: "destructive"
-      });
+      if (!hasShownKeyError) {
+        toast({
+          title: "Error",
+          description: "Please make sure you've added your OpenAI API key in the settings.",
+          variant: "destructive"
+        });
+        setHasShownKeyError(true);
+      }
     } finally {
       setIsLoading(false);
     }
