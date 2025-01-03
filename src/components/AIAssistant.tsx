@@ -12,7 +12,7 @@ interface Message {
 }
 
 const INITIAL_MESSAGE: Message = {
-  text: "Hi! I'm your ADHD Learning Assistant. I can help you make the most of our tools and provide study tips. Would you like help with: \n1. Using the Pomodoro Timer for focused study\n2. Creating effective mind maps\n3. Managing tasks and deadlines\n4. Setting up a distraction-free workspace\n5. Using color overlays for reading",
+  text: "Hi! I'm your virtual assistant to help you use this web application. What would you like help with today?",
   isUser: false
 };
 
