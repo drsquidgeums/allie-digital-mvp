@@ -2,15 +2,13 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Users, Book, MessageSquare, Share2, Home } from "lucide-react";
+import { Users, Book, MessageSquare, Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ChatMessage } from "./chat/ChatMessage";
 import { ChatInput } from "./chat/ChatInput";
-import { useNavigate } from "react-router-dom";
 
 export const Community = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
   const [messages, setMessages] = useState<Array<{ text: string; isUser: boolean }>>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -65,20 +63,10 @@ export const Community = () => {
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Community Hub</h1>
-        <div className="flex items-center gap-2">
-          <Button onClick={handleShareResource}>
-            <Share2 className="mr-2 h-4 w-4" />
-            Share Resource
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/')}
-            className="ml-2"
-          >
-            <Home className="h-5 w-5" />
-          </Button>
-        </div>
+        <Button onClick={handleShareResource}>
+          <Share2 className="mr-2 h-4 w-4" />
+          Share Resource
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
