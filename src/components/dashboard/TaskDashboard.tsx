@@ -5,10 +5,43 @@ import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Calendar } from "@/components/ui/calendar";
+import { TaskListCard } from "./TaskListCard";
+
+interface Task {
+  id: string;
+  text: string;
+  completed: boolean;
+  createdAt: Date;
+  points: number;
+}
 
 export const TaskDashboard = () => {
   const navigate = useNavigate();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [tasks, setTasks] = React.useState<Task[]>([]);
+
+  const handleToggleTask = (id: string) => {
+    setTasks(tasks.map(task => {
+      if (task.id === id) {
+        const newStatus = !task.completed;
+        if (newStatus) {
+          toast({
+            title: "Points earned!",
+            description: `You earned ${task.points} points for completing this task!`,
+          });
+        }
+        return { ...task, completed: newStatus };
+      }
+      return task;
+    }));
+  };
+
+  const handleDeleteTask = (id: string) => {
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+      setTasks(tasks.filter(task => task.id !== id));
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -40,12 +73,11 @@ export const TaskDashboard = () => {
                   className="rounded-md border"
                 />
               </Card>
-              <Card className="p-6 shadow-lg">
-                <h2 className="text-xl font-semibold mb-4">Task List</h2>
-                <div className="space-y-2">
-                  {/* Move TaskList here */}
-                </div>
-              </Card>
+              <TaskListCard
+                tasks={tasks}
+                onToggleTask={handleToggleTask}
+                onDeleteTask={handleDeleteTask}
+              />
               <Card className="p-6 shadow-lg">
                 <h2 className="text-xl font-semibold mb-4">Achievements</h2>
                 <div className="space-y-4">
