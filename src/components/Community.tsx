@@ -79,7 +79,7 @@ export const Community = () => {
         <Card className="p-4 flex flex-col items-center text-center">
           <MessageSquare className="h-8 w-8 mb-2" />
           <h3 className="font-semibold">Discussions</h3>
-          <p className="text-2xl font-bold text-primary">89</p>
+          <p className="text-2xl font-bold text-primary">71</p>
         </Card>
 
         <Card className="p-4 flex flex-col items-center text-center">
