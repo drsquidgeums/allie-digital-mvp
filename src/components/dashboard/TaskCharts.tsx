@@ -1,4 +1,5 @@
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { format, startOfWeek, addDays } from 'date-fns';
 
 const COLORS = ['#22c55e', '#94a3b8'];
 
@@ -22,23 +23,25 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
 
   const getBarChartData = () => {
     const today = new Date();
-    const lastWeek = Array.from({ length: 7 }, (_, i) => {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      return date.toLocaleDateString('en-GB', { weekday: 'short' });
-    }).reverse();
-
-    return lastWeek.map(day => ({
-      name: day,
-      completed: tasks.filter(task => 
-        task.completed && 
-        task.createdAt.toLocaleDateString('en-GB', { weekday: 'short' }) === day
-      ).length,
-      pending: tasks.filter(task =>
-        !task.completed &&
-        task.createdAt.toLocaleDateString('en-GB', { weekday: 'short' }) === day
-      ).length
-    }));
+    const weekStart = startOfWeek(today);
+    
+    return Array.from({ length: 7 }, (_, i) => {
+      const date = addDays(weekStart, i);
+      const dateStr = format(date, 'MMM dd');
+      const dayName = format(date, 'EEE');
+      
+      return {
+        name: `${dayName}\n${dateStr}`,
+        completed: tasks.filter(task => 
+          task.completed && 
+          format(task.createdAt, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
+        ).length,
+        pending: tasks.filter(task =>
+          !task.completed &&
+          format(task.createdAt, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
+        ).length
+      };
+    });
   };
 
   return (
@@ -71,7 +74,13 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getBarChartData()}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis 
+              dataKey="name" 
+              angle={-45}
+              textAnchor="end"
+              height={60}
+              interval={0}
+            />
             <YAxis />
             <Tooltip />
             <Legend />
