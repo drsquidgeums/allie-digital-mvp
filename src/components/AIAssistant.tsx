@@ -3,6 +3,21 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Bot, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true
+});
+
+const systemPrompt = `You are an ADHD Learning Assistant helping students use a digital workspace. The workspace includes:
+- Pomodoro Timer for focused study
+- Mind Mapping tool for visual learning
+- Task Management system with points and rewards
+- Reading tools (color overlays, bionic reader)
+- Focus mode to reduce distractions
+
+Provide short, clear responses focused on using these tools effectively for ADHD learners. Break information into small chunks and use bullet points when possible.`;
 
 export const AIAssistant = () => {
   const [input, setInput] = useState("");
@@ -12,52 +27,43 @@ export const AIAssistant = () => {
       isUser: false
     }
   ]);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
     
-    setMessages([...messages, { text: input, isUser: true }]);
+    setIsLoading(true);
+    setMessages(prev => [...prev, { text: input, isUser: true }]);
     setInput("");
     
-    // ADHD-specific responses based on common keywords
-    setTimeout(() => {
-      const adhd_responses = {
-        pomodoro: "For ADHD learners, I recommend starting with shorter Pomodoro sessions - try 15 minutes of focus, then a 5-minute break. Use our timer to:\n- Set shorter intervals at first\n- Gradually increase duration as you build focus\n- Use the break to move around\n- Track your best focus times",
-        
-        mindmap: "Mind mapping is great for ADHD brains! Try these tips with our mind map tool:\n- Start with a central idea\n- Use different colors for different types of information\n- Keep branches short and clear\n- Add visual cues and symbols\n- Break complex topics into smaller chunks",
-        
-        task: "Let's make task management work for you! Our task planner helps by:\n- Breaking big tasks into smaller steps\n- Using color coding for priority\n- Setting realistic deadlines\n- Celebrating completed tasks with points\n- Sending gentle reminders",
-        
-        focus: "Create a distraction-free zone using our focus mode:\n- Enable the focus overlay\n- Use noise-canceling if available\n- Try different color overlays for comfort\n- Keep your workspace visually clean\n- Take regular movement breaks",
-        
-        reading: "Make reading easier with our tools:\n- Try the bionic reader for better focus\n- Use the color overlay to reduce visual stress\n- Break text into smaller chunks\n- Use text-to-speech for difficult passages\n- Take notes using the mind map",
-        
-        default: "Here are some general ADHD-friendly study tips:\n1. Use our Pomodoro timer for focused work\n2. Break tasks into smaller chunks in the task planner\n3. Try different color overlays for reading comfort\n4. Create visual mind maps for better understanding\n5. Enable focus mode during study sessions\n\nWhat specific area would you like help with?"
-      };
-      
-      const lowercaseInput = input.toLowerCase();
-      let response = adhd_responses.default;
-      
-      if (lowercaseInput.includes('pomodoro') || lowercaseInput.includes('timer')) {
-        response = adhd_responses.pomodoro;
-      } else if (lowercaseInput.includes('mind map') || lowercaseInput.includes('mindmap')) {
-        response = adhd_responses.mindmap;
-      } else if (lowercaseInput.includes('task') || lowercaseInput.includes('deadline')) {
-        response = adhd_responses.task;
-      } else if (lowercaseInput.includes('focus') || lowercaseInput.includes('distract')) {
-        response = adhd_responses.focus;
-      } else if (lowercaseInput.includes('read') || lowercaseInput.includes('text')) {
-        response = adhd_responses.reading;
-      }
-      
-      setMessages(prev => [...prev, { text: response, isUser: false }]);
-    }, 1000);
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: systemPrompt },
+          ...messages.map(msg => ({
+            role: msg.isUser ? "user" : "assistant",
+            content: msg.text
+          })),
+          { role: "user", content: input }
+        ],
+        temperature: 0.7,
+        max_tokens: 500
+      });
 
-    toast({
-      title: "Message sent",
-      description: "The AI assistant will respond shortly",
-    });
+      const aiResponse = response.choices[0]?.message?.content || "I'm sorry, I couldn't process that request.";
+      setMessages(prev => [...prev, { text: aiResponse, isUser: false }]);
+    } catch (error) {
+      console.error("Error calling OpenAI:", error);
+      toast({
+        title: "Error",
+        description: "Failed to get a response. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -86,8 +92,9 @@ export const AIAssistant = () => {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask about study tips or how to use our tools..."
           onKeyPress={(e) => e.key === "Enter" && handleSend()}
+          disabled={isLoading}
         />
-        <Button onClick={handleSend} size="icon">
+        <Button onClick={handleSend} size="icon" disabled={isLoading}>
           <Send className="w-4 h-4" />
         </Button>
       </div>
