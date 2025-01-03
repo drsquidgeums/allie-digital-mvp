@@ -12,7 +12,7 @@ interface Message {
 }
 
 const INITIAL_MESSAGE: Message = {
-  text: "Hi! I'm your virtual assistant to help you use this web application. What would you like help with today?",
+  text: "Hi - I'm your Allie, your virtual AI assistant. I'm here to help you get the best out of this web application. What can I help you with today?",
   isUser: false
 };
 
@@ -31,17 +31,21 @@ export const AIAssistant = () => {
 
     try {
       const openai = await createOpenAIClient();
+      if (!openai) {
+        throw new Error("OpenAI client not initialized");
+      }
+
       const apiMessages: ChatCompletionMessageParam[] = [
-        { role: "system", content: SYSTEM_PROMPT } as ChatCompletionMessageParam,
+        { role: "system", content: SYSTEM_PROMPT },
         ...messages.map(msg => ({
           role: msg.isUser ? "user" : "assistant",
           content: msg.text
-        } as ChatCompletionMessageParam)),
-        { role: "user", content: input } as ChatCompletionMessageParam
+        })),
+        { role: "user", content: input }
       ];
 
       const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o",
         messages: apiMessages,
         temperature: 0.7,
         max_tokens: 500
@@ -53,7 +57,7 @@ export const AIAssistant = () => {
       console.error("Error calling OpenAI:", error);
       toast({
         title: "Error",
-        description: "Failed to get a response. Please try again.",
+        description: "Please make sure you've added your OpenAI API key in the settings.",
         variant: "destructive"
       });
     } finally {
