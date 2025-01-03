@@ -33,10 +33,21 @@ const initialNodes: Node[] = [
   },
 ];
 
+const colorOptions = [
+  { label: 'Default', value: '#f3f4f6' },
+  { label: 'Purple', value: '#E5DEFF' },
+  { label: 'Green', value: '#F2FCE2' },
+  { label: 'Yellow', value: '#FEF7CD' },
+  { label: 'Orange', value: '#FEC6A1' },
+  { label: 'Pink', value: '#FFDEE2' },
+  { label: 'Blue', value: '#D3E4FD' },
+];
+
 export const MindMap = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [newNodeText, setNewNodeText] = useState("");
+  const [selectedColor, setSelectedColor] = useState(colorOptions[0].value);
   const { toast } = useToast();
 
   const onConnect = useCallback(
@@ -55,7 +66,7 @@ export const MindMap = () => {
         y: Math.random() * 500,
       },
       style: {
-        background: '#f3f4f6',
+        background: selectedColor,
         padding: '10px',
         borderRadius: '8px',
         border: '1px solid #e5e7eb',
@@ -108,6 +119,19 @@ export const MindMap = () => {
           <h3 className="font-medium">Mind Map</h3>
         </div>
         <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mr-4">
+            <select
+              value={selectedColor}
+              onChange={(e) => setSelectedColor(e.target.value)}
+              className="h-9 px-3 py-1 rounded-md border border-input bg-background text-sm"
+            >
+              {colorOptions.map((color) => (
+                <option key={color.value} value={color.value}>
+                  {color.label}
+                </option>
+              ))}
+            </select>
+          </div>
           <Input
             value={newNodeText}
             onChange={(e) => setNewNodeText(e.target.value)}
