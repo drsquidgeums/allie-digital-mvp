@@ -4,9 +4,10 @@ import { Input } from "./ui/input";
 import { Bot, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import OpenAI from "openai";
+import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
   dangerouslyAllowBrowser: true
 });
 
@@ -38,16 +39,18 @@ export const AIAssistant = () => {
     setInput("");
     
     try {
+      const apiMessages: ChatCompletionMessageParam[] = [
+        { role: "system", content: systemPrompt },
+        ...messages.map(msg => ({
+          role: msg.isUser ? "user" : "assistant",
+          content: msg.text
+        })),
+        { role: "user", content: input }
+      ];
+
       const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...messages.map(msg => ({
-            role: msg.isUser ? "user" : "assistant",
-            content: msg.text
-          })),
-          { role: "user", content: input }
-        ],
+        messages: apiMessages,
         temperature: 0.7,
         max_tokens: 500
       });
