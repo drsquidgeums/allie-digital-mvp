@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
-const COLORS = ['#7E69AB', '#9b87f5']; // Dark purple and medium purple
+const COLORS = ['#1A1F2C', '#7E69AB']; // Darker purple for completed, Medium purple for pending
 
 interface Task {
   id: string;
@@ -53,8 +53,8 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div className="h-64">
-        <h3 className="text-lg font-semibold mb-2">Task Status</h3>
+      <div className="h-72"> {/* Increased height from h-64 to h-72 */}
+        <h3 className="text-lg font-semibold mb-4">Task Status</h3>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -71,13 +71,13 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
               ))}
             </Pie>
             <Tooltip />
-            <Legend />
+            <Legend verticalAlign="bottom" height={36} />
           </PieChart>
         </ResponsiveContainer>
       </div>
 
-      <div className="h-64">
-        <div className="flex items-center justify-between mb-2">
+      <div className="h-72"> {/* Increased height from h-64 to h-72 */}
+        <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">Weekly Progress</h3>
           <div className="flex items-center gap-2">
             <Button
@@ -112,8 +112,8 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="completed" fill="#7E69AB" name="Completed" />
-            <Bar dataKey="pending" fill="#9b87f5" name="Pending" />
+            <Bar dataKey="completed" fill="#1A1F2C" name="Completed" />
+            <Bar dataKey="pending" fill="#7E69AB" name="Pending" />
           </BarChart>
         </ResponsiveContainer>
       </div>
