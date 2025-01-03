@@ -11,8 +11,17 @@ export const WorkspaceLayout = () => {
   const [uploadedFiles, setUploadedFiles] = React.useState<File[]>([]);
   const location = useLocation();
 
-  // Don't render the workspace layout on the tasks route
-  if (location.pathname === "/tasks") {
+  React.useEffect(() => {
+    // Apply saved overlay on mount
+    const savedOverlay = localStorage.getItem('irlenOverlayColor');
+    if (savedOverlay) {
+      document.documentElement.style.setProperty('--overlay-color', savedOverlay);
+      document.documentElement.style.setProperty('--overlay-display', 'block');
+    }
+  }, []);
+
+  // Don't render the workspace layout on specific routes
+  if (["/tasks", "/mind-map", "/ai-assistant"].includes(location.pathname)) {
     return null;
   }
 

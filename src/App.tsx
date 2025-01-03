@@ -10,21 +10,32 @@ import MindMapDashboard from "./pages/MindMapDashboard";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/tasks" element={<TaskDashboard />} />
-          <Route path="/ai-assistant" element={<AIAssistant />} />
-          <Route path="/mind-map" element={<MindMapDashboard />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  React.useEffect(() => {
+    // Apply saved overlay on app mount
+    const savedOverlay = localStorage.getItem('irlenOverlayColor');
+    if (savedOverlay) {
+      document.documentElement.style.setProperty('--overlay-color', savedOverlay);
+      document.documentElement.style.setProperty('--overlay-display', 'block');
+    }
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/tasks" element={<TaskDashboard />} />
+            <Route path="/ai-assistant" element={<AIAssistant />} />
+            <Route path="/mind-map" element={<MindMapDashboard />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
