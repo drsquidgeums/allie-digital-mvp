@@ -9,7 +9,9 @@ import {
 } from "@/components/ui/popover";
 
 export const IrlenOverlay = () => {
-  const [overlayColor, setOverlayColor] = React.useState("");
+  const [overlayColor, setOverlayColor] = React.useState(() => {
+    return localStorage.getItem('irlenOverlayColor') || "";
+  });
   const { toast } = useToast();
 
   const colors = [
@@ -20,6 +22,7 @@ export const IrlenOverlay = () => {
 
   const handleOverlayChange = (color: string) => {
     setOverlayColor(color);
+    localStorage.setItem('irlenOverlayColor', color);
     
     if (color) {
       document.documentElement.style.setProperty('--overlay-color', color);
@@ -51,6 +54,12 @@ export const IrlenOverlay = () => {
       }
     `;
     document.head.appendChild(style);
+
+    // Apply saved overlay on component mount
+    if (overlayColor) {
+      document.documentElement.style.setProperty('--overlay-color', overlayColor);
+      document.documentElement.style.setProperty('--overlay-display', 'block');
+    }
 
     return () => {
       document.head.removeChild(style);

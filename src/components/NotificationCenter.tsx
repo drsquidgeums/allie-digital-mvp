@@ -18,19 +18,28 @@ interface Notification {
 }
 
 export const NotificationCenter = () => {
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
+  const [notifications, setNotifications] = useState<Notification[]>(() => {
+    const saved = localStorage.getItem('notifications');
+    return saved ? JSON.parse(saved) : [{
       id: "1",
       title: "Welcome!",
       message: "Welcome to your workspace. Get started by uploading a document or creating a task.",
       read: false,
       timestamp: new Date(),
-    },
-  ]);
+    }];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('notifications', JSON.stringify(notifications));
+  }, [notifications]);
 
   useEffect(() => {
     const handleTaskNotification = (event: CustomEvent<Notification>) => {
-      setNotifications(prev => [event.detail, ...prev]);
+      setNotifications(prev => {
+        const newNotifications = [event.detail, ...prev];
+        localStorage.setItem('notifications', JSON.stringify(newNotifications));
+        return newNotifications;
+      });
     };
 
     window.addEventListener('taskNotification', handleTaskNotification as EventListener);
