@@ -59,14 +59,14 @@ export const MindMapToolbar = ({
           className="w-64 bg-background text-foreground"
           onKeyPress={(e) => e.key === "Enter" && onAddNode()}
         />
-        <Button onClick={onAddNode} size="icon" className="text-foreground">
-          <Plus className="w-4 h-4" />
+        <Button onClick={onAddNode} size="icon" variant="outline" className="bg-background hover:bg-accent">
+          <Plus className="w-4 h-4 text-foreground" />
         </Button>
-        <Button onClick={onExport} variant="outline" size="icon" className="text-foreground">
-          <Download className="w-4 h-4" />
+        <Button onClick={onExport} variant="outline" size="icon" className="bg-background hover:bg-accent">
+          <Download className="w-4 h-4 text-foreground" />
         </Button>
-        <Button onClick={onClear} variant="outline" size="icon" className="text-foreground">
-          <Trash2 className="w-4 h-4" />
+        <Button onClick={onClear} variant="outline" size="icon" className="bg-background hover:bg-accent">
+          <Trash2 className="w-4 h-4 text-foreground" />
         </Button>
       </div>
     </div>

@@ -132,7 +132,9 @@ export const MindMap = () => {
         className="bg-background"
       >
         <Background />
-        <Controls className="bg-background text-foreground fill-foreground stroke-foreground" />
+        <Controls 
+          className="!bg-background [&>button]:!text-foreground [&>button]:hover:!bg-accent [&>button]:border-border" 
+        />
         <MiniMap className="bg-background" />
       </ReactFlow>
     </div>
