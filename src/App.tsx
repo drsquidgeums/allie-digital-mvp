@@ -23,7 +23,7 @@ const App = () => {
     // Add global overlay styles
     const style = document.createElement('style');
     style.textContent = `
-      :root::after {
+      body::after {
         content: '';
         position: fixed;
         top: 0;
@@ -38,8 +38,23 @@ const App = () => {
     `;
     document.head.appendChild(style);
 
+    // Set up storage event listener to handle changes
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'irlenOverlayColor') {
+        if (e.newValue) {
+          document.documentElement.style.setProperty('--overlay-color', e.newValue);
+          document.documentElement.style.setProperty('--overlay-display', 'block');
+        } else {
+          document.documentElement.style.setProperty('--overlay-display', 'none');
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
     return () => {
       document.head.removeChild(style);
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
