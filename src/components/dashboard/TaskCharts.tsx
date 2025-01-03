@@ -29,11 +29,10 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
   const getBarChartData = () => {
     return Array.from({ length: 7 }, (_, i) => {
       const date = addDays(currentWeekStart, i);
-      const dateStr = format(date, 'MMM dd');
       const dayName = format(date, 'EEE');
       
       return {
-        name: `${dayName}\n${dateStr}`,
+        name: dayName,
         completed: tasks.filter(task => 
           task.completed && 
           format(task.createdAt, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
@@ -107,9 +106,7 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis 
               dataKey="name" 
-              angle={-45}
-              textAnchor="end"
-              height={60}
+              height={30}
               interval={0}
             />
             <YAxis />
