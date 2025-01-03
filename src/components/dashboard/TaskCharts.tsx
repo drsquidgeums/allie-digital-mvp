@@ -1,5 +1,8 @@
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { format, startOfWeek, addDays } from 'date-fns';
+import { format, startOfWeek, addDays, addWeeks, subWeeks } from 'date-fns';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 
 const COLORS = ['#22c55e', '#94a3b8'];
 
@@ -16,17 +19,16 @@ interface TaskChartsProps {
 }
 
 export const TaskCharts = ({ tasks }: TaskChartsProps) => {
+  const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date()));
+
   const getPieChartData = () => [
     { name: 'Completed', value: tasks.filter(task => task.completed).length },
     { name: 'Pending', value: tasks.filter(task => !task.completed).length }
   ];
 
   const getBarChartData = () => {
-    const today = new Date();
-    const weekStart = startOfWeek(today);
-    
     return Array.from({ length: 7 }, (_, i) => {
-      const date = addDays(weekStart, i);
+      const date = addDays(currentWeekStart, i);
       const dateStr = format(date, 'MMM dd');
       const dayName = format(date, 'EEE');
       
@@ -42,6 +44,12 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
         ).length
       };
     });
+  };
+
+  const navigateWeek = (direction: 'forward' | 'backward') => {
+    setCurrentWeekStart(current => 
+      direction === 'forward' ? addWeeks(current, 1) : subWeeks(current, 1)
+    );
   };
 
   return (
@@ -70,7 +78,30 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
       </div>
 
       <div className="h-64">
-        <h3 className="text-lg font-semibold mb-2">Weekly Progress</h3>
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-lg font-semibold">Weekly Progress</h3>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => navigateWeek('backward')}
+              className="h-8 w-8"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <span className="min-w-32 text-center">
+              {format(currentWeekStart, 'MMM dd')} - {format(addDays(currentWeekStart, 6), 'MMM dd, yyyy')}
+            </span>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => navigateWeek('forward')}
+              className="h-8 w-8"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getBarChartData()}>
             <CartesianGrid strokeDasharray="3 3" />
