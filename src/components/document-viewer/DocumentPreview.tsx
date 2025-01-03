@@ -8,6 +8,7 @@ interface DocumentPreviewProps {
 
 export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -46,6 +47,40 @@ export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewPro
     }
   }, [selectedColor]);
 
+  // Handle iframe load for URL content
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (iframe && url) {
+      iframe.onload = () => {
+        try {
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+          if (iframeDoc) {
+            // Make iframe content editable
+            iframeDoc.body.contentEditable = 'true';
+            
+            // Add click handler to iframe content
+            iframeDoc.addEventListener('click', (e: MouseEvent) => {
+              const target = e.target as HTMLElement;
+              const selection = iframeDoc.getSelection();
+              
+              if (selection && !selection.isCollapsed) {
+                const range = selection.getRangeAt(0);
+                const span = document.createElement('span');
+                span.style.color = selectedColor;
+                range.surroundContents(span);
+                selection.removeAllRanges();
+              } else if (target.tagName === 'P' || target.tagName === 'SPAN' || target.tagName === 'DIV') {
+                target.style.color = selectedColor;
+              }
+            });
+          }
+        } catch (error) {
+          console.error('Error accessing iframe content:', error);
+        }
+      };
+    }
+  }, [url, selectedColor]);
+
   if (!file && !url) {
     return (
       <div className="h-full flex items-center justify-center">
@@ -60,6 +95,7 @@ export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewPro
     return (
       <div ref={containerRef} className="w-full h-full">
         <iframe
+          ref={iframeRef}
           src={embedUrl}
           className="w-full h-full rounded-lg border border-border"
           title="Document Preview"
@@ -103,17 +139,14 @@ export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewPro
   }
 
   // For other URLs
-  if (url) {
-    return (
-      <div ref={containerRef} className="w-full h-full">
-        <iframe
-          src={url}
-          className="w-full h-full rounded-lg border border-border"
-          title="Document Preview"
-        />
-      </div>
-    );
-  }
-
-  return null;
+  return (
+    <div ref={containerRef} className="w-full h-full">
+      <iframe
+        ref={iframeRef}
+        src={url}
+        className="w-full h-full rounded-lg border border-border"
+        title="Document Preview"
+      />
+    </div>
+  );
 };
