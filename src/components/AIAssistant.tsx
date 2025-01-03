@@ -9,7 +9,7 @@ interface Message {
 }
 
 const INITIAL_MESSAGE: Message = {
-  text: "Hi - I'm your Allie, your virtual AI assistant. I'm here to help you get the best out of this web application. What can I help you with today?",
+  text: "Hi - I'm Allie, your virtual AI assistant. I can help explain how our tools support your learning needs. What would you like to know about?",
   isUser: false
 };
 
@@ -18,6 +18,44 @@ export const AIAssistant = () => {
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const getToolResponse = (input: string): string => {
+    const lowerInput = input.toLowerCase();
+    
+    if (lowerInput.includes("irlen") || lowerInput.includes("overlay")) {
+      return "The Irlen Overlay tool helps users with visual processing difficulties, including dyslexia. It adds a colored overlay to the screen which can reduce visual stress and make text easier to read. You can choose from different colors to find what works best for you.";
+    }
+    
+    if (lowerInput.includes("font") || lowerInput.includes("opendyslexic") || lowerInput.includes("dyslexic")) {
+      return "The Font Customization tool includes the OpenDyslexic font, which is specifically designed to help users with dyslexia. Its unique letter shapes and weighted bottoms can increase readability and reduce letter switching.";
+    }
+    
+    if (lowerInput.includes("bionic") || lowerInput.includes("reader")) {
+      return "The Bionic Reader helps improve focus and reading speed by highlighting parts of words. This can be particularly helpful for users with ADHD or reading difficulties, making it easier to maintain attention while reading.";
+    }
+    
+    if (lowerInput.includes("color") || lowerInput.includes("separator")) {
+      return "The Color Separator tool allows you to highlight different parts of text in various colors. This can help with organizing information, making complex texts more manageable, and improving comprehension for users with learning differences.";
+    }
+    
+    if (lowerInput.includes("focus") || lowerInput.includes("mode")) {
+      return "Focus Mode helps minimize distractions by entering fullscreen and hiding unnecessary elements. This is particularly helpful for users with ADHD who need to concentrate on their work.";
+    }
+    
+    if (lowerInput.includes("pomodoro") || lowerInput.includes("timer")) {
+      return "The Pomodoro Timer helps break work into manageable chunks with regular breaks. This is especially useful for users with ADHD, as it helps maintain focus and prevents mental fatigue.";
+    }
+    
+    if (lowerInput.includes("mind") || lowerInput.includes("map")) {
+      return "The Mind Mapping tool helps visualize connections between ideas. This visual approach to organizing information can be particularly helpful for users with different learning styles or those who prefer visual processing.";
+    }
+    
+    if (lowerInput.includes("text") && lowerInput.includes("speech")) {
+      return "The Text-to-Speech feature reads text aloud, which is helpful for users with dyslexia, visual processing difficulties, or those who learn better through auditory input.";
+    }
+
+    return "I can explain how our various tools help support different learning needs. You can ask about specific tools like the Irlen Overlay, OpenDyslexic font, Bionic Reader, Color Separator, Focus Mode, Pomodoro Timer, Mind Map, or Text-to-Speech feature. Which would you like to learn more about?";
+  };
+
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
@@ -25,8 +63,7 @@ export const AIAssistant = () => {
     setMessages(prev => [...prev, { text: input, isUser: true }]);
     setInput("");
 
-    // Simple response system
-    const response = "I understand you're asking about " + input + ". As an ADHD Learning Assistant, I'm here to help you use our workspace tools effectively. Could you please be more specific about what you'd like to know?";
+    const response = getToolResponse(input);
     
     setTimeout(() => {
       setMessages(prev => [...prev, { text: response, isUser: false }]);
