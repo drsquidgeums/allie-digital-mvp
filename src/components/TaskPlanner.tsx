@@ -137,11 +137,15 @@ export const TaskPlanner = ({ selectedDate }: TaskPlannerProps) => {
       </form>
 
       <TaskCharts tasks={tasks} />
-      <TaskList 
-        tasks={tasks} 
-        onToggleTask={toggleTask} 
-        onDeleteTask={deleteTask}
-      />
+      
+      <div className="mt-8 bg-card border border-border rounded-lg p-4">
+        <h3 className="text-lg font-semibold mb-4">Task List</h3>
+        <TaskList 
+          tasks={tasks} 
+          onToggleTask={toggleTask} 
+          onDeleteTask={deleteTask}
+        />
+      </div>
     </div>
   );
 };

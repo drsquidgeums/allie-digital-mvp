@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
-const COLORS = ['#7E69AB', '#D6BCFA']; // Dark and light purple
+const COLORS = ['#7E69AB', '#9b87f5']; // Dark purple and medium purple
 
 interface Task {
   id: string;
@@ -113,7 +113,7 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
             <Tooltip />
             <Legend />
             <Bar dataKey="completed" fill="#7E69AB" name="Completed" />
-            <Bar dataKey="pending" fill="#D6BCFA" name="Pending" />
+            <Bar dataKey="pending" fill="#9b87f5" name="Pending" />
           </BarChart>
         </ResponsiveContainer>
       </div>

@@ -16,12 +16,16 @@ interface TaskListProps {
 }
 
 export const TaskList = ({ tasks, onToggleTask, onDeleteTask }: TaskListProps) => {
+  if (tasks.length === 0) {
+    return <div className="text-muted-foreground text-center py-4">No tasks yet. Add some tasks to get started!</div>;
+  }
+
   return (
     <div className="space-y-2">
       {tasks.map((task) => (
         <div
           key={task.id}
-          className="flex items-center gap-2 p-2 rounded-lg bg-card border border-border"
+          className="flex items-center gap-2 p-3 rounded-lg bg-background hover:bg-accent/10 border border-border"
         >
           <Button
             size="sm"
