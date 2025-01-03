@@ -1,40 +1,33 @@
 import React, { useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Bot, Send } from "lucide-react";
+import { Bot } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import OpenAI from "openai";
 import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
+import { ChatMessage } from "./chat/ChatMessage";
+import { ChatInput } from "./chat/ChatInput";
+import { createOpenAIClient, SYSTEM_PROMPT } from "@/utils/openai";
 
-const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true
-});
+interface Message {
+  text: string;
+  isUser: boolean;
+}
 
-const systemPrompt = `You are an ADHD Learning Assistant helping students use a digital workspace. The workspace includes:
-- Pomodoro Timer for focused study
-- Mind Mapping tool for visual learning
-- Task Management system with points and rewards
-- Reading tools (color overlays, bionic reader)
-- Focus mode to reduce distractions
-
-Provide short, clear responses focused on using these tools effectively for ADHD learners. Break information into small chunks and use bullet points when possible.`;
+const INITIAL_MESSAGE: Message = {
+  text: "Hi! I'm your ADHD Learning Assistant. I can help you make the most of our tools and provide study tips. Would you like help with: \n1. Using the Pomodoro Timer for focused study\n2. Creating effective mind maps\n3. Managing tasks and deadlines\n4. Setting up a distraction-free workspace\n5. Using color overlays for reading",
+  isUser: false
+};
 
 export const AIAssistant = () => {
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Array<{ text: string; isUser: boolean }>>([
-    {
-      text: "Hi! I'm your ADHD Learning Assistant. I can help you make the most of our tools and provide study tips. Would you like help with: \n1. Using the Pomodoro Timer for focused study\n2. Creating effective mind maps\n3. Managing tasks and deadlines\n4. Setting up a distraction-free workspace\n5. Using color overlays for reading",
-      isUser: false
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
-    
-    if (!import.meta.env.VITE_OPENAI_API_KEY) {
+
+    try {
+      const openai = createOpenAIClient();
+    } catch (error) {
       toast({
         title: "API Key Missing",
         description: "Please set up your OpenAI API key to use the AI Assistant.",
@@ -42,14 +35,15 @@ export const AIAssistant = () => {
       });
       return;
     }
-    
+
     setIsLoading(true);
     setMessages(prev => [...prev, { text: input, isUser: true }]);
     setInput("");
-    
+
     try {
+      const openai = createOpenAIClient();
       const apiMessages: ChatCompletionMessageParam[] = [
-        { role: "system", content: systemPrompt },
+        { role: "system" as const, content: SYSTEM_PROMPT },
         ...messages.map(msg => ({
           role: msg.isUser ? "user" as const : "assistant" as const,
           content: msg.text
@@ -86,30 +80,15 @@ export const AIAssistant = () => {
       </div>
       <div className="bg-card rounded-lg p-3 h-[300px] overflow-y-auto space-y-2">
         {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`p-2 rounded-lg ${
-              msg.isUser
-                ? "bg-primary text-primary-foreground ml-auto"
-                : "bg-muted"
-            } max-w-[80%] ${msg.isUser ? "ml-auto" : "mr-auto"} whitespace-pre-line`}
-          >
-            {msg.text}
-          </div>
+          <ChatMessage key={idx} text={msg.text} isUser={msg.isUser} />
         ))}
       </div>
-      <div className="flex gap-2">
-        <Input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask about study tips or how to use our tools..."
-          onKeyPress={(e) => e.key === "Enter" && handleSend()}
-          disabled={isLoading}
-        />
-        <Button onClick={handleSend} size="icon" disabled={isLoading}>
-          <Send className="w-4 h-4" />
-        </Button>
-      </div>
+      <ChatInput
+        value={input}
+        onChange={setInput}
+        onSend={handleSend}
+        isLoading={isLoading}
+      />
     </div>
   );
 };
