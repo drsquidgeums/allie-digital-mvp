@@ -32,16 +32,16 @@ export const AIAssistant = () => {
     try {
       const openai = await createOpenAIClient();
       const apiMessages: ChatCompletionMessageParam[] = [
-        { role: "system", content: SYSTEM_PROMPT },
+        { role: "system", content: SYSTEM_PROMPT } as ChatCompletionMessageParam,
         ...messages.map(msg => ({
           role: msg.isUser ? "user" : "assistant",
           content: msg.text
-        })),
-        { role: "user", content: input }
+        } as ChatCompletionMessageParam)),
+        { role: "user", content: input } as ChatCompletionMessageParam
       ];
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-3.5-turbo",
         messages: apiMessages,
         temperature: 0.7,
         max_tokens: 500
