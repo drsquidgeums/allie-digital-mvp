@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { Bot } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { ChatMessage } from "./chat/ChatMessage";
 import { ChatInput } from "./chat/ChatInput";
-import { createOpenAIClient, SYSTEM_PROMPT } from "@/utils/openai";
 
 interface Message {
   text: string;
@@ -20,8 +17,6 @@ export const AIAssistant = () => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasShownKeyError, setHasShownKeyError] = useState(false);
-  const { toast } = useToast();
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -30,55 +25,13 @@ export const AIAssistant = () => {
     setMessages(prev => [...prev, { text: input, isUser: true }]);
     setInput("");
 
-    try {
-      const openai = await createOpenAIClient();
-      if (!openai) {
-        if (!hasShownKeyError) {
-          toast({
-            title: "OpenAI API Key Required",
-            description: "Please add your OpenAI API key in the settings to use the AI assistant.",
-            variant: "destructive"
-          });
-          setHasShownKeyError(true);
-        }
-        setMessages(prev => [...prev, { 
-          text: "I'm unable to respond right now. Please add your OpenAI API key in the settings to continue our conversation.", 
-          isUser: false 
-        }]);
-        return;
-      }
-
-      const apiMessages: ChatCompletionMessageParam[] = [
-        { role: "system", content: SYSTEM_PROMPT } as const,
-        ...messages.map(msg => ({
-          role: msg.isUser ? "user" : "assistant",
-          content: msg.text
-        } as const)),
-        { role: "user", content: input } as const
-      ];
-
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: apiMessages,
-        temperature: 0.7,
-        max_tokens: 500
-      });
-
-      const aiResponse = response.choices[0]?.message?.content || "I'm sorry, I couldn't process that request.";
-      setMessages(prev => [...prev, { text: aiResponse, isUser: false }]);
-    } catch (error) {
-      console.error("Error calling OpenAI:", error);
-      if (!hasShownKeyError) {
-        toast({
-          title: "Error",
-          description: "Please make sure you've added your OpenAI API key in the settings.",
-          variant: "destructive"
-        });
-        setHasShownKeyError(true);
-      }
-    } finally {
+    // Simple response system
+    const response = "I understand you're asking about " + input + ". As an ADHD Learning Assistant, I'm here to help you use our workspace tools effectively. Could you please be more specific about what you'd like to know?";
+    
+    setTimeout(() => {
+      setMessages(prev => [...prev, { text: response, isUser: false }]);
       setIsLoading(false);
-    }
+    }, 1000);
   };
 
   return (
