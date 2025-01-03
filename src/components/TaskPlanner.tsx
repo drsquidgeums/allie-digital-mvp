@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Check, Trash2, Trophy } from "lucide-react";
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { Trophy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { TaskCharts } from "./dashboard/TaskCharts";
+import { TaskList } from "./dashboard/TaskList";
 
 interface Task {
   id: string;
@@ -13,7 +14,9 @@ interface Task {
   points: number;
 }
 
-const COLORS = ['#22c55e', '#94a3b8'];
+interface TaskPlannerProps {
+  selectedDate?: Date;
+}
 
 const emitTaskNotification = (title: string, message: string) => {
   const event = new CustomEvent('taskNotification', {
@@ -28,7 +31,7 @@ const emitTaskNotification = (title: string, message: string) => {
   window.dispatchEvent(event);
 };
 
-export const TaskPlanner = () => {
+export const TaskPlanner = ({ selectedDate }: TaskPlannerProps) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState("");
   const [points, setPoints] = useState(0);
@@ -37,17 +40,18 @@ export const TaskPlanner = () => {
   const addTask = (e: React.FormEvent) => {
     e.preventDefault();
     if (newTask.trim()) {
+      const taskDate = selectedDate || new Date();
       setTasks([...tasks, { 
         id: Date.now().toString(), 
         text: newTask, 
         completed: false,
-        createdAt: new Date(),
+        createdAt: taskDate,
         points: 10
       }]);
       setNewTask("");
       emitTaskNotification(
         "New Task Added",
-        `Task "${newTask}" has been added to your list`
+        `Task "${newTask}" has been added to your list for ${taskDate.toLocaleDateString()}`
       );
       toast({
         title: "Task added",
@@ -93,32 +97,6 @@ export const TaskPlanner = () => {
     setTasks(tasks.filter(task => task.id !== id));
   };
 
-  const getPieChartData = () => [
-    { name: 'Completed', value: tasks.filter(task => task.completed).length },
-    { name: 'Pending', value: tasks.filter(task => !task.completed).length }
-  ];
-
-  const getBarChartData = () => {
-    const today = new Date();
-    const lastWeek = Array.from({ length: 7 }, (_, i) => {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      return date.toLocaleDateString('en-GB', { weekday: 'short' });
-    }).reverse();
-
-    return lastWeek.map(day => ({
-      name: day,
-      completed: tasks.filter(task => 
-        task.completed && 
-        task.createdAt.toLocaleDateString('en-GB', { weekday: 'short' }) === day
-      ).length,
-      pending: tasks.filter(task =>
-        !task.completed &&
-        task.createdAt.toLocaleDateString('en-GB', { weekday: 'short' }) === day
-      ).length
-    }));
-  };
-
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between bg-accent/10 p-4 rounded-lg">
@@ -133,81 +111,18 @@ export const TaskPlanner = () => {
         <Input
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
-          placeholder="Add a new task..."
+          placeholder={`Add a new task${selectedDate ? ` for ${selectedDate.toLocaleDateString()}` : ''}...`}
           className="flex-1"
         />
         <Button type="submit">Add</Button>
       </form>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="h-64">
-          <h3 className="text-lg font-semibold mb-2">Task Status</h3>
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={getPieChartData()}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={5}
-                dataKey="value"
-              >
-                {getPieChartData().map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="h-64">
-          <h3 className="text-lg font-semibold mb-2">Weekly Progress</h3>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={getBarChartData()}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="completed" fill="#22c55e" name="Completed" />
-              <Bar dataKey="pending" fill="#94a3b8" name="Pending" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        {tasks.map((task) => (
-          <div
-            key={task.id}
-            className="flex items-center gap-2 p-2 rounded-lg bg-card border border-border"
-          >
-            <Button
-              size="sm"
-              variant="ghost"
-              className={`p-1 h-6 w-6 ${task.completed ? "bg-green-500 text-white hover:bg-green-600" : ""}`}
-              onClick={() => toggleTask(task.id)}
-            >
-              <Check className="h-4 w-4" />
-            </Button>
-            <span className={`flex-1 ${task.completed ? "line-through text-muted-foreground" : ""}`}>
-              {task.text}
-            </span>
-            <span className="text-sm text-muted-foreground">{task.points} pts</span>
-            <Button
-              size="sm"
-              variant="ghost"
-              className="p-1 h-6 w-6 text-destructive hover:text-destructive/90"
-              onClick={() => deleteTask(task.id)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        ))}
-      </div>
+      <TaskCharts tasks={tasks} />
+      <TaskList 
+        tasks={tasks} 
+        onToggleTask={toggleTask} 
+        onDeleteTask={deleteTask}
+      />
     </div>
   );
 };

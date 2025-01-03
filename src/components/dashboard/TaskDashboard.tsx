@@ -28,7 +28,7 @@ export const TaskDashboard = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <Card className="p-6 shadow-lg lg:col-span-2">
               <h2 className="text-xl font-semibold mb-4">Task Management</h2>
-              <TaskPlanner />
+              <TaskPlanner selectedDate={date} />
             </Card>
             <div className="space-y-6">
               <Card className="p-6 shadow-lg">
