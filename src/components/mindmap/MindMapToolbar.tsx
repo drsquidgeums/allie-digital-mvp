@@ -28,8 +28,8 @@ export const MindMapToolbar = ({
   return (
     <div className="p-4 border-b flex items-center justify-between bg-background">
       <div className="flex items-center gap-2">
-        <Network className="w-4 h-4" />
-        <h3 className="font-medium">Mind Map</h3>
+        <Network className="w-4 h-4 text-foreground" />
+        <h3 className="font-medium text-foreground">Mind Map</h3>
       </div>
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2 mr-4">
@@ -59,13 +59,13 @@ export const MindMapToolbar = ({
           className="w-64 bg-background text-foreground"
           onKeyPress={(e) => e.key === "Enter" && onAddNode()}
         />
-        <Button onClick={onAddNode} size="icon">
+        <Button onClick={onAddNode} size="icon" className="text-foreground">
           <Plus className="w-4 h-4" />
         </Button>
-        <Button onClick={onExport} variant="outline" size="icon">
+        <Button onClick={onExport} variant="outline" size="icon" className="text-foreground">
           <Download className="w-4 h-4" />
         </Button>
-        <Button onClick={onClear} variant="outline" size="icon">
+        <Button onClick={onClear} variant="outline" size="icon" className="text-foreground">
           <Trash2 className="w-4 h-4" />
         </Button>
       </div>
