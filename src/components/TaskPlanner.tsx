@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Trophy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { TaskCharts } from "./dashboard/TaskCharts";
-import { TaskList } from "./dashboard/TaskList";
 
 interface Task {
   id: string;
@@ -137,15 +136,6 @@ export const TaskPlanner = ({ selectedDate }: TaskPlannerProps) => {
       </form>
 
       <TaskCharts tasks={tasks} />
-      
-      <div className="mt-8 bg-card border border-border rounded-lg p-4">
-        <h3 className="text-lg font-semibold mb-4">Task List</h3>
-        <TaskList 
-          tasks={tasks} 
-          onToggleTask={toggleTask} 
-          onDeleteTask={deleteTask}
-        />
-      </div>
     </div>
   );
 };

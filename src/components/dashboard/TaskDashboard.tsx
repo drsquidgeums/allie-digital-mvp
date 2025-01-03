@@ -41,6 +41,12 @@ export const TaskDashboard = () => {
                 />
               </Card>
               <Card className="p-6 shadow-lg">
+                <h2 className="text-xl font-semibold mb-4">Task List</h2>
+                <div className="space-y-2">
+                  {/* Move TaskList here */}
+                </div>
+              </Card>
+              <Card className="p-6 shadow-lg">
                 <h2 className="text-xl font-semibold mb-4">Achievements</h2>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
