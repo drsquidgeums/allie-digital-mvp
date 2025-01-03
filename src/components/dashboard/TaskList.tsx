@@ -26,7 +26,7 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask }: TaskListProps) =
           <Button
             size="sm"
             variant="ghost"
-            className={`p-1 h-6 w-6 ${task.completed ? "bg-green-500 text-white hover:bg-green-600" : ""}`}
+            className={`p-1 h-6 w-6 ${task.completed ? "bg-[#7E69AB] text-white hover:bg-[#6E59A5]" : ""}`}
             onClick={() => onToggleTask(task.id)}
           >
             <Check className="h-4 w-4" />
