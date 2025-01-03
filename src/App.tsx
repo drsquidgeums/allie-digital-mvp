@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ChromeOSLayout } from "./components/chrome-os/ChromeOSLayout";
 import Index from "./pages/Index";
 import { TaskDashboard } from "./components/dashboard/TaskDashboard";
 import AIAssistant from "./pages/AIAssistant";
@@ -65,13 +66,15 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/tasks" element={<TaskDashboard />} />
-            <Route path="/ai-assistant" element={<AIAssistant />} />
-            <Route path="/mind-map" element={<MindMapDashboard />} />
-            <Route path="/community" element={<CommunityPage />} />
-          </Routes>
+          <ChromeOSLayout>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/tasks" element={<TaskDashboard />} />
+              <Route path="/ai-assistant" element={<AIAssistant />} />
+              <Route path="/mind-map" element={<MindMapDashboard />} />
+              <Route path="/community" element={<CommunityPage />} />
+            </Routes>
+          </ChromeOSLayout>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
