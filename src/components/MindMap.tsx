@@ -10,8 +10,6 @@ import {
   Connection,
   Edge,
   Panel,
-  getRectOfNodes,
-  getTransformForBounds,
   useReactFlow,
 } from '@xyflow/react';
 import { useToast } from "@/hooks/use-toast";
@@ -98,18 +96,17 @@ export const MindMap = () => {
   };
 
   const downloadImage = () => {
-    const nodesBounds = getRectOfNodes(getNodes());
-    const transform = getTransformForBounds(nodesBounds, nodesBounds.width, nodesBounds.height, 0.5);
-    
     const element = document.querySelector('.react-flow__viewport') as HTMLElement;
     if (!element) return;
 
+    const { width, height } = element.getBoundingClientRect();
+    
     toPng(element, {
       backgroundColor: '#fff',
-      width: nodesBounds.width,
-      height: nodesBounds.height,
+      width,
+      height,
       style: {
-        transform: `translate(${transform[0]}px, ${transform[1]}px) scale(${transform[2]})`,
+        transform: element.style.transform,
       },
     })
       .then((dataUrl) => {
