@@ -13,6 +13,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { MindMapToolbar } from './mindmap/MindMapToolbar';
 import { ColorOption, MindMapNode } from './mindmap/types';
+import { ColorPicker } from './ColorPicker';
 import '@xyflow/react/dist/style.css';
 
 const initialNodes: MindMapNode[] = [
@@ -39,6 +40,7 @@ const colorOptions: ColorOption[] = [
   { label: 'Orange', value: '#FEC6A1' },
   { label: 'Pink', value: '#FFDEE2' },
   { label: 'Blue', value: '#D3E4FD' },
+  { label: 'Custom', value: 'custom' },
 ];
 
 export const MindMap = () => {
@@ -46,12 +48,21 @@ export const MindMap = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [newNodeText, setNewNodeText] = useState("");
   const [selectedColor, setSelectedColor] = useState(colorOptions[0].value);
+  const [customColor, setCustomColor] = useState("#FFFFFF");
   const { toast } = useToast();
 
   const onConnect = useCallback(
     (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
+
+  const handleColorChange = (value: string) => {
+    if (value === 'custom') {
+      setSelectedColor(customColor);
+    } else {
+      setSelectedColor(value);
+    }
+  };
 
   const addNode = () => {
     if (!newNodeText.trim()) return;
@@ -64,7 +75,7 @@ export const MindMap = () => {
         y: Math.random() * 500,
       },
       style: {
-        background: selectedColor,
+        background: selectedColor === 'custom' ? customColor : selectedColor,
         color: selectedColor === 'hsl(var(--muted))' ? 'hsl(var(--foreground))' : '#000000',
         padding: '10px',
         borderRadius: '8px',
@@ -114,7 +125,9 @@ export const MindMap = () => {
     <div className="w-full h-[600px] bg-background rounded-lg border">
       <MindMapToolbar
         selectedColor={selectedColor}
-        setSelectedColor={setSelectedColor}
+        setSelectedColor={handleColorChange}
+        customColor={customColor}
+        setCustomColor={setCustomColor}
         newNodeText={newNodeText}
         setNewNodeText={setNewNodeText}
         onAddNode={addNode}

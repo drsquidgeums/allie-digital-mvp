@@ -3,10 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Network, Plus, Download, Trash2 } from "lucide-react";
 import { ColorOption } from './types';
+import { ColorPicker } from '../ColorPicker';
 
 interface MindMapToolbarProps {
   selectedColor: string;
   setSelectedColor: (color: string) => void;
+  customColor: string;
+  setCustomColor: (color: string) => void;
   newNodeText: string;
   setNewNodeText: (text: string) => void;
   onAddNode: () => void;
@@ -18,6 +21,8 @@ interface MindMapToolbarProps {
 export const MindMapToolbar = ({
   selectedColor,
   setSelectedColor,
+  customColor,
+  setCustomColor,
   newNodeText,
   setNewNodeText,
   onAddNode,
@@ -51,6 +56,13 @@ export const MindMapToolbar = ({
               </option>
             ))}
           </select>
+          {selectedColor === 'custom' && (
+            <ColorPicker
+              label=""
+              value={customColor}
+              onChange={setCustomColor}
+            />
+          )}
         </div>
         <Input
           value={newNodeText}
