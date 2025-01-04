@@ -1,7 +1,27 @@
+import { MindMapNode } from '../types';
 import { toPng } from 'html-to-image';
-import { type ToastType } from "@/hooks/use-toast";
+import { type Toast } from "@/hooks/use-toast";
 
-export const downloadMindMap = async (toast: ToastType) => {
+export const createNewNode = (
+  id: string,
+  label: string,
+  position: { x: number; y: number },
+  color: string,
+  isCustomColor: boolean
+): MindMapNode => ({
+  id,
+  data: { label },
+  position,
+  style: {
+    background: color,
+    color: isCustomColor ? '#000000' : 'hsl(var(--foreground))',
+    padding: '10px',
+    borderRadius: '8px',
+    border: '1px solid hsl(var(--border))',
+  },
+});
+
+export const downloadMindMap = async (toast: Toast) => {
   const element = document.querySelector('.react-flow') as HTMLElement;
   if (!element) {
     toast({
