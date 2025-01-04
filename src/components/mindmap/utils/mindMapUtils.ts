@@ -1,6 +1,6 @@
 import { MindMapNode } from '../types';
 import { toPng } from 'html-to-image';
-import { type ToastProps } from "@/hooks/use-toast";
+import { type ToastProps } from "@/components/ui/toast";
 
 export const createNewNode = (
   id: string,
