@@ -9,11 +9,15 @@ import {
   addEdge,
   Connection,
   Edge,
+  Panel,
+  getRectOfNodes,
+  getTransformForBounds,
+  useReactFlow,
 } from '@xyflow/react';
 import { useToast } from "@/hooks/use-toast";
 import { MindMapToolbar } from './mindmap/MindMapToolbar';
 import { ColorOption, MindMapNode } from './mindmap/types';
-import { ColorPicker } from './ColorPicker';
+import { toPng } from 'html-to-image';
 import '@xyflow/react/dist/style.css';
 
 const initialNodes: MindMapNode[] = [
@@ -50,6 +54,7 @@ export const MindMap = () => {
   const [selectedColor, setSelectedColor] = useState(colorOptions[0].value);
   const [customColor, setCustomColor] = useState("#FFFFFF");
   const { toast } = useToast();
+  const { getNodes } = useReactFlow();
 
   const onConnect = useCallback(
     (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
@@ -92,23 +97,40 @@ export const MindMap = () => {
     });
   };
 
-  const exportToJson = () => {
-    const data = { nodes, edges };
-    const jsonString = JSON.stringify(data, null, 2);
-    const blob = new Blob([jsonString], { type: 'application/json' });
-    const href = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = href;
-    link.download = 'mindmap.json';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(href);
+  const downloadImage = () => {
+    const nodesBounds = getRectOfNodes(getNodes());
+    const transform = getTransformForBounds(nodesBounds, nodesBounds.width, nodesBounds.height, 0.5);
+    
+    const element = document.querySelector('.react-flow__viewport') as HTMLElement;
+    if (!element) return;
 
-    toast({
-      title: "Mind map exported",
-      description: "Your mind map has been exported as JSON",
-    });
+    toPng(element, {
+      backgroundColor: '#fff',
+      width: nodesBounds.width,
+      height: nodesBounds.height,
+      style: {
+        transform: `translate(${transform[0]}px, ${transform[1]}px) scale(${transform[2]})`,
+      },
+    })
+      .then((dataUrl) => {
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = 'mindmap.jpg';
+        link.click();
+        
+        toast({
+          title: "Mind map downloaded",
+          description: "Your mind map has been saved as JPG",
+        });
+      })
+      .catch((error) => {
+        console.error('Error downloading image:', error);
+        toast({
+          title: "Download failed",
+          description: "Failed to download mind map as JPG",
+          variant: "destructive",
+        });
+      });
   };
 
   const clearCanvas = () => {
@@ -131,7 +153,7 @@ export const MindMap = () => {
         newNodeText={newNodeText}
         setNewNodeText={setNewNodeText}
         onAddNode={addNode}
-        onExport={exportToJson}
+        onExport={downloadImage}
         onClear={clearCanvas}
         colorOptions={colorOptions}
       />
