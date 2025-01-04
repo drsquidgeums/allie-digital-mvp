@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { MindMap } from "@/components/MindMap";
+import { ReactFlowProvider } from '@xyflow/react';
 
 const MindMapDashboard = () => {
   const navigate = useNavigate();
@@ -22,7 +23,9 @@ const MindMapDashboard = () => {
           </Button>
         </div>
         <Card className="p-6">
-          <MindMap />
+          <ReactFlowProvider>
+            <MindMap />
+          </ReactFlowProvider>
         </Card>
       </div>
     </div>
