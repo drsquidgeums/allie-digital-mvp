@@ -31,7 +31,7 @@ export const NotificationCenter = () => {
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-workspace-dark border border-gray-500/50 shadow-2xl">
+      <DialogContent className="sm:max-w-[425px] bg-[#1a1a1a] border border-gray-600/50 shadow-2xl backdrop-blur-sm">
         <DialogHeader>
           <DialogTitle className="text-gray-200">Notifications</DialogTitle>
         </DialogHeader>
@@ -42,7 +42,7 @@ export const NotificationCenter = () => {
           />
         </div>
         <DialogClose asChild>
-          <button className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none bg-black border border-gray-500/50 p-1">
+          <button className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none bg-black border border-gray-600/50 p-1">
             <X className="h-4 w-4 text-gray-200" />
             <span className="sr-only">Close</span>
           </button>

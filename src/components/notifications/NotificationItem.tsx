@@ -20,8 +20,8 @@ export const NotificationItem = ({
   return (
     <div
       className={`p-3 rounded-lg ${
-        read ? "bg-gray-900/50" : "bg-gray-800/50"
-      } cursor-pointer hover:bg-gray-700/50 transition-colors border border-gray-700/50`}
+        read ? "bg-[#222222]/80" : "bg-[#2a2a2a]/80"
+      } cursor-pointer hover:bg-[#333333]/80 transition-colors border border-gray-600/50`}
       onClick={() => onRead(id)}
     >
       <div className="flex justify-between items-start">

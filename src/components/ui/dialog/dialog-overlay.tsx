@@ -1,8 +1,9 @@
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
+
 import { cn } from "@/lib/utils"
 
-export const DialogOverlay = React.forwardRef<
+const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
@@ -16,3 +17,5 @@ export const DialogOverlay = React.forwardRef<
   />
 ))
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
+
+export { DialogOverlay }
