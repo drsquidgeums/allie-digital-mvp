@@ -16,7 +16,7 @@ const colors = [
   { name: "Soft Orange", value: "rgba(254, 198, 161, 0.3)" },
   { name: "Bright Orange", value: "rgba(249, 115, 22, 0.3)" },
   { name: "Soft Green", value: "rgba(144, 238, 144, 0.3)" },
-  { name: "Lime Green", value: "rgba(50, 205, 50, 0.3)" },
+  { name: "Bright Green", value: "rgba(0, 255, 0, 0.3)" },
 ];
 
 export const IrlenOverlay = () => {
