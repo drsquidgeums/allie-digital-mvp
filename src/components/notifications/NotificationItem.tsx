@@ -26,7 +26,7 @@ export const NotificationItem = ({
     >
       <div className="flex justify-between items-start">
         <h4 className="text-sm font-medium text-foreground">{title}</h4>
-        <span className="text-xs text-foreground/70">
+        <span className="text-xs text-muted-foreground">
           {new Date(timestamp).toLocaleTimeString('en-GB', {
             hour: '2-digit',
             minute: '2-digit',
@@ -34,7 +34,7 @@ export const NotificationItem = ({
           })}
         </span>
       </div>
-      <p className="text-sm text-foreground/90 mt-1">
+      <p className="text-sm text-foreground mt-1">
         {message}
       </p>
     </div>

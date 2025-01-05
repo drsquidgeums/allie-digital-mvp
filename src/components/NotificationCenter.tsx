@@ -30,9 +30,9 @@ export const NotificationCenter = () => {
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] dark:bg-workspace-dark dark:text-white dark:border dark:border-gray-600">
+      <DialogContent className="sm:max-w-[425px] bg-background border border-border">
         <DialogHeader>
-          <DialogTitle className="dark:text-gray-200">Notifications</DialogTitle>
+          <DialogTitle className="text-foreground">Notifications</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 max-h-[60vh] overflow-y-auto">
           <NotificationList 
@@ -40,8 +40,8 @@ export const NotificationCenter = () => {
             onRead={markAsRead}
           />
         </div>
-        <button className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none dark:bg-black dark:border dark:border-gray-600 p-1">
-          <X className="h-4 w-4 dark:text-gray-200" />
+        <button className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none bg-background border border-border p-1">
+          <X className="h-4 w-4 text-foreground" />
           <span className="sr-only">Close</span>
         </button>
       </DialogContent>
