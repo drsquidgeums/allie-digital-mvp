@@ -10,3 +10,11 @@ export interface MindMapNode {
   position: { x: number; y: number };
   style?: React.CSSProperties;
 }
+
+export type Node = {
+  id: string;
+  type: string;
+  data: { label: string };
+  position: { x: number; y: number };
+  style?: React.CSSProperties;
+}

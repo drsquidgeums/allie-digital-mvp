@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { MindMapToolbar } from './mindmap/MindMapToolbar';
-import { ColorOption } from './mindmap/types';
+import { ColorOption, Node } from './mindmap/types';
 import {
   ReactFlow,
   addEdge,
@@ -26,7 +26,7 @@ const colorOptions: ColorOption[] = [
   { label: 'Custom', value: 'custom' },
 ];
 
-const initialNodes = [
+const initialNodes: Node[] = [
   {
     id: '1',
     type: 'input',
@@ -55,8 +55,9 @@ export const MindMap = () => {
   const addNode = () => {
     if (!newNodeText.trim()) return;
 
-    const newNode = {
+    const newNode: Node = {
       id: `node_${Date.now()}`,
+      type: 'default',
       data: { label: newNodeText },
       position: {
         x: Math.random() * 500,
