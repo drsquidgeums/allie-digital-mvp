@@ -34,7 +34,7 @@ export const AIAssistant = () => {
     }
     
     if (lowerInput.includes("color") || lowerInput.includes("separator")) {
-      return "The Color Separator tool allows you to highlight different parts of text in various colors. This can help with organizing information, making complex texts more manageable, and improving comprehension for users with learning differences.";
+      return "The Colour Separator tool allows you to highlight different parts of text in various colours. This can help with organising information, making complex texts more manageable, and improving comprehension for users with learning differences.";
     }
     
     if (lowerInput.includes("focus") || lowerInput.includes("mode")) {

@@ -22,7 +22,7 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
   
   const tools = [
     { id: "files", icon: FolderOpen, label: "File Uploads" },
-    { id: "color", icon: Paintbrush, label: "Color Tool" },
+    { id: "color", icon: Paintbrush, label: "Colour Tool" },
     { id: "pomodoro", icon: Clock, label: "Pomodoro Timer" },
     { id: "tts", icon: Headphones, label: "Text-to-Speech" },
     { id: "bionic", icon: Eye, label: "Bionic Reader" },
