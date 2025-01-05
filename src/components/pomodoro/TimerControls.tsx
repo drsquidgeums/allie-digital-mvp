@@ -6,11 +6,11 @@ export const TimerControls = () => {
   const { state, dispatch } = usePomodoroContext();
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex flex-col gap-4">
       <div className="text-sm text-muted-foreground">
         Completed: {state.completedPomodoros} / {state.sessionGoal}
       </div>
-      <div className="space-x-2">
+      <div className="flex justify-center space-x-2">
         <Button
           onClick={() => dispatch({ type: 'TOGGLE_TIMER' })}
           variant="default"
