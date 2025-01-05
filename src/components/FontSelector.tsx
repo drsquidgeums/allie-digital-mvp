@@ -11,6 +11,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Bold } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog/dialog-root";
 
 interface FontSelectorProps {
   selectedFont: string;
