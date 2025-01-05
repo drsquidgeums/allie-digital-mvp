@@ -37,52 +37,57 @@ export async function loadPdfDocument(file: File): Promise<ArrayBuffer> {
 
 export async function convertEpubToHtml(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      try {
-        const buffer = e.target?.result;
-        if (!buffer || typeof buffer === 'string') {
-          throw new Error('Invalid buffer');
-        }
+    // Create a temporary URL for the file
+    const tempUrl = URL.createObjectURL(file);
+    
+    try {
+      const epub = new EPub(tempUrl);
+      let content = '';
 
-        const epub = new EPub(buffer);
-        let content = '';
-
-        // Convert callback-based API to Promise
-        await new Promise<void>((resolveEpub, rejectEpub) => {
-          epub.parse();
-          epub.on('end', () => {
-            if (epub.flow) {
-              epub.flow.forEach((chapter: any) => {
-                if (chapter && typeof chapter.href === 'string') {
-                  epub.getChapter(chapter.id, (error: Error | null, text: string) => {
-                    if (error) {
-                      console.error('Error reading chapter:', error);
-                    } else {
-                      content += text;
-                    }
-                  });
-                }
-              });
-              resolveEpub();
-            } else {
-              rejectEpub(new Error('No content found in EPUB'));
-            }
-          });
-          
-          epub.on('error', (error: Error) => {
-            rejectEpub(error);
-          });
+      // Convert callback-based API to Promise
+      const parseEpub = new Promise<void>((resolveEpub, rejectEpub) => {
+        epub.parse();
+        epub.on('end', () => {
+          if (epub.flow) {
+            epub.flow.forEach((chapter: any) => {
+              if (chapter && typeof chapter.href === 'string') {
+                epub.getChapter(chapter.id, (error: Error | null, text: string) => {
+                  if (error) {
+                    console.error('Error reading chapter:', error);
+                  } else {
+                    content += text;
+                  }
+                });
+              }
+            });
+            resolveEpub();
+          } else {
+            rejectEpub(new Error('No content found in EPUB'));
+          }
         });
+        
+        epub.on('error', (error: Error) => {
+          rejectEpub(error);
+        });
+      });
 
-        resolve(content || '<div>No content found in EPUB file</div>');
-      } catch (error) {
-        console.error('Error processing EPUB:', error);
-        reject(error);
-      }
-    };
-    reader.onerror = (e) => reject(e);
-    reader.readAsArrayBuffer(file);
+      parseEpub
+        .then(() => {
+          // Clean up the temporary URL
+          URL.revokeObjectURL(tempUrl);
+          resolve(content || '<div>No content found in EPUB file</div>');
+        })
+        .catch((error) => {
+          // Clean up the temporary URL
+          URL.revokeObjectURL(tempUrl);
+          reject(error);
+        });
+    } catch (error) {
+      // Clean up the temporary URL
+      URL.revokeObjectURL(tempUrl);
+      console.error('Error processing EPUB:', error);
+      reject(error);
+    }
   });
 }
 
