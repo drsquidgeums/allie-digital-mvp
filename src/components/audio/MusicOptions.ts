@@ -11,8 +11,8 @@ export const MUSIC_OPTIONS: MusicOption[] = [
     url: "https://media-ssl.musicradio.com/ClassicFM",
   },
   {
-    id: "ambient",
-    name: "Ambient",
+    id: "chillout",
+    name: "Chillout",
     url: "https://radio.stereoscenic.com/asm-h", // Ambient Sleeping Pill radio - free ambient music stream
   },
   {
