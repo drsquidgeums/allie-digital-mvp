@@ -18,9 +18,10 @@ export const IrlenOverlay = () => {
     { name: "Yellow", value: "rgba(255, 255, 0, 0.3)" },
     { name: "Blue", value: "rgba(0, 0, 255, 0.3)" },
     { name: "Rose", value: "rgba(255, 192, 203, 0.3)" },
-    { name: "Soft Orange", value: "rgba(254, 198, 161, 0.3)" }, // #FEC6A1 with opacity
-    { name: "Bright Orange", value: "rgba(249, 115, 22, 0.3)" }, // #F97316 with opacity
-    { name: "Soft Green", value: "rgba(242, 252, 226, 0.3)" }, // #F2FCE2 with opacity
+    { name: "Soft Orange", value: "rgba(254, 198, 161, 0.3)" },
+    { name: "Bright Orange", value: "rgba(249, 115, 22, 0.3)" },
+    { name: "Soft Green", value: "rgba(242, 252, 226, 0.3)" },
+    { name: "Lime Green", value: "rgba(50, 205, 50, 0.3)" }, // Added Lime Green
   ];
 
   const handleOverlayChange = (color: string) => {
