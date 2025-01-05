@@ -6,18 +6,49 @@ import { Play, Pause, Square } from "lucide-react";
 
 export const TextToSpeech = () => {
   const [text, setText] = React.useState("");
-  const [voice, setVoice] = React.useState("1");
+  const [selectedVoice, setSelectedVoice] = React.useState("");
+  const [voices, setVoices] = React.useState<SpeechSynthesisVoice[]>([]);
   const [isPlaying, setIsPlaying] = React.useState(false);
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = React.useRef<SpeechSynthesisUtterance | null>(null);
 
   React.useEffect(() => {
-    return () => {
-      if (utteranceRef.current) {
-        speechSynthesis.cancel();
+    const loadVoices = () => {
+      const availableVoices = speechSynthesis.getVoices();
+      // Filter for English voices only
+      const englishVoices = availableVoices.filter(voice => 
+        voice.lang.includes('en')
+      );
+      setVoices(englishVoices);
+      
+      // Set default voice if none selected
+      if (!selectedVoice && englishVoices.length > 0) {
+        setSelectedVoice(englishVoices[0].voiceURI);
       }
     };
-  }, [speechSynthesis]);
+
+    loadVoices();
+    
+    // Some browsers need this event to load voices
+    speechSynthesis.onvoiceschanged = loadVoices;
+
+    return () => {
+      speechSynthesis.onvoiceschanged = null;
+    };
+  }, [selectedVoice]);
+
+  const getVoiceLabel = (voice: SpeechSynthesisVoice) => {
+    const lang = voice.lang.toLowerCase();
+    if (lang.includes('gb')) return `UK English (${voice.name})`;
+    if (lang.includes('us')) return `US English (${voice.name})`;
+    if (lang.includes('au')) return `Australian English (${voice.name})`;
+    if (lang.includes('ie')) return `Irish English (${voice.name})`;
+    if (lang.includes('za')) return `South African English (${voice.name})`;
+    if (lang.includes('nz')) return `New Zealand English (${voice.name})`;
+    if (lang.includes('in')) return `Indian English (${voice.name})`;
+    if (lang.includes('ca')) return `Canadian English (${voice.name})`;
+    return `English (${voice.name})`;
+  };
 
   const handlePlay = () => {
     if (isPlaying) {
@@ -27,15 +58,17 @@ export const TextToSpeech = () => {
         speechSynthesis.resume();
       } else {
         const utterance = new SpeechSynthesisUtterance(text);
-        const voices = speechSynthesis.getVoices();
-        utterance.voice = voices[parseInt(voice)];
-        utteranceRef.current = utterance;
+        const selectedVoiceObj = voices.find(v => v.voiceURI === selectedVoice);
+        if (selectedVoiceObj) {
+          utterance.voice = selectedVoiceObj;
+        }
         
         utterance.onend = () => {
           setIsPlaying(false);
           utteranceRef.current = null;
         };
         
+        utteranceRef.current = utterance;
         speechSynthesis.speak(utterance);
       }
     }
@@ -51,14 +84,16 @@ export const TextToSpeech = () => {
   return (
     <div className="p-4 space-y-4 animate-fade-in">
       <div className="space-y-2">
-        <Select value={voice} onValueChange={setVoice}>
+        <Select value={selectedVoice} onValueChange={setSelectedVoice}>
           <SelectTrigger>
             <SelectValue placeholder="Select a voice" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="1">Voice 1</SelectItem>
-            <SelectItem value="2">Voice 2</SelectItem>
-            <SelectItem value="3">Voice 3</SelectItem>
+            {voices.map((voice) => (
+              <SelectItem key={voice.voiceURI} value={voice.voiceURI}>
+                {getVoiceLabel(voice)}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
