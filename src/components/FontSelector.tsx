@@ -23,7 +23,7 @@ export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) 
 
   const handleBoldToggle = () => {
     setIsBold(!isBold);
-    document.documentElement.style.fontWeight = !isBold ? 'bold' : 'normal';
+    document.documentElement.style.setProperty('--font-weight', !isBold ? 'bold' : 'normal');
     toast({
       title: !isBold ? "Bold text enabled" : "Bold text disabled",
       description: "Font weight has been updated",
