@@ -48,6 +48,23 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
     }
   };
 
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newUrl = e.target.value;
+    try {
+      // Check if the URL is valid
+      if (newUrl && !newUrl.startsWith('data:') && !newUrl.startsWith('blob:')) {
+        new URL(newUrl);
+      }
+      setUrl(newUrl);
+    } catch (error) {
+      toast({
+        title: "Invalid URL",
+        description: "Please enter a valid URL",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <Card className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
       <div className="p-4 border-b border-border">
@@ -70,7 +87,7 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
             placeholder="Paste URL here"
             className="w-full"
             value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            onChange={handleUrlChange}
           />
         </div>
         <div className="h-full">
