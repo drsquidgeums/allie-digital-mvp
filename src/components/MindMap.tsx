@@ -126,7 +126,7 @@ export const MindMap = () => {
         onClear={clearCanvas}
         colorOptions={colorOptions}
       />
-      <div className="w-full h-[calc(100%-64px)] bg-background">
+      <div className="w-full h-[calc(100%-64px)]">
         <ReactFlow
           nodes={nodes}
           edges={edges}
