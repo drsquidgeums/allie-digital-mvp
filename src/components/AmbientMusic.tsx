@@ -14,17 +14,17 @@ const MUSIC_OPTIONS = [
   {
     id: "classical",
     name: "Classical Piano",
-    url: "https://cdn.pixabay.com/download/audio/2022/02/22/audio_d1718ab41b.mp3",
+    url: "https://www.chosic.com/wp-content/uploads/2021/04/The-Epic-Hero-Epic-Cinematic-Keys.mp3",
   },
   {
     id: "ambient",
     name: "Ambient Nature",
-    url: "https://cdn.pixabay.com/download/audio/2022/03/10/audio_1fb4c56a6d.mp3",
+    url: "https://www.chosic.com/wp-content/uploads/2021/07/Raindrops-on-window.mp3",
   },
   {
     id: "electronic",
     name: "Minimal Electronic",
-    url: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0c6ff1a42.mp3",
+    url: "https://www.chosic.com/wp-content/uploads/2021/04/Beautiful-Dream.mp3",
   },
 ];
 
@@ -38,31 +38,59 @@ export const AmbientMusic = () => {
     audioRef.current = new Audio();
     audioRef.current.loop = true;
 
+    // Add error event listener
+    audioRef.current.addEventListener('error', (e) => {
+      console.error('Audio error:', e);
+      toast({
+        title: "Playback error",
+        description: "There was an error loading the audio file. Please try another option.",
+        variant: "destructive",
+      });
+      setIsPlaying(false);
+    });
+
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.removeEventListener('error', () => {});
         audioRef.current = null;
       }
     };
-  }, []);
+  }, [toast]);
 
-  const handleMusicChange = (value: string) => {
+  const handleMusicChange = async (value: string) => {
     const music = MUSIC_OPTIONS.find((opt) => opt.id === value);
     if (!music || !audioRef.current) return;
 
-    audioRef.current.src = music.url;
-    setSelectedMusic(value);
-    
-    if (isPlaying) {
-      audioRef.current.play();
+    try {
+      // Pause current playback
+      if (audioRef.current.src) {
+        audioRef.current.pause();
+      }
+
+      // Set new source
+      audioRef.current.src = music.url;
+      setSelectedMusic(value);
+      
+      // If was playing, start new selection
+      if (isPlaying) {
+        await audioRef.current.play();
+        toast({
+          title: "Music changed",
+          description: `Now playing: ${music.name}`,
+        });
+      }
+    } catch (error) {
+      console.error('Error changing music:', error);
       toast({
-        title: "Music changed",
-        description: `Now playing: ${music.name}`,
+        title: "Error changing music",
+        description: "Unable to load the selected music",
+        variant: "destructive",
       });
     }
   };
 
-  const togglePlay = () => {
+  const togglePlay = async () => {
     if (!audioRef.current || !selectedMusic) {
       toast({
         title: "Please select a music option",
@@ -71,26 +99,30 @@ export const AmbientMusic = () => {
       return;
     }
 
-    if (isPlaying) {
-      audioRef.current.pause();
-      toast({
-        title: "Music paused",
-        description: "Background music has been paused",
-      });
-    } else {
-      audioRef.current.play().catch(() => {
+    try {
+      if (isPlaying) {
+        audioRef.current.pause();
         toast({
-          title: "Playback failed",
-          description: "Unable to play the selected music",
-          variant: "destructive",
+          title: "Music paused",
+          description: "Background music has been paused",
         });
-      });
+      } else {
+        await audioRef.current.play();
+        toast({
+          title: "Music playing",
+          description: `Now playing: ${MUSIC_OPTIONS.find(opt => opt.id === selectedMusic)?.name}`,
+        });
+      }
+      setIsPlaying(!isPlaying);
+    } catch (error) {
+      console.error('Playback error:', error);
       toast({
-        title: "Music playing",
-        description: `Now playing: ${MUSIC_OPTIONS.find(opt => opt.id === selectedMusic)?.name}`,
+        title: "Playback failed",
+        description: "Unable to play the selected music. Please try again.",
+        variant: "destructive",
       });
+      setIsPlaying(false);
     }
-    setIsPlaying(!isPlaying);
   };
 
   return (
