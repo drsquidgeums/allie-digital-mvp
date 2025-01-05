@@ -4,9 +4,10 @@ interface DocumentPreviewProps {
   file: File | null;
   url: string;
   selectedColor: string;
+  isHighlighter?: boolean;
 }
 
-export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewProps) => {
+export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = false }: DocumentPreviewProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -20,7 +21,12 @@ export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewPro
           // Handle text selection
           const range = selection.getRangeAt(0);
           const span = document.createElement('span');
-          span.style.color = selectedColor;
+          if (isHighlighter) {
+            span.style.backgroundColor = `${selectedColor}40`; // 40 is for 25% opacity
+            span.style.padding = '0 2px';
+          } else {
+            span.style.color = selectedColor;
+          }
           range.surroundContents(span);
           selection.removeAllRanges();
         }
@@ -29,7 +35,7 @@ export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewPro
       container.addEventListener('mouseup', handleClick);
       return () => container.removeEventListener('mouseup', handleClick);
     }
-  }, [selectedColor]);
+  }, [selectedColor, isHighlighter]);
 
   // Handle iframe load for URL content
   useEffect(() => {
@@ -48,7 +54,12 @@ export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewPro
               if (selection && !selection.isCollapsed) {
                 const range = selection.getRangeAt(0);
                 const span = document.createElement('span');
-                span.style.color = selectedColor;
+                if (isHighlighter) {
+                  span.style.backgroundColor = `${selectedColor}40`;
+                  span.style.padding = '0 2px';
+                } else {
+                  span.style.color = selectedColor;
+                }
                 range.surroundContents(span);
                 selection.removeAllRanges();
               }
@@ -59,7 +70,7 @@ export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewPro
         }
       };
     }
-  }, [url, selectedColor]);
+  }, [url, selectedColor, isHighlighter]);
 
   if (!file && !url) {
     return (

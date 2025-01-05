@@ -1,26 +1,28 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Paintbrush } from "lucide-react";
+import { Paintbrush, Highlighter } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "./ui/alert";
+import { Toggle } from "./ui/toggle";
 
 interface ColorSeparatorProps {
-  onColorChange?: (color: string) => void;
+  onColorChange?: (color: string, isHighlighter?: boolean) => void;
 }
 
 export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
   const [selectedColor, setSelectedColor] = React.useState("#000000");
   const [hexInput, setHexInput] = React.useState("#000000");
+  const [isHighlighter, setIsHighlighter] = React.useState(false);
   const { toast } = useToast();
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
     setHexInput(color);
     if (onColorChange) {
-      onColorChange(color);
+      onColorChange(color, isHighlighter);
       toast({
-        title: "Color selected",
+        title: isHighlighter ? "Highlighter color selected" : "Color selected",
         description: "Now highlight text in the document to apply this color",
       });
     }
@@ -34,6 +36,17 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
     const isValidHex = /^#[0-9A-Fa-f]{6}$/.test(value);
     if (isValidHex) {
       handleColorChange(value);
+    }
+  };
+
+  const toggleHighlighter = () => {
+    setIsHighlighter(!isHighlighter);
+    if (onColorChange) {
+      onColorChange(selectedColor, !isHighlighter);
+      toast({
+        title: !isHighlighter ? "Highlighter mode enabled" : "Text color mode enabled",
+        description: "Now highlight text in the document to apply this effect",
+      });
     }
   };
 
@@ -52,18 +65,28 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
 
   return (
     <div className="p-4 space-y-4">
-      <div className="flex items-center gap-2">
-        <Paintbrush className="w-4 h-4" />
-        <h3 className="font-medium">Color Tool</h3>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Paintbrush className="w-4 h-4" />
+          <h3 className="font-medium">Color Tool</h3>
+        </div>
+        <Toggle
+          pressed={isHighlighter}
+          onPressedChange={toggleHighlighter}
+          aria-label="Toggle highlighter mode"
+          className="data-[state=on]:bg-yellow-200"
+        >
+          <Highlighter className="w-4 h-4" />
+        </Toggle>
       </div>
 
       <Alert>
         <AlertDescription>
-          1. Select a color below
+          1. {isHighlighter ? "Toggle highlighter mode" : "Select a color"} below
           <br />
           2. Highlight text in your document
           <br />
-          3. The highlighted text will automatically change to your selected color
+          3. The highlighted text will automatically change
         </AlertDescription>
       </Alert>
       
@@ -98,7 +121,10 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
             <Button
               key={color}
               className="w-full h-8 transition-transform hover:scale-105"
-              style={{ backgroundColor: color }}
+              style={{ 
+                backgroundColor: isHighlighter ? `${color}40` : color,
+                border: isHighlighter ? `2px solid ${color}` : 'none'
+              }}
               onClick={() => handleColorChange(color)}
             />
           ))}

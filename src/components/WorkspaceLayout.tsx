@@ -8,6 +8,7 @@ export const WorkspaceLayout = () => {
   const { toast } = useToast();
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [selectedColor, setSelectedColor] = React.useState("#000000");
+  const [isHighlighter, setIsHighlighter] = React.useState(false);
   const [uploadedFiles, setUploadedFiles] = React.useState<File[]>([]);
   const location = useLocation();
 
@@ -51,16 +52,25 @@ export const WorkspaceLayout = () => {
     });
   };
 
+  const handleColorChange = (color: string, highlighter?: boolean) => {
+    setSelectedColor(color);
+    setIsHighlighter(!!highlighter);
+  };
+
   return (
     <div className="flex h-screen bg-background overflow-hidden">
       <Sidebar 
         onFileUpload={handleFileUpload} 
-        onColorChange={setSelectedColor}
+        onColorChange={handleColorChange}
         uploadedFiles={uploadedFiles}
         onFileSelect={handleFileSelect}
       />
       <main className="flex-1 p-6 overflow-auto">
-        <DocumentViewer file={selectedFile} selectedColor={selectedColor} />
+        <DocumentViewer 
+          file={selectedFile} 
+          selectedColor={selectedColor}
+          isHighlighter={isHighlighter}
+        />
       </main>
     </div>
   );
