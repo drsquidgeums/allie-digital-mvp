@@ -1,12 +1,13 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Palette, Book } from "lucide-react";
+import { Sun, Moon, Palette, Book, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog/dialog-root";
 import { IrlenOverlay } from "./IrlenOverlay";
 import { AmbientMusic } from "./AmbientMusic";
@@ -82,8 +83,13 @@ export const ThemeProvider = () => {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader>
+            <DialogHeader className="flex flex-row items-center justify-between">
               <DialogTitle>Choose a Font</DialogTitle>
+              <DialogClose asChild>
+                <Button variant="ghost" size="icon" className="h-6 w-6">
+                  <X className="h-4 w-4" />
+                </Button>
+              </DialogClose>
             </DialogHeader>
             <FontSelector selectedFont={selectedFont} onFontChange={handleFontChange} />
           </DialogContent>
