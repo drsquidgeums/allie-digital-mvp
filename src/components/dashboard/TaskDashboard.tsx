@@ -68,12 +68,14 @@ export const TaskDashboard = () => {
             <div className="space-y-6">
               <Card className="p-6 shadow-lg">
                 <h2 className="text-xl font-semibold mb-4">Calendar</h2>
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  className="rounded-md border"
-                />
+                <div className="flex justify-center">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    className="rounded-md border"
+                  />
+                </div>
               </Card>
               <TaskListCard
                 tasks={tasks}
