@@ -27,7 +27,7 @@ export const NotificationItem = ({
       onClick={() => onRead(id)}
     >
       <div className="flex justify-between items-start">
-        <h4 className="text-sm font-medium dark:text-gray-200 text-gray-800 sepia:text-[#F2E8CF]">{title}</h4>
+        <h4 className="text-sm font-medium dark:text-gray-200 text-gray-800">{title}</h4>
         <span className="text-xs dark:text-gray-400 text-gray-500 sepia:text-[#F2E8CF]">
           {new Date(timestamp).toLocaleTimeString('en-GB', {
             hour: '2-digit',
