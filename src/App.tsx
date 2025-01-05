@@ -10,7 +10,6 @@ import AIAssistant from "./pages/AIAssistant";
 import MindMapDashboard from "./pages/MindMapDashboard";
 import CommunityPage from "./pages/CommunityPage";
 import { PomodoroProvider } from "./contexts/PomodoroContext";
-import { AmbientMusic } from "./components/AmbientMusic";
 
 const queryClient = new QueryClient();
 
@@ -65,9 +64,6 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <PomodoroProvider>
-          <div className="fixed top-4 right-4 z-50">
-            <AmbientMusic />
-          </div>
           <Toaster />
           <Sonner />
           <BrowserRouter>

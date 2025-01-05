@@ -6,11 +6,9 @@ export const useAudioInstance = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio();
-      audioRef.current.loop = true;
-      audioRef.current.volume = 0.3;
-    }
+    audioRef.current = new Audio();
+    audioRef.current.loop = true;
+    audioRef.current.volume = 0.3;
 
     const handleError = (e: Event) => {
       console.error('Audio error:', e);
@@ -25,7 +23,9 @@ export const useAudioInstance = () => {
 
     return () => {
       if (audioRef.current) {
+        audioRef.current.pause();
         audioRef.current.removeEventListener('error', handleError);
+        audioRef.current = null;
       }
     };
   }, [toast]);
