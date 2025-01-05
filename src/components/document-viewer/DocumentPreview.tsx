@@ -1,6 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
-import { convertDocxToHtml, readTextFile, loadPdfDocument, getFileType } from './FileConverter';
+import { 
+  convertDocxToHtml, 
+  readTextFile, 
+  loadPdfDocument, 
+  getFileType,
+  convertOdtToHtml,
+  convertRtfToHtml,
+  convertEpubToHtml,
+  convertMarkdownToHtml
+} from './FileConverter';
 import { useToast } from '@/hooks/use-toast';
 import { AnnotationTools } from './AnnotationTools';
 import { Button } from '@/components/ui/button';
@@ -22,13 +31,6 @@ export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = fals
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pdfDoc, setPdfDoc] = useState<any>(null);
-  const [annotations, setAnnotations] = useState<Array<{
-    type: 'highlight' | 'comment';
-    content: string;
-    color?: string;
-    position?: { x: number; y: number };
-    page: number;
-  }>>([]);
 
   useEffect(() => {
     if (!file) return;
@@ -48,8 +50,19 @@ export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = fals
             break;
 
           case 'docx':
-            const htmlContent = await convertDocxToHtml(file);
-            setContent(htmlContent);
+          case 'doc':
+            const docContent = await convertDocxToHtml(file);
+            setContent(docContent);
+            break;
+
+          case 'odt':
+            const odtContent = await convertOdtToHtml(file);
+            setContent(odtContent);
+            break;
+
+          case 'rtf':
+            const rtfContent = await convertRtfToHtml(file);
+            setContent(rtfContent);
             break;
 
           case 'txt':
@@ -58,8 +71,18 @@ export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = fals
             break;
 
           case 'html':
-            const htmlFileContent = await readTextFile(file);
-            setContent(htmlFileContent);
+            const htmlContent = await readTextFile(file);
+            setContent(htmlContent);
+            break;
+
+          case 'epub':
+            const epubContent = await convertEpubToHtml(file);
+            setContent(epubContent);
+            break;
+
+          case 'md':
+            const mdContent = await convertMarkdownToHtml(file);
+            setContent(mdContent);
             break;
         }
 

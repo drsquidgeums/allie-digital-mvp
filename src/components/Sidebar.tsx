@@ -71,7 +71,7 @@ export const Sidebar = ({
           ref={fileInputRef}
           onChange={handleFileChange}
           className="hidden"
-          accept=".pdf,.doc,.docx,.txt,.html"
+          accept=".pdf,.doc,.docx,.txt,.html,.odt,.rtf,.epub,.md"
         />
 
         <SidebarTools 
