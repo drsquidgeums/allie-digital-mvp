@@ -110,22 +110,45 @@
     width: 100%;
   }
 
-  /* Ensure font weight inheritance */
-  button, a, div, span {
-    font-weight: inherit;
-  }
-
-  /* Button hover and active states */
+  /* Button states styling */
   .button-base {
     @apply transition-colors duration-200;
   }
 
+  /* Light theme button states */
   .button-hover {
     @apply hover:bg-accent hover:text-accent-foreground;
   }
 
   .button-active {
     @apply active:bg-accent active:text-accent-foreground;
+  }
+
+  /* Selected button state - ensure text is visible */
+  [data-state="open"],
+  .selected,
+  .active,
+  button[aria-expanded="true"],
+  button[data-state="on"] {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  /* Dark theme specific button states */
+  .dark [data-state="open"],
+  .dark .selected,
+  .dark .active,
+  .dark button[aria-expanded="true"],
+  .dark button[data-state="on"] {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  /* Sepia theme specific button states */
+  .sepia [data-state="open"],
+  .sepia .selected,
+  .sepia .active,
+  .sepia button[aria-expanded="true"],
+  .sepia button[data-state="on"] {
+    @apply bg-primary text-primary-foreground;
   }
 
   .dark .react-flow__node {

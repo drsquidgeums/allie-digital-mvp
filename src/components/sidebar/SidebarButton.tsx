@@ -13,7 +13,9 @@ export const SidebarButton = ({ icon: Icon, label, isActive, onClick }: SidebarB
   return (
     <Button 
       variant={isActive ? "default" : "ghost"}
-      className="w-full flex items-center justify-start gap-2 px-2 font-inherit text-inherit"
+      className={`w-full flex items-center justify-start gap-2 px-2 font-inherit text-inherit ${
+        isActive ? 'bg-primary text-primary-foreground' : ''
+      }`}
       onClick={onClick}
       style={{ fontWeight: 'inherit' }}
     >
