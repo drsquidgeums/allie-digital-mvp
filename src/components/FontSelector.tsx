@@ -8,6 +8,9 @@ import {
   SelectScrollUpButton,
   SelectScrollDownButton,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Bold } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface FontSelectorProps {
   selectedFont: string;
@@ -15,6 +18,18 @@ interface FontSelectorProps {
 }
 
 export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) => {
+  const [isBold, setIsBold] = React.useState(false);
+  const { toast } = useToast();
+
+  const handleBoldToggle = () => {
+    setIsBold(!isBold);
+    document.documentElement.style.fontWeight = !isBold ? 'bold' : 'normal';
+    toast({
+      title: !isBold ? "Bold text enabled" : "Bold text disabled",
+      description: "Font weight has been updated",
+    });
+  };
+
   const fonts = [
     // ADHD-friendly fonts
     { name: "Verdana", value: "Verdana" },
@@ -50,20 +65,31 @@ export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) 
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium">Font</label>
-      <Select value={selectedFont} onValueChange={onFontChange}>
-        <SelectTrigger>
-          <SelectValue placeholder="Select a font" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectScrollUpButton />
-          {fonts.map((font) => (
-            <SelectItem key={font.value} value={font.value}>
-              {font.name}
-            </SelectItem>
-          ))}
-          <SelectScrollDownButton />
-        </SelectContent>
-      </Select>
+      <div className="flex gap-2 items-start">
+        <Select value={selectedFont} onValueChange={onFontChange}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select a font" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectScrollUpButton />
+            {fonts.map((font) => (
+              <SelectItem key={font.value} value={font.value}>
+                {font.name}
+              </SelectItem>
+            ))}
+            <SelectScrollDownButton />
+          </SelectContent>
+        </Select>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={handleBoldToggle}
+          className={`h-10 w-10 ${isBold ? 'bg-accent' : ''}`}
+          title="Toggle bold text"
+        >
+          <Bold className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 };
