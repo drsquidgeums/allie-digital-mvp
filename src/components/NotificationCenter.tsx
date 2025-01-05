@@ -31,9 +31,9 @@ export const NotificationCenter = () => {
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] dark:bg-[#1a1a1a] bg-[#f8f8f8] dark:border-gray-600/50 border-gray-200/50 shadow-2xl backdrop-blur-sm">
+      <DialogContent className="sm:max-w-[425px] dark:bg-[#1a1a1a] bg-[#f8f8f8] sepia:bg-[#F2E8CF] dark:border-gray-600/50 border-gray-200/50 shadow-2xl backdrop-blur-sm">
         <DialogHeader>
-          <DialogTitle className="dark:text-gray-200 text-gray-800">Notifications</DialogTitle>
+          <DialogTitle className="dark:text-gray-200 text-gray-800 sepia:text-[#F2E8CF]">Notifications</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 max-h-[60vh] overflow-y-auto">
           <NotificationList 
@@ -42,8 +42,8 @@ export const NotificationCenter = () => {
           />
         </div>
         <DialogClose asChild>
-          <button className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none dark:bg-black bg-white dark:border-gray-600/50 border-gray-200/50 p-1">
-            <X className="h-4 w-4 dark:text-gray-200 text-gray-800" />
+          <button className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none dark:bg-black bg-white sepia:bg-[#F2E8CF] dark:border-gray-600/50 border-gray-200/50 p-1">
+            <X className="h-4 w-4 dark:text-gray-200 text-gray-800 sepia:text-[#F2E8CF]" />
             <span className="sr-only">Close</span>
           </button>
         </DialogClose>
