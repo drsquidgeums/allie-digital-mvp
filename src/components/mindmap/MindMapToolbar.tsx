@@ -1,9 +1,10 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Network, Plus, Download, Trash2 } from "lucide-react";
+import { Network, Plus, Download, Trash2, Image } from "lucide-react";
 import { ColorOption } from './types';
 import { ColorPicker } from '../ColorPicker';
+import { downloadMindMap } from './utils/mindMapUtils';
 
 interface MindMapToolbarProps {
   selectedColor: string;
@@ -76,6 +77,9 @@ export const MindMapToolbar = ({
         </Button>
         <Button onClick={onExport} variant="outline" size="icon" className="bg-background hover:bg-accent">
           <Download className="w-4 h-4 text-foreground" />
+        </Button>
+        <Button onClick={downloadMindMap} variant="outline" size="icon" className="bg-background hover:bg-accent">
+          <Image className="w-4 h-4 text-foreground" />
         </Button>
         <Button onClick={onClear} variant="outline" size="icon" className="bg-background hover:bg-accent">
           <Trash2 className="w-4 h-4 text-foreground" />
