@@ -152,4 +152,22 @@
     background: hsl(var(--card));
     border-color: hsl(var(--border));
   }
+
+  /* Fix for mind map viewer box borders */
+  .react-flow {
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .react-flow__container {
+    border-radius: inherit;
+  }
+
+  .react-flow__renderer {
+    border-radius: inherit;
+  }
+
+  .react-flow__pane {
+    border-radius: inherit;
+  }
 }
