@@ -18,6 +18,6 @@ export const MUSIC_OPTIONS: MusicOption[] = [
   {
     id: "minimal",
     name: "Minimal",
-    url: "https://radio.stereoscenic.com/chill-h", // Stereoscenic Chill radio - free minimal/electronic stream
+    url: "http://ice1.somafm.com/groovesalad-128-mp3", // SomaFM Groove Salad - electronic/downtempo
   },
 ];
