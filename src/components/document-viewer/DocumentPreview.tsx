@@ -2,9 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 import { convertDocxToHtml, readTextFile, loadPdfDocument, getFileType } from './FileConverter';
 import { useToast } from '@/hooks/use-toast';
-import { AnnotationTools } from './AnnotationTools';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { PdfViewer } from './viewers/PdfViewer';
+import { TextViewer } from './viewers/TextViewer';
 
 interface DocumentPreviewProps {
   file: File | null;
@@ -14,23 +13,19 @@ interface DocumentPreviewProps {
 }
 
 export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = false }: DocumentPreviewProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [content, setContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pdfDoc, setPdfDoc] = useState<any>(null);
-  const [annotations, setAnnotations] = useState<Array<{
-    type: 'highlight' | 'comment';
-    content: string;
-    color?: string;
-    position?: { x: number; y: number };
-    page: number;
-  }>>([]);
 
   useEffect(() => {
+    if (!file && url) {
+      setContent(`<iframe src="${url}" style="width:100%; height:100vh; border:none;"></iframe>`);
+      return;
+    }
+
     if (!file) return;
 
     const loadDocument = async () => {
@@ -44,7 +39,6 @@ export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = fals
             const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
             setPdfDoc(pdf);
             setTotalPages(pdf.numPages);
-            await renderPdfPage(pdf, currentPage);
             break;
 
           case 'docx':
@@ -80,81 +74,7 @@ export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = fals
     };
 
     loadDocument();
-  }, [file, currentPage, toast]);
-
-  const renderPdfPage = async (pdf: any, pageNumber: number) => {
-    if (!canvasRef.current) return;
-    
-    const page = await pdf.getPage(pageNumber);
-    const viewport = page.getViewport({ scale: 1.5 });
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    
-    if (canvas && context) {
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-      
-      await page.render({
-        canvasContext: context,
-        viewport: viewport
-      }).promise;
-    }
-  };
-
-  const handleTextSelection = () => {
-    const selection = window.getSelection();
-    if (selection && !selection.isCollapsed) {
-      const range = selection.getRangeAt(0);
-      const span = document.createElement('span');
-      
-      if (isHighlighter) {
-        span.style.backgroundColor = `${selectedColor}40`;
-        span.style.padding = '0 2px';
-      } else {
-        span.style.color = selectedColor;
-      }
-      
-      range.surroundContents(span);
-      selection.removeAllRanges();
-
-      // Save highlight annotation
-      setAnnotations(prev => [...prev, {
-        type: 'highlight',
-        content: range.toString(),
-        color: isHighlighter ? selectedColor : undefined,
-        page: currentPage,
-      }]);
-    }
-  };
-
-  const handleAddComment = (comment: string) => {
-    setAnnotations(prev => [...prev, {
-      type: 'comment',
-      content: comment,
-      page: currentPage,
-      position: { x: 0, y: 0 }, // You can implement position selection later
-    }]);
-  };
-
-  const handleSaveAnnotations = () => {
-    // Save annotations to localStorage or your backend
-    localStorage.setItem(`annotations-${file?.name}`, JSON.stringify(annotations));
-    toast({
-      title: "Annotations saved",
-      description: "Your annotations have been saved successfully",
-    });
-  };
-
-  const handlePageChange = async (direction: 'prev' | 'next') => {
-    if (!pdfDoc) return;
-    
-    const newPage = direction === 'next' 
-      ? Math.min(currentPage + 1, totalPages)
-      : Math.max(currentPage - 1, 1);
-    
-    setCurrentPage(newPage);
-    await renderPdfPage(pdfDoc, newPage);
-  };
+  }, [file, url, toast]);
 
   if (!file && !url) {
     return (
@@ -174,51 +94,16 @@ export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = fals
 
   return (
     <div className="flex flex-col h-full">
-      <div 
-        ref={containerRef} 
-        className="flex-1 overflow-auto"
-        onMouseUp={handleTextSelection}
-      >
-        {file && getFileType(file) === 'pdf' ? (
-          <div className="relative">
-            <canvas ref={canvasRef} className="w-full" />
-            {totalPages > 1 && (
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-background/80 p-2 rounded-lg shadow">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange('prev')}
-                  disabled={currentPage === 1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <span className="text-sm">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange('next')}
-                  disabled={currentPage === totalPages}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div
-            className="p-4"
-            dangerouslySetInnerHTML={{ __html: content }}
-            contentEditable
-            style={{ minHeight: '100%' }}
-          />
-        )}
-      </div>
-      <AnnotationTools
-        onAddComment={handleAddComment}
-        onSaveAnnotations={handleSaveAnnotations}
-      />
+      {file && getFileType(file) === 'pdf' ? (
+        <PdfViewer
+          pdfDoc={pdfDoc}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+        />
+      ) : (
+        <TextViewer content={content} />
+      )}
     </div>
   );
 };
