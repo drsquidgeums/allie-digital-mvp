@@ -30,7 +30,6 @@ export const WorkspaceLayout = () => {
         file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
       setSelectedFile(file);
       setUploadedFiles(prevFiles => {
-        // Check if file already exists
         const exists = prevFiles.some(f => 
           f.name === file.name && 
           f.size === file.size && 
