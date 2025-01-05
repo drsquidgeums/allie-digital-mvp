@@ -23,7 +23,7 @@ export const DocumentToolbar = ({
   const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground";
 
   return (
-    <div className="flex justify-between w-full p-2 border-b border-border">
+    <div className="flex justify-between w-full p-2">
       <div className="flex gap-2">
         <Button
           variant="outline"

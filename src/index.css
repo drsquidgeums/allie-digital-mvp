@@ -115,7 +115,19 @@
     font-weight: inherit;
   }
 
-  /* Mind Map specific styles */
+  /* Button hover and active states */
+  .button-base {
+    @apply transition-colors duration-200;
+  }
+
+  .button-hover {
+    @apply hover:bg-accent hover:text-accent-foreground;
+  }
+
+  .button-active {
+    @apply active:bg-accent active:text-accent-foreground;
+  }
+
   .dark .react-flow__node {
     background: hsl(var(--secondary));
     color: hsl(var(--secondary-foreground));
