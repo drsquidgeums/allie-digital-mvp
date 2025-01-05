@@ -7,9 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { Calendar } from "@/components/ui/calendar";
 import { TaskListCard } from "./TaskListCard";
 import { useToast } from "@/hooks/use-toast";
-import GridLayout from "react-grid-layout";
-import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
 
 interface Task {
   id: string;
@@ -24,12 +21,6 @@ export const TaskDashboard = () => {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [tasks, setTasks] = React.useState<Task[]>([]);
   const { toast } = useToast();
-  const [layout, setLayout] = React.useState([
-    { i: 'taskManagement', x: 0, y: 0, w: 8, h: 4 },
-    { i: 'calendar', x: 8, y: 0, w: 4, h: 2 },
-    { i: 'taskList', x: 8, y: 2, w: 4, h: 2 },
-    { i: 'achievements', x: 8, y: 4, w: 4, h: 2 }
-  ]);
 
   const handleToggleTask = (id: string) => {
     setTasks(tasks.map(task => {
@@ -54,18 +45,6 @@ export const TaskDashboard = () => {
     }
   };
 
-  const handleLayoutChange = (newLayout: Layout[]) => {
-    setLayout(newLayout);
-    localStorage.setItem('taskDashboardLayout', JSON.stringify(newLayout));
-  };
-
-  React.useEffect(() => {
-    const savedLayout = localStorage.getItem('taskDashboardLayout');
-    if (savedLayout) {
-      setLayout(JSON.parse(savedLayout));
-    }
-  }, []);
-
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto py-6 px-4">
@@ -81,65 +60,51 @@ export const TaskDashboard = () => {
               <Home className="h-5 w-5" />
             </Button>
           </div>
-          
-          <GridLayout
-            className="layout"
-            layout={layout}
-            cols={12}
-            rowHeight={100}
-            width={1200}
-            isDraggable={true}
-            isResizable={true}
-            onLayoutChange={handleLayoutChange}
-            margin={[16, 16]}
-          >
-            <Card key="taskManagement" className="p-6 shadow-lg">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="p-6 shadow-lg lg:col-span-2">
               <h2 className="text-xl font-semibold mb-4">Task Management</h2>
               <TaskPlanner selectedDate={date} />
             </Card>
-
-            <Card key="calendar" className="p-6 shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Calendar</h2>
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                className="rounded-md border"
-              />
-            </Card>
-
-            <Card key="taskList" className="p-6 shadow-lg">
+            <div className="space-y-6">
+              <Card className="p-6 shadow-lg">
+                <h2 className="text-xl font-semibold mb-4">Calendar</h2>
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  className="rounded-md border"
+                />
+              </Card>
               <TaskListCard
                 tasks={tasks}
                 onToggleTask={handleToggleTask}
                 onDeleteTask={handleDeleteTask}
               />
-            </Card>
-
-            <Card key="achievements" className="p-6 shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Achievements</h2>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span>Task Master</span>
-                  <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
-                    <div className="h-full bg-green-500 w-3/4" />
+              <Card className="p-6 shadow-lg">
+                <h2 className="text-xl font-semibold mb-4">Achievements</h2>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span>Task Master</span>
+                    <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-green-500 w-3/4" />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Streak Champion</span>
+                    <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-blue-500 w-1/2" />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Early Bird</span>
+                    <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-purple-500 w-1/4" />
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span>Streak Champion</span>
-                  <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
-                    <div className="h-full bg-blue-500 w-1/2" />
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Early Bird</span>
-                  <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
-                    <div className="h-full bg-purple-500 w-1/4" />
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </GridLayout>
+              </Card>
+            </div>
+          </div>
         </div>
       </div>
     </div>
