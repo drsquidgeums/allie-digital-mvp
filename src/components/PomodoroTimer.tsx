@@ -2,134 +2,140 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
+import { Progress } from "@/components/ui/progress";
+import { usePomodoroContext } from "@/contexts/PomodoroContext";
 import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export const PomodoroTimer = () => {
-  const [workMinutes, setWorkMinutes] = React.useState(25);
-  const [breakMinutes, setBreakMinutes] = React.useState(5);
-  const [seconds, setSeconds] = React.useState(0);
-  const [isActive, setIsActive] = React.useState(false);
-  const [isWork, setIsWork] = React.useState(true);
-  const [showAlert, setShowAlert] = React.useState(false);
-  const { toast } = useToast();
-
-  React.useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (isActive) {
-      interval = setInterval(() => {
-        if (seconds === 0) {
-          if (workMinutes === 0) {
-            setIsWork(!isWork);
-            setWorkMinutes(isWork ? breakMinutes : workMinutes);
-            setShowAlert(true);
-            toast({
-              title: isWork ? "Break time!" : "Back to work!",
-              description: `Time for a ${isWork ? "break" : "work"} session`,
-            });
-          } else {
-            setWorkMinutes(minutes => minutes - 1);
-            setSeconds(59);
-          }
-        } else {
-          setSeconds(seconds => seconds - 1);
-        }
-      }, 1000);
-    }
-
-    return () => clearInterval(interval);
-  }, [isActive, seconds, workMinutes, breakMinutes, isWork, toast]);
-
-  const toggleTimer = () => {
-    setIsActive(!isActive);
-  };
-
-  const resetTimer = () => {
-    setIsActive(false);
-    setIsWork(true);
-    setWorkMinutes(25);
-    setBreakMinutes(5);
-    setSeconds(0);
-  };
+  const { state, dispatch } = usePomodoroContext();
+  const progress = ((state.workMinutes * 60 + state.seconds) / (state.isWork ? (25 * 60) : (state.shortBreakMinutes * 60))) * 100;
 
   return (
-    <>
-      <div className="p-2 space-y-3 animate-fade-in">
-        <div className="space-y-1">
-          <Label>Work Duration (minutes)</Label>
-          <Input
-            type="number"
-            value={workMinutes}
-            onChange={(e) => setWorkMinutes(Number(e.target.value))}
-            min="1"
-            disabled={isActive}
-            className="h-8"
-          />
-        </div>
-        <div className="space-y-1">
-          <Label>Break Duration (minutes)</Label>
-          <Input
-            type="number"
-            value={breakMinutes}
-            onChange={(e) => setBreakMinutes(Number(e.target.value))}
-            min="1"
-            disabled={isActive}
-            className="h-8"
-          />
-        </div>
-        <div className="text-center py-2">
-          <h3 className="text-2xl font-bold text-foreground">
-            {String(workMinutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            {isWork ? "Work Time" : "Break Time"}
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            onClick={toggleTimer}
-            className="flex-1 h-8 text-sm"
-          >
-            {isActive ? "Pause" : "Start"}
-          </Button>
-          <Button
-            onClick={resetTimer}
-            variant="outline"
-            className="flex-1 h-8 text-sm"
-          >
-            Reset
-          </Button>
-        </div>
-      </div>
+    <div className="space-y-6 animate-fade-in">
+      <Card>
+        <CardHeader>
+          <CardTitle>Pomodoro Timer</CardTitle>
+          <CardDescription>
+            Focus on your tasks with timed work sessions
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-1">
+              <Label>Work Duration</Label>
+              <Input
+                type="number"
+                value={state.workMinutes}
+                onChange={(e) => dispatch({ 
+                  type: 'SET_WORK_MINUTES', 
+                  payload: Number(e.target.value) 
+                })}
+                min="1"
+                disabled={state.isActive}
+                className="h-8"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label>Short Break</Label>
+              <Input
+                type="number"
+                value={state.shortBreakMinutes}
+                onChange={(e) => dispatch({ 
+                  type: 'SET_SHORT_BREAK', 
+                  payload: Number(e.target.value) 
+                })}
+                min="1"
+                disabled={state.isActive}
+                className="h-8"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label>Long Break</Label>
+              <Input
+                type="number"
+                value={state.longBreakMinutes}
+                onChange={(e) => dispatch({ 
+                  type: 'SET_LONG_BREAK', 
+                  payload: Number(e.target.value) 
+                })}
+                min="1"
+                disabled={state.isActive}
+                className="h-8"
+              />
+            </div>
+          </div>
 
-      <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {isWork ? "Break Time!" : "Back to Work!"}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {isWork 
-                ? "Great work! Take a well-deserved break."
-                : "Break's over! Time to get back to work."}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setShowAlert(false)}>
-              Got it!
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+          <div className="space-y-2">
+            <Label>Current Task</Label>
+            <Select
+              value={state.currentTask || ""}
+              onValueChange={(value) => dispatch({ 
+                type: 'SET_CURRENT_TASK', 
+                payload: value 
+              })}
+              disabled={state.isActive}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a task" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="task1">Task 1</SelectItem>
+                <SelectItem value="task2">Task 2</SelectItem>
+                <SelectItem value="task3">Task 3</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-4">
+            <div className="text-center">
+              <h3 className="text-3xl font-bold">
+                {String(state.workMinutes).padStart(2, "0")}:
+                {String(state.seconds).padStart(2, "0")}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {state.isWork ? "Work Time" : "Break Time"}
+              </p>
+            </div>
+
+            <Progress value={progress} className="h-2" />
+
+            <div className="flex justify-between items-center">
+              <div className="text-sm text-muted-foreground">
+                Completed: {state.completedPomodoros} / {state.sessionGoal}
+              </div>
+              <div className="space-x-2">
+                <Button
+                  onClick={() => dispatch({ type: 'TOGGLE_TIMER' })}
+                  variant="default"
+                  size="sm"
+                >
+                  {state.isActive ? "Pause" : "Start"}
+                </Button>
+                <Button
+                  onClick={() => dispatch({ type: 'RESET_TIMER' })}
+                  variant="outline"
+                  size="sm"
+                >
+                  Reset
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };

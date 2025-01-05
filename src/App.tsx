@@ -9,6 +9,7 @@ import { TaskDashboard } from "./components/dashboard/TaskDashboard";
 import AIAssistant from "./pages/AIAssistant";
 import MindMapDashboard from "./pages/MindMapDashboard";
 import CommunityPage from "./pages/CommunityPage";
+import { PomodoroProvider } from "./contexts/PomodoroContext";
 
 const queryClient = new QueryClient();
 
@@ -62,17 +63,19 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/tasks" element={<TaskDashboard />} />
-            <Route path="/ai-assistant" element={<AIAssistant />} />
-            <Route path="/mind-map" element={<MindMapDashboard />} />
-            <Route path="/community" element={<CommunityPage />} />
-          </Routes>
-        </BrowserRouter>
+        <PomodoroProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/tasks" element={<TaskDashboard />} />
+              <Route path="/ai-assistant" element={<AIAssistant />} />
+              <Route path="/mind-map" element={<MindMapDashboard />} />
+              <Route path="/community" element={<CommunityPage />} />
+            </Routes>
+          </BrowserRouter>
+        </PomodoroProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
