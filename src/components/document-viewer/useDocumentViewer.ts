@@ -35,14 +35,14 @@ export const useDocumentViewer = () => {
     }
 
     try {
-      // Capture the document with annotations as canvas
       const canvas = await html2canvas(documentRef.current, {
-        scale: 2, // Higher quality
+        scale: 2,
         useCORS: true,
         logging: false,
+        allowTaint: true,
+        foreignObjectRendering: true
       });
 
-      // Convert to PDF
       const imgData = canvas.toDataURL('image/jpeg', 1.0);
       const pdf = new jsPDF({
         orientation: 'portrait',
@@ -52,7 +52,6 @@ export const useDocumentViewer = () => {
 
       pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
       
-      // Download with original filename but append "_annotated"
       const fileName = file.name.replace(/\.[^/.]+$/, "") + "_annotated.pdf";
       pdf.save(fileName);
 
