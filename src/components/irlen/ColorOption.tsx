@@ -16,7 +16,7 @@ export const ColorOption = ({ name, value, isSelected, onClick }: ColorOptionPro
       variant={isSelected ? "secondary" : "outline"}
     >
       <div 
-        className="w-4 h-4 rounded"
+        className="w-4 h-4 rounded border border-border"
         style={{ backgroundColor: value }}
       />
       {name}
