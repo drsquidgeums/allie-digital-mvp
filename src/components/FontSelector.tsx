@@ -5,6 +5,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectScrollUpButton,
+  SelectScrollDownButton,
 } from "@/components/ui/select";
 
 interface FontSelectorProps {
@@ -53,11 +55,13 @@ export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) 
           <SelectValue placeholder="Select a font" />
         </SelectTrigger>
         <SelectContent>
+          <SelectScrollUpButton />
           {fonts.map((font) => (
             <SelectItem key={font.value} value={font.value}>
               {font.name}
             </SelectItem>
           ))}
+          <SelectScrollDownButton />
         </SelectContent>
       </Select>
     </div>
