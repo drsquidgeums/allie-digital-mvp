@@ -3,9 +3,12 @@ import { useToast } from "@/hooks/use-toast";
 import { MindMapToolbar } from './mindmap/MindMapToolbar';
 import { ColorOption } from './mindmap/types';
 import { useMindMap } from './mindmap/hooks/useMindMap';
-import 'jsmind/style/jsmind.css';
 
-declare const jsMind: any; // Since jsMind doesn't have TypeScript types
+declare global {
+  interface Window {
+    jsMind: any;
+  }
+}
 
 const colorOptions: ColorOption[] = [
   { label: 'Default', value: 'hsl(var(--muted))' },
@@ -35,7 +38,7 @@ export const MindMap = () => {
   } = useMindMap();
 
   useEffect(() => {
-    if (containerRef.current && mindMapData) {
+    if (containerRef.current && mindMapData && window.jsMind) {
       const options = {
         container: containerRef.current,
         theme: 'primary',
@@ -50,8 +53,18 @@ export const MindMap = () => {
         }
       };
 
-      mindMapRef.current = new jsMind(options);
+      mindMapRef.current = new window.jsMind(options);
       mindMapRef.current.show(mindMapData);
+
+      return () => {
+        if (mindMapRef.current) {
+          try {
+            mindMapRef.current.destroy();
+          } catch (e) {
+            console.error('Error destroying mind map:', e);
+          }
+        }
+      };
     }
   }, [mindMapData, selectedColor, customColor]);
 
