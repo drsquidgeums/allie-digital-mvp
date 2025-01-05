@@ -75,7 +75,7 @@ export const AIAssistant = () => {
     <div className="p-4 space-y-4">
       <div className="flex items-center gap-2">
         <Bot className="w-4 h-4" />
-        <h3 className="font-medium">ADHD Learning Assistant</h3>
+        <h3 className="font-medium">Allie</h3>
       </div>
       <div className="bg-card rounded-lg p-3 h-[300px] overflow-y-auto space-y-2">
         {messages.map((msg, idx) => (
