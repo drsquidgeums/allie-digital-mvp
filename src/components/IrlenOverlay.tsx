@@ -85,7 +85,7 @@ export const IrlenOverlay = () => {
           <Glasses className="h-4 w-4" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-48" align="end">
+      <PopoverContent className="w-48 bg-popover text-popover-foreground border-border" align="end">
         <div className="space-y-2">
           <div className="font-medium text-sm">Irlen Overlay</div>
           <ColorList
