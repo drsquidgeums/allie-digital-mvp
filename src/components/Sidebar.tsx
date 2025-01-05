@@ -10,13 +10,15 @@ interface SidebarProps {
   onColorChange: (color: string) => void;
   uploadedFiles: File[];
   onFileSelect: (file: File) => void;
+  onFileDelete: (file: File) => void;
 }
 
 export const Sidebar = ({ 
   onFileUpload, 
   onColorChange, 
   uploadedFiles, 
-  onFileSelect 
+  onFileSelect,
+  onFileDelete
 }: SidebarProps) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
@@ -78,6 +80,7 @@ export const Sidebar = ({
         onColorChange={onColorChange}
         uploadedFiles={uploadedFiles}
         onFileSelect={onFileSelect}
+        onFileDelete={onFileDelete}
       />
     </div>
   );

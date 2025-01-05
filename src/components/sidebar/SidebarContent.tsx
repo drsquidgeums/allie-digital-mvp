@@ -14,13 +14,15 @@ interface SidebarContentProps {
   onColorChange: (color: string) => void;
   uploadedFiles: File[];
   onFileSelect: (file: File) => void;
+  onFileDelete: (file: File) => void;
 }
 
 export const SidebarContent = ({ 
   activeComponent,
   onColorChange,
   uploadedFiles,
-  onFileSelect
+  onFileSelect,
+  onFileDelete
 }: SidebarContentProps) => {
   const renderActiveComponent = () => {
     switch (activeComponent) {
@@ -41,7 +43,11 @@ export const SidebarContent = ({
       case "color":
         return <ColorSeparator onColorChange={onColorChange} />;
       case "files":
-        return <FileList files={uploadedFiles} onFileSelect={onFileSelect} />;
+        return <FileList 
+          files={uploadedFiles} 
+          onFileSelect={onFileSelect}
+          onFileDelete={onFileDelete}
+        />;
       default:
         return null;
     }

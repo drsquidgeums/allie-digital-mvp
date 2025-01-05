@@ -13,7 +13,6 @@ export const WorkspaceLayout = () => {
   const location = useLocation();
 
   React.useEffect(() => {
-    // Apply saved overlay on mount
     const savedOverlay = localStorage.getItem('irlenOverlayColor');
     if (savedOverlay) {
       document.documentElement.style.setProperty('--overlay-color', savedOverlay);
@@ -21,7 +20,6 @@ export const WorkspaceLayout = () => {
     }
   }, []);
 
-  // Don't render the workspace layout on specific routes
   if (["/tasks", "/mind-map", "/ai-assistant"].includes(location.pathname)) {
     return null;
   }
@@ -52,6 +50,13 @@ export const WorkspaceLayout = () => {
     });
   };
 
+  const handleFileDelete = (fileToDelete: File) => {
+    setUploadedFiles(prev => prev.filter(file => file !== fileToDelete));
+    if (selectedFile === fileToDelete) {
+      setSelectedFile(null);
+    }
+  };
+
   const handleColorChange = (color: string, highlighter?: boolean) => {
     setSelectedColor(color);
     setIsHighlighter(!!highlighter);
@@ -64,6 +69,7 @@ export const WorkspaceLayout = () => {
         onColorChange={handleColorChange}
         uploadedFiles={uploadedFiles}
         onFileSelect={handleFileSelect}
+        onFileDelete={handleFileDelete}
       />
       <main className="flex-1 p-6 overflow-auto">
         <DocumentViewer 
