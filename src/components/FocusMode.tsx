@@ -7,9 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FocusSettingSwitch } from "./focus/FocusSettingSwitch";
+import { FocusSettings } from "./focus/FocusSettings";
 import { FocusModeActions } from "./focus/FocusModeActions";
 import { useFocusSettings } from "@/hooks/useFocusSettings";
+import { useFocusModeEffects } from "./focus/useFocusModeEffects";
 
 export const FocusMode = () => {
   const [isActive, setIsActive] = React.useState(false);
@@ -49,22 +50,15 @@ export const FocusMode = () => {
   const toggleFocusMode = async () => {
     if (!isActive) {
       try {
-        // Handle fullscreen
         if (settings.fullscreen) {
           await document.documentElement.requestFullscreen();
         }
-
-        // Handle notifications
         if (settings.blockNotifications && notificationPermission === "granted") {
           localStorage.setItem('previousNotificationState', 'enabled');
         }
-
-        // Handle background dimming
         if (settings.dimBackground) {
           document.body.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
         }
-
-        // Handle audio muting
         if (settings.muteAudio) {
           document.querySelectorAll('audio, video').forEach((el: HTMLMediaElement) => {
             el.muted = true;
@@ -86,20 +80,13 @@ export const FocusMode = () => {
         });
       }
     } else {
-      // Disable focus mode
       if (document.fullscreenElement) {
         document.exitFullscreen();
       }
-
-      // Restore notification settings
       if (localStorage.getItem('previousNotificationState') === 'enabled') {
         localStorage.removeItem('previousNotificationState');
       }
-
-      // Restore background
       document.body.style.backgroundColor = '';
-
-      // Restore audio
       document.querySelectorAll('audio, video').forEach((el: HTMLMediaElement) => {
         el.muted = false;
       });
@@ -114,36 +101,8 @@ export const FocusMode = () => {
     }
   };
 
-  // Handle visibility change
-  React.useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (isActive && document.hidden) {
-        toast({
-          title: "Stay focused!",
-          description: "You've switched away from your focus session",
-        });
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [isActive, toast]);
-
-  // Handle fullscreen change
-  React.useEffect(() => {
-    const handleFullscreenChange = () => {
-      if (!document.fullscreenElement && isActive && settings.fullscreen) {
-        setIsActive(false);
-        toast({
-          title: "Focus mode deactivated",
-          description: "Fullscreen mode was exited",
-        });
-      }
-    };
-
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, [isActive, settings.fullscreen, toast]);
+  // Use the effects hook
+  useFocusModeEffects(isActive, settings);
 
   return (
     <Card className="w-full">
@@ -154,57 +113,7 @@ export const FocusMode = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-4">
-          <FocusSettingSwitch
-            label="Block Notifications"
-            description="Mute all notifications during focus mode"
-            checked={settings.blockNotifications}
-            onCheckedChange={(checked) => updateSetting('blockNotifications', checked)}
-          />
-
-          <FocusSettingSwitch
-            label="Fullscreen Mode"
-            description="Enter fullscreen during focus mode"
-            checked={settings.fullscreen}
-            onCheckedChange={(checked) => updateSetting('fullscreen', checked)}
-          />
-
-          <FocusSettingSwitch
-            label="Block Popups"
-            description="Prevent popup dialogs during focus mode"
-            checked={settings.blockPopups}
-            onCheckedChange={(checked) => updateSetting('blockPopups', checked)}
-          />
-
-          <FocusSettingSwitch
-            label="Block Social Media"
-            description="Hide social media elements during focus mode"
-            checked={settings.blockSocialMedia}
-            onCheckedChange={(checked) => updateSetting('blockSocialMedia', checked)}
-          />
-
-          <FocusSettingSwitch
-            label="Enable Pomodoro"
-            description="Automatically start a Pomodoro timer"
-            checked={settings.enablePomodoro}
-            onCheckedChange={(checked) => updateSetting('enablePomodoro', checked)}
-          />
-
-          <FocusSettingSwitch
-            label="Dim Background"
-            description="Slightly dim the background for better focus"
-            checked={settings.dimBackground}
-            onCheckedChange={(checked) => updateSetting('dimBackground', checked)}
-          />
-
-          <FocusSettingSwitch
-            label="Mute Audio"
-            description="Mute all audio during focus mode"
-            checked={settings.muteAudio}
-            onCheckedChange={(checked) => updateSetting('muteAudio', checked)}
-          />
-        </div>
-
+        <FocusSettings />
         <FocusModeActions
           isActive={isActive}
           notificationPermission={notificationPermission}

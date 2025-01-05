@@ -5,6 +5,7 @@ import { ThemeProvider } from "./ThemeProvider";
 import { FileActions } from "./document-viewer/FileActions";
 import { DocumentPreview } from "./document-viewer/DocumentPreview";
 import { Input } from "@/components/ui/input";
+import { useDocumentViewer } from "./document-viewer/useDocumentViewer";
 
 interface DocumentViewerProps {
   file: File | null;
@@ -12,9 +13,15 @@ interface DocumentViewerProps {
 }
 
 export const DocumentViewer = ({ file, selectedColor }: DocumentViewerProps) => {
-  const [url, setUrl] = React.useState<string>("");
   const { toast } = useToast();
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const {
+    url,
+    setUrl,
+    fileInputRef,
+    handleUpload,
+    handleDelete,
+    handleDownload
+  } = useDocumentViewer();
 
   React.useEffect(() => {
     if (file) {
@@ -22,36 +29,7 @@ export const DocumentViewer = ({ file, selectedColor }: DocumentViewerProps) => 
       setUrl(fileUrl);
       return () => URL.revokeObjectURL(fileUrl);
     }
-  }, [file]);
-
-  const handleUpload = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleDelete = () => {
-    setUrl("");
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-    toast({
-      title: "File deleted",
-      description: "The document has been removed from the viewer",
-    });
-  };
-
-  const handleDownload = () => {
-    if (!file) return;
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = file.name;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    toast({
-      title: "Download started",
-      description: `Downloading ${file.name}`,
-    });
-  };
+  }, [file, setUrl]);
 
   return (
     <Card className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
@@ -59,7 +37,7 @@ export const DocumentViewer = ({ file, selectedColor }: DocumentViewerProps) => 
         <div className="flex items-center gap-2">
           <FileActions
             onUpload={handleUpload}
-            onDownload={handleDownload}
+            onDownload={() => handleDownload(file)}
             onDelete={handleDelete}
             hasFile={!!file}
           />
