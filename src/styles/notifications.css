@@ -1,13 +1,25 @@
 @layer base {
   [data-radix-toast-close-button] {
-    @apply text-foreground hover:text-foreground/80 !important;
+    @apply text-[#333333] hover:text-[#222222] !important;
   }
 
   .dark [data-radix-toast-close-button] {
-    @apply text-foreground hover:text-foreground/80 !important;
+    @apply text-[#333333] hover:text-[#222222] !important;
   }
 
   .sepia [data-radix-toast-close-button] {
-    @apply text-foreground hover:text-foreground/80 !important;
+    @apply text-[#333333] hover:text-[#222222] !important;
+  }
+
+  [data-radix-dialog-close] {
+    @apply text-[#333333] hover:text-[#222222] opacity-100 !important;
+  }
+
+  .dark [data-radix-dialog-close] {
+    @apply text-[#333333] hover:text-[#222222] opacity-100 !important;
+  }
+
+  .sepia [data-radix-dialog-close] {
+    @apply text-[#333333] hover:text-[#222222] opacity-100 !important;
   }
 }
