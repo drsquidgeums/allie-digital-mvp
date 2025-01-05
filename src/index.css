@@ -170,5 +170,10 @@
 
   .react-flow__pane {
     border-radius: inherit;
+    border: none;
+  }
+
+  .react-flow__viewport {
+    border: none;
   }
 }
