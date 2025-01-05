@@ -31,7 +31,7 @@ export const FocusModeActions = ({
       <Button 
         onClick={onToggleFocus}
         variant={isActive ? "destructive" : "default"}
-        className="w-full"
+        className="w-full justify-start px-6"
       >
         {isActive ? (
           <>
