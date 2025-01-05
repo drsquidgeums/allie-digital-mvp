@@ -64,13 +64,22 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
         return;
       }
 
-      // Clean up URL by removing any extra colons before forward slashes
-      const cleanUrl = newUrl.replace(/:\/+/g, '://').replace(/:\//g, '/');
+      // For regular URLs, ensure they have a protocol
+      let processedUrl = newUrl;
+      if (!newUrl.startsWith('http://') && !newUrl.startsWith('https://')) {
+        processedUrl = `https://${newUrl}`;
+      }
+
+      // Remove any double slashes (except after protocol) and extra colons
+      processedUrl = processedUrl
+        .replace(/:\/+/g, '://')  // Fix protocol slashes
+        .replace(/([^:])\/+/g, '$1/') // Fix other double slashes
+        .replace(/:\//g, '/'); // Remove extra colons before slashes
       
       // Validate URL
-      new URL(cleanUrl);
+      new URL(processedUrl);
       
-      setUrl(cleanUrl);
+      setUrl(processedUrl);
     } catch (error) {
       console.error('Invalid URL:', error);
       toast({
