@@ -1,0 +1,29 @@
+@layer base {
+  .react-flow {
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .react-flow__container {
+    border-radius: inherit;
+  }
+
+  .react-flow__renderer {
+    border-radius: inherit;
+  }
+
+  .react-flow__pane {
+    border: none !important;
+  }
+
+  .react-flow__viewport {
+    border: none !important;
+  }
+
+  .react-flow__renderer, 
+  .react-flow__container, 
+  .react-flow__viewport {
+    overflow: hidden;
+  }
+}

@@ -1,0 +1,13 @@
+@layer base {
+  [data-radix-toast-close-button] {
+    @apply text-foreground hover:text-foreground/80 !important;
+  }
+
+  .dark [data-radix-toast-close-button] {
+    @apply text-foreground hover:text-foreground/80 !important;
+  }
+
+  .sepia [data-radix-toast-close-button] {
+    @apply text-foreground hover:text-foreground/80 !important;
+  }
+}
