@@ -1,7 +1,11 @@
 import React from "react";
+import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { ThemeProvider } from "./ThemeProvider";
+import { Input } from "@/components/ui/input";
 import { useDocumentViewer } from "./document-viewer/useDocumentViewer";
-import { ViewerContainer } from "./document-viewer/ViewerContainer";
+import { DocumentToolbar } from "./document-viewer/DocumentToolbar";
+import { DocumentPreview } from "./document-viewer/DocumentPreview";
 
 interface DocumentViewerProps {
   file: File | null;
@@ -45,19 +49,39 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
   };
 
   return (
-    <>
-      <ViewerContainer
-        file={file}
-        url={url}
-        setUrl={setUrl}
-        selectedColor={selectedColor}
-        isHighlighter={isHighlighter}
-        onUpload={handleUpload}
-        onDownload={() => handleDownload(file)}
-        onDelete={handleDelete}
-        onZoomIn={handleZoomIn}
-        onZoomOut={handleZoomOut}
-      />
+    <Card className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
+      <div className="p-4 border-b border-border">
+        <div className="flex items-center gap-2">
+          <DocumentToolbar
+            onUpload={handleUpload}
+            onDownload={() => handleDownload(file)}
+            onDelete={handleDelete}
+            onZoomIn={handleZoomIn}
+            onZoomOut={handleZoomOut}
+            hasFile={!!file}
+          />
+          <ThemeProvider />
+        </div>
+      </div>
+      <div className="flex-1 p-4 relative">
+        <div className="mb-4">
+          <Input
+            type="url"
+            placeholder="Paste URL here"
+            className="w-full"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+          />
+        </div>
+        <div className="h-full">
+          <DocumentPreview 
+            file={file} 
+            url={url} 
+            selectedColor={selectedColor}
+            isHighlighter={isHighlighter} 
+          />
+        </div>
+      </div>
       <input
         type="file"
         ref={fileInputRef}
@@ -65,6 +89,6 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
         accept=".pdf,.doc,.docx,.txt,.html"
         onChange={handleFileChange}
       />
-    </>
+    </Card>
   );
 };
