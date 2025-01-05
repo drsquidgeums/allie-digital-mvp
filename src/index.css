@@ -68,32 +68,32 @@
 
   .sepia {
     --background: 35 25% 73%;
-    --foreground: 35 25% 15%;
+    --foreground: 25 32% 23%;
 
     --card: 35 25% 76%;
-    --card-foreground: 35 25% 15%;
+    --card-foreground: 25 32% 23%;
 
     --popover: 35 25% 76%;
-    --popover-foreground: 35 25% 15%;
+    --popover-foreground: 25 32% 23%;
 
-    --primary: 35 25% 15%;
+    --primary: 25 32% 23%;
     --primary-foreground: 35 25% 76%;
 
     --secondary: 35 15% 70%;
-    --secondary-foreground: 35 25% 15%;
+    --secondary-foreground: 25 32% 23%;
 
     --muted: 35 15% 65%;
-    --muted-foreground: 35 20% 35%;
+    --muted-foreground: 25 32% 23%;
 
     --accent: 35 15% 65%;
-    --accent-foreground: 35 25% 15%;
+    --accent-foreground: 25 32% 23%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 35 25% 76%;
 
-    --border: 35 15% 50%;
+    --border: 25 32% 23%;
     --input: 35 15% 65%;
-    --ring: 35 25% 15%;
+    --ring: 25 32% 23%;
   }
   
   * {
@@ -106,5 +106,50 @@
     position: relative;
     min-height: 100vh;
     width: 100%;
+  }
+
+  /* Mind Map specific styles */
+  .dark .react-flow__node {
+    background: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .dark .react-flow__controls {
+    background: hsl(var(--secondary));
+    border-color: hsl(var(--border));
+  }
+
+  .dark .react-flow__controls button {
+    background: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+    border-color: hsl(var(--border));
+  }
+
+  .dark .react-flow__minimap {
+    background: hsl(var(--secondary));
+    border-color: hsl(var(--border));
+  }
+
+  .sepia .react-flow__node {
+    background: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .sepia .react-flow__controls {
+    background: hsl(var(--card));
+    border-color: hsl(var(--border));
+  }
+
+  .sepia .react-flow__controls button {
+    background: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    border-color: hsl(var(--border));
+  }
+
+  .sepia .react-flow__minimap {
+    background: hsl(var(--card));
+    border-color: hsl(var(--border));
   }
 }
