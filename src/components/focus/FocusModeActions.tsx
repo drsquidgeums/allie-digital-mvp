@@ -21,7 +21,7 @@ export const FocusModeActions = ({
         <Button
           variant="outline"
           onClick={onRequestNotifications}
-          className="w-full"
+          className="w-full justify-start"
         >
           <Bell className="w-4 h-4 mr-2" />
           Enable Notifications
@@ -31,7 +31,7 @@ export const FocusModeActions = ({
       <Button 
         onClick={onToggleFocus}
         variant={isActive ? "destructive" : "default"}
-        className="w-full flex items-center"
+        className="w-full justify-start"
       >
         {isActive ? (
           <>
