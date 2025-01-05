@@ -1,7 +1,7 @@
 import { MindMapNode } from '../types';
 import { toPng } from 'html-to-image';
 import { type ToastActionElement } from "@/components/ui/toast";
-import { type Toast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 
 export const createNewNode = (
   id: string,
@@ -22,7 +22,7 @@ export const createNewNode = (
   },
 });
 
-export const downloadMindMap = async (toast: (props: Toast) => void) => {
+export const downloadMindMap = async () => {
   const element = document.querySelector('.react-flow') as HTMLElement;
   if (!element) {
     toast({
