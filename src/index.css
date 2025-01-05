@@ -168,12 +168,19 @@
     border-radius: inherit;
   }
 
+  /* Remove duplicate borders */
   .react-flow__pane {
-    border-radius: inherit;
-    border: none;
+    border: none !important;
   }
 
   .react-flow__viewport {
-    border: none;
+    border: none !important;
+  }
+
+  /* Ensure corners are properly connected */
+  .react-flow__renderer, 
+  .react-flow__container, 
+  .react-flow__viewport {
+    overflow: hidden;
   }
 }
