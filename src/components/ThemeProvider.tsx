@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog/dialog-root";
 import { IrlenOverlay } from "./IrlenOverlay";
+import { AmbientMusic } from "./AmbientMusic";
 import { useTheme } from "next-themes";
 import { FontSelector } from "./FontSelector";
 
@@ -89,6 +90,7 @@ export const ThemeProvider = () => {
         </Dialog>
       </div>
       <IrlenOverlay />
+      <AmbientMusic />
     </div>
   );
 };
