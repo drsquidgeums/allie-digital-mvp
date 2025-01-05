@@ -1,10 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { MusicOption } from '../MusicOptions';
 
 export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const { toast } = useToast();
+
+  // Sync with global audio state on mount
+  useEffect(() => {
+    if (audioRef.current) {
+      setIsPlaying(!audioRef.current.paused);
+    }
+  }, []);
 
   const togglePlay = async (currentMusic: MusicOption | undefined) => {
     if (!audioRef.current || !currentMusic) {
