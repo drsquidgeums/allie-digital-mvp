@@ -1,6 +1,6 @@
 import mammoth from 'mammoth';
 import { PDFDocument } from 'pdf-lib';
-import EPub from 'epub'; // Updated import syntax
+import EPub from 'epub';
 import { marked } from 'marked';
 
 export async function convertDocxToHtml(file: File): Promise<string> {
@@ -39,17 +39,47 @@ export async function convertEpubToHtml(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = async (e) => {
-      const epub = new EPub(e.target?.result as ArrayBuffer);
-      epub.parse();
-      let content = '';
-      
-      epub.flow.forEach((chapter) => {
-        if (chapter.content) {
-          content += chapter.content;
+      try {
+        const buffer = e.target?.result;
+        if (!buffer || typeof buffer === 'string') {
+          throw new Error('Invalid buffer');
         }
-      });
-      
-      resolve(content);
+
+        const epub = new EPub(buffer);
+        let content = '';
+
+        // Convert callback-based API to Promise
+        await new Promise<void>((resolveEpub, rejectEpub) => {
+          epub.parse();
+          epub.on('end', () => {
+            if (epub.flow) {
+              epub.flow.forEach((chapter: any) => {
+                if (chapter && typeof chapter.href === 'string') {
+                  epub.getChapter(chapter.id, (error: Error | null, text: string) => {
+                    if (error) {
+                      console.error('Error reading chapter:', error);
+                    } else {
+                      content += text;
+                    }
+                  });
+                }
+              });
+              resolveEpub();
+            } else {
+              rejectEpub(new Error('No content found in EPUB'));
+            }
+          });
+          
+          epub.on('error', (error: Error) => {
+            rejectEpub(error);
+          });
+        });
+
+        resolve(content || '<div>No content found in EPUB file</div>');
+      } catch (error) {
+        console.error('Error processing EPUB:', error);
+        reject(error);
+      }
     };
     reader.onerror = (e) => reject(e);
     reader.readAsArrayBuffer(file);
