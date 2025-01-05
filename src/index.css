@@ -110,6 +110,11 @@
     width: 100%;
   }
 
+  /* Ensure font weight inheritance */
+  button, a, div, span {
+    font-weight: inherit;
+  }
+
   /* Mind Map specific styles */
   .dark .react-flow__node {
     background: hsl(var(--secondary));
