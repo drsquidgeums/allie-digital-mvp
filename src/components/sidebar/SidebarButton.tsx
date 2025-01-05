@@ -13,7 +13,7 @@ export const SidebarButton = ({ icon: Icon, label, isActive, onClick }: SidebarB
   return (
     <Button 
       variant={isActive ? "default" : "ghost"}
-      className="w-full flex items-center justify-start gap-2 px-2"
+      className="w-full flex items-center justify-start gap-2 px-2 font-[inherit]"
       onClick={onClick}
     >
       <Icon className="h-4 w-4" />

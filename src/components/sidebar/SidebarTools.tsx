@@ -30,7 +30,6 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
   ];
 
   const handleLogout = () => {
-    // Add logout logic here when needed
     console.log("Logout clicked");
   };
 

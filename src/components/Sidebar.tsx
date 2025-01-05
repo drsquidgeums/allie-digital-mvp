@@ -31,12 +31,14 @@ export const Sidebar = ({
     }
   };
 
+  const buttonClassName = "w-full flex items-center justify-start gap-2 px-2 font-[inherit]";
+
   return (
     <div className="w-64 bg-card border-r border-border p-4 flex flex-col h-full">
       <div className="space-y-2">
         <Button 
           variant="ghost"
-          className="w-full flex items-center justify-start gap-2 px-2"
+          className={buttonClassName}
           onClick={() => navigate('/tasks')}
         >
           <CheckSquare className="h-4 w-4" />
@@ -45,7 +47,7 @@ export const Sidebar = ({
 
         <Button 
           variant="ghost"
-          className="w-full flex items-center justify-start gap-2 px-2"
+          className={buttonClassName}
           onClick={() => navigate('/ai-assistant')}
         >
           <MessageSquare className="h-4 w-4" />
@@ -54,7 +56,7 @@ export const Sidebar = ({
 
         <Button 
           variant="ghost"
-          className="w-full flex items-center justify-start gap-2 px-2"
+          className={buttonClassName}
           onClick={() => navigate('/mind-map')}
         >
           <Brain className="h-4 w-4" />
