@@ -19,6 +19,7 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
     url,
     setUrl,
     fileInputRef,
+    documentRef,
     handleUpload,
     handleDelete,
     handleDownload,
@@ -73,7 +74,7 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
             onChange={(e) => setUrl(e.target.value)}
           />
         </div>
-        <div className="h-full">
+        <div className="h-full" ref={documentRef}>
           <DocumentPreview 
             file={file} 
             url={url} 
