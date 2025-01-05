@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from "./ui/input";
+import { ChromePicker } from "react-color";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "./ui/alert";
 import { ColorHeader } from "./color-tool/ColorHeader";
@@ -11,30 +11,18 @@ interface ColorSeparatorProps {
 
 export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
   const [selectedColor, setSelectedColor] = React.useState("#000000");
-  const [hexInput, setHexInput] = React.useState("#000000");
   const [isHighlighter, setIsHighlighter] = React.useState(false);
   const { toast } = useToast();
 
-  const handleColorChange = (color: string) => {
-    setSelectedColor(color);
-    setHexInput(color);
+  const handleColorChange = (color: any) => {
+    const hexColor = color.hex;
+    setSelectedColor(hexColor);
     if (onColorChange) {
-      onColorChange(color, isHighlighter);
+      onColorChange(hexColor, isHighlighter);
       toast({
         title: isHighlighter ? "Highlighter color selected" : "Color selected",
         description: "Now highlight text in the document to apply this color",
       });
-    }
-  };
-
-  const handleHexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setHexInput(value);
-    
-    // Validate hex color format
-    const isValidHex = /^#[0-9A-Fa-f]{6}$/.test(value);
-    if (isValidHex) {
-      handleColorChange(value);
     }
   };
 
@@ -79,31 +67,19 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
         </AlertDescription>
       </Alert>
       
-      <div className="relative">
-        <Input
-          type="color"
-          value={selectedColor}
-          onChange={(e) => handleColorChange(e.target.value)}
-          className="w-full h-40 p-0 border-2 rounded-lg cursor-pointer"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Hex Color</label>
-        <Input
-          type="text"
-          value={hexInput}
-          onChange={handleHexInputChange}
-          placeholder="#000000"
-          className="font-mono"
-          pattern="^#[0-9A-Fa-f]{6}$"
+      <div className="relative flex justify-center">
+        <ChromePicker
+          color={selectedColor}
+          onChange={handleColorChange}
+          className="shadow-lg"
+          disableAlpha={!isHighlighter}
         />
       </div>
 
       <ColorPresets 
         presetColors={presetColors}
         isHighlighter={isHighlighter}
-        onColorSelect={handleColorChange}
+        onColorSelect={(color) => handleColorChange({ hex: color })}
       />
     </div>
   );
