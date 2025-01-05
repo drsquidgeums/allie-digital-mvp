@@ -95,7 +95,7 @@
     --input: 35 15% 65%;
     --ring: 25 32% 23%;
   }
-  
+
   * {
     @apply border-border;
   }
@@ -155,6 +155,7 @@
 
   /* Fix for mind map viewer box borders */
   .react-flow {
+    border: 1px solid hsl(var(--border));
     border-radius: 0.5rem;
     overflow: hidden;
   }
