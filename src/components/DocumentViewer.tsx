@@ -2,10 +2,10 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ThemeProvider } from "./ThemeProvider";
-import { FileActions } from "./document-viewer/FileActions";
-import { DocumentPreview } from "./document-viewer/DocumentPreview";
 import { Input } from "@/components/ui/input";
 import { useDocumentViewer } from "./document-viewer/useDocumentViewer";
+import { DocumentToolbar } from "./document-viewer/DocumentToolbar";
+import { DocumentPreview } from "./document-viewer/DocumentPreview";
 
 interface DocumentViewerProps {
   file: File | null;
@@ -21,7 +21,9 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
     fileInputRef,
     handleUpload,
     handleDelete,
-    handleDownload
+    handleDownload,
+    handleZoomIn,
+    handleZoomOut
   } = useDocumentViewer();
 
   React.useEffect(() => {
@@ -36,10 +38,12 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
     <Card className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
       <div className="p-4 border-b border-border">
         <div className="flex items-center gap-2">
-          <FileActions
+          <DocumentToolbar
             onUpload={handleUpload}
             onDownload={() => handleDownload(file)}
             onDelete={handleDelete}
+            onZoomIn={handleZoomIn}
+            onZoomOut={handleZoomOut}
             hasFile={!!file}
           />
           <ThemeProvider />
@@ -59,7 +63,7 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
           <DocumentPreview 
             file={file} 
             url={url} 
-            selectedColor={selectedColor} 
+            selectedColor={selectedColor}
             isHighlighter={isHighlighter} 
           />
         </div>
@@ -68,7 +72,7 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
         type="file"
         ref={fileInputRef}
         className="hidden"
-        accept=".pdf,.doc,.docx"
+        accept=".pdf,.doc,.docx,.txt,.html"
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (file) {

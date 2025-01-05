@@ -3,6 +3,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export const useDocumentViewer = () => {
   const [url, setUrl] = useState<string>("");
+  const [zoom, setZoom] = useState(1);
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -35,12 +36,23 @@ export const useDocumentViewer = () => {
     });
   };
 
+  const handleZoomIn = () => {
+    setZoom(prev => Math.min(prev + 0.1, 2));
+  };
+
+  const handleZoomOut = () => {
+    setZoom(prev => Math.max(prev - 0.1, 0.5));
+  };
+
   return {
     url,
     setUrl,
+    zoom,
     fileInputRef,
     handleUpload,
     handleDelete,
-    handleDownload
+    handleDownload,
+    handleZoomIn,
+    handleZoomOut
   };
 };
