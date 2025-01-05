@@ -31,17 +31,17 @@ export const FocusModeActions = ({
       <Button 
         onClick={onToggleFocus}
         variant={isActive ? "destructive" : "default"}
-        className="w-full justify-start px-6"
+        className="w-full flex items-center"
       >
         {isActive ? (
           <>
             <MinusCircle className="w-4 h-4 mr-2" />
-            Exit Focus Mode
+            <span>Exit Focus Mode</span>
           </>
         ) : (
           <>
             <Focus className="w-4 h-4 mr-2" />
-            Enter Focus Mode
+            <span>Enter Focus Mode</span>
           </>
         )}
       </Button>
