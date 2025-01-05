@@ -151,48 +151,17 @@
     @apply bg-primary text-primary-foreground;
   }
 
-  .dark .react-flow__node {
-    background: hsl(var(--secondary));
-    color: hsl(var(--secondary-foreground));
-    border: 1px solid hsl(var(--border));
+  /* Notification styles */
+  [data-radix-toast-close-button] {
+    @apply text-foreground hover:text-foreground/80 !important;
   }
 
-  .dark .react-flow__controls {
-    background: hsl(var(--secondary));
-    border-color: hsl(var(--border));
+  .dark [data-radix-toast-close-button] {
+    @apply text-foreground hover:text-foreground/80 !important;
   }
 
-  .dark .react-flow__controls button {
-    background: hsl(var(--secondary));
-    color: hsl(var(--secondary-foreground));
-    border-color: hsl(var(--border));
-  }
-
-  .dark .react-flow__minimap {
-    background: hsl(var(--secondary));
-    border-color: hsl(var(--border));
-  }
-
-  .sepia .react-flow__node {
-    background: hsl(var(--card));
-    color: hsl(var(--card-foreground));
-    border: 1px solid hsl(var(--border));
-  }
-
-  .sepia .react-flow__controls {
-    background: hsl(var(--card));
-    border-color: hsl(var(--border));
-  }
-
-  .sepia .react-flow__controls button {
-    background: hsl(var(--card));
-    color: hsl(var(--card-foreground));
-    border-color: hsl(var(--border));
-  }
-
-  .sepia .react-flow__minimap {
-    background: hsl(var(--card));
-    border-color: hsl(var(--border));
+  .sepia [data-radix-toast-close-button] {
+    @apply text-foreground hover:text-foreground/80 !important;
   }
 
   /* Fix for mind map viewer box borders */
