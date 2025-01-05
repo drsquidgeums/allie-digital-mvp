@@ -13,11 +13,12 @@ export const SidebarButton = ({ icon: Icon, label, isActive, onClick }: SidebarB
   return (
     <Button 
       variant={isActive ? "secondary" : "ghost"}
-      className="w-full flex items-center justify-start gap-2 px-2 font-[var(--font-weight)]"
+      className="w-full flex items-center justify-start gap-2 px-2"
       onClick={onClick}
+      style={{ fontWeight: 'inherit' }}
     >
-      <Icon className="h-4 w-4 font-[var(--font-weight)]" />
-      <span className="font-[var(--font-weight)]">{label}</span>
+      <Icon className="h-4 w-4" style={{ fontWeight: 'inherit' }} />
+      <span style={{ fontWeight: 'inherit' }}>{label}</span>
     </Button>
   );
 };
