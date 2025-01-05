@@ -1,16 +1,11 @@
-import React, { useState } from 'react';
-import {
-  ReactFlow,
-  MiniMap,
-  Controls,
-  Background,
-} from '@xyflow/react';
+import React, { useEffect, useRef } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { MindMapToolbar } from './mindmap/MindMapToolbar';
 import { ColorOption } from './mindmap/types';
 import { useMindMap } from './mindmap/hooks/useMindMap';
-import { downloadMindMap } from './mindmap/utils/mindMapUtils';
-import '@xyflow/react/dist/style.css';
+import 'jsmind/style/jsmind.css';
+
+declare const jsMind: any; // Since jsMind doesn't have TypeScript types
 
 const colorOptions: ColorOption[] = [
   { label: 'Default', value: 'hsl(var(--muted))' },
@@ -24,21 +19,41 @@ const colorOptions: ColorOption[] = [
 ];
 
 export const MindMap = () => {
-  const [selectedColor, setSelectedColor] = useState(colorOptions[0].value);
-  const [customColor, setCustomColor] = useState("#FFFFFF");
+  const [selectedColor, setSelectedColor] = React.useState(colorOptions[0].value);
+  const [customColor, setCustomColor] = React.useState("#FFFFFF");
   const { toast } = useToast();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mindMapRef = useRef<any>(null);
   
   const {
-    nodes,
-    edges,
+    mindMapData,
     newNodeText,
     setNewNodeText,
-    onNodesChange,
-    onEdgesChange,
-    onConnect,
     addNode,
     clearCanvas,
+    downloadMindMap
   } = useMindMap();
+
+  useEffect(() => {
+    if (containerRef.current && mindMapData) {
+      const options = {
+        container: containerRef.current,
+        theme: 'primary',
+        editable: true,
+        theme_color: selectedColor === 'custom' ? customColor : selectedColor,
+        view: {
+          engine: 'canvas',
+          hmargin: 100,
+          vmargin: 50,
+          line_width: 2,
+          line_color: '#555'
+        }
+      };
+
+      mindMapRef.current = new jsMind(options);
+      mindMapRef.current.show(mindMapData);
+    }
+  }, [mindMapData, selectedColor, customColor]);
 
   const handleColorChange = (value: string) => {
     if (value === 'custom') {
@@ -46,14 +61,19 @@ export const MindMap = () => {
     } else {
       setSelectedColor(value);
     }
+    
+    if (mindMapRef.current) {
+      mindMapRef.current.set_theme_color(value === 'custom' ? customColor : value);
+    }
   };
 
   const handleAddNode = () => {
-    addNode(selectedColor, customColor);
-  };
-
-  const handleDownloadImage = () => {
-    downloadMindMap();
+    if (newNodeText.trim()) {
+      addNode(selectedColor, customColor);
+      if (mindMapRef.current) {
+        mindMapRef.current.refresh();
+      }
+    }
   };
 
   return (
@@ -66,25 +86,14 @@ export const MindMap = () => {
         newNodeText={newNodeText}
         setNewNodeText={setNewNodeText}
         onAddNode={handleAddNode}
-        onExport={handleDownloadImage}
+        onExport={downloadMindMap}
         onClear={clearCanvas}
         colorOptions={colorOptions}
       />
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        fitView
-        className="bg-background"
-      >
-        <Background />
-        <Controls 
-          className="!bg-accent [&>button]:!bg-accent [&>button]:!text-foreground [&>button]:hover:!bg-muted [&>button]:border-border" 
-        />
-        <MiniMap className="bg-background" />
-      </ReactFlow>
+      <div 
+        ref={containerRef} 
+        className="w-full h-[calc(100%-64px)] bg-background"
+      />
     </div>
   );
 };
