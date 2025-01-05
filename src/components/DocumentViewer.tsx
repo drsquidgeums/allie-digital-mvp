@@ -49,14 +49,30 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
   };
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUrl = e.target.value;
+    const newUrl = e.target.value.trim();
+    
+    // Handle empty URL
+    if (!newUrl) {
+      setUrl("");
+      return;
+    }
+
     try {
-      // Check if the URL is valid
-      if (newUrl && !newUrl.startsWith('data:') && !newUrl.startsWith('blob:')) {
-        new URL(newUrl);
+      // Special handling for data and blob URLs
+      if (newUrl.startsWith('data:') || newUrl.startsWith('blob:')) {
+        setUrl(newUrl);
+        return;
       }
-      setUrl(newUrl);
+
+      // Clean up URL by removing any extra colons before forward slashes
+      const cleanUrl = newUrl.replace(/:\/+/g, '://').replace(/:\//g, '/');
+      
+      // Validate URL
+      new URL(cleanUrl);
+      
+      setUrl(cleanUrl);
     } catch (error) {
+      console.error('Invalid URL:', error);
       toast({
         title: "Invalid URL",
         description: "Please enter a valid URL",
