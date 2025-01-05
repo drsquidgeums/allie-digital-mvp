@@ -25,10 +25,23 @@ export const WorkspaceLayout = () => {
   }
 
   const handleFileUpload = (file: File) => {
-    if (file.type === "application/pdf" || file.type === "application/msword" || 
+    if (file.type === "application/pdf" || 
+        file.type === "application/msword" || 
         file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
       setSelectedFile(file);
-      setUploadedFiles(prev => [...prev, file]);
+      setUploadedFiles(prevFiles => {
+        // Check if file already exists
+        const exists = prevFiles.some(f => 
+          f.name === file.name && 
+          f.size === file.size && 
+          f.lastModified === file.lastModified
+        );
+        if (!exists) {
+          return [...prevFiles, file];
+        }
+        return prevFiles;
+      });
+      
       toast({
         title: "File uploaded successfully",
         description: `${file.name} has been added to your workspace`,

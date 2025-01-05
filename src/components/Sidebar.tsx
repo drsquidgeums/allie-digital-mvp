@@ -21,7 +21,7 @@ export const Sidebar = ({
   onFileDelete
 }: SidebarProps) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
+  const [activeComponent, setActiveComponent] = React.useState<string | null>("files");
   const navigate = useNavigate();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +71,7 @@ export const Sidebar = ({
           ref={fileInputRef}
           onChange={handleFileChange}
           className="hidden"
-          accept=".pdf,.doc,.docx"
+          accept=".pdf,.doc,.docx,.txt,.html"
         />
 
         <SidebarTools 

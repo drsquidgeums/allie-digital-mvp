@@ -31,8 +31,22 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
       const fileUrl = URL.createObjectURL(file);
       setUrl(fileUrl);
       return () => URL.revokeObjectURL(fileUrl);
+    } else {
+      setUrl("");
     }
   }, [file, setUrl]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const fileUrl = URL.createObjectURL(file);
+      setUrl(fileUrl);
+      toast({
+        title: "File uploaded",
+        description: `${file.name} has been added to the viewer`,
+      });
+    }
+  };
 
   return (
     <Card className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
@@ -73,16 +87,7 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
         ref={fileInputRef}
         className="hidden"
         accept=".pdf,.doc,.docx,.txt,.html"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) {
-            setUrl(URL.createObjectURL(file));
-            toast({
-              title: "File uploaded",
-              description: `${file.name} has been added to the viewer`,
-            });
-          }
-        }}
+        onChange={handleFileChange}
       />
     </Card>
   );
