@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog/dialog-root";
 import { NotificationList } from "./notifications/NotificationList";
 import { useNotifications } from "@/hooks/useNotifications";
 

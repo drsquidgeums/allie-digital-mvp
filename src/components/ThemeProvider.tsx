@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog/dialog-root";
 import { IrlenOverlay } from "./IrlenOverlay";
 import { useTheme } from "next-themes";
 import { FontSelector } from "./FontSelector";
