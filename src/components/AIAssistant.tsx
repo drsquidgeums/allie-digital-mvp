@@ -9,7 +9,7 @@ interface Message {
 }
 
 const INITIAL_MESSAGE: Message = {
-  text: "Hi - I'm Allie, your virtual AI assistant. I can help explain how our tools support your learning needs. What would you like to know about?",
+  text: "Hi! I'm Allie your virtual AI learning assistant. What can I help you with today?",
   isUser: false
 };
 
