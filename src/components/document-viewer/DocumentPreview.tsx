@@ -15,35 +15,19 @@ export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewPro
       const container = containerRef.current;
       
       const handleClick = (e: MouseEvent) => {
-        const target = e.target as HTMLElement;
-        
-        // Handle text selection
         const selection = window.getSelection();
         if (selection && !selection.isCollapsed) {
+          // Handle text selection
           const range = selection.getRangeAt(0);
           const span = document.createElement('span');
           span.style.color = selectedColor;
           range.surroundContents(span);
           selection.removeAllRanges();
-        } else if (target.tagName === 'P' || target.tagName === 'SPAN' || target.tagName === 'DIV') {
-          // Handle single click on text
-          if (target.childNodes.length === 1 && target.childNodes[0].nodeType === Node.TEXT_NODE) {
-            target.style.color = selectedColor;
-          } else {
-            target.childNodes.forEach(node => {
-              if (node.nodeType === Node.TEXT_NODE) {
-                const span = document.createElement('span');
-                span.textContent = node.textContent;
-                span.style.color = selectedColor;
-                node.parentNode?.replaceChild(span, node);
-              }
-            });
-          }
         }
       };
 
-      container.addEventListener('click', handleClick);
-      return () => container.removeEventListener('click', handleClick);
+      container.addEventListener('mouseup', handleClick);
+      return () => container.removeEventListener('mouseup', handleClick);
     }
   }, [selectedColor]);
 
@@ -58,19 +42,15 @@ export const DocumentPreview = ({ file, url, selectedColor }: DocumentPreviewPro
             // Make iframe content editable
             iframeDoc.body.contentEditable = 'true';
             
-            // Add click handler to iframe content
-            iframeDoc.addEventListener('click', (e: MouseEvent) => {
-              const target = e.target as HTMLElement;
+            // Add mouseup handler to iframe content
+            iframeDoc.addEventListener('mouseup', () => {
               const selection = iframeDoc.getSelection();
-              
               if (selection && !selection.isCollapsed) {
                 const range = selection.getRangeAt(0);
                 const span = document.createElement('span');
                 span.style.color = selectedColor;
                 range.surroundContents(span);
                 selection.removeAllRanges();
-              } else if (target.tagName === 'P' || target.tagName === 'SPAN' || target.tagName === 'DIV') {
-                target.style.color = selectedColor;
               }
             });
           }

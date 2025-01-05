@@ -19,15 +19,9 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
     setHexInput(color);
     if (onColorChange) {
       onColorChange(color);
-    }
-  };
-
-  const handleApplyColor = () => {
-    if (onColorChange) {
-      onColorChange(selectedColor);
       toast({
-        title: "Color ready to apply",
-        description: "Now click on the text you want to color",
+        title: "Color selected",
+        description: "Now highlight text in the document to apply this color",
       });
     }
   };
@@ -60,18 +54,16 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
     <div className="p-4 space-y-4">
       <div className="flex items-center gap-2">
         <Paintbrush className="w-4 h-4" />
-        <h3 className="font-medium">Color Separator</h3>
+        <h3 className="font-medium">Color Tool</h3>
       </div>
 
       <Alert>
         <AlertDescription>
           1. Select a color below
           <br />
-          2. Click "Apply Color"
+          2. Highlight text in your document
           <br />
-          3. Select the text you want to color
-          <br />
-          4. Click on the selected text to apply the color
+          3. The highlighted text will automatically change to your selected color
         </AlertDescription>
       </Alert>
       
@@ -84,15 +76,6 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
           className="w-full h-40 p-0 border-2 rounded-lg cursor-pointer"
         />
       </div>
-
-      {/* Apply Color Button */}
-      <Button 
-        className="w-full"
-        onClick={handleApplyColor}
-        style={{ backgroundColor: selectedColor }}
-      >
-        Apply Color
-      </Button>
 
       {/* Hex Input */}
       <div className="space-y-2">
