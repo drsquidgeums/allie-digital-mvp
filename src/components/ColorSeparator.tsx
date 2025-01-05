@@ -1,10 +1,9 @@
 import React from "react";
-import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Paintbrush, Highlighter } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "./ui/alert";
-import { Toggle } from "./ui/toggle";
+import { ColorHeader } from "./color-tool/ColorHeader";
+import { ColorPresets } from "./color-tool/ColorPresets";
 
 interface ColorSeparatorProps {
   onColorChange?: (color: string, isHighlighter?: boolean) => void;
@@ -39,12 +38,12 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
     }
   };
 
-  const toggleHighlighter = () => {
-    setIsHighlighter(!isHighlighter);
+  const toggleHighlighter = (pressed: boolean) => {
+    setIsHighlighter(pressed);
     if (onColorChange) {
-      onColorChange(selectedColor, !isHighlighter);
+      onColorChange(selectedColor, pressed);
       toast({
-        title: !isHighlighter ? "Highlighter mode enabled" : "Text color mode enabled",
+        title: pressed ? "Highlighter mode enabled" : "Text color mode enabled",
         description: "Now highlight text in the document to apply this effect",
       });
     }
@@ -65,20 +64,10 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
 
   return (
     <div className="p-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Paintbrush className="w-4 h-4" />
-          <h3 className="font-medium">Color Tool</h3>
-        </div>
-        <Toggle
-          pressed={isHighlighter}
-          onPressedChange={toggleHighlighter}
-          aria-label="Toggle highlighter mode"
-          className="data-[state=on]:bg-yellow-200"
-        >
-          <Highlighter className="w-4 h-4" />
-        </Toggle>
-      </div>
+      <ColorHeader 
+        isHighlighter={isHighlighter} 
+        onHighlighterToggle={toggleHighlighter} 
+      />
 
       <Alert>
         <AlertDescription>
@@ -90,7 +79,6 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
         </AlertDescription>
       </Alert>
       
-      {/* Color Wheel */}
       <div className="relative">
         <Input
           type="color"
@@ -100,7 +88,6 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
         />
       </div>
 
-      {/* Hex Input */}
       <div className="space-y-2">
         <label className="text-sm font-medium">Hex Color</label>
         <Input
@@ -113,23 +100,11 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
         />
       </div>
 
-      {/* Preset Colors */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Preset Colors</label>
-        <div className="grid grid-cols-5 gap-2">
-          {presetColors.map((color) => (
-            <Button
-              key={color}
-              className="w-full h-8 transition-transform hover:scale-105"
-              style={{ 
-                backgroundColor: isHighlighter ? `${color}40` : color,
-                border: isHighlighter ? `2px solid ${color}` : 'none'
-              }}
-              onClick={() => handleColorChange(color)}
-            />
-          ))}
-        </div>
-      </div>
+      <ColorPresets 
+        presetColors={presetColors}
+        isHighlighter={isHighlighter}
+        onColorSelect={handleColorChange}
+      />
     </div>
   );
 };

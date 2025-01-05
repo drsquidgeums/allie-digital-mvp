@@ -10,9 +10,10 @@ import { useDocumentViewer } from "./document-viewer/useDocumentViewer";
 interface DocumentViewerProps {
   file: File | null;
   selectedColor: string;
+  isHighlighter?: boolean;
 }
 
-export const DocumentViewer = ({ file, selectedColor }: DocumentViewerProps) => {
+export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentViewerProps) => {
   const { toast } = useToast();
   const {
     url,
@@ -55,7 +56,12 @@ export const DocumentViewer = ({ file, selectedColor }: DocumentViewerProps) => 
           />
         </div>
         <div className="h-full">
-          <DocumentPreview file={file} url={url} selectedColor={selectedColor} />
+          <DocumentPreview 
+            file={file} 
+            url={url} 
+            selectedColor={selectedColor} 
+            isHighlighter={isHighlighter} 
+          />
         </div>
       </div>
       <input
