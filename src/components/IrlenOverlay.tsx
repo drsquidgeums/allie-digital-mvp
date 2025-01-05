@@ -15,7 +15,7 @@ const colors = [
   { name: "Rose", value: "rgba(255, 192, 203, 0.3)" },
   { name: "Soft Orange", value: "rgba(254, 198, 161, 0.3)" },
   { name: "Bright Orange", value: "rgba(249, 115, 22, 0.3)" },
-  { name: "Soft Green", value: "rgba(242, 252, 226, 0.3)" },
+  { name: "Soft Green", value: "rgba(144, 238, 144, 0.3)" },
   { name: "Lime Green", value: "rgba(50, 205, 50, 0.3)" },
 ];
 
