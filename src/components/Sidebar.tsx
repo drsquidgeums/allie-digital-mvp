@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { CheckSquare, Brain, MessageSquare } from "lucide-react";
+import { CheckSquare, Brain, Robot } from "lucide-react";
 import { SidebarTools } from "./sidebar/SidebarTools";
 import { SidebarContent } from "./sidebar/SidebarContent";
 
@@ -39,7 +39,7 @@ export const Sidebar = ({
           className="w-full flex items-center justify-start gap-2 px-2 font-[var(--font-weight)]"
           onClick={() => navigate('/tasks')}
         >
-          <CheckSquare className="h-4 w-4" />
+          <CheckSquare className="h-4 w-4 font-[var(--font-weight)]" />
           Task Planner
         </Button>
 
@@ -48,7 +48,7 @@ export const Sidebar = ({
           className="w-full flex items-center justify-start gap-2 px-2 font-[var(--font-weight)]"
           onClick={() => navigate('/ai-assistant')}
         >
-          <MessageSquare className="h-4 w-4" />
+          <Robot className="h-4 w-4 font-[var(--font-weight)]" />
           AI Assistant
         </Button>
 
