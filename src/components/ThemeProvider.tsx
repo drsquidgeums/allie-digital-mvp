@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Palette } from "lucide-react";
+import { Sun, Moon, Palette, Book } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -25,10 +25,17 @@ export const ThemeProvider = () => {
   const handleDarkMode = () => {
     setTheme('dark');
     document.documentElement.classList.add('dark');
+    document.documentElement.classList.remove('sepia');
   };
 
   const handleLightMode = () => {
     setTheme('light');
+    document.documentElement.classList.remove('dark', 'sepia');
+  };
+
+  const handleSepiaMode = () => {
+    setTheme('sepia');
+    document.documentElement.classList.add('sepia');
     document.documentElement.classList.remove('dark');
   };
 
@@ -52,6 +59,15 @@ export const ThemeProvider = () => {
           title="Dark Mode"
         >
           <Moon className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleSepiaMode}
+          className={`${theme === "sepia" ? "bg-secondary" : ""} ${buttonClassName}`}
+          title="Sepia Mode"
+        >
+          <Book className="h-4 w-4" />
         </Button>
         <Dialog>
           <DialogTrigger asChild>

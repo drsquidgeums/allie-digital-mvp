@@ -65,6 +65,36 @@
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
   }
+
+  .sepia {
+    --background: 35 25% 95%;
+    --foreground: 35 25% 15%;
+
+    --card: 35 25% 95%;
+    --card-foreground: 35 25% 15%;
+
+    --popover: 35 25% 95%;
+    --popover-foreground: 35 25% 15%;
+
+    --primary: 35 25% 15%;
+    --primary-foreground: 35 25% 95%;
+
+    --secondary: 35 15% 85%;
+    --secondary-foreground: 35 25% 15%;
+
+    --muted: 35 15% 85%;
+    --muted-foreground: 35 20% 35%;
+
+    --accent: 35 15% 85%;
+    --accent-foreground: 35 25% 15%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 35 25% 95%;
+
+    --border: 35 15% 85%;
+    --input: 35 15% 85%;
+    --ring: 35 25% 15%;
+  }
   
   * {
     @apply border-border;
