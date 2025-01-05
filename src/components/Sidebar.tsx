@@ -21,7 +21,7 @@ export const Sidebar = ({
   onFileDelete
 }: SidebarProps) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const [activeComponent, setActiveComponent] = React.useState<string | null>("files");
+  const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,16 +31,15 @@ export const Sidebar = ({
     }
   };
 
-  const buttonClassName = "w-full flex items-center justify-start gap-2 px-2 font-inherit text-inherit";
+  const buttonClassName = "w-full flex items-center justify-start gap-2 px-2 text-inherit hover:bg-accent hover:text-accent-foreground";
 
   return (
-    <div className="w-64 bg-card border-r border-border p-4 flex flex-col h-full" style={{ fontWeight: 'inherit' }}>
+    <div className="w-64 bg-card border-r border-border p-4 flex flex-col h-full">
       <div className="space-y-2">
         <Button 
           variant="ghost"
           className={buttonClassName}
           onClick={() => navigate('/tasks')}
-          style={{ fontWeight: 'inherit' }}
         >
           <CheckSquare className="h-4 w-4" />
           Task Planner
@@ -50,7 +49,6 @@ export const Sidebar = ({
           variant="ghost"
           className={buttonClassName}
           onClick={() => navigate('/ai-assistant')}
-          style={{ fontWeight: 'inherit' }}
         >
           <MessageSquare className="h-4 w-4" />
           AI Assistant
@@ -60,7 +58,6 @@ export const Sidebar = ({
           variant="ghost"
           className={buttonClassName}
           onClick={() => navigate('/mind-map')}
-          style={{ fontWeight: 'inherit' }}
         >
           <Brain className="h-4 w-4" />
           Mind Map
