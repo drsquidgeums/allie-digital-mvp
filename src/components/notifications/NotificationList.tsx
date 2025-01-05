@@ -1,0 +1,33 @@
+import React from "react";
+import { NotificationItem } from "./NotificationItem";
+
+interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  read: boolean;
+  timestamp: Date;
+}
+
+interface NotificationListProps {
+  notifications: Notification[];
+  onRead: (id: string) => void;
+}
+
+export const NotificationList = ({ notifications, onRead }: NotificationListProps) => {
+  if (notifications.length === 0) {
+    return <p className="text-sm text-muted-foreground">No notifications</p>;
+  }
+
+  return (
+    <div className="space-y-2">
+      {notifications.map((notification) => (
+        <NotificationItem
+          key={notification.id}
+          {...notification}
+          onRead={onRead}
+        />
+      ))}
+    </div>
+  );
+};

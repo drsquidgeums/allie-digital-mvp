@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,58 +8,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  read: boolean;
-  timestamp: Date;
-}
+import { NotificationList } from "./notifications/NotificationList";
+import { useNotifications } from "@/hooks/useNotifications";
 
 export const NotificationCenter = () => {
-  const [notifications, setNotifications] = useState<Notification[]>(() => {
-    const saved = localStorage.getItem('notifications');
-    return saved ? JSON.parse(saved) : [{
-      id: "1",
-      title: "Welcome!",
-      message: "Welcome to your workspace. Get started by uploading a document or creating a task.",
-      read: false,
-      timestamp: new Date(),
-    }];
-  });
-  const [notificationSound] = useState(new Audio('/sounds/notification-bell.mp3'));
-
-  useEffect(() => {
-    localStorage.setItem('notifications', JSON.stringify(notifications));
-  }, [notifications]);
-
-  useEffect(() => {
-    const handleTaskNotification = (event: CustomEvent<Notification>) => {
-      setNotifications(prev => {
-        const newNotifications = [event.detail, ...prev];
-        localStorage.setItem('notifications', JSON.stringify(newNotifications));
-        notificationSound.play().catch(error => {
-          console.log('Error playing notification sound:', error);
-        });
-        return newNotifications;
-      });
-    };
-
-    window.addEventListener('taskNotification', handleTaskNotification as EventListener);
-
-    return () => {
-      window.removeEventListener('taskNotification', handleTaskNotification as EventListener);
-    };
-  }, [notificationSound]);
-
-  const unreadCount = notifications.filter(n => !n.read).length;
-
-  const markAsRead = (id: string) => {
-    setNotifications(notifications.map(n =>
-      n.id === id ? { ...n, read: true } : n
-    ));
-  };
+  const { notifications, unreadCount, markAsRead } = useNotifications();
 
   return (
     <Dialog>
@@ -82,35 +35,10 @@ export const NotificationCenter = () => {
           <DialogTitle>Notifications</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 max-h-[60vh] overflow-y-auto">
-          {notifications.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No notifications</p>
-          ) : (
-            <div className="space-y-2">
-              {notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className={`p-3 rounded-lg ${
-                    notification.read ? "bg-muted" : "bg-accent"
-                  } cursor-pointer`}
-                  onClick={() => markAsRead(notification.id)}
-                >
-                  <div className="flex justify-between items-start">
-                    <h4 className="text-sm font-medium">{notification.title}</h4>
-                    <span className="text-xs text-muted-foreground">
-                      {new Date(notification.timestamp).toLocaleTimeString('en-GB', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                      })}
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {notification.message}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
+          <NotificationList 
+            notifications={notifications} 
+            onRead={markAsRead}
+          />
         </div>
       </DialogContent>
     </Dialog>

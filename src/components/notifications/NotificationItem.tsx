@@ -1,0 +1,42 @@
+import React from "react";
+
+interface NotificationItemProps {
+  id: string;
+  title: string;
+  message: string;
+  timestamp: Date;
+  read: boolean;
+  onRead: (id: string) => void;
+}
+
+export const NotificationItem = ({ 
+  id, 
+  title, 
+  message, 
+  timestamp, 
+  read, 
+  onRead 
+}: NotificationItemProps) => {
+  return (
+    <div
+      className={`p-3 rounded-lg ${
+        read ? "bg-muted" : "bg-accent"
+      } cursor-pointer`}
+      onClick={() => onRead(id)}
+    >
+      <div className="flex justify-between items-start">
+        <h4 className="text-sm font-medium">{title}</h4>
+        <span className="text-xs text-muted-foreground">
+          {new Date(timestamp).toLocaleTimeString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+          })}
+        </span>
+      </div>
+      <p className="text-sm text-muted-foreground mt-1">
+        {message}
+      </p>
+    </div>
+  );
+};
