@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { Music } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import {
   Popover,
   PopoverContent,
@@ -9,120 +8,22 @@ import {
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-
-const MUSIC_OPTIONS = [
-  {
-    id: "classical",
-    name: "Classical Piano",
-    url: "https://www.chosic.com/wp-content/uploads/2021/04/The-Epic-Hero-Epic-Cinematic-Keys.mp3",
-  },
-  {
-    id: "ambient",
-    name: "Ambient Nature",
-    url: "https://www.chosic.com/wp-content/uploads/2021/07/Raindrops-on-window.mp3",
-  },
-  {
-    id: "electronic",
-    name: "Minimal Electronic",
-    url: "https://www.chosic.com/wp-content/uploads/2021/04/Beautiful-Dream.mp3",
-  },
-];
+import { MUSIC_OPTIONS } from "./audio/MusicOptions";
+import { useAudioPlayer } from "./audio/useAudioPlayer";
 
 export const AmbientMusic = () => {
-  const [isPlaying, setIsPlaying] = React.useState(false);
-  const [selectedMusic, setSelectedMusic] = React.useState<string>("");
-  const audioRef = React.useRef<HTMLAudioElement | null>(null);
-  const { toast } = useToast();
+  const { isPlaying, selectedMusic, handleMusicChange, togglePlay } = useAudioPlayer();
 
-  React.useEffect(() => {
-    audioRef.current = new Audio();
-    audioRef.current.loop = true;
-
-    // Add error event listener
-    audioRef.current.addEventListener('error', (e) => {
-      console.error('Audio error:', e);
-      toast({
-        title: "Playback error",
-        description: "There was an error loading the audio file. Please try another option.",
-        variant: "destructive",
-      });
-      setIsPlaying(false);
-    });
-
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.removeEventListener('error', () => {});
-        audioRef.current = null;
-      }
-    };
-  }, [toast]);
-
-  const handleMusicChange = async (value: string) => {
+  const handleMusicSelection = (value: string) => {
     const music = MUSIC_OPTIONS.find((opt) => opt.id === value);
-    if (!music || !audioRef.current) return;
-
-    try {
-      // Pause current playback
-      if (audioRef.current.src) {
-        audioRef.current.pause();
-      }
-
-      // Set new source
-      audioRef.current.src = music.url;
-      setSelectedMusic(value);
-      
-      // If was playing, start new selection
-      if (isPlaying) {
-        await audioRef.current.play();
-        toast({
-          title: "Music changed",
-          description: `Now playing: ${music.name}`,
-        });
-      }
-    } catch (error) {
-      console.error('Error changing music:', error);
-      toast({
-        title: "Error changing music",
-        description: "Unable to load the selected music",
-        variant: "destructive",
-      });
+    if (music) {
+      handleMusicChange(music);
     }
   };
 
-  const togglePlay = async () => {
-    if (!audioRef.current || !selectedMusic) {
-      toast({
-        title: "Please select a music option",
-        description: "Choose from the available music options to play",
-      });
-      return;
-    }
-
-    try {
-      if (isPlaying) {
-        audioRef.current.pause();
-        toast({
-          title: "Music paused",
-          description: "Background music has been paused",
-        });
-      } else {
-        await audioRef.current.play();
-        toast({
-          title: "Music playing",
-          description: `Now playing: ${MUSIC_OPTIONS.find(opt => opt.id === selectedMusic)?.name}`,
-        });
-      }
-      setIsPlaying(!isPlaying);
-    } catch (error) {
-      console.error('Playback error:', error);
-      toast({
-        title: "Playback failed",
-        description: "Unable to play the selected music. Please try again.",
-        variant: "destructive",
-      });
-      setIsPlaying(false);
-    }
+  const handlePlayToggle = () => {
+    const currentMusic = MUSIC_OPTIONS.find(opt => opt.id === selectedMusic);
+    togglePlay(currentMusic);
   };
 
   return (
@@ -144,7 +45,7 @@ export const AmbientMusic = () => {
           <div className="font-medium text-sm">Ambient Music</div>
           <RadioGroup
             value={selectedMusic}
-            onValueChange={handleMusicChange}
+            onValueChange={handleMusicSelection}
             className="space-y-2"
           >
             {MUSIC_OPTIONS.map((option) => (
@@ -155,7 +56,7 @@ export const AmbientMusic = () => {
             ))}
           </RadioGroup>
           <Button
-            onClick={togglePlay}
+            onClick={handlePlayToggle}
             className="w-full"
             variant={isPlaying ? "destructive" : "default"}
           >
