@@ -10,7 +10,8 @@ export const useAudioPlayer = () => {
 
   useEffect(() => {
     audioRef.current = new Audio();
-    audioRef.current.loop = true;
+    audioRef.current.loop = true; // Enable looping
+    audioRef.current.volume = 0.3; // Set volume to 30%
 
     const handleError = (e: Event) => {
       console.error('Audio error:', e);

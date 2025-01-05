@@ -8,7 +8,7 @@ export const MUSIC_OPTIONS: MusicOption[] = [
   {
     id: "classical",
     name: "Classical Piano",
-    url: "https://cdn.pixabay.com/download/audio/2022/08/02/audio_884fe5a085.mp3", // Peaceful Piano Song
+    url: "https://cdn.pixabay.com/download/audio/2023/09/24/audio_7b6a59a9af.mp3", // Soft Piano Background Music
   },
   {
     id: "ambient",
@@ -18,6 +18,6 @@ export const MUSIC_OPTIONS: MusicOption[] = [
   {
     id: "electronic",
     name: "Minimal Electronic",
-    url: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3", // Electronic Ambient
+    url: "https://cdn.pixabay.com/download/audio/2022/01/26/audio_31743c8c24.mp3", // Minimal Technology Background
   },
 ];
