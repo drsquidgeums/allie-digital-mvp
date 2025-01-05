@@ -53,7 +53,7 @@ export const MindMap = () => {
   };
 
   const handleDownloadImage = () => {
-    downloadMindMap(toast);
+    downloadMindMap();
   };
 
   return (
