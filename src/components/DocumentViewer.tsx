@@ -23,8 +23,6 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
     handleUpload,
     handleDelete,
     handleDownload,
-    handleZoomIn,
-    handleZoomOut
   } = useDocumentViewer();
 
   React.useEffect(() => {
@@ -57,8 +55,6 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
             onUpload={handleUpload}
             onDownload={() => handleDownload(file)}
             onDelete={handleDelete}
-            onZoomIn={handleZoomIn}
-            onZoomOut={handleZoomOut}
             hasFile={!!file}
           />
           <ThemeProvider />

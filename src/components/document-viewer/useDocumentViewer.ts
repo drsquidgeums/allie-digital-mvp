@@ -1,11 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 
 export const useDocumentViewer = () => {
   const [url, setUrl] = useState<string>("");
-  const [zoom, setZoom] = useState(1);
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const documentRef = useRef<HTMLDivElement>(null);
@@ -71,24 +70,13 @@ export const useDocumentViewer = () => {
     }
   };
 
-  const handleZoomIn = () => {
-    setZoom(prev => Math.min(prev + 0.1, 2));
-  };
-
-  const handleZoomOut = () => {
-    setZoom(prev => Math.max(prev - 0.1, 0.5));
-  };
-
   return {
     url,
     setUrl,
-    zoom,
     fileInputRef,
     documentRef,
     handleUpload,
     handleDelete,
     handleDownload,
-    handleZoomIn,
-    handleZoomOut
   };
 };
