@@ -75,7 +75,7 @@ export const ThemeProvider = () => {
               variant="outline"
               size="sm"
               className={buttonClassName}
-              title="Customize Font"
+              title="Customise Font"
             >
               <Palette className="h-4 w-4" />
             </Button>
