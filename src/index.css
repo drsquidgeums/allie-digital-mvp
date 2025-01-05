@@ -68,43 +68,31 @@
 
   .sepia {
     --background: 35 25% 73%;
-    --foreground: 35 25% 15%;
+    --foreground: 17 31% 23%;  /* #4E3629 */
 
     --card: 35 25% 76%;
-    --card-foreground: 35 25% 15%;
+    --card-foreground: 17 31% 23%;  /* #4E3629 */
 
     --popover: 35 25% 76%;
-    --popover-foreground: 35 25% 15%;
+    --popover-foreground: 17 31% 23%;  /* #4E3629 */
 
-    --primary: 35 25% 15%;
+    --primary: 17 31% 23%;  /* #4E3629 */
     --primary-foreground: 35 25% 76%;
 
     --secondary: 35 15% 70%;
-    --secondary-foreground: 35 25% 15%;
+    --secondary-foreground: 17 31% 23%;  /* #4E3629 */
 
     --muted: 35 15% 65%;
     --muted-foreground: 35 20% 35%;
 
     --accent: 35 15% 65%;
-    --accent-foreground: 35 25% 15%;
+    --accent-foreground: 17 31% 23%;  /* #4E3629 */
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 35 25% 76%;
 
-    --border: 35 15% 50%;
+    --border: 17 31% 23%;  /* #4E3629 */
     --input: 35 15% 65%;
-    --ring: 35 25% 15%;
-  }
-  
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground min-h-screen;
-    font-family: var(--font-family);
-    position: relative;
-    min-height: 100vh;
-    width: 100%;
+    --ring: 17 31% 23%;  /* #4E3629 */
   }
 }
