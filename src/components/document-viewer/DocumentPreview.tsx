@@ -100,6 +100,8 @@ export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = fals
           currentPage={currentPage}
           totalPages={totalPages}
           setCurrentPage={setCurrentPage}
+          selectedColor={selectedColor}
+          isHighlighter={isHighlighter}
         />
       ) : (
         <TextViewer content={content} />
