@@ -64,27 +64,31 @@ export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) 
 
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium">Font</label>
+      <label className="text-sm font-medium text-foreground">Font</label>
       <div className="flex gap-2 items-start">
         <Select value={selectedFont} onValueChange={onFontChange}>
-          <SelectTrigger>
+          <SelectTrigger className="text-foreground bg-background">
             <SelectValue placeholder="Select a font" />
           </SelectTrigger>
-          <SelectContent>
-            <SelectScrollUpButton />
+          <SelectContent className="bg-background">
+            <SelectScrollUpButton className="text-foreground" />
             {fonts.map((font) => (
-              <SelectItem key={font.value} value={font.value}>
+              <SelectItem 
+                key={font.value} 
+                value={font.value}
+                className="text-foreground hover:bg-accent hover:text-accent-foreground"
+              >
                 {font.name}
               </SelectItem>
             ))}
-            <SelectScrollDownButton />
+            <SelectScrollDownButton className="text-foreground" />
           </SelectContent>
         </Select>
         <Button
           variant="outline"
           size="icon"
           onClick={handleBoldToggle}
-          className={`h-10 w-10 ${isBold ? 'bg-accent' : ''}`}
+          className={`h-10 w-10 ${isBold ? 'bg-accent text-accent-foreground' : 'text-foreground'}`}
           title="Toggle bold text"
         >
           <Bold className="h-4 w-4" />
