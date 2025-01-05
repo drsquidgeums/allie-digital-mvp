@@ -7,9 +7,9 @@ export const PomodoroSettings = () => {
   const { state, dispatch } = usePomodoroContext();
 
   return (
-    <div className="grid grid-cols-3 gap-4">
-      <div className="space-y-1">
-        <Label>Work Duration</Label>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">Work Duration (min)</Label>
         <Input
           type="number"
           value={state.workMinutes}
@@ -19,11 +19,11 @@ export const PomodoroSettings = () => {
           })}
           min="1"
           disabled={state.isActive}
-          className="h-8"
+          className="h-9"
         />
       </div>
-      <div className="space-y-1">
-        <Label>Short Break</Label>
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">Short Break (min)</Label>
         <Input
           type="number"
           value={state.shortBreakMinutes}
@@ -33,11 +33,11 @@ export const PomodoroSettings = () => {
           })}
           min="1"
           disabled={state.isActive}
-          className="h-8"
+          className="h-9"
         />
       </div>
-      <div className="space-y-1">
-        <Label>Long Break</Label>
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">Long Break (min)</Label>
         <Input
           type="number"
           value={state.longBreakMinutes}
@@ -47,7 +47,7 @@ export const PomodoroSettings = () => {
           })}
           min="1"
           disabled={state.isActive}
-          className="h-8"
+          className="h-9"
         />
       </div>
     </div>
