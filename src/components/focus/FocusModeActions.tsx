@@ -35,13 +35,13 @@ export const FocusModeActions = ({
       >
         {isActive ? (
           <>
-            <MinusCircle className="w-4 h-4 mr-2" />
-            <span>Exit Focus Mode</span>
+            <MinusCircle className="w-4 h-4" />
+            <span className="ml-6">Exit Focus Mode</span>
           </>
         ) : (
           <>
-            <Focus className="w-4 h-4 mr-2" />
-            <span>Enter Focus Mode</span>
+            <Focus className="w-4 h-4" />
+            <span className="ml-6">Enter Focus Mode</span>
           </>
         )}
       </Button>
