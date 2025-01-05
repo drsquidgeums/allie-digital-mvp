@@ -81,6 +81,11 @@ export const AIAssistant = () => {
         {messages.map((msg, idx) => (
           <ChatMessage key={idx} text={msg.text} isUser={msg.isUser} />
         ))}
+        {isLoading && (
+          <div className="flex items-center gap-2">
+            <div className="w-12 h-6 bg-muted/50 rounded animate-pulse" />
+          </div>
+        )}
       </div>
       <ChatInput
         value={input}

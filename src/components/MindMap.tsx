@@ -32,6 +32,10 @@ const initialNodes: Node[] = [
     type: 'input',
     data: { label: 'Main Topic' },
     position: { x: 250, y: 25 },
+    style: {
+      background: 'hsl(var(--muted))',
+      color: 'hsl(var(--muted-foreground))',
+    },
   },
 ];
 
@@ -65,6 +69,7 @@ export const MindMap = () => {
       },
       style: {
         background: selectedColor === 'custom' ? customColor : selectedColor,
+        color: 'hsl(var(--muted-foreground))',
       },
     };
 
@@ -129,10 +134,11 @@ export const MindMap = () => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           fitView
+          className="dark:bg-background"
         >
-          <Controls />
-          <MiniMap />
-          <Background />
+          <Controls className="dark:bg-muted dark:border-muted-foreground/20" />
+          <MiniMap className="dark:bg-muted" />
+          <Background className="dark:bg-background" />
         </ReactFlow>
       </div>
     </div>
