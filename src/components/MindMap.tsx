@@ -1,19 +1,9 @@
 import React, { useCallback } from 'react';
 import { useToast } from "@/hooks/use-toast";
-import { MindMapToolbar } from './mindmap/MindMapToolbar';
-import { ColorOption, Node } from './mindmap/types';
-import {
-  ReactFlow,
-  addEdge,
-  MiniMap,
-  Controls,
-  Background,
-  useNodesState,
-  useEdgesState,
-  Connection,
-  Edge,
-} from '@xyflow/react';
+import { addEdge, Connection, Edge, useNodesState, useEdgesState } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { MindMapContainer } from './mindmap/MindMapContainer';
+import { ColorOption, Node } from './mindmap/types';
 
 const colorOptions: ColorOption[] = [
   { label: 'Default', value: 'hsl(var(--muted))' },
@@ -51,10 +41,6 @@ export const MindMap = () => {
     (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
-
-  const handleColorChange = (value: string) => {
-    setSelectedColor(value);
-  };
 
   const addNode = () => {
     if (!newNodeText.trim()) return;
@@ -113,34 +99,22 @@ export const MindMap = () => {
   };
 
   return (
-    <div className="w-full h-[600px] bg-background rounded-lg border">
-      <MindMapToolbar
-        selectedColor={selectedColor}
-        setSelectedColor={handleColorChange}
-        customColor={customColor}
-        setCustomColor={setCustomColor}
-        newNodeText={newNodeText}
-        setNewNodeText={setNewNodeText}
-        onAddNode={addNode}
-        onExport={downloadMindMap}
-        onClear={clearCanvas}
-        colorOptions={colorOptions}
-      />
-      <div className="w-full h-[calc(100%-64px)]">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          fitView
-          className="dark:bg-background"
-        >
-          <Controls className="dark:bg-muted dark:border-muted-foreground/20" />
-          <MiniMap className="dark:bg-muted" />
-          <Background className="dark:bg-background" />
-        </ReactFlow>
-      </div>
-    </div>
+    <MindMapContainer
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      onConnect={onConnect}
+      selectedColor={selectedColor}
+      setSelectedColor={setSelectedColor}
+      customColor={customColor}
+      setCustomColor={setCustomColor}
+      newNodeText={newNodeText}
+      setNewNodeText={setNewNodeText}
+      onAddNode={addNode}
+      onExport={downloadMindMap}
+      onClear={clearCanvas}
+      colorOptions={colorOptions}
+    />
   );
 };
