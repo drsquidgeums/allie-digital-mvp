@@ -7,22 +7,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ColorList } from "./irlen/ColorList";
+
+const colors = [
+  { name: "Yellow", value: "rgba(255, 255, 0, 0.3)" },
+  { name: "Blue", value: "rgba(0, 0, 255, 0.3)" },
+  { name: "Rose", value: "rgba(255, 192, 203, 0.3)" },
+  { name: "Soft Orange", value: "rgba(254, 198, 161, 0.3)" },
+  { name: "Bright Orange", value: "rgba(249, 115, 22, 0.3)" },
+  { name: "Soft Green", value: "rgba(242, 252, 226, 0.3)" },
+  { name: "Lime Green", value: "rgba(50, 205, 50, 0.3)" },
+];
 
 export const IrlenOverlay = () => {
   const [overlayColor, setOverlayColor] = React.useState(() => {
     return localStorage.getItem('irlenOverlayColor') || "";
   });
   const { toast } = useToast();
-
-  const colors = [
-    { name: "Yellow", value: "rgba(255, 255, 0, 0.3)" },
-    { name: "Blue", value: "rgba(0, 0, 255, 0.3)" },
-    { name: "Rose", value: "rgba(255, 192, 203, 0.3)" },
-    { name: "Soft Orange", value: "rgba(254, 198, 161, 0.3)" },
-    { name: "Bright Orange", value: "rgba(249, 115, 22, 0.3)" },
-    { name: "Soft Green", value: "rgba(242, 252, 226, 0.3)" },
-    { name: "Lime Green", value: "rgba(50, 205, 50, 0.3)" }, // Added Lime Green
-  ];
 
   const handleOverlayChange = (color: string) => {
     setOverlayColor(color);
@@ -59,7 +60,6 @@ export const IrlenOverlay = () => {
     `;
     document.head.appendChild(style);
 
-    // Apply saved overlay on component mount
     if (overlayColor) {
       document.documentElement.style.setProperty('--overlay-color', overlayColor);
       document.documentElement.style.setProperty('--overlay-display', 'block');
@@ -85,26 +85,11 @@ export const IrlenOverlay = () => {
       <PopoverContent className="w-48" align="end">
         <div className="space-y-2">
           <div className="font-medium text-sm">Irlen Overlay</div>
-          <div className="grid grid-cols-1 gap-2">
-            {colors.map((color) => (
-              <Button
-                key={color.name}
-                onClick={() => handleOverlayChange(color.value)}
-                className="w-full"
-                variant={overlayColor === color.value ? "secondary" : "outline"}
-              >
-                {color.name}
-              </Button>
-            ))}
-            <Button 
-              onClick={() => handleOverlayChange("")}
-              variant="outline" 
-              className="w-full"
-              disabled={!overlayColor}
-            >
-              Remove Overlay
-            </Button>
-          </div>
+          <ColorList
+            colors={colors}
+            selectedColor={overlayColor}
+            onColorChange={handleOverlayChange}
+          />
         </div>
       </PopoverContent>
     </Popover>
