@@ -28,6 +28,7 @@ export const NotificationCenter = () => {
       timestamp: new Date(),
     }];
   });
+  const [notificationSound] = useState(new Audio('/sounds/notification-bell.mp3'));
 
   useEffect(() => {
     localStorage.setItem('notifications', JSON.stringify(notifications));
@@ -38,6 +39,9 @@ export const NotificationCenter = () => {
       setNotifications(prev => {
         const newNotifications = [event.detail, ...prev];
         localStorage.setItem('notifications', JSON.stringify(newNotifications));
+        notificationSound.play().catch(error => {
+          console.log('Error playing notification sound:', error);
+        });
         return newNotifications;
       });
     };
@@ -47,7 +51,7 @@ export const NotificationCenter = () => {
     return () => {
       window.removeEventListener('taskNotification', handleTaskNotification as EventListener);
     };
-  }, []);
+  }, [notificationSound]);
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
