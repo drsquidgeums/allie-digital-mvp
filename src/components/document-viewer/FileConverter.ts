@@ -1,6 +1,6 @@
 import mammoth from 'mammoth';
 import { PDFDocument } from 'pdf-lib';
-import { EPub } from 'epub';
+import EPub from 'epub'; // Updated import syntax
 import { marked } from 'marked';
 
 export async function convertDocxToHtml(file: File): Promise<string> {

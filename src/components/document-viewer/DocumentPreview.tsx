@@ -15,6 +15,14 @@ import { AnnotationTools } from './AnnotationTools';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+interface Annotation {
+  type: 'highlight' | 'comment';
+  content: string;
+  color?: string;
+  page: number;
+  position?: { x: number; y: number };
+}
+
 interface DocumentPreviewProps {
   file: File | null;
   url: string;
@@ -31,6 +39,7 @@ export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = fals
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pdfDoc, setPdfDoc] = useState<any>(null);
+  const [annotations, setAnnotations] = useState<Annotation[]>([]);
 
   useEffect(() => {
     if (!file) return;
@@ -140,7 +149,6 @@ export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = fals
       range.surroundContents(span);
       selection.removeAllRanges();
 
-      // Save highlight annotation
       setAnnotations(prev => [...prev, {
         type: 'highlight',
         content: range.toString(),
@@ -155,12 +163,11 @@ export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = fals
       type: 'comment',
       content: comment,
       page: currentPage,
-      position: { x: 0, y: 0 }, // You can implement position selection later
+      position: { x: 0, y: 0 },
     }]);
   };
 
   const handleSaveAnnotations = () => {
-    // Save annotations to localStorage or your backend
     localStorage.setItem(`annotations-${file?.name}`, JSON.stringify(annotations));
     toast({
       title: "Annotations saved",
