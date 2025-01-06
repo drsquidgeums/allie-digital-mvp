@@ -21,14 +21,14 @@ export const NotificationItem = ({
     <div
       className={`p-3 rounded-lg ${
         read 
-          ? "dark:bg-[#222222]/80 bg-[#f5f5f5]/80 sepia:bg-[#F2E8CF]/80" 
-          : "dark:bg-[#2a2a2a]/80 bg-[#ffffff]/80 sepia:bg-[#F2E8CF]/90"
-      } cursor-pointer dark:hover:bg-[#333333]/80 hover:bg-[#f0f0f0]/80 sepia:hover:bg-[#F2E8CF]/70 transition-colors dark:border-gray-600/50 border-gray-200/50`}
+          ? "bg-muted/50" 
+          : "bg-background"
+      } cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors border border-border`}
       onClick={() => onRead(id)}
     >
       <div className="flex justify-between items-start">
-        <h4 className="text-sm font-medium dark:text-gray-200 text-gray-800">{title}</h4>
-        <span className="text-xs dark:text-gray-400 text-gray-500 sepia:text-[#F2E8CF]">
+        <h4 className="text-sm font-medium text-foreground">{title}</h4>
+        <span className="text-xs text-muted-foreground">
           {new Date(timestamp).toLocaleTimeString('en-GB', {
             hour: '2-digit',
             minute: '2-digit',
@@ -36,7 +36,7 @@ export const NotificationItem = ({
           })}
         </span>
       </div>
-      <p className="text-sm dark:text-gray-300 text-gray-600 sepia:text-[#F2E8CF] mt-1">
+      <p className="text-sm text-foreground mt-1">
         {message}
       </p>
     </div>
