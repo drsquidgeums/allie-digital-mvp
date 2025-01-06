@@ -44,7 +44,7 @@
   }
 
   .sepia {
-    --background: 35 25% 85%;
+    --background: 35 25% 75%;
     --foreground: 25 32% 13%;
     --card: 35 25% 88%;
     --card-foreground: 25 32% 13%;
