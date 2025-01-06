@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Palette, X } from "lucide-react";
+import { Palette, Moon, Sun, Book, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -15,13 +15,9 @@ import { useTheme } from "next-themes";
 import { FontSelector } from "./FontSelector";
 
 export const ThemeProvider = () => {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [selectedFont, setSelectedFont] = React.useState("Inter");
   const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground";
-
-  React.useEffect(() => {
-    setTheme('light');
-  }, [setTheme]);
 
   const handleFontChange = (font: string) => {
     setSelectedFont(font);
@@ -31,6 +27,33 @@ export const ThemeProvider = () => {
   return (
     <div className="flex items-center gap-2">
       <div className="flex gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className={buttonClassName}
+          onClick={() => setTheme('light')}
+          title="Light Mode"
+        >
+          <Sun className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className={buttonClassName}
+          onClick={() => setTheme('dark')}
+          title="Dark Mode"
+        >
+          <Moon className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className={buttonClassName}
+          onClick={() => setTheme('sepia')}
+          title="Sepia Mode"
+        >
+          <Book className="h-4 w-4" />
+        </Button>
         <Dialog>
           <DialogTrigger asChild>
             <Button
