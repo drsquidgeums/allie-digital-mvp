@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider as NextThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import { TaskDashboard } from "./components/dashboard/TaskDashboard";
 import AIAssistant from "./pages/AIAssistant";
@@ -61,23 +62,25 @@ const App = () => {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <PomodoroProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/tasks" element={<TaskDashboard />} />
-              <Route path="/ai-assistant" element={<AIAssistant />} />
-              <Route path="/mind-map" element={<MindMapDashboard />} />
-              <Route path="/community" element={<CommunityPage />} />
-            </Routes>
-          </BrowserRouter>
-        </PomodoroProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <NextThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <PomodoroProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/tasks" element={<TaskDashboard />} />
+                <Route path="/ai-assistant" element={<AIAssistant />} />
+                <Route path="/mind-map" element={<MindMapDashboard />} />
+                <Route path="/community" element={<CommunityPage />} />
+              </Routes>
+            </BrowserRouter>
+          </PomodoroProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </NextThemeProvider>
   );
 };
 
