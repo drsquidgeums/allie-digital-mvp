@@ -2,7 +2,6 @@
   .react-flow {
     border-radius: 0.5rem;
     overflow: hidden;
-    border: 1px solid var(--border);
   }
 
   .react-flow__container {
@@ -45,17 +44,17 @@
 
   /* Sepia mode styles */
   .sepia .react-flow__controls {
-    background-color: hsl(35 25% 75%);
-    border-color: hsl(35 25% 45%);
+    background-color: #e8dccc;
+    border-color: #d4c5b0;
   }
 
   .sepia .react-flow__controls-button {
-    background-color: hsl(35 25% 75%);
-    border-color: hsl(35 25% 45%);
-    color: hsl(35 25% 25%);
+    background-color: #d4c5b0;
+    border-color: #c0b09a;
+    color: #5c4d3d;
   }
 
   .sepia .react-flow__controls-button:hover {
-    background-color: hsl(35 25% 65%);
+    background-color: #c0b09a;
   }
 }
