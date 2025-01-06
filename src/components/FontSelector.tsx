@@ -1,83 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
+import { Bold } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
   SelectTrigger,
   SelectValue,
-  SelectScrollUpButton,
-  SelectScrollDownButton,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Bold } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog/dialog-root";
+
+const fonts = [
+  { value: "inter", name: "Inter" },
+  { value: "roboto", name: "Roboto" },
+  { value: "open-sans", name: "Open Sans" },
+  { value: "lato", name: "Lato" },
+  { value: "source-sans-pro", name: "Source Sans Pro" },
+];
 
 interface FontSelectorProps {
-  selectedFont: string;
   onFontChange: (font: string) => void;
+  onBoldChange: (isBold: boolean) => void;
 }
 
-export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) => {
-  const [isBold, setIsBold] = React.useState(false);
-  const { toast } = useToast();
+export const FontSelector = ({ onFontChange, onBoldChange }: FontSelectorProps) => {
+  const [selectedFont, setSelectedFont] = useState<string>("inter");
+  const [isBold, setIsBold] = useState(false);
+
+  const handleFontChange = (value: string) => {
+    setSelectedFont(value);
+    onFontChange(value);
+  };
 
   const handleBoldToggle = () => {
     setIsBold(!isBold);
-    document.documentElement.style.setProperty('--font-weight', !isBold ? 'bold' : 'normal');
-    toast({
-      title: !isBold ? "Bold text enabled" : "Bold text disabled",
-      description: "Font weight has been updated",
-    });
+    onBoldChange(!isBold);
   };
-
-  const fonts = [
-    // ADHD-friendly fonts
-    { name: "Verdana", value: "Verdana" },
-    { name: "Arial", value: "Arial" },
-    { name: "Comic Sans MS", value: "Comic Sans MS" },
-    { name: "Century Gothic", value: "Century Gothic" },
-    { name: "Tahoma", value: "Tahoma" },
-    
-    // Autism-friendly fonts
-    { name: "Helvetica", value: "Helvetica" },
-    { name: "Avenir", value: "Avenir" },
-    { name: "OpenDyslexic", value: "OpenDyslexic" },
-    { name: "Suisse Int'l", value: "Suisse Int'l" },
-    
-    // Dyslexia-friendly fonts
-    { name: "Dyslexie", value: "Dyslexie" },
-    { name: "Readability", value: "Readability" },
-    { name: "Lexie Readable", value: "Lexie Readable" },
-    { name: "Andika", value: "Andika" },
-    
-    // Additional fonts for various needs
-    { name: "Georgia", value: "Georgia" },
-    { name: "Trebuchet MS", value: "Trebuchet MS" },
-    { name: "Lucida Sans", value: "Lucida Sans" },
-    { name: "Inter", value: "Inter" },
-    { name: "Roboto", value: "Roboto" },
-    { name: "Open Sans", value: "Open Sans" },
-    { name: "Lato", value: "Lato" },
-    { name: "Source Sans Pro", value: "Source Sans Pro" },
-    { name: "Segoe UI", value: "Segoe UI" },
-  ];
 
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium text-foreground dark:text-white">Font</label>
       <div className="flex gap-2 items-start">
-        <Select value={selectedFont} onValueChange={onFontChange}>
-          <SelectTrigger className="text-foreground bg-background dark:bg-gray-800 dark:text-white dark:border-gray-600">
+        <Select value={selectedFont} onValueChange={handleFontChange}>
+          <SelectTrigger className="text-foreground bg-background dark:bg-gray-800 dark:text-white dark:border-border">
             <SelectValue placeholder="Select a font" />
           </SelectTrigger>
-          <SelectContent className="bg-background dark:bg-gray-800">
+          <SelectContent className="bg-background dark:bg-gray-800 dark:border-border">
             <SelectScrollUpButton className="text-foreground dark:text-white" />
             {fonts.map((font) => (
               <SelectItem 
@@ -95,7 +64,7 @@ export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) 
           variant="outline"
           size="icon"
           onClick={handleBoldToggle}
-          className={`h-10 w-10 dark:border-gray-600 dark:text-white ${
+          className={`h-10 w-10 dark:border-border dark:text-white ${
             isBold 
               ? 'bg-accent text-accent-foreground dark:bg-gray-700' 
               : 'text-foreground dark:bg-gray-800 dark:hover:bg-gray-700'
