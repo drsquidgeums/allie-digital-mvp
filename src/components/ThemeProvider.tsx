@@ -30,7 +30,7 @@ export const ThemeProvider = () => {
         <Button
           variant="outline"
           size="sm"
-          className={buttonClassName}
+          className={`${buttonClassName} ${theme === 'light' ? 'bg-accent text-accent-foreground' : ''}`}
           onClick={() => setTheme('light')}
           title="Light Mode"
         >
@@ -39,7 +39,7 @@ export const ThemeProvider = () => {
         <Button
           variant="outline"
           size="sm"
-          className={buttonClassName}
+          className={`${buttonClassName} ${theme === 'dark' ? 'bg-accent text-accent-foreground' : ''}`}
           onClick={() => setTheme('dark')}
           title="Dark Mode"
         >
@@ -48,7 +48,7 @@ export const ThemeProvider = () => {
         <Button
           variant="outline"
           size="sm"
-          className={buttonClassName}
+          className={`${buttonClassName} ${theme === 'sepia' ? 'bg-accent text-accent-foreground' : ''}`}
           onClick={() => setTheme('sepia')}
           title="Sepia Mode"
         >
