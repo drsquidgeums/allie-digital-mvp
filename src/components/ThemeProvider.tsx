@@ -17,11 +17,15 @@ import { FontSelector } from "./FontSelector";
 export const ThemeProvider = () => {
   const { theme, setTheme } = useTheme();
   const [selectedFont, setSelectedFont] = React.useState("Inter");
-  const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground";
+  const buttonClassName = "h-9 w-9";
 
   const handleFontChange = (font: string) => {
     setSelectedFont(font);
     document.documentElement.style.setProperty('--font-family', font);
+  };
+
+  const handleThemeChange = (newTheme: string) => {
+    setTheme(newTheme);
   };
 
   return (
@@ -30,8 +34,12 @@ export const ThemeProvider = () => {
         <Button
           variant="outline"
           size="sm"
-          className={`${buttonClassName} ${theme === 'light' ? 'bg-accent text-accent-foreground' : ''}`}
-          onClick={() => setTheme('light')}
+          className={`${buttonClassName} ${
+            theme === 'light' 
+              ? 'bg-accent text-accent-foreground' 
+              : 'bg-background hover:bg-accent hover:text-accent-foreground'
+          }`}
+          onClick={() => handleThemeChange('light')}
           title="Light Mode"
         >
           <Sun className="h-4 w-4" />
@@ -39,8 +47,12 @@ export const ThemeProvider = () => {
         <Button
           variant="outline"
           size="sm"
-          className={`${buttonClassName} ${theme === 'dark' ? 'bg-accent text-accent-foreground' : ''}`}
-          onClick={() => setTheme('dark')}
+          className={`${buttonClassName} ${
+            theme === 'dark' 
+              ? 'bg-accent text-accent-foreground' 
+              : 'bg-background hover:bg-accent hover:text-accent-foreground'
+          }`}
+          onClick={() => handleThemeChange('dark')}
           title="Dark Mode"
         >
           <Moon className="h-4 w-4" />
@@ -48,8 +60,12 @@ export const ThemeProvider = () => {
         <Button
           variant="outline"
           size="sm"
-          className={`${buttonClassName} ${theme === 'sepia' ? 'bg-accent text-accent-foreground' : ''}`}
-          onClick={() => setTheme('sepia')}
+          className={`${buttonClassName} ${
+            theme === 'sepia' 
+              ? 'bg-accent text-accent-foreground' 
+              : 'bg-background hover:bg-accent hover:text-accent-foreground'
+          }`}
+          onClick={() => handleThemeChange('sepia')}
           title="Sepia Mode"
         >
           <Book className="h-4 w-4" />
@@ -59,7 +75,7 @@ export const ThemeProvider = () => {
             <Button
               variant="outline"
               size="sm"
-              className={buttonClassName}
+              className={`${buttonClassName} bg-background hover:bg-accent hover:text-accent-foreground`}
               title="Customise Font"
             >
               <Palette className="h-4 w-4" />
