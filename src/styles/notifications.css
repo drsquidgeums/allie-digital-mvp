@@ -8,7 +8,7 @@
   }
 
   .sepia [data-radix-toast-close-button] {
-    @apply text-[#F2E8CF] hover:text-[#F2E8CF]/80 !important;
+    @apply text-[#8B7355] hover:text-[#8B7355]/80 !important;
   }
 
   [data-radix-dialog-close] {
@@ -20,6 +20,10 @@
   }
 
   .sepia [data-radix-dialog-close] {
-    @apply text-[#F2E8CF] hover:text-[#F2E8CF]/80 opacity-100 !important;
+    @apply text-[#8B7355] hover:text-[#8B7355]/80 opacity-100 !important;
+  }
+
+  .sepia [data-radix-dialog-title] {
+    @apply text-[#8B7355] !important;
   }
 }
