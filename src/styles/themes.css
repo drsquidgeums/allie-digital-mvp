@@ -84,17 +84,6 @@
       color: hsl(35 25% 15%);
     }
 
-    /* Style URL input in sepia mode */
-    input[type="url"] {
-      background-color: hsl(35 25% 75%);
-      border: 1px solid hsl(35 25% 45%);
-    }
-
-    input[type="url"]:focus {
-      background-color: hsl(35 25% 65%);
-      border-color: hsl(35 25% 35%);
-    }
-
     /* Mind map tool specific button styles */
     .react-flow__controls-button {
       background-color: hsl(35 25% 75%) !important;
@@ -134,6 +123,17 @@
       background-color: hsl(35 25% 65%) !important;
       border-color: hsl(35 25% 35%) !important;
       color: hsl(35 25% 15%) !important;
+    }
+
+    /* URL input styling in sepia mode */
+    input[type="url"] {
+      background-color: hsl(35 25% 75%);
+      border: 1px solid hsl(35 25% 45%);
+    }
+
+    input[type="url"]:focus {
+      background-color: hsl(35 25% 65%);
+      border-color: hsl(35 25% 35%);
     }
   }
 }
