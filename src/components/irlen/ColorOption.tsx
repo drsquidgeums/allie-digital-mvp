@@ -12,7 +12,7 @@ export const ColorOption = ({ name, value, isSelected, onClick }: ColorOptionPro
   return (
     <Button
       onClick={onClick}
-      className="w-full flex items-center gap-2 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:border-border"
+      className="w-full flex items-center gap-2 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:border-gray-600"
       variant={isSelected ? "secondary" : "outline"}
     >
       <div 

@@ -79,14 +79,14 @@ export const IrlenOverlay = () => {
         <Button
           variant="outline"
           size="sm"
-          className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground dark:border-border dark:bg-gray-800"
+          className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground dark:border-gray-600"
           title="Irlen Overlay"
         >
           <Glasses className="h-4 w-4" />
         </Button>
       </PopoverTrigger>
       <PopoverContent 
-        className="w-48 dark:bg-gray-800 dark:border-border dark:text-white" 
+        className="w-48 dark:bg-background dark:border-gray-600 dark:text-white" 
         align="end"
       >
         <div className="space-y-2">
