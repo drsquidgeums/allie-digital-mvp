@@ -44,11 +44,11 @@
   }
 
   .sepia {
-    --background: 35 25% 93%;
+    --background: 35 25% 85%;
     --foreground: 25 32% 23%;
-    --card: 35 25% 96%;
+    --card: 35 25% 88%;
     --card-foreground: 25 32% 23%;
-    --popover: 35 25% 96%;
+    --popover: 35 25% 88%;
     --popover-foreground: 25 32% 23%;
     --primary: 25 32% 23%;
     --primary-foreground: 35 25% 96%;
