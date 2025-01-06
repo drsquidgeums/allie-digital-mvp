@@ -84,4 +84,15 @@
   .sepia button[class*="h-9 w-9"]:hover svg {
     color: hsl(35 25% 15%);
   }
+
+  /* Style URL input in sepia mode */
+  .sepia input[type="url"] {
+    background-color: hsl(35 25% 75%);
+    border: 1px solid hsl(35 25% 45%);
+  }
+
+  .sepia input[type="url"]:focus {
+    background-color: hsl(35 25% 65%);
+    border-color: hsl(35 25% 35%);
+  }
 }
