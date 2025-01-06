@@ -64,4 +64,24 @@
     --input: 35 15% 85%;
     --ring: 25 32% 23%;
   }
+
+  /* Add specific button styling for sepia mode */
+  .sepia button[class*="h-9 w-9"] {
+    background-color: hsl(35 25% 75%);
+    border: 1px solid hsl(35 25% 45%);
+  }
+
+  .sepia button[class*="h-9 w-9"]:hover {
+    background-color: hsl(35 25% 65%);
+    border-color: hsl(35 25% 35%);
+  }
+
+  /* Ensure icons have good contrast in sepia mode */
+  .sepia button[class*="h-9 w-9"] svg {
+    color: hsl(35 25% 25%);
+  }
+
+  .sepia button[class*="h-9 w-9"]:hover svg {
+    color: hsl(35 25% 15%);
+  }
 }
