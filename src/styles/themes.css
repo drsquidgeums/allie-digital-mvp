@@ -45,19 +45,19 @@
 
   .sepia {
     --background: 35 25% 93%;
-    --foreground: 25 32% 15%;
+    --foreground: 25 32% 23%;
     --card: 35 25% 96%;
-    --card-foreground: 25 32% 15%;
+    --card-foreground: 25 32% 23%;
     --popover: 35 25% 96%;
-    --popover-foreground: 25 32% 15%;
-    --primary: 25 32% 15%;
+    --popover-foreground: 25 32% 23%;
+    --primary: 25 32% 23%;
     --primary-foreground: 35 25% 96%;
     --secondary: 35 15% 90%;
-    --secondary-foreground: 25 32% 15%;
+    --secondary-foreground: 25 32% 23%;
     --muted: 35 15% 85%;
-    --muted-foreground: 25 32% 25%;
+    --muted-foreground: 25 32% 33%;
     --accent: 35 15% 85%;
-    --accent-foreground: 25 32% 15%;
+    --accent-foreground: 25 32% 23%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 35 25% 96%;
     --border: 25 32% 23%;

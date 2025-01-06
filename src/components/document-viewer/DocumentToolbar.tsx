@@ -16,7 +16,7 @@ export const DocumentToolbar = ({
   onDelete,
   hasFile
 }: DocumentToolbarProps) => {
-  const buttonClassName = "h-9 w-9 bg-gray-800 hover:bg-gray-700 text-white border-2 border-gray-600 hover:border-gray-500";
+  const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground";
 
   return (
     <div className="flex justify-between w-full p-2">
@@ -35,7 +35,7 @@ export const DocumentToolbar = ({
           size="sm"
           onClick={onDownload}
           disabled={!hasFile}
-          className={`${buttonClassName} ${!hasFile && 'opacity-50 cursor-not-allowed'}`}
+          className={buttonClassName}
           title="Download document"
         >
           <Download className="h-4 w-4" />
@@ -45,7 +45,7 @@ export const DocumentToolbar = ({
           size="sm"
           onClick={onDelete}
           disabled={!hasFile}
-          className={`${buttonClassName} ${!hasFile && 'opacity-50 cursor-not-allowed'}`}
+          className={buttonClassName}
           title="Delete document"
         >
           <Trash2 className="h-4 w-4" />
