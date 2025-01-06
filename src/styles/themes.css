@@ -64,23 +64,76 @@
     --input: 35 15% 85%;
     --ring: 25 32% 23%;
     
-    /* Override any color transformations for Irlen overlay in sepia mode */
-    body::after {
-      mix-blend-mode: normal !important;
-      opacity: 1 !important;
+    /* Style updates for buttons in sepia mode */
+    button[class*="h-9 w-9"] {
+      background-color: hsl(35 25% 75%);
+      border: 1px solid hsl(35 25% 45%);
     }
 
-    /* Ensure Irlen overlay colors remain pure and unaffected by sepia theme */
-    :root::after {
-      mix-blend-mode: normal !important;
-      opacity: 1 !important;
+    button[class*="h-9 w-9"]:hover {
+      background-color: hsl(35 25% 65%);
+      border-color: hsl(35 25% 35%);
     }
 
-    /* Additional specificity to ensure overlay colors stay true */
-    [data-theme="sepia"] body::after,
-    [data-theme="sepia"] :root::after {
-      mix-blend-mode: normal !important;
-      opacity: 1 !important;
+    /* Ensure icons have good contrast in sepia mode */
+    button[class*="h-9 w-9"] svg {
+      color: hsl(35 25% 25%);
+    }
+
+    button[class*="h-9 w-9"]:hover svg {
+      color: hsl(35 25% 15%);
+    }
+
+    /* Style URL input in sepia mode */
+    input[type="url"] {
+      background-color: hsl(35 25% 75%);
+      border: 1px solid hsl(35 25% 45%);
+    }
+
+    input[type="url"]:focus {
+      background-color: hsl(35 25% 65%);
+      border-color: hsl(35 25% 35%);
+    }
+
+    /* Mind map tool specific button styles */
+    .react-flow__controls-button {
+      background-color: hsl(35 25% 75%) !important;
+      border: 1px solid hsl(35 25% 45%) !important;
+      color: hsl(35 25% 25%) !important;
+    }
+
+    .react-flow__controls-button:hover {
+      background-color: hsl(35 25% 65%) !important;
+      border-color: hsl(35 25% 35%) !important;
+      color: hsl(35 25% 15%) !important;
+    }
+
+    /* Mind map toolbar buttons */
+    [class*="MindMapToolbar"] button {
+      background-color: hsl(35 25% 75%) !important;
+      border: 1px solid hsl(35 25% 45%) !important;
+      color: hsl(35 25% 25%) !important;
+    }
+
+    [class*="MindMapToolbar"] button:hover {
+      background-color: hsl(35 25% 65%) !important;
+      border-color: hsl(35 25% 35%) !important;
+      color: hsl(35 25% 15%) !important;
+    }
+
+    /* Home button and general button styles */
+    button[variant="outline"],
+    .button-outline {
+      background-color: hsl(35 25% 75%) !important;
+      border: 1px solid hsl(35 25% 45%) !important;
+      color: hsl(35 25% 25%) !important;
+    }
+
+    button[variant="outline"]:hover,
+    .button-outline:hover {
+      background-color: hsl(35 25% 65%) !important;
+      border-color: hsl(35 25% 35%) !important;
+      color: hsl(35 25% 15%) !important;
     }
   }
 }
