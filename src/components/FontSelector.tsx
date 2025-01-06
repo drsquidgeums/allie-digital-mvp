@@ -20,18 +20,13 @@ const fonts = [
 ];
 
 interface FontSelectorProps {
+  selectedFont: string;
   onFontChange: (font: string) => void;
   onBoldChange: (isBold: boolean) => void;
 }
 
-export const FontSelector = ({ onFontChange, onBoldChange }: FontSelectorProps) => {
-  const [selectedFont, setSelectedFont] = useState<string>("inter");
+export const FontSelector = ({ selectedFont, onFontChange, onBoldChange }: FontSelectorProps) => {
   const [isBold, setIsBold] = useState(false);
-
-  const handleFontChange = (value: string) => {
-    setSelectedFont(value);
-    onFontChange(value);
-  };
 
   const handleBoldToggle = () => {
     setIsBold(!isBold);
@@ -42,7 +37,7 @@ export const FontSelector = ({ onFontChange, onBoldChange }: FontSelectorProps) 
     <div className="space-y-2">
       <label className="text-sm font-medium text-foreground dark:text-white">Font</label>
       <div className="flex gap-2 items-start">
-        <Select value={selectedFont} onValueChange={handleFontChange}>
+        <Select value={selectedFont} onValueChange={onFontChange}>
           <SelectTrigger className="text-foreground bg-background dark:bg-gray-800 dark:text-white dark:border-border">
             <SelectValue placeholder="Select a font" />
           </SelectTrigger>
