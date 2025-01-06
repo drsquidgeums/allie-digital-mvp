@@ -24,9 +24,10 @@ export const ThemeProvider = () => {
     document.documentElement.style.setProperty('--font-family', font);
   };
 
-  const handleThemeChange = (newTheme: string) => {
-    setTheme(newTheme);
-  };
+  React.useEffect(() => {
+    // Force a re-render when theme changes
+    document.documentElement.className = theme || '';
+  }, [theme]);
 
   return (
     <div className="flex items-center gap-2">
@@ -39,7 +40,7 @@ export const ThemeProvider = () => {
               ? 'bg-accent text-accent-foreground' 
               : 'bg-background hover:bg-accent hover:text-accent-foreground'
           }`}
-          onClick={() => handleThemeChange('light')}
+          onClick={() => setTheme('light')}
           title="Light Mode"
         >
           <Sun className="h-4 w-4" />
@@ -52,7 +53,7 @@ export const ThemeProvider = () => {
               ? 'bg-accent text-accent-foreground' 
               : 'bg-background hover:bg-accent hover:text-accent-foreground'
           }`}
-          onClick={() => handleThemeChange('dark')}
+          onClick={() => setTheme('dark')}
           title="Dark Mode"
         >
           <Moon className="h-4 w-4" />
@@ -65,7 +66,7 @@ export const ThemeProvider = () => {
               ? 'bg-accent text-accent-foreground' 
               : 'bg-background hover:bg-accent hover:text-accent-foreground'
           }`}
-          onClick={() => handleThemeChange('sepia')}
+          onClick={() => setTheme('sepia')}
           title="Sepia Mode"
         >
           <Book className="h-4 w-4" />
