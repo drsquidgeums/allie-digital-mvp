@@ -16,7 +16,7 @@ export const DocumentToolbar = ({
   onDelete,
   hasFile
 }: DocumentToolbarProps) => {
-  const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground";
+  const buttonClassName = "h-9 w-9 bg-secondary hover:bg-accent hover:text-accent-foreground border-2 border-accent";
 
   return (
     <div className="flex justify-between w-full p-2">

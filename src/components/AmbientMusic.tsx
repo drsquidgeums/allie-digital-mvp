@@ -32,7 +32,7 @@ export const AmbientMusic = () => {
         <Button
           variant="outline"
           size="sm"
-          className={`h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground ${
+          className={`h-9 w-9 bg-secondary hover:bg-accent hover:text-accent-foreground border-2 border-accent ${
             isPlaying ? "text-primary" : ""
           }`}
           title="Ambient Music"
