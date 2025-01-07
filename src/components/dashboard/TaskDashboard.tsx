@@ -1,9 +1,6 @@
 import React from "react";
 import { TaskPlanner } from "../TaskPlanner";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Home } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { Calendar } from "@/components/ui/calendar";
 import { TaskListCard } from "./TaskListCard";
 import { useToast } from "@/hooks/use-toast";
@@ -18,7 +15,6 @@ interface Task {
 }
 
 export const TaskDashboard = () => {
-  const navigate = useNavigate();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [tasks, setTasks] = React.useState<Task[]>([]);
   const { toast } = useToast();
@@ -59,15 +55,7 @@ export const TaskDashboard = () => {
         <div className="container mx-auto py-6 px-4">
           <div className="flex flex-col space-y-6">
             <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-bold">Task Dashboard</h1>
-              <Button 
-                variant="outline" 
-                size="icon"
-                onClick={() => navigate('/')}
-                className="w-10 h-10"
-              >
-                <Home className="h-5 w-5" />
-              </Button>
+              <h1 className="text-3xl font-bold">Task Planner</h1>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <Card className="p-6 shadow-lg lg:col-span-2">
