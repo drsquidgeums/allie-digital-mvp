@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Sidebar } from "@/components/Sidebar";
 import { ChatInput } from "./chat/ChatInput";
 import { ChatMessage } from "./chat/ChatMessage";
 
 export const AIAssistant = () => {
+  const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSend = () => {
+    // Handle sending message
+    setIsLoading(true);
+    // Add your send logic here
+    setIsLoading(false);
+  };
+
   return (
     <div className="flex h-screen bg-background">
       <Sidebar 
@@ -23,10 +33,15 @@ export const AIAssistant = () => {
             <Card className="flex-1 p-6">
               <div className="space-y-4">
                 <div className="flex flex-col space-y-2">
-                  <ChatMessage message="Hello! How can I assist you today?" />
-                  <ChatMessage message="Feel free to ask me anything." />
+                  <ChatMessage text="Hello! How can I assist you today?" isUser={false} />
+                  <ChatMessage text="Feel free to ask me anything." isUser={false} />
                 </div>
-                <ChatInput />
+                <ChatInput 
+                  value={inputValue}
+                  onChange={setInputValue}
+                  onSend={handleSend}
+                  isLoading={isLoading}
+                />
               </div>
             </Card>
           </div>
