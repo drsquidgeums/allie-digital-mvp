@@ -77,13 +77,13 @@ export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) 
           <SelectTrigger className="text-foreground bg-background">
             <SelectValue placeholder="Select a font" />
           </SelectTrigger>
-          <SelectContent className="bg-background">
+          <SelectContent className="dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]">
             <SelectScrollUpButton className="text-foreground" />
             {fonts.map((font) => (
               <SelectItem 
                 key={font.value} 
                 value={font.value}
-                className="text-foreground hover:bg-accent hover:text-accent-foreground"
+                className="text-foreground hover:bg-accent hover:text-accent-foreground dark:text-[#FAFAFA] dark:hover:bg-accent/20"
               >
                 {font.name}
               </SelectItem>
