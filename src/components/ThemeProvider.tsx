@@ -25,7 +25,6 @@ export const ThemeProvider = () => {
   };
 
   React.useEffect(() => {
-    // Force a re-render when theme changes
     document.documentElement.className = theme || '';
   }, [theme]);
 
@@ -82,7 +81,7 @@ export const ThemeProvider = () => {
               <Palette className="h-4 w-4" />
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]">
             <DialogHeader className="flex flex-row items-center justify-between">
               <DialogTitle>Choose a Font</DialogTitle>
               <DialogClose asChild>
