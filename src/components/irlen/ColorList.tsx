@@ -28,7 +28,7 @@ export const ColorList = ({ colors, selectedColor, onColorChange }: ColorListPro
       <Button 
         onClick={() => onColorChange("")}
         variant="outline" 
-        className="w-full dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:border-gray-600"
+        className="w-full dark:bg-gray-800 dark:text-[#FAFAFA] dark:hover:bg-gray-700 dark:border dark:border-white/20"
         disabled={!selectedColor}
       >
         Remove Overlay

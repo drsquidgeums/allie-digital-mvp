@@ -12,7 +12,9 @@ export const ColorOption = ({ name, value, isSelected, onClick }: ColorOptionPro
   return (
     <Button
       onClick={onClick}
-      className="w-full flex items-center gap-2 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:border-gray-600"
+      className={`w-full flex items-center gap-2 dark:bg-gray-800 dark:text-[#FAFAFA] dark:hover:bg-gray-700 dark:border dark:border-white/20 ${
+        isSelected ? 'bg-accent text-accent-foreground' : 'bg-background'
+      }`}
       variant={isSelected ? "secondary" : "outline"}
     >
       <div 
