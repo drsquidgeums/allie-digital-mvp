@@ -40,7 +40,7 @@ export const AmbientMusic = () => {
           <Music className="h-4 w-4" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-64 bg-popover text-popover-foreground border-border" align="end">
+      <PopoverContent className="w-64 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]" align="end">
         <div className="space-y-4">
           <div className="font-medium text-sm">Ambient Music</div>
           <RadioGroup
