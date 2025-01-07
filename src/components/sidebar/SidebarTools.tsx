@@ -29,6 +29,13 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
     { id: "focus", icon: Focus, label: "Focus Mode" },
   ];
 
+  const handleToolClick = (toolId: string) => {
+    setActiveComponent(toolId);
+    if (toolId === "files") {
+      navigate('/');
+    }
+  };
+
   const handleLogout = () => {
     console.log("Logout clicked");
   };
@@ -45,7 +52,7 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
           icon={tool.icon}
           label={tool.label}
           isActive={activeComponent === tool.id}
-          onClick={() => setActiveComponent(tool.id)}
+          onClick={() => handleToolClick(tool.id)}
         />
       ))}
       
