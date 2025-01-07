@@ -66,17 +66,24 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <PomodoroProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/tasks" element={<TaskDashboard />} />
-                <Route path="/ai-assistant" element={<AIAssistant />} />
-                <Route path="/mind-map" element={<MindMapDashboard />} />
-                <Route path="/community" element={<CommunityPage />} />
-              </Routes>
-            </BrowserRouter>
+            <div className="flex flex-col min-h-screen">
+              <div className="flex-grow">
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/tasks" element={<TaskDashboard />} />
+                    <Route path="/ai-assistant" element={<AIAssistant />} />
+                    <Route path="/mind-map" element={<MindMapDashboard />} />
+                    <Route path="/community" element={<CommunityPage />} />
+                  </Routes>
+                </BrowserRouter>
+              </div>
+              <footer className="text-center py-4 text-sm text-muted-foreground">
+                © {new Date().getFullYear()} Allie Digital Ltd. All rights reserved.
+              </footer>
+            </div>
           </PomodoroProvider>
         </TooltipProvider>
       </QueryClientProvider>
