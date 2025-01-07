@@ -33,6 +33,14 @@ export const Sidebar = ({
 
   return (
     <div className="w-64 bg-card border-r border-border p-4 flex flex-col h-full">
+      <div className="flex items-center justify-center mb-4">
+        <img 
+          src="/lovable-uploads/3a3ef3bc-dbfb-441c-88cd-8b91d4891d61.png" 
+          alt="Allie Digital Logo" 
+          className="w-12 h-12"
+        />
+      </div>
+      
       <div className="space-y-2">
         <Button 
           variant="ghost"
