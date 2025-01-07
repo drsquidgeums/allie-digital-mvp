@@ -106,17 +106,19 @@ export const TextToSpeech = () => {
       <div className="flex gap-2">
         <Button
           onClick={handlePlay}
-          className="flex-1 bg-workspace-dark text-white hover:bg-workspace-dark/90"
+          size="sm"
+          className="flex-1 bg-workspace-dark text-white hover:bg-workspace-dark/90 h-8"
         >
-          {isPlaying ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
+          {isPlaying ? <Pause className="w-3 h-3 mr-2" /> : <Play className="w-3 h-3 mr-2" />}
           {isPlaying ? "Pause" : "Play"}
         </Button>
         <Button
           onClick={handleStop}
+          size="sm"
           variant="outline"
-          className="flex-1"
+          className="flex-1 h-8"
         >
-          <Square className="w-4 h-4 mr-2" />
+          <Square className="w-3 h-3 mr-2" />
           Stop
         </Button>
       </div>
