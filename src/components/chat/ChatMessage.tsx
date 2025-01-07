@@ -7,13 +7,15 @@ interface ChatMessageProps {
 
 export const ChatMessage = ({ text, isUser }: ChatMessageProps) => {
   return (
-    <div
-      className={cn(
-        "p-2 rounded-lg max-w-[80%] whitespace-pre-wrap inline-block w-fit",
-        isUser ? "bg-primary text-primary-foreground ml-0" : "bg-muted mr-0"
-      )}
-    >
-      {text}
+    <div className="w-full flex flex-col">
+      <div
+        className={cn(
+          "p-2 rounded-lg max-w-[80%] whitespace-pre-wrap w-fit",
+          isUser ? "bg-primary text-primary-foreground self-end" : "bg-muted self-start"
+        )}
+      >
+        {text}
+      </div>
     </div>
   );
 };
