@@ -20,10 +20,6 @@ export const WorkspaceLayout = () => {
     }
   }, []);
 
-  if (["/tasks", "/mind-map", "/ai-assistant"].includes(location.pathname)) {
-    return null;
-  }
-
   const handleFileUpload = (file: File) => {
     if (file.type === "application/pdf" || 
         file.type === "application/msword" || 
@@ -74,6 +70,9 @@ export const WorkspaceLayout = () => {
     setIsHighlighter(!!highlighter);
   };
 
+  // Only render document viewer for the main workspace
+  const showDocumentViewer = !["/tasks", "/mind-map", "/ai-assistant", "/community"].includes(location.pathname);
+
   return (
     <div className="flex h-screen bg-background overflow-hidden">
       <Sidebar 
@@ -83,13 +82,15 @@ export const WorkspaceLayout = () => {
         onFileSelect={handleFileSelect}
         onFileDelete={handleFileDelete}
       />
-      <main className="flex-1 p-6 overflow-auto">
-        <DocumentViewer 
-          file={selectedFile} 
-          selectedColor={selectedColor}
-          isHighlighter={isHighlighter}
-        />
-      </main>
+      {showDocumentViewer && (
+        <main className="flex-1 p-6 overflow-auto">
+          <DocumentViewer 
+            file={selectedFile} 
+            selectedColor={selectedColor}
+            isHighlighter={isHighlighter}
+          />
+        </main>
+      )}
     </div>
   );
 };
