@@ -94,7 +94,7 @@ export const TaskPlanner = ({ selectedDate }: TaskPlannerProps) => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-4">
       <TaskPoints points={points} />
       <TaskInput 
         selectedDate={selectedDate}

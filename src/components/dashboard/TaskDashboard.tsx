@@ -52,36 +52,32 @@ export const TaskDashboard = () => {
         onFileDelete={() => {}}
       />
       <div className="flex-1 min-h-screen bg-background">
-        <div className="container mx-auto py-6 px-4">
-          <div className="flex flex-col space-y-6">
+        <div className="container mx-auto py-4 px-4">
+          <div className="flex flex-col space-y-4">
             <div className="flex items-center justify-between">
               <h1 className="text-3xl font-bold">Task Planner</h1>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <Card className="p-6 shadow-lg lg:col-span-2">
-                <h2 className="text-xl font-semibold mb-4">Task Management</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <Card className="p-4 shadow-lg lg:col-span-2">
                 <TaskPlanner selectedDate={date} />
               </Card>
-              <div className="space-y-6">
-                <Card className="p-6 shadow-lg">
-                  <h2 className="text-xl font-semibold mb-4">Calendar</h2>
-                  <div className="flex justify-center">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      className="rounded-md border"
-                    />
-                  </div>
+              <div className="space-y-4">
+                <Card className="p-4 shadow-lg">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    className="rounded-md border"
+                  />
                 </Card>
                 <TaskListCard
                   tasks={tasks}
                   onToggleTask={handleToggleTask}
                   onDeleteTask={handleDeleteTask}
                 />
-                <Card className="p-6 shadow-lg">
-                  <h2 className="text-xl font-semibold mb-4">Achievements</h2>
-                  <div className="space-y-4">
+                <Card className="p-4 shadow-lg">
+                  <h2 className="text-lg font-semibold mb-3">Achievements</h2>
+                  <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <span>Task Master</span>
                       <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
