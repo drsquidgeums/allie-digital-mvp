@@ -9,8 +9,8 @@ export const ChatMessage = ({ text, isUser }: ChatMessageProps) => {
   return (
     <div
       className={cn(
-        "p-2 rounded-lg max-w-[80%] whitespace-pre-line inline-block",
-        isUser ? "bg-primary text-primary-foreground ml-auto" : "bg-muted mr-auto"
+        "p-2 rounded-lg max-w-[80%] whitespace-pre-line",
+        isUser ? "bg-primary text-primary-foreground ml-0" : "bg-muted mr-0"
       )}
     >
       {text}
