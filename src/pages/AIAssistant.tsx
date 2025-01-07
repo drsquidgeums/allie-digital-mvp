@@ -21,17 +21,6 @@ const AIAssistant = () => {
       <div className="flex-1 min-h-screen bg-background">
         <div className="container mx-auto py-6 px-4">
           <div className="flex flex-col space-y-6">
-            <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-bold">AI Assistant</h1>
-              <Button 
-                variant="outline" 
-                size="icon"
-                onClick={() => navigate('/')}
-                className="w-10 h-10"
-              >
-                <Home className="h-5 w-5" />
-              </Button>
-            </div>
             <Card className="p-6 shadow-lg">
               <AIAssistantComponent />
             </Card>

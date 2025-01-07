@@ -54,9 +54,6 @@ export const TaskDashboard = () => {
       <div className="flex-1 min-h-screen bg-background">
         <div className="container mx-auto py-4 px-4">
           <div className="flex flex-col space-y-4">
-            <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-bold">Task Planner</h1>
-            </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <Card className="p-4 shadow-lg lg:col-span-2">
                 <TaskPlanner selectedDate={date} />
