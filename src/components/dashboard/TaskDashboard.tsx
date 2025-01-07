@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Calendar } from "@/components/ui/calendar";
 import { TaskListCard } from "./TaskListCard";
 import { useToast } from "@/hooks/use-toast";
+import { Sidebar } from "@/components/Sidebar";
 
 interface Task {
   id: string;
@@ -46,65 +47,74 @@ export const TaskDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto py-6 px-4">
-        <div className="flex flex-col space-y-6">
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Task Dashboard</h1>
-            <Button 
-              variant="outline" 
-              size="icon"
-              onClick={() => navigate('/')}
-              className="w-10 h-10"
-            >
-              <Home className="h-5 w-5" />
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="p-6 shadow-lg lg:col-span-2">
-              <h2 className="text-xl font-semibold mb-4">Task Management</h2>
-              <TaskPlanner selectedDate={date} />
-            </Card>
-            <div className="space-y-6">
-              <Card className="p-6 shadow-lg">
-                <h2 className="text-xl font-semibold mb-4">Calendar</h2>
-                <div className="flex justify-center">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    className="rounded-md border"
-                  />
-                </div>
+    <div className="flex h-screen bg-background">
+      <Sidebar 
+        onFileUpload={() => {}} 
+        onColorChange={() => {}}
+        uploadedFiles={[]}
+        onFileSelect={() => {}}
+        onFileDelete={() => {}}
+      />
+      <div className="flex-1 min-h-screen bg-background">
+        <div className="container mx-auto py-6 px-4">
+          <div className="flex flex-col space-y-6">
+            <div className="flex items-center justify-between">
+              <h1 className="text-3xl font-bold">Task Dashboard</h1>
+              <Button 
+                variant="outline" 
+                size="icon"
+                onClick={() => navigate('/')}
+                className="w-10 h-10"
+              >
+                <Home className="h-5 w-5" />
+              </Button>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <Card className="p-6 shadow-lg lg:col-span-2">
+                <h2 className="text-xl font-semibold mb-4">Task Management</h2>
+                <TaskPlanner selectedDate={date} />
               </Card>
-              <TaskListCard
-                tasks={tasks}
-                onToggleTask={handleToggleTask}
-                onDeleteTask={handleDeleteTask}
-              />
-              <Card className="p-6 shadow-lg">
-                <h2 className="text-xl font-semibold mb-4">Achievements</h2>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span>Task Master</span>
-                    <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
-                      <div className="h-full bg-green-500 w-3/4" />
+              <div className="space-y-6">
+                <Card className="p-6 shadow-lg">
+                  <h2 className="text-xl font-semibold mb-4">Calendar</h2>
+                  <div className="flex justify-center">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      className="rounded-md border"
+                    />
+                  </div>
+                </Card>
+                <TaskListCard
+                  tasks={tasks}
+                  onToggleTask={handleToggleTask}
+                  onDeleteTask={handleDeleteTask}
+                />
+                <Card className="p-6 shadow-lg">
+                  <h2 className="text-xl font-semibold mb-4">Achievements</h2>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span>Task Master</span>
+                      <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="h-full bg-green-500 w-3/4" />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span>Streak Champion</span>
+                      <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="h-full bg-blue-500 w-1/2" />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span>Early Bird</span>
+                      <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="h-full bg-purple-500 w-1/4" />
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span>Streak Champion</span>
-                    <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
-                      <div className="h-full bg-blue-500 w-1/2" />
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>Early Bird</span>
-                    <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
-                      <div className="h-full bg-purple-500 w-1/4" />
-                    </div>
-                  </div>
-                </div>
-              </Card>
+                </Card>
+              </div>
             </div>
           </div>
         </div>
