@@ -7,10 +7,7 @@ import {
   Paintbrush,
   FolderOpen,
   Users,
-  LogOut,
-  CheckSquare,
-  Brain,
-  Bot
+  LogOut
 } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 import { useNavigate } from "react-router-dom";
@@ -24,10 +21,7 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
   const navigate = useNavigate();
   
   const tools = [
-    { id: "files", icon: FolderOpen, label: "File Uploads", route: '/' },
-    { id: "tasks", icon: CheckSquare, label: "Task Planner", route: '/tasks' },
-    { id: "ai", icon: Bot, label: "AI Assistant", route: '/ai-assistant' },
-    { id: "mindmap", icon: Brain, label: "Mind Map", route: '/mind-map' },
+    { id: "files", icon: FolderOpen, label: "File Uploads" },
     { id: "color", icon: Paintbrush, label: "Colour Tool" },
     { id: "pomodoro", icon: Clock, label: "Pomodoro Timer" },
     { id: "tts", icon: Headphones, label: "Text-to-Speech" },
@@ -35,10 +29,10 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
     { id: "focus", icon: Focus, label: "Focus Mode" },
   ];
 
-  const handleToolClick = (toolId: string, route?: string) => {
+  const handleToolClick = (toolId: string) => {
     setActiveComponent(toolId);
-    if (route) {
-      navigate(route);
+    if (toolId === "files") {
+      navigate('/');
     }
   };
 
@@ -58,7 +52,7 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
           icon={tool.icon}
           label={tool.label}
           isActive={activeComponent === tool.id}
-          onClick={() => handleToolClick(tool.id, tool.route)}
+          onClick={() => handleToolClick(tool.id)}
         />
       ))}
       
