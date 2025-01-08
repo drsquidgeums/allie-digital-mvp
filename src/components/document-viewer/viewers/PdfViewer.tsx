@@ -92,14 +92,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     };
   }, [selectedColor, isHighlighter, isHighlighting, currentPage]);
 
-  const handlePageChange = (direction: 'prev' | 'next') => {
-    const newPage = direction === 'next' 
-      ? Math.min(currentPage + 1, totalPages)
-      : Math.max(currentPage - 1, 1);
-    
-    setCurrentPage(newPage);
-  };
-
   return (
     <div className="flex flex-col h-full">
       <PdfControls
@@ -121,7 +113,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
         <div className="relative">
           <canvas 
             ref={canvasRef} 
-            className="w-full cursor-crosshair mx-auto"
+            className="w-full cursor-crosshair mx-auto mb-24"
           />
           <div 
             ref={annotationLayerRef}
