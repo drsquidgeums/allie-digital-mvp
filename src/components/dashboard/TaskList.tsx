@@ -29,11 +29,15 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask }: TaskListProps) =
         >
           <Button
             size="sm"
-            variant="ghost"
-            className={`p-1 h-6 w-6 ${task.completed ? "bg-[#7E69AB] text-white hover:bg-[#6E59A5]" : ""}`}
+            variant="outline"
+            className={`p-1 h-6 w-6 ${
+              task.completed 
+                ? "bg-[#7E69AB] text-white hover:bg-[#6E59A5] border-[#7E69AB]" 
+                : "border-input"
+            }`}
             onClick={() => onToggleTask(task.id)}
           >
-            <Check className="h-4 w-4" />
+            {task.completed && <Check className="h-4 w-4" />}
           </Button>
           <span className={`flex-1 ${task.completed ? "line-through text-muted-foreground" : ""}`}>
             {task.text}

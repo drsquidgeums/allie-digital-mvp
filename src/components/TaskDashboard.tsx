@@ -5,6 +5,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { TaskListCard } from "./dashboard/TaskListCard";
 import { useToast } from "@/hooks/use-toast";
 import { Sidebar } from "@/components/Sidebar";
+import { TaskAchievements } from "./dashboard/TaskAchievements";
 
 interface Task {
   id: string;
@@ -17,7 +18,12 @@ interface Task {
 export const TaskDashboard = () => {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [tasks, setTasks] = React.useState<Task[]>([]);
+  const [showAchievement, setShowAchievement] = React.useState(false);
   const { toast } = useToast();
+
+  const calculateTotalPoints = () => {
+    return tasks.reduce((total, task) => total + (task.completed ? task.points : 0), 0);
+  };
 
   const handleAddTask = (text: string) => {
     const taskDate = date || new Date();
@@ -36,6 +42,12 @@ export const TaskDashboard = () => {
       if (task.id === id) {
         const newStatus = !task.completed;
         if (newStatus) {
+          const newTotalPoints = calculateTotalPoints() + task.points;
+          if (newTotalPoints >= 20 && newTotalPoints < 50 || 
+              newTotalPoints >= 50 && newTotalPoints < 100 ||
+              newTotalPoints >= 100) {
+            setShowAchievement(true);
+          }
           toast({
             title: "Points earned!",
             description: `You earned ${task.points} points for completing this task!`,
@@ -97,6 +109,11 @@ export const TaskDashboard = () => {
           </div>
         </Card>
       </div>
+      <TaskAchievements 
+        points={calculateTotalPoints()}
+        isOpen={showAchievement}
+        onClose={() => setShowAchievement(false)}
+      />
     </div>
   );
 };
