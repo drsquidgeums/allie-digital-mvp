@@ -1,0 +1,54 @@
+@layer base {
+  .sepia {
+    --background: 35 25% 75%;
+    --foreground: 25 32% 13%;
+    --card: 35 25% 88%;
+    --card-foreground: 25 32% 13%;
+    --popover: 35 25% 88%;
+    --popover-foreground: 25 32% 13%;
+    --primary: 25 32% 13%;
+    --primary-foreground: 35 25% 96%;
+    --secondary: 35 15% 90%;
+    --secondary-foreground: 25 32% 13%;
+    --muted: 35 15% 85%;
+    --muted-foreground: 25 32% 23%;
+    --accent: 35 15% 85%;
+    --accent-foreground: 25 32% 13%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 35 25% 96%;
+    --border: 25 32% 23%;
+    --input: 35 15% 85%;
+    --ring: 25 32% 23%;
+
+    /* Style updates for buttons in sepia mode */
+    button[class*="h-9 w-9"] {
+      background-color: hsl(35 25% 75%);
+      border: 1px solid hsl(35 25% 45%);
+    }
+
+    button[class*="h-9 w-9"]:hover {
+      background-color: hsl(35 25% 65%);
+      border-color: hsl(35 25% 35%);
+    }
+
+    /* Calendar date selection in sepia mode */
+    button[class*="h-9 w-9"][aria-selected="true"] {
+      background-color: hsl(35 25% 65%) !important;
+      color: hsl(35 25% 25%) !important;
+    }
+
+    /* AI Assistant chat styles in sepia mode */
+    .bg-muted.self-start {
+      background-color: hsl(35 25% 65%);
+    }
+
+    /* Ensure icons have good contrast in sepia mode */
+    button[class*="h-9 w-9"] svg {
+      color: hsl(35 25% 25%);
+    }
+
+    button[class*="h-9 w-9"]:hover svg {
+      color: hsl(35 25% 15%);
+    }
+  }
+}
