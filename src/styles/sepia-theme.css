@@ -39,7 +39,7 @@
 
     /* AI Assistant chat styles in sepia mode */
     .bg-muted.self-start {
-      background-color: hsl(35 15% 85%);  /* Matches the input background color */
+      background-color: hsl(35 25% 75%);  /* Matches the background color */
     }
 
     /* Ensure icons have good contrast in sepia mode */
