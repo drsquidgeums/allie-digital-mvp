@@ -14,6 +14,10 @@ interface Task {
 
 interface TaskPlannerProps {
   selectedDate?: Date;
+  tasks: Task[];
+  onAddTask: (text: string) => void;
+  onToggleTask: (id: string) => void;
+  onDeleteTask: (id: string) => void;
 }
 
 const emitTaskNotification = (title: string, message: string) => {
@@ -29,26 +33,18 @@ const emitTaskNotification = (title: string, message: string) => {
   window.dispatchEvent(event);
 };
 
-export const TaskPlanner = ({ selectedDate }: TaskPlannerProps) => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [points, setPoints] = useState(0);
+export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDeleteTask }: TaskPlannerProps) => {
   const [showStarburst, setShowStarburst] = useState(false);
   const { toast } = useToast();
+  const points = tasks.reduce((total, task) => total + (task.completed ? task.points : 0), 0);
 
-  const addTask = (text: string) => {
-    const taskDate = selectedDate || new Date();
-    setTasks([...tasks, { 
-      id: Date.now().toString(), 
-      text, 
-      completed: false,
-      createdAt: taskDate,
-      points: 10
-    }]);
+  const handleAddTask = (text: string) => {
+    onAddTask(text);
     setShowStarburst(true);
     setTimeout(() => setShowStarburst(false), 700);
     emitTaskNotification(
       "New Task Added",
-      `Task "${text}" has been added to your list for ${taskDate.toLocaleDateString()}`
+      `Task "${text}" has been added to your list for ${selectedDate?.toLocaleDateString() || new Date().toLocaleDateString()}`
     );
     toast({
       title: "Task added",
@@ -56,41 +52,27 @@ export const TaskPlanner = ({ selectedDate }: TaskPlannerProps) => {
     });
   };
 
-  const toggleTask = (id: string) => {
-    setTasks(tasks.map(task => {
-      if (task.id === id) {
-        const newStatus = !task.completed;
-        if (newStatus) {
-          setPoints(prev => prev + task.points);
-          toast({
-            title: "Points earned!",
-            description: `You earned ${task.points} points for completing this task!`,
-          });
-        } else {
-          setPoints(prev => prev - task.points);
-        }
-        emitTaskNotification(
-          newStatus ? "Task Completed" : "Task Reopened",
-          `Task "${task.text}" has been ${newStatus ? 'completed' : 'reopened'}`
-        );
-        return { ...task, completed: newStatus };
-      }
-      return task;
-    }));
-  };
-
-  const deleteTask = (id: string) => {
+  const handleToggleTask = (id: string) => {
+    onToggleTask(id);
     const task = tasks.find(t => t.id === id);
     if (task) {
-      if (task.completed) {
-        setPoints(prev => prev - task.points);
-      }
+      const newStatus = !task.completed;
+      emitTaskNotification(
+        newStatus ? "Task Completed" : "Task Reopened",
+        `Task "${task.text}" has been ${newStatus ? 'completed' : 'reopened'}`
+      );
+    }
+  };
+
+  const handleDeleteTask = (id: string) => {
+    const task = tasks.find(t => t.id === id);
+    if (task) {
       emitTaskNotification(
         "Task Deleted",
         `Task "${task.text}" has been removed`
       );
     }
-    setTasks(tasks.filter(task => task.id !== id));
+    onDeleteTask(id);
   };
 
   return (
@@ -98,7 +80,7 @@ export const TaskPlanner = ({ selectedDate }: TaskPlannerProps) => {
       <TaskPoints points={points} />
       <TaskInput 
         selectedDate={selectedDate}
-        onAddTask={addTask}
+        onAddTask={handleAddTask}
         showStarburst={showStarburst}
       />
       <TaskCharts tasks={tasks} />
