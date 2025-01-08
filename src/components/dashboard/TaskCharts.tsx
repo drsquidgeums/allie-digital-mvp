@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
-const COLORS = ['#1A1F2C', '#7E69AB']; // Darker purple for completed, Medium purple for pending
+const COLORS = ['#1A1F2C', '#7E69AB'];
 
 interface Task {
   id: string;
@@ -52,31 +52,8 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div className="h-80 p-4"> {/* Increased height and added padding */}
-        <h3 className="text-lg font-semibold mb-6">Task Status</h3>
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={getPieChartData()}
-              cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={80}
-              paddingAngle={5}
-              dataKey="value"
-            >
-              {getPieChartData().map((_, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend verticalAlign="bottom" height={36} />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
-
-      <div className="h-80 p-4"> {/* Increased height and added padding */}
+    <div className="flex flex-col space-y-8">
+      <div className="w-full">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold">Weekly Progress</h3>
           <div className="flex items-center gap-2">
@@ -101,21 +78,56 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
             </Button>
           </div>
         </div>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={getBarChartData()}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="name" 
-              height={30}
-              interval={0}
-            />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="completed" fill="#1A1F2C" name="Completed" />
-            <Bar dataKey="pending" fill="#7E69AB" name="Pending" />
-          </BarChart>
-        </ResponsiveContainer>
+        <div className="h-80 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={getBarChartData()}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                dataKey="name" 
+                height={30}
+                interval={0}
+              />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="completed" fill="#1A1F2C" name="Completed" />
+              <Bar dataKey="pending" fill="#7E69AB" name="Pending" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      <div className="w-full">
+        <h3 className="text-lg font-semibold mb-6">Task Status</h3>
+        <div className="h-80 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={getPieChartData()}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                paddingAngle={5}
+                dataKey="value"
+                label={({ name, value }) => `${name}: ${value}`}
+                labelLine={false}
+              >
+                {getPieChartData().map((_, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend 
+                verticalAlign="bottom" 
+                height={36}
+                wrapperStyle={{
+                  paddingTop: "20px"
+                }}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );
