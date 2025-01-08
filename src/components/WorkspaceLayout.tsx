@@ -3,6 +3,10 @@ import { Sidebar } from "./Sidebar";
 import { DocumentViewer } from "./DocumentViewer";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "react-router-dom";
+import { Community } from "@/components/Community";
+import { TaskDashboard } from "./dashboard/TaskDashboard";
+import AIAssistant from "./pages/AIAssistant";
+import MindMapDashboard from "./pages/MindMapDashboard";
 
 export const WorkspaceLayout = () => {
   const { toast } = useToast();
@@ -82,13 +86,20 @@ export const WorkspaceLayout = () => {
         onFileSelect={handleFileSelect}
         onFileDelete={handleFileDelete}
       />
-      {showDocumentViewer && (
+      {showDocumentViewer ? (
         <main className="flex-1 p-6 overflow-auto">
           <DocumentViewer 
             file={selectedFile} 
             selectedColor={selectedColor}
             isHighlighter={isHighlighter}
           />
+        </main>
+      ) : (
+        <main className="flex-1 overflow-auto">
+          {location.pathname === "/community" && <Community />}
+          {location.pathname === "/tasks" && <TaskDashboard />}
+          {location.pathname === "/mind-map" && <MindMapDashboard />}
+          {location.pathname === "/ai-assistant" && <AIAssistant />}
         </main>
       )}
     </div>

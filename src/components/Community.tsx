@@ -16,11 +16,15 @@ export const Community = () => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
-      <CommunityHeader onShareResource={handleShareResource} />
-      <CommunityStats />
-      <DiscussionList />
-      <CommunityChat />
+    <div className="flex-1 min-h-screen bg-background">
+      <div className="container mx-auto py-4 px-4">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <CommunityHeader onShareResource={handleShareResource} />
+          <CommunityStats />
+          <DiscussionList />
+          <CommunityChat />
+        </div>
+      </div>
     </div>
   );
 };
