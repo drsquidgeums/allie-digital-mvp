@@ -1,8 +1,8 @@
 import React from "react";
-import { TaskPlanner } from "../TaskPlanner";
+import { TaskPlanner } from "./TaskPlanner";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
-import { TaskListCard } from "./TaskListCard";
+import { TaskListCard } from "./dashboard/TaskListCard";
 import { useToast } from "@/hooks/use-toast";
 import { Sidebar } from "@/components/Sidebar";
 
