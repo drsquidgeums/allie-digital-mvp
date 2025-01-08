@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { CheckSquare, Brain, Bot } from "lucide-react";
+import { CheckSquare, Brain, Bot, FolderOpen } from "lucide-react";
 import { SidebarTools } from "./sidebar/SidebarTools";
 import { SidebarContent } from "./sidebar/SidebarContent";
 
@@ -21,7 +21,7 @@ export const Sidebar = ({
   onFileDelete
 }: SidebarProps) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
+  const [activeComponent, setActiveComponent] = React.useState<string | null>("files");
   const navigate = useNavigate();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,6 +42,19 @@ export const Sidebar = ({
       </div>
       
       <div className="space-y-2">
+        <Button 
+          variant="ghost"
+          className="w-full flex items-center justify-start gap-2 px-2"
+          onClick={() => {
+            setActiveComponent("files");
+            navigate('/');
+          }}
+          style={{ fontWeight: 'inherit' }}
+        >
+          <FolderOpen className="h-4 w-4" style={{ fontWeight: 'inherit' }} />
+          <span style={{ fontWeight: 'inherit' }}>File Uploads</span>
+        </Button>
+
         <Button 
           variant="ghost"
           className="w-full flex items-center justify-start gap-2 px-2"
