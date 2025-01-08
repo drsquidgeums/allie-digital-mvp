@@ -5,8 +5,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "react-router-dom";
 import { Community } from "@/components/Community";
 import { TaskDashboard } from "./dashboard/TaskDashboard";
-import { AIAssistant } from "./AIAssistant";
-import MindMapDashboard from "@/components/pages/MindMapDashboard";
+import { AIAssistant } from "@/components/AIAssistant";
+import MindMapDashboard from "@/pages/MindMapDashboard";
 
 export const WorkspaceLayout = () => {
   const { toast } = useToast();
