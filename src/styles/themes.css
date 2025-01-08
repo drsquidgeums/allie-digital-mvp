@@ -75,6 +75,12 @@
       border-color: hsl(35 25% 35%);
     }
 
+    /* Calendar date selection in sepia mode */
+    button[class*="h-9 w-9"][aria-selected="true"] {
+      background-color: hsl(35 25% 65%) !important;
+      color: hsl(35 25% 25%) !important;
+    }
+
     /* Ensure icons have good contrast in sepia mode */
     button[class*="h-9 w-9"] svg {
       color: hsl(35 25% 25%);
