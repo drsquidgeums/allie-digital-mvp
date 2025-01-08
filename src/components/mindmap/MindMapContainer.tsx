@@ -45,7 +45,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   };
 
   return (
-    <div className="w-full h-[600px] bg-background border-none rounded-lg overflow-hidden">
+    <div className="w-full h-[600px] bg-background border-none rounded-lg overflow-hidden flex flex-col">
       <MindMapToolbar
         selectedColor={selectedColor}
         setSelectedColor={setSelectedColor}
@@ -58,7 +58,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
         onClear={onClear}
         colorOptions={colorOptions}
       />
-      <div className="w-full h-[calc(100%-128px)]">
+      <div className="flex-1 min-h-0">
         <MindMapFlow
           nodes={nodes}
           edges={edges}
@@ -67,7 +67,9 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
           onConnect={onConnect}
         />
       </div>
-      <MindMapCreativeToolbar onShapeSelect={handleShapeSelect} />
+      <div className="flex-shrink-0">
+        <MindMapCreativeToolbar onShapeSelect={handleShapeSelect} />
+      </div>
     </div>
   );
 };
