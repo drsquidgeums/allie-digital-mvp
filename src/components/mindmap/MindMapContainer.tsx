@@ -45,22 +45,79 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   nodeTypes,
 }) => {
   const handleShapeSelect = (shape: string, label?: string) => {
+    let nodeStyle: React.CSSProperties = {
+      background: selectedColor === 'custom' ? customColor : selectedColor,
+      border: '1px solid #ddd',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '10px',
+    };
+
+    // Apply specific styles based on shape
+    switch (shape) {
+      case 'circle':
+        nodeStyle = {
+          ...nodeStyle,
+          borderRadius: '50%',
+          width: 100,
+          height: 100,
+        };
+        break;
+      case 'triangle':
+        nodeStyle = {
+          ...nodeStyle,
+          clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+          width: 100,
+          height: 100,
+        };
+        break;
+      case 'diamond':
+        nodeStyle = {
+          ...nodeStyle,
+          clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
+          width: 100,
+          height: 100,
+        };
+        break;
+      case 'hexagon':
+        nodeStyle = {
+          ...nodeStyle,
+          clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
+          width: 120,
+          height: 100,
+        };
+        break;
+      case 'star':
+        nodeStyle = {
+          ...nodeStyle,
+          clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
+          width: 100,
+          height: 100,
+        };
+        break;
+      case 'image':
+        nodeStyle = {
+          padding: 0,
+          background: 'transparent',
+          border: 'none',
+        };
+        break;
+      default:
+        nodeStyle = {
+          ...nodeStyle,
+          width: 150,
+          height: 100,
+          borderRadius: '4px',
+        };
+    }
+
     const newNode = {
       id: `${shape}_${Date.now()}`,
-      type: shape === 'image' ? 'imageNode' : shape,
+      type: shape === 'image' ? 'imageNode' : 'default',
       data: { label: label || shape },
       position: { x: Math.random() * 500, y: Math.random() * 300 },
-      style: {
-        background: selectedColor === 'custom' ? customColor : selectedColor,
-        borderRadius: shape === 'circle' ? '50%' : 
-                     shape === 'star' ? '0' : '4px',
-        width: 150,
-        height: shape === 'circle' ? 150 : 100,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        border: '1px solid #ddd',
-      },
+      style: nodeStyle,
     };
 
     onNodesChange([{ type: 'add', item: newNode }]);
