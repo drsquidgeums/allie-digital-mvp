@@ -1,17 +1,7 @@
 import React from "react";
 import { ColorOption } from "./ColorOption";
 import { Button } from "../ui/button";
-
-interface Color {
-  name: string;
-  value: string;
-}
-
-interface ColorListProps {
-  colors: Color[];
-  selectedColor: string;
-  onColorChange: (color: string) => void;
-}
+import { ColorListProps } from "./types";
 
 export const ColorList = ({ colors, selectedColor, onColorChange }: ColorListProps) => {
   return (

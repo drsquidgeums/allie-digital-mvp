@@ -1,12 +1,6 @@
 import React from "react";
 import { Button } from "../ui/button";
-
-interface ColorOptionProps {
-  name: string;
-  value: string;
-  isSelected: boolean;
-  onClick: () => void;
-}
+import { ColorOptionProps } from "./types";
 
 export const ColorOption = ({ name, value, isSelected, onClick }: ColorOptionProps) => {
   return (
