@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ThemeProvider as NextThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import { TaskDashboard } from "./components/dashboard/TaskDashboard";
@@ -13,6 +13,29 @@ import CommunityPage from "./pages/CommunityPage";
 import { PomodoroProvider } from "./contexts/PomodoroContext";
 
 const queryClient = new QueryClient();
+
+const AppContent = () => {
+  const location = useLocation();
+
+  React.useEffect(() => {
+    // Reapply overlay on route changes
+    const savedOverlay = localStorage.getItem('irlenOverlayColor');
+    if (savedOverlay) {
+      document.documentElement.style.setProperty('--overlay-color', savedOverlay);
+      document.documentElement.style.setProperty('--overlay-display', 'block');
+    }
+  }, [location.pathname]);
+
+  return (
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/tasks" element={<TaskDashboard />} />
+      <Route path="/ai-assistant" element={<AIAssistant />} />
+      <Route path="/mind-map" element={<MindMapDashboard />} />
+      <Route path="/community" element={<CommunityPage />} />
+    </Routes>
+  );
+};
 
 const App = () => {
   React.useEffect(() => {
@@ -34,6 +57,7 @@ const App = () => {
         width: 100%;
         height: 100%;
         background-color: var(--overlay-color);
+        mix-blend-mode: normal;
         pointer-events: none;
         z-index: 9999;
         display: var(--overlay-display, none);
@@ -41,23 +65,8 @@ const App = () => {
     `;
     document.head.appendChild(style);
 
-    // Set up storage event listener to handle changes
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'irlenOverlayColor') {
-        if (e.newValue) {
-          document.documentElement.style.setProperty('--overlay-color', e.newValue);
-          document.documentElement.style.setProperty('--overlay-display', 'block');
-        } else {
-          document.documentElement.style.setProperty('--overlay-display', 'none');
-        }
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
     return () => {
       document.head.removeChild(style);
-      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
@@ -69,13 +78,7 @@ const App = () => {
             <Toaster />
             <Sonner />
             <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/tasks" element={<TaskDashboard />} />
-                <Route path="/ai-assistant" element={<AIAssistant />} />
-                <Route path="/mind-map" element={<MindMapDashboard />} />
-                <Route path="/community" element={<CommunityPage />} />
-              </Routes>
+              <AppContent />
             </BrowserRouter>
           </PomodoroProvider>
         </TooltipProvider>

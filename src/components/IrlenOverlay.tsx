@@ -32,12 +32,8 @@ export const IrlenOverlay = () => {
     setOverlayColor(color);
     localStorage.setItem('irlenOverlayColor', color);
     
-    if (color) {
-      document.documentElement.style.setProperty('--overlay-color', color);
-      document.documentElement.style.setProperty('--overlay-display', 'block');
-    } else {
-      document.documentElement.style.setProperty('--overlay-display', 'none');
-    }
+    document.documentElement.style.setProperty('--overlay-color', color);
+    document.documentElement.style.setProperty('--overlay-display', color ? 'block' : 'none');
     
     toast({
       title: color ? "Overlay applied" : "Overlay removed",
@@ -46,32 +42,11 @@ export const IrlenOverlay = () => {
   };
 
   React.useEffect(() => {
-    const style = document.createElement('style');
-    style.textContent = `
-      :root::after {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: var(--overlay-color);
-        pointer-events: none;
-        z-index: 9999;
-        display: var(--overlay-display, none);
-      }
-    `;
-    document.head.appendChild(style);
-
     if (overlayColor) {
       document.documentElement.style.setProperty('--overlay-color', overlayColor);
       document.documentElement.style.setProperty('--overlay-display', 'block');
     }
-
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
+  }, [overlayColor]);
 
   return (
     <Popover>
