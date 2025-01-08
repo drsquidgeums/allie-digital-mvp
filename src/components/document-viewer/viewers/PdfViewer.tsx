@@ -22,15 +22,17 @@ export const PdfViewer = ({
   isHighlighter = false 
 }: PdfViewerProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const annotationLayerRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHighlighting, setIsHighlighting] = useState(false);
   const drawingRef = useRef(false);
   const lastPosRef = useRef({ x: 0, y: 0 });
+  const highlightsRef = useRef<any[]>([]);
   const { toast } = useToast();
 
   useEffect(() => {
     const renderPage = async () => {
-      if (!canvasRef.current || !pdfDoc) return;
+      if (!canvasRef.current || !annotationLayerRef.current || !pdfDoc) return;
       
       try {
         const page = await pdfDoc.getPage(currentPage);
@@ -42,30 +44,42 @@ export const PdfViewer = ({
           canvas.height = viewport.height;
           canvas.width = viewport.width;
           
+          // Clear previous content
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          
+          // Render PDF content
           await page.render({
             canvasContext: context,
             viewport: viewport
           }).promise;
 
-          // Restore any previous highlights
-          const annotations = await page.getAnnotations();
-          annotations.forEach((annotation: any) => {
-            if (annotation.subtype === 'Highlight') {
-              const rect = annotation.rect;
-              context.fillStyle = annotation.color || 'yellow';
+          // Render existing highlights
+          highlightsRef.current.forEach(highlight => {
+            if (highlight.page === currentPage) {
+              context.fillStyle = highlight.color;
               context.globalAlpha = 0.3;
-              context.fillRect(rect[0], rect[1], rect[2] - rect[0], rect[3] - rect[1]);
+              context.fillRect(
+                highlight.rect.x,
+                highlight.rect.y,
+                highlight.rect.width,
+                highlight.rect.height
+              );
               context.globalAlpha = 1.0;
             }
           });
         }
       } catch (error) {
         console.error('Error rendering PDF page:', error);
+        toast({
+          title: "Error",
+          description: "Failed to render PDF page",
+          variant: "destructive",
+        });
       }
     };
 
     renderPage();
-  }, [pdfDoc, currentPage]);
+  }, [pdfDoc, currentPage, toast]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -82,7 +96,7 @@ export const PdfViewer = ({
     };
 
     const draw = (e: MouseEvent) => {
-      if (!drawingRef.current || !isHighlighting) return;
+      if (!drawingRef.current || !isHighlighting || !canvas) return;
       
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
@@ -91,30 +105,39 @@ export const PdfViewer = ({
       const currentX = e.clientX - rect.left;
       const currentY = e.clientY - rect.top;
 
-      ctx.beginPath();
-      ctx.moveTo(lastPosRef.current.x, lastPosRef.current.y);
-      ctx.lineTo(currentX, currentY);
-      
-      if (isHighlighter) {
-        ctx.globalAlpha = 0.3;
-        ctx.lineWidth = 20;
-        ctx.strokeStyle = selectedColor;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-      } else {
-        ctx.globalAlpha = 1;
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = selectedColor;
-      }
-      
-      ctx.stroke();
-      ctx.closePath();
+      // Save the highlight
+      const highlight = {
+        page: currentPage,
+        color: selectedColor,
+        rect: {
+          x: Math.min(lastPosRef.current.x, currentX),
+          y: Math.min(lastPosRef.current.y, currentY),
+          width: Math.abs(currentX - lastPosRef.current.x),
+          height: Math.abs(currentY - lastPosRef.current.y)
+        }
+      };
+
+      // Draw the highlight
+      ctx.fillStyle = selectedColor;
+      ctx.globalAlpha = 0.3;
+      ctx.fillRect(
+        highlight.rect.x,
+        highlight.rect.y,
+        highlight.rect.width,
+        highlight.rect.height
+      );
+      ctx.globalAlpha = 1.0;
+
+      // Store the highlight
+      highlightsRef.current.push(highlight);
 
       lastPosRef.current = { x: currentX, y: currentY };
     };
 
     const stopDrawing = () => {
-      drawingRef.current = false;
+      if (drawingRef.current) {
+        drawingRef.current = false;
+      }
     };
 
     canvas.addEventListener('mousedown', startDrawing);
@@ -128,7 +151,7 @@ export const PdfViewer = ({
       canvas.removeEventListener('mouseup', stopDrawing);
       canvas.removeEventListener('mouseout', stopDrawing);
     };
-  }, [selectedColor, isHighlighter, isHighlighting]);
+  }, [selectedColor, isHighlighter, isHighlighting, currentPage]);
 
   const handlePageChange = (direction: 'prev' | 'next') => {
     const newPage = direction === 'next' 
@@ -167,10 +190,16 @@ export const PdfViewer = ({
           minHeight: '500px'
         }}
       >
-        <canvas 
-          ref={canvasRef} 
-          className="w-full cursor-crosshair mx-auto"
-        />
+        <div className="relative">
+          <canvas 
+            ref={canvasRef} 
+            className="w-full cursor-crosshair mx-auto"
+          />
+          <div 
+            ref={annotationLayerRef}
+            className="absolute top-0 left-0 w-full h-full pointer-events-none"
+          />
+        </div>
       </div>
       {totalPages > 1 && (
         <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-background/80 p-2 rounded-lg shadow z-10">
