@@ -3,67 +3,25 @@ import { TaskPlanner } from "./TaskPlanner";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { TaskListCard } from "./dashboard/TaskListCard";
-import { useToast } from "@/hooks/use-toast";
 import { Sidebar } from "@/components/Sidebar";
 import { TaskAchievements } from "./dashboard/TaskAchievements";
-
-interface Task {
-  id: string;
-  text: string;
-  completed: boolean;
-  createdAt: Date;
-  points: number;
-}
+import { useTasks } from "@/hooks/useTasks";
 
 export const TaskDashboard = () => {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
-  const [tasks, setTasks] = React.useState<Task[]>([]);
-  const [showAchievement, setShowAchievement] = React.useState(false);
-  const { toast } = useToast();
+  const {
+    tasks,
+    showAchievement,
+    setShowAchievement,
+    calculateTotalPoints,
+    handleAddTask,
+    handleToggleTask,
+    handleDeleteTask
+  } = useTasks();
 
-  const calculateTotalPoints = () => {
-    return tasks.reduce((total, task) => total + (task.completed ? task.points : 0), 0);
-  };
-
-  const handleAddTask = (text: string) => {
+  const handleAddTaskWithDate = (text: string) => {
     const taskDate = date || new Date();
-    const newTask = {
-      id: Date.now().toString(),
-      text,
-      completed: false,
-      createdAt: taskDate,
-      points: 10
-    };
-    setTasks([...tasks, newTask]);
-  };
-
-  const handleToggleTask = (id: string) => {
-    setTasks(tasks.map(task => {
-      if (task.id === id) {
-        const newStatus = !task.completed;
-        if (newStatus) {
-          const newTotalPoints = calculateTotalPoints() + task.points;
-          if (newTotalPoints >= 20 && newTotalPoints < 50 || 
-              newTotalPoints >= 50 && newTotalPoints < 100 ||
-              newTotalPoints >= 100) {
-            setShowAchievement(true);
-          }
-          toast({
-            title: "Points earned!",
-            description: `You earned ${task.points} points for completing this task!`,
-          });
-        }
-        return { ...task, completed: newStatus };
-      }
-      return task;
-    }));
-  };
-
-  const handleDeleteTask = (id: string) => {
-    const task = tasks.find(t => t.id === id);
-    if (task) {
-      setTasks(tasks.filter(task => task.id !== id));
-    }
+    handleAddTask(text, taskDate);
   };
 
   return (
@@ -82,9 +40,9 @@ export const TaskDashboard = () => {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-full">
                 <Card className="p-4 shadow-lg lg:col-span-2 overflow-auto">
                   <TaskPlanner 
-                    selectedDate={date} 
+                    selectedDate={date}
                     tasks={tasks}
-                    onAddTask={handleAddTask}
+                    onAddTask={handleAddTaskWithDate}
                     onToggleTask={handleToggleTask}
                     onDeleteTask={handleDeleteTask}
                   />
