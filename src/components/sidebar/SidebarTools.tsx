@@ -1,75 +1,57 @@
 import React from "react";
-import { 
-  Clock,
-  Headphones,
-  Eye,
-  Focus,
-  Paintbrush,
-  FolderOpen,
-  Users,
-  LogOut
-} from "lucide-react";
-import { SidebarButton } from "./SidebarButton";
+import { Button } from "@/components/ui/button";
+import { CheckSquare, Brain, Bot, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface SidebarToolsProps {
   activeComponent: string | null;
-  setActiveComponent: (component: string) => void;
+  setActiveComponent: (component: string | null) => void;
 }
 
 export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToolsProps) => {
   const navigate = useNavigate();
-  
-  const tools = [
-    { id: "files", icon: FolderOpen, label: "File Uploads" },
-    { id: "pomodoro", icon: Clock, label: "Pomodoro Timer" },
-    { id: "tts", icon: Headphones, label: "Text-to-Speech" },
-    { id: "bionic", icon: Eye, label: "Bionic Reader" },
-    { id: "focus", icon: Focus, label: "Focus Mode" },
-    { id: "color", icon: Paintbrush, label: "Colour Tool" },
-  ];
-
-  const handleToolClick = (toolId: string) => {
-    setActiveComponent(toolId);
-    if (toolId === "files") {
-      navigate('/');
-    }
-  };
-
-  const handleLogout = () => {
-    console.log("Logout clicked");
-  };
-
-  const handleCommunityClick = () => {
-    navigate('/community');
-  };
 
   return (
     <div className="space-y-2">
-      {tools.map((tool) => (
-        <SidebarButton
-          key={tool.id}
-          icon={tool.icon}
-          label={tool.label}
-          isActive={activeComponent === tool.id}
-          onClick={() => handleToolClick(tool.id)}
-        />
-      ))}
-      
-      <div className="pt-4 border-t border-border">
-        <SidebarButton
-          icon={Users}
-          label="Community"
-          isActive={activeComponent === "community"}
-          onClick={handleCommunityClick}
-        />
-        <SidebarButton
-          icon={LogOut}
-          label="Logout"
-          isActive={false}
-          onClick={handleLogout}
-        />
-      </div>
+      <Button 
+        variant="ghost"
+        className="w-full flex items-center justify-start gap-2 px-2"
+        onClick={() => navigate('/tasks')}
+        style={{ fontWeight: 'inherit' }}
+      >
+        <CheckSquare className="h-4 w-4" style={{ fontWeight: 'inherit' }} />
+        <span style={{ fontWeight: 'inherit' }}>Task Planner</span>
+      </Button>
+
+      <Button 
+        variant="ghost"
+        className="w-full flex items-center justify-start gap-2 px-2"
+        onClick={() => navigate('/ai-assistant')}
+        style={{ fontWeight: 'inherit' }}
+      >
+        <Bot className="h-4 w-4" style={{ fontWeight: 'inherit' }} />
+        <span style={{ fontWeight: 'inherit' }}>AI Assistant</span>
+      </Button>
+
+      <Button 
+        variant="ghost"
+        className="w-full flex items-center justify-start gap-2 px-2"
+        onClick={() => navigate('/mind-map')}
+        style={{ fontWeight: 'inherit' }}
+      >
+        <Brain className="h-4 w-4" style={{ fontWeight: 'inherit' }} />
+        <span style={{ fontWeight: 'inherit' }}>Mind Map</span>
+      </Button>
+
+      <Button 
+        variant="ghost"
+        className="w-full flex items-center justify-start gap-2 px-2"
+        onClick={() => navigate('/community')}
+        style={{ fontWeight: 'inherit' }}
+      >
+        <Users className="h-4 w-4" style={{ fontWeight: 'inherit' }} />
+        <span style={{ fontWeight: 'inherit' }}>Community</span>
+      </Button>
     </div>
   );
 };

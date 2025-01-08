@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { CheckSquare, Brain, Bot, FolderOpen } from "lucide-react";
+import { FolderOpen } from "lucide-react";
 import { SidebarTools } from "./sidebar/SidebarTools";
 import { SidebarContent } from "./sidebar/SidebarContent";
 
@@ -55,44 +55,6 @@ export const Sidebar = ({
           <span style={{ fontWeight: 'inherit' }}>File Uploads</span>
         </Button>
 
-        <Button 
-          variant="ghost"
-          className="w-full flex items-center justify-start gap-2 px-2"
-          onClick={() => navigate('/tasks')}
-          style={{ fontWeight: 'inherit' }}
-        >
-          <CheckSquare className="h-4 w-4" style={{ fontWeight: 'inherit' }} />
-          <span style={{ fontWeight: 'inherit' }}>Task Planner</span>
-        </Button>
-
-        <Button 
-          variant="ghost"
-          className="w-full flex items-center justify-start gap-2 px-2"
-          onClick={() => navigate('/ai-assistant')}
-          style={{ fontWeight: 'inherit' }}
-        >
-          <Bot className="h-4 w-4" style={{ fontWeight: 'inherit' }} />
-          <span style={{ fontWeight: 'inherit' }}>AI Assistant</span>
-        </Button>
-
-        <Button 
-          variant="ghost"
-          className="w-full flex items-center justify-start gap-2 px-2"
-          onClick={() => navigate('/mind-map')}
-          style={{ fontWeight: 'inherit' }}
-        >
-          <Brain className="h-4 w-4" style={{ fontWeight: 'inherit' }} />
-          <span style={{ fontWeight: 'inherit' }}>Mind Map</span>
-        </Button>
-
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          className="hidden"
-          accept=".pdf,.doc,.docx,.txt,.html"
-        />
-
         <SidebarTools 
           activeComponent={activeComponent}
           setActiveComponent={setActiveComponent}
@@ -105,6 +67,14 @@ export const Sidebar = ({
         uploadedFiles={uploadedFiles}
         onFileSelect={onFileSelect}
         onFileDelete={onFileDelete}
+      />
+
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        className="hidden"
+        accept=".pdf,.doc,.docx,.txt,.html"
       />
     </div>
   );
