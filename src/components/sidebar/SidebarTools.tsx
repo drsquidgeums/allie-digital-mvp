@@ -21,7 +21,6 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
   const navigate = useNavigate();
   
   const tools = [
-    { id: "files", icon: FolderOpen, label: "File Uploads" },
     { id: "pomodoro", icon: Clock, label: "Pomodoro Timer" },
     { id: "tts", icon: Headphones, label: "Text-to-Speech" },
     { id: "bionic", icon: Eye, label: "Bionic Reader" },
