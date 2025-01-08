@@ -22,11 +22,11 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
   
   const tools = [
     { id: "files", icon: FolderOpen, label: "File Uploads" },
-    { id: "color", icon: Paintbrush, label: "Colour Tool" },
     { id: "pomodoro", icon: Clock, label: "Pomodoro Timer" },
     { id: "tts", icon: Headphones, label: "Text-to-Speech" },
     { id: "bionic", icon: Eye, label: "Bionic Reader" },
     { id: "focus", icon: Focus, label: "Focus Mode" },
+    { id: "color", icon: Paintbrush, label: "Colour Tool" },
   ];
 
   const handleToolClick = (toolId: string) => {
