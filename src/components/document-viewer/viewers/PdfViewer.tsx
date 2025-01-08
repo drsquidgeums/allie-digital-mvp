@@ -21,6 +21,8 @@ export const PdfViewer = ({
 }: PdfViewerProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const drawingRef = useRef(false);
+  const lastPosRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const renderPage = async () => {
@@ -49,47 +51,49 @@ export const PdfViewer = ({
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    let isDrawing = false;
-    let lastX = 0;
-    let lastY = 0;
+    const startDrawing = (e: MouseEvent) => {
+      drawingRef.current = true;
+      const rect = canvas.getBoundingClientRect();
+      lastPosRef.current = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    };
 
     const draw = (e: MouseEvent) => {
-      if (!isDrawing) return;
+      if (!drawingRef.current) return;
+      
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
       const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const currentX = e.clientX - rect.left;
+      const currentY = e.clientY - rect.top;
 
       ctx.beginPath();
-      ctx.moveTo(lastX, lastY);
-      ctx.lineTo(x, y);
+      ctx.moveTo(lastPosRef.current.x, lastPosRef.current.y);
+      ctx.lineTo(currentX, currentY);
       
       if (isHighlighter) {
         ctx.globalAlpha = 0.3;
-        ctx.strokeStyle = selectedColor;
         ctx.lineWidth = 20;
+        ctx.strokeStyle = selectedColor;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
       } else {
         ctx.globalAlpha = 1;
-        ctx.strokeStyle = selectedColor;
         ctx.lineWidth = 2;
+        ctx.strokeStyle = selectedColor;
       }
       
       ctx.stroke();
       ctx.closePath();
 
-      [lastX, lastY] = [x, y];
-    };
-
-    const startDrawing = (e: MouseEvent) => {
-      isDrawing = true;
-      const rect = canvas.getBoundingClientRect();
-      [lastX, lastY] = [e.clientX - rect.left, e.clientY - rect.top];
+      lastPosRef.current = { x: currentX, y: currentY };
     };
 
     const stopDrawing = () => {
-      isDrawing = false;
+      drawingRef.current = false;
     };
 
     canvas.addEventListener('mousedown', startDrawing);
