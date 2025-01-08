@@ -43,31 +43,42 @@ export const TaskDashboard = () => {
   };
 
   return (
-    <Card className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
-      <div className="container mx-auto py-4 px-4">
-        <div className="flex flex-col space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <Card className="p-4 shadow-lg lg:col-span-2">
-              <TaskPlanner selectedDate={date} />
-            </Card>
-            <div className="space-y-4">
-              <Card className="p-4 shadow-lg">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  className="rounded-md border"
-                />
-              </Card>
-              <TaskListCard
-                tasks={tasks}
-                onToggleTask={handleToggleTask}
-                onDeleteTask={handleDeleteTask}
-              />
+    <div className="flex h-screen bg-background">
+      <Sidebar 
+        onFileUpload={() => {}} 
+        onColorChange={() => {}}
+        uploadedFiles={[]}
+        onFileSelect={() => {}}
+        onFileDelete={() => {}}
+      />
+      <main className="flex-1 p-6 overflow-auto">
+        <Card className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
+          <div className="container mx-auto py-4 px-4">
+            <div className="flex flex-col space-y-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <Card className="p-4 shadow-lg lg:col-span-2">
+                  <TaskPlanner selectedDate={date} />
+                </Card>
+                <div className="space-y-4">
+                  <Card className="p-4 shadow-lg">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      className="rounded-md border"
+                    />
+                  </Card>
+                  <TaskListCard
+                    tasks={tasks}
+                    onToggleTask={handleToggleTask}
+                    onDeleteTask={handleDeleteTask}
+                  />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </Card>
+        </Card>
+      </main>
+    </div>
   );
 };
