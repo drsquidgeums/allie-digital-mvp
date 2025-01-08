@@ -12,14 +12,17 @@ export const ColorOption = ({ name, value, isSelected, onClick }: ColorOptionPro
   return (
     <Button
       onClick={onClick}
-      className={`w-full flex items-center gap-2 dark:bg-[#333333] dark:text-[#FAFAFA] dark:hover:bg-[#444444] dark:border dark:border-white/20 ${
-        isSelected ? 'dark:bg-transparent' : ''
+      className={`w-full flex items-center gap-2 bg-background hover:bg-accent ${
+        isSelected ? 'bg-accent' : ''
       }`}
       variant={isSelected ? "secondary" : "outline"}
     >
       <div 
         className="w-4 h-4 rounded"
-        style={{ backgroundColor: value }}
+        style={{ 
+          backgroundColor: value,
+          border: '1px solid rgba(0,0,0,0.1)'
+        }}
       />
       {name}
     </Button>
