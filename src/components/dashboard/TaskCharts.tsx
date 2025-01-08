@@ -52,7 +52,7 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
   };
 
   return (
-    <div className="flex flex-col space-y-8">
+    <div className="flex flex-col space-y-8 bg-accent/10 p-4 rounded-lg mb-6">
       <div className="w-full">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold">Weekly Progress</h3>
@@ -97,7 +97,7 @@ export const TaskCharts = ({ tasks }: TaskChartsProps) => {
         </div>
       </div>
 
-      <div className="w-full pb-4">
+      <div className="w-full">
         <h3 className="text-lg font-semibold mb-4">Task Status</h3>
         <div className="h-56 w-full">
           <ResponsiveContainer width="100%" height="100%">
