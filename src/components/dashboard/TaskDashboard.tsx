@@ -19,6 +19,18 @@ export const TaskDashboard = () => {
   const [tasks, setTasks] = React.useState<Task[]>([]);
   const { toast } = useToast();
 
+  const handleAddTask = (text: string) => {
+    const taskDate = date || new Date();
+    const newTask = {
+      id: Date.now().toString(),
+      text,
+      completed: false,
+      createdAt: taskDate,
+      points: 10
+    };
+    setTasks([...tasks, newTask]);
+  };
+
   const handleToggleTask = (id: string) => {
     setTasks(tasks.map(task => {
       if (task.id === id) {
@@ -57,7 +69,13 @@ export const TaskDashboard = () => {
             <div className="flex flex-col space-y-4">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <Card className="p-4 shadow-lg lg:col-span-2">
-                  <TaskPlanner selectedDate={date} />
+                  <TaskPlanner 
+                    selectedDate={date}
+                    tasks={tasks}
+                    onAddTask={handleAddTask}
+                    onToggleTask={handleToggleTask}
+                    onDeleteTask={handleDeleteTask}
+                  />
                 </Card>
                 <div className="space-y-4">
                   <Card className="p-4 shadow-lg">
