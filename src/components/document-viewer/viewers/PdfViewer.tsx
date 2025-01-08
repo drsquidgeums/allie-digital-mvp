@@ -118,13 +118,13 @@ export const PdfViewer = ({
   };
 
   return (
-    <div className="relative h-[calc(100vh-16rem)] overflow-y-auto pb-20" ref={containerRef}>
+    <div className="relative h-[calc(100vh-16rem)] overflow-y-auto pb-32" ref={containerRef}>
       <canvas 
         ref={canvasRef} 
         className="w-full cursor-crosshair mx-auto"
       />
       {totalPages > 1 && (
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-background/80 p-2 rounded-lg shadow">
+        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-background/80 p-2 rounded-lg shadow">
           <Button
             variant="outline"
             size="sm"
