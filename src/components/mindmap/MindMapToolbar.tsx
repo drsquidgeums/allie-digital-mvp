@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Network, Plus, Download, Trash2, Image } from "lucide-react";
+import { Network, Plus, Download, Trash2 } from "lucide-react";
 import { ColorOption } from './types';
 import { ColorPicker } from '../ColorPicker';
 import { downloadMindMap } from './utils/mindMapUtils';
@@ -79,7 +79,7 @@ export const MindMapToolbar = ({
           <Download className="w-4 h-4 text-foreground" />
         </Button>
         <Button onClick={downloadMindMap} variant="outline" size="icon" className="bg-background hover:bg-accent">
-          <Image className="w-4 h-4 text-foreground" />
+          <span className="text-xs font-medium">JPG</span>
         </Button>
         <Button onClick={onClear} variant="outline" size="icon" className="bg-background hover:bg-accent">
           <Trash2 className="w-4 h-4 text-foreground" />
