@@ -3,11 +3,13 @@ import '@xyflow/react/dist/style.css';
 import { MindMapContainer } from './mindmap/MindMapContainer';
 import { ColorOption } from './mindmap/types';
 import { ImageNode } from './mindmap/nodes/ImageNode';
+import { ShapeNode } from './mindmap/nodes/ShapeNode';
 import { useMindMapState } from './mindmap/hooks/useMindMapState';
 import { downloadMindMapAsJpg, downloadMindMapAsJson } from './mindmap/utils/mindMapUtils';
 
 const nodeTypes = {
   imageNode: ImageNode,
+  shapeNode: ShapeNode,
 };
 
 const colorOptions: ColorOption[] = [

@@ -4,6 +4,7 @@ import { MindMapFlow } from './MindMapFlow';
 import { MindMapCreativeToolbar } from './MindMapCreativeToolbar';
 import { ColorOption } from './types';
 import { toast } from "sonner";
+import { NodeResizer } from '@xyflow/react';
 
 interface MindMapContainerProps {
   nodes: any[];
@@ -52,6 +53,8 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
       justifyContent: 'center',
       alignItems: 'center',
       padding: '10px',
+      minWidth: '100px',
+      minHeight: '100px',
     };
 
     // Apply specific styles based on shape
@@ -114,8 +117,12 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
 
     const newNode = {
       id: `${shape}_${Date.now()}`,
-      type: shape === 'image' ? 'imageNode' : 'default',
-      data: { label: label || shape },
+      type: shape === 'image' ? 'imageNode' : 'shapeNode',
+      data: { 
+        label: label || '',
+        shape,
+        color: selectedColor === 'custom' ? customColor : selectedColor
+      },
       position: { x: Math.random() * 500, y: Math.random() * 300 },
       style: nodeStyle,
     };
