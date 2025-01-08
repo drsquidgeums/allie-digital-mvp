@@ -1,7 +1,9 @@
 import React from 'react';
 import { MindMapToolbar } from './MindMapToolbar';
 import { MindMapFlow } from './MindMapFlow';
+import { MindMapCreativeToolbar } from './MindMapCreativeToolbar';
 import { ColorOption } from './types';
+import { toast } from "sonner";
 
 interface MindMapContainerProps {
   nodes: any[];
@@ -38,6 +40,13 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   onClear,
   colorOptions,
 }) => {
+  const handleShapeSelect = (shape: string) => {
+    toast({
+      title: "Shape selected",
+      description: `${shape} node will be added in the next update`,
+    });
+  };
+
   return (
     <div className="w-full h-[600px] bg-background border-none rounded-lg overflow-hidden">
       <MindMapToolbar
@@ -52,7 +61,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
         onClear={onClear}
         colorOptions={colorOptions}
       />
-      <div className="w-full h-[calc(100%-64px)]">
+      <div className="w-full h-[calc(100%-128px)]">
         <MindMapFlow
           nodes={nodes}
           edges={edges}
@@ -61,6 +70,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
           onConnect={onConnect}
         />
       </div>
+      <MindMapCreativeToolbar onShapeSelect={handleShapeSelect} />
     </div>
   );
 };
