@@ -1,34 +1,10 @@
-import { MindMapNode } from '../types';
+import { toast } from "sonner";
 import { toPng } from 'html-to-image';
-import { toast } from "@/hooks/use-toast";
 
-export const createNewNode = (
-  id: string,
-  label: string,
-  position: { x: number; y: number },
-  color: string,
-  isCustomColor: boolean
-): MindMapNode => ({
-  id,
-  data: { label },
-  position,
-  style: {
-    background: color,
-    color: isCustomColor ? '#000000' : 'hsl(var(--foreground))',
-    padding: '10px',
-    borderRadius: '8px',
-    border: '1px solid hsl(var(--border))',
-  },
-});
-
-export const downloadMindMap = async () => {
+export const downloadMindMapAsJpg = async () => {
   const element = document.querySelector('.react-flow') as HTMLElement;
   if (!element) {
-    toast({
-      title: "Error",
-      description: "Could not find the mind map element",
-      variant: "destructive",
-    });
+    toast("Could not find the mind map element");
     return;
   }
 
@@ -42,15 +18,21 @@ export const downloadMindMap = async () => {
     link.href = dataUrl;
     link.click();
     
-    toast({
-      title: "Success",
-      description: "Mind map downloaded successfully",
-    });
+    toast("Mind map downloaded as JPG");
   } catch (error) {
-    toast({
-      title: "Error",
-      description: "Failed to download mind map",
-      variant: "destructive",
-    });
+    toast("Failed to download mind map");
   }
+};
+
+export const downloadMindMapAsJson = (nodes: any[], edges: any[]) => {
+  const data = { nodes, edges };
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+  const downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href", dataStr);
+  downloadAnchorNode.setAttribute("download", "mindmap.json");
+  document.body.appendChild(downloadAnchorNode);
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+  
+  toast("Mind map downloaded as JSON");
 };

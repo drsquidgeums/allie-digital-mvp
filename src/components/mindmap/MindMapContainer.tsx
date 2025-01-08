@@ -18,7 +18,8 @@ interface MindMapContainerProps {
   newNodeText: string;
   setNewNodeText: (text: string) => void;
   onAddNode: () => void;
-  onExport: () => void;
+  onExportJpg: () => void;
+  onExportJson: () => void;
   onClear: () => void;
   colorOptions: ColorOption[];
   nodeTypes: any;
@@ -37,7 +38,8 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   newNodeText,
   setNewNodeText,
   onAddNode,
-  onExport,
+  onExportJpg,
+  onExportJson,
   onClear,
   colorOptions,
   nodeTypes,
@@ -75,7 +77,8 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
         newNodeText={newNodeText}
         setNewNodeText={setNewNodeText}
         onAddNode={onAddNode}
-        onExport={onExport}
+        onExportJpg={onExportJpg}
+        onExportJson={onExportJson}
         onClear={onClear}
         colorOptions={colorOptions}
       />

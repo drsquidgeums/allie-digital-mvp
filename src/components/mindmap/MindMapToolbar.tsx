@@ -1,10 +1,9 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Network, Plus, Download, Trash2 } from "lucide-react";
+import { Network, Download, Plus, Trash2 } from "lucide-react";
 import { ColorOption } from './types';
 import { ColorPicker } from '../ColorPicker';
-import { downloadMindMap } from './utils/mindMapUtils';
 
 interface MindMapToolbarProps {
   selectedColor: string;
@@ -14,7 +13,8 @@ interface MindMapToolbarProps {
   newNodeText: string;
   setNewNodeText: (text: string) => void;
   onAddNode: () => void;
-  onExport: () => void;
+  onExportJpg: () => void;
+  onExportJson: () => void;
   onClear: () => void;
   colorOptions: ColorOption[];
 }
@@ -27,7 +27,8 @@ export const MindMapToolbar = ({
   newNodeText,
   setNewNodeText,
   onAddNode,
-  onExport,
+  onExportJpg,
+  onExportJson,
   onClear,
   colorOptions,
 }: MindMapToolbarProps) => {
@@ -75,10 +76,10 @@ export const MindMapToolbar = ({
         <Button onClick={onAddNode} size="icon" variant="outline" className="bg-background hover:bg-accent">
           <Plus className="w-4 h-4 text-foreground" />
         </Button>
-        <Button onClick={downloadMindMap} variant="outline" size="icon" className="bg-background hover:bg-accent">
+        <Button onClick={onExportJpg} variant="outline" size="icon" className="bg-background hover:bg-accent">
           <Download className="w-4 h-4 text-foreground" />
         </Button>
-        <Button onClick={onExport} variant="outline" size="icon" className="bg-background hover:bg-accent">
+        <Button onClick={onExportJson} variant="outline" size="icon" className="bg-background hover:bg-accent">
           <span className="text-[10px] font-medium">JSON</span>
         </Button>
         <Button onClick={onClear} variant="outline" size="icon" className="bg-background hover:bg-accent">
