@@ -4,6 +4,11 @@ import { addEdge, Connection, Edge, useNodesState, useEdgesState } from '@xyflow
 import '@xyflow/react/dist/style.css';
 import { MindMapContainer } from './mindmap/MindMapContainer';
 import { ColorOption, Node } from './mindmap/types';
+import { ImageNode } from './mindmap/nodes/ImageNode';
+
+const nodeTypes = {
+  imageNode: ImageNode,
+};
 
 const colorOptions: ColorOption[] = [
   { label: 'Default', value: 'hsl(var(--muted))' },
@@ -115,6 +120,7 @@ export const MindMap = () => {
       onExport={downloadMindMap}
       onClear={clearCanvas}
       colorOptions={colorOptions}
+      nodeTypes={nodeTypes}
     />
   );
 };

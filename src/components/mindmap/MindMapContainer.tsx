@@ -21,6 +21,7 @@ interface MindMapContainerProps {
   onExport: () => void;
   onClear: () => void;
   colorOptions: ColorOption[];
+  nodeTypes: any;
 }
 
 export const MindMapContainer: React.FC<MindMapContainerProps> = ({
@@ -39,11 +40,12 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   onExport,
   onClear,
   colorOptions,
+  nodeTypes,
 }) => {
   const handleShapeSelect = (shape: string, label?: string) => {
     const newNode = {
       id: `${shape}_${Date.now()}`,
-      type: shape,
+      type: shape === 'image' ? 'imageNode' : shape,
       data: { label: label || shape },
       position: { x: Math.random() * 500, y: Math.random() * 300 },
       style: {
@@ -84,6 +86,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          nodeTypes={nodeTypes}
         />
       </div>
       <div className="flex-shrink-0">

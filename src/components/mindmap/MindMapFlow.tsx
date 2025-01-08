@@ -12,6 +12,7 @@ interface MindMapFlowProps {
   onNodesChange: (changes: any) => void;
   onEdgesChange: (changes: any) => void;
   onConnect: (connection: any) => void;
+  nodeTypes: any;
 }
 
 export const MindMapFlow: React.FC<MindMapFlowProps> = ({
@@ -20,6 +21,7 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
   onNodesChange,
   onEdgesChange,
   onConnect,
+  nodeTypes,
 }) => {
   return (
     <ReactFlow
@@ -28,6 +30,7 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
+      nodeTypes={nodeTypes}
       fitView
       className="dark:bg-background"
     >
