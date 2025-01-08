@@ -39,7 +39,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   colorOptions,
 }) => {
   return (
-    <div className="w-full h-[600px] bg-background border border-border rounded-lg overflow-hidden">
+    <div className="w-full h-[600px] bg-background border border-border sepia:border-none rounded-lg overflow-hidden">
       <MindMapToolbar
         selectedColor={selectedColor}
         setSelectedColor={setSelectedColor}
