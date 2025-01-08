@@ -160,11 +160,11 @@ export const PdfViewer = ({
         </Button>
       </div>
       <div 
-        className="relative flex-1 overflow-auto"
+        className="relative flex-1 overflow-auto pb-24"
         ref={containerRef}
         style={{ 
-          height: 'calc(100vh - 350px)',
-          marginBottom: '6rem'
+          height: 'calc(100vh - 400px)',
+          minHeight: '500px'
         }}
       >
         <canvas 
