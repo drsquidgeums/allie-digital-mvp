@@ -41,10 +41,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   colorOptions,
 }) => {
   const handleShapeSelect = (shape: string) => {
-    toast({
-      title: "Shape selected",
-      description: `${shape} node will be added in the next update`,
-    });
+    toast(`${shape} node will be added in the next update`);
   };
 
   return (
