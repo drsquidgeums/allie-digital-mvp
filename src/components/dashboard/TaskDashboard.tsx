@@ -43,63 +43,31 @@ export const TaskDashboard = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background">
-      <Sidebar 
-        onFileUpload={() => {}} 
-        onColorChange={() => {}}
-        uploadedFiles={[]}
-        onFileSelect={() => {}}
-        onFileDelete={() => {}}
-      />
-      <div className="flex-1 min-h-screen bg-background">
-        <div className="container mx-auto py-4 px-4">
-          <div className="flex flex-col space-y-4">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <Card className="p-4 shadow-lg lg:col-span-2">
-                <TaskPlanner selectedDate={date} />
-              </Card>
-              <div className="space-y-4">
-                <Card className="p-4 shadow-lg">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    className="rounded-md border"
-                  />
-                </Card>
-                <TaskListCard
-                  tasks={tasks}
-                  onToggleTask={handleToggleTask}
-                  onDeleteTask={handleDeleteTask}
+    <Card className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
+      <div className="container mx-auto py-4 px-4">
+        <div className="flex flex-col space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <Card className="p-4 shadow-lg lg:col-span-2">
+              <TaskPlanner selectedDate={date} />
+            </Card>
+            <div className="space-y-4">
+              <Card className="p-4 shadow-lg">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  className="rounded-md border"
                 />
-                <Card className="p-4 shadow-lg">
-                  <h2 className="text-lg font-semibold mb-3">Achievements</h2>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span>Task Master</span>
-                      <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-green-500 w-3/4" />
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Streak Champion</span>
-                      <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-500 w-1/2" />
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Early Bird</span>
-                      <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-purple-500 w-1/4" />
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </div>
+              </Card>
+              <TaskListCard
+                tasks={tasks}
+                onToggleTask={handleToggleTask}
+                onDeleteTask={handleDeleteTask}
+              />
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };

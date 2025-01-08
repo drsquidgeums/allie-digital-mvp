@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Bot } from "lucide-react";
 import { ChatMessage } from "./chat/ChatMessage";
 import { ChatInput } from "./chat/ChatInput";
+import { Card } from "@/components/ui/card";
 
 interface Message {
   text: string;
@@ -72,27 +73,29 @@ export const AIAssistant = () => {
   };
 
   return (
-    <div className="p-4 space-y-4">
-      <div className="flex items-center gap-2">
-        <Bot className="w-4 h-4" />
-        <h3 className="font-medium">Allie</h3>
+    <Card className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
+      <div className="p-4 space-y-4">
+        <div className="flex items-center gap-2">
+          <Bot className="w-4 h-4" />
+          <h3 className="font-medium">Allie</h3>
+        </div>
+        <div className="bg-card rounded-lg p-3 h-[calc(100vh-12rem)] overflow-y-auto space-y-2">
+          {messages.map((msg, idx) => (
+            <ChatMessage key={idx} text={msg.text} isUser={msg.isUser} />
+          ))}
+          {isLoading && (
+            <div className="flex items-center gap-2">
+              <div className="w-12 h-6 bg-muted/50 rounded animate-pulse" />
+            </div>
+          )}
+        </div>
+        <ChatInput
+          value={input}
+          onChange={setInput}
+          onSend={handleSend}
+          isLoading={isLoading}
+        />
       </div>
-      <div className="bg-card rounded-lg p-3 h-[300px] overflow-y-auto space-y-2">
-        {messages.map((msg, idx) => (
-          <ChatMessage key={idx} text={msg.text} isUser={msg.isUser} />
-        ))}
-        {isLoading && (
-          <div className="flex items-center gap-2">
-            <div className="w-12 h-6 bg-muted/50 rounded animate-pulse" />
-          </div>
-        )}
-      </div>
-      <ChatInput
-        value={input}
-        onChange={setInput}
-        onSend={handleSend}
-        isLoading={isLoading}
-      />
-    </div>
+    </Card>
   );
 };

@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "react-router-dom";
 import { Community } from "@/components/Community";
 import { TaskDashboard } from "./dashboard/TaskDashboard";
-import { AIAssistant } from "@/components/AIAssistant";
+import { AIAssistant } from "./AIAssistant";
 import MindMapDashboard from "@/pages/MindMapDashboard";
 
 export const WorkspaceLayout = () => {
@@ -95,11 +95,23 @@ export const WorkspaceLayout = () => {
           />
         </main>
       ) : (
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 p-6 overflow-auto">
           {location.pathname === "/community" && <Community />}
-          {location.pathname === "/tasks" && <TaskDashboard />}
-          {location.pathname === "/mind-map" && <MindMapDashboard />}
-          {location.pathname === "/ai-assistant" && <AIAssistant />}
+          {location.pathname === "/tasks" && (
+            <div className="h-full">
+              <TaskDashboard />
+            </div>
+          )}
+          {location.pathname === "/mind-map" && (
+            <div className="h-full">
+              <MindMapDashboard />
+            </div>
+          )}
+          {location.pathname === "/ai-assistant" && (
+            <div className="h-full">
+              <AIAssistant />
+            </div>
+          )}
         </main>
       )}
     </div>
