@@ -59,7 +59,6 @@ export const IrlenOverlay = () => {
         pointer-events: none;
         z-index: 9999;
         display: var(--overlay-display, none);
-        mix-blend-mode: normal;
       }
     `;
     document.head.appendChild(style);
@@ -87,7 +86,7 @@ export const IrlenOverlay = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent 
-        className="w-48 bg-background text-foreground border border-border" 
+        className="w-48 bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]" 
         align="end"
       >
         <div className="space-y-2">
