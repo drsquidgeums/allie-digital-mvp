@@ -40,8 +40,27 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   onClear,
   colorOptions,
 }) => {
-  const handleShapeSelect = (shape: string) => {
-    toast(`${shape} node will be added in the next update`);
+  const handleShapeSelect = (shape: string, label?: string) => {
+    const newNode = {
+      id: `${shape}_${Date.now()}`,
+      type: shape,
+      data: { label: label || shape },
+      position: { x: Math.random() * 500, y: Math.random() * 300 },
+      style: {
+        background: selectedColor === 'custom' ? customColor : selectedColor,
+        borderRadius: shape === 'circle' ? '50%' : 
+                     shape === 'star' ? '0' : '4px',
+        width: 150,
+        height: shape === 'circle' ? 150 : 100,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        border: '1px solid #ddd',
+      },
+    };
+
+    onNodesChange([{ type: 'add', item: newNode }]);
+    toast(`Added ${shape} node`);
   };
 
   return (

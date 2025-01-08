@@ -18,7 +18,7 @@ import { TooltipContent } from "@/components/ui/tooltip";
 import { TooltipTrigger } from "@/components/ui/tooltip";
 
 interface MindMapCreativeToolbarProps {
-  onShapeSelect: (shape: string) => void;
+  onShapeSelect: (shape: string, label?: string) => void;
 }
 
 export const MindMapCreativeToolbar = ({
@@ -30,7 +30,7 @@ export const MindMapCreativeToolbar = ({
         <div className="flex items-center space-x-1">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('circle')} className="h-9 w-9">
+              <Button variant="outline" size="icon" onClick={() => onShapeSelect('circle', 'Circle Node')} className="h-9 w-9">
                 <CircleDot className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
@@ -39,7 +39,7 @@ export const MindMapCreativeToolbar = ({
           
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('square')} className="h-9 w-9">
+              <Button variant="outline" size="icon" onClick={() => onShapeSelect('square', 'Square Node')} className="h-9 w-9">
                 <Square className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
@@ -48,7 +48,7 @@ export const MindMapCreativeToolbar = ({
           
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('triangle')} className="h-9 w-9">
+              <Button variant="outline" size="icon" onClick={() => onShapeSelect('triangle', 'Triangle Node')} className="h-9 w-9">
                 <Triangle className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
@@ -57,7 +57,7 @@ export const MindMapCreativeToolbar = ({
           
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('diamond')} className="h-9 w-9">
+              <Button variant="outline" size="icon" onClick={() => onShapeSelect('diamond', 'Diamond Node')} className="h-9 w-9">
                 <Diamond className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
@@ -66,7 +66,7 @@ export const MindMapCreativeToolbar = ({
           
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('hexagon')} className="h-9 w-9">
+              <Button variant="outline" size="icon" onClick={() => onShapeSelect('hexagon', 'Hexagon Node')} className="h-9 w-9">
                 <Hexagon className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
@@ -75,7 +75,7 @@ export const MindMapCreativeToolbar = ({
           
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('star')} className="h-9 w-9">
+              <Button variant="outline" size="icon" onClick={() => onShapeSelect('star', 'Star Node')} className="h-9 w-9">
                 <Star className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
@@ -88,7 +88,7 @@ export const MindMapCreativeToolbar = ({
         <div className="flex items-center space-x-1">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('text')} className="h-9 w-9">
+              <Button variant="outline" size="icon" onClick={() => onShapeSelect('text', 'Text Node')} className="h-9 w-9">
                 <Type className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
@@ -97,7 +97,7 @@ export const MindMapCreativeToolbar = ({
           
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('image')} className="h-9 w-9">
+              <Button variant="outline" size="icon" onClick={() => onShapeSelect('image', 'Image Node')} className="h-9 w-9">
                 <Image className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
@@ -106,7 +106,7 @@ export const MindMapCreativeToolbar = ({
           
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('sticker')} className="h-9 w-9">
+              <Button variant="outline" size="icon" onClick={() => onShapeSelect('sticker', 'Sticker Node')} className="h-9 w-9">
                 <Sticker className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
@@ -115,7 +115,7 @@ export const MindMapCreativeToolbar = ({
           
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('custom')} className="h-9 w-9">
+              <Button variant="outline" size="icon" onClick={() => onShapeSelect('custom', 'Custom Node')} className="h-9 w-9">
                 <Palette className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
