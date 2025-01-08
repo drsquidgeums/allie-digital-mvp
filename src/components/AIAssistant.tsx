@@ -73,7 +73,7 @@ export const AIAssistant = () => {
   };
 
   return (
-    <Card className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative sepia:border-none">
+    <Card className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative border-none">
       <div className="p-4 space-y-4">
         <div className="flex items-center gap-2">
           <Bot className="w-4 h-4" />
