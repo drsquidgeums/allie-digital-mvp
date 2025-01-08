@@ -32,31 +32,35 @@ export const PdfViewer = ({
     const renderPage = async () => {
       if (!canvasRef.current || !pdfDoc) return;
       
-      const page = await pdfDoc.getPage(currentPage);
-      const viewport = page.getViewport({ scale: 1.5 });
-      const canvas = canvasRef.current;
-      const context = canvas.getContext('2d');
-      
-      if (canvas && context) {
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+      try {
+        const page = await pdfDoc.getPage(currentPage);
+        const viewport = page.getViewport({ scale: 1.5 });
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
         
-        await page.render({
-          canvasContext: context,
-          viewport: viewport
-        }).promise;
+        if (canvas && context) {
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          
+          await page.render({
+            canvasContext: context,
+            viewport: viewport
+          }).promise;
 
-        // Restore any previous highlights
-        const annotations = await page.getAnnotations();
-        annotations.forEach((annotation: any) => {
-          if (annotation.subtype === 'Highlight') {
-            const rect = annotation.rect;
-            context.fillStyle = annotation.color || 'yellow';
-            context.globalAlpha = 0.3;
-            context.fillRect(rect[0], rect[1], rect[2] - rect[0], rect[3] - rect[1]);
-            context.globalAlpha = 1.0;
-          }
-        });
+          // Restore any previous highlights
+          const annotations = await page.getAnnotations();
+          annotations.forEach((annotation: any) => {
+            if (annotation.subtype === 'Highlight') {
+              const rect = annotation.rect;
+              context.fillStyle = annotation.color || 'yellow';
+              context.globalAlpha = 0.3;
+              context.fillRect(rect[0], rect[1], rect[2] - rect[0], rect[3] - rect[1]);
+              context.globalAlpha = 1.0;
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error rendering PDF page:', error);
       }
     };
 
@@ -156,9 +160,12 @@ export const PdfViewer = ({
         </Button>
       </div>
       <div 
-        className="relative flex-1 overflow-y-auto mb-16" 
+        className="relative flex-1 overflow-y-auto"
         ref={containerRef}
-        style={{ minHeight: '400px' }}
+        style={{ 
+          height: 'calc(100vh - 300px)',
+          paddingBottom: '4rem'
+        }}
       >
         <canvas 
           ref={canvasRef} 
@@ -166,7 +173,7 @@ export const PdfViewer = ({
         />
       </div>
       {totalPages > 1 && (
-        <div className="sticky bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-background/80 p-2 rounded-lg shadow">
+        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-background/80 p-2 rounded-lg shadow z-10">
           <Button
             variant="outline"
             size="sm"
