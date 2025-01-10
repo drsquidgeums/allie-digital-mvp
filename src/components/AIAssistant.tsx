@@ -1,79 +1,101 @@
-import React from "react";
-import { Card } from "@/components/ui/card";
+import React, { useState } from "react";
+import { Bot } from "lucide-react";
 import { ChatMessage } from "./chat/ChatMessage";
 import { ChatInput } from "./chat/ChatInput";
-import { useToast } from "@/hooks/use-toast";
+import { Card } from "@/components/ui/card";
+
+interface Message {
+  text: string;
+  isUser: boolean;
+}
+
+const INITIAL_MESSAGE: Message = {
+  text: "Hi! I'm Allie, your virtual AI learning assistant. What can I help you with today?",
+  isUser: false
+};
 
 export const AIAssistant = () => {
-  const [messages, setMessages] = React.useState<{ text: string; isUser: boolean }[]>([]);
-  const [inputValue, setInputValue] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
-  const { toast } = useToast();
-  const chatContainerRef = React.useRef<HTMLDivElement>(null);
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSend = async () => {
-    if (!inputValue.trim()) return;
-
-    const newMessage = { text: inputValue, isUser: true };
-    setMessages((prev) => [...prev, newMessage]);
-    setInputValue("");
-    setIsLoading(true);
-
-    try {
-      // Simulate AI response
-      const aiResponse = { text: "This is a simulated AI response.", isUser: false };
-      setMessages((prev) => [...prev, aiResponse]);
-      
-      // Announce new message for screen readers
-      const announcement = document.createElement('div');
-      announcement.setAttribute('role', 'status');
-      announcement.setAttribute('aria-live', 'polite');
-      announcement.textContent = 'New message received';
-      document.body.appendChild(announcement);
-      setTimeout(() => document.body.removeChild(announcement), 1000);
-
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to get response. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+  const getToolResponse = (input: string): string => {
+    const lowerInput = input.toLowerCase();
+    
+    if (lowerInput.includes("irlen") || lowerInput.includes("overlay")) {
+      return "The Irlen Overlay tool helps users with visual processing difficulties, including dyslexia. It adds a colored overlay to the screen which can reduce visual stress and make text easier to read. You can choose from different colors to find what works best for you.";
     }
+    
+    if (lowerInput.includes("font") || lowerInput.includes("opendyslexic") || lowerInput.includes("dyslexic")) {
+      return "The Font Customization tool includes the OpenDyslexic font, which is specifically designed to help users with dyslexia. Its unique letter shapes and weighted bottoms can increase readability and reduce letter switching.";
+    }
+    
+    if (lowerInput.includes("bionic") || lowerInput.includes("reader")) {
+      return "The Bionic Reader helps improve focus and reading speed by highlighting parts of words. This can be particularly helpful for users with ADHD or reading difficulties, making it easier to maintain attention while reading.";
+    }
+    
+    if (lowerInput.includes("color") || lowerInput.includes("separator")) {
+      return "The Colour Separator tool allows you to highlight different parts of text in various colours. This can help with organising information, making complex texts more manageable, and improving comprehension for users with learning differences.";
+    }
+    
+    if (lowerInput.includes("focus") || lowerInput.includes("mode")) {
+      return "Focus Mode helps minimize distractions by entering fullscreen and hiding unnecessary elements. This is particularly helpful for users with ADHD who need to concentrate on their work.";
+    }
+    
+    if (lowerInput.includes("pomodoro") || lowerInput.includes("timer")) {
+      return "The Pomodoro Timer helps break work into manageable chunks with regular breaks. This is especially useful for users with ADHD, as it helps maintain focus and prevents mental fatigue.";
+    }
+    
+    if (lowerInput.includes("mind") || lowerInput.includes("map")) {
+      return "The Mind Mapping tool helps visualize connections between ideas. This visual approach to organizing information can be particularly helpful for users with different learning styles or those who prefer visual processing.";
+    }
+    
+    if (lowerInput.includes("text") && lowerInput.includes("speech")) {
+      return "The Text-to-Speech feature reads text aloud, which is helpful for users with dyslexia, visual processing difficulties, or those who learn better through auditory input.";
+    }
+
+    return "I can explain how our various tools help support different learning needs. You can ask about specific tools like the Irlen Overlay, OpenDyslexic font, Bionic Reader, Color Separator, Focus Mode, Pomodoro Timer, Mind Map, or Text-to-Speech feature. Which would you like to learn more about?";
   };
 
-  // Auto-scroll to latest message
-  React.useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-    }
-  }, [messages]);
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
+
+    setIsLoading(true);
+    setMessages(prev => [...prev, { text: input, isUser: true }]);
+    setInput("");
+
+    const response = getToolResponse(input);
+    
+    setTimeout(() => {
+      setMessages(prev => [...prev, { text: response, isUser: false }]);
+      setIsLoading(false);
+    }, 1000);
+  };
 
   return (
-    <Card className="flex flex-col h-full p-4 gap-4" role="region" aria-label="AI Assistant Chat">
-      <div 
-        ref={chatContainerRef}
-        className="flex-1 overflow-y-auto space-y-4 p-4"
-        role="log"
-        aria-live="polite"
-        aria-label="Chat messages"
-      >
-        {messages.map((message, index) => (
-          <ChatMessage
-            key={index}
-            text={message.text}
-            isUser={message.isUser}
-          />
-        ))}
+    <Card className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative border-none">
+      <div className="p-4 space-y-4">
+        <div className="flex items-center gap-2">
+          <Bot className="w-4 h-4" />
+          <h3 className="font-medium">Allie</h3>
+        </div>
+        <div className="bg-card rounded-lg p-3 h-[calc(100vh-12rem)] overflow-y-auto space-y-2">
+          {messages.map((msg, idx) => (
+            <ChatMessage key={idx} text={msg.text} isUser={msg.isUser} />
+          ))}
+          {isLoading && (
+            <div className="flex items-center gap-2">
+              <div className="w-12 h-6 bg-muted/50 rounded animate-pulse" />
+            </div>
+          )}
+        </div>
+        <ChatInput
+          value={input}
+          onChange={setInput}
+          onSend={handleSend}
+          isLoading={isLoading}
+        />
       </div>
-      <ChatInput
-        value={inputValue}
-        onChange={setInputValue}
-        onSend={handleSend}
-        isLoading={isLoading}
-        aria-label="Chat input"
-      />
     </Card>
   );
 };
