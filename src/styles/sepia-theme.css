@@ -20,6 +20,15 @@
     --input: 35 15% 85%;
     --ring: 25 32% 23%;
 
+    /* Enhanced contrast colors for sepia mode */
+    --chat-user-bg: 25 32% 13%;
+    --chat-user-text: 35 25% 96%;
+    --chat-assistant-bg: 35 15% 85%;
+    --chat-assistant-text: 25 32% 13%;
+    --loading-indicator: 25 32% 23%;
+    --focus-ring: 25 32% 13%;
+    --hover-bg: 35 15% 80%;
+
     /* Style updates for buttons in sepia mode */
     button[class*="h-9 w-9"] {
       background-color: hsl(35 25% 75%);

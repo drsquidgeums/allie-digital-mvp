@@ -19,5 +19,14 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
+
+    /* Enhanced contrast colors for dark mode */
+    --chat-user-bg: 0 0% 98%;
+    --chat-user-text: 240 10% 3.9%;
+    --chat-assistant-bg: 240 3.7% 15.9%;
+    --chat-assistant-text: 0 0% 98%;
+    --loading-indicator: 240 5% 84.9%;
+    --focus-ring: 0 0% 98%;
+    --hover-bg: 240 3.7% 20.9%;
   }
 }

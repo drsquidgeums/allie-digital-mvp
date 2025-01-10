@@ -26,6 +26,15 @@
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
     --radius: 0.5rem;
+
+    /* Enhanced contrast colors for better accessibility */
+    --chat-user-bg: 240 5.9% 10%;
+    --chat-user-text: 0 0% 100%;
+    --chat-assistant-bg: 240 4.8% 95.9%;
+    --chat-assistant-text: 240 10% 3.9%;
+    --loading-indicator: 240 10% 33.9%;
+    --focus-ring: 240 5.9% 10%;
+    --hover-bg: 240 5.9% 15%;
   }
 
   * {
