@@ -132,7 +132,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
 
   return (
     <div 
-      className="w-full h-[600px] bg-background border-none rounded-lg overflow-hidden flex flex-col"
+      className="w-full h-[600px] bg-background border-none rounded-lg overflow-hidden flex flex-col animate-fade-in"
       role="application"
       aria-label="Mind map editor"
     >
