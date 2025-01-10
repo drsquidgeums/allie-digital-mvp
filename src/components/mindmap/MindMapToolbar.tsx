@@ -32,10 +32,24 @@ export const MindMapToolbar = ({
   onClear,
   colorOptions,
 }: MindMapToolbarProps) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      onAddNode();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      setNewNodeText('');
+    }
+  };
+
   return (
-    <div className="p-4 border-b flex items-center justify-between bg-background">
+    <div 
+      className="p-4 border-b flex items-center justify-between bg-background"
+      role="toolbar"
+      aria-label="Mind map toolbar"
+    >
       <div className="flex items-center gap-2">
-        <Network className="w-4 h-4 text-foreground" />
+        <Network className="w-4 h-4 text-foreground" aria-hidden="true" />
         <h3 className="font-medium text-foreground">Mind Map</h3>
       </div>
       <div className="flex items-center gap-2">
@@ -44,13 +58,7 @@ export const MindMapToolbar = ({
             value={selectedColor}
             onChange={(e) => setSelectedColor(e.target.value)}
             className="h-9 px-3 py-1 rounded-md border border-input bg-background text-foreground text-sm pr-8 appearance-none"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'right 0.5rem center',
-              backgroundSize: '1.5em 1.5em',
-              paddingRight: '2.5rem'
-            }}
+            aria-label="Select node color"
           >
             {colorOptions.map((color) => (
               <option key={color.value} value={color.value}>
@@ -60,7 +68,7 @@ export const MindMapToolbar = ({
           </select>
           {selectedColor === 'custom' && (
             <ColorPicker
-              label=""
+              label="Custom color"
               value={customColor}
               onChange={setCustomColor}
             />
@@ -69,21 +77,46 @@ export const MindMapToolbar = ({
         <Input
           value={newNodeText}
           onChange={(e) => setNewNodeText(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="Add a node..."
           className="w-64 bg-background text-foreground"
-          onKeyPress={(e) => e.key === "Enter" && onAddNode()}
+          aria-label="New node text"
         />
-        <Button onClick={onAddNode} size="icon" variant="outline" className="bg-background hover:bg-accent">
-          <Plus className="w-4 h-4 text-foreground" />
+        <Button 
+          onClick={onAddNode} 
+          size="icon" 
+          variant="outline" 
+          className="bg-background hover:bg-accent"
+          aria-label="Add node"
+        >
+          <Plus className="w-4 h-4 text-foreground" aria-hidden="true" />
         </Button>
-        <Button onClick={onExportJpg} variant="outline" size="icon" className="bg-background hover:bg-accent">
-          <Download className="w-4 h-4 text-foreground" />
+        <Button 
+          onClick={onExportJpg} 
+          variant="outline" 
+          size="icon" 
+          className="bg-background hover:bg-accent"
+          aria-label="Export as JPG"
+        >
+          <Download className="w-4 h-4 text-foreground" aria-hidden="true" />
         </Button>
-        <Button onClick={onExportJson} variant="outline" size="icon" className="bg-background hover:bg-accent">
+        <Button 
+          onClick={onExportJson} 
+          variant="outline" 
+          size="icon" 
+          className="bg-background hover:bg-accent"
+          aria-label="Export as JSON"
+        >
           <span className="text-[10px] font-medium">JSON</span>
         </Button>
-        <Button onClick={onClear} variant="outline" size="icon" className="bg-background hover:bg-accent">
-          <Trash2 className="w-4 h-4 text-foreground" />
+        <Button 
+          onClick={onClear} 
+          variant="outline" 
+          size="icon" 
+          className="bg-background hover:bg-accent"
+          aria-label="Clear canvas"
+        >
+          <Trash2 className="w-4 h-4 text-foreground" aria-hidden="true" />
         </Button>
       </div>
     </div>

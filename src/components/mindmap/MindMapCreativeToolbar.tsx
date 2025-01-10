@@ -24,14 +24,32 @@ interface MindMapCreativeToolbarProps {
 export const MindMapCreativeToolbar = ({
   onShapeSelect
 }: MindMapCreativeToolbarProps) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, shape: string, label: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onShapeSelect(shape, label);
+    }
+  };
+
   return (
-    <div className="p-4 border-t bg-background flex items-center justify-between">
+    <div 
+      className="p-4 border-t bg-background flex items-center justify-between"
+      role="toolbar"
+      aria-label="Shape selection toolbar"
+    >
       <div className="flex items-center space-x-2">
         <div className="flex items-center space-x-1">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('circle', 'Circle Node')} className="h-9 w-9">
-                <CircleDot className="h-4 w-4" />
+              <Button 
+                variant="outline" 
+                size="icon" 
+                onClick={() => onShapeSelect('circle', 'Circle Node')} 
+                onKeyDown={(e) => handleKeyDown(e, 'circle', 'Circle Node')}
+                className="h-9 w-9"
+                aria-label="Add circle node"
+              >
+                <CircleDot className="h-4 w-4" aria-hidden="true" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Add Circle Node</TooltipContent>
@@ -88,8 +106,15 @@ export const MindMapCreativeToolbar = ({
         <div className="flex items-center space-x-1">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('text', 'Text Node')} className="h-9 w-9">
-                <Type className="h-4 w-4" />
+              <Button 
+                variant="outline" 
+                size="icon" 
+                onClick={() => onShapeSelect('text', 'Text Node')}
+                onKeyDown={(e) => handleKeyDown(e, 'text', 'Text Node')}
+                className="h-9 w-9"
+                aria-label="Add text node"
+              >
+                <Type className="h-4 w-4" aria-hidden="true" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Add Text Node</TooltipContent>
