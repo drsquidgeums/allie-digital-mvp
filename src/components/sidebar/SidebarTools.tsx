@@ -24,8 +24,8 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
     { id: "pomodoro", icon: Clock, label: "Pomodoro Timer" },
     { id: "tts", icon: Headphones, label: "Text-to-Speech" },
     { id: "bionic", icon: Eye, label: "Bionic Reader" },
-    { id: "focus", icon: Focus, label: "Focus Mode" },
     { id: "color", icon: Paintbrush, label: "Colour Tool" },
+    { id: "focus", icon: Focus, label: "Focus Mode" },
   ];
 
   const handleToolClick = (toolId: string) => {
