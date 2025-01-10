@@ -24,6 +24,22 @@ interface MindMapCreativeToolbarProps {
 export const MindMapCreativeToolbar = ({
   onShapeSelect
 }: MindMapCreativeToolbarProps) => {
+  const shapes = [
+    { id: 'circle', icon: CircleDot, label: 'Circle Node' },
+    { id: 'square', icon: Square, label: 'Square Node' },
+    { id: 'triangle', icon: Triangle, label: 'Triangle Node' },
+    { id: 'diamond', icon: Diamond, label: 'Diamond Node' },
+    { id: 'hexagon', icon: Hexagon, label: 'Hexagon Node' },
+    { id: 'star', icon: Star, label: 'Star Node' },
+  ];
+
+  const tools = [
+    { id: 'text', icon: Type, label: 'Text Node' },
+    { id: 'image', icon: Image, label: 'Image Node' },
+    { id: 'sticker', icon: Sticker, label: 'Sticker Node' },
+    { id: 'custom', icon: Palette, label: 'Custom Node' },
+  ];
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, shape: string, label: string) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -39,113 +55,45 @@ export const MindMapCreativeToolbar = ({
     >
       <div className="flex items-center space-x-2">
         <div className="flex items-center space-x-1">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button 
-                variant="outline" 
-                size="icon" 
-                onClick={() => onShapeSelect('circle', 'Circle Node')} 
-                onKeyDown={(e) => handleKeyDown(e, 'circle', 'Circle Node')}
-                className="h-9 w-9"
-                aria-label="Add circle node"
-              >
-                <CircleDot className="h-4 w-4" aria-hidden="true" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Add Circle Node</TooltipContent>
-          </Tooltip>
-          
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('square', 'Square Node')} className="h-9 w-9">
-                <Square className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Add Square Node</TooltipContent>
-          </Tooltip>
-          
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('triangle', 'Triangle Node')} className="h-9 w-9">
-                <Triangle className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Add Triangle Node</TooltipContent>
-          </Tooltip>
-          
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('diamond', 'Diamond Node')} className="h-9 w-9">
-                <Diamond className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Add Diamond Node</TooltipContent>
-          </Tooltip>
-          
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('hexagon', 'Hexagon Node')} className="h-9 w-9">
-                <Hexagon className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Add Hexagon Node</TooltipContent>
-          </Tooltip>
-          
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('star', 'Star Node')} className="h-9 w-9">
-                <Star className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Add Star Node</TooltipContent>
-          </Tooltip>
+          {shapes.map(({ id, icon: Icon, label }) => (
+            <Tooltip key={id}>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  onClick={() => onShapeSelect(id, label)}
+                  onKeyDown={(e) => handleKeyDown(e, id, label)}
+                  className="h-9 w-9 focus:ring-2 focus:ring-ring"
+                  aria-label={`Add ${label}`}
+                >
+                  <Icon className="h-4 w-4" aria-hidden="true" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Add {label}</TooltipContent>
+            </Tooltip>
+          ))}
         </div>
 
         <Separator orientation="vertical" className="h-6" />
 
         <div className="flex items-center space-x-1">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button 
-                variant="outline" 
-                size="icon" 
-                onClick={() => onShapeSelect('text', 'Text Node')}
-                onKeyDown={(e) => handleKeyDown(e, 'text', 'Text Node')}
-                className="h-9 w-9"
-                aria-label="Add text node"
-              >
-                <Type className="h-4 w-4" aria-hidden="true" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Add Text Node</TooltipContent>
-          </Tooltip>
-          
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('image', 'Image Node')} className="h-9 w-9">
-                <Image className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Add Image Node</TooltipContent>
-          </Tooltip>
-          
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('sticker', 'Sticker Node')} className="h-9 w-9">
-                <Sticker className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Add Sticker Node</TooltipContent>
-          </Tooltip>
-          
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={() => onShapeSelect('custom', 'Custom Node')} className="h-9 w-9">
-                <Palette className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Custom Node</TooltipContent>
-          </Tooltip>
+          {tools.map(({ id, icon: Icon, label }) => (
+            <Tooltip key={id}>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  onClick={() => onShapeSelect(id, label)}
+                  onKeyDown={(e) => handleKeyDown(e, id, label)}
+                  className="h-9 w-9 focus:ring-2 focus:ring-ring"
+                  aria-label={`Add ${label}`}
+                >
+                  <Icon className="h-4 w-4" aria-hidden="true" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Add {label}</TooltipContent>
+            </Tooltip>
+          ))}
         </div>
       </div>
     </div>

@@ -44,6 +44,38 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
           fitView();
         }
         break;
+      case 'Escape':
+        // Deselect all nodes
+        onNodesChange(
+          nodes.filter(node => node.selected).map(node => ({
+            type: 'select',
+            id: node.id,
+            selected: false,
+          }))
+        );
+        break;
+      case 'Tab':
+        // Handle tab navigation between nodes
+        event.preventDefault();
+        const currentNode = nodes.find(node => node.selected);
+        const nodeIndex = currentNode ? nodes.indexOf(currentNode) : -1;
+        const nextIndex = event.shiftKey 
+          ? (nodeIndex - 1 + nodes.length) % nodes.length 
+          : (nodeIndex + 1) % nodes.length;
+        
+        onNodesChange([
+          ...(currentNode ? [{
+            type: 'select',
+            id: currentNode.id,
+            selected: false,
+          }] : []),
+          {
+            type: 'select',
+            id: nodes[nextIndex].id,
+            selected: true,
+          },
+        ]);
+        break;
     }
   }, [nodes, onNodesChange, fitView]);
 
@@ -53,7 +85,7 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
       tabIndex={0}
       role="application"
       aria-label="Mind map canvas"
-      className="focus:outline-none focus:ring-2 focus:ring-primary h-full"
+      className="focus:outline-none focus:ring-2 focus:ring-ring h-full"
     >
       <ReactFlow
         nodes={nodes}

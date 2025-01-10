@@ -32,13 +32,22 @@ export const MindMapToolbar = ({
   onClear,
   colorOptions,
 }: MindMapToolbarProps) => {
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       onAddNode();
     } else if (e.key === 'Escape') {
       e.preventDefault();
       setNewNodeText('');
+      (e.target as HTMLElement).blur();
+    }
+  };
+
+  const handleColorKeyDown = (e: React.KeyboardEvent<HTMLSelectElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const select = e.target as HTMLSelectElement;
+      setSelectedColor(select.value);
     }
   };
 
@@ -57,7 +66,8 @@ export const MindMapToolbar = ({
           <select
             value={selectedColor}
             onChange={(e) => setSelectedColor(e.target.value)}
-            className="h-9 px-3 py-1 rounded-md border border-input bg-background text-foreground text-sm pr-8 appearance-none"
+            onKeyDown={handleColorKeyDown}
+            className="h-9 px-3 py-1 rounded-md border border-input bg-background text-foreground text-sm pr-8 appearance-none focus:outline-none focus:ring-2 focus:ring-ring"
             aria-label="Select node color"
           >
             {colorOptions.map((color) => (
@@ -79,14 +89,14 @@ export const MindMapToolbar = ({
           onChange={(e) => setNewNodeText(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Add a node..."
-          className="w-64 bg-background text-foreground"
+          className="w-64 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           aria-label="New node text"
         />
         <Button 
           onClick={onAddNode} 
           size="icon" 
           variant="outline" 
-          className="bg-background hover:bg-accent"
+          className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
           aria-label="Add node"
         >
           <Plus className="w-4 h-4 text-foreground" aria-hidden="true" />
@@ -95,7 +105,7 @@ export const MindMapToolbar = ({
           onClick={onExportJpg} 
           variant="outline" 
           size="icon" 
-          className="bg-background hover:bg-accent"
+          className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
           aria-label="Export as JPG"
         >
           <Download className="w-4 h-4 text-foreground" aria-hidden="true" />
@@ -104,7 +114,7 @@ export const MindMapToolbar = ({
           onClick={onExportJson} 
           variant="outline" 
           size="icon" 
-          className="bg-background hover:bg-accent"
+          className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
           aria-label="Export as JSON"
         >
           <span className="text-[10px] font-medium">JSON</span>
@@ -113,7 +123,7 @@ export const MindMapToolbar = ({
           onClick={onClear} 
           variant="outline" 
           size="icon" 
-          className="bg-background hover:bg-accent"
+          className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
           aria-label="Clear canvas"
         >
           <Trash2 className="w-4 h-4 text-foreground" aria-hidden="true" />
