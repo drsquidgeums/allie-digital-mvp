@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Card,
@@ -17,8 +17,8 @@ export const FocusMode = () => {
   const [notificationPermission, setNotificationPermission] = React.useState<NotificationPermission>("default");
   const { settings, updateSetting } = useFocusSettings();
   const { toast } = useToast();
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  // Check notification permission on mount
   React.useEffect(() => {
     if ("Notification" in window) {
       setNotificationPermission(Notification.permission);
@@ -64,10 +64,8 @@ export const FocusMode = () => {
             el.muted = true;
           });
         }
-
         setIsActive(true);
         window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: true } }));
-
         toast({
           title: "Focus mode activated",
           description: "Your selected focus settings have been applied",
@@ -90,10 +88,8 @@ export const FocusMode = () => {
       document.querySelectorAll('audio, video').forEach((el: HTMLMediaElement) => {
         el.muted = false;
       });
-
       setIsActive(false);
       window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: false } }));
-
       toast({
         title: "Focus mode deactivated",
         description: "Returned to normal mode",
@@ -101,11 +97,22 @@ export const FocusMode = () => {
     }
   };
 
-  // Use the effects hook
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape' && isActive) {
+      toggleFocusMode();
+    }
+  };
+
   useFocusModeEffects(isActive, settings);
 
   return (
-    <Card className="w-full">
+    <Card 
+      className="w-full"
+      ref={cardRef}
+      onKeyDown={handleKeyDown}
+      role="region"
+      aria-label="Focus Mode Settings"
+    >
       <CardHeader>
         <CardTitle>Focus Mode</CardTitle>
         <CardDescription>
@@ -113,6 +120,13 @@ export const FocusMode = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div 
+          role="status" 
+          aria-live="polite"
+          className="sr-only"
+        >
+          {isActive ? "Focus mode is active" : "Focus mode is inactive"}
+        </div>
         <FocusSettings />
         <FocusModeActions
           isActive={isActive}
