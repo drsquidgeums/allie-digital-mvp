@@ -27,10 +27,11 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
   const { fitView } = useReactFlow();
 
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
+    const selectedNodes = nodes.filter(node => node.selected);
+
     switch (event.key) {
       case 'Delete':
       case 'Backspace':
-        const selectedNodes = nodes.filter(node => node.selected);
         if (selectedNodes.length) {
           onNodesChange(selectedNodes.map(node => ({
             type: 'remove',
@@ -41,11 +42,10 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
       case 'f':
         if (event.ctrlKey || event.metaKey) {
           event.preventDefault();
-          fitView();
+          fitView({ duration: 200 });
         }
         break;
       case 'Escape':
-        // Deselect all nodes
         onNodesChange(
           nodes.filter(node => node.selected).map(node => ({
             type: 'select',
@@ -55,7 +55,6 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
         );
         break;
       case 'Tab':
-        // Handle tab navigation between nodes
         event.preventDefault();
         const currentNode = nodes.find(node => node.selected);
         const nodeIndex = currentNode ? nodes.indexOf(currentNode) : -1;
