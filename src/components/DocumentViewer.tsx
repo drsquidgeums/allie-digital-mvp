@@ -29,29 +29,19 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
     if (e.key === 'Escape') {
       setUrl('');
       e.currentTarget.blur();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (url.trim()) {
+        toast({
+          title: "URL loaded",
+          description: "Document URL has been loaded into the viewer",
+        });
+      }
     }
   };
 
-  React.useEffect(() => {
-    if (file) {
-      const fileUrl = URL.createObjectURL(file);
-      setUrl(fileUrl);
-      return () => URL.revokeObjectURL(fileUrl);
-    } else {
-      setUrl("");
-    }
-  }, [file, setUrl]);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const fileUrl = URL.createObjectURL(file);
-      setUrl(fileUrl);
-      toast({
-        title: "File uploaded",
-        description: `${file.name} has been added to the viewer`,
-      });
-    }
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUrl(e.target.value);
   };
 
   return (
@@ -78,12 +68,23 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
             placeholder="Paste URL here"
             className="w-full"
             value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            onChange={handleUrlChange}
             onKeyDown={handleKeyDown}
             aria-label="Document URL input"
+            role="textbox"
+            aria-describedby="url-input-help"
           />
+          <div id="url-input-help" className="sr-only">
+            Press Enter to load the URL or Escape to clear the input
+          </div>
         </div>
-        <div className="h-full" ref={documentRef}>
+        <div 
+          className="h-full" 
+          ref={documentRef}
+          tabIndex={0}
+          role="document"
+          aria-label={file ? `Viewing ${file.name}` : "Document preview area"}
+        >
           <DocumentPreview 
             file={file} 
             url={url} 
@@ -97,7 +98,15 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
         ref={fileInputRef}
         className="hidden"
         accept=".pdf,.doc,.docx,.txt,.html"
-        onChange={handleFileChange}
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            toast({
+              title: "File uploaded",
+              description: `${file.name} has been added to the viewer`,
+            });
+          }
+        }}
         aria-hidden="true"
       />
     </Card>
