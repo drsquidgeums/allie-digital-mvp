@@ -30,14 +30,14 @@ export const ChatInput = ({ value, onChange, onSend, isLoading }: ChatInputProps
         onKeyDown={handleKeyDown}
         disabled={isLoading}
         aria-label="Chat input"
-        className="focus:ring-2 focus:ring-primary focus-visible:ring-ring focus-visible:ring-offset-2 transition-colors"
+        className="focus:ring-2 focus:ring-primary focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 ease-in-out hover:border-primary/50"
       />
       <Button 
         onClick={onSend} 
         size="icon" 
         disabled={isLoading}
         aria-label="Send message"
-        className="focus:ring-2 focus:ring-primary focus-visible:ring-ring focus-visible:ring-offset-2 transition-colors hover:bg-primary/90"
+        className="focus:ring-2 focus:ring-primary focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 ease-in-out hover:bg-primary/90 hover:scale-105 active:scale-95"
       >
         <Send className="w-4 h-4" aria-hidden="true" />
       </Button>
