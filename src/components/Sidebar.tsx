@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { CheckSquare, Brain, Bot, FolderOpen } from "lucide-react";
+import { CheckSquare, Brain, Bot, Monitor } from "lucide-react";
 import { SidebarTools } from "./sidebar/SidebarTools";
 import { SidebarContent } from "./sidebar/SidebarContent";
 
@@ -51,8 +51,8 @@ export const Sidebar = ({
           }}
           style={{ fontWeight: 'inherit' }}
         >
-          <FolderOpen className="h-4 w-4" style={{ fontWeight: 'inherit' }} />
-          <span style={{ fontWeight: 'inherit' }}>File Uploads</span>
+          <Monitor className="h-4 w-4" style={{ fontWeight: 'inherit' }} />
+          <span style={{ fontWeight: 'inherit' }}>File Uploader</span>
         </Button>
 
         <Button 
