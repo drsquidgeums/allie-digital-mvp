@@ -38,6 +38,15 @@ export const Sidebar = ({
     }
   };
 
+  // Memoize the logo to prevent re-rendering
+  const Logo = React.memo(() => (
+    <img 
+      src="/lovable-uploads/3a3ef3bc-dbfb-441c-88cd-8b91d4891d61.png" 
+      alt="Allie Digital Logo" 
+      className="w-12 h-12"
+    />
+  ));
+
   return (
     <div 
       ref={sidebarRef}
@@ -51,11 +60,7 @@ export const Sidebar = ({
         className="flex items-center mb-4 px-2"
         role="banner"
       >
-        <img 
-          src="/lovable-uploads/3a3ef3bc-dbfb-441c-88cd-8b91d4891d61.png" 
-          alt="Allie Digital Logo" 
-          className="w-12 h-12"
-        />
+        <Logo />
       </div>
       
       <div className="space-y-2">
