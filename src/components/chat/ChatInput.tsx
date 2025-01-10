@@ -10,21 +10,34 @@ interface ChatInputProps {
 }
 
 export const ChatInput = ({ value, onChange, onSend, isLoading }: ChatInputProps) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      onSend();
+    }
+  };
+
   return (
-    <div className="flex gap-2" role="form">
+    <div 
+      className="flex gap-2" 
+      role="form"
+      aria-label="Chat input form"
+    >
       <Input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Ask about study tips or how to use our tools..."
-        onKeyPress={(e) => e.key === "Enter" && onSend()}
+        onKeyDown={handleKeyDown}
         disabled={isLoading}
         aria-label="Chat input"
+        className="focus:ring-2 focus:ring-primary"
       />
       <Button 
         onClick={onSend} 
         size="icon" 
         disabled={isLoading}
         aria-label="Send message"
+        className="focus:ring-2 focus:ring-primary"
       >
         <Send className="w-4 h-4" aria-hidden="true" />
       </Button>

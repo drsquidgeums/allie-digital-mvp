@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Bot } from "lucide-react";
 import { ChatMessage } from "./chat/ChatMessage";
 import { ChatInput } from "./chat/ChatInput";
@@ -18,6 +18,15 @@ export const AIAssistant = () => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const getToolResponse = (input: string): string => {
     const lowerInput = input.toLowerCase();
@@ -72,11 +81,19 @@ export const AIAssistant = () => {
     }, 1000);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      setInput('');
+    }
+  };
+
   return (
     <Card 
       className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative border-none"
       role="region"
       aria-label="AI Assistant Chat Interface"
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
     >
       <div className="p-4 space-y-4">
         <div className="flex items-center gap-2" role="banner">
@@ -84,19 +101,30 @@ export const AIAssistant = () => {
           <h3 className="font-medium">Allie</h3>
         </div>
         <div 
-          className="bg-card rounded-lg p-3 h-[calc(100vh-12rem)] overflow-y-auto space-y-2"
+          className="bg-card rounded-lg p-3 h-[calc(100vh-12rem)] overflow-y-auto space-y-2 focus:outline-none focus:ring-2 focus:ring-primary"
           role="log"
           aria-live="polite"
           aria-label="Chat messages"
+          tabIndex={0}
         >
           {messages.map((msg, idx) => (
-            <ChatMessage key={idx} text={msg.text} isUser={msg.isUser} />
+            <ChatMessage 
+              key={idx} 
+              text={msg.text} 
+              isUser={msg.isUser}
+              tabIndex={0}
+            />
           ))}
           {isLoading && (
-            <div className="flex items-center gap-2" aria-label="Loading response">
+            <div 
+              className="flex items-center gap-2" 
+              aria-label="Loading response"
+              role="status"
+            >
               <div className="w-12 h-6 bg-muted/50 rounded animate-pulse" />
             </div>
           )}
+          <div ref={messagesEndRef} />
         </div>
         <ChatInput
           value={input}
