@@ -8,6 +8,7 @@ import { useChatLogic } from "@/hooks/useChatLogic";
 export const AIAssistant = () => {
   const { input, setInput, messages, isLoading, handleSend } = useChatLogic();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -23,6 +24,27 @@ export const AIAssistant = () => {
     }
   };
 
+  // Handle keyboard navigation within messages
+  const handleMessagesKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      const messages = chatContainerRef.current?.querySelectorAll('[role="article"]');
+      if (!messages?.length) return;
+
+      const currentFocus = document.activeElement;
+      const currentIndex = Array.from(messages).indexOf(currentFocus as Element);
+      
+      let nextIndex;
+      if (e.key === 'ArrowUp') {
+        nextIndex = currentIndex > 0 ? currentIndex - 1 : messages.length - 1;
+      } else {
+        nextIndex = currentIndex < messages.length - 1 ? currentIndex + 1 : 0;
+      }
+
+      (messages[nextIndex] as HTMLElement).focus();
+    }
+  };
+
   return (
     <Card 
       className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative border-none shadow-lg ring-offset-background transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -34,10 +56,12 @@ export const AIAssistant = () => {
       <div className="p-4 space-y-4">
         <ChatHeader />
         <div 
+          ref={chatContainerRef}
           className="bg-card rounded-lg p-3 h-[calc(100vh-12rem)] overflow-y-auto space-y-2 focus:outline-none focus:ring-2 focus:ring-primary focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 ease-in-out"
           role="log"
           aria-live="polite"
           aria-label="Chat messages"
+          onKeyDown={handleMessagesKeyDown}
           tabIndex={0}
         >
           {messages.map((msg, idx) => (

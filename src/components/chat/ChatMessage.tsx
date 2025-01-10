@@ -7,12 +7,20 @@ interface ChatMessageProps {
 }
 
 export const ChatMessage = ({ text, isUser, tabIndex }: ChatMessageProps) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      // Add any specific interaction you want when the message is focused and activated
+      e.preventDefault();
+    }
+  };
+
   return (
     <div 
       className="w-full flex flex-col animate-fade-in"
       role="article"
       aria-label={isUser ? "Your message" : "Allie's response"}
       tabIndex={tabIndex}
+      onKeyDown={handleKeyDown}
     >
       <div
         className={cn(
