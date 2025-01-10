@@ -16,19 +16,23 @@ export const DocumentToolbar = ({
   onDelete,
   hasFile
 }: DocumentToolbarProps) => {
-  const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground";
+  const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 
   return (
-    <div className="flex justify-between w-full p-2">
+    <div 
+      className="flex justify-between w-full p-2"
+      role="toolbar"
+      aria-label="Document actions"
+    >
       <div className="flex gap-2">
         <Button
           variant="outline"
           size="sm"
           onClick={onUpload}
           className={buttonClassName}
-          title="Upload document"
+          aria-label="Upload document"
         >
-          <Upload className="h-4 w-4" />
+          <Upload className="h-4 w-4" aria-hidden="true" />
         </Button>
         <Button
           variant="outline"
@@ -36,9 +40,9 @@ export const DocumentToolbar = ({
           onClick={onDownload}
           disabled={!hasFile}
           className={buttonClassName}
-          title="Download document"
+          aria-label="Download document"
         >
-          <Download className="h-4 w-4" />
+          <Download className="h-4 w-4" aria-hidden="true" />
         </Button>
         <Button
           variant="outline"
@@ -46,9 +50,9 @@ export const DocumentToolbar = ({
           onClick={onDelete}
           disabled={!hasFile}
           className={buttonClassName}
-          title="Delete document"
+          aria-label="Delete document"
         >
-          <Trash2 className="h-4 w-4" />
+          <Trash2 className="h-4 w-4" aria-hidden="true" />
         </Button>
       </div>
       <NotificationCenter />
