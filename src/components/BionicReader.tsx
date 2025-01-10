@@ -50,7 +50,7 @@ export const BionicReader = () => {
 
   return (
     <div 
-      className="p-4 space-y-4"
+      className="p-4 space-y-4 animate-fade-in"
       role="region"
       aria-label="Bionic Reader Tool"
     >

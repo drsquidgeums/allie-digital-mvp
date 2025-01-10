@@ -24,7 +24,7 @@ export const Community = () => {
 
   return (
     <div 
-      className="flex-1 min-h-screen bg-background"
+      className="flex-1 min-h-screen bg-background animate-fade-in"
       onKeyDown={handleKeyDown}
       role="main"
       aria-label="Community Dashboard"

@@ -51,7 +51,7 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
   ];
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 space-y-4 animate-fade-in">
       <ColorHeader 
         isHighlighter={isHighlighter} 
         onHighlighterToggle={toggleHighlighter} 

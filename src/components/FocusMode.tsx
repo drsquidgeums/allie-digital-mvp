@@ -107,7 +107,7 @@ export const FocusMode = () => {
 
   return (
     <Card 
-      className="w-full"
+      className="w-full animate-fade-in"
       ref={cardRef}
       onKeyDown={handleKeyDown}
       role="region"
