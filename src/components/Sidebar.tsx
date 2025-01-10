@@ -1,7 +1,6 @@
-import React, { useRef, useMemo } from "react";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { CheckSquare, Brain, Bot, Monitor } from "lucide-react";
+import React, { useRef } from "react";
+import { SidebarLogo } from "./sidebar/SidebarLogo";
+import { SidebarNavigation } from "./sidebar/SidebarNavigation";
 import { SidebarTools } from "./sidebar/SidebarTools";
 import { SidebarContent } from "./sidebar/SidebarContent";
 
@@ -13,7 +12,7 @@ interface SidebarProps {
   onFileDelete: (file: File) => void;
 }
 
-export const Sidebar = ({ 
+export const Sidebar = React.memo(({ 
   onFileUpload, 
   onColorChange, 
   uploadedFiles, 
@@ -22,7 +21,6 @@ export const Sidebar = ({
 }: SidebarProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeComponent, setActiveComponent] = React.useState<string | null>("files");
-  const navigate = useNavigate();
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,67 +36,6 @@ export const Sidebar = ({
     }
   };
 
-  // Memoize the logo
-  const Logo = React.memo(() => (
-    <img 
-      src="/lovable-uploads/3a3ef3bc-dbfb-441c-88cd-8b91d4891d61.png" 
-      alt="Allie Digital Logo" 
-      className="w-12 h-12"
-    />
-  ));
-
-  // Memoize the main navigation buttons
-  const MainNavigation = React.memo(() => (
-    <>
-      <Button 
-        variant="ghost"
-        className="w-full flex items-center justify-start gap-2 px-2"
-        onClick={() => {
-          setActiveComponent("files");
-          navigate('/');
-        }}
-        style={{ fontWeight: 'inherit' }}
-        aria-current={activeComponent === "files" ? "page" : undefined}
-      >
-        <Monitor className="h-4 w-4" aria-hidden="true" />
-        <span>File Uploader</span>
-      </Button>
-
-      <Button 
-        variant="ghost"
-        className="w-full flex items-center justify-start gap-2 px-2"
-        onClick={() => navigate('/tasks')}
-        style={{ fontWeight: 'inherit' }}
-        aria-current={location.pathname === '/tasks' ? "page" : undefined}
-      >
-        <CheckSquare className="h-4 w-4" aria-hidden="true" />
-        <span>Task Planner</span>
-      </Button>
-
-      <Button 
-        variant="ghost"
-        className="w-full flex items-center justify-start gap-2 px-2"
-        onClick={() => navigate('/ai-assistant')}
-        style={{ fontWeight: 'inherit' }}
-        aria-current={location.pathname === '/ai-assistant' ? "page" : undefined}
-      >
-        <Bot className="h-4 w-4" aria-hidden="true" />
-        <span>AI Assistant</span>
-      </Button>
-
-      <Button 
-        variant="ghost"
-        className="w-full flex items-center justify-start gap-2 px-2"
-        onClick={() => navigate('/mind-map')}
-        style={{ fontWeight: 'inherit' }}
-        aria-current={location.pathname === '/mind-map' ? "page" : undefined}
-      >
-        <Brain className="h-4 w-4" aria-hidden="true" />
-        <span>Mind Map</span>
-      </Button>
-    </>
-  ));
-
   return (
     <div 
       ref={sidebarRef}
@@ -108,15 +45,13 @@ export const Sidebar = ({
       tabIndex={0}
       onKeyDown={handleKeyDown}
     >
-      <div 
-        className="flex items-center mb-4 px-2"
-        role="banner"
-      >
-        <Logo />
-      </div>
+      <SidebarLogo />
       
       <div className="space-y-2">
-        <MainNavigation />
+        <SidebarNavigation 
+          activeComponent={activeComponent}
+          setActiveComponent={setActiveComponent}
+        />
 
         <input
           type="file"
@@ -142,4 +77,6 @@ export const Sidebar = ({
       />
     </div>
   );
-};
+});
+
+Sidebar.displayName = "Sidebar";

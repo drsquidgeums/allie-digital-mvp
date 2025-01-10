@@ -8,7 +8,7 @@ import { TaskDashboard } from "./dashboard/TaskDashboard";
 import { AIAssistant } from "./AIAssistant";
 import MindMapDashboard from "@/pages/MindMapDashboard";
 
-export const WorkspaceLayout = () => {
+export const WorkspaceLayout = React.memo(() => {
   const { toast } = useToast();
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [selectedColor, setSelectedColor] = React.useState("#000000");
@@ -74,42 +74,25 @@ export const WorkspaceLayout = () => {
     setIsHighlighter(!!highlighter);
   };
 
-  // Memoize the main content to prevent unnecessary re-renders
   const MainContent = useMemo(() => {
     const showDocumentViewer = !["/tasks", "/mind-map", "/ai-assistant", "/community"].includes(location.pathname);
 
     if (showDocumentViewer) {
       return (
-        <main className="flex-1 p-6 overflow-auto">
-          <DocumentViewer 
-            file={selectedFile} 
-            selectedColor={selectedColor}
-            isHighlighter={isHighlighter}
-          />
-        </main>
+        <DocumentViewer 
+          file={selectedFile} 
+          selectedColor={selectedColor}
+          isHighlighter={isHighlighter}
+        />
       );
     }
 
-    return (
-      <main className="flex-1 p-6 overflow-auto">
-        {location.pathname === "/community" && <Community />}
-        {location.pathname === "/tasks" && (
-          <div className="h-full">
-            <TaskDashboard />
-          </div>
-        )}
-        {location.pathname === "/mind-map" && (
-          <div className="h-full">
-            <MindMapDashboard />
-          </div>
-        )}
-        {location.pathname === "/ai-assistant" && (
-          <div className="h-full">
-            <AIAssistant />
-          </div>
-        )}
-      </main>
-    );
+    if (location.pathname === "/community") return <Community />;
+    if (location.pathname === "/tasks") return <TaskDashboard />;
+    if (location.pathname === "/mind-map") return <MindMapDashboard />;
+    if (location.pathname === "/ai-assistant") return <AIAssistant />;
+
+    return null;
   }, [location.pathname, selectedFile, selectedColor, isHighlighter]);
 
   return (
@@ -121,7 +104,11 @@ export const WorkspaceLayout = () => {
         onFileSelect={handleFileSelect}
         onFileDelete={handleFileDelete}
       />
-      {MainContent}
+      <main className="flex-1 p-6 overflow-auto">
+        {MainContent}
+      </main>
     </div>
   );
-};
+});
+
+WorkspaceLayout.displayName = "WorkspaceLayout";
