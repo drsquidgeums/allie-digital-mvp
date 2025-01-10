@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ThemeProvider as NextThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import { TaskDashboard } from "./components/dashboard/TaskDashboard";
@@ -28,11 +28,12 @@ const AppContent = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Index />} />
+      <Route path="/file-uploader" element={<Index />} />
       <Route path="/tasks" element={<TaskDashboard />} />
       <Route path="/ai-assistant" element={<AIAssistant />} />
       <Route path="/mind-map" element={<MindMapDashboard />} />
       <Route path="/community" element={<CommunityPage />} />
+      <Route path="/" element={<Navigate to="/file-uploader" replace />} />
     </Routes>
   );
 };
