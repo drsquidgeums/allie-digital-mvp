@@ -7,7 +7,11 @@ interface ChatMessageProps {
 
 export const ChatMessage = ({ text, isUser }: ChatMessageProps) => {
   return (
-    <div className="w-full flex flex-col">
+    <div 
+      className="w-full flex flex-col"
+      role="article"
+      aria-label={isUser ? "Your message" : "Allie's response"}
+    >
       <div
         className={cn(
           "p-2 rounded-lg max-w-[80%] whitespace-pre-wrap w-fit",

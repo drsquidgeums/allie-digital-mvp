@@ -73,18 +73,27 @@ export const AIAssistant = () => {
   };
 
   return (
-    <Card className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative border-none">
+    <Card 
+      className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative border-none"
+      role="region"
+      aria-label="AI Assistant Chat Interface"
+    >
       <div className="p-4 space-y-4">
-        <div className="flex items-center gap-2">
-          <Bot className="w-4 h-4" />
+        <div className="flex items-center gap-2" role="banner">
+          <Bot className="w-4 h-4" aria-hidden="true" />
           <h3 className="font-medium">Allie</h3>
         </div>
-        <div className="bg-card rounded-lg p-3 h-[calc(100vh-12rem)] overflow-y-auto space-y-2">
+        <div 
+          className="bg-card rounded-lg p-3 h-[calc(100vh-12rem)] overflow-y-auto space-y-2"
+          role="log"
+          aria-live="polite"
+          aria-label="Chat messages"
+        >
           {messages.map((msg, idx) => (
             <ChatMessage key={idx} text={msg.text} isUser={msg.isUser} />
           ))}
           {isLoading && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" aria-label="Loading response">
               <div className="w-12 h-6 bg-muted/50 rounded animate-pulse" />
             </div>
           )}
