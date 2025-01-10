@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Sidebar } from "./Sidebar";
 import { DocumentViewer } from "./DocumentViewer";
 import { useToast } from "@/hooks/use-toast";
@@ -74,8 +74,43 @@ export const WorkspaceLayout = () => {
     setIsHighlighter(!!highlighter);
   };
 
-  // Only render document viewer for the main workspace
-  const showDocumentViewer = !["/tasks", "/mind-map", "/ai-assistant", "/community"].includes(location.pathname);
+  // Memoize the main content to prevent unnecessary re-renders
+  const MainContent = useMemo(() => {
+    const showDocumentViewer = !["/tasks", "/mind-map", "/ai-assistant", "/community"].includes(location.pathname);
+
+    if (showDocumentViewer) {
+      return (
+        <main className="flex-1 p-6 overflow-auto">
+          <DocumentViewer 
+            file={selectedFile} 
+            selectedColor={selectedColor}
+            isHighlighter={isHighlighter}
+          />
+        </main>
+      );
+    }
+
+    return (
+      <main className="flex-1 p-6 overflow-auto">
+        {location.pathname === "/community" && <Community />}
+        {location.pathname === "/tasks" && (
+          <div className="h-full">
+            <TaskDashboard />
+          </div>
+        )}
+        {location.pathname === "/mind-map" && (
+          <div className="h-full">
+            <MindMapDashboard />
+          </div>
+        )}
+        {location.pathname === "/ai-assistant" && (
+          <div className="h-full">
+            <AIAssistant />
+          </div>
+        )}
+      </main>
+    );
+  }, [location.pathname, selectedFile, selectedColor, isHighlighter]);
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
@@ -86,34 +121,7 @@ export const WorkspaceLayout = () => {
         onFileSelect={handleFileSelect}
         onFileDelete={handleFileDelete}
       />
-      {showDocumentViewer ? (
-        <main className="flex-1 p-6 overflow-auto">
-          <DocumentViewer 
-            file={selectedFile} 
-            selectedColor={selectedColor}
-            isHighlighter={isHighlighter}
-          />
-        </main>
-      ) : (
-        <main className="flex-1 p-6 overflow-auto">
-          {location.pathname === "/community" && <Community />}
-          {location.pathname === "/tasks" && (
-            <div className="h-full">
-              <TaskDashboard />
-            </div>
-          )}
-          {location.pathname === "/mind-map" && (
-            <div className="h-full">
-              <MindMapDashboard />
-            </div>
-          )}
-          {location.pathname === "/ai-assistant" && (
-            <div className="h-full">
-              <AIAssistant />
-            </div>
-          )}
-        </main>
-      )}
+      {MainContent}
     </div>
   );
 };

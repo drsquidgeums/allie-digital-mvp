@@ -78,7 +78,7 @@ export const TaskDashboard = () => {
                   />
                 </Card>
                 <div className="space-y-4">
-                  <Card className="p-4 shadow-lg">
+                  <Card className="p-4 shadow-lg flex justify-center">
                     <Calendar
                       mode="single"
                       selected={date}
