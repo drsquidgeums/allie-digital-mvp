@@ -4,7 +4,7 @@ import { MindMapFlow } from './MindMapFlow';
 import { MindMapCreativeToolbar } from './MindMapCreativeToolbar';
 import { ColorOption } from './types';
 import { toast } from "sonner";
-import { NodeResizer } from '@xyflow/react';
+import { ReactFlowProvider } from '@xyflow/react';
 
 interface MindMapContainerProps {
   nodes: any[];
@@ -57,7 +57,6 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
       minHeight: '100px',
     };
 
-    // Apply specific styles based on shape
     switch (shape) {
       case 'circle':
         nodeStyle = {
@@ -132,7 +131,11 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   };
 
   return (
-    <div className="w-full h-[600px] bg-background border-none rounded-lg overflow-hidden flex flex-col">
+    <div 
+      className="w-full h-[600px] bg-background border-none rounded-lg overflow-hidden flex flex-col"
+      role="application"
+      aria-label="Mind map editor"
+    >
       <MindMapToolbar
         selectedColor={selectedColor}
         setSelectedColor={setSelectedColor}
@@ -147,14 +150,16 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
         colorOptions={colorOptions}
       />
       <div className="flex-1 min-h-0">
-        <MindMapFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          nodeTypes={nodeTypes}
-        />
+        <ReactFlowProvider>
+          <MindMapFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            nodeTypes={nodeTypes}
+          />
+        </ReactFlowProvider>
       </div>
       <div className="flex-shrink-0">
         <MindMapCreativeToolbar onShapeSelect={handleShapeSelect} />

@@ -5,7 +5,6 @@ import {
   MiniMap,
   Background,
   useReactFlow,
-  ReactFlowProvider,
 } from '@xyflow/react';
 
 interface MindMapFlowProps {
@@ -17,7 +16,7 @@ interface MindMapFlowProps {
   nodeTypes: any;
 }
 
-const MindMapFlowContent: React.FC<MindMapFlowProps> = ({
+export const MindMapFlow: React.FC<MindMapFlowProps> = ({
   nodes,
   edges,
   onNodesChange,
@@ -53,8 +52,8 @@ const MindMapFlowContent: React.FC<MindMapFlowProps> = ({
       onKeyDown={handleKeyDown}
       tabIndex={0}
       role="application"
-      aria-label="Mind map editor"
-      className="focus:outline-none focus:ring-2 focus:ring-primary"
+      aria-label="Mind map canvas"
+      className="focus:outline-none focus:ring-2 focus:ring-primary h-full"
     >
       <ReactFlow
         nodes={nodes}
@@ -65,7 +64,6 @@ const MindMapFlowContent: React.FC<MindMapFlowProps> = ({
         nodeTypes={nodeTypes}
         fitView
         className="dark:bg-background"
-        aria-label="Mind map canvas"
       >
         <Controls 
           className="dark:bg-muted dark:border-muted-foreground/20"
@@ -78,13 +76,5 @@ const MindMapFlowContent: React.FC<MindMapFlowProps> = ({
         <Background className="dark:bg-background" />
       </ReactFlow>
     </div>
-  );
-};
-
-export const MindMapFlow: React.FC<MindMapFlowProps> = (props) => {
-  return (
-    <ReactFlowProvider>
-      <MindMapFlowContent {...props} />
-    </ReactFlowProvider>
   );
 };
