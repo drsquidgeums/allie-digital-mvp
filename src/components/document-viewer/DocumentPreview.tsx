@@ -19,10 +19,11 @@ export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = fals
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pdfDoc, setPdfDoc] = useState<any>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!file && url) {
-      setContent(`<iframe src="${url}" style="width:100%; height:100vh; border:none;"></iframe>`);
+      setContent(`<iframe src="${url}" style="width:100%; height:100vh; border:none;" title="Document preview"></iframe>`);
       return;
     }
 
@@ -76,9 +77,21 @@ export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = fals
     loadDocument();
   }, [file, url, toast]);
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowRight' && currentPage < totalPages) {
+      setCurrentPage(prev => prev + 1);
+    } else if (e.key === 'ArrowLeft' && currentPage > 1) {
+      setCurrentPage(prev => prev - 1);
+    }
+  };
+
   if (!file && !url) {
     return (
-      <div className="h-full flex items-center justify-center">
+      <div 
+        className="h-full flex items-center justify-center"
+        role="status"
+        aria-label="No document loaded"
+      >
         <p className="text-muted-foreground">Upload a document or paste a URL to get started</p>
       </div>
     );
@@ -86,14 +99,25 @@ export const DocumentPreview = ({ file, url, selectedColor, isHighlighter = fals
 
   if (isLoading) {
     return (
-      <div className="h-full flex items-center justify-center">
+      <div 
+        className="h-full flex items-center justify-center"
+        role="status"
+        aria-label="Loading document"
+      >
         <p className="text-muted-foreground">Loading document...</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div 
+      className="flex flex-col h-full"
+      ref={previewRef}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      role="document"
+      aria-label={file ? `Document preview: ${file.name}` : 'Document preview'}
+    >
       {file && getFileType(file) === 'pdf' ? (
         <PdfViewer
           pdfDoc={pdfDoc}

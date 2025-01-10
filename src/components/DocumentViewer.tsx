@@ -25,6 +25,13 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
     handleDownload,
   } = useDocumentViewer();
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape') {
+      setUrl('');
+      e.currentTarget.blur();
+    }
+  };
+
   React.useEffect(() => {
     if (file) {
       const fileUrl = URL.createObjectURL(file);
@@ -48,7 +55,11 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
   };
 
   return (
-    <Card className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
+    <Card 
+      className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative"
+      role="region"
+      aria-label="Document viewer"
+    >
       <div className="p-4 border-b border-border">
         <div className="flex items-center gap-2">
           <DocumentToolbar
@@ -68,6 +79,8 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
             className="w-full"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
+            onKeyDown={handleKeyDown}
+            aria-label="Document URL input"
           />
         </div>
         <div className="h-full" ref={documentRef}>
@@ -85,6 +98,7 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
         className="hidden"
         accept=".pdf,.doc,.docx,.txt,.html"
         onChange={handleFileChange}
+        aria-hidden="true"
       />
     </Card>
   );

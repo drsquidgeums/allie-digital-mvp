@@ -75,37 +75,46 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     renderPage();
   }, [pdfDoc, currentPage]);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    canvas.addEventListener('mousedown', (e) => startDrawing(e, canvas));
-    canvas.addEventListener('mousemove', (e) => draw(e, canvas, selectedColor));
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseout', stopDrawing);
-
-    return () => {
-      canvas.removeEventListener('mousedown', (e) => startDrawing(e, canvas));
-      canvas.removeEventListener('mousemove', (e) => draw(e, canvas, selectedColor));
-      canvas.removeEventListener('mouseup', stopDrawing);
-      canvas.removeEventListener('mouseout', stopDrawing);
-    };
-  }, [selectedColor, isHighlighter, isHighlighting, currentPage]);
-
-  const handlePageChange = (direction: 'prev' | 'next') => {
-    const newPage = direction === 'next' 
-      ? Math.min(currentPage + 1, totalPages)
-      : Math.max(currentPage - 1, 1);
-    
-    setCurrentPage(newPage);
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'PageDown':
+        if (currentPage < totalPages) {
+          setCurrentPage(currentPage + 1);
+        }
+        break;
+      case 'ArrowLeft':
+      case 'PageUp':
+        if (currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+        }
+        break;
+      case 'Home':
+        setCurrentPage(1);
+        break;
+      case 'End':
+        setCurrentPage(totalPages);
+        break;
+    }
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div 
+      className="flex flex-col h-full"
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      role="document"
+      aria-label={`PDF document, page ${currentPage} of ${totalPages}`}
+    >
       <PdfControls
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={handlePageChange}
+        onPageChange={(direction) => {
+          const newPage = direction === 'next' 
+            ? Math.min(currentPage + 1, totalPages)
+            : Math.max(currentPage - 1, 1);
+          setCurrentPage(newPage);
+        }}
         isHighlighting={isHighlighting}
         onToggleHighlighting={toggleHighlighting}
       />
@@ -122,10 +131,14 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
           <canvas 
             ref={canvasRef} 
             className="w-full cursor-crosshair mx-auto mb-24"
+            tabIndex={0}
+            role="application"
+            aria-label="PDF canvas"
           />
           <div 
             ref={annotationLayerRef}
             className="absolute top-0 left-0 w-full h-full pointer-events-none"
+            aria-hidden="true"
           />
         </div>
       </div>
