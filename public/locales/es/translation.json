@@ -18,5 +18,9 @@
     "loading": "Cargando...",
     "error": "Ocurrió un error",
     "success": "Éxito"
+  },
+  "tasks": {
+    "taskAdded": "Nueva tarea creada exitosamente",
+    "pointsEarned": "¡Ganaste {{points}} puntos por completar esta tarea!"
   }
 }

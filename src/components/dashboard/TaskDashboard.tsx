@@ -6,6 +6,7 @@ import { TaskListCard } from "./TaskListCard";
 import { useToast } from "@/hooks/use-toast";
 import { Sidebar } from "@/components/Sidebar";
 import { LanguageSwitcher } from "../LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 interface Task {
   id: string;
@@ -19,6 +20,7 @@ export const TaskDashboard = () => {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [tasks, setTasks] = React.useState<Task[]>([]);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const handleAddTask = (text: string) => {
     const taskDate = date || new Date();
@@ -30,6 +32,10 @@ export const TaskDashboard = () => {
       points: 10
     };
     setTasks([...tasks, newTask]);
+    toast({
+      title: t('common.success'),
+      description: t('tasks.taskAdded'),
+    });
   };
 
   const handleToggleTask = (id: string) => {
@@ -38,8 +44,8 @@ export const TaskDashboard = () => {
         const newStatus = !task.completed;
         if (newStatus) {
           toast({
-            title: "Points earned!",
-            description: `You earned ${task.points} points for completing this task!`,
+            title: t('common.success'),
+            description: t('tasks.pointsEarned', { points: task.points }),
           });
         }
         return { ...task, completed: newStatus };

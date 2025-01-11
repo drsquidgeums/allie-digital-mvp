@@ -18,5 +18,9 @@
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success"
+  },
+  "tasks": {
+    "taskAdded": "New task has been created successfully",
+    "pointsEarned": "You earned {{points}} points for completing this task!"
   }
 }
