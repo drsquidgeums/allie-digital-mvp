@@ -8,56 +8,54 @@
     --popover-foreground: 25 32% 13%;
     --primary: 25 32% 13%;
     --primary-foreground: 35 25% 96%;
-    --secondary: 35 15% 90%;
+    /* Enhanced contrast for secondary elements */
+    --secondary: 35 15% 80%;
     --secondary-foreground: 25 32% 13%;
-    --muted: 35 15% 85%;
-    --muted-foreground: 25 32% 23%;
-    --accent: 35 15% 85%;
+    /* Improved muted contrast */
+    --muted: 35 15% 75%;
+    --muted-foreground: 25 32% 18%;
+    --accent: 35 15% 75%;
     --accent-foreground: 25 32% 13%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 35 25% 96%;
-    --border: 25 32% 23%;
-    --input: 35 15% 85%;
-    --ring: 25 32% 23%;
+    /* Enhanced border visibility */
+    --border: 25 32% 33%;
+    --input: 35 15% 75%;
+    --ring: 25 32% 33%;
 
     /* Enhanced contrast colors for sepia mode */
-    --chat-user-bg: 25 32% 13%;
+    --chat-user-bg: 25 32% 23%;
     --chat-user-text: 35 25% 96%;
-    --chat-assistant-bg: 35 15% 85%;
+    --chat-assistant-bg: 35 15% 75%;
     --chat-assistant-text: 25 32% 13%;
-    --loading-indicator: 25 32% 23%;
-    --focus-ring: 25 32% 13%;
-    --hover-bg: 35 15% 80%;
+    --loading-indicator: 25 32% 33%;
+    --focus-ring: 25 32% 23%;
+    --hover-bg: 35 15% 70%;
 
     /* Style updates for buttons in sepia mode */
     button[class*="h-9 w-9"] {
       background-color: hsl(35 25% 75%);
-      border: 1px solid hsl(35 25% 45%);
+      border: 1px solid hsl(35 25% 35%);
     }
 
     button[class*="h-9 w-9"]:hover {
-      background-color: hsl(35 25% 65%);
-      border-color: hsl(35 25% 35%);
+      background-color: hsl(35 25% 55%);
+      border-color: hsl(35 25% 25%);
     }
 
     /* Calendar date selection in sepia mode */
     button[class*="h-9 w-9"][aria-selected="true"] {
-      background-color: hsl(35 25% 65%) !important;
-      color: hsl(35 25% 25%) !important;
+      background-color: hsl(35 25% 55%) !important;
+      color: hsl(35 25% 15%) !important;
     }
 
-    /* AI Assistant chat styles in sepia mode */
-    .bg-muted.self-start {
-      background-color: hsl(35 25% 75%);  /* Matches the background color */
-    }
-
-    /* Ensure icons have good contrast in sepia mode */
+    /* Ensure icons have good contrast */
     button[class*="h-9 w-9"] svg {
-      color: hsl(35 25% 25%);
+      color: hsl(35 25% 15%);
     }
 
     button[class*="h-9 w-9"]:hover svg {
-      color: hsl(35 25% 15%);
+      color: hsl(35 25% 5%);
     }
   }
 }
