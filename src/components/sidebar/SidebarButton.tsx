@@ -21,7 +21,7 @@ export const SidebarButton = ({ icon: Icon, label, isActive, onClick }: SidebarB
     <Button 
       variant={isActive ? "secondary" : "ghost"}
       className={`w-full flex items-center justify-start gap-2 px-2 transition-all duration-200 ease-in-out
-        ${isActive ? 'ring-2 ring-primary ring-offset-2' : 'hover:ring-1 hover:ring-primary/50'}
+        ${isActive ? 'ring-2 ring-primary ring-offset-2 dark:ring-offset-workspace-dark' : 'hover:ring-1 hover:ring-primary/50'}
       `}
       onClick={onClick}
       onKeyDown={handleKeyDown}
