@@ -3,7 +3,7 @@ import { DocumentViewer } from "@/components/DocumentViewer";
 import { FileList } from "@/components/FileList";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
-export const Index = () => {
+const Index = () => {
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [uploadedFiles, setUploadedFiles] = React.useState<File[]>([]);
   const [selectedColor, setSelectedColor] = React.useState("#000000");
@@ -43,3 +43,5 @@ export const Index = () => {
     </div>
   );
 };
+
+export { Index };

@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ThemeProvider as NextThemeProvider } from "next-themes";
-import Index from "./pages/Index";
+import { Index } from "./pages/Index";
 import { TaskDashboard } from "./components/dashboard/TaskDashboard";
 import AIAssistant from "./pages/AIAssistant";
 import MindMapDashboard from "./pages/MindMapDashboard";
