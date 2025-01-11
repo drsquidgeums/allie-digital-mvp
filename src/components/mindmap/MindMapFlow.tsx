@@ -95,14 +95,20 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
         nodeTypes={nodeTypes}
         fitView
         className="dark:bg-background"
+        aria-label="Mind map flow diagram"
       >
         <Controls 
           className="dark:bg-muted dark:border-muted-foreground/20"
           aria-label="Mind map controls"
+          showInteractive={false}
         />
         <MiniMap 
           className="dark:bg-muted"
           aria-label="Mind map overview"
+          nodeColor={(node) => {
+            return node.style?.background || 'hsl(var(--muted))';
+          }}
+          maskColor="rgba(0, 0, 0, 0.1)"
         />
         <Background className="dark:bg-background" />
       </ReactFlow>

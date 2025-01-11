@@ -25,19 +25,19 @@ export const MindMapCreativeToolbar = ({
   onShapeSelect
 }: MindMapCreativeToolbarProps) => {
   const shapes = [
-    { id: 'circle', icon: CircleDot, label: 'Circle Node' },
-    { id: 'square', icon: Square, label: 'Square Node' },
-    { id: 'triangle', icon: Triangle, label: 'Triangle Node' },
-    { id: 'diamond', icon: Diamond, label: 'Diamond Node' },
-    { id: 'hexagon', icon: Hexagon, label: 'Hexagon Node' },
-    { id: 'star', icon: Star, label: 'Star Node' },
+    { id: 'circle', icon: CircleDot, label: 'Circle Node', description: 'Add a circular node' },
+    { id: 'square', icon: Square, label: 'Square Node', description: 'Add a square node' },
+    { id: 'triangle', icon: Triangle, label: 'Triangle Node', description: 'Add a triangular node' },
+    { id: 'diamond', icon: Diamond, label: 'Diamond Node', description: 'Add a diamond node' },
+    { id: 'hexagon', icon: Hexagon, label: 'Hexagon Node', description: 'Add a hexagonal node' },
+    { id: 'star', icon: Star, label: 'Star Node', description: 'Add a star node' },
   ];
 
   const tools = [
-    { id: 'text', icon: Type, label: 'Text Node' },
-    { id: 'image', icon: Image, label: 'Image Node' },
-    { id: 'sticker', icon: Sticker, label: 'Sticker Node' },
-    { id: 'custom', icon: Palette, label: 'Custom Node' },
+    { id: 'text', icon: Type, label: 'Text Node', description: 'Add a text node' },
+    { id: 'image', icon: Image, label: 'Image Node', description: 'Add an image node' },
+    { id: 'sticker', icon: Sticker, label: 'Sticker Node', description: 'Add a sticker node' },
+    { id: 'custom', icon: Palette, label: 'Custom Node', description: 'Add a custom node' },
   ];
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, shape: string, label: string) => {
@@ -55,7 +55,7 @@ export const MindMapCreativeToolbar = ({
     >
       <div className="flex items-center space-x-2">
         <div className="flex items-center space-x-1">
-          {shapes.map(({ id, icon: Icon, label }) => (
+          {shapes.map(({ id, icon: Icon, label, description }) => (
             <Tooltip key={id}>
               <TooltipTrigger asChild>
                 <Button 
@@ -64,12 +64,12 @@ export const MindMapCreativeToolbar = ({
                   onClick={() => onShapeSelect(id, label)}
                   onKeyDown={(e) => handleKeyDown(e, id, label)}
                   className="h-9 w-9 focus:ring-2 focus:ring-ring"
-                  aria-label={`Add ${label}`}
+                  aria-label={description}
                 >
                   <Icon className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Add {label}</TooltipContent>
+              <TooltipContent>{description}</TooltipContent>
             </Tooltip>
           ))}
         </div>
@@ -77,7 +77,7 @@ export const MindMapCreativeToolbar = ({
         <Separator orientation="vertical" className="h-6" />
 
         <div className="flex items-center space-x-1">
-          {tools.map(({ id, icon: Icon, label }) => (
+          {tools.map(({ id, icon: Icon, label, description }) => (
             <Tooltip key={id}>
               <TooltipTrigger asChild>
                 <Button 
@@ -86,12 +86,12 @@ export const MindMapCreativeToolbar = ({
                   onClick={() => onShapeSelect(id, label)}
                   onKeyDown={(e) => handleKeyDown(e, id, label)}
                   className="h-9 w-9 focus:ring-2 focus:ring-ring"
-                  aria-label={`Add ${label}`}
+                  aria-label={description}
                 >
                   <Icon className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Add {label}</TooltipContent>
+              <TooltipContent>{description}</TooltipContent>
             </Tooltip>
           ))}
         </div>

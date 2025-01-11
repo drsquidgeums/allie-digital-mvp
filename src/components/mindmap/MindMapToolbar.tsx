@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Network, Download, Plus, Trash2 } from "lucide-react";
 import { ColorOption } from './types';
 import { ColorPicker } from '../ColorPicker';
+import { toast } from "sonner";
 
 interface MindMapToolbarProps {
   selectedColor: string;
@@ -36,6 +37,7 @@ export const MindMapToolbar = ({
     if (e.key === 'Enter') {
       e.preventDefault();
       onAddNode();
+      toast("Node added successfully");
     } else if (e.key === 'Escape') {
       e.preventDefault();
       setNewNodeText('');
@@ -48,6 +50,7 @@ export const MindMapToolbar = ({
       e.preventDefault();
       const select = e.target as HTMLSelectElement;
       setSelectedColor(select.value);
+      toast(`Color changed to ${select.options[select.selectedIndex].text}`);
     }
   };
 
@@ -65,7 +68,10 @@ export const MindMapToolbar = ({
         <div className="flex items-center gap-2 mr-4">
           <select
             value={selectedColor}
-            onChange={(e) => setSelectedColor(e.target.value)}
+            onChange={(e) => {
+              setSelectedColor(e.target.value);
+              toast(`Color changed to ${e.target.options[e.target.selectedIndex].text}`);
+            }}
             onKeyDown={handleColorKeyDown}
             className="h-9 px-3 py-1 rounded-md border border-input bg-background text-foreground text-sm pr-8 appearance-none focus:outline-none focus:ring-2 focus:ring-ring"
             aria-label="Select node color"
@@ -80,7 +86,10 @@ export const MindMapToolbar = ({
             <ColorPicker
               label="Custom color"
               value={customColor}
-              onChange={setCustomColor}
+              onChange={(color) => {
+                setCustomColor(color);
+                toast("Custom color updated");
+              }}
             />
           )}
         </div>
@@ -93,7 +102,10 @@ export const MindMapToolbar = ({
           aria-label="New node text"
         />
         <Button 
-          onClick={onAddNode} 
+          onClick={() => {
+            onAddNode();
+            toast("Node added successfully");
+          }} 
           size="icon" 
           variant="outline" 
           className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
@@ -102,7 +114,10 @@ export const MindMapToolbar = ({
           <Plus className="w-4 h-4 text-foreground" aria-hidden="true" />
         </Button>
         <Button 
-          onClick={onExportJpg} 
+          onClick={() => {
+            onExportJpg();
+            toast("Mind map exported as JPG");
+          }} 
           variant="outline" 
           size="icon" 
           className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
@@ -111,7 +126,10 @@ export const MindMapToolbar = ({
           <Download className="w-4 h-4 text-foreground" aria-hidden="true" />
         </Button>
         <Button 
-          onClick={onExportJson} 
+          onClick={() => {
+            onExportJson();
+            toast("Mind map exported as JSON");
+          }} 
           variant="outline" 
           size="icon" 
           className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
@@ -120,7 +138,10 @@ export const MindMapToolbar = ({
           <span className="text-[10px] font-medium">JSON</span>
         </Button>
         <Button 
-          onClick={onClear} 
+          onClick={() => {
+            onClear();
+            toast("Canvas cleared");
+          }} 
           variant="outline" 
           size="icon" 
           className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"

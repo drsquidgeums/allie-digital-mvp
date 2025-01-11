@@ -65,6 +65,10 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
       <div 
         className="w-full h-full flex items-center justify-center"
         onDoubleClick={handleDoubleClick}
+        style={{
+          backgroundColor: data.color,
+          color: getContrastColor(data.color),
+        }}
       >
         {isEditing ? (
           <input
@@ -79,7 +83,7 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
             aria-label="Edit node text"
           />
         ) : (
-          <span className="text-sm">{label}</span>
+          <span className="text-sm font-medium">{label}</span>
         )}
       </div>
       <Handle 
@@ -91,3 +95,42 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
     </div>
   );
 };
+
+// Helper function to ensure text contrast
+function getContrastColor(bgColor: string): string {
+  // Convert background color to RGB
+  let color = bgColor;
+  if (color.startsWith('hsl')) {
+    // Convert HSL to RGB if needed
+    const hsl = color.match(/\d+/g)?.map(Number);
+    if (hsl) {
+      const h = hsl[0];
+      const s = hsl[1] / 100;
+      const l = hsl[2] / 100;
+      // HSL to RGB conversion
+      const c = (1 - Math.abs(2 * l - 1)) * s;
+      const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+      const m = l - c / 2;
+      let r = 0, g = 0, b = 0;
+      if (h < 60) { r = c; g = x; }
+      else if (h < 120) { r = x; g = c; }
+      else if (h < 180) { g = c; b = x; }
+      else if (h < 240) { g = x; b = c; }
+      else if (h < 300) { r = x; b = c; }
+      else { r = c; b = x; }
+      color = `rgb(${Math.round((r + m) * 255)}, ${Math.round((g + m) * 255)}, ${Math.round((b + m) * 255)})`;
+    }
+  }
+  
+  // Extract RGB values
+  const rgb = color.match(/\d+/g)?.map(Number);
+  if (!rgb) return '#000000';
+  
+  // Calculate relative luminance
+  const luminance = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255;
+  
+  // Return black or white based on luminance
+  return luminance > 0.5 ? '#000000' : '#FFFFFF';
+}
+
+export default ShapeNode;
