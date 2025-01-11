@@ -1,6 +1,6 @@
 import React from "react";
 import { MindMap } from "@/components/MindMap";
-import WorkspaceLayout from "@/components/WorkspaceLayout";
+import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 
 const MindMapDashboard = React.memo(() => {
   return (

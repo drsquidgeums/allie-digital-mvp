@@ -5,7 +5,9 @@ import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 const CommunityPage = () => {
   return (
     <div>
-      <WorkspaceLayout />
+      <WorkspaceLayout>
+        <Community />
+      </WorkspaceLayout>
     </div>
   );
 };

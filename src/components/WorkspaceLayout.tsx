@@ -6,7 +6,7 @@ interface WorkspaceLayoutProps {
   children: React.ReactNode;
 }
 
-const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) => {
+export const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) => {
   const memoizedSidebar = useMemo(() => (
     <Sidebar 
       onFileUpload={() => {}} 
@@ -34,5 +34,3 @@ const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) => {
 });
 
 WorkspaceLayout.displayName = "WorkspaceLayout";
-
-export default WorkspaceLayout;
