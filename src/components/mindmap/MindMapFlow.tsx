@@ -5,6 +5,7 @@ import {
   MiniMap,
   Background,
   useReactFlow,
+  Node,
 } from '@xyflow/react';
 
 interface MindMapFlowProps {
@@ -78,6 +79,10 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
     }
   }, [nodes, onNodesChange, fitView]);
 
+  const getNodeColor = (node: Node) => {
+    return (node.style?.background as string) || 'hsl(var(--muted))';
+  };
+
   return (
     <div 
       onKeyDown={handleKeyDown}
@@ -105,9 +110,7 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
         <MiniMap 
           className="dark:bg-muted"
           aria-label="Mind map overview"
-          nodeColor={(node) => {
-            return node.style?.background || 'hsl(var(--muted))';
-          }}
+          nodeColor={getNodeColor}
           maskColor="rgba(0, 0, 0, 0.1)"
         />
         <Background className="dark:bg-background" />
