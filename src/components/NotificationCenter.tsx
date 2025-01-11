@@ -33,7 +33,7 @@ export const NotificationCenter = () => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-card text-card-foreground border border-border shadow-lg backdrop-blur-sm">
         <DialogHeader>
-          <DialogTitle className="text-foreground">Notifications</DialogTitle>
+          <DialogTitle className="text-foreground font-semibold">Notifications</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 max-h-[60vh] overflow-y-auto">
           <NotificationList 
