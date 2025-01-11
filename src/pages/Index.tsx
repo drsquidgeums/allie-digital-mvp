@@ -1,9 +1,12 @@
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
+import { DocumentViewer } from "@/components/DocumentViewer";
 
 const Index = () => {
   return (
     <div>
-      <WorkspaceLayout />
+      <WorkspaceLayout>
+        <DocumentViewer />
+      </WorkspaceLayout>
     </div>
   );
 };
