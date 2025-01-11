@@ -1,34 +1,38 @@
 @layer base {
   .dark {
+    /* Enhanced Dark Mode Colors */
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
+    /* Increased contrast for primary elements */
     --primary: 0 0% 98%;
     --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
+    /* Enhanced secondary colors */
+    --secondary: 240 3.7% 20%;
     --secondary-foreground: 0 0% 98%;
-    /* Increased contrast for muted text */
-    --muted: 240 3.7% 15.9%;
+    /* Improved muted contrast */
+    --muted: 240 3.7% 20%;
     --muted-foreground: 240 5% 94.9%;
-    --accent: 240 3.7% 15.9%;
+    /* Enhanced accent visibility */
+    --accent: 240 3.7% 20%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     /* Enhanced border visibility */
-    --border: 240 3.7% 25.9%;
-    --input: 240 3.7% 15.9%;
+    --border: 240 3.7% 30%;
+    --input: 240 3.7% 20%;
     --ring: 240 4.9% 93.9%;
 
     /* Enhanced contrast colors for dark mode */
     --chat-user-bg: 0 0% 98%;
     --chat-user-text: 240 10% 3.9%;
-    --chat-assistant-bg: 240 3.7% 25.9%;
+    --chat-assistant-bg: 240 3.7% 30%;
     --chat-assistant-text: 0 0% 98%;
     --loading-indicator: 240 5% 94.9%;
     --focus-ring: 0 0% 98%;
-    --hover-bg: 240 3.7% 25.9%;
+    --hover-bg: 240 3.7% 25%;
   }
 }
