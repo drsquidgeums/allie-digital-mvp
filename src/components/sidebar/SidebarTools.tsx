@@ -5,12 +5,11 @@ import {
   Eye,
   Focus,
   Paintbrush,
-  FolderOpen,
   Users,
   LogOut
 } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface SidebarToolsProps {
   activeComponent: string | null;
@@ -19,6 +18,7 @@ interface SidebarToolsProps {
 
 export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToolsProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
   
   const tools = [
     { id: "pomodoro", icon: Clock, label: "Pomodoro Timer" },
@@ -30,9 +30,6 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
 
   const handleToolClick = (toolId: string) => {
     setActiveComponent(toolId);
-    if (toolId === "files") {
-      navigate('/');
-    }
   };
 
   const handleLogout = () => {
@@ -59,7 +56,7 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
         <SidebarButton
           icon={Users}
           label="Community"
-          isActive={activeComponent === "community"}
+          isActive={location.pathname === '/community'}
           onClick={handleCommunityClick}
         />
         <SidebarButton

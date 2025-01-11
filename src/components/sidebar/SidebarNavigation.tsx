@@ -1,7 +1,7 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Monitor, CheckSquare, Brain, Bot } from "lucide-react";
+import { SidebarButton } from "./SidebarButton";
 
 interface SidebarNavigationProps {
   activeComponent: string | null;
@@ -10,6 +10,7 @@ interface SidebarNavigationProps {
 
 export const SidebarNavigation = React.memo(({ activeComponent, setActiveComponent }: SidebarNavigationProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const navigationItems = [
     {
@@ -41,22 +42,16 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
   return (
     <div className="space-y-2">
       {navigationItems.map(({ id, label, icon: Icon, path }) => (
-        <Button 
+        <SidebarButton
           key={id}
-          variant={activeComponent === id ? "secondary" : "ghost"}
-          className={`w-full flex items-center justify-start gap-2 px-2 transition-all duration-200 ease-in-out
-            ${activeComponent === id ? 'ring-2 ring-primary ring-offset-2 dark:ring-offset-workspace-dark' : 'hover:ring-1 hover:ring-primary/50'}
-          `}
+          icon={Icon}
+          label={label}
+          isActive={location.pathname === path}
           onClick={() => {
             setActiveComponent(id);
             navigate(path);
           }}
-          style={{ fontWeight: 'inherit' }}
-          aria-current={activeComponent === id ? "page" : undefined}
-        >
-          <Icon className="h-4 w-4" aria-hidden="true" />
-          <span>{label}</span>
-        </Button>
+        />
       ))}
     </div>
   );
