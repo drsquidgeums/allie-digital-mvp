@@ -5,7 +5,11 @@ import { ColorListProps } from "./types";
 
 export const ColorList = ({ colors, selectedColor, onColorChange }: ColorListProps) => {
   return (
-    <div className="grid grid-cols-1 gap-2">
+    <div 
+      className="grid grid-cols-1 gap-2"
+      role="radiogroup"
+      aria-label="Irlen overlay color options"
+    >
       {colors.map((color) => (
         <ColorOption
           key={color.name}
@@ -20,6 +24,7 @@ export const ColorList = ({ colors, selectedColor, onColorChange }: ColorListPro
         variant="outline" 
         className="w-full dark:bg-[#333333] dark:text-[#FAFAFA] dark:hover:bg-[#444444] dark:border dark:border-white/20"
         disabled={!selectedColor}
+        aria-label="Remove overlay"
       >
         Remove Overlay
       </Button>

@@ -25,7 +25,7 @@ export const IrlenOverlay = () => {
     
     toast({
       title: color ? "Overlay applied" : "Overlay removed",
-      description: color ? `Applied ${color} overlay to the workspace` : "Removed overlay from the workspace",
+      description: color ? `Applied ${IRLEN_COLORS.find(c => c.value === color)?.name || ''} overlay to improve readability` : "Removed overlay from the workspace",
     });
   };
 
@@ -42,18 +42,27 @@ export const IrlenOverlay = () => {
         <Button
           variant="outline"
           size="sm"
-          className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground"
-          title="Irlen Overlay"
+          className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground relative"
+          aria-label={`Irlen Overlay ${overlayColor ? 'active' : 'inactive'}`}
         >
           <Glasses className="h-4 w-4" />
+          {overlayColor && (
+            <div 
+              className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"
+              role="status"
+              aria-label="Overlay active"
+            />
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent 
         className="w-48 bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]" 
         align="end"
+        role="dialog"
+        aria-label="Irlen Overlay Settings"
       >
         <div className="space-y-2">
-          <div className="font-medium text-sm">Irlen Overlay</div>
+          <div className="font-medium text-sm mb-2">Irlen Overlay</div>
           <ColorList
             colors={IRLEN_COLORS}
             selectedColor={overlayColor}
