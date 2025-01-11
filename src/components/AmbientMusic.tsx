@@ -32,33 +32,59 @@ export const AmbientMusic = () => {
         <Button
           variant="outline"
           size="sm"
-          className={`h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground ${
-            isPlaying ? "text-primary" : ""
+          className={`h-9 w-9 relative bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+            isPlaying ? "text-primary ring-2 ring-primary" : ""
           }`}
-          title="Ambient Music"
+          aria-label={`Ambient Music ${isPlaying ? 'Playing' : 'Paused'}`}
         >
-          <Music className="h-4 w-4" />
+          <Music className="h-4 w-4" aria-hidden="true" />
+          {isPlaying && (
+            <div 
+              className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"
+              role="status"
+              aria-label="Music playing"
+            />
+          )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-64 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]" align="end">
+      <PopoverContent 
+        className="w-64 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]" 
+        align="end"
+        role="dialog"
+        aria-label="Ambient Music Settings"
+      >
         <div className="space-y-4">
-          <div className="font-medium text-sm">Ambient Music</div>
+          <div className="font-medium text-sm mb-2">Ambient Music</div>
           <RadioGroup
             value={selectedMusic}
             onValueChange={handleMusicSelection}
             className="space-y-2"
+            aria-label="Select background music"
           >
             {MUSIC_OPTIONS.map((option) => (
               <div key={option.id} className="flex items-center space-x-2">
-                <RadioGroupItem value={option.id} id={option.id} />
-                <Label htmlFor={option.id}>{option.name}</Label>
+                <RadioGroupItem 
+                  value={option.id} 
+                  id={option.id}
+                  aria-label={option.name}
+                />
+                <Label 
+                  htmlFor={option.id}
+                  className="flex-1 text-left cursor-pointer"
+                >
+                  {option.name}
+                </Label>
               </div>
             ))}
           </RadioGroup>
           <Button
             onClick={handlePlayToggle}
-            className="w-full"
-            variant={isPlaying ? "destructive" : "default"}
+            className={`w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+              isPlaying 
+                ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground" 
+                : "bg-primary hover:bg-primary/90 text-primary-foreground"
+            }`}
+            aria-label={isPlaying ? "Stop music playback" : "Start music playback"}
           >
             {isPlaying ? "Stop Music" : "Play Music"}
           </Button>
