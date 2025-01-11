@@ -1,5 +1,4 @@
 import React from "react";
-import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ThemeProvider } from "./ThemeProvider";
 import { Input } from "@/components/ui/input";
@@ -45,7 +44,7 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
   };
 
   return (
-    <Card 
+    <div 
       className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative"
       role="region"
       aria-label="Document viewer"
@@ -109,6 +108,6 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
         }}
         aria-hidden="true"
       />
-    </Card>
+    </div>
   );
 };
