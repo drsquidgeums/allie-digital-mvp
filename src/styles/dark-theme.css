@@ -10,23 +10,25 @@
     --primary-foreground: 240 5.9% 10%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
+    /* Increased contrast for muted text */
     --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 84.9%;
+    --muted-foreground: 240 5% 94.9%;
     --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
+    /* Enhanced border visibility */
+    --border: 240 3.7% 25.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --ring: 240 4.9% 93.9%;
 
     /* Enhanced contrast colors for dark mode */
     --chat-user-bg: 0 0% 98%;
     --chat-user-text: 240 10% 3.9%;
-    --chat-assistant-bg: 240 3.7% 15.9%;
+    --chat-assistant-bg: 240 3.7% 25.9%;
     --chat-assistant-text: 0 0% 98%;
-    --loading-indicator: 240 5% 84.9%;
+    --loading-indicator: 240 5% 94.9%;
     --focus-ring: 0 0% 98%;
-    --hover-bg: 240 3.7% 20.9%;
+    --hover-bg: 240 3.7% 25.9%;
   }
 }
