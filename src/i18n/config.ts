@@ -8,13 +8,19 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'en',
+    fallbackLng: {
+      'en-GB': ['en'],
+      'en-US': ['en'],
+      'default': ['en']
+    },
+    supportedLngs: ['en', 'es'],
+    load: 'languageOnly', // This will convert 'en-GB' to 'en'
     debug: true,
     interpolation: {
       escapeValue: false,
     },
     backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json',
+      loadPath: '/locales/{{lng}}/translation.json',
     },
   });
 
