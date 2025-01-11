@@ -1,0 +1,26 @@
+{
+  "navigation": {
+    "fileUploader": "Datei-Uploader",
+    "tasks": "Aufgabenplaner",
+    "aiAssistant": "KI-Assistent",
+    "mindMap": "Mind Map",
+    "community": "Community"
+  },
+  "tools": {
+    "pomodoro": "Pomodoro-Timer",
+    "tts": "Text-zu-Sprache",
+    "bionic": "Bionic Reader",
+    "color": "Farbwerkzeug",
+    "focus": "Fokusmodus"
+  },
+  "common": {
+    "logout": "Abmelden",
+    "loading": "Lädt...",
+    "error": "Ein Fehler ist aufgetreten",
+    "success": "Erfolgreich"
+  },
+  "tasks": {
+    "taskAdded": "Neue Aufgabe wurde erfolgreich erstellt",
+    "pointsEarned": "Du hast {{points}} Punkte für das Abschließen dieser Aufgabe erhalten!"
+  }
+}

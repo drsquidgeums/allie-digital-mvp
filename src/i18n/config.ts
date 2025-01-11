@@ -8,14 +8,9 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: {
-      'en-GB': ['en'],
-      'en-US': ['en'],
-      'default': ['en']
-    },
-    supportedLngs: ['en', 'es'],
-    load: 'languageOnly', // This will convert 'en-GB' to 'en'
-    debug: true,
+    fallbackLng: 'en',
+    supportedLngs: ['en', 'es', 'de'],
+    debug: false,
     interpolation: {
       escapeValue: false,
     },
@@ -24,7 +19,8 @@ i18n
     },
     detection: {
       order: ['localStorage', 'navigator'],
-      caches: ['localStorage']
+      caches: ['localStorage'],
+      lookupLocalStorage: 'i18nextLng'
     }
   });
 

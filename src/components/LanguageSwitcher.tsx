@@ -14,13 +14,13 @@ export const LanguageSwitcher = () => {
 
   const languages = [
     { code: 'en', name: 'English' },
-    { code: 'es', name: 'Español' }
+    { code: 'es', name: 'Español' },
+    { code: 'de', name: 'Deutsch' }
   ];
 
   const handleLanguageChange = (value: string) => {
+    localStorage.setItem('i18nextLng', value);
     i18n.changeLanguage(value);
-    // Force a reload of translations
-    window.location.reload();
   };
 
   return (
