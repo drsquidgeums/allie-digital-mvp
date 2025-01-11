@@ -1,0 +1,22 @@
+{
+  "navigation": {
+    "fileUploader": "File Uploader",
+    "tasks": "Task Planner",
+    "aiAssistant": "AI Assistant",
+    "mindMap": "Mind Map",
+    "community": "Community"
+  },
+  "tools": {
+    "pomodoro": "Pomodoro Timer",
+    "tts": "Text-to-Speech",
+    "bionic": "Bionic Reader",
+    "color": "Colour Tool",
+    "focus": "Focus Mode"
+  },
+  "common": {
+    "logout": "Logout",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success"
+  }
+}

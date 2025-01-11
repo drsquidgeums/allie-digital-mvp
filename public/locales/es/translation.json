@@ -1,0 +1,22 @@
+{
+  "navigation": {
+    "fileUploader": "Cargador de archivos",
+    "tasks": "Planificador de tareas",
+    "aiAssistant": "Asistente IA",
+    "mindMap": "Mapa mental",
+    "community": "Comunidad"
+  },
+  "tools": {
+    "pomodoro": "Temporizador Pomodoro",
+    "tts": "Texto a voz",
+    "bionic": "Lector biónico",
+    "color": "Herramienta de color",
+    "focus": "Modo concentración"
+  },
+  "common": {
+    "logout": "Cerrar sesión",
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "success": "Éxito"
+  }
+}
