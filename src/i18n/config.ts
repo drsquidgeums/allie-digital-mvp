@@ -22,6 +22,10 @@ i18n
     backend: {
       loadPath: '/locales/{{lng}}/translation.json',
     },
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage']
+    }
   });
 
 export default i18n;
