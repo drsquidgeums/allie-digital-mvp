@@ -5,6 +5,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { TaskListCard } from "./TaskListCard";
 import { useToast } from "@/hooks/use-toast";
 import { Sidebar } from "@/components/Sidebar";
+import { LanguageSwitcher } from "../LanguageSwitcher";
 
 interface Task {
   id: string;
@@ -64,6 +65,9 @@ export const TaskDashboard = () => {
         onFileDelete={() => {}}
       />
       <main className="flex-1 p-6 overflow-auto">
+        <div className="flex justify-end mb-4">
+          <LanguageSwitcher />
+        </div>
         <Card className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
           <div className="container mx-auto py-4 px-4">
             <div className="flex flex-col space-y-4">
