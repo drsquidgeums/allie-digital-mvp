@@ -20,15 +20,16 @@ export const SidebarButton = ({ icon: Icon, label, isActive, onClick }: SidebarB
   return (
     <Button 
       variant={isActive ? "secondary" : "ghost"}
-      className="w-full flex items-center justify-start gap-2 px-2 focus:ring-2 focus:ring-primary focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 ease-in-out"
+      className={`w-full flex items-center justify-start gap-2 px-2 transition-all duration-200 ease-in-out
+        ${isActive ? 'ring-2 ring-primary ring-offset-2' : 'hover:ring-1 hover:ring-primary/50'}
+      `}
       onClick={onClick}
       onKeyDown={handleKeyDown}
       role="menuitem"
       aria-current={isActive ? "page" : undefined}
-      style={{ fontWeight: 'inherit' }}
     >
-      <Icon className="h-4 w-4" aria-hidden="true" style={{ fontWeight: 'inherit' }} />
-      <span style={{ fontWeight: 'inherit' }}>{label}</span>
+      <Icon className="h-4 w-4" aria-hidden="true" />
+      <span>{label}</span>
     </Button>
   );
 };
