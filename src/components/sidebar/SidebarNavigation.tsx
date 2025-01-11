@@ -43,8 +43,10 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       {navigationItems.map(({ id, label, icon: Icon, path }) => (
         <Button 
           key={id}
-          variant="ghost"
-          className="w-full flex items-center justify-start gap-2 px-2 focus:ring-2 focus:ring-primary focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 ease-in-out"
+          variant={activeComponent === id ? "secondary" : "ghost"}
+          className={`w-full flex items-center justify-start gap-2 px-2 transition-all duration-200 ease-in-out
+            ${activeComponent === id ? 'ring-2 ring-primary ring-offset-2 dark:ring-offset-workspace-dark' : 'hover:ring-1 hover:ring-primary/50'}
+          `}
           onClick={() => {
             setActiveComponent(id);
             navigate(path);
