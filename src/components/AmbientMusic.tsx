@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
-import { Music } from "lucide-react";
+import { Music, Volume2, VolumeX, Repeat } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -8,11 +8,24 @@ import {
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import { MUSIC_OPTIONS } from "./audio/MusicOptions";
 import { useAudioPlayer } from "./audio/useAudioPlayer";
 
 export const AmbientMusic = () => {
-  const { isPlaying, selectedMusic, handleMusicChange, togglePlay } = useAudioPlayer();
+  const { 
+    isPlaying, 
+    selectedMusic, 
+    volume,
+    isLooping,
+    isMuted,
+    handleMusicChange, 
+    togglePlay,
+    setVolume,
+    toggleMute,
+    toggleLoop 
+  } = useAudioPlayer();
 
   const handleMusicSelection = (value: string) => {
     const music = MUSIC_OPTIONS.find((opt) => opt.id === value);
@@ -24,6 +37,10 @@ export const AmbientMusic = () => {
   const handlePlayToggle = () => {
     const currentMusic = MUSIC_OPTIONS.find(opt => opt.id === selectedMusic);
     togglePlay(currentMusic);
+  };
+
+  const handleVolumeChange = (value: number[]) => {
+    setVolume(value[0]);
   };
 
   return (
@@ -77,6 +94,56 @@ export const AmbientMusic = () => {
               </div>
             ))}
           </RadioGroup>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="volume-control" className="text-sm">
+                Volume
+              </Label>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
+                onClick={toggleMute}
+                aria-label={isMuted ? "Unmute" : "Mute"}
+              >
+                {isMuted ? (
+                  <VolumeX className="h-4 w-4" aria-hidden="true" />
+                ) : (
+                  <Volume2 className="h-4 w-4" aria-hidden="true" />
+                )}
+              </Button>
+            </div>
+            <Slider
+              id="volume-control"
+              min={0}
+              max={100}
+              step={1}
+              value={[isMuted ? 0 : volume * 100]}
+              onValueChange={handleVolumeChange}
+              className="cursor-pointer"
+              aria-label="Adjust volume"
+            />
+          </div>
+
+          <div className="flex items-center justify-between space-x-2">
+            <Label htmlFor="loop-toggle" className="text-sm cursor-pointer">
+              Loop Playback
+            </Label>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="loop-toggle"
+                checked={isLooping}
+                onCheckedChange={toggleLoop}
+                aria-label="Toggle loop playback"
+              />
+              <Repeat 
+                className={`h-4 w-4 ${isLooping ? 'text-primary' : 'text-muted-foreground'}`}
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+
           <Button
             onClick={handlePlayToggle}
             className={`w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${

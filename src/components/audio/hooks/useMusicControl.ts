@@ -4,14 +4,43 @@ import { MusicOption } from '../MusicOptions';
 
 export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(0.2);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isLooping, setIsLooping] = useState(true);
   const { toast } = useToast();
 
-  // Sync with global audio state on mount
   useEffect(() => {
     if (audioRef.current) {
       setIsPlaying(!audioRef.current.paused);
+      setVolume(audioRef.current.volume);
+      setIsMuted(audioRef.current.muted);
+      setIsLooping(audioRef.current.loop);
     }
   }, []);
+
+  const handleVolumeChange = (newVolume: number) => {
+    if (!audioRef.current) return;
+    const normalizedVolume = newVolume / 100;
+    audioRef.current.volume = normalizedVolume;
+    setVolume(normalizedVolume);
+    setIsMuted(false);
+  };
+
+  const toggleMute = () => {
+    if (!audioRef.current) return;
+    audioRef.current.muted = !audioRef.current.muted;
+    setIsMuted(!isMuted);
+  };
+
+  const toggleLoop = () => {
+    if (!audioRef.current) return;
+    audioRef.current.loop = !audioRef.current.loop;
+    setIsLooping(!isLooping);
+    toast({
+      title: isLooping ? "Loop disabled" : "Loop enabled",
+      description: isLooping ? "Music will stop after playing once" : "Music will play continuously",
+    });
+  };
 
   const togglePlay = async (currentMusic: MusicOption | undefined) => {
     if (!audioRef.current || !currentMusic) {
@@ -50,7 +79,13 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
 
   return {
     isPlaying,
+    volume,
+    isMuted,
+    isLooping,
     setIsPlaying,
     togglePlay,
+    setVolume: handleVolumeChange,
+    toggleMute,
+    toggleLoop,
   };
 };
