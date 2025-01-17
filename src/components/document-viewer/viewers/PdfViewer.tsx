@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
+import { TextLayerBuilder } from 'pdfjs-dist/web/pdf_viewer';
 import { useToast } from "@/hooks/use-toast";
 
 // Initialize PDF.js worker
@@ -93,12 +94,15 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
         textLayer.style.height = viewport.height + 'px';
         textLayer.style.width = viewport.width + 'px';
 
-        pdfjsLib.renderTextLayer({
-          textContent: textContent,
-          container: textLayer,
-          viewport: viewport,
-          textDivs: [],
+        // Create text layer builder
+        const textLayerBuilder = new TextLayerBuilder({
+          textLayerDiv: textLayer,
+          pageIndex: page.pageNumber - 1,
+          viewport: viewport
         });
+
+        textLayerBuilder.setTextContent(textContent);
+        textLayerBuilder.render();
 
         canvas.parentNode?.appendChild(textLayer);
 
@@ -149,31 +153,33 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
       >
         <canvas ref={canvasRef} className="max-w-full" />
       </div>
-      <style jsx>{`
-        .textLayer {
-          position: absolute;
-          left: 0;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          overflow: hidden;
-          opacity: 0.2;
-          line-height: 1.0;
-        }
+      <style>
+        {`
+          .textLayer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            opacity: 0.2;
+            line-height: 1.0;
+          }
 
-        .textLayer > span {
-          color: transparent;
-          position: absolute;
-          white-space: pre;
-          cursor: text;
-          transform-origin: 0% 0%;
-        }
+          .textLayer > span {
+            color: transparent;
+            position: absolute;
+            white-space: pre;
+            cursor: text;
+            transform-origin: 0% 0%;
+          }
 
-        .textLayer ::selection {
-          background: ${selectedColor};
-          opacity: 0.3;
-        }
-      `}</style>
+          .textLayer ::selection {
+            background: ${selectedColor};
+            opacity: 0.3;
+          }
+        `}
+      </style>
     </div>
   );
 };
