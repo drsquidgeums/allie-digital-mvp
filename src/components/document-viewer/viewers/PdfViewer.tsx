@@ -1,147 +1,179 @@
-import React, { useRef, useEffect } from 'react';
-import { useHighlighter } from './pdf/useHighlighter';
-import { PdfControls } from './pdf/PdfControls';
+import React, { useRef, useEffect, useState } from 'react';
+import * as pdfjsLib from 'pdfjs-dist';
+import { useToast } from "@/hooks/use-toast";
+
+// Initialize PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface PdfViewerProps {
-  pdfDoc: any;
-  currentPage: number;
-  totalPages: number;
-  setCurrentPage: (page: number) => void;
+  file: File | null;
+  url: string;
   selectedColor: string;
   isHighlighter?: boolean;
 }
 
 export const PdfViewer: React.FC<PdfViewerProps> = ({ 
-  pdfDoc, 
-  currentPage, 
-  totalPages, 
-  setCurrentPage,
+  file, 
+  url, 
   selectedColor,
   isHighlighter = false 
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const annotationLayerRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  
-  const {
-    isHighlighting,
-    highlightsRef,
-    toggleHighlighting,
-    startDrawing,
-    draw,
-    stopDrawing
-  } = useHighlighter(currentPage);
+  const [pdfDoc, setPdfDoc] = useState<any>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [numPages, setNumPages] = useState(0);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const loadPDF = async () => {
+      try {
+        let pdfUrl: string | ArrayBuffer;
+        
+        if (file) {
+          const arrayBuffer = await file.arrayBuffer();
+          pdfUrl = arrayBuffer;
+        } else if (url) {
+          pdfUrl = url;
+        } else {
+          return;
+        }
+
+        const loadingTask = pdfjsLib.getDocument(pdfUrl);
+        const pdf = await loadingTask.promise;
+        
+        setPdfDoc(pdf);
+        setNumPages(pdf.numPages);
+        setCurrentPage(1);
+
+        toast({
+          title: "PDF loaded successfully",
+          description: `Total pages: ${pdf.numPages}`,
+        });
+      } catch (error) {
+        console.error('Error loading PDF:', error);
+        toast({
+          title: "Error loading PDF",
+          description: "There was a problem loading the PDF document",
+          variant: "destructive",
+        });
+      }
+    };
+
+    loadPDF();
+  }, [file, url]);
 
   useEffect(() => {
     const renderPage = async () => {
-      if (!canvasRef.current || !annotationLayerRef.current || !pdfDoc) return;
-      
+      if (!pdfDoc || !canvasRef.current) return;
+
       try {
         const page = await pdfDoc.getPage(currentPage);
-        const viewport = page.getViewport({ scale: 1.5 });
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
-        
-        if (canvas && context) {
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
-          
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          
-          await page.render({
-            canvasContext: context,
-            viewport: viewport
-          }).promise;
 
-          highlightsRef.current.forEach(highlight => {
-            if (highlight.page === currentPage) {
-              context.fillStyle = highlight.color;
-              context.globalAlpha = 0.3;
-              context.fillRect(
-                highlight.rect.x,
-                highlight.rect.y,
-                highlight.rect.width,
-                highlight.rect.height
-              );
-              context.globalAlpha = 1.0;
-            }
-          });
-        }
+        if (!context) return;
+
+        const viewport = page.getViewport({ scale: 1.5 });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport,
+        };
+
+        await page.render(renderContext).promise;
+
+        // Enable text selection and highlighting
+        const textContent = await page.getTextContent();
+        const textLayer = document.createElement('div');
+        textLayer.className = 'textLayer';
+        textLayer.style.left = canvas.offsetLeft + 'px';
+        textLayer.style.top = canvas.offsetTop + 'px';
+        textLayer.style.height = viewport.height + 'px';
+        textLayer.style.width = viewport.width + 'px';
+
+        pdfjsLib.renderTextLayer({
+          textContent: textContent,
+          container: textLayer,
+          viewport: viewport,
+          textDivs: [],
+        });
+
+        canvas.parentNode?.appendChild(textLayer);
+
       } catch (error) {
         console.error('Error rendering PDF page:', error);
+        toast({
+          title: "Error rendering page",
+          description: "There was a problem displaying the PDF page",
+          variant: "destructive",
+        });
       }
     };
 
     renderPage();
   }, [pdfDoc, currentPage]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    switch (e.key) {
-      case 'ArrowRight':
-      case 'PageDown':
-        if (currentPage < totalPages) {
-          setCurrentPage(currentPage + 1);
-        }
-        break;
-      case 'ArrowLeft':
-      case 'PageUp':
-        if (currentPage > 1) {
-          setCurrentPage(currentPage - 1);
-        }
-        break;
-      case 'Home':
-        setCurrentPage(1);
-        break;
-      case 'End':
-        setCurrentPage(totalPages);
-        break;
-    }
+  const changePage = (offset: number) => {
+    setCurrentPage((prevPage) => {
+      const newPage = prevPage + offset;
+      return newPage >= 1 && newPage <= numPages ? newPage : prevPage;
+    });
   };
 
   return (
-    <div 
-      className="flex flex-col h-full"
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-      role="document"
-      aria-label={`PDF document, page ${currentPage} of ${totalPages}`}
-    >
-      <PdfControls
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={(direction) => {
-          const newPage = direction === 'next' 
-            ? Math.min(currentPage + 1, totalPages)
-            : Math.max(currentPage - 1, 1);
-          setCurrentPage(newPage);
-        }}
-        isHighlighting={isHighlighting}
-        onToggleHighlighting={toggleHighlighting}
-      />
-      <div 
-        className="relative flex-1 overflow-auto pb-24"
-        ref={containerRef}
-        style={{ 
-          height: 'calc(100vh - 400px)',
-          minHeight: '500px',
-          paddingBottom: '6rem'
-        }}
-      >
-        <div className="relative">
-          <canvas 
-            ref={canvasRef} 
-            className="w-full cursor-crosshair mx-auto mb-24"
-            tabIndex={0}
-            role="application"
-            aria-label="PDF canvas"
-          />
-          <div 
-            ref={annotationLayerRef}
-            className="absolute top-0 left-0 w-full h-full pointer-events-none"
-            aria-hidden="true"
-          />
-        </div>
+    <div className="flex flex-col items-center gap-4 p-4">
+      <div className="flex gap-2 mb-4">
+        <button
+          onClick={() => changePage(-1)}
+          disabled={currentPage <= 1}
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-md disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span className="px-4 py-2">
+          Page {currentPage} of {numPages}
+        </span>
+        <button
+          onClick={() => changePage(1)}
+          disabled={currentPage >= numPages}
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-md disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
+      <div 
+        className="relative border border-border rounded-lg overflow-hidden"
+        style={{ width: 'fit-content' }}
+      >
+        <canvas ref={canvasRef} className="max-w-full" />
+      </div>
+      <style jsx>{`
+        .textLayer {
+          position: absolute;
+          left: 0;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          overflow: hidden;
+          opacity: 0.2;
+          line-height: 1.0;
+        }
+
+        .textLayer > span {
+          color: transparent;
+          position: absolute;
+          white-space: pre;
+          cursor: text;
+          transform-origin: 0% 0%;
+        }
+
+        .textLayer ::selection {
+          background: ${selectedColor};
+          opacity: 0.3;
+        }
+      `}</style>
     </div>
   );
 };

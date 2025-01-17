@@ -16,31 +16,6 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   selectedColor,
   isHighlighter
 }) => {
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const [totalPages, setTotalPages] = React.useState(1);
-  const [pdfDoc, setPdfDoc] = React.useState<any>(null);
-
-  React.useEffect(() => {
-    if (file) {
-      const loadDocument = async () => {
-        try {
-          const fileType = getFileType(file);
-          if (fileType === 'pdf') {
-            const { getDocument } = await import('pdfjs-dist');
-            const arrayBuffer = await file.arrayBuffer();
-            const doc = await getDocument({ data: arrayBuffer }).promise;
-            setPdfDoc(doc);
-            setTotalPages(doc.numPages);
-            setCurrentPage(1);
-          }
-        } catch (error) {
-          console.error('Error loading document:', error);
-        }
-      };
-      loadDocument();
-    }
-  }, [file]);
-
   if (!file && !url) {
     return (
       <div 
@@ -60,10 +35,8 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         case 'pdf':
           return (
             <PdfViewer
-              pdfDoc={pdfDoc}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
+              file={file}
+              url=""
               selectedColor={selectedColor}
               isHighlighter={isHighlighter}
             />
@@ -96,6 +69,16 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   }
 
   if (url) {
+    if (url.toLowerCase().endsWith('.pdf')) {
+      return (
+        <PdfViewer
+          file={null}
+          url={url}
+          selectedColor={selectedColor}
+          isHighlighter={isHighlighter}
+        />
+      );
+    }
     return (
       <iframe
         src={url}
