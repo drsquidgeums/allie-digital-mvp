@@ -5,12 +5,21 @@ import { type ToastProps } from "@/components/ui/toast";
 // Initialize PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
-export const usePdfLoader = (
-  file: File | null,
-  url: string,
-  canvasRef: RefObject<HTMLCanvasElement>,
-  toast: { toast: (props: ToastProps) => void }
-) => {
+interface UsePdfLoaderProps {
+  file: File | null;
+  url: string;
+  canvasRef: RefObject<HTMLCanvasElement>;
+  toast: {
+    toast: (props: ToastProps) => void;
+  };
+}
+
+export const usePdfLoader = ({
+  file,
+  url,
+  canvasRef,
+  toast
+}: UsePdfLoaderProps) => {
   const [pdfDoc, setPdfDoc] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [numPages, setNumPages] = useState(0);
@@ -35,13 +44,13 @@ export const usePdfLoader = (
       setNumPages(pdf.numPages);
       setCurrentPage(1);
 
-      toast({
+      toast.toast({
         title: "PDF loaded successfully",
         description: `Total pages: ${pdf.numPages}`,
       });
     } catch (error) {
       console.error('Error loading PDF:', error);
-      toast({
+      toast.toast({
         title: "Error loading PDF",
         description: "There was a problem loading the PDF document",
         variant: "destructive",
@@ -108,7 +117,7 @@ export const usePdfLoader = (
       canvas.parentNode?.appendChild(textLayer);
     } catch (error) {
       console.error('Error rendering PDF page:', error);
-      toast({
+      toast.toast({
         title: "Error rendering page",
         description: "There was a problem displaying the PDF page",
         variant: "destructive",

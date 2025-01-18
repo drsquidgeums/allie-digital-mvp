@@ -19,7 +19,12 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
-  const { pdfDoc, currentPage, numPages, changePage, renderPage } = usePdfLoader(file, url, canvasRef, toast);
+  const { pdfDoc, currentPage, numPages, changePage, renderPage } = usePdfLoader({
+    file,
+    url,
+    canvasRef,
+    toast
+  });
 
   React.useEffect(() => {
     if (pdfDoc && canvasRef.current) {
