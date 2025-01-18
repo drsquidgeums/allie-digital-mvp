@@ -5,6 +5,14 @@ import { Input } from "@/components/ui/input";
 import { useDocumentViewer } from "./document-viewer/useDocumentViewer";
 import { DocumentToolbar } from "./document-viewer/DocumentToolbar";
 import { DocumentPreview } from "./document-viewer/DocumentPreview";
+import { Button } from "./ui/button";
+import { Timer, Headphones, Eye, Paintbrush, Focus } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface DocumentViewerProps {
   file: File | null;
@@ -56,6 +64,14 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
     }
   };
 
+  const tools = [
+    { icon: Timer, label: "Pomodoro Timer", onClick: () => {} },
+    { icon: Headphones, label: "Text to Speech", onClick: () => {} },
+    { icon: Eye, label: "Bionic Reader", onClick: () => {} },
+    { icon: Paintbrush, label: "Color Tool", onClick: () => {} },
+    { icon: Focus, label: "Focus Mode", onClick: () => {} },
+  ];
+
   return (
     <div 
       className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative"
@@ -63,14 +79,36 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
       aria-label="Document viewer"
     >
       <div className="p-4 border-b border-border">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-2">
           <DocumentToolbar
             onUpload={handleUpload}
             onDownload={() => handleDownload(selectedFile)}
             onDelete={handleDelete}
             hasFile={!!selectedFile}
           />
-          <ThemeProvider />
+          <div className="flex items-center gap-2">
+            <TooltipProvider>
+              {tools.map(({ icon: Icon, label, onClick }) => (
+                <Tooltip key={label}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground"
+                      onClick={onClick}
+                    >
+                      <Icon className="h-4 w-4" />
+                      <span className="sr-only">{label}</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{label}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+            </TooltipProvider>
+            <ThemeProvider />
+          </div>
         </div>
       </div>
       <div className="flex-1 p-4 relative">
