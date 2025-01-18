@@ -1,18 +1,11 @@
 import React from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ThemeProvider } from "./ThemeProvider";
-import { Input } from "@/components/ui/input";
 import { useDocumentViewer } from "./document-viewer/useDocumentViewer";
 import { DocumentToolbar } from "./document-viewer/DocumentToolbar";
 import { DocumentPreview } from "./document-viewer/DocumentPreview";
-import { Button } from "./ui/button";
-import { Timer, Headphones, Eye, Paintbrush, Focus } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { ToolbarTools } from "./document-viewer/ToolbarTools";
+import { UrlInput } from "./document-viewer/UrlInput";
 
 interface DocumentViewerProps {
   file: File | null;
@@ -64,14 +57,6 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
     }
   };
 
-  const tools = [
-    { icon: Timer, label: "Pomodoro Timer", onClick: () => {} },
-    { icon: Headphones, label: "Text to Speech", onClick: () => {} },
-    { icon: Eye, label: "Bionic Reader", onClick: () => {} },
-    { icon: Paintbrush, label: "Color Tool", onClick: () => {} },
-    { icon: Focus, label: "Focus Mode", onClick: () => {} },
-  ];
-
   return (
     <div 
       className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative"
@@ -87,47 +72,17 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
             hasFile={!!selectedFile}
           />
           <div className="flex items-center gap-2">
-            <TooltipProvider>
-              {tools.map(({ icon: Icon, label, onClick }) => (
-                <Tooltip key={label}>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground"
-                      onClick={onClick}
-                    >
-                      <Icon className="h-4 w-4" />
-                      <span className="sr-only">{label}</span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{label}</p>
-                  </TooltipContent>
-                </Tooltip>
-              ))}
-            </TooltipProvider>
+            <ToolbarTools />
             <ThemeProvider />
           </div>
         </div>
       </div>
       <div className="flex-1 p-4 relative">
-        <div className="mb-4">
-          <Input
-            type="url"
-            placeholder="Paste URL here"
-            className="w-full"
-            value={url}
-            onChange={handleUrlChange}
-            onKeyDown={handleKeyDown}
-            aria-label="Document URL input"
-            role="textbox"
-            aria-describedby="url-input-help"
-          />
-          <div id="url-input-help" className="sr-only">
-            Press Enter to load the URL or Escape to clear the input
-          </div>
-        </div>
+        <UrlInput 
+          url={url}
+          onChange={handleUrlChange}
+          onKeyDown={handleKeyDown}
+        />
         <div 
           className="h-full" 
           ref={documentRef}
