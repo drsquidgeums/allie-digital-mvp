@@ -1,7 +1,7 @@
 import React from 'react';
 import { PdfLoader, PdfHighlighter, Highlight } from 'react-pdf-highlighter-extended';
 import { useToast } from "@/hooks/use-toast";
-import type { OnProgressParameters } from 'react-pdf-highlighter-extended';
+import type { PDFDocumentProxy } from 'pdfjs-dist';
 
 interface PdfViewerProps {
   file: File | null;
@@ -39,23 +39,25 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     });
   };
 
-  const renderLoader = (progress: OnProgressParameters) => {
-    return <div className="text-center p-4">Loading PDF... {Math.round(progress.loaded / progress.total * 100)}%</div>;
+  const renderLoader = () => {
+    return <div className="text-center p-4">Loading PDF...</div>;
   };
 
   return (
     <div className="flex flex-col h-full">
       <PdfLoader 
-        url={getFileUrl()} 
-        beforeLoad={renderLoader}
+        document={getFileUrl()}
+        loadingRenderer={renderLoader}
       >
-        {(pdfDocument) => (
+        {(pdfDocument: PDFDocumentProxy) => (
           <PdfHighlighter
             pdfDocument={pdfDocument}
-            enableAreaSelection={true}
+            enableAreaSelection={false}
             highlights={highlights}
             onScrollChange={() => {}}
-            scrollRef={() => {}}
+            scrollRef={(scrollTo) => {
+              return scrollTo !== null;
+            }}
             onSelectionFinished={(
               position,
               content,
@@ -63,9 +65,8 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
               transformSelection
             ) => {
               addHighlight({
-                content: { text: content.text },
+                content: content,
                 position,
-                comment: '',
                 id: `highlight-${Date.now()}`,
               });
               hideTipAndSelection();
