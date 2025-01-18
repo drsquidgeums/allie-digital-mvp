@@ -12,7 +12,7 @@ interface DocumentViewerProps {
   isHighlighter?: boolean;
 }
 
-export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentViewerProps) => {
+export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerProps) => {
   const { toast } = useToast();
   const {
     url,
@@ -22,6 +22,7 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
     handleUpload,
     handleDelete,
     handleDownload,
+    selectedFile,
     setSelectedFile,
   } = useDocumentViewer();
 
@@ -65,9 +66,9 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
         <div className="flex items-center gap-2">
           <DocumentToolbar
             onUpload={handleUpload}
-            onDownload={() => handleDownload(file)}
+            onDownload={() => handleDownload(selectedFile)}
             onDelete={handleDelete}
-            hasFile={!!file}
+            hasFile={!!selectedFile}
           />
           <ThemeProvider />
         </div>
@@ -94,10 +95,10 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
           ref={documentRef}
           tabIndex={0}
           role="document"
-          aria-label={file ? `Viewing ${file.name}` : "Document preview area"}
+          aria-label={selectedFile ? `Viewing ${selectedFile.name}` : "Document preview area"}
         >
           <DocumentPreview 
-            file={file} 
+            file={selectedFile} 
             url={url} 
             selectedColor={selectedColor}
             isHighlighter={isHighlighter} 
