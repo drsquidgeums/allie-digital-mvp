@@ -30,6 +30,31 @@ export const ThemeProvider = () => {
 
   return (
     <div className="flex items-center gap-2">
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className={`${buttonClassName} bg-background hover:bg-accent hover:text-accent-foreground`}
+            title="Customise Font"
+          >
+            <Palette className="h-4 w-4" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]">
+          <DialogHeader className="flex flex-row items-center justify-between">
+            <DialogTitle>Choose a Font</DialogTitle>
+            <DialogClose asChild>
+              <Button variant="ghost" size="icon" className="h-6 w-6">
+                <X className="h-4 w-4" />
+              </Button>
+            </DialogClose>
+          </DialogHeader>
+          <FontSelector selectedFont={selectedFont} onFontChange={handleFontChange} />
+        </DialogContent>
+      </Dialog>
+      <IrlenOverlay />
+      <AmbientMusic />
       <div className="flex gap-2">
         <Button
           variant="outline"
@@ -70,32 +95,7 @@ export const ThemeProvider = () => {
         >
           <Book className="h-4 w-4" />
         </Button>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className={`${buttonClassName} bg-background hover:bg-accent hover:text-accent-foreground`}
-              title="Customise Font"
-            >
-              <Palette className="h-4 w-4" />
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]">
-            <DialogHeader className="flex flex-row items-center justify-between">
-              <DialogTitle>Choose a Font</DialogTitle>
-              <DialogClose asChild>
-                <Button variant="ghost" size="icon" className="h-6 w-6">
-                  <X className="h-4 w-4" />
-                </Button>
-              </DialogClose>
-            </DialogHeader>
-            <FontSelector selectedFont={selectedFont} onFontChange={handleFontChange} />
-          </DialogContent>
-        </Dialog>
       </div>
-      <IrlenOverlay />
-      <AmbientMusic />
     </div>
   );
 };
