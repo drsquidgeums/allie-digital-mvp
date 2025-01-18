@@ -132,7 +132,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
 
   return (
     <div 
-      className="w-full h-[600px] bg-background border-none rounded-lg overflow-hidden flex flex-col animate-fade-in"
+      className="w-full h-[600px] bg-workspace border-none rounded-lg overflow-hidden flex flex-col animate-fade-in"
       role="application"
       aria-label="Mind map editor"
     >
@@ -149,7 +149,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
         onClear={onClear}
         colorOptions={colorOptions}
       />
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 bg-workspace">
         <ReactFlowProvider>
           <MindMapFlow
             nodes={nodes}
