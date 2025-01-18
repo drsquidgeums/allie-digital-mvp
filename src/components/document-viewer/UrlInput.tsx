@@ -12,17 +12,17 @@ export const UrlInput = ({ url, onChange, onKeyDown }: UrlInputProps) => {
     <div className="mb-4">
       <Input
         type="url"
-        placeholder="Paste URL here (supports YouTube videos, PDFs, and web pages)"
+        placeholder="Paste URL here"
         className="w-full"
         value={url}
         onChange={onChange}
         onKeyDown={onKeyDown}
-        aria-label="Content URL input"
+        aria-label="Document URL input"
         role="textbox"
         aria-describedby="url-input-help"
       />
-      <div id="url-input-help" className="mt-1 text-sm text-muted-foreground">
-        Press Enter to load the URL or Escape to clear the input. You can paste YouTube links, PDF URLs, or any web page.
+      <div id="url-input-help" className="sr-only">
+        Press Enter to load the URL or Escape to clear the input
       </div>
     </div>
   );

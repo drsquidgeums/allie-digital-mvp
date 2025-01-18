@@ -1,9 +1,7 @@
 import React from 'react';
 import { PdfViewer } from './viewers/PdfViewer';
 import { TextViewer } from './viewers/TextViewer';
-import { YouTubeViewer } from './viewers/YouTubeViewer';
 import { getFileType } from './FileConverter';
-import { getContentType } from '@/utils/contentUtils';
 
 interface DocumentPreviewProps {
   file: File | null;
@@ -25,7 +23,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         role="status"
         aria-label="No document loaded"
       >
-        Upload a file or paste a URL to view content (supports PDF, text, YouTube videos, and web pages)
+        Upload a file or paste a URL to view
       </div>
     );
   }
@@ -73,34 +71,27 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   }
 
   if (url) {
-    const contentType = getContentType(url);
-    
-    switch (contentType) {
-      case 'youtube':
-        return <YouTubeViewer url={url} />;
-      case 'pdf':
-        return (
-          <div className="h-full overflow-auto">
-            <PdfViewer
-              file={null}
-              url={url}
-              selectedColor={selectedColor}
-              isHighlighter={isHighlighter}
-            />
-          </div>
-        );
-      case 'webpage':
-        return (
-          <iframe
-            src={url}
-            className="w-full h-full border-0"
-            title="Document preview"
-            sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-            referrerPolicy="no-referrer"
-            tabIndex={0}
+    if (url.toLowerCase().endsWith('.pdf')) {
+      return (
+        <div className="h-full overflow-auto">
+          <PdfViewer
+            file={null}
+            url={url}
+            selectedColor={selectedColor}
+            isHighlighter={isHighlighter}
           />
-        );
+        </div>
+      );
     }
+    return (
+      <iframe
+        src={url}
+        className="w-full h-full border-0"
+        title="Document preview"
+        sandbox="allow-same-origin allow-scripts"
+        tabIndex={0}
+      />
+    );
   }
 
   return null;
