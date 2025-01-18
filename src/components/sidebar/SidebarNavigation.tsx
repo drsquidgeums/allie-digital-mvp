@@ -40,9 +40,11 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
   ];
 
   const isPathActive = (path: string) => {
-    if (path === "/" && location.pathname === "/") {
-      return true;
+    // For root path, only match exact "/"
+    if (path === "/") {
+      return location.pathname === "/";
     }
+    // For other paths, match exactly
     return location.pathname === path;
   };
 
