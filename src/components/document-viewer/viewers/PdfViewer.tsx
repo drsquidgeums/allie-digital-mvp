@@ -1,7 +1,7 @@
 import React from 'react';
-import { PdfLoader, PdfHighlighter, IHighlight } from 'react-pdf-highlighter-extended';
+import { PdfLoader, PdfHighlighter, Highlight } from 'react-pdf-highlighter-extended';
 import { useToast } from "@/hooks/use-toast";
-import type { Position, ScaledPosition } from 'react-pdf-highlighter-extended';
+import type { OnProgressParameters } from 'react-pdf-highlighter-extended';
 
 interface PdfViewerProps {
   file: File | null;
@@ -15,11 +15,6 @@ interface HighlightContent {
   image?: string;
 }
 
-interface PdfHighlight extends IHighlight {
-  content: HighlightContent;
-  position: Position;
-}
-
 export const PdfViewer: React.FC<PdfViewerProps> = ({
   file,
   url,
@@ -27,7 +22,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   isHighlighter = false
 }) => {
   const { toast } = useToast();
-  const [highlights, setHighlights] = React.useState<PdfHighlight[]>([]);
+  const [highlights, setHighlights] = React.useState<Highlight[]>([]);
 
   const getFileUrl = () => {
     if (file) {
@@ -36,7 +31,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     return url;
   };
 
-  const addHighlight = (highlight: PdfHighlight) => {
+  const addHighlight = (highlight: Highlight) => {
     setHighlights([...highlights, highlight]);
     toast({
       title: "Highlight added",
@@ -44,11 +39,15 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     });
   };
 
+  const renderLoader = (progress: OnProgressParameters) => {
+    return <div className="text-center p-4">Loading PDF... {Math.round(progress.loaded / progress.total * 100)}%</div>;
+  };
+
   return (
     <div className="flex flex-col h-full">
       <PdfLoader 
         url={getFileUrl()} 
-        beforeLoad={<div className="text-center p-4">Loading PDF...</div>}
+        beforeLoad={renderLoader}
       >
         {(pdfDocument) => (
           <PdfHighlighter
@@ -66,6 +65,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
               addHighlight({
                 content: { text: content.text },
                 position,
+                comment: '',
                 id: `highlight-${Date.now()}`,
               });
               hideTipAndSelection();
