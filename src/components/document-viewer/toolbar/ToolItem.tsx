@@ -50,7 +50,7 @@ export const ToolItem = ({ id, icon: Icon, label, content, isActive, onClick }: 
       </Tooltip>
       {isActive && (
         <PopoverContent 
-          className="w-80 p-0 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]" 
+          className="w-80 p-0 border-0 shadow-md dark:bg-workspace-dark dark:text-[#FAFAFA]" 
           align="end"
         >
           {content}
