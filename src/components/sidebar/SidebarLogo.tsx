@@ -1,5 +1,4 @@
 import React from "react";
-import { LanguageSwitcher } from "../LanguageSwitcher";
 
 export const SidebarLogo = React.memo(() => (
   <div 
@@ -11,7 +10,6 @@ export const SidebarLogo = React.memo(() => (
       alt="Allie Digital Logo" 
       className="w-12 h-12"
     />
-    <LanguageSwitcher />
   </div>
 ));
 
