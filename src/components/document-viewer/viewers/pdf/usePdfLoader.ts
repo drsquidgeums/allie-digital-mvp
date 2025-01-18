@@ -1,4 +1,4 @@
-import { useState, useCallback, RefObject } from 'react';
+import React, { useState, useCallback, RefObject } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 import { type ToastProps } from "@/components/ui/toast";
 
