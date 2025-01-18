@@ -33,6 +33,7 @@ export const ToolItem = ({ id, icon: Icon, label, content, isActive, onClick }: 
                 size="sm"
                 className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground"
                 onClick={() => onClick(id)}
+                data-tool-id={id}
               >
                 <Icon className="h-4 w-4" />
                 <span className="sr-only">{label}</span>
@@ -47,12 +48,14 @@ export const ToolItem = ({ id, icon: Icon, label, content, isActive, onClick }: 
           <p>{label}</p>
         </TooltipContent>
       </Tooltip>
-      <PopoverContent 
-        className="w-80 p-0 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]" 
-        align="end"
-      >
-        {content}
-      </PopoverContent>
+      {isActive && (
+        <PopoverContent 
+          className="w-80 p-0 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]" 
+          align="end"
+        >
+          {content}
+        </PopoverContent>
+      )}
     </Popover>
   );
 };

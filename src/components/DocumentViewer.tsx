@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ThemeProvider } from "./ThemeProvider";
 import { useDocumentViewer } from "./document-viewer/useDocumentViewer";
@@ -26,6 +26,31 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
     selectedFile,
     setSelectedFile,
   } = useDocumentViewer();
+
+  // Auto-activate Bionic Reader and TTS when content is loaded
+  useEffect(() => {
+    if (selectedFile || url) {
+      const toolbarTools = document.querySelectorAll('[data-tool-id]');
+      const bionicTool = Array.from(toolbarTools).find(
+        tool => tool.getAttribute('data-tool-id') === 'bionic'
+      );
+      const ttsTool = Array.from(toolbarTools).find(
+        tool => tool.getAttribute('data-tool-id') === 'tts'
+      );
+
+      if (bionicTool instanceof HTMLElement) {
+        bionicTool.click();
+      }
+      if (ttsTool instanceof HTMLElement) {
+        ttsTool.click();
+      }
+
+      toast({
+        title: "Tools activated",
+        description: "Bionic Reader and Text-to-Speech are now available for this document",
+      });
+    }
+  }, [selectedFile, url, toast]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Escape') {

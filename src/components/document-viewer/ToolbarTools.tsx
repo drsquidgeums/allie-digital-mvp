@@ -10,43 +10,64 @@ import { ToolItem } from "./toolbar/ToolItem";
 import { LanguageSelector } from "./toolbar/LanguageSelector";
 
 export const ToolbarTools = () => {
-  const [activeToolId, setActiveToolId] = useState<string | null>(null);
+  const [activeTools, setActiveTools] = useState<Set<string>>(new Set());
 
   const tools = [
     { 
       id: "pomodoro", 
       icon: Timer, 
       label: "Pomodoro Timer",
-      content: <PomodoroTimer />
+      content: <PomodoroTimer />,
+      allowMultiple: false
     },
     { 
       id: "tts", 
       icon: Headphones, 
       label: "Text to Speech",
-      content: <TextToSpeech />
+      content: <TextToSpeech />,
+      allowMultiple: true
     },
     { 
       id: "bionic", 
       icon: Eye, 
       label: "Bionic Reader",
-      content: <BionicReader />
+      content: <BionicReader />,
+      allowMultiple: true
     },
     { 
       id: "color", 
       icon: Paintbrush, 
       label: "Color Tool",
-      content: <ColorSeparator />
+      content: <ColorSeparator />,
+      allowMultiple: false
     },
     { 
       id: "focus", 
       icon: Focus, 
       label: "Focus Mode",
-      content: <FocusMode />
+      content: <FocusMode />,
+      allowMultiple: false
     }
   ];
 
   const handleToolClick = (toolId: string) => {
-    setActiveToolId(activeToolId === toolId ? null : toolId);
+    setActiveTools(prev => {
+      const newActiveTools = new Set(prev);
+      const tool = tools.find(t => t.id === toolId);
+      
+      if (!tool?.allowMultiple) {
+        // If tool doesn't allow multiple, deactivate all other tools
+        newActiveTools.clear();
+      }
+      
+      if (newActiveTools.has(toolId)) {
+        newActiveTools.delete(toolId);
+      } else {
+        newActiveTools.add(toolId);
+      }
+      
+      return newActiveTools;
+    });
   };
 
   return (
@@ -56,7 +77,7 @@ export const ToolbarTools = () => {
           <ToolItem
             key={tool.id}
             {...tool}
-            isActive={activeToolId === tool.id}
+            isActive={activeTools.has(tool.id)}
             onClick={handleToolClick}
           />
         ))}
