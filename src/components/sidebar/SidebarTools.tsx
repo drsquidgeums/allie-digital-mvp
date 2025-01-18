@@ -1,10 +1,5 @@
 import React from "react";
 import { 
-  Clock,
-  Headphones,
-  Eye,
-  Focus,
-  Paintbrush,
   Users,
   LogOut
 } from "lucide-react";
@@ -19,18 +14,6 @@ interface SidebarToolsProps {
 export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToolsProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  
-  const tools = [
-    { id: "pomodoro", icon: Clock, label: "Pomodoro Timer" },
-    { id: "tts", icon: Headphones, label: "Text-to-Speech" },
-    { id: "bionic", icon: Eye, label: "Bionic Reader" },
-    { id: "color", icon: Paintbrush, label: "Colour Tool" },
-    { id: "focus", icon: Focus, label: "Focus Mode" },
-  ];
-
-  const handleToolClick = (toolId: string) => {
-    setActiveComponent(toolId);
-  };
 
   const handleLogout = () => {
     console.log("Logout clicked");
@@ -42,16 +25,6 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
 
   return (
     <div className="space-y-2">
-      {tools.map((tool) => (
-        <SidebarButton
-          key={tool.id}
-          icon={tool.icon}
-          label={tool.label}
-          isActive={activeComponent === tool.id}
-          onClick={() => handleToolClick(tool.id)}
-        />
-      ))}
-      
       <div className="pt-4 border-t border-border">
         <SidebarButton
           icon={Users}
