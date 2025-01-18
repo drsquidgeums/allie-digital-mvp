@@ -1,6 +1,9 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 import { useToast } from "@/hooks/use-toast";
+import { PdfPageControls } from './pdf/PdfPageControls';
+import { PdfTextLayer } from './pdf/PdfTextLayer';
+import { usePdfLoader } from './pdf/usePdfLoader';
 
 // Initialize PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
@@ -12,55 +15,16 @@ interface PdfViewerProps {
   isHighlighter?: boolean;
 }
 
-export const PdfViewer: React.FC<PdfViewerProps> = ({ 
-  file, 
-  url, 
+export const PdfViewer: React.FC<PdfViewerProps> = ({
+  file,
+  url,
   selectedColor,
-  isHighlighter = false 
+  isHighlighter = false
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [pdfDoc, setPdfDoc] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [numPages, setNumPages] = useState(0);
   const { toast } = useToast();
-
-  useEffect(() => {
-    const loadPDF = async () => {
-      try {
-        let pdfUrl: string | ArrayBuffer;
-        
-        if (file) {
-          const arrayBuffer = await file.arrayBuffer();
-          pdfUrl = arrayBuffer;
-        } else if (url) {
-          pdfUrl = url;
-        } else {
-          return;
-        }
-
-        const loadingTask = pdfjsLib.getDocument(pdfUrl);
-        const pdf = await loadingTask.promise;
-        
-        setPdfDoc(pdf);
-        setNumPages(pdf.numPages);
-        setCurrentPage(1);
-
-        toast({
-          title: "PDF loaded successfully",
-          description: `Total pages: ${pdf.numPages}`,
-        });
-      } catch (error) {
-        console.error('Error loading PDF:', error);
-        toast({
-          title: "Error loading PDF",
-          description: "There was a problem loading the PDF document",
-          variant: "destructive",
-        });
-      }
-    };
-
-    loadPDF();
-  }, [file, url]);
+  const { pdfDoc, numPages } = usePdfLoader(file, url);
 
   useEffect(() => {
     const renderPage = async () => {
@@ -114,7 +78,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
         });
 
         canvas.parentNode?.appendChild(textLayer);
-
       } catch (error) {
         console.error('Error rendering PDF page:', error);
         toast({
@@ -126,9 +89,9 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     };
 
     renderPage();
-  }, [pdfDoc, currentPage]);
+  }, [pdfDoc, currentPage, toast]);
 
-  const changePage = (offset: number) => {
+  const handlePageChange = (offset: number) => {
     setCurrentPage((prevPage) => {
       const newPage = prevPage + offset;
       return newPage >= 1 && newPage <= numPages ? newPage : prevPage;
@@ -137,58 +100,18 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 
   return (
     <div className="flex flex-col items-center gap-4 p-4">
-      <div className="flex gap-2 mb-4">
-        <button
-          onClick={() => changePage(-1)}
-          disabled={currentPage <= 1}
-          className="px-4 py-2 bg-primary text-primary-foreground rounded-md disabled:opacity-50"
-        >
-          Previous
-        </button>
-        <span className="px-4 py-2">
-          Page {currentPage} of {numPages}
-        </span>
-        <button
-          onClick={() => changePage(1)}
-          disabled={currentPage >= numPages}
-          className="px-4 py-2 bg-primary text-primary-foreground rounded-md disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
+      <PdfPageControls
+        currentPage={currentPage}
+        numPages={numPages}
+        onPageChange={handlePageChange}
+      />
       <div 
         className="relative border border-border rounded-lg overflow-hidden"
         style={{ width: 'fit-content' }}
       >
         <canvas ref={canvasRef} className="max-w-full" />
       </div>
-      <style>
-        {`
-          .textLayer {
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            overflow: hidden;
-            opacity: 0.2;
-            line-height: 1.0;
-          }
-
-          .textLayer > span {
-            color: transparent;
-            position: absolute;
-            white-space: pre;
-            cursor: text;
-            transform-origin: 0% 0%;
-          }
-
-          .textLayer ::selection {
-            background: ${selectedColor};
-            opacity: 0.3;
-          }
-        `}
-      </style>
+      <PdfTextLayer selectedColor={selectedColor} />
     </div>
   );
 };
