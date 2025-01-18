@@ -4,7 +4,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 import * as rangy from 'rangy';
 import 'rangy/lib/rangy-classapplier';
 import 'rangy/lib/rangy-highlighter';
-import type { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
+import type { PDFDocumentProxy } from 'pdfjs-dist';
 
 // Initialize PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
@@ -24,10 +24,10 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 }) => {
   const { toast } = useToast();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [scale, setScale] = useState(1.5);
+  const [isLoading, setIsLoading] = useState(true);
   const highlighterRef = useRef<any>(null);
 
   useEffect(() => {
@@ -49,13 +49,25 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   useEffect(() => {
     const loadPDF = async () => {
       try {
-        const fileUrl = file ? URL.createObjectURL(file) : url;
-        if (!fileUrl) return;
+        setIsLoading(true);
+        let pdfData;
+        
+        if (file) {
+          const arrayBuffer = await file.arrayBuffer();
+          pdfData = new Uint8Array(arrayBuffer);
+        } else if (url) {
+          const response = await fetch(url);
+          const arrayBuffer = await response.arrayBuffer();
+          pdfData = new Uint8Array(arrayBuffer);
+        } else {
+          return;
+        }
 
-        const loadingTask = pdfjsLib.getDocument(fileUrl);
+        const loadingTask = pdfjsLib.getDocument({ data: pdfData });
         const pdfDoc = await loadingTask.promise;
         setPdf(pdfDoc);
-        renderPage(1, pdfDoc);
+        setCurrentPage(1);
+        await renderPage(1, pdfDoc);
 
         toast({
           title: "PDF loaded",
@@ -68,6 +80,8 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
           description: "Failed to load PDF document",
           variant: "destructive",
         });
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -108,7 +122,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     const selection = rangy.getSelection();
     if (selection.rangeCount > 0) {
       highlighterRef.current.highlightSelection('highlight', {
-        containerElementId: containerRef.current?.id,
         exclusive: false
       });
       
@@ -126,18 +139,22 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
-    <div 
-      ref={containerRef}
-      className="flex flex-col h-full overflow-auto"
-      id="pdf-container"
-    >
+    <div className="flex flex-col h-full overflow-auto">
       <div className="flex justify-between p-4 border-b">
         <div className="flex gap-2">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage <= 1}
-            className="px-3 py-1 bg-primary text-primary-foreground rounded"
+            className="px-3 py-1 bg-primary text-primary-foreground rounded disabled:opacity-50"
           >
             Previous
           </button>
@@ -145,18 +162,20 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={!pdf || currentPage >= pdf.numPages}
-            className="px-3 py-1 bg-primary text-primary-foreground rounded"
+            className="px-3 py-1 bg-primary text-primary-foreground rounded disabled:opacity-50"
           >
             Next
           </button>
         </div>
-        <button
-          onClick={handleHighlight}
-          className="px-3 py-1 bg-accent text-accent-foreground rounded"
-          style={{ backgroundColor: selectedColor }}
-        >
-          Highlight Selection
-        </button>
+        {isHighlighter && (
+          <button
+            onClick={handleHighlight}
+            className="px-3 py-1 rounded"
+            style={{ backgroundColor: selectedColor, color: 'white' }}
+          >
+            Highlight Selection
+          </button>
+        )}
       </div>
       <div className="flex-1 overflow-auto p-4">
         <canvas
