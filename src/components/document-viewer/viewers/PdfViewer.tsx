@@ -1,8 +1,7 @@
-import React, { useRef } from 'react';
+import React from 'react';
+import { PdfLoader, PdfHighlighter, Highlight, Popup, AreaHighlight } from 'react-pdf-highlighter-extended';
 import { useToast } from "@/hooks/use-toast";
 import { PdfPageControls } from './pdf/PdfPageControls';
-import { PdfTextLayer } from './pdf/PdfTextLayer';
-import { usePdfLoader } from './pdf/usePdfLoader';
 
 interface PdfViewerProps {
   file: File | null;
@@ -17,50 +16,88 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   selectedColor,
   isHighlighter = false
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const [highlights, setHighlights] = React.useState<Highlight[]>([]);
 
-  const { pdfDoc, currentPage, numPages, changePage, renderPage } = usePdfLoader({
-    file,
-    url,
-    canvasRef,
-    toast: { toast }
-  });
-
-  React.useEffect(() => {
-    if (pdfDoc && canvasRef.current) {
-      renderPage();
+  const getFileUrl = () => {
+    if (file) {
+      return URL.createObjectURL(file);
     }
-  }, [pdfDoc, currentPage, renderPage]);
+    return url;
+  };
 
-  if (!pdfDoc) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        Loading PDF...
-      </div>
-    );
-  }
+  const addHighlight = (highlight: Highlight) => {
+    setHighlights([...highlights, highlight]);
+    toast({
+      title: "Highlight added",
+      variant: "default",
+      children: "Text has been highlighted"
+    });
+  };
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4" ref={containerRef}>
-      <PdfPageControls
-        currentPage={currentPage}
-        numPages={numPages}
-        onPageChange={changePage}
-      />
-      <div 
-        className="relative border border-border rounded-lg overflow-auto max-h-[calc(100vh-200px)]"
-        style={{ width: 'fit-content' }}
-      >
-        <canvas 
-          ref={canvasRef} 
-          className="max-w-full"
-        />
-        {isHighlighter && (
-          <PdfTextLayer selectedColor={selectedColor} />
+    <div className="flex flex-col h-full">
+      <PdfLoader url={getFileUrl()} beforeLoad={<div>Loading PDF...</div>}>
+        {(pdfDocument) => (
+          <PdfHighlighter
+            pdfDocument={pdfDocument}
+            enableAreaSelection={true}
+            highlights={highlights}
+            onScrollChange={() => {}}
+            scrollRef={(scrollTo) => {}}
+            onSelectionFinished={(
+              position,
+              content,
+              hideTipAndSelection,
+              transformSelection
+            ) => {
+              addHighlight({
+                content,
+                position,
+                comment: "",
+                id: `highlight-${Date.now()}`,
+              });
+              hideTipAndSelection();
+            }}
+            highlightTransform={(
+              highlight,
+              index,
+              setTip,
+              hideTip,
+              viewportToScaled,
+              screenshot,
+              isScrolledTo
+            ) => {
+              const isTextHighlight = !Boolean(highlight.content && highlight.content.image);
+
+              const component = isTextHighlight ? (
+                <Popup
+                  popupContent={<div>{highlight.content.text}</div>}
+                  onMouseOver={(popupContent) => setTip(highlight, (highlight) => popupContent)}
+                  onMouseOut={hideTip}
+                  key={index}
+                >
+                  <div
+                    style={{
+                      background: selectedColor || "#ffd400",
+                      opacity: 0.4,
+                    }}
+                  />
+                </Popup>
+              ) : (
+                <AreaHighlight
+                  highlight={highlight}
+                  onChange={(boundingRect) => {
+                    console.log("Highlight changed:", boundingRect);
+                  }}
+                />
+              );
+
+              return component;
+            }}
+          />
         )}
-      </div>
+      </PdfLoader>
     </div>
   );
 };

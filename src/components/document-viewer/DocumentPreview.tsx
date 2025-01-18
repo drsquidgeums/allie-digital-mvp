@@ -34,12 +34,14 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       switch (fileType) {
         case 'pdf':
           return (
-            <PdfViewer
-              file={file}
-              url=""
-              selectedColor={selectedColor}
-              isHighlighter={isHighlighter}
-            />
+            <div className="h-full overflow-auto">
+              <PdfViewer
+                file={file}
+                url=""
+                selectedColor={selectedColor}
+                isHighlighter={isHighlighter}
+              />
+            </div>
           );
         case 'txt':
         case 'html':
@@ -71,12 +73,14 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   if (url) {
     if (url.toLowerCase().endsWith('.pdf')) {
       return (
-        <PdfViewer
-          file={null}
-          url={url}
-          selectedColor={selectedColor}
-          isHighlighter={isHighlighter}
-        />
+        <div className="h-full overflow-auto">
+          <PdfViewer
+            file={null}
+            url={url}
+            selectedColor={selectedColor}
+            isHighlighter={isHighlighter}
+          />
+        </div>
       );
     }
     return (
