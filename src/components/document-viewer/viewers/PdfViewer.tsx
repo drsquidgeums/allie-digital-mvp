@@ -23,7 +23,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     file,
     url,
     canvasRef,
-    toast
+    toast: { toast }
   });
 
   React.useEffect(() => {

@@ -46,14 +46,15 @@ export const usePdfLoader = ({
 
       toast.toast({
         title: "PDF loaded successfully",
-        description: `Total pages: ${pdf.numPages}`,
+        variant: "default",
+        children: `Total pages: ${pdf.numPages}`
       });
     } catch (error) {
       console.error('Error loading PDF:', error);
       toast.toast({
         title: "Error loading PDF",
-        description: "There was a problem loading the PDF document",
         variant: "destructive",
+        children: "There was a problem loading the PDF document"
       });
     }
   }, [file, url, toast]);
@@ -119,8 +120,8 @@ export const usePdfLoader = ({
       console.error('Error rendering PDF page:', error);
       toast.toast({
         title: "Error rendering page",
-        description: "There was a problem displaying the PDF page",
         variant: "destructive",
+        children: "There was a problem displaying the PDF page"
       });
     }
   }, [pdfDoc, currentPage, toast]);
