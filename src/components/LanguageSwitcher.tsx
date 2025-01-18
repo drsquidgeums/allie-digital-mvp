@@ -13,9 +13,23 @@ export const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
 
   const languages = [
-    { code: 'en', name: 'English' },
+    { code: 'en-US', name: 'English (US)' },
+    { code: 'en-GB', name: 'English (UK)' },
     { code: 'es', name: 'Español' },
-    { code: 'de', name: 'Deutsch' }
+    { code: 'zh', name: '中文' },
+    { code: 'fr', name: 'Français' },
+    { code: 'de', name: 'Deutsch' },
+    { code: 'it', name: 'Italiano' },
+    { code: 'pt', name: 'Português' },
+    { code: 'ru', name: 'Русский' },
+    { code: 'ja', name: '日本語' },
+    { code: 'ko', name: '한국어' },
+    { code: 'ar', name: 'العربية' },
+    { code: 'nl', name: 'Nederlands' },
+    { code: 'tr', name: 'Türkçe' },
+    { code: 'hi', name: 'हिन्दी' },
+    { code: 'pl', name: 'Polski' },
+    { code: 'sv', name: 'Svenska' }
   ];
 
   const handleLanguageChange = (value: string) => {
@@ -26,8 +40,8 @@ export const LanguageSwitcher = () => {
   return (
     <div className="flex items-center gap-2">
       <Globe className="h-4 w-4 text-muted-foreground" />
-      <Select value={i18n.language.split('-')[0]} onValueChange={handleLanguageChange}>
-        <SelectTrigger className="w-[120px]">
+      <Select value={i18n.language} onValueChange={handleLanguageChange}>
+        <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Select language" />
         </SelectTrigger>
         <SelectContent>
