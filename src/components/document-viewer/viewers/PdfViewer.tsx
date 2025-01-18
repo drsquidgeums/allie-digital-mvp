@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
-import { TextLayerBuilder } from 'pdfjs-dist/web/pdf_viewer';
+import { TextLayerBuilder } from 'pdfjs-dist/lib/web/text_layer_builder';
 import { useToast } from "@/hooks/use-toast";
 
 // Initialize PDF.js worker
