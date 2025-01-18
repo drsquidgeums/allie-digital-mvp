@@ -41,12 +41,16 @@ export const LanguageSwitcher = () => {
     <div className="flex items-center gap-1">
       <Globe className="h-3 w-3 text-muted-foreground" />
       <Select value={i18n.language} onValueChange={handleLanguageChange}>
-        <SelectTrigger className="w-[120px] h-8 text-sm">
+        <SelectTrigger className="w-[120px] h-8 text-sm bg-background hover:bg-accent hover:text-accent-foreground dark:border-border">
           <SelectValue placeholder="Select language" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="dark:bg-workspace-dark dark:border-border">
           {languages.map((lang) => (
-            <SelectItem key={lang.code} value={lang.code}>
+            <SelectItem 
+              key={lang.code} 
+              value={lang.code}
+              className="dark:focus:bg-accent dark:focus:text-accent-foreground"
+            >
               {lang.name}
             </SelectItem>
           ))}
