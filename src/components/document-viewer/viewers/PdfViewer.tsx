@@ -1,13 +1,23 @@
 import React from 'react';
-import { PdfLoader, PdfHighlighter, Highlight, Popup, AreaHighlight } from 'react-pdf-highlighter-extended';
+import { PdfLoader, PdfHighlighter, IHighlight } from 'react-pdf-highlighter-extended';
 import { useToast } from "@/hooks/use-toast";
-import { PdfPageControls } from './pdf/PdfPageControls';
+import type { Position, ScaledPosition } from 'react-pdf-highlighter-extended';
 
 interface PdfViewerProps {
   file: File | null;
   url: string;
   selectedColor: string;
   isHighlighter?: boolean;
+}
+
+interface HighlightContent {
+  text?: string;
+  image?: string;
+}
+
+interface PdfHighlight extends IHighlight {
+  content: HighlightContent;
+  position: Position;
 }
 
 export const PdfViewer: React.FC<PdfViewerProps> = ({
@@ -17,7 +27,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   isHighlighter = false
 }) => {
   const { toast } = useToast();
-  const [highlights, setHighlights] = React.useState<Highlight[]>([]);
+  const [highlights, setHighlights] = React.useState<PdfHighlight[]>([]);
 
   const getFileUrl = () => {
     if (file) {
@@ -26,25 +36,27 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     return url;
   };
 
-  const addHighlight = (highlight: Highlight) => {
+  const addHighlight = (highlight: PdfHighlight) => {
     setHighlights([...highlights, highlight]);
     toast({
       title: "Highlight added",
-      variant: "default",
-      children: "Text has been highlighted"
+      description: "Text has been highlighted"
     });
   };
 
   return (
     <div className="flex flex-col h-full">
-      <PdfLoader url={getFileUrl()} beforeLoad={<div>Loading PDF...</div>}>
+      <PdfLoader 
+        url={getFileUrl()} 
+        beforeLoad={<div className="text-center p-4">Loading PDF...</div>}
+      >
         {(pdfDocument) => (
           <PdfHighlighter
             pdfDocument={pdfDocument}
             enableAreaSelection={true}
             highlights={highlights}
             onScrollChange={() => {}}
-            scrollRef={(scrollTo) => {}}
+            scrollRef={() => {}}
             onSelectionFinished={(
               position,
               content,
@@ -52,9 +64,8 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
               transformSelection
             ) => {
               addHighlight({
-                content,
+                content: { text: content.text },
                 position,
-                comment: "",
                 id: `highlight-${Date.now()}`,
               });
               hideTipAndSelection();
@@ -70,30 +81,25 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
             ) => {
               const isTextHighlight = !Boolean(highlight.content && highlight.content.image);
 
-              const component = isTextHighlight ? (
-                <Popup
-                  popupContent={<div>{highlight.content.text}</div>}
-                  onMouseOver={(popupContent) => setTip(highlight, (highlight) => popupContent)}
-                  onMouseOut={hideTip}
+              return (
+                <div
                   key={index}
-                >
-                  <div
-                    style={{
-                      background: selectedColor || "#ffd400",
-                      opacity: 0.4,
-                    }}
-                  />
-                </Popup>
-              ) : (
-                <AreaHighlight
-                  highlight={highlight}
-                  onChange={(boundingRect) => {
-                    console.log("Highlight changed:", boundingRect);
+                  style={{
+                    background: selectedColor || "#ffd400",
+                    opacity: 0.4,
                   }}
+                  onClick={() => {
+                    setTip(highlight, () => (
+                      <div>
+                        {highlight.content.text && (
+                          <div className="p-2">{highlight.content.text}</div>
+                        )}
+                      </div>
+                    ));
+                  }}
+                  onMouseLeave={hideTip}
                 />
               );
-
-              return component;
             }}
           />
         )}
