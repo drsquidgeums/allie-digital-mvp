@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from "@/components/ui/button";
 
 interface PdfPageControlsProps {
   currentPage: number;
@@ -13,23 +14,23 @@ export const PdfPageControls: React.FC<PdfPageControlsProps> = ({
 }) => {
   return (
     <div className="flex gap-2 mb-4">
-      <button
+      <Button
+        variant="outline"
         onClick={() => onPageChange(-1)}
         disabled={currentPage <= 1}
-        className="px-4 py-2 bg-primary text-primary-foreground rounded-md disabled:opacity-50"
       >
         Previous
-      </button>
+      </Button>
       <span className="px-4 py-2">
         Page {currentPage} of {numPages}
       </span>
-      <button
+      <Button
+        variant="outline"
         onClick={() => onPageChange(1)}
         disabled={currentPage >= numPages}
-        className="px-4 py-2 bg-primary text-primary-foreground rounded-md disabled:opacity-50"
       >
         Next
-      </button>
+      </Button>
     </div>
   );
 };
