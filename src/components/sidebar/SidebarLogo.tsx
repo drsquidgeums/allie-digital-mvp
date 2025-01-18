@@ -1,8 +1,9 @@
 import React from "react";
+import { LanguageSwitcher } from "../LanguageSwitcher";
 
 export const SidebarLogo = React.memo(() => (
   <div 
-    className="flex items-center mb-4 px-2"
+    className="flex items-center justify-between mb-4 px-2"
     role="banner"
   >
     <img 
@@ -10,6 +11,7 @@ export const SidebarLogo = React.memo(() => (
       alt="Allie Digital Logo" 
       className="w-12 h-12"
     />
+    <LanguageSwitcher />
   </div>
 ));
 
