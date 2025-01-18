@@ -15,7 +15,7 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
   const navigationItems = [
     {
       id: "files",
-      label: "Main Tool",
+      label: "Toolbox",
       icon: Monitor,
       path: "/"
     },

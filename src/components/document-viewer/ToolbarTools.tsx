@@ -51,15 +51,17 @@ export const ToolbarTools = () => {
 
   return (
     <TooltipProvider>
-      {tools.map((tool) => (
-        <ToolItem
-          key={tool.id}
-          {...tool}
-          isActive={activeToolId === tool.id}
-          onClick={handleToolClick}
-        />
-      ))}
-      <LanguageSelector />
+      <div className="flex items-center gap-2">
+        {tools.map((tool) => (
+          <ToolItem
+            key={tool.id}
+            {...tool}
+            isActive={activeToolId === tool.id}
+            onClick={handleToolClick}
+          />
+        ))}
+        <LanguageSelector />
+      </div>
     </TooltipProvider>
   );
 };
