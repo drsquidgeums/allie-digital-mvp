@@ -1,8 +1,7 @@
-import { useState, useCallback, RefObject, useEffect } from 'react';
+import { useState, useCallback, RefObject } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 import { type ToastProps } from "@/components/ui/toast";
 
-// Initialize PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface UsePdfLoaderProps {
@@ -25,6 +24,8 @@ export const usePdfLoader = ({
   const [numPages, setNumPages] = useState(0);
 
   const loadPDF = useCallback(async () => {
+    if (!file && !url) return;
+
     try {
       let pdfUrl: string | ArrayBuffer;
       
@@ -59,7 +60,7 @@ export const usePdfLoader = ({
     }
   }, [file, url, toast]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     loadPDF();
   }, [loadPDF]);
 
@@ -83,39 +84,6 @@ export const usePdfLoader = ({
       };
 
       await page.render(renderContext).promise;
-
-      // Create text layer
-      const textContent = await page.getTextContent();
-      const textLayer = document.createElement('div');
-      textLayer.className = 'textLayer';
-      textLayer.style.left = canvas.offsetLeft + 'px';
-      textLayer.style.top = canvas.offsetTop + 'px';
-      textLayer.style.height = viewport.height + 'px';
-      textLayer.style.width = viewport.width + 'px';
-
-      // Add text elements
-      textContent.items.forEach((item: any) => {
-        const tx = pdfjsLib.Util.transform(viewport.transform, item.transform);
-        const style = `
-          left: ${tx[4]}px;
-          top: ${tx[5]}px;
-          font-size: ${Math.sqrt((tx[0] * tx[0]) + (tx[1] * tx[1])) * 1.5}px;
-          transform: scaleX(${tx[0] / 1.5});
-        `;
-        
-        const textSpan = document.createElement('span');
-        textSpan.textContent = item.str;
-        textSpan.setAttribute('style', style);
-        textLayer.appendChild(textSpan);
-      });
-
-      // Remove existing text layer if any
-      const existingTextLayer = canvas.parentNode?.querySelector('.textLayer');
-      if (existingTextLayer) {
-        existingTextLayer.remove();
-      }
-
-      canvas.parentNode?.appendChild(textLayer);
     } catch (error) {
       console.error('Error rendering PDF page:', error);
       toast.toast({

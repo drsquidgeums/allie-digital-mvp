@@ -18,7 +18,9 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   isHighlighter = false
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
   const { pdfDoc, currentPage, numPages, changePage, renderPage } = usePdfLoader({
     file,
     url,
@@ -32,20 +34,33 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     }
   }, [pdfDoc, currentPage, renderPage]);
 
+  if (!pdfDoc) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        Loading PDF...
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col items-center gap-4 p-4">
+    <div className="flex flex-col items-center gap-4 p-4" ref={containerRef}>
       <PdfPageControls
         currentPage={currentPage}
         numPages={numPages}
         onPageChange={changePage}
       />
       <div 
-        className="relative border border-border rounded-lg overflow-hidden"
+        className="relative border border-border rounded-lg overflow-auto max-h-[calc(100vh-200px)]"
         style={{ width: 'fit-content' }}
       >
-        <canvas ref={canvasRef} className="max-w-full" />
+        <canvas 
+          ref={canvasRef} 
+          className="max-w-full"
+        />
+        {isHighlighter && (
+          <PdfTextLayer selectedColor={selectedColor} />
+        )}
       </div>
-      <PdfTextLayer selectedColor={selectedColor} />
     </div>
   );
 };
