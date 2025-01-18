@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
-import { TextLayerBuilder } from 'pdfjs-dist/lib/web/text_layer_builder';
 import { useToast } from "@/hooks/use-toast";
 
 // Initialize PDF.js worker
@@ -94,15 +93,25 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
         textLayer.style.height = viewport.height + 'px';
         textLayer.style.width = viewport.width + 'px';
 
-        // Create text layer builder
-        const textLayerBuilder = new TextLayerBuilder({
-          textLayerDiv: textLayer,
-          pageIndex: page.pageNumber - 1,
-          viewport: viewport
+        // Create text layer
+        const textItems = textContent.items;
+        textItems.forEach((item: any) => {
+          const tx = pdfjsLib.Util.transform(
+            viewport.transform,
+            item.transform
+          );
+          const style = `
+            left: ${tx[4]}px;
+            top: ${tx[5]}px;
+            font-size: ${Math.sqrt((tx[0] * tx[0]) + (tx[1] * tx[1])) * 1.5}px;
+            transform: scaleX(${tx[0] / 1.5});
+          `;
+          
+          const textSpan = document.createElement('span');
+          textSpan.textContent = item.str;
+          textSpan.setAttribute('style', style);
+          textLayer.appendChild(textSpan);
         });
-
-        textLayerBuilder.setTextContent(textContent);
-        textLayerBuilder.render();
 
         canvas.parentNode?.appendChild(textLayer);
 
