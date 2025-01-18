@@ -12,6 +12,7 @@ const Index = () => {
         <DocumentViewer 
           file={selectedFile}
           selectedColor={selectedColor}
+          isHighlighter={true}
         />
       </WorkspaceLayout>
     </div>

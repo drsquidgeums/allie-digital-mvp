@@ -5,6 +5,7 @@ import { jsPDF } from "jspdf";
 
 export const useDocumentViewer = () => {
   const [url, setUrl] = useState<string>("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const documentRef = useRef<HTMLDivElement>(null);
@@ -15,6 +16,7 @@ export const useDocumentViewer = () => {
 
   const handleDelete = () => {
     setUrl("");
+    setSelectedFile(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -72,6 +74,8 @@ export const useDocumentViewer = () => {
   return {
     url,
     setUrl,
+    selectedFile,
+    setSelectedFile,
     fileInputRef,
     documentRef,
     handleUpload,

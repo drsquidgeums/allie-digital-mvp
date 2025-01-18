@@ -22,6 +22,7 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
     handleUpload,
     handleDelete,
     handleDownload,
+    setSelectedFile,
   } = useDocumentViewer();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -41,6 +42,17 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(e.target.value);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      toast({
+        title: "File uploaded",
+        description: `${file.name} has been added to the viewer`,
+      });
+    }
   };
 
   return (
@@ -97,15 +109,7 @@ export const DocumentViewer = ({ file, selectedColor, isHighlighter }: DocumentV
         ref={fileInputRef}
         className="hidden"
         accept=".pdf,.doc,.docx,.txt,.html"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) {
-            toast({
-              title: "File uploaded",
-              description: `${file.name} has been added to the viewer`,
-            });
-          }
-        }}
+        onChange={handleFileChange}
         aria-hidden="true"
       />
     </div>
