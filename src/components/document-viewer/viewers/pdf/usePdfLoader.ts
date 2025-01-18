@@ -1,6 +1,6 @@
 import { useState, useCallback, RefObject, useEffect } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
-import { type Toast } from "@/components/ui/toast";
+import { type ToastProps } from "@/components/ui/toast";
 
 // Initialize PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
@@ -9,7 +9,7 @@ export const usePdfLoader = (
   file: File | null,
   url: string,
   canvasRef: RefObject<HTMLCanvasElement>,
-  toast: Toast
+  toast: { toast: (props: ToastProps) => void }
 ) => {
   const [pdfDoc, setPdfDoc] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
