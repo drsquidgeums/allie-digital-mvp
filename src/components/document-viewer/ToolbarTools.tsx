@@ -1,5 +1,4 @@
-import React from "react";
-import { TextSelect, Volume2, Brain, Palette, Focus, Timer } from "lucide-react";
+import { TextSelect, Volume2, Eye, Palette, Focus, Timer } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { BionicReader } from "../BionicReader";
@@ -14,7 +13,7 @@ export const ToolbarTools = () => {
   return (
     <div className="flex items-center gap-2">
       <ToolItem
-        icon={Brain}
+        icon={Eye}
         label={t('tools.bionic')}
         id="bionic"
         content={<BionicReader />}
