@@ -10,7 +10,7 @@ export const SidebarLogo = React.memo(() => (
       alt="Allie Digital Logo" 
       className="w-12 h-12"
     />
-    <span className="text-sm font-medium text-foreground">Antoinette</span>
+    <span className="text-sm font-medium text-foreground">Username</span>
   </div>
 ));
 
