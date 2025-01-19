@@ -34,10 +34,10 @@ export const Settings = () => {
   };
 
   return (
-    <div className="flex-1 min-h-screen bg-background animate-fade-in overflow-auto">
+    <div className="flex-1 bg-background animate-fade-in">
       <div className="container mx-auto py-4 px-4">
         <div className="max-w-4xl mx-auto space-y-6 pb-6">
-          <Card className="bg-card text-card-foreground rounded-xl overflow-y-auto relative border-none shadow-lg">
+          <Card className="bg-card text-card-foreground rounded-xl relative border-none shadow-lg">
             <div className="p-6 space-y-6">
               <div className="space-y-2">
                 <h2 className="text-2xl font-semibold">Application Settings</h2>
