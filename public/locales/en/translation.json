@@ -1,27 +1,10 @@
 {
-  "navigation": {
-    "fileUploader": "File Uploader",
-    "tasks": "Task Planner",
-    "aiAssistant": "AI Assistant",
-    "mindMap": "Mind Map",
-    "settings": "Settings",
-    "community": "Community"
-  },
   "tools": {
-    "pomodoro": "Pomodoro Timer",
-    "tts": "Text-to-Speech",
     "bionic": "Bionic Reader",
-    "color": "Colour Tool",
+    "tts": "Text to Speech",
+    "stt": "Speech to Text",
+    "pomodoro": "Pomodoro Timer",
+    "color": "Color Tools",
     "focus": "Focus Mode"
-  },
-  "common": {
-    "logout": "Logout",
-    "loading": "Loading...",
-    "error": "An error occurred",
-    "success": "Success"
-  },
-  "tasks": {
-    "taskAdded": "New task has been created successfully",
-    "pointsEarned": "You earned {{points}} points for completing this task!"
   }
 }
