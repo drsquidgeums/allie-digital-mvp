@@ -3,8 +3,22 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useTranslation } from "react-i18next";
 
 export const Settings = () => {
+  const { i18n } = useTranslation();
+
+  const languages = [
+    { code: 'en', name: 'English' },
+    { code: 'es', name: 'Español' },
+    { code: 'de', name: 'Deutsch' }
+  ];
+
+  const handleLanguageChange = (value: string) => {
+    i18n.changeLanguage(value);
+  };
+
   return (
     <div className="flex-1 min-h-screen bg-background animate-fade-in overflow-auto">
       <div className="container mx-auto py-4 px-4">
@@ -19,6 +33,27 @@ export const Settings = () => {
               <Separator />
 
               <div className="space-y-6">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">Language</h3>
+                  <div className="flex items-center gap-4">
+                    <Label>Select Language</Label>
+                    <Select value={i18n.language} onValueChange={handleLanguageChange}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select language" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {languages.map((lang) => (
+                          <SelectItem key={lang.code} value={lang.code}>
+                            {lang.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <Separator />
+
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium">Accessibility</h3>
                   <div className="space-y-4">

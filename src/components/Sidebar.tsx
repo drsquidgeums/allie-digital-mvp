@@ -39,7 +39,7 @@ export const Sidebar = React.memo(({
   return (
     <div 
       ref={sidebarRef}
-      className="w-64 bg-card border-r border-border p-4 flex flex-col h-full"
+      className="w-64 bg-card border-r border-border p-4 flex flex-col min-h-screen h-full sticky top-0"
       role="navigation"
       aria-label="Main navigation"
       tabIndex={0}
@@ -47,7 +47,7 @@ export const Sidebar = React.memo(({
     >
       <SidebarLogo />
       
-      <div className="space-y-2">
+      <div className="space-y-2 flex-1">
         <SidebarNavigation 
           activeComponent={activeComponent}
           setActiveComponent={setActiveComponent}
