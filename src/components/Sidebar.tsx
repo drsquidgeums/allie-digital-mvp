@@ -39,7 +39,7 @@ export const Sidebar = React.memo(({
   return (
     <div 
       ref={sidebarRef}
-      className="w-64 bg-card border-r border-border p-4 flex flex-col h-full"
+      className="w-64 bg-card border-r border-border p-4 flex flex-col h-screen overflow-y-auto"
       role="navigation"
       aria-label="Main navigation"
       tabIndex={0}
