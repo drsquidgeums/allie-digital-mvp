@@ -22,8 +22,15 @@ interface ToolItemProps {
 }
 
 export const ToolItem = ({ id, icon: Icon, label, content, isActive = false, onClick }: ToolItemProps) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setIsOpen(!isOpen);
+    onClick?.(id);
+  };
+
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <Tooltip>
         <TooltipTrigger asChild>
           <PopoverTrigger asChild>
@@ -32,7 +39,7 @@ export const ToolItem = ({ id, icon: Icon, label, content, isActive = false, onC
                 variant="outline"
                 size="sm"
                 className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground transition-colors duration-200"
-                onClick={() => onClick?.(id)}
+                onClick={handleClick}
                 data-tool-id={id}
               >
                 <Icon className="h-4 w-4" />
@@ -50,9 +57,9 @@ export const ToolItem = ({ id, icon: Icon, label, content, isActive = false, onC
           <p>{label}</p>
         </TooltipContent>
       </Tooltip>
-      {isActive && content && (
+      {content && (
         <PopoverContent 
-          className="w-80 p-0 shadow-md dark:bg-workspace-dark dark:text-[#FAFAFA]" 
+          className="w-80 p-4 shadow-md"
           align="end"
         >
           {content}

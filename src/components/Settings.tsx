@@ -10,9 +10,23 @@ export const Settings = () => {
   const { i18n } = useTranslation();
 
   const languages = [
-    { code: 'en', name: 'English' },
+    { code: 'en-US', name: 'English (US)' },
+    { code: 'en-GB', name: 'English (UK)' },
     { code: 'es', name: 'Español' },
-    { code: 'de', name: 'Deutsch' }
+    { code: 'zh', name: '中文' },
+    { code: 'fr', name: 'Français' },
+    { code: 'de', name: 'Deutsch' },
+    { code: 'it', name: 'Italiano' },
+    { code: 'pt', name: 'Português' },
+    { code: 'ru', name: 'Русский' },
+    { code: 'ja', name: '日本語' },
+    { code: 'ko', name: '한국어' },
+    { code: 'ar', name: 'العربية' },
+    { code: 'nl', name: 'Nederlands' },
+    { code: 'tr', name: 'Türkçe' },
+    { code: 'hi', name: 'हिन्दी' },
+    { code: 'pl', name: 'Polski' },
+    { code: 'sv', name: 'Svenska' }
   ];
 
   const handleLanguageChange = (value: string) => {
