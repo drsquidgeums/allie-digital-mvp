@@ -25,7 +25,6 @@ export const SidebarButton = ({ icon: Icon, label, isActive, onClick }: SidebarB
         focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
         dark:focus-visible:ring-offset-workspace-dark
         sepia:ring-offset-[hsl(35,25%,88%)] sepia:focus-visible:ring-offset-[hsl(35,25%,88%)]
-        ring-2 ring-primary ring-offset-2
       `}
       onClick={onClick}
       onKeyDown={handleKeyDown}
