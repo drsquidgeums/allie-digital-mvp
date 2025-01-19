@@ -19,9 +19,18 @@ interface ToolItemProps {
   content?: React.ReactNode;
   isActive?: boolean;
   onClick?: (id: string) => void;
+  popoverClassName?: string;
 }
 
-export const ToolItem = ({ id, icon: Icon, label, content, isActive = false, onClick }: ToolItemProps) => {
+export const ToolItem = ({ 
+  id, 
+  icon: Icon, 
+  label, 
+  content, 
+  isActive = false, 
+  onClick,
+  popoverClassName 
+}: ToolItemProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const handleClick = () => {
@@ -52,14 +61,14 @@ export const ToolItem = ({ id, icon: Icon, label, content, isActive = false, onC
           </PopoverTrigger>
         </TooltipTrigger>
         <TooltipContent 
-          className="bg-popover text-popover-foreground px-3 py-1.5 text-sm shadow-md transition-colors duration-200"
+          className="bg-popover text-popover-foreground px-3 py-1.5 text-sm shadow-md transition-colors duration-200 dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
         >
           <p>{label}</p>
         </TooltipContent>
       </Tooltip>
       {content && (
         <PopoverContent 
-          className="w-80 p-4 shadow-md"
+          className={popoverClassName}
           align="end"
         >
           {content}

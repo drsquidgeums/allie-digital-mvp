@@ -17,30 +17,35 @@ export const ToolbarTools = () => {
         label={t('tools.bionic')}
         id="bionic"
         content={<BionicReader />}
+        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
       />
       <ToolItem
         icon={Volume2}
         label={t('tools.tts')}
         id="tts"
         content={<TextToSpeech />}
+        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
       />
       <ToolItem
         icon={Timer}
         label={t('tools.pomodoro')}
         id="pomodoro"
         content={<PomodoroTimer />}
+        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
       />
       <ToolItem
         icon={Palette}
         label={t('tools.color')}
         id="color"
         content={<ColorSeparator onColorChange={() => {}} />}
+        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
       />
       <ToolItem
         icon={Focus}
         label={t('tools.focus')}
         id="focus"
         content={<FocusMode />}
+        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
       />
     </div>
   );
