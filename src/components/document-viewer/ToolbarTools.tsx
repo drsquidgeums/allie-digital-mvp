@@ -1,4 +1,4 @@
-import { TextSelect, Mic, Eye, Palette, Focus, Timer, MicOff } from "lucide-react";
+import { TextSelect, Speaker, Eye, Palette, Focus, Timer, SpeakerOff } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { BionicReader } from "../BionicReader";
@@ -21,14 +21,14 @@ export const ToolbarTools = () => {
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
       />
       <ToolItem
-        icon={Mic}
+        icon={Speaker}
         label={t('tools.tts')}
         id="tts"
         content={<TextToSpeech />}
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
       />
       <ToolItem
-        icon={MicOff}
+        icon={SpeakerOff}
         label={t('tools.stt')}
         id="stt"
         content={<SpeechToText />}
