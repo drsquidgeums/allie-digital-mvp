@@ -27,7 +27,7 @@ export const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) =
 
   return (
     <div className="flex min-h-screen h-full bg-background">
-      <div className="sticky top-0 h-screen">
+      <div className="sticky top-0 h-screen overflow-y-auto">
         {memoizedSidebar}
       </div>
       {memoizedContent}
