@@ -2,7 +2,7 @@ import React from "react";
 
 export const SidebarLogo = React.memo(() => (
   <div 
-    className="flex items-center justify-between mb-4 px-2"
+    className="flex items-center gap-3 mb-4 px-2"
     role="banner"
   >
     <img 
@@ -10,6 +10,7 @@ export const SidebarLogo = React.memo(() => (
       alt="Allie Digital Logo" 
       className="w-12 h-12"
     />
+    <span className="text-sm font-medium text-foreground">Antoinette</span>
   </div>
 ));
 
