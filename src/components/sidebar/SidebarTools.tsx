@@ -1,6 +1,7 @@
 import React from "react";
 import { 
   Users,
+  Settings,
   LogOut
 } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
@@ -19,6 +20,10 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
     console.log("Logout clicked");
   };
 
+  const handleSettingsClick = () => {
+    navigate('/settings');
+  };
+
   const handleCommunityClick = () => {
     navigate('/community');
   };
@@ -26,6 +31,12 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
   return (
     <div className="space-y-2">
       <div className="pt-4 border-t border-border">
+        <SidebarButton
+          icon={Settings}
+          label="Settings"
+          isActive={location.pathname === '/settings'}
+          onClick={handleSettingsClick}
+        />
         <SidebarButton
           icon={Users}
           label="Community"

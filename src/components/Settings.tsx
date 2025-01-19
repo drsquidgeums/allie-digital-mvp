@@ -6,9 +6,9 @@ import { Label } from "@/components/ui/label";
 
 export const Settings = () => {
   return (
-    <div className="flex-1 min-h-screen bg-background animate-fade-in">
+    <div className="flex-1 min-h-screen bg-background animate-fade-in overflow-auto">
       <div className="container mx-auto py-4 px-4">
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-6 pb-6">
           <Card className="bg-card text-card-foreground rounded-xl overflow-y-auto relative border-none shadow-lg">
             <div className="p-6 space-y-6">
               <div className="space-y-2">

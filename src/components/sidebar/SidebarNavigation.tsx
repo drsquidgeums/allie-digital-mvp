@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Monitor, CheckSquare, Brain, Bot, Settings } from "lucide-react";
+import { Monitor, CheckSquare, Brain, Bot } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 
 interface SidebarNavigationProps {
@@ -36,12 +36,6 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       label: "Mind Map",
       icon: Brain,
       path: "/mind-map"
-    },
-    {
-      id: "settings",
-      label: "Settings",
-      icon: Settings,
-      path: "/settings"
     }
   ];
 
