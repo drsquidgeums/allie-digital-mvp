@@ -10,6 +10,7 @@ import { TaskDashboard } from "./components/dashboard/TaskDashboard";
 import AIAssistant from "./pages/AIAssistant";
 import MindMapDashboard from "./pages/MindMapDashboard";
 import CommunityPage from "./pages/CommunityPage";
+import SettingsPage from "./pages/SettingsPage";
 import { PomodoroProvider } from "./contexts/PomodoroContext";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const AppContent = () => {
       <Route path="/tasks" element={<TaskDashboard />} />
       <Route path="/ai-assistant" element={<AIAssistant />} />
       <Route path="/mind-map" element={<MindMapDashboard />} />
+      <Route path="/settings" element={<SettingsPage />} />
       <Route path="/community" element={<CommunityPage />} />
       <Route path="/" element={<Navigate to="/file-uploader" replace />} />
     </Routes>
