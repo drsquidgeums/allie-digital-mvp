@@ -1,5 +1,5 @@
 import React from "react";
-import { TextSelect, Volume2, Brain, Palette, Focus } from "lucide-react";
+import { TextSelect, Volume2, Brain, Palette, Focus, Timer } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 
@@ -17,6 +17,11 @@ export const ToolbarTools = () => {
         icon={Volume2}
         label={t('tools.tts')}
         id="tts"
+      />
+      <ToolItem
+        icon={Timer}
+        label={t('tools.pomodoro')}
+        id="pomodoro"
       />
       <ToolItem
         icon={Palette}

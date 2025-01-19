@@ -31,7 +31,7 @@ export const ToolItem = ({ id, icon: Icon, label, content, isActive = false, onC
               <Button
                 variant="outline"
                 size="sm"
-                className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground"
+                className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground transition-colors duration-200"
                 onClick={() => onClick?.(id)}
                 data-tool-id={id}
               >
@@ -44,7 +44,9 @@ export const ToolItem = ({ id, icon: Icon, label, content, isActive = false, onC
             </div>
           </PopoverTrigger>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent 
+          className="bg-popover text-popover-foreground px-3 py-1.5 text-sm shadow-md transition-colors duration-200"
+        >
           <p>{label}</p>
         </TooltipContent>
       </Tooltip>
