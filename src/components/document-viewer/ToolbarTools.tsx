@@ -11,22 +11,22 @@ export const ToolbarTools = () => {
       <ToolItem
         icon={Brain}
         label={t('tools.bionic')}
-        toolId="bionic"
+        id="bionic"
       />
       <ToolItem
         icon={Volume2}
         label={t('tools.tts')}
-        toolId="tts"
+        id="tts"
       />
       <ToolItem
         icon={Palette}
         label={t('tools.color')}
-        toolId="color"
+        id="color"
       />
       <ToolItem
         icon={Focus}
         label={t('tools.focus')}
-        toolId="focus"
+        id="focus"
       />
     </div>
   );

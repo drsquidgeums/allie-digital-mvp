@@ -16,12 +16,12 @@ interface ToolItemProps {
   id: string;
   icon: LucideIcon;
   label: string;
-  content: React.ReactNode;
-  isActive: boolean;
-  onClick: (id: string) => void;
+  content?: React.ReactNode;
+  isActive?: boolean;
+  onClick?: (id: string) => void;
 }
 
-export const ToolItem = ({ id, icon: Icon, label, content, isActive, onClick }: ToolItemProps) => {
+export const ToolItem = ({ id, icon: Icon, label, content, isActive = false, onClick }: ToolItemProps) => {
   return (
     <Popover>
       <Tooltip>
@@ -32,7 +32,7 @@ export const ToolItem = ({ id, icon: Icon, label, content, isActive, onClick }: 
                 variant="outline"
                 size="sm"
                 className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground"
-                onClick={() => onClick(id)}
+                onClick={() => onClick?.(id)}
                 data-tool-id={id}
               >
                 <Icon className="h-4 w-4" />
@@ -48,7 +48,7 @@ export const ToolItem = ({ id, icon: Icon, label, content, isActive, onClick }: 
           <p>{label}</p>
         </TooltipContent>
       </Tooltip>
-      {isActive && (
+      {isActive && content && (
         <PopoverContent 
           className="w-80 p-0 shadow-md dark:bg-workspace-dark dark:text-[#FAFAFA]" 
           align="end"
