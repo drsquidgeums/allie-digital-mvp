@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Palette, Moon, Sun, Book, X } from "lucide-react";
+import { Text, Moon, Sun, Book } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -35,7 +35,7 @@ export const ThemeProvider = () => {
             className={`${buttonClassName} bg-background hover:bg-accent hover:text-accent-foreground`}
             title="Customise Font"
           >
-            <Palette className="h-4 w-4" />
+            <Text className="h-4 w-4" />
           </Button>
         </PopoverTrigger>
         <PopoverContent 
