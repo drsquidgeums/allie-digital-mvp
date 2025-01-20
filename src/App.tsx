@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider as NextThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import { TaskDashboard } from "./components/dashboard/TaskDashboard";
@@ -13,7 +13,6 @@ import CommunityPage from "./pages/CommunityPage";
 import SettingsPage from "./pages/SettingsPage";
 import { PomodoroProvider } from "./contexts/PomodoroContext";
 
-// Move queryClient outside component to prevent recreation
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -26,22 +25,20 @@ const queryClient = new QueryClient({
   },
 });
 
-// Memoize the routes to prevent unnecessary re-renders
 const AppRoutes = React.memo(() => (
   <Routes>
+    <Route path="/" element={<Index />} />
     <Route path="/file-uploader" element={<Index />} />
     <Route path="/tasks" element={<TaskDashboard />} />
     <Route path="/ai-assistant" element={<AIAssistant />} />
     <Route path="/mind-map" element={<MindMapDashboard />} />
     <Route path="/settings" element={<SettingsPage />} />
     <Route path="/community" element={<CommunityPage />} />
-    <Route path="/" element={<Navigate to="/file-uploader" replace />} />
   </Routes>
 ));
 
 AppRoutes.displayName = "AppRoutes";
 
-// Memoize the providers wrapper to prevent unnecessary re-renders
 const ProvidersWrapper = React.memo(({ children }: { children: React.ReactNode }) => (
   <QueryClientProvider client={queryClient}>
     <NextThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>

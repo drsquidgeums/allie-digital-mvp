@@ -17,7 +17,7 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       id: "files",
       label: "Toolbox",
       icon: Monitor,
-      path: "/file-uploader"
+      path: "/"
     },
     {
       id: "tasks",
@@ -40,6 +40,9 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
   ];
 
   const isPathActive = useCallback((path: string) => {
+    if (path === "/") {
+      return location.pathname === "/" || location.pathname === "/file-uploader";
+    }
     return location.pathname === path;
   }, [location.pathname]);
 
