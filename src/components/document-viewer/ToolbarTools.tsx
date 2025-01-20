@@ -1,4 +1,4 @@
-import { TextSelect, Speaker, Eye, Palette, Focus, Timer, SpeakerOff, Camera } from "lucide-react";
+import { TextSelect, Speaker, Eye, Palette, Focus, Timer, VolumeX, Camera } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { BionicReader } from "../BionicReader";
@@ -26,7 +26,7 @@ export const ToolbarTools = () => {
         return;
       }
 
-      const canvas = await html2canvas(documentElement, {
+      const canvas = await html2canvas(documentElement as HTMLElement, {
         logging: false,
         useCORS: true,
         allowTaint: true,
@@ -72,7 +72,7 @@ export const ToolbarTools = () => {
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
       />
       <ToolItem
-        icon={SpeakerOff}
+        icon={VolumeX}
         label={t('tools.stt')}
         id="stt"
         content={<SpeechToText />}
