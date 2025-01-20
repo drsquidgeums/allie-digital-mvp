@@ -46,6 +46,14 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
     return location.pathname === path;
   };
 
+  const handleItemClick = (id: string, path: string) => {
+    setActiveComponent(id);
+    // Only navigate if we're actually changing routes
+    if (location.pathname !== path) {
+      navigate(path);
+    }
+  };
+
   return (
     <div className="space-y-2">
       {navigationItems.map(({ id, label, icon: Icon, path }) => (
@@ -54,10 +62,7 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
           icon={Icon}
           label={label}
           isActive={isPathActive(path)}
-          onClick={() => {
-            setActiveComponent(id);
-            navigate(path);
-          }}
+          onClick={() => handleItemClick(id, path)}
         />
       ))}
     </div>
