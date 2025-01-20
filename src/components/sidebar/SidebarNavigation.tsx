@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Monitor, CheckSquare, Brain, Bot } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
@@ -39,12 +39,17 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
     }
   ];
 
-  const isPathActive = (path: string) => {
+  const isPathActive = useCallback((path: string) => {
     if (path === "/") {
       return location.pathname === "/";
     }
     return location.pathname === path;
-  };
+  }, [location.pathname]);
+
+  const handleNavigation = useCallback((id: string, path: string) => {
+    setActiveComponent(id);
+    navigate(path);
+  }, [navigate, setActiveComponent]);
 
   return (
     <div className="space-y-2">
@@ -54,10 +59,7 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
           icon={Icon}
           label={label}
           isActive={isPathActive(path)}
-          onClick={() => {
-            setActiveComponent(id);
-            navigate(path);
-          }}
+          onClick={() => handleNavigation(id, path)}
         />
       ))}
     </div>

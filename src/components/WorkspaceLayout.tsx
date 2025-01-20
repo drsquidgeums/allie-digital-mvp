@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Sidebar } from "@/components/Sidebar";
 
@@ -7,16 +7,24 @@ interface WorkspaceLayoutProps {
 }
 
 export const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) => {
+  // Memoize the callback functions
+  const handleFileUpload = useCallback(() => {}, []);
+  const handleColorChange = useCallback(() => {}, []);
+  const handleFileSelect = useCallback(() => {}, []);
+  const handleFileDelete = useCallback(() => {}, []);
+
+  // Memoize the sidebar component
   const memoizedSidebar = useMemo(() => (
     <Sidebar 
-      onFileUpload={() => {}} 
-      onColorChange={() => {}}
+      onFileUpload={handleFileUpload}
+      onColorChange={handleColorChange}
       uploadedFiles={[]}
-      onFileSelect={() => {}}
-      onFileDelete={() => {}}
+      onFileSelect={handleFileSelect}
+      onFileDelete={handleFileDelete}
     />
-  ), []);
+  ), [handleFileUpload, handleColorChange, handleFileSelect, handleFileDelete]);
 
+  // Memoize the content
   const memoizedContent = useMemo(() => (
     <div className="flex-1 p-6 overflow-y-auto">
       <Card className="h-full shadow-lg">
