@@ -49,11 +49,11 @@ const App = () => {
   }, []);
 
   return (
-    <NextThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <PomodoroProvider>
-            <BrowserRouter>
+    <BrowserRouter>
+      <NextThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <PomodoroProvider>
               <Toaster />
               <Sonner />
               <Routes>
@@ -65,11 +65,11 @@ const App = () => {
                 <Route path="/community" element={<CommunityPage />} />
                 <Route path="/" element={<Navigate to="/file-uploader" replace />} />
               </Routes>
-            </BrowserRouter>
-          </PomodoroProvider>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </NextThemeProvider>
+            </PomodoroProvider>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </NextThemeProvider>
+    </BrowserRouter>
   );
 };
 
