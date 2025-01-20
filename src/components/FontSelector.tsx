@@ -23,11 +23,12 @@ export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) 
 
   const handleBoldToggle = () => {
     setIsBold(!isBold);
-    // Apply bold styling to the sidebar text
+    // Apply bold styling to all sidebar text elements
     document.documentElement.style.setProperty('--font-weight', !isBold ? 'bold' : 'normal');
-    // Apply bold styling to specific sidebar elements, including navigation links
-    const sidebarText = document.querySelectorAll('[data-sidebar] span, [data-sidebar] label, [data-sidebar] div, [data-sidebar] button span');
-    sidebarText.forEach(element => {
+    
+    // Target all sidebar navigation links and text elements
+    const sidebarElements = document.querySelectorAll('[data-sidebar] span, [data-sidebar] a, [data-sidebar-nav] span, [data-sidebar-nav] a, .sidebar-nav-link');
+    sidebarElements.forEach(element => {
       (element as HTMLElement).style.fontWeight = !isBold ? 'bold' : 'normal';
     });
     
