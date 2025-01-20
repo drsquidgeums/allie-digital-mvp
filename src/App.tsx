@@ -74,21 +74,19 @@ const App = () => {
   }, []);
 
   return (
-    <React.StrictMode>
-      <NextThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-        <QueryClientProvider client={queryClient}>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <NextThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <TooltipProvider>
             <PomodoroProvider>
               <Toaster />
               <Sonner />
-              <BrowserRouter>
-                <AppContent />
-              </BrowserRouter>
+              <AppContent />
             </PomodoroProvider>
           </TooltipProvider>
-        </QueryClientProvider>
-      </NextThemeProvider>
-    </React.StrictMode>
+        </NextThemeProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 };
 
