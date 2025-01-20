@@ -1,19 +1,65 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Speaker, SpeakerOff, Copy } from "lucide-react";
+import { Mic, MicOff, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 
 export const SpeechToText = () => {
+  const [isListening, setIsListening] = useState(false);
+  const [transcript, setTranscript] = useState("");
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const { toast } = useToast();
-  const {
-    isListening,
-    transcript,
-    setTranscript,
-    startListening,
-    stopListening
-  } = useSpeechRecognition();
+
+  const startListening = () => {
+    if (!('webkitSpeechRecognition' in window)) {
+      toast({
+        title: "Not supported",
+        description: "Speech recognition is not supported in your browser",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    recognitionRef.current = new webkitSpeechRecognition();
+    recognitionRef.current.continuous = true;
+    recognitionRef.current.interimResults = true;
+
+    recognitionRef.current.onresult = (event) => {
+      let currentTranscript = '';
+      for (let i = 0; i < event.results.length; i++) {
+        currentTranscript += event.results[i][0].transcript;
+      }
+      setTranscript(currentTranscript);
+    };
+
+    recognitionRef.current.onerror = (event) => {
+      console.error('Speech recognition error:', event.error);
+      stopListening();
+      toast({
+        title: "Error",
+        description: "There was an error with speech recognition",
+        variant: "destructive"
+      });
+    };
+
+    recognitionRef.current.start();
+    setIsListening(true);
+    toast({
+      title: "Listening",
+      description: "Speech recognition started"
+    });
+  };
+
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+      toast({
+        title: "Stopped",
+        description: "Speech recognition stopped"
+      });
+    }
+  };
 
   const copyToClipboard = async () => {
     try {
@@ -41,12 +87,12 @@ export const SpeechToText = () => {
         >
           {isListening ? (
             <>
-              <SpeakerOff className="w-3 h-3 mr-1" />
+              <MicOff className="w-3 h-3 mr-1" />
               Stop Recording
             </>
           ) : (
             <>
-              <Speaker className="w-3 h-3 mr-1" />
+              <Mic className="w-3 h-3 mr-1" />
               Start Recording
             </>
           )}
