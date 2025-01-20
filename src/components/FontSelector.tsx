@@ -11,13 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Bold } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog/dialog-root";
 
 interface FontSelectorProps {
   selectedFont: string;
@@ -30,7 +23,14 @@ export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) 
 
   const handleBoldToggle = () => {
     setIsBold(!isBold);
+    // Apply bold styling to the sidebar text
     document.documentElement.style.setProperty('--font-weight', !isBold ? 'bold' : 'normal');
+    // Apply bold styling to specific sidebar elements
+    const sidebarText = document.querySelectorAll('[data-sidebar] span, [data-sidebar] label, [data-sidebar] div');
+    sidebarText.forEach(element => {
+      (element as HTMLElement).style.fontWeight = !isBold ? 'bold' : 'normal';
+    });
+    
     toast({
       title: !isBold ? "Bold text enabled" : "Bold text disabled",
       description: "Font weight has been updated",
