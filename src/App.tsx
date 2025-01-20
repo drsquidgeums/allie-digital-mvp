@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider as NextThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import { TaskDashboard } from "./components/dashboard/TaskDashboard";
@@ -14,31 +14,6 @@ import SettingsPage from "./pages/SettingsPage";
 import { PomodoroProvider } from "./contexts/PomodoroContext";
 
 const queryClient = new QueryClient();
-
-const AppContent = () => {
-  const location = useLocation();
-
-  React.useEffect(() => {
-    // Reapply overlay on route changes
-    const savedOverlay = localStorage.getItem('irlenOverlayColor');
-    if (savedOverlay) {
-      document.documentElement.style.setProperty('--overlay-color', savedOverlay);
-      document.documentElement.style.setProperty('--overlay-display', 'block');
-    }
-  }, [location.pathname]);
-
-  return (
-    <Routes>
-      <Route path="/file-uploader" element={<Index />} />
-      <Route path="/tasks" element={<TaskDashboard />} />
-      <Route path="/ai-assistant" element={<AIAssistant />} />
-      <Route path="/mind-map" element={<MindMapDashboard />} />
-      <Route path="/settings" element={<SettingsPage />} />
-      <Route path="/community" element={<CommunityPage />} />
-      <Route path="/" element={<Navigate to="/file-uploader" replace />} />
-    </Routes>
-  );
-};
 
 const App = () => {
   React.useEffect(() => {
@@ -78,10 +53,18 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <PomodoroProvider>
-            <Toaster />
-            <Sonner />
             <BrowserRouter>
-              <AppContent />
+              <Toaster />
+              <Sonner />
+              <Routes>
+                <Route path="/file-uploader" element={<Index />} />
+                <Route path="/tasks" element={<TaskDashboard />} />
+                <Route path="/ai-assistant" element={<AIAssistant />} />
+                <Route path="/mind-map" element={<MindMapDashboard />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/community" element={<CommunityPage />} />
+                <Route path="/" element={<Navigate to="/file-uploader" replace />} />
+              </Routes>
             </BrowserRouter>
           </PomodoroProvider>
         </TooltipProvider>
