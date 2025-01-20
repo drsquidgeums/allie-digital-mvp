@@ -13,18 +13,26 @@ import CommunityPage from "./pages/CommunityPage";
 import SettingsPage from "./pages/SettingsPage";
 import { PomodoroProvider } from "./contexts/PomodoroContext";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      retry: false,
+      staleTime: Infinity
+    },
+  },
+});
 
 const App = () => {
   React.useEffect(() => {
-    // Apply saved overlay on app mount and add overlay styles
     const savedOverlay = localStorage.getItem('irlenOverlayColor');
     if (savedOverlay) {
       document.documentElement.style.setProperty('--overlay-color', savedOverlay);
       document.documentElement.style.setProperty('--overlay-display', 'block');
     }
 
-    // Add global overlay styles
     const style = document.createElement('style');
     style.textContent = `
       body::after {
@@ -50,25 +58,27 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <NextThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <NextThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <TooltipProvider>
             <PomodoroProvider>
-              <Toaster />
-              <Sonner />
-              <Routes>
-                <Route path="/file-uploader" element={<Index />} />
-                <Route path="/tasks" element={<TaskDashboard />} />
-                <Route path="/ai-assistant" element={<AIAssistant />} />
-                <Route path="/mind-map" element={<MindMapDashboard />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/community" element={<CommunityPage />} />
-                <Route path="/" element={<Navigate to="/file-uploader" replace />} />
-              </Routes>
+              <div className="app-container">
+                <Toaster />
+                <Sonner />
+                <Routes>
+                  <Route path="/file-uploader" element={<Index />} />
+                  <Route path="/tasks" element={<TaskDashboard />} />
+                  <Route path="/ai-assistant" element={<AIAssistant />} />
+                  <Route path="/mind-map" element={<MindMapDashboard />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/community" element={<CommunityPage />} />
+                  <Route path="/" element={<Navigate to="/file-uploader" replace />} />
+                </Routes>
+              </div>
             </PomodoroProvider>
           </TooltipProvider>
-        </QueryClientProvider>
-      </NextThemeProvider>
+        </NextThemeProvider>
+      </QueryClientProvider>
     </BrowserRouter>
   );
 };
