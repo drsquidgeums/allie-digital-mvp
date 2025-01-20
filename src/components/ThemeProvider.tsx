@@ -2,13 +2,10 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Palette, Moon, Sun, Book, X } from "lucide-react";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-} from "@/components/ui/dialog/dialog-root";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { IrlenOverlay } from "./IrlenOverlay";
 import { AmbientMusic } from "./AmbientMusic";
 import { useTheme } from "next-themes";
@@ -30,8 +27,8 @@ export const ThemeProvider = () => {
 
   return (
     <div className="flex items-center gap-2">
-      <Dialog>
-        <DialogTrigger asChild>
+      <Popover>
+        <PopoverTrigger asChild>
           <Button
             variant="outline"
             size="sm"
@@ -40,19 +37,14 @@ export const ThemeProvider = () => {
           >
             <Palette className="h-4 w-4" />
           </Button>
-        </DialogTrigger>
-        <DialogContent className="dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]">
-          <DialogHeader className="flex flex-row items-center justify-between">
-            <DialogTitle>Choose a Font</DialogTitle>
-            <DialogClose asChild>
-              <Button variant="ghost" size="icon" className="h-6 w-6">
-                <X className="h-4 w-4" />
-              </Button>
-            </DialogClose>
-          </DialogHeader>
+        </PopoverTrigger>
+        <PopoverContent 
+          className="w-[200px] p-4 dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
+          align="end"
+        >
           <FontSelector selectedFont={selectedFont} onFontChange={handleFontChange} />
-        </DialogContent>
-      </Dialog>
+        </PopoverContent>
+      </Popover>
       <IrlenOverlay />
       <AmbientMusic />
       <div className="flex gap-2">
