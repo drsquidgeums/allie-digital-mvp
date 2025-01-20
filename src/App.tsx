@@ -74,19 +74,19 @@ const App = () => {
   }, []);
 
   return (
-    <BrowserRouter>
+    <NextThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
       <QueryClientProvider client={queryClient}>
-        <NextThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <TooltipProvider>
-            <PomodoroProvider>
-              <Toaster />
-              <Sonner />
+        <TooltipProvider>
+          <PomodoroProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
               <AppContent />
-            </PomodoroProvider>
-          </TooltipProvider>
-        </NextThemeProvider>
+            </BrowserRouter>
+          </PomodoroProvider>
+        </TooltipProvider>
       </QueryClientProvider>
-    </BrowserRouter>
+    </NextThemeProvider>
   );
 };
 

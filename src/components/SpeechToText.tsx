@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Speaker, Mic, Copy } from "lucide-react";
+import { Speaker, SpeakerOff, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 
@@ -41,12 +41,12 @@ export const SpeechToText = () => {
         >
           {isListening ? (
             <>
-              <Speaker className="w-3 h-3 mr-1" />
+              <SpeakerOff className="w-3 h-3 mr-1" />
               Stop Recording
             </>
           ) : (
             <>
-              <Mic className="w-3 h-3 mr-1" />
+              <Speaker className="w-3 h-3 mr-1" />
               Start Recording
             </>
           )}
