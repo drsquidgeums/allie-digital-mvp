@@ -12,7 +12,6 @@ import MindMapDashboard from "./pages/MindMapDashboard";
 import CommunityPage from "./pages/CommunityPage";
 import SettingsPage from "./pages/SettingsPage";
 import { PomodoroProvider } from "./contexts/PomodoroContext";
-import { WorkspaceLayout } from "./components/WorkspaceLayout";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,13 +27,13 @@ const queryClient = new QueryClient({
 
 const AppRoutes = React.memo(() => (
   <Routes>
-    <Route path="/" element={<WorkspaceLayout><Index /></WorkspaceLayout>} />
-    <Route path="/file-uploader" element={<WorkspaceLayout><Index /></WorkspaceLayout>} />
-    <Route path="/tasks" element={<WorkspaceLayout><TaskDashboard /></WorkspaceLayout>} />
-    <Route path="/ai-assistant" element={<WorkspaceLayout><AIAssistant /></WorkspaceLayout>} />
-    <Route path="/mind-map" element={<WorkspaceLayout><MindMapDashboard /></WorkspaceLayout>} />
-    <Route path="/settings" element={<WorkspaceLayout><SettingsPage /></WorkspaceLayout>} />
-    <Route path="/community" element={<WorkspaceLayout><CommunityPage /></WorkspaceLayout>} />
+    <Route path="/" element={<Index />} />
+    <Route path="/file-uploader" element={<Index />} />
+    <Route path="/tasks" element={<TaskDashboard />} />
+    <Route path="/ai-assistant" element={<AIAssistant />} />
+    <Route path="/mind-map" element={<MindMapDashboard />} />
+    <Route path="/settings" element={<SettingsPage />} />
+    <Route path="/community" element={<CommunityPage />} />
   </Routes>
 ));
 
