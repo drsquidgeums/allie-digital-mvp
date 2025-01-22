@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ThemeProvider } from "./ThemeProvider";
 import { Worker, Viewer } from '@react-pdf-viewer/core';
-import { highlightPlugin } from '@react-pdf-viewer/highlight';
+import { highlightPlugin, Trigger } from '@react-pdf-viewer/highlight';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import { DocumentToolbar } from "./document-viewer/DocumentToolbar";
 import { ToolbarTools } from "./document-viewer/ToolbarTools";
@@ -28,7 +28,7 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
 
   // Initialize plugins with correct properties
   const highlightPluginInstance = highlightPlugin({
-    trigger: 'click',
+    trigger: 'MouseUp' as Trigger,
   });
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
