@@ -3,8 +3,13 @@ import { useToast } from "@/hooks/use-toast";
 import * as pdfjsLib from 'pdfjs-dist';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 
-// Configure PDF.js worker
+// Configure PDF.js worker using CDN
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
+
+interface PdfRendererResult {
+  page: any;
+  viewport: any;
+}
 
 export const usePdfRenderer = () => {
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
@@ -13,11 +18,11 @@ export const usePdfRenderer = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
-  const loadPDF = async (file: File | null, url: string) => {
+  const loadPDF = async (file: File | null, url: string): Promise<void> => {
     try {
       setIsLoading(true);
       let pdfData: Uint8Array;
-      
+
       if (file) {
         const arrayBuffer = await file.arrayBuffer();
         pdfData = new Uint8Array(arrayBuffer);
@@ -51,7 +56,10 @@ export const usePdfRenderer = () => {
     }
   };
 
-  const renderPage = async (pageNumber: number, pdfDoc: PDFDocumentProxy = pdf!) => {
+  const renderPage = async (
+    pageNumber: number,
+    pdfDoc: PDFDocumentProxy | null = pdf
+  ): Promise<PdfRendererResult | undefined> => {
     if (!pdfDoc) return;
 
     try {
@@ -68,7 +76,7 @@ export const usePdfRenderer = () => {
     }
   };
 
-  const handlePageChange = (newPage: number) => {
+  const handlePageChange = (newPage: number): void => {
     if (pdf && newPage >= 1 && newPage <= pdf.numPages) {
       setCurrentPage(newPage);
       renderPage(newPage);
