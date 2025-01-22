@@ -26,8 +26,8 @@ export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) 
     // Apply bold styling to all sidebar text elements
     document.documentElement.style.setProperty('--font-weight', !isBold ? 'bold' : 'normal');
     
-    // Target all sidebar navigation links and text elements
-    const sidebarElements = document.querySelectorAll('[data-sidebar] span, [data-sidebar] a, [data-sidebar-nav] span, [data-sidebar-nav] a, .sidebar-nav-link');
+    // Target all sidebar navigation links and text elements, including settings, community, and logout
+    const sidebarElements = document.querySelectorAll('[data-sidebar] span, [data-sidebar] a, [data-sidebar-nav] span, [data-sidebar-nav] a, .sidebar-nav-link, button[role="menuitem"] span');
     sidebarElements.forEach(element => {
       (element as HTMLElement).style.fontWeight = !isBold ? 'bold' : 'normal';
     });
