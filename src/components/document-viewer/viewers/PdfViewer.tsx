@@ -7,7 +7,8 @@ import 'rangy/lib/rangy-highlighter';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 
 // Initialize PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+const workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
 
 interface PdfViewerProps {
   file: File | null;
@@ -31,26 +32,12 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   const highlighterRef = useRef<any>(null);
 
   useEffect(() => {
-    // Initialize Rangy
-    rangy.init();
-    highlighterRef.current = rangy.createHighlighter();
-    highlighterRef.current.addClassApplier(rangy.createClassApplier('highlight', {
-      ignoreWhiteSpace: true,
-      tagNames: ['span', 'a']
-    }));
-
-    return () => {
-      if (pdf) {
-        pdf.destroy();
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     const loadPDF = async () => {
       try {
         setIsLoading(true);
-        let pdfData;
+        console.log('Loading PDF with file:', file?.name, 'or URL:', url);
+        
+        let pdfData: Uint8Array | string;
         
         if (file) {
           const arrayBuffer = await file.arrayBuffer();
@@ -60,11 +47,16 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
           const arrayBuffer = await response.arrayBuffer();
           pdfData = new Uint8Array(arrayBuffer);
         } else {
+          console.log('No PDF source provided');
+          setIsLoading(false);
           return;
         }
 
+        console.log('PDF data loaded, creating document');
         const loadingTask = pdfjsLib.getDocument({ data: pdfData });
         const pdfDoc = await loadingTask.promise;
+        console.log('PDF document created with', pdfDoc.numPages, 'pages');
+        
         setPdf(pdfDoc);
         setCurrentPage(1);
         await renderPage(1, pdfDoc);
@@ -77,7 +69,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
         console.error('Error loading PDF:', error);
         toast({
           title: "Error",
-          description: "Failed to load PDF document",
+          description: "Failed to load PDF document. Please try again.",
           variant: "destructive",
         });
       } finally {
@@ -86,16 +78,31 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     };
 
     loadPDF();
+
+    return () => {
+      if (pdf) {
+        pdf.destroy();
+      }
+    };
   }, [file, url]);
 
   const renderPage = async (pageNumber: number, pdfDoc: PDFDocumentProxy = pdf!) => {
-    if (!canvasRef.current || !pdfDoc) return;
+    if (!canvasRef.current || !pdfDoc) {
+      console.log('No canvas or PDF document available');
+      return;
+    }
 
     try {
+      console.log('Rendering page', pageNumber);
       const page = await pdfDoc.getPage(pageNumber);
       const viewport = page.getViewport({ scale });
       const canvas = canvasRef.current;
-      const context = canvas.getContext('2d')!;
+      const context = canvas.getContext('2d');
+
+      if (!context) {
+        console.error('Could not get canvas context');
+        return;
+      }
 
       canvas.height = viewport.height;
       canvas.width = viewport.width;
@@ -106,6 +113,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
       };
 
       await page.render(renderContext).promise;
+      console.log('Page rendered successfully');
     } catch (error) {
       console.error('Error rendering page:', error);
       toast({
