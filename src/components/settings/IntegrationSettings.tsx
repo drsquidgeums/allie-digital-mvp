@@ -32,6 +32,30 @@ export const IntegrationSettings = () => {
           </div>
           <Button variant="outline" size="sm">Connect</Button>
         </div>
+
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <Label>Canvas LMS</Label>
+            <p className="text-sm text-muted-foreground">Sync with your Canvas courses and assignments</p>
+          </div>
+          <Button variant="outline" size="sm">Connect</Button>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <Label>Trello</Label>
+            <p className="text-sm text-muted-foreground">Sync tasks with Trello boards</p>
+          </div>
+          <Button variant="outline" size="sm">Connect</Button>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <Label>GitHub</Label>
+            <p className="text-sm text-muted-foreground">Connect with GitHub repositories</p>
+          </div>
+          <Button variant="outline" size="sm">Connect</Button>
+        </div>
       </div>
       <Separator />
     </div>

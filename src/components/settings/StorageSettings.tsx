@@ -25,8 +25,9 @@ export const StorageSettings = () => {
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-4">
           <Label>Export Data</Label>
+          <p className="text-sm text-muted-foreground">Download all your workspace data including documents, annotations, and settings</p>
           <Button variant="outline" size="sm">Download My Data</Button>
         </div>
       </div>
