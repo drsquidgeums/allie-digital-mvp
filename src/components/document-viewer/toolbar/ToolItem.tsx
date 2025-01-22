@@ -47,13 +47,19 @@ export const ToolItem = ({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground transition-colors duration-200"
+                className={`h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground transition-colors duration-200 ${
+                  isOpen ? "bg-primary text-primary-foreground ring-2 ring-primary" : ""
+                }`}
                 onClick={handleClick}
                 data-tool-id={id}
               >
                 <Icon className="h-4 w-4" />
-                {isActive && (
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full animate-fade-in" />
+                {isOpen && (
+                  <div 
+                    className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full animate-fade-in"
+                    role="status"
+                    aria-label={`${label} tool active`}
+                  />
                 )}
               </Button>
             </div>
