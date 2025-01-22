@@ -9,9 +9,10 @@ export const BoldToggle = () => {
   const { toast } = useToast();
 
   React.useEffect(() => {
-    return globalBoldState.subscribe((newValue) => {
+    const unsubscribe = globalBoldState.subscribe((newValue) => {
       setIsBold(newValue);
     });
+    return unsubscribe;
   }, []);
 
   const handleBoldToggle = () => {

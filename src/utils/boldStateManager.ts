@@ -7,11 +7,14 @@ class BoldStateManager {
   constructor() {
     this.listeners = new Set();
     this.isBold = localStorage.getItem('isBoldEnabled') === 'true';
+    this.applyBoldStyling();
   }
 
   subscribe(listener: BoldStateListener) {
     this.listeners.add(listener);
-    return () => this.listeners.delete(listener);
+    return () => {
+      this.listeners.delete(listener);
+    };
   }
 
   setBold(value: boolean) {
@@ -21,7 +24,8 @@ class BoldStateManager {
     this.listeners.forEach(listener => listener(value));
   }
 
-  private applyBoldStyling() {
+  // Changed from private to public since we need to access it globally
+  public applyBoldStyling() {
     document.documentElement.style.setProperty('--font-weight', this.isBold ? 'bold' : 'normal');
     const allTextElements = document.querySelectorAll('p, span, a, h1, h2, h3, h4, h5, h6, div, button, label, input, textarea');
     allTextElements.forEach(element => {
@@ -31,4 +35,3 @@ class BoldStateManager {
 }
 
 export const globalBoldState = new BoldStateManager();
-globalBoldState.applyBoldStyling();
