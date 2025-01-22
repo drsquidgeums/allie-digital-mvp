@@ -26,7 +26,6 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
 
-  // Initialize plugins with correct properties
   const highlightPluginInstance = highlightPlugin({
     trigger: 'MouseUp' as Trigger,
   });
@@ -69,7 +68,6 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
     }
 
     try {
-      // Create a temporary link element
       const link = document.createElement('a');
       link.href = fileUrl;
       link.download = selectedFile.name;
@@ -144,7 +142,7 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
           onKeyDown={handleKeyDown}
         />
         <div className="h-full bg-white rounded-lg overflow-hidden">
-          <Worker workerUrl="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js">
+          <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`}>
             {(fileUrl || url) ? (
               <Viewer
                 fileUrl={fileUrl || url}
