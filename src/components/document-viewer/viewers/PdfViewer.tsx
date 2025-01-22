@@ -7,7 +7,7 @@ import 'rangy/lib/rangy-highlighter';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 
 // Initialize PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface PdfViewerProps {
   file: File | null;
@@ -16,12 +16,7 @@ interface PdfViewerProps {
   isHighlighter?: boolean;
 }
 
-export const PdfViewer = ({
-  file,
-  url,
-  selectedColor,
-  isHighlighter = false
-}: PdfViewerProps) => {
+export const PdfViewer = ({ file, url, selectedColor, isHighlighter = false }: PdfViewerProps) => {
   const { toast } = useToast();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
@@ -59,6 +54,17 @@ export const PdfViewer = ({
         setPdf(pdfDoc);
         setCurrentPage(1);
         await renderPage(1, pdfDoc);
+
+        // Initialize Rangy highlighter
+        if (isHighlighter) {
+          rangy.init();
+          const highlighter = rangy.createHighlighter();
+          highlighter.addClassApplier(rangy.createClassApplier('highlighted', {
+            ignoreWhiteSpace: true,
+            tagNames: ['span']
+          }));
+          highlighterRef.current = highlighter;
+        }
 
         toast({
           title: "PDF loaded",

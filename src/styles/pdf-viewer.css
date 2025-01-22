@@ -1,0 +1,28 @@
+.highlighted {
+  background-color: var(--highlight-color, yellow);
+  opacity: 0.5;
+}
+
+.pdf-container {
+  position: relative;
+  user-select: text;
+}
+
+.text-layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  opacity: 0.2;
+  line-height: 1.0;
+}
+
+.text-layer > span {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
