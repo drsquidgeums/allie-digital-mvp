@@ -98,6 +98,12 @@ export const ScreenshotButton = () => {
       // Wait for any content to be fully rendered
       await new Promise(resolve => setTimeout(resolve, 500));
 
+      // Remove any existing screenshot elements
+      const existingOverlay = document.getElementById('screenshot-overlay');
+      const existingBox = document.getElementById('selection-box');
+      if (existingOverlay) document.body.removeChild(existingOverlay);
+      if (existingBox) document.body.removeChild(existingBox);
+
       const canvas = await html2canvas(document.body, {
         scale: 2,
         useCORS: true,
@@ -109,6 +115,11 @@ export const ScreenshotButton = () => {
         width: area.width,
         height: area.height,
         backgroundColor: null,
+        ignoreElements: (element) => {
+          return element.id === 'screenshot-overlay' || 
+                 element.id === 'selection-box' ||
+                 element.classList.contains('radix-toast');
+        }
       });
 
       // Create a new canvas for the selected area
