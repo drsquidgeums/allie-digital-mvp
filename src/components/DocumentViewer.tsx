@@ -144,7 +144,7 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
           onKeyDown={handleKeyDown}
         />
         <div className="h-full bg-white rounded-lg overflow-hidden">
-          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+          <Worker workerUrl="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js">
             {(fileUrl || url) ? (
               <Viewer
                 fileUrl={fileUrl || url}
