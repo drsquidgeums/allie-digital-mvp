@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import * as pdfjsLib from 'pdfjs-dist';
 import * as rangy from 'rangy';
+// Import required Rangy modules
 import 'rangy/lib/rangy-classapplier';
 import 'rangy/lib/rangy-highlighter';
+import 'rangy/lib/rangy-textrange';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 
 // Initialize PDF.js worker
@@ -31,19 +33,38 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   const highlighterRef = useRef<any>(null);
 
   useEffect(() => {
-    // Initialize Rangy
-    rangy.init();
-    highlighterRef.current = rangy.createHighlighter();
-    highlighterRef.current.addClassApplier(rangy.createClassApplier('highlight', {
-      ignoreWhiteSpace: true,
-      tagNames: ['span', 'a']
-    }));
-
-    return () => {
-      if (pdf) {
-        pdf.destroy();
+    try {
+      // Initialize Rangy with required modules
+      rangy.init();
+      
+      // Check if the highlighter module is loaded
+      if (typeof rangy.createHighlighter !== 'function') {
+        console.error('Rangy highlighter module not loaded properly');
+        return;
       }
-    };
+
+      // Create highlighter instance
+      highlighterRef.current = rangy.createHighlighter();
+      
+      // Add class applier for highlights
+      highlighterRef.current.addClassApplier(rangy.createClassApplier('highlight', {
+        ignoreWhiteSpace: true,
+        tagNames: ['span', 'a']
+      }));
+
+      return () => {
+        if (pdf) {
+          pdf.destroy();
+        }
+      };
+    } catch (error) {
+      console.error('Error initializing Rangy:', error);
+      toast({
+        title: "Error",
+        description: "Failed to initialize text highlighting",
+        variant: "destructive",
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -117,17 +138,29 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   };
 
   const handleHighlight = () => {
-    if (!highlighterRef.current) return;
+    if (!highlighterRef.current) {
+      console.error('Highlighter not initialized');
+      return;
+    }
     
-    const selection = rangy.getSelection();
-    if (selection.rangeCount > 0) {
-      highlighterRef.current.highlightSelection('highlight', {
-        exclusive: false
-      });
-      
+    try {
+      const selection = rangy.getSelection();
+      if (selection.rangeCount > 0) {
+        highlighterRef.current.highlightSelection('highlight', {
+          exclusive: false
+        });
+        
+        toast({
+          title: "Text highlighted",
+          description: "Selection has been highlighted",
+        });
+      }
+    } catch (error) {
+      console.error('Error highlighting text:', error);
       toast({
-        title: "Text highlighted",
-        description: "Selection has been highlighted",
+        title: "Error",
+        description: "Failed to highlight text",
+        variant: "destructive",
       });
     }
   };
