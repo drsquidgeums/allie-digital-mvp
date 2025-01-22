@@ -5,6 +5,7 @@ import { LanguageSettings } from "./settings/LanguageSettings";
 import { AccessibilitySettings } from "./settings/AccessibilitySettings";
 import { NotificationSettings } from "./settings/NotificationSettings";
 import { PerformanceSettings } from "./settings/PerformanceSettings";
+import { DisplaySettings } from "./settings/DisplaySettings";
 
 export const Settings = () => {
   return (
@@ -19,6 +20,7 @@ export const Settings = () => {
         <div className="space-y-6">
           <LanguageSettings />
           <AccessibilitySettings />
+          <DisplaySettings />
           <NotificationSettings />
           <PerformanceSettings />
         </div>
