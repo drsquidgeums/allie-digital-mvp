@@ -46,20 +46,24 @@ export const IrlenOverlay = () => {
       <Tooltip>
         <TooltipTrigger asChild>
           <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground relative"
-            >
-              <Glasses className="h-4 w-4" />
-              {overlayColor && (
-                <div 
-                  className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"
-                  role="status"
-                  aria-label="Overlay active"
-                />
-              )}
-            </Button>
+            <div className="relative">
+              <Button
+                variant="outline"
+                size="sm"
+                className={`h-9 w-9 relative bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                  overlayColor ? "bg-primary text-primary-foreground ring-2 ring-primary" : ""
+                }`}
+              >
+                <Glasses className="h-4 w-4" />
+                {overlayColor && (
+                  <div 
+                    className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"
+                    role="status"
+                    aria-label="Overlay active"
+                  />
+                )}
+              </Button>
+            </div>
           </PopoverTrigger>
         </TooltipTrigger>
         <TooltipContent 
