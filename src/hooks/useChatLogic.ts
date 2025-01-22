@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { supabase } from '@/utils/supabase';
+import { createOpenAIClient } from '@/utils/openai';
 
 interface Message {
   text: string;
@@ -6,52 +8,36 @@ interface Message {
 }
 
 const INITIAL_MESSAGE: Message = {
-  text: "Hi! I'm Allie AI, your virtual AI learning assistant. What can I help you with today?",
+  text: "Hi! I'm your AI learning assistant. I can help you use our tools like the Pomodoro Timer, Mind Map, Reading tools, and Focus mode. What would you like to learn about?",
   isUser: false
 };
+
+const SYSTEM_PROMPT = `You are an AI learning assistant specializing in helping users with ADHD and dyslexia use a digital workspace. The workspace includes:
+
+- Pomodoro Timer for focused study sessions with customizable work/break intervals
+- Mind Mapping tool for visual learning and organizing thoughts
+- Task Management system with points and rewards for motivation
+- Reading tools including:
+  - Irlen overlays for reducing visual stress
+  - Bionic reader for improved focus
+  - OpenDyslexic font option
+  - Text-to-speech functionality
+- Focus mode to reduce distractions
+
+Provide clear, step-by-step guidance on using these tools. Break information into small, manageable chunks and use bullet points when possible. Keep responses friendly, encouraging, and focused on practical usage tips.
+
+If users seem frustrated or overwhelmed, suggest breaking tasks into smaller steps and recommend specific tools that might help, like:
+- Using the Pomodoro Timer for time management
+- Creating a mind map to organize thoughts
+- Enabling Focus mode to reduce distractions
+- Using reading tools for better comprehension
+
+Always maintain a supportive and understanding tone while providing concrete, actionable advice.`;
 
 export const useChatLogic = () => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
-
-  const getToolResponse = (input: string): string => {
-    const lowerInput = input.toLowerCase();
-    
-    if (lowerInput.includes("irlen") || lowerInput.includes("overlay")) {
-      return "The Irlen Overlay tool helps users with visual processing difficulties, including dyslexia. It adds a colored overlay to the screen which can reduce visual stress and make text easier to read. You can choose from different colors to find what works best for you.";
-    }
-    
-    if (lowerInput.includes("font") || lowerInput.includes("opendyslexic") || lowerInput.includes("dyslexic")) {
-      return "The Font Customization tool includes the OpenDyslexic font, which is specifically designed to help users with dyslexia. Its unique letter shapes and weighted bottoms can increase readability and reduce letter switching.";
-    }
-    
-    if (lowerInput.includes("bionic") || lowerInput.includes("reader")) {
-      return "The Bionic Reader helps improve focus and reading speed by highlighting parts of words. This can be particularly helpful for users with ADHD or reading difficulties, making it easier to maintain attention while reading.";
-    }
-    
-    if (lowerInput.includes("color") || lowerInput.includes("separator")) {
-      return "The Colour Separator tool allows you to highlight different parts of text in various colours. This can help with organising information, making complex texts more manageable, and improving comprehension for users with learning differences.";
-    }
-    
-    if (lowerInput.includes("focus") || lowerInput.includes("mode")) {
-      return "Focus Mode helps minimize distractions by entering fullscreen and hiding unnecessary elements. This is particularly helpful for users with ADHD who need to concentrate on their work.";
-    }
-    
-    if (lowerInput.includes("pomodoro") || lowerInput.includes("timer")) {
-      return "The Pomodoro Timer helps break work into manageable chunks with regular breaks. This is especially useful for users with ADHD, as it helps maintain focus and prevents mental fatigue.";
-    }
-    
-    if (lowerInput.includes("mind") || lowerInput.includes("map")) {
-      return "The Mind Mapping tool helps visualize connections between ideas. This visual approach to organizing information can be particularly helpful for users with different learning styles or those who prefer visual processing.";
-    }
-    
-    if (lowerInput.includes("text") && lowerInput.includes("speech")) {
-      return "The Text-to-Speech feature reads text aloud, which is helpful for users with dyslexia, visual processing difficulties, or those who learn better through auditory input.";
-    }
-
-    return "I can explain how our various tools help support different learning needs. You can ask about specific tools like the Irlen Overlay, OpenDyslexic font, Bionic Reader, Color Separator, Focus Mode, Pomodoro Timer, Mind Map, or Text-to-Speech feature. Which would you like to learn more about?";
-  };
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -60,12 +46,39 @@ export const useChatLogic = () => {
     setMessages(prev => [...prev, { text: input, isUser: true }]);
     setInput("");
 
-    const response = getToolResponse(input);
-    
-    setTimeout(() => {
-      setMessages(prev => [...prev, { text: response, isUser: false }]);
+    try {
+      const openai = await createOpenAIClient();
+      
+      if (!openai) {
+        throw new Error('Failed to initialize OpenAI client');
+      }
+
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          ...messages.map(msg => ({
+            role: msg.isUser ? "user" : "assistant",
+            content: msg.text
+          })),
+          { role: "user", content: input }
+        ],
+        temperature: 0.7,
+        max_tokens: 500
+      });
+
+      const aiResponse = response.choices[0]?.message?.content || "I apologize, but I'm having trouble generating a response. Please try again.";
+      
+      setMessages(prev => [...prev, { text: aiResponse, isUser: false }]);
+    } catch (error) {
+      console.error('Error in AI response:', error);
+      setMessages(prev => [...prev, { 
+        text: "I apologize, but I'm having trouble connecting right now. Please try again in a moment.", 
+        isUser: false 
+      }]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return {
