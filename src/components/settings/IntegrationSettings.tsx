@@ -20,9 +20,9 @@ export const IntegrationSettings = () => {
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
             <Label>Microsoft Teams</Label>
-            <p className="text-sm text-muted-foreground">Enable Teams notifications</p>
+            <p className="text-sm text-muted-foreground">Connect to Teams chat channels for collaborative discussions</p>
           </div>
-          <Switch />
+          <Button variant="outline" size="sm">Connect</Button>
         </div>
 
         <div className="flex items-center justify-between">
