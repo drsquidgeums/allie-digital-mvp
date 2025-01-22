@@ -18,19 +18,29 @@ interface FontSelectorProps {
 }
 
 export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) => {
-  const [isBold, setIsBold] = React.useState(false);
+  // Use localStorage to persist the bold state
+  const [isBold, setIsBold] = React.useState(() => {
+    const savedBold = localStorage.getItem('isBoldEnabled');
+    return savedBold === 'true';
+  });
   const { toast } = useToast();
+
+  React.useEffect(() => {
+    // Apply bold styling when component mounts or isBold changes
+    document.documentElement.style.setProperty('--font-weight', isBold ? 'bold' : 'normal');
+    
+    // Target all text elements in the application
+    const allTextElements = document.querySelectorAll('p, span, a, h1, h2, h3, h4, h5, h6, div, button, label, input, textarea');
+    allTextElements.forEach(element => {
+      (element as HTMLElement).style.fontWeight = isBold ? 'bold' : 'normal';
+    });
+
+    // Save state to localStorage
+    localStorage.setItem('isBoldEnabled', isBold.toString());
+  }, [isBold]);
 
   const handleBoldToggle = () => {
     setIsBold(!isBold);
-    // Apply bold styling to all sidebar text elements
-    document.documentElement.style.setProperty('--font-weight', !isBold ? 'bold' : 'normal');
-    
-    // Target all sidebar navigation links and text elements, including settings, community, and logout
-    const sidebarElements = document.querySelectorAll('[data-sidebar] span, [data-sidebar] a, [data-sidebar-nav] span, [data-sidebar-nav] a, .sidebar-nav-link, button[role="menuitem"] span');
-    sidebarElements.forEach(element => {
-      (element as HTMLElement).style.fontWeight = !isBold ? 'bold' : 'normal';
-    });
     
     toast({
       title: !isBold ? "Bold text enabled" : "Bold text disabled",
@@ -96,10 +106,17 @@ export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) 
           variant="outline"
           size="icon"
           onClick={handleBoldToggle}
-          className={`h-10 w-10 ${isBold ? 'bg-accent text-accent-foreground' : 'text-foreground'}`}
+          className={`h-10 w-10 ${isBold ? 'bg-accent text-accent-foreground ring-2 ring-primary' : 'text-foreground'}`}
           title="Toggle bold text"
         >
           <Bold className="h-4 w-4" />
+          {isBold && (
+            <div 
+              className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"
+              role="status"
+              aria-label="Bold text active"
+            />
+          )}
         </Button>
       </div>
     </div>
