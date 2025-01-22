@@ -14,13 +14,7 @@ export const Settings = () => {
       aria-label="Application Settings"
     >
       <div className="p-4 space-y-4">
-        <div className="space-y-2">
-          <h2 className="text-2xl font-semibold">Application Settings</h2>
-          <p className="text-muted-foreground">Manage your application preferences</p>
-        </div>
-        
         <Separator />
-
         <div className="space-y-6">
           <LanguageSettings />
           <AccessibilitySettings />

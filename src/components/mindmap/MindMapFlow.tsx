@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import {
   ReactFlow,
-  Controls,
   MiniMap,
+  Controls,
   Background,
   useReactFlow,
   Node,
@@ -55,33 +55,8 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
           }))
         );
         break;
-      case 'Tab':
-        event.preventDefault();
-        const currentNode = nodes.find(node => node.selected);
-        const nodeIndex = currentNode ? nodes.indexOf(currentNode) : -1;
-        const nextIndex = event.shiftKey 
-          ? (nodeIndex - 1 + nodes.length) % nodes.length 
-          : (nodeIndex + 1) % nodes.length;
-        
-        onNodesChange([
-          ...(currentNode ? [{
-            type: 'select',
-            id: currentNode.id,
-            selected: false,
-          }] : []),
-          {
-            type: 'select',
-            id: nodes[nextIndex].id,
-            selected: true,
-          },
-        ]);
-        break;
     }
   }, [nodes, onNodesChange, fitView]);
-
-  const getNodeColor = (node: Node) => {
-    return (node.style?.background as string) || 'hsl(var(--muted))';
-  };
 
   return (
     <div 
@@ -97,8 +72,8 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        nodeTypes={nodeTypes}
         fitView
+        nodeTypes={nodeTypes}
         className="bg-workspace dark:bg-background"
         aria-label="Mind map flow diagram"
       >
@@ -106,12 +81,6 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
           className="bg-workspace dark:bg-muted border-border dark:border-muted-foreground/20"
           aria-label="Mind map controls"
           showInteractive={false}
-        />
-        <MiniMap 
-          className="bg-workspace dark:bg-muted"
-          aria-label="Mind map overview"
-          nodeColor={getNodeColor}
-          maskColor="rgba(0, 0, 0, 0.1)"
         />
         <Background className="bg-workspace dark:bg-background" />
       </ReactFlow>
