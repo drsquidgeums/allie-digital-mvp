@@ -4,10 +4,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 
 // Configure PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url
-).toString();
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
 
 export const usePdfRenderer = () => {
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
@@ -19,7 +16,7 @@ export const usePdfRenderer = () => {
   const loadPDF = async (file: File | null, url: string) => {
     try {
       setIsLoading(true);
-      let pdfData;
+      let pdfData: Uint8Array;
       
       if (file) {
         const arrayBuffer = await file.arrayBuffer();
