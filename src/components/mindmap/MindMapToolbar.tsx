@@ -1,10 +1,9 @@
 import React from 'react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Network, Download, Plus, Trash2 } from "lucide-react";
+import { Network } from "lucide-react";
 import { ColorOption } from './types';
-import { ColorPicker } from '../ColorPicker';
-import { toast } from "sonner";
+import { ColorSelector } from './toolbar/ColorSelector';
+import { NodeInput } from './toolbar/NodeInput';
+import { ExportButtons } from './toolbar/ExportButtons';
 
 interface MindMapToolbarProps {
   selectedColor: string;
@@ -33,27 +32,6 @@ export const MindMapToolbar = ({
   onClear,
   colorOptions,
 }: MindMapToolbarProps) => {
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      onAddNode();
-      toast("Node added successfully");
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      setNewNodeText('');
-      (e.target as HTMLElement).blur();
-    }
-  };
-
-  const handleColorKeyDown = (e: React.KeyboardEvent<HTMLSelectElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const select = e.target as HTMLSelectElement;
-      setSelectedColor(select.value);
-      toast(`Color changed to ${select.options[select.selectedIndex].text}`);
-    }
-  };
-
   return (
     <div 
       className="p-4 border-b flex items-center justify-between bg-background"
@@ -66,89 +44,24 @@ export const MindMapToolbar = ({
       </div>
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2 mr-4">
-          <select
-            value={selectedColor}
-            onChange={(e) => {
-              setSelectedColor(e.target.value);
-              toast(`Color changed to ${e.target.options[e.target.selectedIndex].text}`);
-            }}
-            onKeyDown={handleColorKeyDown}
-            className="h-9 px-3 py-1 rounded-md border border-input bg-background text-foreground text-sm pr-8 appearance-none focus:outline-none focus:ring-2 focus:ring-ring"
-            aria-label="Select node color"
-          >
-            {colorOptions.map((color) => (
-              <option key={color.value} value={color.value}>
-                {color.label}
-              </option>
-            ))}
-          </select>
-          {selectedColor === 'custom' && (
-            <ColorPicker
-              label="Custom color"
-              value={customColor}
-              onChange={(color) => {
-                setCustomColor(color);
-                toast("Custom color updated");
-              }}
-            />
-          )}
+          <ColorSelector
+            selectedColor={selectedColor}
+            setSelectedColor={setSelectedColor}
+            customColor={customColor}
+            setCustomColor={setCustomColor}
+            colorOptions={colorOptions}
+          />
         </div>
-        <Input
-          value={newNodeText}
-          onChange={(e) => setNewNodeText(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Add a node..."
-          className="w-64 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          aria-label="New node text"
+        <NodeInput
+          newNodeText={newNodeText}
+          setNewNodeText={setNewNodeText}
+          onAddNode={onAddNode}
         />
-        <Button 
-          onClick={() => {
-            onAddNode();
-            toast("Node added successfully");
-          }} 
-          size="icon" 
-          variant="outline" 
-          className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
-          aria-label="Add node"
-        >
-          <Plus className="w-4 h-4 text-foreground" aria-hidden="true" />
-        </Button>
-        <Button 
-          onClick={() => {
-            onExportJpg();
-            toast("Mind map exported as JPG");
-          }} 
-          variant="outline" 
-          size="icon" 
-          className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
-          aria-label="Export as JPG"
-        >
-          <Download className="w-4 h-4 text-foreground" aria-hidden="true" />
-        </Button>
-        <Button 
-          onClick={() => {
-            onExportJson();
-            toast("Mind map exported as JSON");
-          }} 
-          variant="outline" 
-          size="icon" 
-          className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
-          aria-label="Export as JSON"
-        >
-          <span className="text-[10px] font-medium">JSON</span>
-        </Button>
-        <Button 
-          onClick={() => {
-            onClear();
-            toast("Canvas cleared");
-          }} 
-          variant="outline" 
-          size="icon" 
-          className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
-          aria-label="Clear canvas"
-        >
-          <Trash2 className="w-4 h-4 text-foreground" aria-hidden="true" />
-        </Button>
+        <ExportButtons
+          onExportJpg={onExportJpg}
+          onExportJson={onExportJson}
+          onClear={onClear}
+        />
       </div>
     </div>
   );
