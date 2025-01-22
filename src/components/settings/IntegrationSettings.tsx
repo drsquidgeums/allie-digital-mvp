@@ -43,16 +43,24 @@ export const IntegrationSettings = () => {
 
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label>Trello</Label>
-            <p className="text-sm text-muted-foreground">Sync tasks with Trello boards</p>
+            <Label>Google Classroom</Label>
+            <p className="text-sm text-muted-foreground">Connect and sync with Google Classroom</p>
           </div>
           <Button variant="outline" size="sm">Connect</Button>
         </div>
 
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label>GitHub</Label>
-            <p className="text-sm text-muted-foreground">Connect with GitHub repositories</p>
+            <Label>Blackboard</Label>
+            <p className="text-sm text-muted-foreground">Sync with Blackboard courses and assignments</p>
+          </div>
+          <Button variant="outline" size="sm">Connect</Button>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <Label>Trello</Label>
+            <p className="text-sm text-muted-foreground">Sync tasks with Trello boards</p>
           </div>
           <Button variant="outline" size="sm">Connect</Button>
         </div>
