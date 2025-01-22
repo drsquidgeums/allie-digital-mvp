@@ -142,7 +142,7 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
           onKeyDown={handleKeyDown}
         />
         <div className="h-full bg-white rounded-lg overflow-hidden">
-          <Worker workerUrl={`https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${process.env.VITE_PDFJS_VERSION || '4.10.38'}/pdf.worker.min.js`}>
+          <Worker workerUrl="/pdf.worker.min.js">
             {(fileUrl || url) ? (
               <Viewer
                 fileUrl={fileUrl || url}
