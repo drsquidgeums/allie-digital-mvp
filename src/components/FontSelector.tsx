@@ -17,33 +17,51 @@ interface FontSelectorProps {
   onFontChange: (font: string) => void;
 }
 
+// Create a global state for bold text
+const globalBoldState = {
+  listeners: new Set<(isBold: boolean) => void>(),
+  isBold: localStorage.getItem('isBoldEnabled') === 'true',
+  
+  subscribe(listener: (isBold: boolean) => void) {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  },
+  
+  setBold(value: boolean) {
+    this.isBold = value;
+    localStorage.setItem('isBoldEnabled', value.toString());
+    this.applyBoldStyling();
+    this.listeners.forEach(listener => listener(value));
+  },
+  
+  applyBoldStyling() {
+    document.documentElement.style.setProperty('--font-weight', this.isBold ? 'bold' : 'normal');
+    const allTextElements = document.querySelectorAll('p, span, a, h1, h2, h3, h4, h5, h6, div, button, label, input, textarea');
+    allTextElements.forEach(element => {
+      (element as HTMLElement).style.fontWeight = this.isBold ? 'bold' : 'normal';
+    });
+  }
+};
+
+// Apply initial styling
+globalBoldState.applyBoldStyling();
+
 export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) => {
-  // Use localStorage to persist the bold state
-  const [isBold, setIsBold] = React.useState(() => {
-    const savedBold = localStorage.getItem('isBoldEnabled');
-    return savedBold === 'true';
-  });
+  const [isBold, setLocalBold] = React.useState(globalBoldState.isBold);
   const { toast } = useToast();
 
   React.useEffect(() => {
-    // Apply bold styling when component mounts or isBold changes
-    document.documentElement.style.setProperty('--font-weight', isBold ? 'bold' : 'normal');
-    
-    // Target all text elements in the application
-    const allTextElements = document.querySelectorAll('p, span, a, h1, h2, h3, h4, h5, h6, div, button, label, input, textarea');
-    allTextElements.forEach(element => {
-      (element as HTMLElement).style.fontWeight = isBold ? 'bold' : 'normal';
+    return globalBoldState.subscribe((newValue) => {
+      setLocalBold(newValue);
     });
-
-    // Save state to localStorage
-    localStorage.setItem('isBoldEnabled', isBold.toString());
-  }, [isBold]);
+  }, []);
 
   const handleBoldToggle = () => {
-    setIsBold(!isBold);
+    const newValue = !isBold;
+    globalBoldState.setBold(newValue);
     
     toast({
-      title: !isBold ? "Bold text enabled" : "Bold text disabled",
+      title: newValue ? "Bold text enabled" : "Bold text disabled",
       description: "Font weight has been updated",
     });
   };
