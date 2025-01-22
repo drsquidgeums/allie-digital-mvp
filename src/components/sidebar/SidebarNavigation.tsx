@@ -46,18 +46,18 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
     return location.pathname === path;
   }, [location.pathname]);
 
-  const handleNavigation = useCallback((e: React.MouseEvent, id: string, path: string) => {
-    e.preventDefault(); // Prevent default navigation
+  const handleNavigation = useCallback((e: React.MouseEvent<HTMLButtonElement>, id: string, path: string) => {
+    e.preventDefault();
     setActiveComponent(id);
     navigate(path);
   }, [navigate, setActiveComponent]);
 
   return (
     <div className="space-y-2" data-sidebar-nav>
-      {navigationItems.map(({ id, label, icon: Icon, path }) => (
+      {navigationItems.map(({ id, label, icon, path }) => (
         <SidebarButton
           key={id}
-          icon={Icon}
+          icon={icon}
           label={label}
           isActive={isPathActive(path)}
           onClick={(e) => handleNavigation(e, id, path)}

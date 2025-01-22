@@ -6,17 +6,11 @@ interface SidebarButtonProps {
   icon: LucideIcon;
   label: string;
   isActive: boolean;
-  onClick: () => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  className?: string;
 }
 
-export const SidebarButton = ({ icon: Icon, label, isActive, onClick }: SidebarButtonProps) => {
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      onClick();
-    }
-  };
-
+export const SidebarButton = ({ icon: Icon, label, isActive, onClick, className }: SidebarButtonProps) => {
   return (
     <Button 
       variant={isActive ? "secondary" : "ghost"}
@@ -25,9 +19,8 @@ export const SidebarButton = ({ icon: Icon, label, isActive, onClick }: SidebarB
         focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
         dark:focus-visible:ring-offset-workspace-dark
         sepia:ring-offset-[hsl(35,25%,88%)] sepia:focus-visible:ring-offset-[hsl(35,25%,88%)]
-      `}
+        ${className}`}
       onClick={onClick}
-      onKeyDown={handleKeyDown}
       role="menuitem"
       aria-current={isActive ? "page" : undefined}
     >
