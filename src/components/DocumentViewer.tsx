@@ -26,9 +26,9 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
 
-  // Initialize plugins
+  // Initialize plugins with correct properties
   const highlightPluginInstance = highlightPlugin({
-    highlightColor: selectedColor,
+    trigger: 'click',
   });
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
