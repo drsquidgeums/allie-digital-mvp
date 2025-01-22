@@ -5,10 +5,12 @@ import * as rangy from 'rangy';
 import 'rangy/lib/rangy-classapplier';
 import 'rangy/lib/rangy-highlighter';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 
-// Initialize PDF.js worker using the local worker file
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+// Initialize PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',
+  import.meta.url
+).toString();
 
 interface PdfViewerProps {
   file: File | null;
@@ -17,12 +19,12 @@ interface PdfViewerProps {
   isHighlighter?: boolean;
 }
 
-export const PdfViewer: React.FC<PdfViewerProps> = ({
+export const PdfViewer = ({
   file,
   url,
   selectedColor,
   isHighlighter = false
-}) => {
+}: PdfViewerProps) => {
   const { toast } = useToast();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
