@@ -28,7 +28,6 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
 
   // Initialize plugins
   const highlightPluginInstance = highlightPlugin({
-    enableAreaSelection: true,
     highlightColor: selectedColor,
   });
 
@@ -57,6 +56,39 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
       title: "File deleted",
       description: "The document has been removed from the viewer",
     });
+  };
+
+  const handleDownload = async () => {
+    if (!selectedFile) {
+      toast({
+        title: "Error",
+        description: "No document to download",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      // Create a temporary link element
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = selectedFile.name;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast({
+        title: "Download started",
+        description: `Downloading ${selectedFile.name}`,
+      });
+    } catch (error) {
+      console.error('Error downloading document:', error);
+      toast({
+        title: "Download failed",
+        description: "There was an error downloading your document",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,6 +127,7 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
         <div className="flex items-center justify-between gap-2">
           <DocumentToolbar
             onUpload={handleUpload}
+            onDownload={handleDownload}
             onDelete={handleDelete}
             hasFile={!!selectedFile}
           />
