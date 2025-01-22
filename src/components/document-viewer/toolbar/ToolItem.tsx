@@ -52,18 +52,18 @@ export const ToolItem = ({
                 data-tool-id={id}
               >
                 <Icon className="h-4 w-4" />
-                <span className="sr-only">{label}</span>
+                {isActive && (
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full animate-fade-in" />
+                )}
               </Button>
-              {isActive && (
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full animate-fade-in" />
-              )}
             </div>
           </PopoverTrigger>
         </TooltipTrigger>
         <TooltipContent 
-          className="bg-popover text-popover-foreground px-3 py-1.5 text-sm shadow-md transition-colors duration-200 dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
+          side="bottom"
+          className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
         >
-          <p>{label}</p>
+          {label}
         </TooltipContent>
       </Tooltip>
       {content && (

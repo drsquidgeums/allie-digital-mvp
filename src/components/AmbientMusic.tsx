@@ -6,6 +6,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -45,30 +50,37 @@ export const AmbientMusic = () => {
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className={`h-9 w-9 relative bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-            isPlaying ? "text-primary ring-2 ring-primary" : ""
-          }`}
-          aria-label={`Ambient Music ${isPlaying ? 'Playing' : 'Paused'}`}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className={`h-9 w-9 relative bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                isPlaying ? "text-primary ring-2 ring-primary" : ""
+              }`}
+            >
+              <Music className="h-4 w-4" />
+              {isPlaying && (
+                <div 
+                  className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"
+                  role="status"
+                  aria-label="Music playing"
+                />
+              )}
+            </Button>
+          </PopoverTrigger>
+        </TooltipTrigger>
+        <TooltipContent 
+          side="bottom"
+          className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
         >
-          <Music className="h-4 w-4" aria-hidden="true" />
-          {isPlaying && (
-            <div 
-              className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"
-              role="status"
-              aria-label="Music playing"
-            />
-          )}
-        </Button>
-      </PopoverTrigger>
+          Ambient Music
+        </TooltipContent>
+      </Tooltip>
       <PopoverContent 
         className="w-64 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]" 
         align="end"
-        role="dialog"
-        aria-label="Ambient Music Settings"
       >
         <div className="space-y-4">
           <div className="font-medium text-sm mb-2">Ambient Music</div>
