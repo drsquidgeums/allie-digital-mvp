@@ -1,11 +1,17 @@
 import React, { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ThemeProvider } from "./ThemeProvider";
-import { useDocumentViewer } from "./document-viewer/useDocumentViewer";
+import { Worker, Viewer } from '@react-pdf-viewer/core';
+import { highlightPlugin } from '@react-pdf-viewer/highlight';
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import { DocumentToolbar } from "./document-viewer/DocumentToolbar";
-import { DocumentPreview } from "./document-viewer/DocumentPreview";
 import { ToolbarTools } from "./document-viewer/ToolbarTools";
 import { UrlInput } from "./document-viewer/UrlInput";
+
+// Import styles
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import '@react-pdf-viewer/highlight/lib/styles/index.css';
 
 interface DocumentViewerProps {
   file: File | null;
@@ -15,42 +21,54 @@ interface DocumentViewerProps {
 
 export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerProps) => {
   const { toast } = useToast();
-  const {
-    url,
-    setUrl,
-    fileInputRef,
-    documentRef,
-    handleUpload,
-    handleDelete,
-    handleDownload,
-    selectedFile,
-    setSelectedFile,
-  } = useDocumentViewer();
+  const [url, setUrl] = React.useState('');
+  const [fileUrl, setFileUrl] = React.useState('');
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
 
-  // Auto-activate Bionic Reader and TTS when content is loaded
+  // Initialize plugins
+  const highlightPluginInstance = highlightPlugin({
+    enableAreaSelection: true,
+    highlightColor: selectedColor,
+  });
+
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
+
   useEffect(() => {
-    if (selectedFile || url) {
-      const toolbarTools = document.querySelectorAll('[data-tool-id]');
-      const bionicTool = Array.from(toolbarTools).find(
-        tool => tool.getAttribute('data-tool-id') === 'bionic'
-      );
-      const ttsTool = Array.from(toolbarTools).find(
-        tool => tool.getAttribute('data-tool-id') === 'tts'
-      );
+    if (selectedFile) {
+      const objectUrl = URL.createObjectURL(selectedFile);
+      setFileUrl(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl);
+    }
+  }, [selectedFile]);
 
-      if (bionicTool instanceof HTMLElement) {
-        bionicTool.click();
-      }
-      if (ttsTool instanceof HTMLElement) {
-        ttsTool.click();
-      }
+  const handleUpload = () => {
+    fileInputRef.current?.click();
+  };
 
+  const handleDelete = () => {
+    setUrl("");
+    setFileUrl("");
+    setSelectedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    toast({
+      title: "File deleted",
+      description: "The document has been removed from the viewer",
+    });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
       toast({
-        title: "Tools activated",
-        description: "Bionic Reader and Text-to-Speech are now available for this document",
+        title: "File uploaded",
+        description: `${file.name} has been added to the viewer`,
       });
     }
-  }, [selectedFile, url, toast]);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Escape') {
@@ -67,21 +85,6 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
     }
   };
 
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUrl(e.target.value);
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      toast({
-        title: "File uploaded",
-        description: `${file.name} has been added to the viewer`,
-      });
-    }
-  };
-
   return (
     <div 
       className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative"
@@ -92,7 +95,6 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
         <div className="flex items-center justify-between gap-2">
           <DocumentToolbar
             onUpload={handleUpload}
-            onDownload={() => handleDownload(selectedFile)}
             onDelete={handleDelete}
             hasFile={!!selectedFile}
           />
@@ -105,29 +107,36 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
       <div className="flex-1 p-4 relative">
         <UrlInput 
           url={url}
-          onChange={handleUrlChange}
+          onChange={(e) => setUrl(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <div 
-          className="h-full" 
-          ref={documentRef}
-          tabIndex={0}
-          role="document"
-          aria-label={selectedFile ? `Viewing ${selectedFile.name}` : "Document preview area"}
-        >
-          <DocumentPreview 
-            file={selectedFile} 
-            url={url} 
-            selectedColor={selectedColor}
-            isHighlighter={isHighlighter} 
-          />
+        <div className="h-full bg-white rounded-lg overflow-hidden">
+          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+            {(fileUrl || url) ? (
+              <Viewer
+                fileUrl={fileUrl || url}
+                plugins={[
+                  highlightPluginInstance,
+                  defaultLayoutPluginInstance,
+                ]}
+                defaultScale={1.2}
+                theme={{
+                  theme: 'light',
+                }}
+              />
+            ) : (
+              <div className="flex items-center justify-center h-full text-muted-foreground">
+                Upload a file or paste a URL to view
+              </div>
+            )}
+          </Worker>
         </div>
       </div>
       <input
         type="file"
         ref={fileInputRef}
         className="hidden"
-        accept=".pdf,.doc,.docx,.txt,.html"
+        accept=".pdf"
         onChange={handleFileChange}
         aria-hidden="true"
       />
