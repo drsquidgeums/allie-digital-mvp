@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { Card } from "@/components/ui/card";
 import { CommunityHeader } from "./community/CommunityHeader";
 import { CommunityStats } from "./community/CommunityStats";
 import { DiscussionList } from "./community/DiscussionList";
@@ -23,24 +24,18 @@ export const Community = () => {
   };
 
   return (
-    <div 
-      className="flex-1 min-h-screen bg-background animate-fade-in"
-      onKeyDown={handleKeyDown}
-      role="main"
+    <Card 
+      className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative border-none shadow-lg ring-offset-background transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      role="region"
       aria-label="Community Dashboard"
+      onKeyDown={handleKeyDown}
     >
-      <div className="container mx-auto py-4 px-4">
-        <div 
-          ref={mainRef}
-          className="max-w-4xl mx-auto space-y-6 focus:outline-none"
-          tabIndex={-1}
-        >
-          <CommunityHeader onShareResource={handleShareResource} />
-          <CommunityStats />
-          <DiscussionList />
-          <CommunityChat />
-        </div>
+      <div className="p-4 space-y-4">
+        <CommunityHeader onShareResource={handleShareResource} />
+        <CommunityStats />
+        <DiscussionList />
+        <CommunityChat />
       </div>
-    </div>
+    </Card>
   );
 };
