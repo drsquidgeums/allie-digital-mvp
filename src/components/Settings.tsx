@@ -6,6 +6,10 @@ import { AccessibilitySettings } from "./settings/AccessibilitySettings";
 import { NotificationSettings } from "./settings/NotificationSettings";
 import { PerformanceSettings } from "./settings/PerformanceSettings";
 import { DisplaySettings } from "./settings/DisplaySettings";
+import { PrivacySettings } from "./settings/PrivacySettings";
+import { KeyboardSettings } from "./settings/KeyboardSettings";
+import { StorageSettings } from "./settings/StorageSettings";
+import { IntegrationSettings } from "./settings/IntegrationSettings";
 
 export const Settings = () => {
   return (
@@ -23,6 +27,10 @@ export const Settings = () => {
           <DisplaySettings />
           <NotificationSettings />
           <PerformanceSettings />
+          <PrivacySettings />
+          <KeyboardSettings />
+          <StorageSettings />
+          <IntegrationSettings />
         </div>
       </div>
     </Card>
