@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { usePdfRenderer } from './usePdfRenderer';
 import { PdfControls } from './PdfControls';
 
@@ -25,6 +25,33 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     handlePageChange,
   } = usePdfRenderer();
 
+  const renderCurrentPage = useCallback(async () => {
+    if (!canvasRef.current) return;
+
+    const result = await renderPage(currentPage);
+    if (!result) return;
+
+    const { page, viewport } = result;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    if (!context) return;
+
+    // Set canvas dimensions to match viewport
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    const renderContext = {
+      canvasContext: context,
+      viewport: viewport,
+    };
+
+    try {
+      await page.render(renderContext).promise;
+    } catch (error) {
+      console.error('Error rendering PDF page:', error);
+    }
+  }, [currentPage, renderPage]);
+
   useEffect(() => {
     loadPDF(file, url);
     return () => {
@@ -35,30 +62,8 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   }, [file, url, loadPDF, pdf]);
 
   useEffect(() => {
-    const renderCurrentPage = async () => {
-      if (!canvasRef.current) return;
-
-      const result = await renderPage(currentPage);
-      if (!result) return;
-
-      const { page, viewport } = result;
-      const canvas = canvasRef.current;
-      const context = canvas.getContext('2d');
-      if (!context) return;
-
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-
-      const renderContext = {
-        canvasContext: context,
-        viewport: viewport,
-      };
-
-      await page.render(renderContext).promise;
-    };
-
     renderCurrentPage();
-  }, [currentPage, renderPage]);
+  }, [renderCurrentPage]);
 
   if (isLoading) {
     return (

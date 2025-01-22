@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import * as pdfjsLib from 'pdfjs-dist';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 
-// Configure PDF.js worker using CDN
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
+// Configure PDF.js worker using a reliable CDN
+const workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
 
 interface PdfRendererResult {
   page: any;
@@ -18,7 +19,7 @@ export const usePdfRenderer = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
-  const loadPDF = async (file: File | null, url: string): Promise<void> => {
+  const loadPDF = useCallback(async (file: File | null, url: string): Promise<void> => {
     try {
       setIsLoading(true);
       let pdfData: Uint8Array;
@@ -31,10 +32,21 @@ export const usePdfRenderer = () => {
         const arrayBuffer = await response.arrayBuffer();
         pdfData = new Uint8Array(arrayBuffer);
       } else {
+        setIsLoading(false);
         return;
       }
 
+      // Initialize PDF.js with the worker if needed
+      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+      }
+
       const loadingTask = pdfjsLib.getDocument({ data: pdfData });
+      
+      loadingTask.onProgress = (progress) => {
+        console.log(`Loading PDF: ${Math.round(progress.loaded / progress.total * 100)}%`);
+      };
+
       const pdfDoc = await loadingTask.promise;
       setPdf(pdfDoc);
       setCurrentPage(1);
@@ -48,15 +60,15 @@ export const usePdfRenderer = () => {
       console.error('Error loading PDF:', error);
       toast({
         title: "Error",
-        description: "Failed to load PDF document",
+        description: "Failed to load PDF document. Please try again.",
         variant: "destructive",
       });
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [toast]);
 
-  const renderPage = async (
+  const renderPage = useCallback(async (
     pageNumber: number,
     pdfDoc: PDFDocumentProxy | null = pdf
   ): Promise<PdfRendererResult | undefined> => {
@@ -74,14 +86,14 @@ export const usePdfRenderer = () => {
         variant: "destructive",
       });
     }
-  };
+  }, [pdf, scale, toast]);
 
-  const handlePageChange = (newPage: number): void => {
+  const handlePageChange = useCallback((newPage: number): void => {
     if (pdf && newPage >= 1 && newPage <= pdf.numPages) {
       setCurrentPage(newPage);
       renderPage(newPage);
     }
-  };
+  }, [pdf, renderPage]);
 
   return {
     pdf,
