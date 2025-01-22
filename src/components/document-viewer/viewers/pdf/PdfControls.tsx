@@ -1,58 +1,51 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Highlighter } from 'lucide-react';
 
 interface PdfControlsProps {
   currentPage: number;
   totalPages: number;
-  onPageChange: (direction: 'prev' | 'next') => void;
-  isHighlighting: boolean;
-  onToggleHighlighting: () => void;
+  onPageChange: (newPage: number) => void;
+  onHighlight?: () => void;
+  isHighlighter?: boolean;
+  selectedColor?: string;
 }
 
 export const PdfControls: React.FC<PdfControlsProps> = ({
   currentPage,
   totalPages,
   onPageChange,
-  isHighlighting,
-  onToggleHighlighting
+  onHighlight,
+  isHighlighter,
+  selectedColor
 }) => {
   return (
-    <>
-      <div className="flex justify-end mb-2 px-4">
+    <div className="flex justify-between p-4 border-b">
+      <div className="flex gap-2">
         <Button
-          variant={isHighlighting ? "secondary" : "outline"}
-          size="sm"
-          onClick={onToggleHighlighting}
-          className="flex items-center gap-2"
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage <= 1}
+          className="px-3 py-1 bg-primary text-primary-foreground rounded disabled:opacity-50"
         >
-          <Highlighter className="h-4 w-4" />
-          {isHighlighting ? "Disable" : "Enable"} Highlighter
+          Previous
+        </Button>
+        <span>Page {currentPage} of {totalPages || 1}</span>
+        <Button
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage >= totalPages}
+          className="px-3 py-1 bg-primary text-primary-foreground rounded disabled:opacity-50"
+        >
+          Next
         </Button>
       </div>
-      {totalPages > 1 && (
-        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-background/80 p-2 rounded-lg shadow z-10">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onPageChange('prev')}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <span className="text-sm">
-            Page {currentPage} of {totalPages}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onPageChange('next')}
-            disabled={currentPage === totalPages}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
+      {isHighlighter && onHighlight && (
+        <Button
+          onClick={onHighlight}
+          className="px-3 py-1 rounded"
+          style={{ backgroundColor: selectedColor, color: 'white' }}
+        >
+          Highlight Selection
+        </Button>
       )}
-    </>
+    </div>
   );
 };
