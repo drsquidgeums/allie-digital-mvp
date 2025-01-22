@@ -7,7 +7,6 @@ import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import { DocumentToolbar } from "./document-viewer/DocumentToolbar";
 import { ToolbarTools } from "./document-viewer/ToolbarTools";
 import { UrlInput } from "./document-viewer/UrlInput";
-import { version } from 'pdfjs-dist';
 
 // Import styles
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -143,7 +142,7 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
           onKeyDown={handleKeyDown}
         />
         <div className="h-full bg-white rounded-lg overflow-hidden">
-          <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.js`}>
+          <Worker workerUrl="/pdf.worker.min.js">
             {(fileUrl || url) ? (
               <Viewer
                 fileUrl={fileUrl || url}
