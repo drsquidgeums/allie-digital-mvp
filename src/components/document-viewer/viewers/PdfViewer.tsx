@@ -7,10 +7,7 @@ import 'rangy/lib/rangy-highlighter';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 
 // Initialize PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url
-).toString();
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
 
 interface PdfViewerProps {
   file: File | null;
