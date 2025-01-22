@@ -12,7 +12,11 @@ export const BoldToggle = () => {
     const unsubscribe = globalBoldState.subscribe((newValue) => {
       setIsBold(newValue);
     });
-    return unsubscribe;
+    
+    // Cleanup function that properly removes the listener
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const handleBoldToggle = () => {
@@ -32,6 +36,8 @@ export const BoldToggle = () => {
       onClick={handleBoldToggle}
       className={`h-10 w-10 ${isBold ? 'bg-accent text-accent-foreground ring-2 ring-primary' : 'text-foreground'}`}
       title="Toggle bold text"
+      aria-pressed={isBold}
+      aria-label={`${isBold ? 'Disable' : 'Enable'} bold text`}
     >
       <Bold className="h-4 w-4" />
       {isBold && (

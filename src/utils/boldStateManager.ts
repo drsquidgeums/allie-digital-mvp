@@ -10,26 +10,29 @@ class BoldStateManager {
     this.applyBoldStyling();
   }
 
-  subscribe(listener: BoldStateListener) {
+  subscribe(listener: BoldStateListener): () => void {
     this.listeners.add(listener);
     return () => {
       this.listeners.delete(listener);
     };
   }
 
-  setBold(value: boolean) {
+  setBold(value: boolean): void {
     this.isBold = value;
     localStorage.setItem('isBoldEnabled', value.toString());
     this.applyBoldStyling();
-    this.listeners.forEach(listener => listener(value));
+    this.notifyListeners();
   }
 
-  // Changed from private to public since we need to access it globally
-  public applyBoldStyling() {
+  private notifyListeners(): void {
+    this.listeners.forEach(listener => listener(this.isBold));
+  }
+
+  public applyBoldStyling(): void {
     document.documentElement.style.setProperty('--font-weight', this.isBold ? 'bold' : 'normal');
-    const allTextElements = document.querySelectorAll('p, span, a, h1, h2, h3, h4, h5, h6, div, button, label, input, textarea');
+    const allTextElements = document.querySelectorAll<HTMLElement>('p, span, a, h1, h2, h3, h4, h5, h6, div, button, label, input, textarea');
     allTextElements.forEach(element => {
-      (element as HTMLElement).style.fontWeight = this.isBold ? 'bold' : 'normal';
+      element.style.fontWeight = this.isBold ? 'bold' : 'normal';
     });
   }
 }
