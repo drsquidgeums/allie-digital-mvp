@@ -2,6 +2,11 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Download, Upload, Trash2 } from 'lucide-react';
 import { NotificationCenter } from '../NotificationCenter';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface DocumentToolbarProps {
   onUpload: () => void;
@@ -25,37 +30,81 @@ export const DocumentToolbar = ({
       aria-label="Document actions"
     >
       <div className="flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onUpload}
-          className={buttonClassName}
-          aria-label="Upload document"
-        >
-          <Upload className="h-4 w-4" aria-hidden="true" />
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onDownload}
-          disabled={!hasFile}
-          className={buttonClassName}
-          aria-label="Download document"
-        >
-          <Download className="h-4 w-4" aria-hidden="true" />
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onDelete}
-          disabled={!hasFile}
-          className={buttonClassName}
-          aria-label="Delete document"
-        >
-          <Trash2 className="h-4 w-4" aria-hidden="true" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onUpload}
+              className={buttonClassName}
+              aria-label="Upload document"
+            >
+              <Upload className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent 
+            side="bottom"
+            className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+          >
+            Upload document
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onDownload}
+              disabled={!hasFile}
+              className={buttonClassName}
+              aria-label="Download document"
+            >
+              <Download className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent 
+            side="bottom"
+            className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+          >
+            Download document
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onDelete}
+              disabled={!hasFile}
+              className={buttonClassName}
+              aria-label="Delete document"
+            >
+              <Trash2 className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent 
+            side="bottom"
+            className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+          >
+            Delete document
+          </TooltipContent>
+        </Tooltip>
       </div>
-      <NotificationCenter />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div>
+            <NotificationCenter />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent 
+          side="bottom"
+          className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+        >
+          Notifications
+        </TooltipContent>
+      </Tooltip>
     </div>
   );
 };
