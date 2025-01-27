@@ -25,7 +25,7 @@ export const TaskDashboard = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex min-h-screen bg-background">
       <Sidebar 
         onFileUpload={() => {}} 
         onColorChange={() => {}}
@@ -33,37 +33,35 @@ export const TaskDashboard = () => {
         onFileSelect={() => {}}
         onFileDelete={() => {}}
       />
-      <div className="flex-1 p-6">
-        <Card className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
+      <div className="flex-1 p-6 overflow-y-auto">
+        <Card className="h-full bg-card text-card-foreground animate-fade-in rounded-xl">
           <div className="container mx-auto py-4 px-4">
-            <div className="flex flex-col h-[calc(100vh-8rem)]">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-full">
-                <Card className="p-4 shadow-lg lg:col-span-2 overflow-auto">
-                  <TaskPlanner 
-                    selectedDate={date}
-                    tasks={tasks}
-                    onAddTask={handleAddTaskWithDate}
-                    onToggleTask={handleToggleTask}
-                    onDeleteTask={handleDeleteTask}
-                  />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <Card className="p-4 shadow-lg lg:col-span-2">
+                <TaskPlanner 
+                  selectedDate={date}
+                  tasks={tasks}
+                  onAddTask={handleAddTaskWithDate}
+                  onToggleTask={handleToggleTask}
+                  onDeleteTask={handleDeleteTask}
+                />
+              </Card>
+              <div className="space-y-4">
+                <Card className="p-4 shadow-lg">
+                  <div className="flex justify-center">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      className="rounded-md border"
+                    />
+                  </div>
                 </Card>
-                <div className="space-y-4">
-                  <Card className="p-4 shadow-lg flex flex-col items-center">
-                    <div className="w-full flex justify-center">
-                      <Calendar
-                        mode="single"
-                        selected={date}
-                        onSelect={setDate}
-                        className="rounded-md border"
-                      />
-                    </div>
-                  </Card>
-                  <TaskListCard
-                    tasks={tasks}
-                    onToggleTask={handleToggleTask}
-                    onDeleteTask={handleDeleteTask}
-                  />
-                </div>
+                <TaskListCard
+                  tasks={tasks}
+                  onToggleTask={handleToggleTask}
+                  onDeleteTask={handleDeleteTask}
+                />
               </div>
             </div>
           </div>
