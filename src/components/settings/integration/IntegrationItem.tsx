@@ -16,7 +16,7 @@ export const IntegrationItem = ({
   isLoading,
 }: IntegrationItemProps) => {
   return (
-    <div className="flex items-center justify-between space-x-2">
+    <div className="flex items-center justify-between space-x-4">
       <div className="space-y-0.5">
         <Label>{title}</Label>
         <p className="text-sm text-muted-foreground">{description}</p>
@@ -25,7 +25,7 @@ export const IntegrationItem = ({
         variant="outline"
         onClick={onClick}
         disabled={isLoading}
-        className="min-w-[90px] shrink-0"
+        className="min-w-[100px]"
       >
         {isLoading ? "Connecting..." : "Connect"}
       </Button>
