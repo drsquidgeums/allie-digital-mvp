@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { TaskList } from "./TaskList";
 
 interface Task {
@@ -17,13 +16,13 @@ interface TaskListCardProps {
 
 export const TaskListCard = ({ tasks, onToggleTask, onDeleteTask }: TaskListCardProps) => {
   return (
-    <Card className="p-6 shadow-lg">
+    <div className="bg-card rounded-lg p-6 shadow-sm">
       <h2 className="text-xl font-semibold mb-4">Task List</h2>
       <TaskList
         tasks={tasks}
         onToggleTask={onToggleTask}
         onDeleteTask={onDeleteTask}
       />
-    </Card>
+    </div>
   );
 };
