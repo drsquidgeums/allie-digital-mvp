@@ -18,7 +18,7 @@ export const Settings = () => {
       role="region"
       aria-label="Application Settings"
     >
-      <div className="p-4 space-y-4">
+      <div className="p-6 space-y-4 max-w-4xl mx-auto">
         <p className="text-muted-foreground">Manage your application preferences</p>
         <Separator />
         <div className="space-y-6">

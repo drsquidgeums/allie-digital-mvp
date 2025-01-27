@@ -1,31 +1,34 @@
 import React from "react";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { IntegrationButton } from "./IntegrationButton";
 
 interface IntegrationItemProps {
   title: string;
   description: string;
-  isLoading?: boolean;
   onClick?: () => void;
+  isLoading?: boolean;
 }
 
 export const IntegrationItem = ({
   title,
   description,
-  isLoading,
   onClick,
+  isLoading,
 }: IntegrationItemProps) => {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between space-x-4">
       <div className="space-y-0.5">
         <Label>{title}</Label>
         <p className="text-sm text-muted-foreground">{description}</p>
       </div>
-      <IntegrationButton 
-        label="Connect" 
-        isLoading={isLoading} 
+      <Button
+        variant="outline"
         onClick={onClick}
-      />
+        disabled={isLoading}
+        className="min-w-[100px]"
+      >
+        {isLoading ? "Connecting..." : "Connect"}
+      </Button>
     </div>
   );
 };
