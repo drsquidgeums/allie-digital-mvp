@@ -5,8 +5,13 @@ import { BrowserRouter } from "react-router-dom";
 import { AppProviders } from "@/components/app/AppProviders";
 import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
+import { PasswordGate } from "@/components/PasswordGate";
 
 const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = React.useState(() => {
+    return localStorage.getItem("isAuthenticated") === "true";
+  });
+
   React.useEffect(() => {
     const savedOverlay = localStorage.getItem('irlenOverlayColor');
     if (savedOverlay) {
@@ -36,6 +41,16 @@ const App = () => {
       document.head.removeChild(style);
     };
   }, []);
+
+  if (!isAuthenticated) {
+    return (
+      <AppProviders>
+        <Toaster />
+        <Sonner />
+        <PasswordGate onAuthenticated={() => setIsAuthenticated(true)} />
+      </AppProviders>
+    );
+  }
 
   return (
     <BrowserRouter>
