@@ -27,7 +27,7 @@ const queryClient = new QueryClient({
 
 const AppLogo = React.memo(() => (
   <div 
-    className="fixed top-0 left-0 w-64 bg-card z-50 p-4 flex items-center gap-3 border-b border-border"
+    className="fixed top-0 left-0 w-64 bg-card z-50 p-4 flex items-center gap-3 border-b border-r border-border"
     role="banner"
   >
     <img 
