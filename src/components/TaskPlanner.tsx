@@ -76,13 +76,14 @@ export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDe
   };
 
   return (
-    <div className="space-y-4">
-      <TaskPoints points={points} />
+    <div className="space-y-6">
+      <h2 className="text-lg font-semibold">Add New Task</h2>
       <TaskInput 
         selectedDate={selectedDate}
         onAddTask={handleAddTask}
         showStarburst={showStarburst}
       />
+      <TaskPoints points={points} />
       <TaskCharts tasks={tasks} />
     </div>
   );
