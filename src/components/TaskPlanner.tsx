@@ -3,6 +3,7 @@ import { useToast } from "@/hooks/use-toast";
 import { TaskCharts } from "./dashboard/TaskCharts";
 import { TaskPoints } from "./dashboard/TaskPoints";
 import { TaskInput } from "./dashboard/TaskInput";
+import { emitTaskNotification } from "@/utils/notifications";
 
 interface Task {
   id: string;
@@ -19,19 +20,6 @@ interface TaskPlannerProps {
   onToggleTask: (id: string) => void;
   onDeleteTask: (id: string) => void;
 }
-
-const emitTaskNotification = (title: string, message: string) => {
-  const event = new CustomEvent('taskNotification', {
-    detail: { 
-      id: Date.now().toString(),
-      title,
-      message,
-      read: false,
-      timestamp: new Date()
-    }
-  });
-  window.dispatchEvent(event);
-};
 
 export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDeleteTask }: TaskPlannerProps) => {
   const [showStarburst, setShowStarburst] = useState(false);
