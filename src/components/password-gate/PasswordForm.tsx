@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,11 +49,15 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
           placeholder="Enter password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full"
+          className="w-full bg-white text-black focus:ring-2 focus:ring-black focus:border-black transition-colors"
           disabled={isLoading}
         />
       </div>
-      <Button type="submit" className="w-[70%]" disabled={isLoading}>
+      <Button 
+        type="submit" 
+        className="w-[70%] bg-black hover:bg-neutral-800 text-white transition-colors" 
+        disabled={isLoading}
+      >
         {isLoading ? "Loading..." : "Enter"}
       </Button>
       <LoadingProgress isLoading={isLoading} progress={progress} />

@@ -83,7 +83,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
           onSubmit={handleSubmit}
         />
       </div>
-      <footer className="absolute bottom-4 text-sm" style={{ color: '#666666' }}>
+      <footer className="absolute bottom-4 text-sm text-[#666666]">
         © Allie Digital Ltd. All Rights Reserved 2025
       </footer>
     </div>
