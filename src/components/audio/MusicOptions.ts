@@ -32,11 +32,6 @@ export const MUSIC_OPTIONS: MusicOption[] = [
     url: "https://radio.stereoscenic.com/asm-h",
   },
   {
-    id: "nature-ambient",
-    name: "Nature Sounds",
-    url: "https://radio.stereoscenic.com/nat-h",
-  },
-  {
     id: "deep-focus",
     name: "Deep Focus",
     url: "https://ice1.somafm.com/dronezone-128-mp3",
