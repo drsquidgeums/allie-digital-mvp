@@ -54,6 +54,6 @@ export const MUSIC_OPTIONS: MusicOption[] = [
   {
     id: "brown-noise",
     name: "Brown Noise",
-    url: "https://streams.relaxfm.ee/brown-noise"
+    url: "https://brownoise.s3.us-east-1.amazonaws.com/brown-noise-loop.mp3"
   }
 ];
