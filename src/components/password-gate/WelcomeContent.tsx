@@ -14,8 +14,8 @@ export const WelcomeContent: React.FC<WelcomeContentProps> = ({ colors }) => {
         <StarburstAnimation colors={colors} />
         <DustParticles colors={colors} />
       </div>
-      <h1 className="text-2xl font-bold mb-2 relative z-20 text-foreground">Welcome</h1>
-      <p className="text-foreground relative z-20 whitespace-nowrap">
+      <h1 className="text-2xl font-bold mb-2 relative z-20 text-black">Welcome</h1>
+      <p className="text-black relative z-20 whitespace-nowrap">
         Please enter the password to access the Web Application
       </p>
     </div>

@@ -49,7 +49,7 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
           placeholder="Enter password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full bg-white text-black focus:ring-2 focus:ring-black focus:border-black transition-colors"
+          className="w-full bg-white text-black placeholder:text-black/60 focus:ring-2 focus:ring-black focus:border-black transition-colors"
           disabled={isLoading}
         />
       </div>
