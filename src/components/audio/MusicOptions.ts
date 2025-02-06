@@ -1,5 +1,4 @@
 
-
 export interface MusicOption {
   id: string;
   name: string;
@@ -53,9 +52,8 @@ export const MUSIC_OPTIONS: MusicOption[] = [
     url: "https://radio.stereoscenic.com/theta-h",
   },
   {
-    id: "white-noise",
-    name: "White Noise",
-    url: "https://streams.audio.wgbh.org:8200/white-noise.mp3"
+    id: "brown-noise",
+    name: "Brown Noise",
+    url: "https://streams.audio.wgbh.org:8200/brown-noise.mp3"
   }
 ];
-
