@@ -31,11 +31,22 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     }
   };
 
-  // Create an array of stars with different colors
-  const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#D4A5A5', '#9B59B6', '#3498DB'];
+  // Create an array of stars with different colors - expanded with more vibrant colors
+  const colors = [
+    '#9b87f5', // Primary Purple
+    '#D946EF', // Magenta Pink
+    '#F97316', // Bright Orange
+    '#0EA5E9', // Ocean Blue
+    '#1EAEDB', // Bright Blue
+    '#33C3F0', // Sky Blue
+    '#8B5CF6', // Vivid Purple
+    '#0FA0CE', // Bright Blue
+    '#7E69AB', // Secondary Purple
+    '#6E59A5', // Tertiary Purple
+  ];
   
-  const stars = Array.from({ length: 8 }).map((_, index) => {
-    const rotation = (index * 45) + "deg"; // Evenly space stars in a circle
+  const stars = Array.from({ length: 10 }).map((_, index) => {
+    const rotation = (index * 36) + "deg"; // Evenly space stars in a circle (360/10 = 36)
     
     return (
       <div
@@ -46,7 +57,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
           left: "50%",
           transform: `translate(-50%, -50%)`,
           backgroundColor: colors[index],
-          opacity: "0.9", // Slightly reduced opacity
+          opacity: "0.95", // Increased opacity to 95%
           clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)", // Star shape
           animation: "starburst 1.5s infinite",
           animationDelay: `${index * 0.2}s`,
