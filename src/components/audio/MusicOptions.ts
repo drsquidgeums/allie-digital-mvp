@@ -18,7 +18,7 @@ export const MUSIC_OPTIONS: MusicOption[] = [
   {
     id: "minimal",
     name: "Minimal",
-    url: "http://ice1.somafm.com/groovesalad-128-mp3", // SomaFM Groove Salad
+    url: "https://ice1.somafm.com/groovesalad-128-mp3", // SomaFM Groove Salad
   },
   {
     id: "alpha-waves",
@@ -38,17 +38,17 @@ export const MUSIC_OPTIONS: MusicOption[] = [
   {
     id: "deep-focus",
     name: "Deep Focus",
-    url: "http://ice1.somafm.com/dronezone-128-mp3", // SomaFM Drone Zone
+    url: "https://ice1.somafm.com/dronezone-128-mp3", // SomaFM Drone Zone
   },
   {
     id: "space-ambient",
     name: "Space Dreams",
-    url: "http://ice1.somafm.com/mission-control-128-mp3", // SomaFM Mission Control - space-themed ambient
+    url: "https://ice1.somafm.com/mission-control-128-mp3", // SomaFM Mission Control - space-themed ambient
   },
   {
     id: "minimal-piano",
     name: "Minimal Piano",
-    url: "http://ice1.somafm.com/deepspaceone-128-mp3", // SomaFM Deep Space One - ambient piano
+    url: "https://ice1.somafm.com/deepspaceone-128-mp3", // SomaFM Deep Space One - ambient piano
   },
   {
     id: "theta-waves",
