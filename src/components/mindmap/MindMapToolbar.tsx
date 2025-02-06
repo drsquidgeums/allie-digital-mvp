@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Network } from "lucide-react";
 import { ColorOption } from './types';
@@ -10,6 +11,10 @@ interface MindMapToolbarProps {
   setSelectedColor: (color: string) => void;
   customColor: string;
   setCustomColor: (color: string) => void;
+  selectedTextColor: string;
+  setSelectedTextColor: (color: string) => void;
+  customTextColor: string;
+  setCustomTextColor: (color: string) => void;
   newNodeText: string;
   setNewNodeText: (text: string) => void;
   onAddNode: () => void;
@@ -17,6 +22,7 @@ interface MindMapToolbarProps {
   onExportJson: () => void;
   onClear: () => void;
   colorOptions: ColorOption[];
+  textColorOptions: ColorOption[];
 }
 
 export const MindMapToolbar = ({
@@ -24,6 +30,10 @@ export const MindMapToolbar = ({
   setSelectedColor,
   customColor,
   setCustomColor,
+  selectedTextColor,
+  setSelectedTextColor,
+  customTextColor,
+  setCustomTextColor,
   newNodeText,
   setNewNodeText,
   onAddNode,
@@ -31,6 +41,7 @@ export const MindMapToolbar = ({
   onExportJson,
   onClear,
   colorOptions,
+  textColorOptions,
 }: MindMapToolbarProps) => {
   return (
     <div 
@@ -50,6 +61,13 @@ export const MindMapToolbar = ({
             customColor={customColor}
             setCustomColor={setCustomColor}
             colorOptions={colorOptions}
+          />
+          <ColorSelector
+            selectedColor={selectedTextColor}
+            setSelectedColor={setSelectedTextColor}
+            customColor={customTextColor}
+            setCustomColor={setCustomTextColor}
+            colorOptions={textColorOptions}
           />
         </div>
         <NodeInput
