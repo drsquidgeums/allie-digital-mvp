@@ -47,7 +47,7 @@ export const MUSIC_OPTIONS: MusicOption[] = [
   },
   {
     id: "minimal-piano",
-    name: "Minimal Piano",
+    name: "Minimal Beats",
     url: "https://ice1.somafm.com/deepspaceone-128-mp3", // SomaFM Deep Space One - ambient piano
   },
   {
