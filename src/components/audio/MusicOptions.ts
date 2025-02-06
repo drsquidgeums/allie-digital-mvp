@@ -40,11 +40,6 @@ export const MUSIC_OPTIONS: MusicOption[] = [
     id: "minimal-piano",
     name: "Minimal Beats",
     url: "https://ice1.somafm.com/deepspaceone-128-mp3",
-  },
-  {
-    id: "theta-waves",
-    name: "Theta Waves",
-    url: "https://radio.stereoscenic.com/theta-h",
   }
 ];
 
