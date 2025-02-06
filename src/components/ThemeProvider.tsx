@@ -1,6 +1,7 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Type, Moon, Sun, Book } from "lucide-react";
+import { Type, Moon, Sun } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -61,74 +62,32 @@ export const ThemeProvider = () => {
       </Popover>
       <IrlenOverlay />
       <AmbientMusic />
-      <div className="flex gap-2">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className={`${buttonClassName} ${
-                theme === 'light' 
-                  ? 'bg-accent text-accent-foreground' 
-                  : 'bg-background hover:bg-accent hover:text-accent-foreground'
-              }`}
-              onClick={() => setTheme('light')}
-            >
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className={`${buttonClassName} ${
+              theme === 'light' 
+                ? 'bg-accent text-accent-foreground' 
+                : 'bg-background hover:bg-accent hover:text-accent-foreground'
+            }`}
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          >
+            {theme === 'dark' ? (
               <Sun className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent 
-            side="bottom" 
-            className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
-          >
-            Light Mode
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className={`${buttonClassName} ${
-                theme === 'dark' 
-                  ? 'bg-accent text-accent-foreground' 
-                  : 'bg-background hover:bg-accent hover:text-accent-foreground'
-              }`}
-              onClick={() => setTheme('dark')}
-            >
+            ) : (
               <Moon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent 
-            side="bottom" 
-            className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
-          >
-            Dark Mode
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className={`${buttonClassName} ${
-                theme === 'sepia' 
-                  ? 'bg-accent text-accent-foreground' 
-                  : 'bg-background hover:bg-accent hover:text-accent-foreground'
-              }`}
-              onClick={() => setTheme('sepia')}
-            >
-              <Book className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent 
-            side="bottom" 
-            className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
-          >
-            Sepia Mode
-          </TooltipContent>
-        </Tooltip>
-      </div>
+            )}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent 
+          side="bottom" 
+          className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+        >
+          Toggle theme
+        </TooltipContent>
+      </Tooltip>
     </div>
   );
 };
