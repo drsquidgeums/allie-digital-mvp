@@ -89,14 +89,14 @@ export default {
             opacity: "0"
           },
           "25%": {
-            opacity: "0.8"
+            opacity: "0.4"
           },
           "50%": {
             transform: "translateY(var(--offset-y)) translateX(var(--offset-x))",
-            opacity: "0.6"
+            opacity: "0.3"
           },
           "75%": {
-            opacity: "0.8"
+            opacity: "0.4"
           },
           "100%": {
             transform: "translateY(0) translateX(0)",

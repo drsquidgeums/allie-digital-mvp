@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 
 interface PasswordFormProps {
   password: string;
@@ -13,8 +14,36 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
   setPassword,
   onSubmit,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setProgress(0);
+
+    // Simulate loading progress
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 100);
+
+    // Simulate a brief loading period
+    setTimeout(() => {
+      clearInterval(interval);
+      setIsLoading(false);
+      setProgress(0);
+      onSubmit(e);
+    }, 1200);
+  };
+
   return (
-    <form onSubmit={onSubmit} className="space-y-4 flex flex-col items-center">
+    <form onSubmit={handleSubmit} className="space-y-4 flex flex-col items-center">
       <div className="w-[70%]">
         <Input
           type="password"
@@ -22,11 +51,17 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full"
+          disabled={isLoading}
         />
       </div>
-      <Button type="submit" className="w-[70%]">
-        Enter
+      <Button type="submit" className="w-[70%]" disabled={isLoading}>
+        {isLoading ? "Loading..." : "Enter"}
       </Button>
+      {isLoading && (
+        <div className="w-[70%]">
+          <Progress value={progress} className="h-2" />
+        </div>
+      )}
     </form>
   );
 };

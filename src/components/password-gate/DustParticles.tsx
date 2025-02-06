@@ -7,11 +7,11 @@ interface DustParticlesProps {
 export const DustParticles: React.FC<DustParticlesProps> = ({ colors }) => {
   const particles = Array.from({ length: 40 }).map((_, index) => {
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    const randomOffsetX = Math.random() * 300 - 150; // Increased spread range (-150 to 150)
-    const randomOffsetY = Math.random() * 200 - 100; // Added vertical spread (-100 to 100)
-    const randomDelay = Math.random() * 3; // Increased delay variation
-    const randomSize = Math.random() * 5 + 2; // Increased size range (2-7 pixels)
-    const randomDuration = 2 + Math.random() * 3; // Random duration between 2-5 seconds
+    const randomOffsetX = Math.random() * 300 - 150;
+    const randomOffsetY = Math.random() * 200 - 100;
+    const randomDelay = Math.random() * 3;
+    const randomSize = Math.random() * 5 + 2;
+    const randomDuration = 2 + Math.random() * 3;
 
     return (
       <div
@@ -35,7 +35,7 @@ export const DustParticles: React.FC<DustParticlesProps> = ({ colors }) => {
   });
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-75">
       {particles}
     </div>
   );
