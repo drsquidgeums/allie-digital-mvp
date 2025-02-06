@@ -31,26 +31,26 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     }
   };
 
-  // Create an array of stars with different rotations and scales
+  // Create an array of stars with different colors
+  const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#D4A5A5', '#9B59B6', '#3498DB'];
+  
   const stars = Array.from({ length: 8 }).map((_, index) => {
     const rotation = (index * 45) + "deg"; // Evenly space stars in a circle
-    const scale = 0.8 + Math.random() * 0.4; // Random scale between 0.8 and 1.2
-    const distance = 40 + Math.random() * 20; // Random distance between 40 and 60 pixels
     
     return (
       <div
         key={index}
-        className="absolute w-4 h-4 bg-black rounded-sm"
+        className="absolute w-4 h-4 rounded-sm"
         style={{
           top: "calc(50% - 20px)", // Move up by 20px
           left: "50%",
           transform: `translate(-50%, -50%)`,
+          backgroundColor: colors[index],
+          opacity: "0.9", // Slightly reduced opacity
           clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)", // Star shape
           animation: "starburst 1.5s infinite",
           animationDelay: `${index * 0.2}s`,
           "--rotation": rotation,
-          "--scale": scale,
-          "--distance": `${distance}px`
         } as React.CSSProperties}
       />
     );
