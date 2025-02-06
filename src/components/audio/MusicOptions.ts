@@ -1,3 +1,4 @@
+
 export interface MusicOption {
   id: string;
   name: string;
@@ -13,51 +14,51 @@ export const MUSIC_OPTIONS: MusicOption[] = [
   {
     id: "chillout",
     name: "Chillout",
-    url: "https://radio.stereoscenic.com/asm-h", // Ambient Sleeping Pill radio
+    url: "https://radio.stereoscenic.com/asm-h",
   },
   {
     id: "minimal",
     name: "Minimal",
-    url: "https://ice1.somafm.com/groovesalad-128-mp3", // SomaFM Groove Salad
+    url: "https://ice1.somafm.com/groovesalad-128-mp3",
   },
   {
     id: "alpha-waves",
     name: "Alpha Waves Focus",
-    url: "https://radio.stereoscenic.com/asp-h", // Alpha wave binaural beats
+    url: "https://radio.stereoscenic.com/asp-h",
   },
   {
     id: "study-beats",
     name: "Lo-Fi Study",
-    url: "https://radio.stereoscenic.com/asm-h", // Ambient Sleeping Pill
+    url: "https://radio.stereoscenic.com/asm-h",
   },
   {
     id: "nature-ambient",
     name: "Nature Sounds",
-    url: "https://radio.stereoscenic.com/nat-h", // Nature ambient
+    url: "https://radio.stereoscenic.com/nat-h",
   },
   {
     id: "deep-focus",
     name: "Deep Focus",
-    url: "https://ice1.somafm.com/dronezone-128-mp3", // SomaFM Drone Zone
+    url: "https://ice1.somafm.com/dronezone-128-mp3",
   },
   {
     id: "space-ambient",
     name: "Space Dreams",
-    url: "https://ice1.somafm.com/mission-control-128-mp3", // SomaFM Mission Control - space-themed ambient
+    url: "https://ice1.somafm.com/mission-control-128-mp3",
   },
   {
     id: "minimal-piano",
     name: "Minimal Beats",
-    url: "https://ice1.somafm.com/deepspaceone-128-mp3", // SomaFM Deep Space One - ambient piano
+    url: "https://ice1.somafm.com/deepspaceone-128-mp3",
   },
   {
     id: "theta-waves",
     name: "Theta Waves",
-    url: "https://radio.stereoscenic.com/theta-h", // Theta wave binaural beats
+    url: "https://radio.stereoscenic.com/theta-h",
   },
   {
     id: "white-noise",
     name: "White Noise",
-    url: "https://radio.stereoscenic.com/purenoise-h", // Pure white noise stream
+    url: "https://streams.audio.wgbh.org:8200/white-noise.mp3"
   }
 ];
