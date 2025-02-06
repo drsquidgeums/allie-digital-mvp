@@ -31,25 +31,32 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     }
   };
 
-  // Generate multiple star elements with different positions and animations
-  const stars = Array.from({ length: 8 }).map((_, index) => (
-    <div
-      key={index}
-      className="absolute w-1 h-1 bg-black rounded-full animate-pulse"
-      style={{
-        top: `${Math.random() * 60 + 20}%`,
-        left: `${Math.random() * 60 + 20}%`,
-        animationDelay: `${index * 0.2}s`,
-        opacity: 0.3
-      }}
-    />
-  ));
+  // Create an array of stars with different rotations
+  const stars = Array.from({ length: 8 }).map((_, index) => {
+    const rotation = (index * 45) + "deg"; // Evenly space stars in a circle
+    return (
+      <div
+        key={index}
+        className="absolute w-1 h-1 bg-black rounded-full"
+        style={{
+          top: "50%",
+          left: "50%",
+          opacity: 0.3,
+          animation: "starburst 1.5s infinite",
+          animationDelay: `${index * 0.2}s`,
+          "--rotation": rotation
+        } as React.CSSProperties}
+      />
+    );
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
-      {stars}
       <div className="w-full max-w-md space-y-8 p-8 relative">
-        <div className="text-center">
+        <div className="text-center relative">
+          <div className="absolute inset-0 -z-10">
+            {stars}
+          </div>
           <h1 className="text-2xl font-bold mb-2">Welcome</h1>
           <p className="text-muted-foreground">Please enter the password to continue</p>
         </div>
