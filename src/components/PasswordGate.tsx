@@ -48,6 +48,15 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     '#8B00FF', // Violet
   ];
 
+  // Preload the background image
+  React.useEffect(() => {
+    const bgImage = new Image();
+    bgImage.src = '/lovable-uploads/c6d002da-1686-4204-97e5-213169f7c0b5.png';
+    
+    const logoImage = new Image();
+    logoImage.src = '/lovable-uploads/3a3ef3bc-dbfb-441c-88cd-8b91d4891d61.png';
+  }, []);
+
   return (
     <div 
       className="min-h-screen flex flex-col items-center justify-center bg-background relative overflow-hidden"
@@ -55,12 +64,13 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         backgroundImage: "url('/lovable-uploads/c6d002da-1686-4204-97e5-213169f7c0b5.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
+        opacity: 1
       }}
     >
       <div 
         className="absolute inset-0" 
-        style={{ backgroundColor: 'rgba(255, 255, 255, 0.85)' }} 
+        style={{ backgroundColor: 'rgba(255, 255, 255, 0.08)' }} 
       />
       <div className="w-full max-w-xl space-y-8 p-8 relative">
         <WelcomeHeader colors={colors} />
