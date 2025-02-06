@@ -33,23 +33,10 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
   };
 
   const colors = [
-    '#FF0000', // Red
-    '#FF7F00', // Orange
-    '#FFFF00', // Yellow
-    '#00FF00', // Green
-    '#0000FF', // Blue
-    '#4B0082', // Indigo
-    '#8B00FF', // Violet
-    '#FF0000', // Red (repeat for smooth transition)
-    '#FF7F00', // Orange
-    '#FFFF00', // Yellow
-    '#00FF00', // Green
-    '#0000FF', // Blue
-    '#4B0082', // Indigo
-    '#8B00FF', // Violet
+    '#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#8B00FF',
+    '#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#8B00FF',
   ];
 
-  // Enhanced image preloading
   useEffect(() => {
     const bgImage = new Image();
     const logoImage = new Image();

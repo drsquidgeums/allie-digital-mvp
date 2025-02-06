@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
+import { LoadingProgress } from "./LoadingProgress";
 
 interface PasswordFormProps {
   password: string;
@@ -22,7 +22,6 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
     setIsLoading(true);
     setProgress(0);
 
-    // Simulate loading progress
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
@@ -33,7 +32,6 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
       });
     }, 100);
 
-    // Simulate a brief loading period
     setTimeout(() => {
       clearInterval(interval);
       setIsLoading(false);
@@ -57,11 +55,7 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
       <Button type="submit" className="w-[70%]" disabled={isLoading}>
         {isLoading ? "Loading..." : "Enter"}
       </Button>
-      {isLoading && (
-        <div className="w-[70%]">
-          <Progress value={progress} className="h-2" />
-        </div>
-      )}
+      <LoadingProgress isLoading={isLoading} progress={progress} />
     </form>
   );
 };

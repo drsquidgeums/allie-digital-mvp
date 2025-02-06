@@ -1,6 +1,5 @@
 import React from "react";
-import { StarburstAnimation } from "./StarburstAnimation";
-import { DustParticles } from "./DustParticles";
+import { WelcomeContent } from "./WelcomeContent";
 
 interface WelcomeHeaderProps {
   colors: string[];
@@ -16,16 +15,7 @@ export const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ colors }) => {
         style={{ opacity: 1 }}
         loading="eager"
       />
-      <div className="text-center relative">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <StarburstAnimation colors={colors} />
-          <DustParticles colors={colors} />
-        </div>
-        <h1 className="text-2xl font-bold mb-2 relative z-10">Welcome</h1>
-        <p className="text-muted-foreground relative z-10 whitespace-nowrap">
-          Please enter the password to access the Web Application
-        </p>
-      </div>
+      <WelcomeContent colors={colors} />
     </div>
   );
 };
