@@ -37,11 +37,11 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     return (
       <div
         key={index}
-        className="absolute w-1 h-1 bg-black rounded-full"
+        className="absolute w-2 h-2 bg-black rounded-full"
         style={{
           top: "50%",
           left: "50%",
-          opacity: 0.3,
+          transform: `translate(-50%, -50%)`,
           animation: "starburst 1.5s infinite",
           animationDelay: `${index * 0.2}s`,
           "--rotation": rotation
@@ -54,11 +54,11 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
       <div className="w-full max-w-md space-y-8 p-8 relative">
         <div className="text-center relative">
-          <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 flex items-center justify-center">
             {stars}
           </div>
-          <h1 className="text-2xl font-bold mb-2">Welcome</h1>
-          <p className="text-muted-foreground">Please enter the password to continue</p>
+          <h1 className="text-2xl font-bold mb-2 relative z-10">Welcome</h1>
+          <p className="text-muted-foreground relative z-10">Please enter the password to continue</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
