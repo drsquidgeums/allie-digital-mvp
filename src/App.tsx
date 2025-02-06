@@ -7,7 +7,6 @@ import { AppProviders } from "@/components/app/AppProviders";
 import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { PasswordGate } from "@/components/PasswordGate";
-import { ThemeProvider } from "next-themes";
 
 const App = () => {
   // Reset authentication state on initial load
@@ -19,29 +18,25 @@ const App = () => {
 
   if (!isAuthenticated) {
     return (
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <AppProviders>
-          <Toaster />
-          <Sonner />
-          <PasswordGate onAuthenticated={() => setIsAuthenticated(true)} />
-        </AppProviders>
-      </ThemeProvider>
+      <AppProviders>
+        <Toaster />
+        <Sonner />
+        <PasswordGate onAuthenticated={() => setIsAuthenticated(true)} />
+      </AppProviders>
     );
   }
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <BrowserRouter>
-        <AppProviders>
-          <div className="app-container">
-            <AppLogo />
-            <Toaster />
-            <Sonner />
-            <AppRoutes />
-          </div>
-        </AppProviders>
-      </BrowserRouter>
-    </ThemeProvider>
+    <BrowserRouter>
+      <AppProviders>
+        <div className="app-container">
+          <AppLogo />
+          <Toaster />
+          <Sonner />
+          <AppRoutes />
+        </div>
+      </AppProviders>
+    </BrowserRouter>
   );
 };
 
