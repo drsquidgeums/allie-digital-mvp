@@ -37,11 +37,12 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     return (
       <div
         key={index}
-        className="absolute w-2 h-2 bg-black rounded-full"
+        className="absolute w-2 h-2 bg-black rounded-sm"
         style={{
-          top: "50%",
+          top: "calc(50% - 20px)", // Move up by 20px
           left: "50%",
           transform: `translate(-50%, -50%)`,
+          clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)", // Star shape
           animation: "starburst 1.5s infinite",
           animationDelay: `${index * 0.2}s`,
           "--rotation": rotation
