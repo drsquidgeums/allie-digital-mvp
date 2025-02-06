@@ -68,8 +68,20 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
   });
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background relative overflow-hidden">
-      <div className="w-full max-w-md space-y-8 p-8 relative">
+    <div 
+      className="min-h-screen flex flex-col items-center justify-center bg-background relative overflow-hidden"
+      style={{
+        backgroundImage: "url('/lovable-uploads/c6d002da-1686-4204-97e5-213169f7c0b5.png')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      <div 
+        className="absolute inset-0" 
+        style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }} 
+      />
+      <div className="w-full max-w-xl space-y-8 p-8 relative">
         <div className="flex flex-col items-center justify-center mb-8">
           <img 
             src="/lovable-uploads/3a3ef3bc-dbfb-441c-88cd-8b91d4891d61.png" 
@@ -81,7 +93,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
               {stars}
             </div>
             <h1 className="text-2xl font-bold mb-2 relative z-10">Welcome</h1>
-            <p className="text-muted-foreground relative z-10">Please enter the password to access the Web Application</p>
+            <p className="text-muted-foreground relative z-10 whitespace-nowrap">Please enter the password to access the Web Application</p>
           </div>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
