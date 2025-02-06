@@ -1,3 +1,4 @@
+
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
@@ -9,8 +10,8 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'en',
-    supportedLngs: ['en', 'es', 'de'],
-    debug: false,
+    debug: true, // Enable debug mode to see what's happening
+    supportedLngs: ['en-US', 'en-GB', 'es', 'zh', 'fr', 'de', 'it', 'pt', 'ru', 'ja', 'ko', 'ar', 'nl', 'tr', 'hi', 'pl', 'sv'],
     interpolation: {
       escapeValue: false,
     },
