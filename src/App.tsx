@@ -19,7 +19,7 @@ const App = () => {
 
   if (!isAuthenticated) {
     return (
-      <ThemeProvider>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <AppProviders>
           <Toaster />
           <Sonner />
@@ -30,7 +30,7 @@ const App = () => {
   }
 
   return (
-    <ThemeProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <BrowserRouter>
         <AppProviders>
           <div className="app-container">
