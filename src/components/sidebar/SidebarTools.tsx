@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 interface SidebarToolsProps {
   activeComponent: string | null;
@@ -15,9 +16,16 @@ interface SidebarToolsProps {
 export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToolsProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { toast } = useToast();
 
   const handleLogout = () => {
-    console.log("Logout clicked");
+    localStorage.removeItem("isAuthenticated");
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+    });
+    // Force a page reload to return to the password gate
+    window.location.reload();
   };
 
   const handleSettingsClick = () => {
