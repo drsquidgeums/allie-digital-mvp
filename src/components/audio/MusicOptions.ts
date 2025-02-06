@@ -6,6 +6,21 @@ export interface MusicOption {
 
 export const MUSIC_OPTIONS: MusicOption[] = [
   {
+    id: "classic",
+    name: "Classic FM",
+    url: "https://media-ssl.musicradio.com/ClassicFM",
+  },
+  {
+    id: "chillout",
+    name: "Chillout",
+    url: "https://radio.stereoscenic.com/asm-h", // Ambient Sleeping Pill radio
+  },
+  {
+    id: "minimal",
+    name: "Minimal",
+    url: "http://ice1.somafm.com/groovesalad-128-mp3", // SomaFM Groove Salad
+  },
+  {
     id: "alpha-waves",
     name: "Alpha Waves Focus",
     url: "https://radio.stereoscenic.com/asp-h", // Alpha wave binaural beats
