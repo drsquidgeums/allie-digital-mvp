@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Toggle } from "../ui/toggle";
 import { Paintbrush, Highlighter } from "lucide-react";
@@ -12,7 +13,7 @@ export const ColorHeader = ({ isHighlighter, onHighlighterToggle }: ColorHeaderP
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
         <Paintbrush className="w-4 h-4" />
-        <h3 className="font-medium">Color Tool</h3>
+        <h3 className="font-medium">Colour Tool</h3>
       </div>
       <Toggle
         pressed={isHighlighter}
