@@ -36,6 +36,10 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     '#9b87f5', // Primary Purple
     '#D946EF', // Magenta Pink
     '#F97316', // Bright Orange
+    '#FFA500', // Pure Orange
+    '#32CD32', // Lime Green
+    '#FFFF00', // Yellow
+    '#FFD700', // Golden Yellow
     '#0EA5E9', // Ocean Blue
     '#1EAEDB', // Bright Blue
     '#33C3F0', // Sky Blue
@@ -45,8 +49,8 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     '#6E59A5', // Tertiary Purple
   ];
   
-  const stars = Array.from({ length: 10 }).map((_, index) => {
-    const rotation = (index * 36) + "deg"; // Evenly space stars in a circle (360/10 = 36)
+  const stars = Array.from({ length: 14 }).map((_, index) => {
+    const rotation = (index * (360/14)) + "deg"; // Evenly space stars in a circle
     
     return (
       <div
