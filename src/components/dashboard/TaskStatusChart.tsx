@@ -30,20 +30,28 @@ export const TaskStatusChart = ({ tasks }: TaskStatusChartProps) => {
               dataKey="value"
               label={({ name, value }) => `${name}: ${value}`}
               labelLine={false}
-              className="text-foreground"
+              className="text-foreground fill-foreground"
             >
               {getPieChartData().map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-            <Tooltip contentStyle={{ color: 'var(--foreground)' }} />
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: 'var(--background)',
+                border: '1px solid var(--border)',
+                color: 'var(--foreground)'
+              }} 
+            />
             <Legend 
               verticalAlign="bottom" 
               height={36}
               wrapperStyle={{
-                paddingTop: "20px",
-                color: 'var(--foreground)'
+                paddingTop: "20px"
               }}
+              formatter={(value, entry) => (
+                <span className="text-foreground">{value}</span>
+              )}
             />
           </PieChart>
         </ResponsiveContainer>
