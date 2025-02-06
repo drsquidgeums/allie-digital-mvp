@@ -81,7 +81,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
               {stars}
             </div>
             <h1 className="text-2xl font-bold mb-2 relative z-10">Welcome</h1>
-            <p className="text-muted-foreground relative z-10">Please enter the password to the Web Application</p>
+            <p className="text-muted-foreground relative z-10">Please enter the password to continue to the Web Application</p>
           </div>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -95,7 +95,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
             />
           </div>
           <Button type="submit" className="w-full">
-            Enter Application
+            Enter
           </Button>
         </form>
       </div>
