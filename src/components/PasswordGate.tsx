@@ -31,13 +31,16 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     }
   };
 
-  // Create an array of stars with different rotations
+  // Create an array of stars with different rotations and scales
   const stars = Array.from({ length: 8 }).map((_, index) => {
     const rotation = (index * 45) + "deg"; // Evenly space stars in a circle
+    const scale = 0.8 + Math.random() * 0.4; // Random scale between 0.8 and 1.2
+    const distance = 40 + Math.random() * 20; // Random distance between 40 and 60 pixels
+    
     return (
       <div
         key={index}
-        className="absolute w-2 h-2 bg-black rounded-sm"
+        className="absolute w-4 h-4 bg-black rounded-sm"
         style={{
           top: "calc(50% - 20px)", // Move up by 20px
           left: "50%",
@@ -45,7 +48,9 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
           clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)", // Star shape
           animation: "starburst 1.5s infinite",
           animationDelay: `${index * 0.2}s`,
-          "--rotation": rotation
+          "--rotation": rotation,
+          "--scale": scale,
+          "--distance": `${distance}px`
         } as React.CSSProperties}
       />
     );

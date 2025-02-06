@@ -78,8 +78,12 @@ export default {
             transform: "rotate(var(--rotation)) translateY(-20px) scale(0)",
             opacity: "1"
           },
+          "50%": {
+            transform: "rotate(calc(var(--rotation) + 45deg)) translateY(calc(-1 * var(--distance))) scale(var(--scale))",
+            opacity: "0.7"
+          },
           "100%": {
-            transform: "rotate(var(--rotation)) translateY(-50px) scale(1.5)",
+            transform: "rotate(calc(var(--rotation) + 90deg)) translateY(calc(-1.5 * var(--distance))) scale(0)",
             opacity: "0"
           }
         }
