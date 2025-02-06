@@ -50,10 +50,6 @@ export const MUSIC_OPTIONS: MusicOption[] = [
     id: "theta-waves",
     name: "Theta Waves",
     url: "https://radio.stereoscenic.com/theta-h",
-  },
-  {
-    id: "brown-noise",
-    name: "Brown Noise",
-    url: "https://brownoise.s3.us-east-1.amazonaws.com/brown-noise-loop.mp3"
   }
 ];
+
