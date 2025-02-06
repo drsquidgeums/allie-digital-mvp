@@ -84,13 +84,23 @@ export default {
           }
         },
         "float": {
-          "0%, 100%": {
+          "0%": {
             transform: "translateY(0) translateX(0)",
             opacity: "0"
           },
+          "25%": {
+            opacity: "0.8"
+          },
           "50%": {
-            transform: "translateY(-20px) translateX(var(--offset-x))",
+            transform: "translateY(var(--offset-y)) translateX(var(--offset-x))",
             opacity: "0.6"
+          },
+          "75%": {
+            opacity: "0.8"
+          },
+          "100%": {
+            transform: "translateY(0) translateX(0)",
+            opacity: "0"
           }
         }
       },

@@ -5,11 +5,13 @@ interface DustParticlesProps {
 }
 
 export const DustParticles: React.FC<DustParticlesProps> = ({ colors }) => {
-  const particles = Array.from({ length: 20 }).map((_, index) => {
+  const particles = Array.from({ length: 40 }).map((_, index) => {
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    const randomOffsetX = Math.random() * 100 - 50; // Random value between -50 and 50
-    const randomDelay = Math.random() * 2; // Random delay between 0 and 2 seconds
-    const randomSize = Math.random() * 3 + 1; // Random size between 1 and 4 pixels
+    const randomOffsetX = Math.random() * 300 - 150; // Increased spread range (-150 to 150)
+    const randomOffsetY = Math.random() * 200 - 100; // Added vertical spread (-100 to 100)
+    const randomDelay = Math.random() * 3; // Increased delay variation
+    const randomSize = Math.random() * 5 + 2; // Increased size range (2-7 pixels)
+    const randomDuration = 2 + Math.random() * 3; // Random duration between 2-5 seconds
 
     return (
       <div
@@ -23,13 +25,18 @@ export const DustParticles: React.FC<DustParticlesProps> = ({ colors }) => {
           left: "50%",
           opacity: 0,
           transform: "translate(-50%, -50%)",
-          animation: `float ${2 + Math.random()}s ease-in-out infinite`,
+          animation: `float ${randomDuration}s ease-in-out infinite`,
           animationDelay: `${randomDelay}s`,
           "--offset-x": `${randomOffsetX}px`,
+          "--offset-y": `${randomOffsetY}px`,
         } as React.CSSProperties}
       />
     );
   });
 
-  return <div className="absolute inset-0 overflow-hidden">{particles}</div>;
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {particles}
+    </div>
+  );
 };
