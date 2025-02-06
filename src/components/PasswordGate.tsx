@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { WelcomeHeader } from "./password-gate/WelcomeHeader";
 import { PasswordForm } from "./password-gate/PasswordForm";
@@ -11,6 +11,7 @@ interface PasswordGateProps {
 
 export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
   const [password, setPassword] = useState("");
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -48,12 +49,23 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     '#8B00FF', // Violet
   ];
 
-  // Preload the background image
-  React.useEffect(() => {
+  // Enhanced image preloading
+  useEffect(() => {
     const bgImage = new Image();
-    bgImage.src = '/lovable-uploads/c6d002da-1686-4204-97e5-213169f7c0b5.png';
-    
     const logoImage = new Image();
+    let loadedCount = 0;
+
+    const handleImageLoad = () => {
+      loadedCount++;
+      if (loadedCount === 2) {
+        setImagesLoaded(true);
+      }
+    };
+
+    bgImage.onload = handleImageLoad;
+    logoImage.onload = handleImageLoad;
+
+    bgImage.src = '/lovable-uploads/c6d002da-1686-4204-97e5-213169f7c0b5.png';
     logoImage.src = '/lovable-uploads/3a3ef3bc-dbfb-441c-88cd-8b91d4891d61.png';
   }, []);
 
@@ -61,16 +73,17 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     <div 
       className="min-h-screen flex flex-col items-center justify-center bg-background relative overflow-hidden"
       style={{
+        opacity: imagesLoaded ? 1 : 0,
+        transition: 'opacity 0.3s ease-in-out',
         backgroundImage: "url('/lovable-uploads/c6d002da-1686-4204-97e5-213169f7c0b5.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        opacity: 1
       }}
     >
       <div 
         className="absolute inset-0" 
-        style={{ backgroundColor: 'rgba(255, 255, 255, 0.92)' }} 
+        style={{ backgroundColor: 'rgba(255, 255, 255, 0.94)' }} 
       />
       <div className="w-full max-w-xl space-y-8 p-8 relative">
         <WelcomeHeader colors={colors} />
