@@ -70,7 +70,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     >
       <div 
         className="absolute inset-0" 
-        style={{ backgroundColor: 'rgba(255, 255, 255, 0.08)' }} 
+        style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }} 
       />
       <div className="w-full max-w-xl space-y-8 p-8 relative">
         <WelcomeHeader colors={colors} />
