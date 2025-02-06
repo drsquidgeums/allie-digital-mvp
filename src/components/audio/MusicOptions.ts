@@ -54,6 +54,6 @@ export const MUSIC_OPTIONS: MusicOption[] = [
   {
     id: "brown-noise",
     name: "Brown Noise",
-    url: "https://streams.audio.wgbh.org:8200/brown-noise.mp3"
+    url: "https://brown-noise.s3.amazonaws.com/brown-noise-8-hours.mp3"
   }
 ];
