@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Connection, Edge, useNodesState, useEdgesState, addEdge } from '@xyflow/react';
@@ -7,7 +8,10 @@ const initialNodes: Node[] = [
   {
     id: '1',
     type: 'input',
-    data: { label: 'Main Topic' },
+    data: { 
+      label: 'Main Topic',
+      textColor: '#000000'
+    },
     position: { x: 250, y: 25 },
     style: {
       background: 'hsl(var(--muted))',
@@ -21,6 +25,8 @@ export const useMindMapState = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedColor, setSelectedColor] = useState('hsl(var(--muted))');
   const [customColor, setCustomColor] = useState("#FFFFFF");
+  const [selectedTextColor, setSelectedTextColor] = useState('auto');
+  const [customTextColor, setCustomTextColor] = useState("#000000");
   const [newNodeText, setNewNodeText] = useState("");
   const { toast } = useToast();
 
@@ -35,14 +41,17 @@ export const useMindMapState = () => {
     const newNode: Node = {
       id: `node_${Date.now()}`,
       type: 'default',
-      data: { label: newNodeText },
+      data: { 
+        label: newNodeText,
+        textColor: selectedTextColor === 'custom' ? customTextColor : selectedTextColor
+      },
       position: {
         x: Math.random() * 500,
         y: Math.random() * 300,
       },
       style: {
         background: selectedColor === 'custom' ? customColor : selectedColor,
-        color: 'hsl(var(--muted-foreground))',
+        color: selectedTextColor === 'custom' ? customTextColor : selectedTextColor,
       },
     };
 
@@ -53,7 +62,7 @@ export const useMindMapState = () => {
       title: "Node added",
       description: "New mind map node has been created",
     });
-  }, [newNodeText, selectedColor, customColor, setNodes, toast]);
+  }, [newNodeText, selectedColor, customColor, selectedTextColor, customTextColor, setNodes, toast]);
 
   const clearCanvas = useCallback(() => {
     setNodes(initialNodes);
@@ -72,6 +81,10 @@ export const useMindMapState = () => {
     setSelectedColor,
     customColor,
     setCustomColor,
+    selectedTextColor,
+    setSelectedTextColor,
+    customTextColor,
+    setCustomTextColor,
     newNodeText,
     setNewNodeText,
     onNodesChange,

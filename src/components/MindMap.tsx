@@ -1,3 +1,4 @@
+
 import React from 'react';
 import '@xyflow/react/dist/style.css';
 import { MindMapContainer } from './mindmap/MindMapContainer';
@@ -23,6 +24,14 @@ const colorOptions: ColorOption[] = [
   { label: 'Custom', value: 'custom' },
 ];
 
+const textColorOptions: ColorOption[] = [
+  { label: 'Auto', value: 'auto' },
+  { label: 'Black', value: '#000000' },
+  { label: 'White', value: '#FFFFFF' },
+  { label: 'Gray', value: '#666666' },
+  { label: 'Custom', value: 'custom' },
+];
+
 export const MindMap = () => {
   const {
     nodes,
@@ -31,6 +40,10 @@ export const MindMap = () => {
     setSelectedColor,
     customColor,
     setCustomColor,
+    selectedTextColor,
+    setSelectedTextColor,
+    customTextColor,
+    setCustomTextColor,
     newNodeText,
     setNewNodeText,
     onNodesChange,
@@ -51,6 +64,10 @@ export const MindMap = () => {
       setSelectedColor={setSelectedColor}
       customColor={customColor}
       setCustomColor={setCustomColor}
+      selectedTextColor={selectedTextColor}
+      setSelectedTextColor={setSelectedTextColor}
+      customTextColor={customTextColor}
+      setCustomTextColor={setCustomTextColor}
       newNodeText={newNodeText}
       setNewNodeText={setNewNodeText}
       onAddNode={addNode}
@@ -58,6 +75,7 @@ export const MindMap = () => {
       onExportJson={() => downloadMindMapAsJson(nodes, edges)}
       onClear={clearCanvas}
       colorOptions={colorOptions}
+      textColorOptions={textColorOptions}
       nodeTypes={nodeTypes}
     />
   );

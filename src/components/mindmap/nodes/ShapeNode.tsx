@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Handle, Position, NodeResizer } from '@xyflow/react';
 
@@ -7,6 +8,7 @@ interface ShapeNodeProps {
     label: string;
     shape: string;
     color: string;
+    textColor?: string;
   };
   selected: boolean;
 }
@@ -67,7 +69,7 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
         onDoubleClick={handleDoubleClick}
         style={{
           backgroundColor: data.color,
-          color: getContrastColor(data.color),
+          color: data.textColor || getContrastColor(data.color),
         }}
       >
         {isEditing ? (
@@ -79,6 +81,7 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
             className="bg-transparent text-center border-none outline-none focus:ring-2 focus:ring-ring"
+            style={{ color: data.textColor || getContrastColor(data.color) }}
             autoFocus
             aria-label="Edit node text"
           />

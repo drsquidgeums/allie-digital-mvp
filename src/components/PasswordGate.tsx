@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { WelcomeHeader } from "./password-gate/WelcomeHeader";
@@ -58,7 +59,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
 
   return (
     <div 
-      className="min-h-screen flex flex-col items-center justify-center bg-background relative overflow-hidden"
+      className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
       style={{
         opacity: imagesLoaded ? 1 : 0,
         transition: 'opacity 0.3s ease-in-out',
@@ -66,6 +67,8 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
+        backgroundColor: '#FFFFFF',
+        color: '#000000',
       }}
     >
       <div 
@@ -80,7 +83,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
           onSubmit={handleSubmit}
         />
       </div>
-      <footer className="absolute bottom-4 text-sm text-muted-foreground">
+      <footer className="absolute bottom-4 text-sm" style={{ color: '#666666' }}>
         © Allie Digital Ltd. All Rights Reserved 2025
       </footer>
     </div>
