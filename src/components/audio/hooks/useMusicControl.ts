@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { MusicOption } from '../MusicOptions';
@@ -11,12 +12,28 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
 
   useEffect(() => {
     if (audioRef.current) {
+      audioRef.current.onerror = (e) => {
+        console.error('Audio error:', e);
+        setIsPlaying(false);
+        toast({
+          title: "Playback error",
+          description: "Unable to play the selected music. Please try another option.",
+          variant: "destructive",
+        });
+      };
+
       setIsPlaying(!audioRef.current.paused);
       setVolume(audioRef.current.volume);
       setIsMuted(audioRef.current.muted);
       setIsLooping(audioRef.current.loop);
     }
-  }, []);
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.onerror = null;
+      }
+    };
+  }, [toast]);
 
   const handleVolumeChange = (newVolume: number) => {
     if (!audioRef.current) return;
@@ -70,7 +87,7 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
       console.error('Playback error:', error);
       toast({
         title: "Playback failed",
-        description: "Unable to play the selected music. Please try again.",
+        description: "Unable to play the selected music. Please try another option.",
         variant: "destructive",
       });
       setIsPlaying(false);
