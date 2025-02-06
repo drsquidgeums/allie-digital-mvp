@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -6,6 +7,7 @@ import { AppProviders } from "@/components/app/AppProviders";
 import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { PasswordGate } from "@/components/PasswordGate";
+import { ThemeProvider } from "next-themes";
 
 const App = () => {
   // Reset authentication state on initial load
@@ -17,25 +19,29 @@ const App = () => {
 
   if (!isAuthenticated) {
     return (
-      <AppProviders>
-        <Toaster />
-        <Sonner />
-        <PasswordGate onAuthenticated={() => setIsAuthenticated(true)} />
-      </AppProviders>
+      <ThemeProvider>
+        <AppProviders>
+          <Toaster />
+          <Sonner />
+          <PasswordGate onAuthenticated={() => setIsAuthenticated(true)} />
+        </AppProviders>
+      </ThemeProvider>
     );
   }
 
   return (
-    <BrowserRouter>
-      <AppProviders>
-        <div className="app-container">
-          <AppLogo />
-          <Toaster />
-          <Sonner />
-          <AppRoutes />
-        </div>
-      </AppProviders>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <AppProviders>
+          <div className="app-container">
+            <AppLogo />
+            <Toaster />
+            <Sonner />
+            <AppRoutes />
+          </div>
+        </AppProviders>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 };
 

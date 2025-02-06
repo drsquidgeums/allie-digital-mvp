@@ -19,17 +19,23 @@ import { FontSelector } from "./FontSelector";
 
 export const ThemeProvider = () => {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
   const [selectedFont, setSelectedFont] = React.useState("Inter");
   const buttonClassName = "h-9 w-9";
+
+  // Only show theme UI after mounting to avoid hydration mismatch
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleFontChange = (font: string) => {
     setSelectedFont(font);
     document.documentElement.style.setProperty('--font-family', font);
   };
 
-  React.useEffect(() => {
-    document.documentElement.className = theme || '';
-  }, [theme]);
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className="flex items-center gap-2">
