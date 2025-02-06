@@ -43,12 +43,12 @@ export const MUSIC_OPTIONS: MusicOption[] = [
   {
     id: "space-ambient",
     name: "Space Dreams",
-    url: "http://ice1.somafm.com/spacestationsom-128-mp3", // SomaFM Space Station
+    url: "http://ice1.somafm.com/mission-control-128-mp3", // SomaFM Mission Control - space-themed ambient
   },
   {
     id: "minimal-piano",
     name: "Minimal Piano",
-    url: "http://ice1.somafm.com/cliqhop-128-mp3", // SomaFM cliqhop
+    url: "http://ice1.somafm.com/deepspaceone-128-mp3", // SomaFM Deep Space One - ambient piano
   },
   {
     id: "theta-waves",
@@ -58,6 +58,6 @@ export const MUSIC_OPTIONS: MusicOption[] = [
   {
     id: "white-noise",
     name: "White Noise",
-    url: "https://radio.stereoscenic.com/wn-h", // White noise stream
+    url: "https://radio.stereoscenic.com/purenoise-h", // Pure white noise stream
   }
 ];
