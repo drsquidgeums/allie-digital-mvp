@@ -68,14 +68,21 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background relative overflow-hidden">
       <div className="w-full max-w-md space-y-8 p-8 relative">
-        <div className="text-center relative">
-          <div className="absolute inset-0 flex items-center justify-center">
-            {stars}
+        <div className="flex flex-col items-center justify-center mb-8">
+          <img 
+            src="/lovable-uploads/3a3ef3bc-dbfb-441c-88cd-8b91d4891d61.png" 
+            alt="Allie Digital Logo" 
+            className="w-24 h-24 mb-6"
+          />
+          <div className="text-center relative">
+            <div className="absolute inset-0 flex items-center justify-center">
+              {stars}
+            </div>
+            <h1 className="text-2xl font-bold mb-2 relative z-10">Welcome</h1>
+            <p className="text-muted-foreground relative z-10">Please enter the password to continue</p>
           </div>
-          <h1 className="text-2xl font-bold mb-2 relative z-10">Welcome</h1>
-          <p className="text-muted-foreground relative z-10">Please enter the password to continue</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -92,6 +99,9 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
           </Button>
         </form>
       </div>
+      <footer className="absolute bottom-4 text-sm text-muted-foreground">
+        © Allie Digital Ltd. All Rights Reserved 2025
+      </footer>
     </div>
   );
 };
