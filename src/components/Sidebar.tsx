@@ -1,8 +1,10 @@
+
 import React, { useRef } from "react";
 import { SidebarLogo } from "./sidebar/SidebarLogo";
 import { SidebarNavigation } from "./sidebar/SidebarNavigation";
 import { SidebarTools } from "./sidebar/SidebarTools";
 import { SidebarContent } from "./sidebar/SidebarContent";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface SidebarProps {
   onFileUpload: (file: File) => void;
@@ -39,7 +41,7 @@ export const Sidebar = React.memo(({
   return (
     <div 
       ref={sidebarRef}
-      className="w-64 bg-card border-r border-border p-4 flex flex-col h-screen overflow-y-auto"
+      className="w-64 bg-card border-r border-border p-4 flex flex-col h-screen overflow-y-auto relative"
       role="navigation"
       aria-label="Main navigation"
       tabIndex={0}
@@ -75,6 +77,10 @@ export const Sidebar = React.memo(({
         onFileSelect={onFileSelect}
         onFileDelete={onFileDelete}
       />
+
+      <div className="absolute bottom-4 left-4">
+        <ThemeToggle />
+      </div>
     </div>
   );
 });
