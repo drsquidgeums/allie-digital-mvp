@@ -1,10 +1,11 @@
+
 {
   "tools": {
     "bionic": "Bionic Reader",
     "tts": "Text to Speech",
     "stt": "Speech to Text",
     "pomodoro": "Pomodoro Timer",
-    "color": "Color Tools",
+    "color": "Colour Tool",
     "focus": "Focus Mode"
   }
 }
