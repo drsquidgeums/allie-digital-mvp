@@ -8,39 +8,12 @@ import { AppLogo } from "@/components/app/AppLogo";
 import { PasswordGate } from "@/components/PasswordGate";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(() => {
-    return localStorage.getItem("isAuthenticated") === "true";
-  });
-
+  // Reset authentication state on initial load
   React.useEffect(() => {
-    const savedOverlay = localStorage.getItem('irlenOverlayColor');
-    if (savedOverlay) {
-      document.documentElement.style.setProperty('--overlay-color', savedOverlay);
-      document.documentElement.style.setProperty('--overlay-display', 'block');
-    }
-
-    const style = document.createElement('style');
-    style.textContent = `
-      body::after {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: var(--overlay-color);
-        mix-blend-mode: normal;
-        pointer-events: none;
-        z-index: 9999;
-        display: var(--overlay-display, none);
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      document.head.removeChild(style);
-    };
+    localStorage.removeItem("isAuthenticated");
   }, []);
+
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
 
   if (!isAuthenticated) {
     return (
