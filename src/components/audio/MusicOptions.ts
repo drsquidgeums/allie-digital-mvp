@@ -1,4 +1,5 @@
 
+
 export interface MusicOption {
   id: string;
   name: string;
@@ -42,11 +43,6 @@ export const MUSIC_OPTIONS: MusicOption[] = [
     url: "https://ice1.somafm.com/dronezone-128-mp3",
   },
   {
-    id: "space-ambient",
-    name: "Space Dreams",
-    url: "https://ice1.somafm.com/mission-control-128-mp3",
-  },
-  {
     id: "minimal-piano",
     name: "Minimal Beats",
     url: "https://ice1.somafm.com/deepspaceone-128-mp3",
@@ -62,3 +58,4 @@ export const MUSIC_OPTIONS: MusicOption[] = [
     url: "https://streams.audio.wgbh.org:8200/white-noise.mp3"
   }
 ];
+
