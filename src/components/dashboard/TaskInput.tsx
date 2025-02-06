@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +26,7 @@ export const TaskInput = ({ selectedDate, onAddTask, showStarburst }: TaskInputP
         value={newTask}
         onChange={(e) => setNewTask(e.target.value)}
         placeholder={`Add a new task${selectedDate ? ` for ${selectedDate.toLocaleDateString()}` : ''}...`}
-        className="flex-1"
+        className="flex-1 text-foreground placeholder:text-muted-foreground"
       />
       <div className="relative">
         <Button type="submit">Add</Button>

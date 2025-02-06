@@ -1,3 +1,4 @@
+
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { Task } from '@/types/task';
 
@@ -15,7 +16,7 @@ export const TaskStatusChart = ({ tasks }: TaskStatusChartProps) => {
 
   return (
     <div className="w-full">
-      <h3 className="text-lg font-semibold mb-4">Task Status</h3>
+      <h3 className="text-lg font-semibold mb-4 text-foreground">Task Status</h3>
       <div className="h-56 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -29,17 +30,19 @@ export const TaskStatusChart = ({ tasks }: TaskStatusChartProps) => {
               dataKey="value"
               label={({ name, value }) => `${name}: ${value}`}
               labelLine={false}
+              className="text-foreground"
             >
               {getPieChartData().map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-            <Tooltip />
+            <Tooltip contentStyle={{ color: 'var(--foreground)' }} />
             <Legend 
               verticalAlign="bottom" 
               height={36}
               wrapperStyle={{
-                paddingTop: "20px"
+                paddingTop: "20px",
+                color: 'var(--foreground)'
               }}
             />
           </PieChart>
