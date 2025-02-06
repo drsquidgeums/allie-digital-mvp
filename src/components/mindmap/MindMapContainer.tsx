@@ -1,31 +1,12 @@
+
 import React from 'react';
 import { MindMapToolbar } from './MindMapToolbar';
 import { MindMapFlow } from './MindMapFlow';
 import { MindMapCreativeToolbar } from './MindMapCreativeToolbar';
-import { ColorOption } from './types';
+import { ColorOption, MindMapContainerProps } from './types';
 import { toast } from "sonner";
 import { ReactFlowProvider } from '@xyflow/react';
 import { getShapeStyle } from './utils/shapeUtils';
-
-interface MindMapContainerProps {
-  nodes: any[];
-  edges: any[];
-  onNodesChange: (changes: any) => void;
-  onEdgesChange: (changes: any) => void;
-  onConnect: (connection: any) => void;
-  selectedColor: string;
-  setSelectedColor: (color: string) => void;
-  customColor: string;
-  setCustomColor: (color: string) => void;
-  newNodeText: string;
-  setNewNodeText: (text: string) => void;
-  onAddNode: () => void;
-  onExportJpg: () => void;
-  onExportJson: () => void;
-  onClear: () => void;
-  colorOptions: ColorOption[];
-  nodeTypes: any;
-}
 
 export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   nodes,
@@ -37,6 +18,10 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   setSelectedColor,
   customColor,
   setCustomColor,
+  selectedTextColor,
+  setSelectedTextColor,
+  customTextColor,
+  setCustomTextColor,
   newNodeText,
   setNewNodeText,
   onAddNode,
@@ -44,6 +29,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   onExportJson,
   onClear,
   colorOptions,
+  textColorOptions,
   nodeTypes,
 }) => {
   const handleShapeSelect = (shape: string, label?: string) => {
@@ -55,7 +41,8 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
       data: { 
         label: label || '',
         shape,
-        color: selectedColor === 'custom' ? customColor : selectedColor
+        color: selectedColor === 'custom' ? customColor : selectedColor,
+        textColor: selectedTextColor === 'custom' ? customTextColor : selectedTextColor
       },
       position: { x: Math.random() * 500, y: Math.random() * 300 },
       style: nodeStyle,
@@ -76,6 +63,10 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
         setSelectedColor={setSelectedColor}
         customColor={customColor}
         setCustomColor={setCustomColor}
+        selectedTextColor={selectedTextColor}
+        setSelectedTextColor={setSelectedTextColor}
+        customTextColor={customTextColor}
+        setCustomTextColor={setCustomTextColor}
         newNodeText={newNodeText}
         setNewNodeText={setNewNodeText}
         onAddNode={onAddNode}
@@ -83,6 +74,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
         onExportJson={onExportJson}
         onClear={onClear}
         colorOptions={colorOptions}
+        textColorOptions={textColorOptions}
       />
       <div className="flex-1 min-h-0 bg-workspace">
         <ReactFlowProvider>
