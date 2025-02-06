@@ -26,7 +26,7 @@ export const TaskInput = ({ selectedDate, onAddTask, showStarburst }: TaskInputP
         value={newTask}
         onChange={(e) => setNewTask(e.target.value)}
         placeholder={`Add a new task${selectedDate ? ` for ${selectedDate.toLocaleDateString()}` : ''}...`}
-        className="flex-1 text-foreground placeholder:text-muted-foreground"
+        className="flex-1 text-foreground placeholder:text-muted-foreground dark:text-gray-200 dark:placeholder:text-gray-400"
       />
       <div className="relative">
         <Button type="submit">Add</Button>

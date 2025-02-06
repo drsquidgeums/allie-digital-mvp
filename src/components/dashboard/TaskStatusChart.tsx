@@ -2,7 +2,7 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { Task } from '@/types/task';
 
-const COLORS = ['#1A1F2C', '#7E69AB'];
+const COLORS = ['#F1F1F1', '#7E69AB']; // Changed first color to light gray
 
 interface TaskStatusChartProps {
   tasks: Task[];
@@ -30,7 +30,7 @@ export const TaskStatusChart = ({ tasks }: TaskStatusChartProps) => {
               dataKey="value"
               label={({ name, value }) => `${name}: ${value}`}
               labelLine={false}
-              className="text-foreground fill-foreground"
+              className="text-foreground fill-foreground dark:text-gray-200"
             >
               {getPieChartData().map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -50,7 +50,7 @@ export const TaskStatusChart = ({ tasks }: TaskStatusChartProps) => {
                 paddingTop: "20px"
               }}
               formatter={(value, entry) => (
-                <span className="text-foreground">{value}</span>
+                <span className="text-foreground dark:text-gray-200">{value}</span>
               )}
             />
           </PieChart>
