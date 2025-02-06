@@ -45,7 +45,7 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask }: TaskListProps) =
           >
             {task.completed && <Check className="h-3 w-3" />}
           </Button>
-          <span className={`flex-1 text-sm ${task.completed ? "line-through text-[#F1F1F1] dark:text-[#aaadb0]" : ""}`}>
+          <span className={`flex-1 text-sm ${task.completed ? "line-through text-[#F1F1F1] dark:text-[#F1F1F1]" : ""}`}>
             {task.text}
           </span>
           <span className="text-xs px-2 py-1 rounded-full bg-accent/10 text-muted-foreground">
