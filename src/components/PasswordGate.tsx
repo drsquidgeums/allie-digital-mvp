@@ -31,22 +31,22 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     }
   };
 
-  // Create an array of stars with different colors - expanded with more vibrant colors
+  // Rainbow-ordered colors
   const colors = [
-    '#9b87f5', // Primary Purple
-    '#D946EF', // Magenta Pink
-    '#F97316', // Bright Orange
-    '#FFA500', // Pure Orange
-    '#32CD32', // Lime Green
+    '#FF0000', // Red
+    '#FF7F00', // Orange
     '#FFFF00', // Yellow
-    '#FFD700', // Golden Yellow
-    '#0EA5E9', // Ocean Blue
-    '#1EAEDB', // Bright Blue
-    '#33C3F0', // Sky Blue
-    '#8B5CF6', // Vivid Purple
-    '#0FA0CE', // Bright Blue
-    '#7E69AB', // Secondary Purple
-    '#6E59A5', // Tertiary Purple
+    '#00FF00', // Green
+    '#0000FF', // Blue
+    '#4B0082', // Indigo
+    '#8B00FF', // Violet
+    '#FF0000', // Red (repeat for smooth transition)
+    '#FF7F00', // Orange
+    '#FFFF00', // Yellow
+    '#00FF00', // Green
+    '#0000FF', // Blue
+    '#4B0082', // Indigo
+    '#8B00FF', // Violet
   ];
   
   const stars = Array.from({ length: 14 }).map((_, index) => {
@@ -100,8 +100,8 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
             <p className="text-muted-foreground relative z-10 whitespace-nowrap">Please enter the password to access the Web Application</p>
           </div>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+        <form onSubmit={handleSubmit} className="space-y-4 flex flex-col items-center">
+          <div className="w-[70%]"> {/* Reduced width by 30% */}
             <Input
               type="password"
               placeholder="Enter password"
@@ -110,7 +110,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
               className="w-full"
             />
           </div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-[70%]"> {/* Reduced width by 30% */}
             Enter
           </Button>
         </form>
