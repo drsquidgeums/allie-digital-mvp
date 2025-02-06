@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "./ui/button";
 import { Glasses } from "lucide-react";
@@ -17,7 +18,10 @@ import { IRLEN_COLORS } from "./irlen/constants";
 
 export const IrlenOverlay = () => {
   const [overlayColor, setOverlayColor] = React.useState(() => {
-    return localStorage.getItem('irlenOverlayColor') || "";
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('irlenOverlayColor') || "";
+    }
+    return "";
   });
   const { toast } = useToast();
 
@@ -25,8 +29,27 @@ export const IrlenOverlay = () => {
     setOverlayColor(color);
     localStorage.setItem('irlenOverlayColor', color);
     
-    document.documentElement.style.setProperty('--overlay-color', color);
-    document.documentElement.style.setProperty('--overlay-display', color ? 'block' : 'none');
+    const overlay = document.createElement('div');
+    overlay.id = 'irlen-overlay';
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.pointerEvents = 'none';
+    overlay.style.zIndex = '9999';
+    overlay.style.backgroundColor = color;
+    
+    // Remove existing overlay if any
+    const existingOverlay = document.getElementById('irlen-overlay');
+    if (existingOverlay) {
+      existingOverlay.remove();
+    }
+    
+    // Add new overlay if color is selected
+    if (color) {
+      document.body.appendChild(overlay);
+    }
     
     toast({
       title: color ? "Overlay applied" : "Overlay removed",
@@ -34,12 +57,12 @@ export const IrlenOverlay = () => {
     });
   };
 
+  // Apply overlay on mount if there's a saved color
   React.useEffect(() => {
     if (overlayColor) {
-      document.documentElement.style.setProperty('--overlay-color', overlayColor);
-      document.documentElement.style.setProperty('--overlay-display', 'block');
+      handleOverlayChange(overlayColor);
     }
-  }, [overlayColor]);
+  }, []);
 
   return (
     <Popover>
