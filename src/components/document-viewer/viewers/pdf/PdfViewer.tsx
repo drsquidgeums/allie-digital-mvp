@@ -2,7 +2,7 @@
 import React from 'react';
 import { Viewer, Worker } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
-import { highlightPlugin, MessageIcon } from '@react-pdf-viewer/highlight';
+import { highlightPlugin } from '@react-pdf-viewer/highlight';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
@@ -23,9 +23,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 }) => {
   // Create the plugins
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
-  const highlightPluginInstance = highlightPlugin({
-    enableAreaSelection: true,
-  });
+  const highlightPluginInstance = highlightPlugin();
 
   const fileUrl = file ? URL.createObjectURL(file) : url;
 
