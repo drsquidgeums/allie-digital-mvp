@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { PdfViewer } from './viewers/PdfViewer';
 import { TextViewer } from './viewers/TextViewer';
 import { getFileType } from './FileConverter';
+import { getUrlType, isVideoUrl } from './urlUtils';
 
 interface DocumentPreviewProps {
   file: File | null;
@@ -71,6 +73,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   }
 
   if (url) {
+    // Handle PDF URLs
     if (url.toLowerCase().endsWith('.pdf')) {
       return (
         <div className="h-full overflow-auto">
@@ -83,13 +86,31 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         </div>
       );
     }
+
+    // Handle video URLs (YouTube, Vimeo, etc.)
+    if (isVideoUrl(url)) {
+      return (
+        <div className="h-full flex items-center justify-center bg-black">
+          <iframe
+            src={url}
+            className="w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="Video player"
+          />
+        </div>
+      );
+    }
+
+    // Handle all other URLs with iframe
     return (
       <iframe
         src={url}
         className="w-full h-full border-0"
         title="Document preview"
-        sandbox="allow-same-origin allow-scripts"
-        tabIndex={0}
+        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+        referrerPolicy="no-referrer"
+        loading="lazy"
       />
     );
   }
