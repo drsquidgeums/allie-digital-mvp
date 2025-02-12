@@ -1,8 +1,6 @@
-
-import React, { useState } from 'react';
-import { PdfLoader, PdfHighlighter, Tip, Highlight, AreaHighlight } from 'react-pdf-highlighter';
-import { useToast } from "@/hooks/use-toast";
-import type { IHighlight, ScaledPosition } from "react-pdf-highlighter";
+import React, { useEffect, useRef, useCallback } from 'react';
+import { usePdfRenderer } from './usePdfRenderer';
+import { PdfControls } from './PdfControls';
 
 interface PdfViewerProps {
   file: File | null;
@@ -11,106 +9,87 @@ interface PdfViewerProps {
   isHighlighter?: boolean;
 }
 
-const getFileUrl = (file: File | null, url: string): string => {
-  if (file) {
-    return URL.createObjectURL(file);
-  }
-  return url;
-};
-
 export const PdfViewer: React.FC<PdfViewerProps> = ({
   file,
   url,
   selectedColor,
   isHighlighter = false,
 }) => {
-  const [highlights, setHighlights] = useState<Array<IHighlight>>([]);
-  const { toast } = useToast();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const {
+    pdf,
+    currentPage,
+    isLoading,
+    loadPDF,
+    renderPage,
+    handlePageChange,
+  } = usePdfRenderer();
 
-  const addHighlight = (highlight: IHighlight) => {
-    setHighlights([...highlights, highlight]);
-    toast({
-      title: "Highlight added",
-      description: "Your highlight has been saved",
-    });
-  };
+  const renderCurrentPage = useCallback(async () => {
+    if (!canvasRef.current) return;
 
-  const updateHighlight = (highlightId: string, position: Object, content: Object) => {
-    setHighlights(
-      highlights.map((h) =>
-        h.id === highlightId
-          ? {
-              ...h,
-              position: { ...h.position, ...position },
-              content: { ...h.content, ...content },
-            }
-          : h
-      )
+    const result = await renderPage(currentPage);
+    if (!result) return;
+
+    const { page, viewport } = result;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    if (!context) return;
+
+    // Set canvas dimensions to match viewport
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    const renderContext = {
+      canvasContext: context,
+      viewport: viewport,
+    };
+
+    try {
+      await page.render(renderContext).promise;
+    } catch (error) {
+      console.error('Error rendering PDF page:', error);
+    }
+  }, [currentPage, renderPage]);
+
+  useEffect(() => {
+    loadPDF(file, url);
+    return () => {
+      if (pdf) {
+        pdf.destroy();
+      }
+    };
+  }, [file, url, loadPDF, pdf]);
+
+  useEffect(() => {
+    renderCurrentPage();
+  }, [renderCurrentPage]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
     );
-  };
-
-  const scrollToHighlight = (highlight: IHighlight) => {
-    // Handled by the library
-  };
+  }
 
   return (
-    <div className="flex flex-col h-full">
-      {(file || url) ? (
-        <div style={{ height: "100%" }}>
-          <PdfLoader url={getFileUrl(file, url)} beforeLoad={
-            <div className="flex items-center justify-center h-full">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-            </div>
-          }>
-            {(pdfDocument) => (
-              <PdfHighlighter
-                pdfDocument={pdfDocument}
-                enableAreaSelection={(event: MouseEvent) => true}
-                onScrollChange={() => {}}
-                scrollRef={(scrollTo) => {
-                  console.log("Scroll to:", scrollTo);
-                }}
-                onSelectionFinished={(
-                  position,
-                  content,
-                  hideTipAndSelection,
-                  transformSelection
-                ) => {
-                  return (
-                    <div
-                      className="bg-white p-2 shadow-lg rounded"
-                      onClick={() => {
-                        const highlight = {
-                          id: `highlight-${Date.now()}`,
-                          content,
-                          position,
-                          comment: {
-                            text: "",
-                            emoji: "💡"
-                          }
-                        };
-                        addHighlight(highlight);
-                        hideTipAndSelection();
-                      }}
-                    >
-                      Click to add highlight
-                    </div>
-                  );
-                }}
-                highlights={highlights}
-                onHighlightUpdate={updateHighlight}
-                scrollToHighlight={scrollToHighlight}
-              />
-            )}
-          </PdfLoader>
-        </div>
-      ) : (
-        <div className="flex items-center justify-center h-full text-gray-500">
-          Please upload a PDF file or provide a URL
-        </div>
-      )}
+    <div className="flex flex-col h-full overflow-auto">
+      <PdfControls
+        currentPage={currentPage}
+        totalPages={pdf?.numPages || 1}
+        onPageChange={handlePageChange}
+        onHighlight={() => {}}
+        selectedColor={selectedColor}
+        isHighlighter={isHighlighter}
+      />
+      <div className="flex-1 overflow-auto p-4">
+        <canvas
+          ref={canvasRef}
+          className="mx-auto"
+          style={{ backgroundColor: 'white' }}
+        />
+      </div>
     </div>
   );
 };
-
-export default PdfViewer;
