@@ -1,6 +1,8 @@
+
 import React, { useEffect, useRef, useCallback } from 'react';
 import { usePdfRenderer } from './usePdfRenderer';
 import { PdfControls } from './PdfControls';
+import { usePdfHighlighter } from './PdfHighlighter';
 
 interface PdfViewerProps {
   file: File | null;
@@ -16,6 +18,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   isHighlighter = false,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const {
     pdf,
     currentPage,
@@ -24,6 +27,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     renderPage,
     handlePageChange,
   } = usePdfRenderer();
+  const { handleHighlight } = usePdfHighlighter();
 
   const renderCurrentPage = useCallback(async () => {
     if (!canvasRef.current) return;
@@ -40,6 +44,14 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     canvas.height = viewport.height;
     canvas.width = viewport.width;
 
+    // Set canvas scale based on device pixel ratio
+    const pixelRatio = window.devicePixelRatio || 1;
+    canvas.style.width = `${viewport.width}px`;
+    canvas.style.height = `${viewport.height}px`;
+    canvas.width = viewport.width * pixelRatio;
+    canvas.height = viewport.height * pixelRatio;
+    context.scale(pixelRatio, pixelRatio);
+
     const renderContext = {
       canvasContext: context,
       viewport: viewport,
@@ -47,6 +59,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 
     try {
       await page.render(renderContext).promise;
+      console.log('Page rendered successfully');
     } catch (error) {
       console.error('Error rendering PDF page:', error);
     }
@@ -74,19 +87,19 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   }
 
   return (
-    <div className="flex flex-col h-full overflow-auto">
+    <div className="flex flex-col h-full overflow-auto" ref={containerRef}>
       <PdfControls
         currentPage={currentPage}
         totalPages={pdf?.numPages || 1}
         onPageChange={handlePageChange}
-        onHighlight={() => {}}
+        onHighlight={handleHighlight}
         selectedColor={selectedColor}
         isHighlighter={isHighlighter}
       />
       <div className="flex-1 overflow-auto p-4">
         <canvas
           ref={canvasRef}
-          className="mx-auto"
+          className="mx-auto bg-white shadow-lg"
           style={{ backgroundColor: 'white' }}
         />
       </div>

@@ -4,9 +4,16 @@ import { useToast } from "@/hooks/use-toast";
 import * as pdfjsLib from 'pdfjs-dist';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 
-// Configure PDF.js worker using a reliable CDN
-const workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+// Use a different approach to load the worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+
+// Enable more verbose logging for debugging
+const enableDebugMode = () => {
+  const PDFViewerApplication = (window as any).PDFViewerApplication;
+  if (PDFViewerApplication) {
+    PDFViewerApplication.pdfDocument.verbosity = 1;
+  }
+};
 
 interface PdfRendererResult {
   page: any;
@@ -23,6 +30,8 @@ export const usePdfRenderer = () => {
   const loadPDF = useCallback(async (file: File | null, url: string): Promise<void> => {
     try {
       setIsLoading(true);
+      console.log('Starting PDF load process');
+      
       let pdfData: Uint8Array | undefined;
 
       if (file) {
@@ -44,32 +53,36 @@ export const usePdfRenderer = () => {
         throw new Error('No PDF data available');
       }
 
-      console.log('Initializing PDF.js');
-      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
-      }
-
-      const loadingTask = pdfjsLib.getDocument({ data: pdfData });
+      // Create loading task with more options
+      const loadingTask = pdfjsLib.getDocument({
+        data: pdfData,
+        cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.12.313/cmaps/',
+        cMapPacked: true,
+        standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.12.313/standard_fonts/',
+      });
       
       loadingTask.onProgress = (progress) => {
-        console.log(`Loading PDF: ${Math.round(progress.loaded / progress.total * 100)}%`);
+        const percentage = progress.total ? Math.round(progress.loaded / progress.total * 100) : 0;
+        console.log(`Loading PDF: ${percentage}%`);
       };
 
       const pdfDoc = await loadingTask.promise;
       console.log('PDF loaded successfully:', pdfDoc.numPages, 'pages');
+      
+      enableDebugMode();
       setPdf(pdfDoc);
       setCurrentPage(1);
       await renderPage(1, pdfDoc);
 
       toast({
         title: "PDF loaded",
-        description: "Document has been loaded successfully",
+        description: `Document loaded successfully with ${pdfDoc.numPages} pages`,
       });
     } catch (error) {
       console.error('Error loading PDF:', error);
       toast({
         title: "Error",
-        description: "Failed to load PDF document. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to load PDF document. Please try again.",
         variant: "destructive",
       });
     } finally {
