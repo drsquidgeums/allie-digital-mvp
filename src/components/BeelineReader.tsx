@@ -31,7 +31,7 @@ export const BeelineReader = () => {
       >
         {enabled ? "Disable" : "Enable"} Beeline Effect
       </button>
-      <style jsx global>{`
+      <style>{`
         .beeline-gradient {
           background: linear-gradient(
             90deg,
