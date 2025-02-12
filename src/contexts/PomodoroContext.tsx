@@ -118,13 +118,23 @@ export const PomodoroProvider = ({ children }: { children: React.ReactNode }) =>
 
   useEffect(() => {
     if (state.workMinutes === 0 && state.seconds === 0) {
-      notificationSound.play().catch(console.error);
+      // Play sound with error handling and volume adjustment
+      notificationSound.volume = 0.5; // Set volume to 50%
+      notificationSound.play().catch(error => {
+        console.error('Error playing notification sound:', error);
+        // Still show toast even if sound fails
+        toast({
+          title: "Time's up!",
+          description: "Your Pomodoro session has ended",
+        });
+      });
+
       if (state.isWork) {
         dispatch({ type: 'COMPLETE_POMODORO' });
         
-        // Check if task has completed enough pomodoros (e.g., 4)
+        // Check if task has completed enough pomodoros
         if (state.currentTask && (state.taskPomodoros[state.currentTask] || 0) >= 4) {
-          handleToggleTask(state.currentTask); // Mark task as completed
+          handleToggleTask(state.currentTask);
           toast({
             title: "Task completed!",
             description: "You've completed all pomodoros for this task!",
