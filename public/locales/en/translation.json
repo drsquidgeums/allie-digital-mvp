@@ -43,6 +43,36 @@
     "title": "Settings",
     "description": "Manage your application preferences",
     "language": "Language Settings",
-    "selectLanguage": "Select Language"
+    "selectLanguage": "Select Language",
+    "accessibility": {
+      "title": "Accessibility",
+      "screenReader": "Screen Reader Support",
+      "screenReaderDescription": "Enable enhanced screen reader compatibility",
+      "contrast": "High Contrast Mode",
+      "contrastDescription": "Increase contrast for better visibility"
+    },
+    "performance": {
+      "title": "Performance",
+      "animations": "Animations",
+      "animationsDescription": "Enable interface animations",
+      "autoSave": "Auto-save",
+      "autoSaveDescription": "Automatically save changes",
+      "hardware": "Hardware Acceleration",
+      "hardwareDescription": "Use GPU for better performance"
+    },
+    "privacy": {
+      "title": "Privacy & Security",
+      "dataCollection": "Data Collection",
+      "dataCollectionDescription": "Allow anonymous usage data collection",
+      "twoFactor": "Two-Factor Authentication",
+      "twoFactorDescription": "Enable 2FA for additional security"
+    }
+  },
+  "fileUploader": {
+    "dropzone": "Drop files here or click to upload",
+    "supportedFormats": "Supported formats: PDF, DOCX, TXT",
+    "uploading": "Uploading...",
+    "success": "File uploaded successfully",
+    "error": "Error uploading file"
   }
 }

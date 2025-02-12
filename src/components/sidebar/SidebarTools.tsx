@@ -1,3 +1,4 @@
+
 import React from "react";
 import { 
   Users,
@@ -7,6 +8,7 @@ import {
 import { SidebarButton } from "./SidebarButton";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { useTranslation } from "react-i18next";
 
 interface SidebarToolsProps {
   activeComponent: string | null;
@@ -17,12 +19,13 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
     toast({
-      title: "Logged out",
-      description: "You have been successfully logged out.",
+      title: t('common.success'),
+      description: t('common.logout'),
     });
     // Force a page reload to return to the password gate
     window.location.reload();
@@ -41,19 +44,19 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
       <div className="pt-4 border-t border-border">
         <SidebarButton
           icon={Settings}
-          label="Settings"
+          label={t('navigation.settings')}
           isActive={location.pathname === '/settings'}
           onClick={handleSettingsClick}
         />
         <SidebarButton
           icon={Users}
-          label="Community"
+          label={t('navigation.community')}
           isActive={location.pathname === '/community'}
           onClick={handleCommunityClick}
         />
         <SidebarButton
           icon={LogOut}
-          label="Logout"
+          label={t('common.logout')}
           isActive={false}
           onClick={handleLogout}
         />

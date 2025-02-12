@@ -43,6 +43,36 @@
     "title": "Einstellungen",
     "description": "Verwalte deine Anwendungseinstellungen",
     "language": "Spracheinstellungen",
-    "selectLanguage": "Sprache auswählen"
+    "selectLanguage": "Sprache auswählen",
+    "accessibility": {
+      "title": "Barrierefreiheit",
+      "screenReader": "Bildschirmleser-Unterstützung",
+      "screenReaderDescription": "Verbesserte Kompatibilität mit Bildschirmlesern aktivieren",
+      "contrast": "Hochkontrast-Modus",
+      "contrastDescription": "Kontrast für bessere Sichtbarkeit erhöhen"
+    },
+    "performance": {
+      "title": "Leistung",
+      "animations": "Animationen",
+      "animationsDescription": "Benutzeroberflächen-Animationen aktivieren",
+      "autoSave": "Automatisches Speichern",
+      "autoSaveDescription": "Änderungen automatisch speichern",
+      "hardware": "Hardware-Beschleunigung",
+      "hardwareDescription": "GPU für bessere Leistung verwenden"
+    },
+    "privacy": {
+      "title": "Datenschutz & Sicherheit",
+      "dataCollection": "Datenerfassung",
+      "dataCollectionDescription": "Anonyme Nutzungsdatenerfassung zulassen",
+      "twoFactor": "Zwei-Faktor-Authentifizierung",
+      "twoFactorDescription": "2FA für zusätzliche Sicherheit aktivieren"
+    }
+  },
+  "fileUploader": {
+    "dropzone": "Dateien hier ablegen oder klicken zum Hochladen",
+    "supportedFormats": "Unterstützte Formate: PDF, DOCX, TXT",
+    "uploading": "Wird hochgeladen...",
+    "success": "Datei erfolgreich hochgeladen",
+    "error": "Fehler beim Hochladen der Datei"
   }
 }

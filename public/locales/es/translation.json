@@ -43,6 +43,36 @@
     "title": "Configuración",
     "description": "Administra las preferencias de la aplicación",
     "language": "Configuración de idioma",
-    "selectLanguage": "Seleccionar idioma"
+    "selectLanguage": "Seleccionar idioma",
+    "accessibility": {
+      "title": "Accesibilidad",
+      "screenReader": "Soporte para lector de pantalla",
+      "screenReaderDescription": "Habilitar compatibilidad mejorada con lector de pantalla",
+      "contrast": "Modo de alto contraste",
+      "contrastDescription": "Aumentar el contraste para mejor visibilidad"
+    },
+    "performance": {
+      "title": "Rendimiento",
+      "animations": "Animaciones",
+      "animationsDescription": "Habilitar animaciones de interfaz",
+      "autoSave": "Auto-guardado",
+      "autoSaveDescription": "Guardar cambios automáticamente",
+      "hardware": "Aceleración de hardware",
+      "hardwareDescription": "Usar GPU para mejor rendimiento"
+    },
+    "privacy": {
+      "title": "Privacidad y Seguridad",
+      "dataCollection": "Recolección de datos",
+      "dataCollectionDescription": "Permitir recolección anónima de datos de uso",
+      "twoFactor": "Autenticación de dos factores",
+      "twoFactorDescription": "Habilitar 2FA para seguridad adicional"
+    }
+  },
+  "fileUploader": {
+    "dropzone": "Suelta archivos aquí o haz clic para subir",
+    "supportedFormats": "Formatos soportados: PDF, DOCX, TXT",
+    "uploading": "Subiendo...",
+    "success": "Archivo subido exitosamente",
+    "error": "Error al subir el archivo"
   }
 }
