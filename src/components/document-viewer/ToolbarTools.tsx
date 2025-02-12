@@ -44,7 +44,7 @@ export const ToolbarTools = () => {
       />
       <ToolItem
         icon={TextSelect}
-        label={t('tools.beeline')}
+        label={"Beeline Reader"}
         id="beeline"
         content={<BeelineReader />}
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
