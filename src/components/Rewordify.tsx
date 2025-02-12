@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from "react";
-import { Text } from "lucide-react";
+import { SpellCheck } from "lucide-react";
 import { Input } from "./ui/input";
 
 export const Rewordify = () => {
@@ -58,7 +58,7 @@ export const Rewordify = () => {
       aria-label="Rewordify Tool"
     >
       <div className="flex items-center gap-2">
-        <Text className="w-4 h-4" aria-hidden="true" />
+        <SpellCheck className="w-4 h-4" aria-hidden="true" />
         <h3 className="font-medium">Rewordify</h3>
       </div>
       <Input
