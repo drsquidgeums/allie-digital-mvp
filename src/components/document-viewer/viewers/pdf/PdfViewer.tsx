@@ -7,6 +7,8 @@ import {
   Popup,
   AreaHighlight,
   IHighlight,
+  ScaledPosition,
+  T_ViewportHighlight,
 } from "react-pdf-highlighter";
 
 interface PdfViewerProps {
@@ -15,6 +17,11 @@ interface PdfViewerProps {
   selectedColor: string;
   isHighlighter?: boolean;
 }
+
+type Comment = {
+  text: string;
+  emoji?: string;
+};
 
 export const PdfViewer: React.FC<PdfViewerProps> = ({
   file,
@@ -50,46 +57,44 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     );
   };
 
-  const scrollToHighlight = (highlight: IHighlight) => {
-    // This function can be implemented if you want to add scroll functionality
-  };
-
   return (
     <div className="h-full" style={{ height: "100%" }}>
       <PdfLoader url={fileUrl} beforeLoad={<div>Loading...</div>}>
         {(pdfDocument) => (
           <PdfHighlighter
             pdfDocument={pdfDocument}
-            enableAreaSelection={true}
+            enableAreaSelection={(event: MouseEvent) => true}
             onScrollChange={() => {}}
             scrollRef={(scrollTo) => {
               // You can implement custom scroll behavior here
             }}
             onSelectionFinished={(
-              position,
-              content,
-              hideTipAndSelection,
-              transformSelection
+              position: ScaledPosition,
+              content: { text?: string; image?: string },
+              hideTipAndSelection: () => void,
+              transformSelection: () => void
             ) => {
-              addHighlight({ 
-                content, 
-                position, 
-                comment: "", 
-                id: `highlight-${Date.now()}` 
-              });
+              const highlight = {
+                content,
+                position,
+                comment: { text: "" } as Comment,
+                id: `highlight-${Date.now()}`
+              };
+              addHighlight(highlight);
               hideTipAndSelection();
+              return <></>;
             }}
             highlightTransform={(
-              highlight,
-              index,
-              setTip,
-              hideTip,
-              viewportToScaled,
-              screenshot,
-              isScrolledTo
+              highlight: T_ViewportHighlight<IHighlight>,
+              index: number,
+              setTip: (highlight: IHighlight, element: JSX.Element) => void,
+              hideTip: () => void,
+              viewportToScaled: (rect: DOMRect) => ScaledPosition,
+              screenshot: (position: Object) => void,
+              isScrolledTo: boolean
             ) => {
               const isTextHighlight = !Boolean(highlight.content && highlight.content.image);
-              
+
               const component = isTextHighlight ? (
                 <Highlight
                   isScrolledTo={isScrolledTo}
@@ -108,7 +113,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 
               return (
                 <Popup
-                  popupContent={<div>{highlight.comment}</div>}
+                  popupContent={<div>{highlight.comment?.text || ""}</div>}
                   onMouseOver={(popupContent) => setTip(highlight, popupContent)}
                   onMouseOut={hideTip}
                   key={index}
