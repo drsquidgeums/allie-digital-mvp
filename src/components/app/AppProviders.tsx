@@ -1,9 +1,10 @@
 
-import React from "react";
+import React, { Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider as NextThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { PomodoroProvider } from "@/contexts/PomodoroContext";
+import "../i18n/config"; // Import the i18n configuration
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,15 +23,17 @@ interface AppProvidersProps {
 }
 
 export const AppProviders = React.memo(({ children }: AppProvidersProps) => (
-  <QueryClientProvider client={queryClient}>
-    <NextThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <TooltipProvider>
-        <PomodoroProvider>
-          {children}
-        </PomodoroProvider>
-      </TooltipProvider>
-    </NextThemeProvider>
-  </QueryClientProvider>
+  <Suspense fallback="Loading...">
+    <QueryClientProvider client={queryClient}>
+      <NextThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        <TooltipProvider>
+          <PomodoroProvider>
+            {children}
+          </PomodoroProvider>
+        </TooltipProvider>
+      </NextThemeProvider>
+    </QueryClientProvider>
+  </Suspense>
 ));
 
 AppProviders.displayName = "AppProviders";

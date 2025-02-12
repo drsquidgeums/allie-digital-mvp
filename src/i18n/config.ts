@@ -11,7 +11,7 @@ i18n
   .init({
     fallbackLng: 'en',
     debug: true,
-    supportedLngs: ['en', 'es', 'de', 'fr', 'it', 'pt', 'ru', 'zh', 'ja', 'ko', 'ar', 'hi', 'nl', 'pl', 'tr'],
+    supportedLngs: ['en', 'es', 'de'],
     interpolation: {
       escapeValue: false,
     },
@@ -22,6 +22,9 @@ i18n
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
       lookupLocalStorage: 'i18nextLng'
+    },
+    react: {
+      useSuspense: true
     }
   });
 

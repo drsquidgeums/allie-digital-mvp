@@ -7,25 +7,13 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 
 export const LanguageSettings = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const { toast } = useToast();
 
   const languages = [
     { code: 'en', name: 'English' },
     { code: 'es', name: 'Español' },
-    { code: 'de', name: 'Deutsch' },
-    { code: 'fr', name: 'Français' },
-    { code: 'it', name: 'Italiano' },
-    { code: 'pt', name: 'Português' },
-    { code: 'ru', name: 'Русский' },
-    { code: 'zh', name: '中文' },
-    { code: 'ja', name: '日本語' },
-    { code: 'ko', name: '한국어' },
-    { code: 'ar', name: 'العربية' },
-    { code: 'hi', name: 'हिन्दी' },
-    { code: 'nl', name: 'Nederlands' },
-    { code: 'pl', name: 'Polski' },
-    { code: 'tr', name: 'Türkçe' }
+    { code: 'de', name: 'Deutsch' }
   ];
 
   const handleLanguageChange = async (value: string) => {
@@ -33,13 +21,13 @@ export const LanguageSettings = () => {
       await i18n.changeLanguage(value);
       localStorage.setItem('i18nextLng', value);
       toast({
-        title: "Language Changed",
+        title: t('common.success'),
         description: `Application language has been changed to ${languages.find(lang => lang.code === value)?.name}`,
       });
     } catch (error) {
       console.error('Language change failed:', error);
       toast({
-        title: "Error",
+        title: t('common.error'),
         description: "Failed to change language. Please try again.",
         variant: "destructive",
       });
@@ -48,9 +36,9 @@ export const LanguageSettings = () => {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">Language</h3>
+      <h3 className="text-lg font-medium">{t('navigation.settings')}</h3>
       <div className="flex items-center gap-4">
-        <Label>Select Language</Label>
+        <Label>{t('common.language', 'Select Language')}</Label>
         <Select value={i18n.language} onValueChange={handleLanguageChange}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select language" />
