@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { Input } from "./ui/input";
 import { Eye } from "lucide-react";
@@ -8,7 +9,10 @@ export const BionicReader = () => {
   const outputRef = useRef<HTMLDivElement>(null);
 
   const processBionicText = (input: string) => {
-    return input.split(' ').map((word, index) => {
+    // Normalize spaces and split by whitespace
+    const words = input.replace(/\s+/g, ' ').trim().split(' ');
+    
+    return words.map((word, index) => {
       const midPoint = Math.ceil(word.length / 2);
       return (
         <span 
