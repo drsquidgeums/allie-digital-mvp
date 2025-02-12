@@ -6,15 +6,14 @@ export const BeelineReader = () => {
   const [enabled, setEnabled] = useState(false);
 
   const applyBeelineEffect = () => {
-    // Target the document viewer
     const documentViewer = document.querySelector('[role="document"]');
     if (!documentViewer) return;
 
-    // Get the iframe if it exists
-    const iframe = documentViewer.querySelector('iframe');
+    // Get the PDF canvas element
+    const canvas = documentViewer.querySelector('canvas');
     
-    // If there's an iframe, we need to create an overlay
-    if (iframe) {
+    if (canvas) {
+      // For PDF documents
       const existingOverlay = documentViewer.querySelector('.beeline-overlay');
       if (enabled && existingOverlay) {
         existingOverlay.remove();
@@ -27,24 +26,30 @@ export const BeelineReader = () => {
         overlay.style.width = '100%';
         overlay.style.height = '100%';
         overlay.style.pointerEvents = 'none';
-        overlay.style.background = 'linear-gradient(90deg, rgba(64, 64, 255, 0.2) 0%, rgba(128, 128, 255, 0.2) 33%, rgba(255, 64, 64, 0.2) 66%, rgba(255, 128, 128, 0.2) 100%)';
+        // Using a stronger color effect for better visibility
+        overlay.style.background = `
+          repeating-linear-gradient(
+            180deg,
+            rgba(64, 64, 255, 0.3) 0px,
+            rgba(128, 128, 255, 0.3) 1.5em,
+            rgba(255, 64, 64, 0.3) 1.5em,
+            rgba(255, 128, 128, 0.3) 3em
+          )
+        `;
+        overlay.style.backgroundSize = '100% 3em';
         overlay.style.zIndex = '9999';
         
         // Make sure the container is positioned relatively
-        const container = iframe.parentElement;
+        const container = canvas.parentElement;
         if (container) {
           container.style.position = 'relative';
           container.appendChild(overlay);
         }
       }
     } else {
-      // Handle direct content as before
+      // For regular text content
       const textElements = documentViewer.querySelectorAll(`
         p, span, div:not([class*="flex"]):not([class*="grid"]), 
-        [class*="docs-"], 
-        [class*="kix-"], 
-        [id*="docs-"], 
-        [id*="kix-"],
         .TextViewer *
       `);
 

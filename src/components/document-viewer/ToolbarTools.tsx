@@ -8,6 +8,7 @@ import { PomodoroTimer } from "../PomodoroTimer";
 import { BeelineReader } from "../BeelineReader";
 import { FocusMode } from "../FocusMode";
 import { SpeechToText } from "../SpeechToText";
+import { Rewordify } from "../Rewordify";
 
 export const ToolbarTools = () => {
   const { t } = useTranslation();
@@ -47,6 +48,13 @@ export const ToolbarTools = () => {
         label={"Beeline Reader"}
         id="beeline"
         content={<BeelineReader />}
+        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
+      />
+      <ToolItem
+        icon={Text}
+        label={"Rewordify"}
+        id="rewordify"
+        content={<Rewordify />}
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
       />
       <ToolItem
