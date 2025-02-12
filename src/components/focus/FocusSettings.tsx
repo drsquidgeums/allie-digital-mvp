@@ -1,3 +1,4 @@
+
 import React from "react";
 import { FocusSettingSwitch } from "./FocusSettingSwitch";
 import { useFocusSettings } from "@/hooks/useFocusSettings";
@@ -12,13 +13,6 @@ export const FocusSettings = () => {
         description="Mute all notifications during focus mode"
         checked={settings.blockNotifications}
         onCheckedChange={(checked) => updateSetting('blockNotifications', checked)}
-      />
-
-      <FocusSettingSwitch
-        label="Fullscreen Mode"
-        description="Enter fullscreen during focus mode"
-        checked={settings.fullscreen}
-        onCheckedChange={(checked) => updateSetting('fullscreen', checked)}
       />
 
       <FocusSettingSwitch
@@ -40,13 +34,6 @@ export const FocusSettings = () => {
         description="Automatically start a Pomodoro timer"
         checked={settings.enablePomodoro}
         onCheckedChange={(checked) => updateSetting('enablePomodoro', checked)}
-      />
-
-      <FocusSettingSwitch
-        label="Dim Background"
-        description="Slightly dim the background for better focus"
-        checked={settings.dimBackground}
-        onCheckedChange={(checked) => updateSetting('dimBackground', checked)}
       />
 
       <FocusSettingSwitch

@@ -1,3 +1,4 @@
+
 import React, { useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -10,12 +11,11 @@ import {
 import { FocusSettings } from "./focus/FocusSettings";
 import { FocusModeActions } from "./focus/FocusModeActions";
 import { useFocusSettings } from "@/hooks/useFocusSettings";
-import { useFocusModeEffects } from "./focus/useFocusModeEffects";
 
 export const FocusMode = () => {
   const [isActive, setIsActive] = React.useState(false);
   const [notificationPermission, setNotificationPermission] = React.useState<NotificationPermission>("default");
-  const { settings, updateSetting } = useFocusSettings();
+  const { settings } = useFocusSettings();
   const { toast } = useToast();
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -25,7 +25,6 @@ export const FocusMode = () => {
     }
   }, []);
 
-  // Request notification permission
   const requestNotificationPermission = async () => {
     if ("Notification" in window) {
       try {
@@ -49,42 +48,24 @@ export const FocusMode = () => {
 
   const toggleFocusMode = async () => {
     if (!isActive) {
-      try {
-        if (settings.fullscreen) {
-          await document.documentElement.requestFullscreen();
-        }
-        if (settings.blockNotifications && notificationPermission === "granted") {
-          localStorage.setItem('previousNotificationState', 'enabled');
-        }
-        if (settings.dimBackground) {
-          document.body.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
-        }
-        if (settings.muteAudio) {
-          document.querySelectorAll('audio, video').forEach((el: HTMLMediaElement) => {
-            el.muted = true;
-          });
-        }
-        setIsActive(true);
-        window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: true } }));
-        toast({
-          title: "Focus mode activated",
-          description: "Your selected focus settings have been applied",
-        });
-      } catch (error) {
-        toast({
-          title: "Error activating focus mode",
-          description: "Some features might not be available",
-          variant: "destructive",
+      if (settings.blockNotifications && notificationPermission === "granted") {
+        localStorage.setItem('previousNotificationState', 'enabled');
+      }
+      if (settings.muteAudio) {
+        document.querySelectorAll('audio, video').forEach((el: HTMLMediaElement) => {
+          el.muted = true;
         });
       }
+      setIsActive(true);
+      window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: true } }));
+      toast({
+        title: "Focus mode activated",
+        description: "Your selected focus settings have been applied",
+      });
     } else {
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      }
       if (localStorage.getItem('previousNotificationState') === 'enabled') {
         localStorage.removeItem('previousNotificationState');
       }
-      document.body.style.backgroundColor = '';
       document.querySelectorAll('audio, video').forEach((el: HTMLMediaElement) => {
         el.muted = false;
       });
@@ -103,8 +84,6 @@ export const FocusMode = () => {
     }
   };
 
-  useFocusModeEffects(isActive, settings);
-
   return (
     <Card 
       className="w-full animate-fade-in"
@@ -114,8 +93,8 @@ export const FocusMode = () => {
       aria-label="Focus Mode Settings"
     >
       <CardHeader>
-        <CardTitle>Focus Mode</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-lg">Focus Mode</CardTitle>
+        <CardDescription className="text-sm">
           Customize your focus session settings
         </CardDescription>
       </CardHeader>
