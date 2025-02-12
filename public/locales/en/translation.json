@@ -20,10 +20,29 @@
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success",
-    "language": "Select Language"
+    "language": "Select Language",
+    "noNotifications": "No notifications",
+    "loadingText": "Loading..."
+  },
+  "chat": {
+    "title": "Allie AI",
+    "inputPlaceholder": "Type your message..."
+  },
+  "notifications": {
+    "empty": "No notifications",
+    "markAsRead": "Mark as read"
   },
   "tasks": {
     "taskAdded": "New task created successfully",
-    "pointsEarned": "You earned {{points}} points for completing this task!"
+    "pointsEarned": "You earned {{points}} points for completing this task!",
+    "title": "Task List",
+    "empty": "No tasks yet",
+    "addTask": "Add a task"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your application preferences",
+    "language": "Language Settings",
+    "selectLanguage": "Select Language"
   }
 }

@@ -1,7 +1,9 @@
+
 import React, { useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Monitor, CheckSquare, Brain, Bot } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
+import { useTranslation } from "react-i18next";
 
 interface SidebarNavigationProps {
   activeComponent: string | null;
@@ -11,29 +13,30 @@ interface SidebarNavigationProps {
 export const SidebarNavigation = React.memo(({ activeComponent, setActiveComponent }: SidebarNavigationProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   const navigationItems = [
     {
       id: "files",
-      label: "Toolbox",
+      label: t('navigation.fileUploader'),
       icon: Monitor,
       path: "/"
     },
     {
       id: "tasks",
-      label: "Task Planner",
+      label: t('navigation.tasks'),
       icon: CheckSquare,
       path: "/tasks"
     },
     {
       id: "ai-assistant",
-      label: "AI Assistant",
+      label: t('navigation.aiAssistant'),
       icon: Bot,
       path: "/ai-assistant"
     },
     {
       id: "mind-map",
-      label: "Mind Map",
+      label: t('navigation.mindMap'),
       icon: Brain,
       path: "/mind-map"
     }

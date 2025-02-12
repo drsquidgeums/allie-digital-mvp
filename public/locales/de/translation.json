@@ -20,10 +20,29 @@
     "loading": "Lädt...",
     "error": "Ein Fehler ist aufgetreten",
     "success": "Erfolgreich",
-    "language": "Sprache auswählen"
+    "language": "Sprache auswählen",
+    "noNotifications": "Keine Benachrichtigungen",
+    "loadingText": "Wird geladen..."
+  },
+  "chat": {
+    "title": "Allie KI",
+    "inputPlaceholder": "Nachricht eingeben..."
+  },
+  "notifications": {
+    "empty": "Keine Benachrichtigungen",
+    "markAsRead": "Als gelesen markieren"
   },
   "tasks": {
     "taskAdded": "Neue Aufgabe wurde erfolgreich erstellt",
-    "pointsEarned": "Du hast {{points}} Punkte für das Abschließen dieser Aufgabe erhalten!"
+    "pointsEarned": "Du hast {{points}} Punkte für das Abschließen dieser Aufgabe erhalten!",
+    "title": "Aufgabenliste",
+    "empty": "Noch keine Aufgaben",
+    "addTask": "Aufgabe hinzufügen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "description": "Verwalte deine Anwendungseinstellungen",
+    "language": "Spracheinstellungen",
+    "selectLanguage": "Sprache auswählen"
   }
 }
