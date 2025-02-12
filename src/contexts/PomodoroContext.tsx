@@ -1,11 +1,13 @@
+
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
+import { Task } from "@/types/task";
 
 interface PomodoroState {
   workMinutes: number;
   shortBreakMinutes: number;
   longBreakMinutes: number;
-  currentTask: string | null;
+  currentTask: string | null; // This will store the task ID
   isActive: boolean;
   isWork: boolean;
   seconds: number;

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { usePomodoroContext } from "@/contexts/PomodoroContext";
@@ -8,9 +9,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTasks } from "@/hooks/useTasks";
 
 export const TaskSelector = () => {
   const { state, dispatch } = usePomodoroContext();
+  const { tasks } = useTasks();
+
+  const incompleteTasks = tasks.filter(task => !task.completed);
 
   return (
     <div className="space-y-2">
@@ -27,9 +32,15 @@ export const TaskSelector = () => {
           <SelectValue placeholder="Select a task" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="task1">Task 1</SelectItem>
-          <SelectItem value="task2">Task 2</SelectItem>
-          <SelectItem value="task3">Task 3</SelectItem>
+          {incompleteTasks.length === 0 ? (
+            <SelectItem value="" disabled>No tasks available</SelectItem>
+          ) : (
+            incompleteTasks.map((task) => (
+              <SelectItem key={task.id} value={task.id}>
+                {task.text}
+              </SelectItem>
+            ))
+          )}
         </SelectContent>
       </Select>
     </div>
