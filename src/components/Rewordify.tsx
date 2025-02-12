@@ -9,7 +9,7 @@ export const Rewordify = () => {
   const outputRef = useRef<HTMLDivElement>(null);
 
   const simplifyText = (input: string) => {
-    // Simple word replacements dictionary
+    // Expanded dictionary of complex words and their simpler alternatives
     const simplifications: { [key: string]: string } = {
       "therefore": "so",
       "however": "but",
@@ -30,16 +30,48 @@ export const Rewordify = () => {
       "demonstrate": "show",
       "subsequently": "later",
       "furthermore": "also",
-      "initiate": "start"
+      "initiate": "start",
+      "commence": "begin",
+      "constitute": "form",
+      "endeavor": "try",
+      "facilitate": "help",
+      "fundamental": "basic",
+      "implement": "carry out",
+      "indicate": "show",
+      "initiate": "begin",
+      "majority": "most",
+      "methodology": "method",
+      "necessitate": "need",
+      "objective": "aim",
+      "operational": "working",
+      "optimize": "improve",
+      "prerequisite": "requirement",
+      "primary": "main",
+      "prioritize": "focus on",
+      "procure": "get",
+      "provide": "give",
+      "regarding": "about",
+      "subsequently": "then",
+      "sufficient": "enough",
+      "utilize": "use",
+      "virtually": "almost",
+      "visualize": "imagine"
     };
 
-    let simplifiedText = input;
-    Object.entries(simplifications).forEach(([complex, simple]) => {
-      const regex = new RegExp(`\\b${complex}\\b`, 'gi');
-      simplifiedText = simplifiedText.replace(regex, simple);
-    });
-
-    return simplifiedText;
+    // Process the text word by word
+    return input.split(/\b/).map(word => {
+      // Check if the word (lowercase) exists in our dictionary
+      const lowercaseWord = word.toLowerCase();
+      if (simplifications[lowercaseWord]) {
+        // Preserve original capitalization
+        if (word[0] === word[0].toUpperCase()) {
+          return simplifications[lowercaseWord].charAt(0).toUpperCase() + 
+                 simplifications[lowercaseWord].slice(1);
+        }
+        return simplifications[lowercaseWord];
+      }
+      return word;
+    }).join('');
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
