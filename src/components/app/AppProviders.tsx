@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider as NextThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { PomodoroProvider } from "@/contexts/PomodoroContext";
-import "../i18n/config"; // Import the i18n configuration
+import "@/i18n/config"; // Fixed import path using alias
 
 const queryClient = new QueryClient({
   defaultOptions: {
