@@ -1,12 +1,13 @@
 
-import React from 'react';
-import { Viewer, Worker } from '@react-pdf-viewer/core';
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
-import { highlightPlugin } from '@react-pdf-viewer/highlight';
-
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import '@react-pdf-viewer/default-layout/lib/styles/index.css';
-import '@react-pdf-viewer/highlight/lib/styles/index.css';
+import React, { useState } from 'react';
+import {
+  PdfLoader,
+  PdfHighlighter,
+  Highlight,
+  Popup,
+  AreaHighlight,
+  IHighlight,
+} from "react-pdf-highlighter";
 
 interface PdfViewerProps {
   file: File | null;
@@ -21,29 +22,105 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   selectedColor,
   isHighlighter = false,
 }) => {
-  // Create the plugins
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
-  const highlightPluginInstance = highlightPlugin();
-
+  const [highlights, setHighlights] = useState<Array<IHighlight>>([]);
   const fileUrl = file ? URL.createObjectURL(file) : url;
 
+  const addHighlight = (highlight: IHighlight) => {
+    setHighlights([...highlights, highlight]);
+  };
+
+  const updateHighlight = (highlightId: string, position: Object) => {
+    setHighlights(
+      highlights.map((h) => {
+        const {
+          id,
+          position: originalPosition,
+          content,
+          ...rest
+        } = h;
+        return id === highlightId
+          ? {
+              id,
+              position: { ...originalPosition, ...position },
+              content,
+              ...rest,
+            }
+          : h;
+      })
+    );
+  };
+
+  const scrollToHighlight = (highlight: IHighlight) => {
+    // This function can be implemented if you want to add scroll functionality
+  };
+
   return (
-    <div className="h-full">
-      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-        <div style={{ height: '100%' }}>
-          <Viewer
-            fileUrl={fileUrl}
-            plugins={[
-              defaultLayoutPluginInstance,
-              highlightPluginInstance,
-            ]}
-            defaultScale={1.2}
-            theme={{
-              theme: 'auto'
+    <div className="h-full" style={{ height: "100%" }}>
+      <PdfLoader url={fileUrl} beforeLoad={<div>Loading...</div>}>
+        {(pdfDocument) => (
+          <PdfHighlighter
+            pdfDocument={pdfDocument}
+            enableAreaSelection={true}
+            onScrollChange={() => {}}
+            scrollRef={(scrollTo) => {
+              // You can implement custom scroll behavior here
             }}
+            onSelectionFinished={(
+              position,
+              content,
+              hideTipAndSelection,
+              transformSelection
+            ) => {
+              addHighlight({ 
+                content, 
+                position, 
+                comment: "", 
+                id: `highlight-${Date.now()}` 
+              });
+              hideTipAndSelection();
+            }}
+            highlightTransform={(
+              highlight,
+              index,
+              setTip,
+              hideTip,
+              viewportToScaled,
+              screenshot,
+              isScrolledTo
+            ) => {
+              const isTextHighlight = !Boolean(highlight.content && highlight.content.image);
+              
+              const component = isTextHighlight ? (
+                <Highlight
+                  isScrolledTo={isScrolledTo}
+                  position={highlight.position}
+                  comment={highlight.comment}
+                />
+              ) : (
+                <AreaHighlight
+                  isScrolledTo={isScrolledTo}
+                  highlight={highlight}
+                  onChange={(boundingRect) => {
+                    updateHighlight(highlight.id, boundingRect);
+                  }}
+                />
+              );
+
+              return (
+                <Popup
+                  popupContent={<div>{highlight.comment}</div>}
+                  onMouseOver={(popupContent) => setTip(highlight, popupContent)}
+                  onMouseOut={hideTip}
+                  key={index}
+                >
+                  {component}
+                </Popup>
+              );
+            }}
+            highlights={highlights}
           />
-        </div>
-      </Worker>
+        )}
+      </PdfLoader>
     </div>
   );
 };
