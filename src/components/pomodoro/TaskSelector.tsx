@@ -21,10 +21,10 @@ export const TaskSelector = () => {
     <div className="space-y-2">
       <Label>Current Task</Label>
       <Select
-        value={state.currentTask || ""}
+        value={state.currentTask || "no-task"}
         onValueChange={(value) => dispatch({ 
           type: 'SET_CURRENT_TASK', 
-          payload: value 
+          payload: value === "no-task" ? null : value 
         })}
         disabled={state.isActive}
       >
@@ -33,7 +33,7 @@ export const TaskSelector = () => {
         </SelectTrigger>
         <SelectContent>
           {incompleteTasks.length === 0 ? (
-            <SelectItem value="" disabled>No tasks available</SelectItem>
+            <SelectItem value="no-task" disabled>No tasks available</SelectItem>
           ) : (
             incompleteTasks.map((task) => (
               <SelectItem key={task.id} value={task.id}>
