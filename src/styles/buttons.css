@@ -1,3 +1,4 @@
+
 @layer base {
   .button-base {
     @apply transition-colors duration-200;
@@ -33,5 +34,16 @@
   .sepia button[aria-expanded="true"],
   .sepia button[data-state="on"] {
     @apply bg-primary text-primary-foreground;
+  }
+
+  /* Add high contrast specific styling for toggle buttons */
+  [data-high-contrast="true"] button[role="switch"] {
+    outline: 2px solid #000000;
+    outline-offset: 2px;
+  }
+
+  [data-high-contrast="true"] button[role="switch"][data-state="checked"] {
+    outline: 2px solid #000000;
+    outline-offset: 2px;
   }
 }

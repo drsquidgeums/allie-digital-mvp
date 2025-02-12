@@ -53,6 +53,7 @@ class ContrastStateManager {
     document.documentElement.style.removeProperty('--accent');
     document.documentElement.style.removeProperty('--accent-foreground');
     document.documentElement.style.removeProperty('--border');
+    document.documentElement.removeAttribute('data-high-contrast');
   }
 
   private applyContrastStyling(): void {
@@ -72,6 +73,7 @@ class ContrastStateManager {
       document.documentElement.style.setProperty('--accent', '#FFFFFF');
       document.documentElement.style.setProperty('--accent-foreground', '#000000');
       document.documentElement.style.setProperty('--border', '#FFFFFF');
+      document.documentElement.setAttribute('data-high-contrast', 'true');
     }
   }
 }
