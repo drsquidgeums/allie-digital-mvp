@@ -6,17 +6,39 @@ export const BeelineReader = () => {
   const [enabled, setEnabled] = useState(false);
 
   const applyBeelineEffect = () => {
-    // Target only text elements within the document viewer
+    // Target the document viewer
     const documentViewer = document.querySelector('[role="document"]');
     if (!documentViewer) return;
 
-    const textElements = documentViewer.querySelectorAll('p, span, div:not([class*="flex"]):not([class*="grid"])');
+    // Get all text-containing elements, including those from Google Docs
+    const textElements = documentViewer.querySelectorAll(`
+      p, span, div:not([class*="flex"]):not([class*="grid"]), 
+      [class*="docs-"], 
+      [class*="kix-"], 
+      [id*="docs-"], 
+      [id*="kix-"],
+      .TextViewer *
+    `);
+
     textElements.forEach((element) => {
+      // Skip elements that are containers or have specific roles
+      if (
+        element.getAttribute('role') === 'toolbar' ||
+        element.getAttribute('role') === 'button' ||
+        element.classList.contains('toolbar') ||
+        element.tagName.toLowerCase() === 'button'
+      ) {
+        return;
+      }
+
       if (enabled) {
         element.classList.remove('beeline-gradient');
       } else {
-        // Only apply to elements that contain text and aren't just containers
-        if (element.textContent?.trim() && element.children.length === 0) {
+        // Only apply to elements that contain direct text
+        if (
+          element.textContent?.trim() && 
+          (!element.children.length || element.tagName.toLowerCase() === 'span')
+        ) {
           element.classList.add('beeline-gradient');
         }
       }
@@ -38,16 +60,16 @@ export const BeelineReader = () => {
       </button>
       <style>{`
         .beeline-gradient {
-          color: transparent;
+          color: transparent !important;
           background: linear-gradient(
             90deg,
             rgb(64, 64, 255) 0%,
             rgb(128, 128, 255) 33%,
             rgb(255, 64, 64) 66%,
             rgb(255, 128, 128) 100%
-          );
-          -webkit-background-clip: text;
-          background-clip: text;
+          ) !important;
+          -webkit-background-clip: text !important;
+          background-clip: text !important;
           transition: all 0.3s ease-in-out;
         }
       `}</style>
