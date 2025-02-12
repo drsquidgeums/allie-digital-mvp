@@ -19,7 +19,8 @@
     "logout": "Logout",
     "loading": "Loading...",
     "error": "An error occurred",
-    "success": "Success"
+    "success": "Success",
+    "language": "Select Language"
   },
   "tasks": {
     "taskAdded": "New task created successfully",

@@ -19,7 +19,8 @@
     "logout": "Cerrar sesión",
     "loading": "Cargando...",
     "error": "Ocurrió un error",
-    "success": "Éxito"
+    "success": "Éxito",
+    "language": "Seleccionar idioma"
   },
   "tasks": {
     "taskAdded": "Nueva tarea creada exitosamente",

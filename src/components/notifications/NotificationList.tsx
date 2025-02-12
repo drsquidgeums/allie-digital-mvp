@@ -1,5 +1,7 @@
+
 import React from "react";
 import { NotificationItem } from "./NotificationItem";
+import { useTranslation } from "react-i18next";
 
 interface Notification {
   id: string;
@@ -15,8 +17,10 @@ interface NotificationListProps {
 }
 
 export const NotificationList = ({ notifications, onRead }: NotificationListProps) => {
+  const { t } = useTranslation();
+
   if (notifications.length === 0) {
-    return <p className="text-sm text-muted-foreground">No notifications</p>;
+    return <p className="text-sm text-muted-foreground">{t('notifications.empty', 'No notifications')}</p>;
   }
 
   return (

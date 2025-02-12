@@ -19,7 +19,8 @@
     "logout": "Abmelden",
     "loading": "Lädt...",
     "error": "Ein Fehler ist aufgetreten",
-    "success": "Erfolgreich"
+    "success": "Erfolgreich",
+    "language": "Sprache auswählen"
   },
   "tasks": {
     "taskAdded": "Neue Aufgabe wurde erfolgreich erstellt",

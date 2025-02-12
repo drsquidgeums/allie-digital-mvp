@@ -1,4 +1,6 @@
+
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface NotificationItemProps {
   id: string;
@@ -17,6 +19,8 @@ export const NotificationItem = ({
   read, 
   onRead 
 }: NotificationItemProps) => {
+  const { i18n } = useTranslation();
+
   return (
     <div
       className={`p-3 rounded-lg ${
@@ -29,7 +33,7 @@ export const NotificationItem = ({
       <div className="flex justify-between items-start">
         <h4 className="text-sm font-medium text-foreground">{title}</h4>
         <span className="text-xs text-muted-foreground">
-          {new Date(timestamp).toLocaleTimeString('en-GB', {
+          {new Date(timestamp).toLocaleTimeString(i18n.language, {
             hour: '2-digit',
             minute: '2-digit',
             hour12: false
