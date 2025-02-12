@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -8,14 +9,6 @@ export const PerformanceSettings = () => {
     <div className="space-y-4">
       <h3 className="text-lg font-medium">Performance</h3>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="space-y-0.5">
-            <Label>Animations</Label>
-            <p className="text-sm text-muted-foreground">Enable interface animations</p>
-          </div>
-          <Switch />
-        </div>
-
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
             <Label>Auto-save</Label>
