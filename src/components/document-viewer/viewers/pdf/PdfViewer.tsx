@@ -28,6 +28,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   const { toast } = useToast();
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    console.log('PDF loaded successfully with', numPages, 'pages');
     setNumPages(numPages);
     setIsLoading(false);
     toast({
@@ -38,6 +39,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 
   const onDocumentLoadError = (error: Error) => {
     console.error('Error loading PDF:', error);
+    setIsLoading(false);
     toast({
       title: "Error",
       description: "Failed to load PDF document. Please try again.",
@@ -45,13 +47,14 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     });
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-      </div>
-    );
-  }
+  const loadingMessage = (
+    <div className="flex items-center justify-center h-full">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+    </div>
+  );
+
+  console.log('Current file:', file?.name);
+  console.log('Current URL:', url);
 
   return (
     <div className="flex flex-col h-full overflow-auto">
@@ -81,17 +84,27 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
           file={file || url}
           onLoadSuccess={onDocumentLoadSuccess}
           onLoadError={onDocumentLoadError}
-          loading={
-            <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+          loading={loadingMessage}
+          error={
+            <div className="text-center text-red-500">
+              Failed to load PDF. Please try again.
+            </div>
+          }
+          noData={
+            <div className="text-center text-gray-500">
+              No PDF file selected.
             </div>
           }
           className="mx-auto"
         >
-          <Page 
-            pageNumber={pageNumber} 
-            className="mx-auto"
-          />
+          {numPages > 0 && (
+            <Page 
+              pageNumber={pageNumber} 
+              className="mx-auto"
+              loading={loadingMessage}
+              error="Failed to load page"
+            />
+          )}
         </Document>
       </div>
     </div>
