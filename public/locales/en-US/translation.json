@@ -11,6 +11,7 @@
   "tools": {
     "pomodoro": "Pomodoro Timer",
     "tts": "Text to Speech",
+    "stt": "Speech to Text",
     "bionic": "Bionic Reader",
     "color": "Color Tool",
     "focus": "Focus Mode"
