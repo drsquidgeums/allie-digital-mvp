@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Task {
@@ -9,10 +10,29 @@ interface Task {
   points: number;
 }
 
+// Create a shared state outside the hook
+let sharedTasks: Task[] = [];
+const listeners = new Set<(tasks: Task[]) => void>();
+
+const notifyListeners = () => {
+  listeners.forEach(listener => listener(sharedTasks));
+};
+
 export const useTasks = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(sharedTasks);
   const [showAchievement, setShowAchievement] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Subscribe to changes
+    const listener = (newTasks: Task[]) => {
+      setTasks(newTasks);
+    };
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
+  }, []);
 
   const calculateTotalPoints = () => {
     return tasks.reduce((total, task) => total + (task.completed ? task.points : 0), 0);
@@ -26,11 +46,12 @@ export const useTasks = () => {
       createdAt: taskDate,
       points: 10
     };
-    setTasks([...tasks, newTask]);
+    sharedTasks = [...sharedTasks, newTask];
+    notifyListeners();
   };
 
   const handleToggleTask = (id: string) => {
-    setTasks(tasks.map(task => {
+    sharedTasks = sharedTasks.map(task => {
       if (task.id === id) {
         const newStatus = !task.completed;
         if (newStatus) {
@@ -48,11 +69,13 @@ export const useTasks = () => {
         return { ...task, completed: newStatus };
       }
       return task;
-    }));
+    });
+    notifyListeners();
   };
 
   const handleDeleteTask = (id: string) => {
-    setTasks(tasks.filter(task => task.id !== id));
+    sharedTasks = sharedTasks.filter(task => task.id !== id);
+    notifyListeners();
   };
 
   return {
