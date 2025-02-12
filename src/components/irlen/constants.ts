@@ -6,6 +6,6 @@ export const IRLEN_COLORS = [
   { name: "Purple", value: "rgba(128, 0, 128, 0.2)" },
   { name: "Grey", value: "rgba(128, 128, 128, 0.2)" },
   { name: "Aqua", value: "rgba(0, 150, 255, 0.2)" },
-  { name: "Soft Orange", value: "rgba(255, 165, 0, 0.2)" },
-  { name: "Soft Green", value: "rgba(34, 139, 34, 0.2)" },
+  { name: "Orange", value: "rgba(255, 165, 0, 0.2)" },
+  { name: "Green", value: "rgba(34, 139, 34, 0.2)" },
 ];
