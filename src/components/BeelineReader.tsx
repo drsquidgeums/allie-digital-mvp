@@ -6,12 +6,17 @@ export const BeelineReader = () => {
   const [enabled, setEnabled] = useState(false);
 
   const applyBeelineEffect = () => {
-    const textElements = document.querySelectorAll('p, span, div');
-    textElements.forEach((element, index) => {
+    // Target only text elements within the document viewer
+    const documentViewer = document.querySelector('[role="document"]');
+    if (!documentViewer) return;
+
+    const textElements = documentViewer.querySelectorAll('p, span, div:not([class*="flex"]):not([class*="grid"])');
+    textElements.forEach((element) => {
       if (enabled) {
         element.classList.remove('beeline-gradient');
       } else {
-        if (element.textContent?.trim()) {
+        // Only apply to elements that contain text and aren't just containers
+        if (element.textContent?.trim() && element.children.length === 0) {
           element.classList.add('beeline-gradient');
         }
       }
@@ -33,21 +38,17 @@ export const BeelineReader = () => {
       </button>
       <style>{`
         .beeline-gradient {
+          color: transparent;
           background: linear-gradient(
             90deg,
-            rgba(70, 70, 70, 0.1) 0%,
-            rgba(70, 70, 70, 0.3) 50%,
-            rgba(70, 70, 70, 0.1) 100%
+            rgb(64, 64, 255) 0%,
+            rgb(128, 128, 255) 33%,
+            rgb(255, 64, 64) 66%,
+            rgb(255, 128, 128) 100%
           );
-          background-size: 200% 100%;
-          background-position: 0 0;
-          animation: gradient 2s linear infinite;
-          transition: background 0.3s ease-in-out;
-        }
-        
-        @keyframes gradient {
-          0% { background-position: 0 0; }
-          100% { background-position: 200% 0; }
+          -webkit-background-clip: text;
+          background-clip: text;
+          transition: all 0.3s ease-in-out;
         }
       `}</style>
     </div>
