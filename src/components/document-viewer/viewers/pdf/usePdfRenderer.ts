@@ -1,19 +1,11 @@
-
 import { useState, useCallback } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import * as pdfjsLib from 'pdfjs-dist';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 
-// Use a different approach to load the worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-
-// Enable more verbose logging for debugging
-const enableDebugMode = () => {
-  const PDFViewerApplication = (window as any).PDFViewerApplication;
-  if (PDFViewerApplication) {
-    PDFViewerApplication.pdfDocument.verbosity = 1;
-  }
-};
+// Set worker directly using the imported worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 interface PdfRendererResult {
   page: any;
@@ -53,12 +45,10 @@ export const usePdfRenderer = () => {
         throw new Error('No PDF data available');
       }
 
-      // Create loading task with more options
       const loadingTask = pdfjsLib.getDocument({
         data: pdfData,
         cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.12.313/cmaps/',
         cMapPacked: true,
-        standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.12.313/standard_fonts/',
       });
       
       loadingTask.onProgress = (progress) => {
@@ -69,7 +59,6 @@ export const usePdfRenderer = () => {
       const pdfDoc = await loadingTask.promise;
       console.log('PDF loaded successfully:', pdfDoc.numPages, 'pages');
       
-      enableDebugMode();
       setPdf(pdfDoc);
       setCurrentPage(1);
       await renderPage(1, pdfDoc);
