@@ -5,32 +5,54 @@
 
 @layer base {
   :root {
-    --font-family: "Roboto", sans-serif;
-    --font-weight: 400;
-    /* Material Design Colors */
+    --font-family: "Inter", sans-serif;
+    --font-weight: normal;
+    /* Enhanced Light Mode Colors */
     --background: 0 0% 98%;
-    --foreground: 0 0% 20%;
+    --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 20%;
+    --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 20%;
-    --primary: 265 89% 78%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 20%;
-    /* Material Design muted colors */
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-    /* Material Design accent */
-    --accent: 265 89% 78%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84% 60%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 5.9% 90%;
+    --secondary-foreground: 240 5.9% 10%;
+    /* Increased contrast for muted text */
+    --muted: 240 4.8% 90%;
+    --muted-foreground: 240 10% 25%;
+    /* Enhanced accent colors */
+    --accent: 240 4.8% 90%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    /* Material Design borders */
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 265 89% 78%;
-    --radius: 0.25rem;
+    /* Strengthened borders */
+    --border: 240 5.9% 80%;
+    --input: 240 5.9% 80%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
   }
 
   * {
@@ -41,42 +63,8 @@
     @apply bg-background text-foreground;
     font-family: var(--font-family);
     font-weight: var(--font-weight);
-  }
-
-  /* Material Design elevation shadows */
-  .shadow-material-1 {
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  }
-
-  .shadow-material-2 {
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  }
-
-  /* Material Design button styles */
-  .button-material {
-    @apply rounded px-4 py-2 font-medium transition-all duration-300 ease-in-out;
-    @apply hover:shadow-material-2 active:shadow-material-1;
-  }
-
-  /* Material Design card styles */
-  .card-material {
-    @apply bg-card rounded-lg shadow-material-1 transition-shadow duration-300;
-    @apply hover:shadow-material-2;
-  }
-
-  /* Material Design switch styles */
-  [role="switch"] {
-    @apply transition-all duration-300;
-    @apply bg-gray-300 hover:bg-gray-400;
-  }
-
-  [role="switch"][data-state="checked"] {
-    @apply bg-primary hover:bg-primary/90;
-  }
-
-  /* Material Design input styles */
-  .input-material {
-    @apply border-0 border-b-2 border-gray-300 rounded-none;
-    @apply focus:border-primary focus:ring-0 transition-all duration-300;
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
   }
 }
