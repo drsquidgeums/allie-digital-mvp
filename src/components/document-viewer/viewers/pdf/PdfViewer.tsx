@@ -1,10 +1,13 @@
 
 import React, { useState } from 'react';
-import { Document, Page, pdfjs } from '@react-pdf/renderer';
+import { Document, Page } from 'react-pdf';
 import { useToast } from "@/hooks/use-toast";
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
 
-// Configure PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+// Initialize worker
+import { pdfjs } from 'react-pdf';
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 interface PdfViewerProps {
   file: File | null;
@@ -78,13 +81,16 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
           file={file || url}
           onLoadSuccess={onDocumentLoadSuccess}
           onLoadError={onDocumentLoadError}
+          loading={
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            </div>
+          }
           className="mx-auto"
         >
-          <Page
-            pageNumber={pageNumber}
+          <Page 
+            pageNumber={pageNumber} 
             className="mx-auto"
-            renderTextLayer={true}
-            renderAnnotationLayer={true}
           />
         </Document>
       </div>
