@@ -1,8 +1,10 @@
 
-import React, { useEffect, useRef, useCallback } from 'react';
-import { usePdfRenderer } from './usePdfRenderer';
-import { PdfControls } from './PdfControls';
-import { usePdfHighlighter } from './PdfHighlighter';
+import React, { useState } from 'react';
+import { Document, Page, pdfjs } from '@react-pdf/renderer';
+import { useToast } from "@/hooks/use-toast";
+
+// Configure PDF.js worker
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 interface PdfViewerProps {
   file: File | null;
@@ -17,66 +19,28 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   selectedColor,
   isHighlighter = false,
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const {
-    pdf,
-    currentPage,
-    isLoading,
-    loadPDF,
-    renderPage,
-    handlePageChange,
-  } = usePdfRenderer();
-  const { handleHighlight } = usePdfHighlighter();
+  const [numPages, setNumPages] = useState<number>(0);
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { toast } = useToast();
 
-  const renderCurrentPage = useCallback(async () => {
-    if (!canvasRef.current) return;
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    setNumPages(numPages);
+    setIsLoading(false);
+    toast({
+      title: "PDF loaded",
+      description: `Document loaded successfully with ${numPages} pages`,
+    });
+  };
 
-    const result = await renderPage(currentPage);
-    if (!result) return;
-
-    const { page, viewport } = result;
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    if (!context) return;
-
-    // Set canvas dimensions to match viewport
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
-
-    // Set canvas scale based on device pixel ratio
-    const pixelRatio = window.devicePixelRatio || 1;
-    canvas.style.width = `${viewport.width}px`;
-    canvas.style.height = `${viewport.height}px`;
-    canvas.width = viewport.width * pixelRatio;
-    canvas.height = viewport.height * pixelRatio;
-    context.scale(pixelRatio, pixelRatio);
-
-    const renderContext = {
-      canvasContext: context,
-      viewport: viewport,
-    };
-
-    try {
-      await page.render(renderContext).promise;
-      console.log('Page rendered successfully');
-    } catch (error) {
-      console.error('Error rendering PDF page:', error);
-    }
-  }, [currentPage, renderPage]);
-
-  useEffect(() => {
-    loadPDF(file, url);
-    return () => {
-      if (pdf) {
-        pdf.destroy();
-      }
-    };
-  }, [file, url, loadPDF, pdf]);
-
-  useEffect(() => {
-    renderCurrentPage();
-  }, [renderCurrentPage]);
+  const onDocumentLoadError = (error: Error) => {
+    console.error('Error loading PDF:', error);
+    toast({
+      title: "Error",
+      description: "Failed to load PDF document. Please try again.",
+      variant: "destructive",
+    });
+  };
 
   if (isLoading) {
     return (
@@ -87,21 +51,42 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   }
 
   return (
-    <div className="flex flex-col h-full overflow-auto" ref={containerRef}>
-      <PdfControls
-        currentPage={currentPage}
-        totalPages={pdf?.numPages || 1}
-        onPageChange={handlePageChange}
-        onHighlight={handleHighlight}
-        selectedColor={selectedColor}
-        isHighlighter={isHighlighter}
-      />
+    <div className="flex flex-col h-full overflow-auto">
+      <div className="flex justify-between p-4 border-b">
+        <div className="flex gap-2">
+          <button
+            onClick={() => setPageNumber(prev => Math.max(prev - 1, 1))}
+            disabled={pageNumber <= 1}
+            className="px-3 py-1 bg-primary text-primary-foreground rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span>
+            Page {pageNumber} of {numPages}
+          </span>
+          <button
+            onClick={() => setPageNumber(prev => Math.min(prev + 1, numPages))}
+            disabled={pageNumber >= numPages}
+            className="px-3 py-1 bg-primary text-primary-foreground rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      </div>
       <div className="flex-1 overflow-auto p-4">
-        <canvas
-          ref={canvasRef}
-          className="mx-auto bg-white shadow-lg"
-          style={{ backgroundColor: 'white' }}
-        />
+        <Document
+          file={file || url}
+          onLoadSuccess={onDocumentLoadSuccess}
+          onLoadError={onDocumentLoadError}
+          className="mx-auto"
+        >
+          <Page
+            pageNumber={pageNumber}
+            className="mx-auto"
+            renderTextLayer={true}
+            renderAnnotationLayer={true}
+          />
+        </Document>
       </div>
     </div>
   );
