@@ -37,7 +37,9 @@ export const TaskSelector = () => {
           ) : (
             incompleteTasks.map((task) => (
               <SelectItem key={task.id} value={task.id}>
-                {task.text}
+                {task.text} {state.taskPomodoros[task.id] ? 
+                  `(${state.taskPomodoros[task.id]}/4 pomodoros)` : 
+                  '(0/4 pomodoros)'}
               </SelectItem>
             ))
           )}

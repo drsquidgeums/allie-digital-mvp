@@ -2,17 +2,19 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Task } from "@/types/task";
+import { useTasks } from "@/hooks/useTasks";
 
 interface PomodoroState {
   workMinutes: number;
   shortBreakMinutes: number;
   longBreakMinutes: number;
-  currentTask: string | null; // This will store the task ID
+  currentTask: string | null;
   isActive: boolean;
   isWork: boolean;
   seconds: number;
   completedPomodoros: number;
   sessionGoal: number;
+  taskPomodoros: Record<string, number>; // Track pomodoros per task
 }
 
 type PomodoroAction =
@@ -36,6 +38,7 @@ const initialState: PomodoroState = {
   seconds: 0,
   completedPomodoros: 0,
   sessionGoal: 4,
+  taskPomodoros: {},
 };
 
 const pomodoroReducer = (state: PomodoroState, action: PomodoroAction): PomodoroState => {
@@ -51,10 +54,11 @@ const pomodoroReducer = (state: PomodoroState, action: PomodoroAction): Pomodoro
     case 'TOGGLE_TIMER':
       return { ...state, isActive: !state.isActive };
     case 'RESET_TIMER':
-      return { 
+      return {
         ...initialState,
         completedPomodoros: state.completedPomodoros,
-        sessionGoal: state.sessionGoal
+        sessionGoal: state.sessionGoal,
+        taskPomodoros: state.taskPomodoros
       };
     case 'TICK':
       if (state.seconds === 0) {
@@ -72,10 +76,15 @@ const pomodoroReducer = (state: PomodoroState, action: PomodoroAction): Pomodoro
       }
       return { ...state, seconds: state.seconds - 1 };
     case 'COMPLETE_POMODORO':
-      return { 
-        ...state, 
+      if (!state.currentTask) return { ...state, completedPomodoros: state.completedPomodoros + 1 };
+      const newTaskPomodoros = {
+        ...state.taskPomodoros,
+        [state.currentTask]: (state.taskPomodoros[state.currentTask] || 0) + 1
+      };
+      return {
+        ...state,
         completedPomodoros: state.completedPomodoros + 1,
-        currentTask: null
+        taskPomodoros: newTaskPomodoros,
       };
     case 'SET_SESSION_GOAL':
       return { ...state, sessionGoal: action.payload };
@@ -92,6 +101,7 @@ const PomodoroContext = createContext<{
 export const PomodoroProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(pomodoroReducer, initialState);
   const { toast } = useToast();
+  const { handleToggleTask } = useTasks();
   const notificationSound = new Audio('/sounds/notification-bell.mp3');
 
   useEffect(() => {
@@ -111,12 +121,22 @@ export const PomodoroProvider = ({ children }: { children: React.ReactNode }) =>
       notificationSound.play().catch(console.error);
       if (state.isWork) {
         dispatch({ type: 'COMPLETE_POMODORO' });
-        toast({
-          title: "Pomodoro completed!",
-          description: state.completedPomodoros % 4 === 0 
-            ? "Time for a long break!" 
-            : "Time for a short break!",
-        });
+        
+        // Check if task has completed enough pomodoros (e.g., 4)
+        if (state.currentTask && (state.taskPomodoros[state.currentTask] || 0) >= 4) {
+          handleToggleTask(state.currentTask); // Mark task as completed
+          toast({
+            title: "Task completed!",
+            description: "You've completed all pomodoros for this task!",
+          });
+        } else {
+          toast({
+            title: "Pomodoro completed!",
+            description: state.completedPomodoros % 4 === 0 
+              ? "Time for a long break!" 
+              : "Time for a short break!",
+          });
+        }
       } else {
         toast({
           title: "Break time's over!",
@@ -124,7 +144,7 @@ export const PomodoroProvider = ({ children }: { children: React.ReactNode }) =>
         });
       }
     }
-  }, [state.workMinutes, state.seconds, state.isWork, state.completedPomodoros, toast]);
+  }, [state.workMinutes, state.seconds, state.isWork, state.completedPomodoros, state.currentTask, state.taskPomodoros, handleToggleTask, toast]);
 
   return (
     <PomodoroContext.Provider value={{ state, dispatch }}>
