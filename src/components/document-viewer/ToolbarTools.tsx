@@ -1,5 +1,5 @@
 
-import { TextSelect, Mic, Eye, Timer, Text, Focus } from "lucide-react";
+import { BookOpen, Mic, Eye, Timer, Text, Focus } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { BionicReader } from "../BionicReader";
@@ -43,7 +43,7 @@ export const ToolbarTools = () => {
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
       />
       <ToolItem
-        icon={TextSelect}
+        icon={BookOpen}
         label={"Beeline Reader"}
         id="beeline"
         content={<BeelineReader />}

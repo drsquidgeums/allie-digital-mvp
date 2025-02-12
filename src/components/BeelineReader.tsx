@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { TextSelect } from "lucide-react";
+import { BookOpen } from "lucide-react";
 
 export const BeelineReader = () => {
   const [enabled, setEnabled] = useState(false);
@@ -22,7 +22,7 @@ export const BeelineReader = () => {
   return (
     <div className="p-4 space-y-4">
       <div className="flex items-center gap-2">
-        <TextSelect className="w-4 h-4" />
+        <BookOpen className="w-4 h-4" />
         <h3 className="font-medium">Beeline Reader</h3>
       </div>
       <button
@@ -42,6 +42,7 @@ export const BeelineReader = () => {
           background-size: 200% 100%;
           background-position: 0 0;
           animation: gradient 2s linear infinite;
+          transition: background 0.3s ease-in-out;
         }
         
         @keyframes gradient {
