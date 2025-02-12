@@ -77,8 +77,9 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                   transformSelection
                 ) => {
                   return (
-                    <Tip
-                      onOpen={() => {
+                    <div
+                      className="bg-white p-2 shadow-lg rounded"
+                      onClick={() => {
                         const highlight = {
                           id: `highlight-${Date.now()}`,
                           content,
@@ -92,15 +93,12 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                         hideTipAndSelection();
                       }}
                     >
-                      <div>Add highlight</div>
-                    </Tip>
+                      Click to add highlight
+                    </div>
                   );
                 }}
                 highlights={highlights}
-                onHighlightClick={(highlight) => {
-                  console.log("Clicked highlight:", highlight);
-                }}
-                onHighlightUpdate={updateHighlight}
+                onUpdateHighlight={updateHighlight}
                 scrollToHighlight={scrollToHighlight}
               />
             )}
