@@ -11,7 +11,7 @@ export const LanguageSettings = () => {
   const { toast } = useToast();
 
   const languages = [
-    { code: 'en', name: 'English' },
+    { code: 'en-GB', name: 'English (UK)' },
     { code: 'es', name: 'Español' },
     { code: 'de', name: 'Deutsch' }
   ];
