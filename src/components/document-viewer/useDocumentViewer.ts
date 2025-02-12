@@ -1,3 +1,4 @@
+
 import { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import html2canvas from "html2canvas";
@@ -40,7 +41,7 @@ export const useDocumentViewer = () => {
       const canvas = await html2canvas(documentRef.current, {
         scale: 2,
         useCORS: true,
-        logging: false,
+        logging: true, // Enable logging for debugging
         allowTaint: true,
         foreignObjectRendering: true
       });

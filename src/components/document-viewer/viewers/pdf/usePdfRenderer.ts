@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import * as pdfjsLib from 'pdfjs-dist';
@@ -22,21 +23,28 @@ export const usePdfRenderer = () => {
   const loadPDF = useCallback(async (file: File | null, url: string): Promise<void> => {
     try {
       setIsLoading(true);
-      let pdfData: Uint8Array;
+      let pdfData: Uint8Array | undefined;
 
       if (file) {
+        console.log('Loading PDF from file:', file.name);
         const arrayBuffer = await file.arrayBuffer();
         pdfData = new Uint8Array(arrayBuffer);
       } else if (url) {
+        console.log('Loading PDF from URL:', url);
         const response = await fetch(url);
         const arrayBuffer = await response.arrayBuffer();
         pdfData = new Uint8Array(arrayBuffer);
       } else {
+        console.log('No PDF source provided');
         setIsLoading(false);
         return;
       }
 
-      // Initialize PDF.js with the worker if needed
+      if (!pdfData) {
+        throw new Error('No PDF data available');
+      }
+
+      console.log('Initializing PDF.js');
       if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
         pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
       }
@@ -48,6 +56,7 @@ export const usePdfRenderer = () => {
       };
 
       const pdfDoc = await loadingTask.promise;
+      console.log('PDF loaded successfully:', pdfDoc.numPages, 'pages');
       setPdf(pdfDoc);
       setCurrentPage(1);
       await renderPage(1, pdfDoc);
@@ -72,11 +81,16 @@ export const usePdfRenderer = () => {
     pageNumber: number,
     pdfDoc: PDFDocumentProxy | null = pdf
   ): Promise<PdfRendererResult | undefined> => {
-    if (!pdfDoc) return;
+    if (!pdfDoc) {
+      console.log('No PDF document available for rendering');
+      return;
+    }
 
     try {
+      console.log(`Rendering page ${pageNumber}`);
       const page = await pdfDoc.getPage(pageNumber);
       const viewport = page.getViewport({ scale });
+      console.log('Page rendered successfully');
       return { page, viewport };
     } catch (error) {
       console.error('Error rendering page:', error);
@@ -90,6 +104,7 @@ export const usePdfRenderer = () => {
 
   const handlePageChange = useCallback((newPage: number): void => {
     if (pdf && newPage >= 1 && newPage <= pdf.numPages) {
+      console.log(`Changing to page ${newPage}`);
       setCurrentPage(newPage);
       renderPage(newPage);
     }
