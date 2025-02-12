@@ -1,16 +1,8 @@
 
 import React, { useState } from 'react';
-import { Document, Page } from 'react-pdf';
+import { PdfLoader, PdfHighlighter, Tip, Highlight, AreaHighlight } from 'react-pdf-highlighter';
 import { useToast } from "@/hooks/use-toast";
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
-
-// Initialize worker
-import { pdfjs } from 'react-pdf';
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url,
-).toString();
+import type { IHighlight } from "react-pdf-highlighter";
 
 interface PdfViewerProps {
   file: File | null;
@@ -19,97 +11,129 @@ interface PdfViewerProps {
   isHighlighter?: boolean;
 }
 
+const getFileUrl = (file: File | null, url: string): string => {
+  if (file) {
+    return URL.createObjectURL(file);
+  }
+  return url;
+};
+
 export const PdfViewer: React.FC<PdfViewerProps> = ({
   file,
   url,
   selectedColor,
   isHighlighter = false,
 }) => {
-  const [numPages, setNumPages] = useState<number>(0);
-  const [pageNumber, setPageNumber] = useState<number>(1);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [highlights, setHighlights] = useState<Array<IHighlight>>([]);
   const { toast } = useToast();
 
-  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-    console.log('PDF loaded successfully with', numPages, 'pages');
-    setNumPages(numPages);
-    setIsLoading(false);
+  const addHighlight = (highlight: IHighlight) => {
+    setHighlights([...highlights, highlight]);
     toast({
-      title: "PDF loaded",
-      description: `Document loaded successfully with ${numPages} pages`,
+      title: "Highlight added",
+      description: "Your highlight has been saved",
     });
   };
 
-  const onDocumentLoadError = (error: Error) => {
-    console.error('Error loading PDF:', error);
-    setIsLoading(false);
-    toast({
-      title: "Error",
-      description: "Failed to load PDF document. Please try again.",
-      variant: "destructive",
-    });
+  const updateHighlight = (highlightId: string, position: Object, content: Object) => {
+    setHighlights(
+      highlights.map((h) =>
+        h.id === highlightId
+          ? {
+              ...h,
+              position: { ...h.position, ...position },
+              content: { ...h.content, ...content },
+            }
+          : h
+      )
+    );
   };
 
-  const loadingMessage = (
-    <div className="flex items-center justify-center h-full">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-    </div>
-  );
-
-  console.log('Current file:', file?.name);
-  console.log('Current URL:', url);
+  const scrollToHighlight = (highlight: IHighlight) => {
+    // Handled by the library
+  };
 
   return (
-    <div className="flex flex-col h-full overflow-auto">
-      <div className="flex justify-between p-4 border-b">
-        <div className="flex gap-2">
-          <button
-            onClick={() => setPageNumber(prev => Math.max(prev - 1, 1))}
-            disabled={pageNumber <= 1}
-            className="px-3 py-1 bg-primary text-primary-foreground rounded disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <span>
-            Page {pageNumber} of {numPages}
-          </span>
-          <button
-            onClick={() => setPageNumber(prev => Math.min(prev + 1, numPages))}
-            disabled={pageNumber >= numPages}
-            className="px-3 py-1 bg-primary text-primary-foreground rounded disabled:opacity-50"
-          >
-            Next
-          </button>
+    <div className="flex flex-col h-full">
+      {(file || url) ? (
+        <div style={{ height: "100%" }}>
+          <PdfLoader url={getFileUrl(file, url)} beforeLoad={
+            <div className="flex items-center justify-center h-full">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            </div>
+          }>
+            {(pdfDocument) => (
+              <PdfHighlighter
+                pdfDocument={pdfDocument}
+                enableAreaSelection={true}
+                onScrollChange={() => {}}
+                scrollRef={(scrollTo) => {
+                  console.log("Scroll to:", scrollTo);
+                }}
+                onSelectionFinished={(
+                  position,
+                  content,
+                  hideTipAndSelection,
+                  transformSelection
+                ) => {
+                  const highlight = {
+                    id: `highlight-${Date.now()}`,
+                    content,
+                    position,
+                    comment: ""
+                  };
+
+                  addHighlight(highlight);
+                  hideTipAndSelection();
+                }}
+                highlights={highlights}
+                onHighlightClick={(highlight) => {
+                  console.log("Clicked highlight:", highlight);
+                }}
+                onHighlightUpdate={updateHighlight}
+                scrollToHighlight={scrollToHighlight}
+                HighlightLayer={HighlightLayer}
+              />
+            )}
+          </PdfLoader>
         </div>
-      </div>
-      <div className="flex-1 overflow-auto p-4">
-        <Document
-          file={file || url}
-          onLoadSuccess={onDocumentLoadSuccess}
-          onLoadError={onDocumentLoadError}
-          loading={loadingMessage}
-          error={
-            <div className="text-center text-red-500">
-              Failed to load PDF. Please try again.
-            </div>
-          }
-          noData={
-            <div className="text-center text-gray-500">
-              No PDF file selected.
-            </div>
-          }
-          className="mx-auto"
-        >
-          {numPages > 0 && (
-            <Page 
-              pageNumber={pageNumber} 
-              className="mx-auto"
-              loading={loadingMessage}
-              error="Failed to load page"
-            />
-          )}
-        </Document>
-      </div>
+      ) : (
+        <div className="flex items-center justify-center h-full text-gray-500">
+          Please upload a PDF file or provide a URL
+        </div>
+      )}
     </div>
   );
 };
+
+// Custom highlight layer component
+const HighlightLayer: React.FC<{
+  highlights: Array<IHighlight>;
+  scale: number;
+  rotation: number;
+}> = ({ highlights, scale, rotation }) => {
+  return (
+    <div>
+      {highlights.map((highlight) => {
+        const { position, content, id } = highlight;
+        
+        if (!content || !position) return null;
+
+        return (
+          <div
+            key={id}
+            style={{
+              position: "absolute",
+              background: "rgba(255, 226, 143, 0.4)",
+              ...position.boundingRect,
+              transform: `scale(${scale}) rotate(${rotation}deg)`,
+              transformOrigin: "top left"
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+export default PdfViewer;
