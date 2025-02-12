@@ -30,13 +30,6 @@ export const FocusSettings = () => {
       />
 
       <FocusSettingSwitch
-        label="Enable Pomodoro"
-        description="Automatically start a Pomodoro timer"
-        checked={settings.enablePomodoro}
-        onCheckedChange={(checked) => updateSetting('enablePomodoro', checked)}
-      />
-
-      <FocusSettingSwitch
         label="Mute Audio"
         description="Mute all audio during focus mode"
         checked={settings.muteAudio}

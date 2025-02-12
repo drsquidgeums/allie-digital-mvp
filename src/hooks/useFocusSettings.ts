@@ -5,7 +5,6 @@ export interface FocusSettings {
   blockNotifications: boolean;
   blockPopups: boolean;
   blockSocialMedia: boolean;
-  enablePomodoro: boolean;
   muteAudio: boolean;
 }
 
@@ -14,7 +13,6 @@ export const useFocusSettings = () => {
     blockNotifications: true,
     blockPopups: true,
     blockSocialMedia: false,
-    enablePomodoro: false,
     muteAudio: false,
   });
 
