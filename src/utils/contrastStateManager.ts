@@ -10,6 +10,8 @@ class ContrastStateManager {
     this.isHighContrast = localStorage.getItem('isHighContrastEnabled') === 'true';
     if (this.isHighContrast) {
       this.applyContrastStyling();
+    } else {
+      this.removeContrastStyling();
     }
   }
 
@@ -23,7 +25,11 @@ class ContrastStateManager {
   setHighContrast(value: boolean): void {
     this.isHighContrast = value;
     localStorage.setItem('isHighContrastEnabled', value.toString());
-    this.applyContrastStyling();
+    if (value) {
+      this.applyContrastStyling();
+    } else {
+      this.removeContrastStyling();
+    }
     this.notifyListeners();
   }
 
@@ -31,7 +37,25 @@ class ContrastStateManager {
     this.listeners.forEach(listener => listener(this.isHighContrast));
   }
 
-  public applyContrastStyling(): void {
+  private removeContrastStyling(): void {
+    document.documentElement.style.removeProperty('--background');
+    document.documentElement.style.removeProperty('--foreground');
+    document.documentElement.style.removeProperty('--card');
+    document.documentElement.style.removeProperty('--card-foreground');
+    document.documentElement.style.removeProperty('--popover');
+    document.documentElement.style.removeProperty('--popover-foreground');
+    document.documentElement.style.removeProperty('--primary');
+    document.documentElement.style.removeProperty('--primary-foreground');
+    document.documentElement.style.removeProperty('--secondary');
+    document.documentElement.style.removeProperty('--secondary-foreground');
+    document.documentElement.style.removeProperty('--muted');
+    document.documentElement.style.removeProperty('--muted-foreground');
+    document.documentElement.style.removeProperty('--accent');
+    document.documentElement.style.removeProperty('--accent-foreground');
+    document.documentElement.style.removeProperty('--border');
+  }
+
+  private applyContrastStyling(): void {
     if (this.isHighContrast) {
       document.documentElement.style.setProperty('--background', '#000000');
       document.documentElement.style.setProperty('--foreground', '#FFFFFF');
@@ -48,23 +72,6 @@ class ContrastStateManager {
       document.documentElement.style.setProperty('--accent', '#FFFFFF');
       document.documentElement.style.setProperty('--accent-foreground', '#000000');
       document.documentElement.style.setProperty('--border', '#FFFFFF');
-    } else {
-      // Reset to default theme values
-      document.documentElement.style.setProperty('--background', 'hsl(0 0% 98%)');
-      document.documentElement.style.setProperty('--foreground', 'hsl(240 10% 3.9%)');
-      document.documentElement.style.setProperty('--card', 'hsl(0 0% 100%)');
-      document.documentElement.style.setProperty('--card-foreground', 'hsl(240 10% 3.9%)');
-      document.documentElement.style.setProperty('--popover', 'hsl(0 0% 100%)');
-      document.documentElement.style.setProperty('--popover-foreground', 'hsl(240 10% 3.9%)');
-      document.documentElement.style.setProperty('--primary', 'hsl(240 5.9% 10%)');
-      document.documentElement.style.setProperty('--primary-foreground', 'hsl(0 0% 98%)');
-      document.documentElement.style.setProperty('--secondary', 'hsl(240 5.9% 90%)');
-      document.documentElement.style.setProperty('--secondary-foreground', 'hsl(240 5.9% 10%)');
-      document.documentElement.style.setProperty('--muted', 'hsl(240 4.8% 90%)');
-      document.documentElement.style.setProperty('--muted-foreground', 'hsl(240 5% 64.9%)');
-      document.documentElement.style.setProperty('--accent', 'hsl(240 4.8% 90%)');
-      document.documentElement.style.setProperty('--accent-foreground', 'hsl(240 5.9% 10%)');
-      document.documentElement.style.setProperty('--border', 'hsl(240 5.9% 90%)');
     }
   }
 }
