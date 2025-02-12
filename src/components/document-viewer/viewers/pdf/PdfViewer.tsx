@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { PdfLoader, PdfHighlighter, Tip, Highlight, AreaHighlight } from 'react-pdf-highlighter';
 import { useToast } from "@/hooks/use-toast";
-import type { IHighlight } from "react-pdf-highlighter";
+import type { IHighlight, ScaledPosition } from "react-pdf-highlighter";
 
 interface PdfViewerProps {
   file: File | null;
@@ -65,7 +65,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
             {(pdfDocument) => (
               <PdfHighlighter
                 pdfDocument={pdfDocument}
-                enableAreaSelection={true}
+                enableAreaSelection={(event: MouseEvent) => true}
                 onScrollChange={() => {}}
                 scrollRef={(scrollTo) => {
                   console.log("Scroll to:", scrollTo);
@@ -76,15 +76,25 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                   hideTipAndSelection,
                   transformSelection
                 ) => {
-                  const highlight = {
-                    id: `highlight-${Date.now()}`,
-                    content,
-                    position,
-                    comment: ""
-                  };
-
-                  addHighlight(highlight);
-                  hideTipAndSelection();
+                  return (
+                    <Tip
+                      onOpen={() => {
+                        const highlight = {
+                          id: `highlight-${Date.now()}`,
+                          content,
+                          position,
+                          comment: {
+                            text: "",
+                            emoji: "💡"
+                          }
+                        };
+                        addHighlight(highlight);
+                        hideTipAndSelection();
+                      }}
+                    >
+                      <div>Add highlight</div>
+                    </Tip>
+                  );
                 }}
                 highlights={highlights}
                 onHighlightClick={(highlight) => {
@@ -92,7 +102,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                 }}
                 onHighlightUpdate={updateHighlight}
                 scrollToHighlight={scrollToHighlight}
-                HighlightLayer={HighlightLayer}
               />
             )}
           </PdfLoader>
@@ -102,36 +111,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
           Please upload a PDF file or provide a URL
         </div>
       )}
-    </div>
-  );
-};
-
-// Custom highlight layer component
-const HighlightLayer: React.FC<{
-  highlights: Array<IHighlight>;
-  scale: number;
-  rotation: number;
-}> = ({ highlights, scale, rotation }) => {
-  return (
-    <div>
-      {highlights.map((highlight) => {
-        const { position, content, id } = highlight;
-        
-        if (!content || !position) return null;
-
-        return (
-          <div
-            key={id}
-            style={{
-              position: "absolute",
-              background: "rgba(255, 226, 143, 0.4)",
-              ...position.boundingRect,
-              transform: `scale(${scale}) rotate(${rotation}deg)`,
-              transformOrigin: "top left"
-            }}
-          />
-        );
-      })}
     </div>
   );
 };
