@@ -1,15 +1,6 @@
 
-import React, { useState } from 'react';
-import {
-  PdfLoader,
-  PdfHighlighter,
-  Highlight,
-  Popup,
-  AreaHighlight,
-  IHighlight,
-  ScaledPosition,
-  T_ViewportHighlight,
-} from "react-pdf-highlighter";
+import React, { useEffect, useRef } from 'react';
+import { usePdfRenderer } from './usePdfRenderer';
 
 interface PdfViewerProps {
   file: File | null;
@@ -18,114 +9,87 @@ interface PdfViewerProps {
   isHighlighter?: boolean;
 }
 
-type Comment = {
-  text: string;
-  emoji?: string;
-};
-
 export const PdfViewer: React.FC<PdfViewerProps> = ({
   file,
   url,
   selectedColor,
-  isHighlighter = false,
+  isHighlighter = false
 }) => {
-  const [highlights, setHighlights] = useState<Array<IHighlight>>([]);
-  const fileUrl = file ? URL.createObjectURL(file) : url;
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { pdf, currentPage, isLoading, loadPDF, renderPage, handlePageChange } = usePdfRenderer();
 
-  const addHighlight = (highlight: IHighlight) => {
-    setHighlights([...highlights, highlight]);
-  };
+  useEffect(() => {
+    loadPDF(file, url);
+    return () => {
+      if (pdf) {
+        pdf.destroy();
+      }
+    };
+  }, [file, url, loadPDF, pdf]);
 
-  const updateHighlight = (highlightId: string, position: Object) => {
-    setHighlights(
-      highlights.map((h) => {
-        const {
-          id,
-          position: originalPosition,
-          content,
-          ...rest
-        } = h;
-        return id === highlightId
-          ? {
-              id,
-              position: { ...originalPosition, ...position },
-              content,
-              ...rest,
-            }
-          : h;
-      })
+  useEffect(() => {
+    const renderCurrentPage = async () => {
+      if (!canvasRef.current) return;
+
+      const result = await renderPage(currentPage);
+      if (!result) return;
+
+      const { page, viewport } = result;
+      const canvas = canvasRef.current;
+      const context = canvas.getContext('2d')!;
+
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport,
+      };
+
+      await page.render(renderContext).promise;
+    };
+
+    renderCurrentPage();
+  }, [currentPage, renderPage]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
     );
-  };
+  }
 
   return (
-    <div className="h-full" style={{ height: "100%" }}>
-      <PdfLoader url={fileUrl} beforeLoad={<div>Loading...</div>}>
-        {(pdfDocument) => (
-          <PdfHighlighter
-            pdfDocument={pdfDocument}
-            enableAreaSelection={(event: MouseEvent) => true}
-            onScrollChange={() => {}}
-            scrollRef={(scrollTo) => {
-              // You can implement custom scroll behavior here
-            }}
-            onSelectionFinished={(
-              position: ScaledPosition,
-              content: { text?: string; image?: string },
-              hideTipAndSelection: () => void,
-              transformSelection: () => void
-            ) => {
-              const highlight = {
-                content,
-                position,
-                comment: { text: "" } as Comment,
-                id: `highlight-${Date.now()}`
-              };
-              addHighlight(highlight);
-              hideTipAndSelection();
-              return <></>;
-            }}
-            highlightTransform={(
-              highlight: T_ViewportHighlight<IHighlight>,
-              index: number,
-              setTip: (highlight: IHighlight, element: JSX.Element) => void,
-              hideTip: () => void,
-              viewportToScaled: (rect: DOMRect) => ScaledPosition,
-              screenshot: (position: Object) => void,
-              isScrolledTo: boolean
-            ) => {
-              const isTextHighlight = !Boolean(highlight.content && highlight.content.image);
-
-              const component = isTextHighlight ? (
-                <Highlight
-                  isScrolledTo={isScrolledTo}
-                  position={highlight.position}
-                  comment={highlight.comment}
-                />
-              ) : (
-                <AreaHighlight
-                  isScrolledTo={isScrolledTo}
-                  highlight={highlight}
-                  onChange={(boundingRect) => {
-                    updateHighlight(highlight.id, boundingRect);
-                  }}
-                />
-              );
-
-              return (
-                <Popup
-                  popupContent={<div>{highlight.comment?.text || ""}</div>}
-                  onMouseOver={(popupContent) => setTip(highlight, popupContent)}
-                  onMouseOut={hideTip}
-                  key={index}
-                >
-                  {component}
-                </Popup>
-              );
-            }}
-            highlights={highlights}
-          />
-        )}
-      </PdfLoader>
+    <div className="flex flex-col h-full overflow-auto">
+      <div className="flex justify-between items-center p-2 border-b">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
+            className="px-2 py-1 rounded bg-primary/10 hover:bg-primary/20 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span>
+            Page {currentPage} of {pdf?.numPages || 1}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={!pdf || currentPage >= pdf.numPages}
+            className="px-2 py-1 rounded bg-primary/10 hover:bg-primary/20 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+      <div className="flex-1 overflow-auto p-4">
+        <canvas
+          ref={canvasRef}
+          className="mx-auto"
+          style={{ backgroundColor: 'white' }}
+        />
+      </div>
     </div>
   );
 };
