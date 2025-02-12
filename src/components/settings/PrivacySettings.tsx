@@ -7,52 +7,52 @@ import { Separator } from "@/components/ui/separator";
 
 export const PrivacySettings = () => {
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-medium">Privacy & Security</h3>
+    <div className="space-y-4 card-material p-6">
+      <h3 className="text-lg font-medium text-foreground">Privacy & Security</h3>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label>Data Collection</Label>
+            <Label className="text-foreground">Data Collection</Label>
             <p className="text-sm text-muted-foreground">Allow anonymous usage data collection</p>
           </div>
-          <Switch />
+          <Switch className="data-[state=checked]:bg-primary" />
         </div>
 
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label>Two-Factor Authentication</Label>
+            <Label className="text-foreground">Two-Factor Authentication</Label>
             <p className="text-sm text-muted-foreground">Enable 2FA for additional security</p>
           </div>
-          <Switch />
+          <Switch className="data-[state=checked]:bg-primary" />
         </div>
 
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label>Session Timeout</Label>
+            <Label className="text-foreground">Session Timeout</Label>
             <p className="text-sm text-muted-foreground">Automatically log out after inactivity</p>
           </div>
-          <Switch />
+          <Switch className="data-[state=checked]:bg-primary" />
         </div>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label>Change Password</Label>
+              <Label className="text-foreground">Change Password</Label>
               <p className="text-sm text-muted-foreground">Update your account password</p>
             </div>
-            <Button variant="outline">Change Password</Button>
+            <Button className="button-material bg-primary text-white">Change Password</Button>
           </div>
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label>Change Email</Label>
+              <Label className="text-foreground">Change Email</Label>
               <p className="text-sm text-muted-foreground">Update your email address</p>
             </div>
-            <Button variant="outline">Change Email</Button>
+            <Button className="button-material bg-primary text-white">Change Email</Button>
           </div>
         </div>
       </div>
-      <Separator />
+      <Separator className="bg-border/50" />
     </div>
   );
 };
