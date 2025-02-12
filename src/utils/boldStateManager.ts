@@ -1,3 +1,4 @@
+
 type BoldStateListener = (isBold: boolean) => void;
 
 class BoldStateManager {
@@ -7,7 +8,10 @@ class BoldStateManager {
   constructor() {
     this.listeners = new Set();
     this.isBold = localStorage.getItem('isBoldEnabled') === 'true';
-    this.applyBoldStyling();
+    // Only apply initial styling if bold was previously enabled
+    if (this.isBold) {
+      this.applyBoldStyling();
+    }
   }
 
   subscribe(listener: BoldStateListener): () => void {
@@ -32,7 +36,13 @@ class BoldStateManager {
     document.documentElement.style.setProperty('--font-weight', this.isBold ? 'bold' : 'normal');
     const allTextElements = document.querySelectorAll<HTMLElement>('p, span, a, h1, h2, h3, h4, h5, h6, div, button, label, input, textarea');
     allTextElements.forEach(element => {
-      element.style.fontWeight = this.isBold ? 'bold' : 'normal';
+      // Only apply bold if it's enabled
+      if (this.isBold) {
+        element.style.fontWeight = 'bold';
+      } else {
+        // Remove the inline style to let the default font weight take effect
+        element.style.removeProperty('font-weight');
+      }
     });
   }
 }
