@@ -47,6 +47,23 @@ export const ScreenshotButton = () => {
 
     let startX: number, startY: number;
 
+    const cleanup = () => {
+      overlay.onmousemove = null;
+      overlay.onmouseup = null;
+      if (document.body.contains(overlay)) document.body.removeChild(overlay);
+      if (document.body.contains(selectionBox)) document.body.removeChild(selectionBox);
+      setIsSelecting(false);
+    };
+
+    // Handle ESC key to cancel selection
+    const handleEscKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        cleanup();
+        document.removeEventListener('keydown', handleEscKey);
+      }
+    };
+    document.addEventListener('keydown', handleEscKey);
+
     overlay.onmousedown = (e) => {
       startX = e.clientX;
       startY = e.clientY;
@@ -74,14 +91,17 @@ export const ScreenshotButton = () => {
         const x = Math.min(startX, endX);
         const y = Math.min(startY, endY);
 
-        captureScreenshot({ x, y, width, height });
+        if (width > 10 && height > 10) {
+          captureScreenshot({ x, y, width, height });
+        } else {
+          toast({
+            title: "Selection too small",
+            description: "Please select a larger area",
+          });
+        }
         
-        // Clean up
-        overlay.onmousemove = null;
-        overlay.onmouseup = null;
-        document.body.removeChild(overlay);
-        document.body.removeChild(selectionBox);
-        setIsSelecting(false);
+        cleanup();
+        document.removeEventListener('keydown', handleEscKey);
       };
     };
   };
@@ -159,6 +179,8 @@ export const ScreenshotButton = () => {
         description: "Failed to capture screenshot",
         variant: "destructive",
       });
+    } finally {
+      setIsSelecting(false);
     }
   };
 
