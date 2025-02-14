@@ -48,14 +48,11 @@ export const BeelineReader = () => {
   };
 
   const processText = (input: string) => {
-    const words = input.replace(/\s+/g, ' ').trim().split(' ');
     const colors = COLOR_GRADIENTS[selectedGradient as keyof typeof COLOR_GRADIENTS];
     const angle = GRADIENT_ANGLES[selectedAngle as keyof typeof GRADIENT_ANGLES];
     
-    return words.map((word, index) => (
-      <span 
-        key={`${word}-${index}`}
-        className="inline-block mr-[0.4em]"
+    return (
+      <div 
         style={{
           color: "transparent",
           background: `linear-gradient(
@@ -67,12 +64,13 @@ export const BeelineReader = () => {
           )`,
           WebkitBackgroundClip: "text",
           backgroundClip: "text",
-          paddingRight: "2px"
+          whiteSpace: "pre-wrap",
+          wordBreak: "break-word"
         }}
       >
-        {word}
-      </span>
-    ));
+        {input}
+      </div>
+    );
   };
 
   return (
