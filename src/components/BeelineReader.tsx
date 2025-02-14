@@ -16,11 +16,11 @@ const COLOR_GRADIENTS = {
     end: "#146014",
     endMiddle: "#0E400E"
   },
-  "Orange to Blue": {
-    start: "#FFA500",
-    middle: "#FFB94D",
-    end: "#0047BB",
-    endMiddle: "#3369C7"
+  "Brown to Blue": {
+    start: "#8B4513",
+    middle: "#A0522D",
+    end: "#000080",
+    endMiddle: "#0000CD"
   }
 };
 
