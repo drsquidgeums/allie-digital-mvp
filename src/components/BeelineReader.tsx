@@ -52,26 +52,26 @@ export const BeelineReader = () => {
     const angle = GRADIENT_ANGLES[selectedAngle as keyof typeof GRADIENT_ANGLES];
     
     return (
-      <div 
+      <p 
         style={{
-          display: "inline-block",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
-          background: `linear-gradient(
+          backgroundImage: `linear-gradient(
             ${angle},
             ${colors.start} 0%,
             ${colors.middle} 40%,
             ${colors.end} 60%,
             ${colors.endMiddle} 100%
           )`,
+          display: "inline",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          width: "fit-content",
           whiteSpace: "pre-wrap",
-          wordBreak: "break-word",
-          width: "100%"
+          wordBreak: "break-word"
         }}
       >
         {input}
-      </div>
+      </p>
     );
   };
 
