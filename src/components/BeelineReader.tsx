@@ -24,9 +24,17 @@ const COLOR_GRADIENTS = {
   }
 };
 
+const GRADIENT_ANGLES = {
+  "Horizontal": "90deg",
+  "Diagonal Down": "45deg",
+  "Diagonal Up": "135deg",
+  "Vertical": "180deg"
+};
+
 export const BeelineReader = () => {
   const [text, setText] = useState("");
   const [selectedGradient, setSelectedGradient] = useState("Blue to Red");
+  const [selectedAngle, setSelectedAngle] = useState("Diagonal Down");
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
 
@@ -42,6 +50,7 @@ export const BeelineReader = () => {
   const processText = (input: string) => {
     const words = input.replace(/\s+/g, ' ').trim().split(' ');
     const colors = COLOR_GRADIENTS[selectedGradient as keyof typeof COLOR_GRADIENTS];
+    const angle = GRADIENT_ANGLES[selectedAngle as keyof typeof GRADIENT_ANGLES];
     
     return words.map((word, index) => (
       <span 
@@ -50,7 +59,7 @@ export const BeelineReader = () => {
         style={{
           color: "transparent",
           background: `linear-gradient(
-            90deg,
+            ${angle},
             ${colors.start} 0%,
             ${colors.middle} 40%,
             ${colors.end} 60%,
@@ -73,19 +82,36 @@ export const BeelineReader = () => {
         <h3 className="font-medium">Beeline Reader</h3>
       </div>
 
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Color Gradient</label>
-        <select
-          value={selectedGradient}
-          onChange={(e) => setSelectedGradient(e.target.value)}
-          className="w-full px-3 py-2 bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-        >
-          {Object.keys(COLOR_GRADIENTS).map((gradient) => (
-            <option key={gradient} value={gradient}>
-              {gradient}
-            </option>
-          ))}
-        </select>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Color Gradient</label>
+          <select
+            value={selectedGradient}
+            onChange={(e) => setSelectedGradient(e.target.value)}
+            className="w-full px-3 py-2 bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            {Object.keys(COLOR_GRADIENTS).map((gradient) => (
+              <option key={gradient} value={gradient}>
+                {gradient}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Gradient Angle</label>
+          <select
+            value={selectedAngle}
+            onChange={(e) => setSelectedAngle(e.target.value)}
+            className="w-full px-3 py-2 bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            {Object.keys(GRADIENT_ANGLES).map((angle) => (
+              <option key={angle} value={angle}>
+                {angle}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <Input
