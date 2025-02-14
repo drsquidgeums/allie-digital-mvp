@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Camera } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import {
   Tooltip,
   TooltipContent,
@@ -12,8 +13,6 @@ import {
 export const ScreenshotButton = () => {
   const { toast } = useToast();
   const [isSelecting, setIsSelecting] = useState(false);
-  const [selection, setSelection] = useState({ x: 0, y: 0, width: 0, height: 0 });
-  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
   const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 
   const startSelection = () => {
@@ -46,11 +45,11 @@ export const ScreenshotButton = () => {
     selectionBox.style.zIndex = '10000';
     document.body.appendChild(selectionBox);
 
-    // Mouse events for selection
+    let startX: number, startY: number;
+
     overlay.onmousedown = (e) => {
-      const startX = e.clientX;
-      const startY = e.clientY;
-      setStartPos({ x: startX, y: startY });
+      startX = e.clientX;
+      startY = e.clientY;
       selectionBox.style.display = 'block';
       selectionBox.style.left = startX + 'px';
       selectionBox.style.top = startY + 'px';
@@ -75,7 +74,6 @@ export const ScreenshotButton = () => {
         const x = Math.min(startX, endX);
         const y = Math.min(startY, endY);
 
-        setSelection({ x, y, width, height });
         captureScreenshot({ x, y, width, height });
         
         // Clean up
@@ -95,66 +93,64 @@ export const ScreenshotButton = () => {
         description: "Please wait while we process your screenshot...",
       });
 
-      // Wait for any content to be fully rendered
-      await new Promise(resolve => setTimeout(resolve, 500));
-
       // Remove any existing screenshot elements
       const existingOverlay = document.getElementById('screenshot-overlay');
       const existingBox = document.getElementById('selection-box');
       if (existingOverlay) document.body.removeChild(existingOverlay);
       if (existingBox) document.body.removeChild(existingBox);
 
-      const canvas = await html2canvas(document.body, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        allowTaint: true,
-        foreignObjectRendering: true,
-        x: area.x,
-        y: area.y,
-        width: area.width,
-        height: area.height,
-        backgroundColor: null,
-        ignoreElements: (element) => {
-          return element.id === 'screenshot-overlay' || 
-                 element.id === 'selection-box' ||
-                 element.classList.contains('radix-toast');
-        }
+      // Wait a moment for UI to update
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      const element = document.body;
+      const scale = window.devicePixelRatio;
+
+      const dataUrl = await toPng(element, {
+        quality: 1.0,
+        pixelRatio: scale,
+        filter: (node) => {
+          const element = node as HTMLElement;
+          return (
+            !element.id?.includes('screenshot-overlay') &&
+            !element.id?.includes('selection-box') &&
+            !element.classList?.contains('radix-toast')
+          );
+        },
       });
 
-      // Create a new canvas for the selected area
-      const croppedCanvas = document.createElement('canvas');
-      croppedCanvas.width = area.width * 2; // Account for scale
-      croppedCanvas.height = area.height * 2;
-      const ctx = croppedCanvas.getContext('2d');
-      
-      if (ctx) {
-        ctx.drawImage(canvas, 0, 0);
-        
-        croppedCanvas.toBlob((blob) => {
-          if (!blob) {
-            toast({
-              title: "Error",
-              description: "Failed to create screenshot",
-              variant: "destructive",
-            });
-            return;
-          }
-          
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = 'screenshot.jpg';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
+      // Create a canvas to crop the image
+      const img = new Image();
+      img.src = dataUrl;
+      await new Promise((resolve) => (img.onload = resolve));
 
-          toast({
-            title: "Screenshot captured",
-            description: "Your screenshot has been downloaded",
-          });
-        }, 'image/jpeg', 0.9);
+      const canvas = document.createElement('canvas');
+      canvas.width = area.width * scale;
+      canvas.height = area.height * scale;
+      const ctx = canvas.getContext('2d');
+
+      if (ctx) {
+        ctx.drawImage(
+          img,
+          area.x * scale,
+          area.y * scale,
+          area.width * scale,
+          area.height * scale,
+          0,
+          0,
+          area.width * scale,
+          area.height * scale
+        );
+
+        const croppedDataUrl = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.download = 'screenshot.png';
+        link.href = croppedDataUrl;
+        link.click();
+
+        toast({
+          title: "Screenshot captured",
+          description: "Your screenshot has been downloaded",
+        });
       }
     } catch (error) {
       console.error('Error taking screenshot:', error);
