@@ -2,6 +2,7 @@
 import React, { useState, useRef } from "react";
 import { BookOpen } from "lucide-react";
 import { Input } from "./ui/input";
+import { Slider } from "./ui/slider";
 
 const COLOR_GRADIENTS = {
   "Dark Gray to Gray": {
@@ -24,17 +25,10 @@ const COLOR_GRADIENTS = {
   }
 };
 
-const GRADIENT_ANGLES = {
-  "Horizontal": "90deg",
-  "Diagonal Down": "45deg",
-  "Diagonal Up": "135deg",
-  "Vertical": "180deg"
-};
-
 export const BeelineReader = () => {
   const [text, setText] = useState("");
   const [selectedGradient, setSelectedGradient] = useState("Dark Gray to Gray");
-  const [selectedAngle, setSelectedAngle] = useState("Diagonal Down");
+  const [angle, setAngle] = useState(45);
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
 
@@ -49,13 +43,12 @@ export const BeelineReader = () => {
 
   const processText = (input: string) => {
     const colors = COLOR_GRADIENTS[selectedGradient as keyof typeof COLOR_GRADIENTS];
-    const angle = GRADIENT_ANGLES[selectedAngle as keyof typeof GRADIENT_ANGLES];
     
     return (
       <p 
         style={{
           backgroundImage: `linear-gradient(
-            ${angle},
+            ${angle}deg,
             ${colors.start} 0%,
             ${colors.middle} 40%,
             ${colors.end} 60%,
@@ -82,7 +75,7 @@ export const BeelineReader = () => {
         <h3 className="font-medium">Beeline Reader</h3>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium">Color Gradient</label>
           <select
@@ -99,18 +92,18 @@ export const BeelineReader = () => {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium">Gradient Angle</label>
-          <select
-            value={selectedAngle}
-            onChange={(e) => setSelectedAngle(e.target.value)}
-            className="w-full px-3 py-2 bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            {Object.keys(GRADIENT_ANGLES).map((angle) => (
-              <option key={angle} value={angle}>
-                {angle}
-              </option>
-            ))}
-          </select>
+          <div className="flex justify-between items-center">
+            <label className="text-sm font-medium">Gradient Angle</label>
+            <span className="text-sm text-muted-foreground">{angle}°</span>
+          </div>
+          <Slider
+            value={[angle]}
+            onValueChange={(value) => setAngle(value[0])}
+            min={0}
+            max={360}
+            step={1}
+            className="w-full"
+          />
         </div>
       </div>
 
