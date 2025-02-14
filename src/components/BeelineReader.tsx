@@ -4,17 +4,17 @@ import { BookOpen } from "lucide-react";
 import { Input } from "./ui/input";
 
 const COLOR_GRADIENTS = {
-  "Blue to Red": {
-    start: "#4040FF",
-    middle: "#8080FF",
-    end: "#FF4040",
-    endMiddle: "#FF8080"
+  "Dark Gray to Gray": {
+    start: "#222222",
+    middle: "#444444",
+    end: "#666666",
+    endMiddle: "#888888"
   },
-  "Green to Purple": {
+  "Green to Dark Green": {
     start: "#22A022",
-    middle: "#40B340",
-    end: "#800080",
-    endMiddle: "#932893"
+    middle: "#1A801A",
+    end: "#146014",
+    endMiddle: "#0E400E"
   },
   "Orange to Blue": {
     start: "#FFA500",
@@ -33,7 +33,7 @@ const GRADIENT_ANGLES = {
 
 export const BeelineReader = () => {
   const [text, setText] = useState("");
-  const [selectedGradient, setSelectedGradient] = useState("Blue to Red");
+  const [selectedGradient, setSelectedGradient] = useState("Dark Gray to Gray");
   const [selectedAngle, setSelectedAngle] = useState("Diagonal Down");
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
