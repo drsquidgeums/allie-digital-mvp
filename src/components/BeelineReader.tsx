@@ -54,6 +54,10 @@ export const BeelineReader = () => {
     return (
       <div 
         style={{
+          display: "inline-block",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
           background: `linear-gradient(
             ${angle},
             ${colors.start} 0%,
@@ -61,12 +65,9 @@ export const BeelineReader = () => {
             ${colors.end} 60%,
             ${colors.endMiddle} 100%
           )`,
-          WebkitBackgroundClip: "text",
-          backgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          color: "transparent",
           whiteSpace: "pre-wrap",
-          wordBreak: "break-word"
+          wordBreak: "break-word",
+          width: "100%"
         }}
       >
         {input}
