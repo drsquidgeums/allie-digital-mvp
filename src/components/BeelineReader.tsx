@@ -5,22 +5,22 @@ import { Input } from "./ui/input";
 
 const COLOR_GRADIENTS = {
   "Blue to Red": {
-    start: "rgb(64, 64, 255)",
-    middle: "rgb(128, 128, 255)",
-    end: "rgb(255, 64, 64)",
-    endMiddle: "rgb(255, 128, 128)"
+    start: "#4040FF",
+    middle: "#8080FF",
+    end: "#FF4040",
+    endMiddle: "#FF8080"
   },
   "Green to Purple": {
-    start: "rgb(34, 139, 34)",
-    middle: "rgb(64, 179, 64)",
-    end: "rgb(128, 0, 128)",
-    endMiddle: "rgb(147, 51, 147)"
+    start: "#22A022",
+    middle: "#40B340",
+    end: "#800080",
+    endMiddle: "#932893"
   },
   "Orange to Blue": {
-    start: "rgb(255, 165, 0)",
-    middle: "rgb(255, 191, 77)",
-    end: "rgb(0, 71, 187)",
-    endMiddle: "rgb(51, 105, 199)"
+    start: "#FFA500",
+    middle: "#FFB94D",
+    end: "#0047BB",
+    endMiddle: "#3369C7"
   }
 };
 
@@ -46,21 +46,22 @@ export const BeelineReader = () => {
     return words.map((word, index) => (
       <span 
         key={`${word}-${index}`}
-        className="inline-block"
+        className="inline-block mr-[0.4em]"
         style={{
           color: "transparent",
           background: `linear-gradient(
             90deg,
             ${colors.start} 0%,
-            ${colors.middle} 33%,
-            ${colors.end} 66%,
+            ${colors.middle} 40%,
+            ${colors.end} 60%,
             ${colors.endMiddle} 100%
           )`,
           WebkitBackgroundClip: "text",
-          backgroundClip: "text"
+          backgroundClip: "text",
+          paddingRight: "2px"
         }}
       >
-        {word}{' '}
+        {word}
       </span>
     ));
   };
@@ -99,7 +100,7 @@ export const BeelineReader = () => {
 
       <div 
         ref={outputRef}
-        className="bg-background/50 p-3 rounded-lg min-h-[100px] text-left focus:outline-none focus:ring-2 focus:ring-primary"
+        className="bg-background/50 p-3 rounded-lg min-h-[100px] text-left focus:outline-none focus:ring-2 focus:ring-primary leading-relaxed"
         tabIndex={text ? 0 : -1}
         role="region"
         aria-label="Processed beeline text"
