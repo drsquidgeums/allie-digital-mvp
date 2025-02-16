@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from "react";
-import { BookOpen } from "lucide-react";
+import { BookOpen, ChevronDown } from "lucide-react";
 import { Input } from "./ui/input";
 import { Slider } from "./ui/slider";
 
@@ -19,7 +19,7 @@ const COLOR_GRADIENTS = {
   },
   "Brown to Blue": {
     start: "#8B4513",
-    middle: "#A0522D",
+    middle: "#4169E1",
     end: "#000080",
     endMiddle: "#0000CD"
   }
@@ -48,37 +48,29 @@ export const BeelineReader = () => {
     return (
       <div className="space-y-1">
         {lines.map((line, index) => {
-          // Calculate which position in the 3-line cycle this line is
           const cyclePosition = index % 3;
           
           let gradientStyle = {};
           if (cyclePosition === 0) {
-            // First line of the cycle
             gradientStyle = {
-              backgroundImage: `linear-gradient(
-                ${angle}deg,
-                ${colors.start} 0%,
-                ${colors.middle} 100%
-              )`
+              background: `linear-gradient(${angle}deg, ${colors.start}, ${colors.middle})`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text"
             };
           } else if (cyclePosition === 1) {
-            // Second line of the cycle
             gradientStyle = {
-              backgroundImage: `linear-gradient(
-                ${angle}deg,
-                ${colors.middle} 0%,
-                ${colors.end} 100%
-              )`
+              background: `linear-gradient(${angle}deg, ${colors.middle}, ${colors.end})`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text"
             };
           } else {
-            // Third line of the cycle
             gradientStyle = {
-              backgroundImage: `linear-gradient(
-                ${angle}deg,
-                ${colors.end} 0%,
-                ${colors.endMiddle} 80%,
-                ${colors.start} 100%
-              )`
+              background: `linear-gradient(${angle}deg, ${colors.end}, ${colors.endMiddle}, ${colors.start})`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text"
             };
           }
 
@@ -88,15 +80,12 @@ export const BeelineReader = () => {
               style={{
                 ...gradientStyle,
                 display: "block",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
                 minHeight: "1.5em",
                 lineHeight: "1.5",
                 padding: "2px 0"
               }}
             >
-              {line || "\u00A0"} {/* Use non-breaking space if line is empty */}
+              {line || "\u00A0"}
             </p>
           );
         })}
@@ -114,17 +103,20 @@ export const BeelineReader = () => {
       <div className="space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium">Color Gradient</label>
-          <select
-            value={selectedGradient}
-            onChange={(e) => setSelectedGradient(e.target.value)}
-            className="w-full px-3 py-2 bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            {Object.keys(COLOR_GRADIENTS).map((gradient) => (
-              <option key={gradient} value={gradient}>
-                {gradient}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              value={selectedGradient}
+              onChange={(e) => setSelectedGradient(e.target.value)}
+              className="w-full px-3 py-2 bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary appearance-none pr-10"
+            >
+              {Object.keys(COLOR_GRADIENTS).map((gradient) => (
+                <option key={gradient} value={gradient}>
+                  {gradient}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="w-4 h-4 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
+          </div>
         </div>
 
         <div className="space-y-2">
