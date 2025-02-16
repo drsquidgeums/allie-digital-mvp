@@ -12,6 +12,7 @@ import { TaskAchievements } from "./dashboard/TaskAchievements";
 import { useTasks } from "@/hooks/useTasks";
 import CollaborationActivity from "./community/CollaborationActivity";
 import TutorCommunication from "./community/TutorCommunication";
+import { PollBox } from "./community/PollBox";
 
 export const Community = () => {
   const mainRef = useRef<HTMLDivElement>(null);
@@ -46,6 +47,7 @@ export const Community = () => {
             <DiscussionList />
             <TutorCommunication />
             <CommunityChat />
+            <PollBox />
           </div>
           <div className="space-y-4">
             <ResourceShare />
