@@ -52,8 +52,12 @@ export const EventDialog = ({ newEvent, onChange, onSubmit }: EventDialogProps) 
             <DialogTitle className="text-popover-foreground dark:text-[#FAFAFA]">Schedule Study Group Event</DialogTitle>
           </DialogHeader>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-6 w-6 p-0 dark:hover:bg-[#444444] dark:text-[#FAFAFA]">
-              <X className="h-4 w-4" />
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-6 w-6 p-0 dark:hover:bg-[#444444] dark:text-[#FAFAFA] group"
+            >
+              <X className="h-4 w-4 dark:group-hover:text-white" />
             </Button>
           </DialogTrigger>
         </div>
