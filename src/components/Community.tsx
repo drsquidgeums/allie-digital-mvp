@@ -42,12 +42,12 @@ export const Community = () => {
         <CommunityStats />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="space-y-4">
-            <ResourceShare />
             <CollaborationActivity />
             <DiscussionList />
             <CommunityChat />
           </div>
           <div className="space-y-4">
+            <ResourceShare />
             <StudyGroups />
             <TutorCommunication />
           </div>
