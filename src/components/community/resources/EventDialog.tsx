@@ -46,10 +46,10 @@ export const EventDialog = ({ newEvent, onChange, onSubmit }: EventDialogProps) 
           Add Event
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="bg-background text-foreground border-border">
         <div className="flex justify-between items-start">
           <DialogHeader>
-            <DialogTitle>Schedule Study Group Event</DialogTitle>
+            <DialogTitle className="text-foreground">Schedule Study Group Event</DialogTitle>
           </DialogHeader>
           <DialogTrigger asChild>
             <Button variant="ghost" size="icon" className="h-6 w-6 p-0">
