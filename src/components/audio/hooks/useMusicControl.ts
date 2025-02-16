@@ -71,11 +71,16 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
     try {
       if (isPlaying) {
         audioRef.current.pause();
+        audioRef.current.currentTime = 0; // Reset the playback position
         toast({
-          title: "Music paused",
-          description: "Background music has been paused",
+          title: "Music stopped",
+          description: "Background music has been stopped",
         });
       } else {
+        // Only set new source if we're starting playback
+        if (audioRef.current.paused) {
+          audioRef.current.src = currentMusic.url;
+        }
         await audioRef.current.play();
         toast({
           title: "Music playing",
