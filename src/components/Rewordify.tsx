@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { SpellCheck } from "lucide-react";
 import { Input } from "./ui/input";
@@ -18,7 +17,7 @@ export const Rewordify = () => {
       "sufficient": "enough",
       "require": "need",
       "utilize": "use",
-      "implement": "carry out",
+      "implement": "do",
       "facilitate": "help",
       "terminate": "end",
       "additionally": "also",
@@ -30,7 +29,7 @@ export const Rewordify = () => {
       "demonstrate": "show",
       "subsequently": "later",
       "furthermore": "also",
-      "initiate": "begin",
+      "initiate": "start",
       "commence": "begin",
       "constitute": "form",
       "endeavor": "try",
@@ -41,28 +40,87 @@ export const Rewordify = () => {
       "objective": "aim",
       "operational": "working",
       "optimize": "improve",
-      "prerequisite": "requirement",
+      "prerequisite": "need",
       "primary": "main",
       "prioritize": "focus on",
       "procure": "get",
       "provide": "give",
       "virtually": "almost",
-      "visualize": "imagine"
+      "visualize": "imagine",
+      "accordingly": "so",
+      "consequently": "so",
+      "elaborate": "explain",
+      "emphasize": "stress",
+      "encounter": "meet",
+      "enhance": "improve",
+      "establish": "set up",
+      "evaluate": "check",
+      "examine": "check",
+      "exemplify": "show",
+      "expedite": "speed up",
+      "formulate": "make",
+      "generate": "make",
+      "implement": "carry out",
+      "indicate": "show",
+      "initial": "first",
+      "initiate": "start",
+      "insufficient": "not enough",
+      "maintain": "keep",
+      "monitor": "check",
+      "obtain": "get",
+      "persuade": "convince",
+      "postpone": "delay",
+      "previous": "earlier",
+      "purchase": "buy",
+      "realize": "know",
+      "receive": "get",
+      "recommend": "suggest",
+      "reduce": "cut",
+      "refer": "call",
+      "regarding": "about",
+      "resolve": "solve",
+      "specified": "given",
+      "submit": "send",
+      "subsequent": "later",
+      "substantial": "large",
+      "sufficient": "enough",
+      "suggest": "say",
+      "suitable": "right",
+      "summarize": "sum up",
+      "superior": "better",
+      "transfer": "move",
+      "transform": "change",
+      "transmit": "send",
+      "transport": "carry",
+      "ultimate": "final",
+      "unique": "only one",
+      "utilize": "use",
+      "valid": "true",
+      "validate": "confirm",
+      "variation": "change",
+      "vicinity": "area",
+      "visible": "can be seen",
+      "withstand": "resist"
     };
 
-    // Process the text word by word
-    return input.split(/\b/).map(word => {
+    // Process the text word by word, preserving punctuation and spacing
+    return input.split(/(\s+|[.,!?;:])/g).map(segment => {
+      // If it's just whitespace or punctuation, return it unchanged
+      if (/^\s+$/.test(segment) || /^[.,!?;:]$/.test(segment)) {
+        return segment;
+      }
+
       // Check if the word (lowercase) exists in our dictionary
-      const lowercaseWord = word.toLowerCase();
+      const lowercaseWord = segment.toLowerCase();
       if (simplifications[lowercaseWord]) {
         // Preserve original capitalization
-        if (word[0] === word[0].toUpperCase()) {
+        if (segment[0] === segment[0].toUpperCase()) {
           return simplifications[lowercaseWord].charAt(0).toUpperCase() + 
                  simplifications[lowercaseWord].slice(1);
         }
         return simplifications[lowercaseWord];
       }
-      return word;
+      return segment;
     }).join('');
   };
 
