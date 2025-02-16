@@ -60,9 +60,7 @@ export const BeelineReader = () => {
           backgroundClip: "text",
           width: "fit-content",
           whiteSpace: "pre-wrap",
-          wordBreak: "break-word",
-          maxWidth: "100%",
-          lineHeight: "1.8", // Increased line height for better gradient effect
+          wordBreak: "break-word"
         }}
       >
         {input}
@@ -71,7 +69,7 @@ export const BeelineReader = () => {
   };
 
   return (
-    <div className="p-4 space-y-4 animate-fade-in w-[600px]"> {/* Increased width */}
+    <div className="p-4 space-y-4 animate-fade-in">
       <div className="flex items-center gap-2">
         <BookOpen className="w-4 h-4" />
         <h3 className="font-medium">Beeline Reader</h3>
@@ -121,7 +119,7 @@ export const BeelineReader = () => {
 
       <div 
         ref={outputRef}
-        className="bg-background/50 p-3 rounded-lg min-h-[100px] text-left focus:outline-none focus:ring-2 focus:ring-primary h-[150px] overflow-auto" // Reduced height
+        className="bg-background/50 p-3 rounded-lg min-h-[100px] text-left focus:outline-none focus:ring-2 focus:ring-primary leading-relaxed"
         tabIndex={text ? 0 : -1}
         role="region"
         aria-label="Processed beeline text"
