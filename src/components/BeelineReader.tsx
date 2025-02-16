@@ -49,42 +49,27 @@ export const BeelineReader = () => {
       <div className="space-y-1">
         {lines.map((line, index) => {
           const cyclePosition = index % 3;
-          
-          let gradientStyle = {};
-          if (cyclePosition === 0) {
-            gradientStyle = {
-              background: `linear-gradient(${angle}deg, ${colors.start}, ${colors.middle})`,
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              color: "transparent",
-              display: "inline-block"
-            };
-          } else if (cyclePosition === 1) {
-            gradientStyle = {
-              background: `linear-gradient(${angle}deg, ${colors.middle}, ${colors.end})`,
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              color: "transparent",
-              display: "inline-block"
-            };
-          } else {
-            gradientStyle = {
-              background: `linear-gradient(${angle}deg, ${colors.end}, ${colors.endMiddle}, ${colors.start})`,
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              color: "transparent",
-              display: "inline-block"
-            };
-          }
+          const style: React.CSSProperties = {
+            display: "block",
+            width: "100%",
+            minHeight: "1.5em",
+            lineHeight: 1.5,
+            padding: "2px 0",
+            backgroundImage: cyclePosition === 0
+              ? `linear-gradient(${angle}deg, ${colors.start}, ${colors.middle})`
+              : cyclePosition === 1
+              ? `linear-gradient(${angle}deg, ${colors.middle}, ${colors.end})`
+              : `linear-gradient(${angle}deg, ${colors.end}, ${colors.endMiddle}, ${colors.start})`,
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            color: "transparent"
+          };
 
           return (
             <p 
               key={index}
-              style={gradientStyle}
-              className="min-h-[1.5em] leading-[1.5] py-[2px] w-full"
+              style={style}
             >
               {line || "\u00A0"}
             </p>
