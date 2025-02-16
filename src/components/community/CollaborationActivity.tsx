@@ -44,10 +44,10 @@ const CollaborationActivity = () => {
                   Subject: {activity.subject}
                 </p>
               </div>
-              <span className={`px-2 py-1 rounded-full text-xs ${
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                 activity.status === "Active" 
-                  ? "bg-green-500/20 text-green-500" 
-                  : "bg-yellow-500/20 text-yellow-500"
+                  ? "bg-green-500/20 text-green-800 dark:text-green-400" 
+                  : "bg-yellow-500/20 text-yellow-800 dark:text-yellow-400"
               }`}>
                 {activity.status}
               </span>
