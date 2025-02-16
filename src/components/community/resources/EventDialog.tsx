@@ -84,19 +84,19 @@ export const EventDialog = ({ newEvent, onChange, onSubmit }: EventDialogProps) 
                 variant="outline" 
                 size="sm"
                 onClick={createGoogleMeetLink}
-                className="flex items-center gap-1"
+                className="group relative w-10 hover:w-20 transition-all duration-200 overflow-hidden"
               >
-                <Video className="h-4 w-4" />
-                Meet
+                <Video className="h-4 w-4 absolute left-3" />
+                <span className="opacity-0 group-hover:opacity-100 ml-6">Meet</span>
               </Button>
               <Button 
                 variant="outline" 
                 size="sm"
                 onClick={createZoomLink}
-                className="flex items-center gap-1"
+                className="group relative w-10 hover:w-20 transition-all duration-200 overflow-hidden"
               >
-                <Video className="h-4 w-4" />
-                Zoom
+                <Video className="h-4 w-4 absolute left-3" />
+                <span className="opacity-0 group-hover:opacity-100 ml-6">Zoom</span>
               </Button>
             </div>
           </div>
