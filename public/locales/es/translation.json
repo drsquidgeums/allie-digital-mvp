@@ -1,4 +1,3 @@
-
 {
   "navigation": {
     "fileUploader": "Cargador de archivos",
@@ -6,7 +5,7 @@
     "aiAssistant": "Asistente IA",
     "mindMap": "Mapa mental",
     "settings": "Configuración",
-    "community": "Comunidad"
+    "community": "Centro Comunitario"
   },
   "tools": {
     "pomodoro": "Temporizador Pomodoro",
