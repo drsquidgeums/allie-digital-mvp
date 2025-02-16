@@ -10,6 +10,8 @@ import { StudyGroups } from "./community/StudyGroups";
 import { TaskPoints } from "./dashboard/TaskPoints";
 import { TaskAchievements } from "./dashboard/TaskAchievements";
 import { useTasks } from "@/hooks/useTasks";
+import CollaborationActivity from "./community/CollaborationActivity";
+import TutorCommunication from "./community/TutorCommunication";
 
 export const Community = () => {
   const mainRef = useRef<HTMLDivElement>(null);
@@ -41,10 +43,14 @@ export const Community = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="space-y-4">
             <StudyGroups />
+            <CollaborationActivity />
             <DiscussionList />
             <CommunityChat />
           </div>
-          <ResourceShare />
+          <div className="space-y-4">
+            <ResourceShare />
+            <TutorCommunication />
+          </div>
         </div>
       </div>
     </Card>
