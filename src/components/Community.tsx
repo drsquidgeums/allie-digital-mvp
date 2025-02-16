@@ -1,3 +1,4 @@
+
 import React, { useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
@@ -5,15 +6,17 @@ import { CommunityHeader } from "./community/CommunityHeader";
 import { CommunityStats } from "./community/CommunityStats";
 import { DiscussionList } from "./community/DiscussionList";
 import { CommunityChat } from "./community/CommunityChat";
+import { ResourceShare } from "./community/ResourceShare";
 
 export const Community = () => {
   const { toast } = useToast();
   const mainRef = useRef<HTMLDivElement>(null);
 
   const handleShareResource = () => {
+    mainRef.current?.querySelector('input')?.focus();
     toast({
-      title: "Coming Soon",
-      description: "Resource sharing will be available in the next update!",
+      title: "Share a Resource",
+      description: "Use the resource sharing form below to share with the community!",
     });
   };
 
@@ -29,12 +32,18 @@ export const Community = () => {
       role="region"
       aria-label="Community Dashboard"
       onKeyDown={handleKeyDown}
+      ref={mainRef}
     >
       <div className="p-4 space-y-4">
         <CommunityHeader onShareResource={handleShareResource} />
         <CommunityStats />
-        <DiscussionList />
-        <CommunityChat />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="space-y-4">
+            <DiscussionList />
+            <CommunityChat />
+          </div>
+          <ResourceShare />
+        </div>
       </div>
     </Card>
   );
