@@ -55,7 +55,7 @@ export const EventDialog = ({ newEvent, onChange, onSubmit }: EventDialogProps) 
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-6 w-6 p-0 dark:hover:bg-[#444444] dark:text-[#FAFAFA] group"
+              className="h-6 w-6 p-0 dark:hover:bg-[#666666] dark:text-[#FAFAFA] group"
             >
               <X className="h-4 w-4 dark:group-hover:text-white" />
             </Button>
