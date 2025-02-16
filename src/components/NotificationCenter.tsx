@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Bell, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,9 +32,11 @@ export const NotificationCenter = () => {
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-card text-card-foreground border border-border shadow-lg backdrop-blur-sm">
+      <DialogContent className="sm:max-w-[425px] bg-card dark:bg-card/95 text-card-foreground border border-border shadow-lg backdrop-blur-sm">
         <DialogHeader>
-          <DialogTitle className="text-foreground font-semibold">Notifications</DialogTitle>
+          <DialogTitle className="text-foreground dark:text-gray-200 font-semibold">
+            Notifications
+          </DialogTitle>
         </DialogHeader>
         <div className="space-y-4 max-h-[60vh] overflow-y-auto">
           <NotificationList 
@@ -42,8 +45,8 @@ export const NotificationCenter = () => {
           />
         </div>
         <DialogClose asChild>
-          <button className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none bg-background p-1">
-            <X className="h-4 w-4 text-foreground" />
+          <button className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none dark:text-gray-300 dark:hover:text-gray-100 p-1">
+            <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
           </button>
         </DialogClose>

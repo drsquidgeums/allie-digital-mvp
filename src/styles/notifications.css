@@ -1,10 +1,11 @@
+
 @layer base {
   [data-radix-toast-close-button] {
     @apply text-gray-800 hover:text-gray-900 !important;
   }
 
   .dark [data-radix-toast-close-button] {
-    @apply text-gray-200 hover:text-gray-100 !important;
+    @apply text-gray-300 hover:text-gray-100 !important;
   }
 
   .sepia [data-radix-toast-close-button] {
@@ -16,7 +17,7 @@
   }
 
   .dark [data-radix-dialog-close] {
-    @apply text-gray-200 hover:text-gray-100 opacity-100 !important;
+    @apply text-gray-300 hover:text-gray-100 opacity-100 !important;
   }
 
   .sepia [data-radix-dialog-close] {
@@ -25,5 +26,13 @@
 
   .sepia [data-radix-dialog-title] {
     @apply text-[#8B7355] !important;
+  }
+
+  .dark .notification-dialog {
+    @apply bg-background/95 backdrop-blur-sm border-border;
+  }
+
+  .dark .notification-item {
+    @apply border-border;
   }
 }

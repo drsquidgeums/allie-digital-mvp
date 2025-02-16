@@ -25,14 +25,16 @@ export const NotificationItem = ({
     <div
       className={`p-3 rounded-lg ${
         read 
-          ? "bg-muted/50" 
-          : "bg-background"
-      } cursor-pointer hover:bg-accent transition-colors border border-border`}
+          ? "bg-muted hover:bg-muted/80 dark:bg-muted/30 dark:hover:bg-muted/40" 
+          : "bg-background hover:bg-accent dark:bg-background/50 dark:hover:bg-accent/50"
+      } cursor-pointer transition-colors border border-border`}
       onClick={() => onRead(id)}
     >
       <div className="flex justify-between items-start">
-        <h4 className="text-sm font-medium text-foreground">{title}</h4>
-        <span className="text-xs text-muted-foreground">
+        <h4 className="text-sm font-medium text-foreground dark:text-gray-200">
+          {title}
+        </h4>
+        <span className="text-xs text-muted-foreground dark:text-gray-400">
           {new Date(timestamp).toLocaleTimeString(i18n.language, {
             hour: '2-digit',
             minute: '2-digit',
@@ -40,7 +42,7 @@ export const NotificationItem = ({
           })}
         </span>
       </div>
-      <p className="text-sm text-muted-foreground mt-1">
+      <p className="text-sm text-muted-foreground dark:text-gray-300 mt-1">
         {message}
       </p>
     </div>
