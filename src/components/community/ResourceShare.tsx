@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Book, Link, FileText, Star } from "lucide-react";
+import { Book, Link, FileText, Star, Calendar } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 
 interface Resource {
   id: string;
@@ -15,10 +16,12 @@ interface Resource {
   category: string;
   rating: number;
   author: string;
+  date?: Date;
 }
 
 export const ResourceShare = () => {
   const { toast } = useToast();
+  const [selectedDate, setSelectedDate] = useState<Date>();
   const [resources, setResources] = useState<Resource[]>([
     {
       id: "1",
@@ -27,7 +30,8 @@ export const ResourceShare = () => {
       url: "https://example.com/study-guide",
       category: "Study Guide",
       rating: 4.5,
-      author: "Maria K."
+      author: "Maria K.",
+      date: new Date()
     },
     {
       id: "2",
@@ -36,7 +40,8 @@ export const ResourceShare = () => {
       url: "https://example.com/focus-template",
       category: "Template",
       rating: 5,
-      author: "Alex B."
+      author: "Alex B.",
+      date: new Date(Date.now() - 86400000) // Yesterday
     }
   ]);
 
@@ -62,7 +67,8 @@ export const ResourceShare = () => {
       ...newResource,
       category: "Study Resource",
       rating: 0,
-      author: "Current User"
+      author: "Current User",
+      date: selectedDate || new Date()
     };
 
     setResources(prev => [resource, ...prev]);
@@ -87,6 +93,13 @@ export const ResourceShare = () => {
     });
   };
 
+  const filteredResources = selectedDate 
+    ? resources.filter(resource => 
+        resource.date && 
+        resource.date.toDateString() === selectedDate.toDateString()
+      )
+    : resources;
+
   return (
     <Card className="p-4">
       <h2 className="text-xl font-semibold mb-4">Share Resources</h2>
@@ -109,16 +122,31 @@ export const ResourceShare = () => {
             placeholder="Resource URL"
             value={newResource.url}
             onChange={e => setNewResource(prev => ({ ...prev, url: e.target.value }))}
+            className="mb-2"
           />
         </div>
-        <Button type="submit" className="w-full">
-          Share Resource
-        </Button>
+        <div className="flex flex-col space-y-4">
+          <div className="border rounded-md p-4">
+            <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              Select Date (Optional)
+            </h3>
+            <CalendarComponent
+              mode="single"
+              selected={selectedDate}
+              onSelect={setSelectedDate}
+              className="rounded-md border"
+            />
+          </div>
+          <Button type="submit" className="w-full">
+            Share Resource
+          </Button>
+        </div>
       </form>
 
       <ScrollArea className="h-[400px]">
         <div className="space-y-4">
-          {resources.map(resource => (
+          {filteredResources.map(resource => (
             <Card key={resource.id} className="p-4 bg-muted/50">
               <div className="flex justify-between items-start">
                 <div className="space-y-1">
@@ -154,7 +182,14 @@ export const ResourceShare = () => {
                   <FileText className="h-4 w-4 mr-1" />
                   {resource.category}
                 </span>
-                <span>Shared by {resource.author}</span>
+                <div className="flex items-center gap-2">
+                  <span>{resource.author}</span>
+                  {resource.date && (
+                    <span className="text-xs">
+                      {resource.date.toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
               </div>
             </Card>
           ))}
