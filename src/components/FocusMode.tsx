@@ -46,6 +46,32 @@ export const FocusMode = () => {
     }
   };
 
+  const enterFullscreen = async () => {
+    try {
+      const element = document.documentElement;
+      if (element.requestFullscreen) {
+        await element.requestFullscreen();
+      }
+    } catch (error) {
+      console.error('Error entering fullscreen:', error);
+      toast({
+        title: "Fullscreen mode failed",
+        description: "Could not enter fullscreen mode",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const exitFullscreen = async () => {
+    try {
+      if (document.fullscreenElement && document.exitFullscreen) {
+        await document.exitFullscreen();
+      }
+    } catch (error) {
+      console.error('Error exiting fullscreen:', error);
+    }
+  };
+
   const toggleFocusMode = async () => {
     if (!isActive) {
       if (settings.blockNotifications && notificationPermission === "granted") {
@@ -56,6 +82,7 @@ export const FocusMode = () => {
           el.muted = true;
         });
       }
+      await enterFullscreen();
       setIsActive(true);
       window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: true } }));
       toast({
@@ -69,6 +96,7 @@ export const FocusMode = () => {
       document.querySelectorAll('audio, video').forEach((el: HTMLMediaElement) => {
         el.muted = false;
       });
+      await exitFullscreen();
       setIsActive(false);
       window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: false } }));
       toast({
@@ -78,11 +106,24 @@ export const FocusMode = () => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = async (e: React.KeyboardEvent) => {
     if (e.key === 'Escape' && isActive) {
-      toggleFocusMode();
+      await toggleFocusMode();
     }
   };
+
+  React.useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && isActive) {
+        toggleFocusMode();
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, [isActive]);
 
   return (
     <Card 
