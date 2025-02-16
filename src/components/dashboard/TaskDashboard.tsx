@@ -1,3 +1,4 @@
+
 import React from "react";
 import { TaskPlanner } from "../TaskPlanner";
 import { Card } from "@/components/ui/card";
@@ -16,7 +17,8 @@ export const TaskDashboard = React.memo(() => {
     calculateTotalPoints,
     handleAddTask,
     handleToggleTask,
-    handleDeleteTask
+    handleDeleteTask,
+    handleUpdateTaskColor
   } = useTasks();
 
   const handleAddTaskWithDate = React.useCallback((text: string) => {
@@ -60,6 +62,7 @@ export const TaskDashboard = React.memo(() => {
                     tasks={tasks}
                     onToggleTask={handleToggleTask}
                     onDeleteTask={handleDeleteTask}
+                    onUpdateTaskColor={handleUpdateTaskColor}
                   />
                 </div>
               </div>
