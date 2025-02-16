@@ -1,15 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-
-interface Task {
-  id: string;
-  text: string;
-  completed: boolean;
-  createdAt: Date;
-  points: number;
-  color?: string;
-}
+import { Task } from "@/types/task";
 
 // Create a shared state outside the hook
 let sharedTasks: Task[] = [];
@@ -18,6 +10,8 @@ const listeners = new Set<(tasks: Task[]) => void>();
 const notifyListeners = () => {
   listeners.forEach(listener => listener(sharedTasks));
 };
+
+const categories = ["work", "personal", "study", "health"];
 
 export const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>(sharedTasks);
@@ -40,12 +34,16 @@ export const useTasks = () => {
   };
 
   const handleAddTask = (text: string, taskDate: Date) => {
+    // Assign a random category if not specified
+    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+    
     const newTask = {
       id: Date.now().toString(),
       text,
       completed: false,
       createdAt: taskDate,
-      points: 10
+      points: 10,
+      category: randomCategory
     };
     sharedTasks = [...sharedTasks, newTask];
     notifyListeners();
@@ -62,10 +60,6 @@ export const useTasks = () => {
               newTotalPoints >= 100) {
             setShowAchievement(true);
           }
-          toast({
-            title: "Points earned!",
-            description: `You earned ${task.points} points for completing this task!`,
-          });
         }
         return { ...task, completed: newStatus };
       }

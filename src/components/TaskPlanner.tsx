@@ -5,14 +5,9 @@ import { TaskCharts } from "./dashboard/TaskCharts";
 import { TaskPoints } from "./dashboard/TaskPoints";
 import { TaskInput } from "./dashboard/TaskInput";
 import { emitTaskNotification } from "@/utils/notifications";
-
-interface Task {
-  id: string;
-  text: string;
-  completed: boolean;
-  createdAt: Date;
-  points: number;
-}
+import { Badge } from "./ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Task } from "@/types/task";
 
 interface TaskPlannerProps {
   selectedDate?: Date;
@@ -24,8 +19,29 @@ interface TaskPlannerProps {
 
 export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDeleteTask }: TaskPlannerProps) => {
   const [showStarburst, setShowStarburst] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const { toast } = useToast();
+
+  const categories = [
+    { value: "all", label: "All Tasks" },
+    { value: "work", label: "Work" },
+    { value: "personal", label: "Personal" },
+    { value: "study", label: "Study" },
+    { value: "health", label: "Health" }
+  ];
+
   const points = tasks.reduce((total, task) => total + (task.completed ? task.points : 0), 0);
+  
+  const filteredTasks = tasks.filter(task => 
+    selectedCategory === "all" || 
+    (task.category === selectedCategory)
+  );
+
+  const taskStats = {
+    total: filteredTasks.length,
+    completed: filteredTasks.filter(task => task.completed).length,
+    pending: filteredTasks.filter(task => !task.completed).length
+  };
 
   const handleAddTask = (text: string) => {
     onAddTask(text);
@@ -50,6 +66,13 @@ export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDe
         newStatus ? "Task Completed" : "Task Reopened",
         `Task "${task.text}" has been ${newStatus ? 'completed' : 'reopened'}`
       );
+      
+      if (newStatus) {
+        toast({
+          title: "Task completed! 🎉",
+          description: `You've earned ${task.points} points!`,
+        });
+      }
     }
   };
 
@@ -62,18 +85,55 @@ export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDe
       );
     }
     onDeleteTask(id);
+    toast({
+      title: "Task deleted",
+      description: "Task has been removed from your list",
+    });
   };
 
   return (
     <div className="space-y-6">
-      <h2 className="text-lg font-semibold">Add New Task</h2>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-lg font-semibold">Task Manager</h2>
+        <div className="flex items-center gap-4">
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter by category" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category.value} value={category.value}>
+                  {category.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Badge variant="outline" className="justify-center py-2">
+          Total Tasks: {taskStats.total}
+        </Badge>
+        <Badge variant="outline" className="justify-center py-2 bg-green-500/10">
+          Completed: {taskStats.completed}
+        </Badge>
+        <Badge variant="outline" className="justify-center py-2 bg-yellow-500/10">
+          Pending: {taskStats.pending}
+        </Badge>
+      </div>
+
       <TaskInput 
         selectedDate={selectedDate}
         onAddTask={handleAddTask}
         showStarburst={showStarburst}
       />
+
       <TaskPoints points={points} />
-      <TaskCharts tasks={tasks} />
+      
+      <div className="bg-card rounded-lg p-4 shadow-sm">
+        <TaskCharts tasks={filteredTasks} />
+      </div>
     </div>
   );
 };

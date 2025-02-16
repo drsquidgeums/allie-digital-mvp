@@ -6,4 +6,5 @@ export interface Task {
   createdAt: Date;
   points: number;
   color?: string;
+  category?: string;
 }
