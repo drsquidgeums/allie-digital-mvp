@@ -9,15 +9,17 @@ interface Task {
   completed: boolean;
   createdAt: Date;
   points: number;
+  color?: string;
 }
 
 interface TaskListCardProps {
   tasks: Task[];
   onToggleTask: (id: string) => void;
   onDeleteTask: (id: string) => void;
+  onUpdateTaskColor: (id: string, color: string) => void;
 }
 
-export const TaskListCard = ({ tasks, onToggleTask, onDeleteTask }: TaskListCardProps) => {
+export const TaskListCard = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor }: TaskListCardProps) => {
   const { t } = useTranslation();
   
   return (
@@ -27,6 +29,7 @@ export const TaskListCard = ({ tasks, onToggleTask, onDeleteTask }: TaskListCard
         tasks={tasks}
         onToggleTask={onToggleTask}
         onDeleteTask={onDeleteTask}
+        onUpdateTaskColor={onUpdateTaskColor}
       />
     </Card>
   );

@@ -8,6 +8,7 @@ interface Task {
   completed: boolean;
   createdAt: Date;
   points: number;
+  color?: string;
 }
 
 // Create a shared state outside the hook
@@ -78,6 +79,20 @@ export const useTasks = () => {
     notifyListeners();
   };
 
+  const handleUpdateTaskColor = (id: string, color: string) => {
+    sharedTasks = sharedTasks.map(task => {
+      if (task.id === id) {
+        return { ...task, color };
+      }
+      return task;
+    });
+    notifyListeners();
+    toast({
+      title: "Task updated",
+      description: "Task color has been updated",
+    });
+  };
+
   return {
     tasks,
     showAchievement,
@@ -85,6 +100,7 @@ export const useTasks = () => {
     calculateTotalPoints,
     handleAddTask,
     handleToggleTask,
-    handleDeleteTask
+    handleDeleteTask,
+    handleUpdateTaskColor
   };
 };
