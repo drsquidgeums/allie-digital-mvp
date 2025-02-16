@@ -44,8 +44,8 @@ export const Community = () => {
           <div className="space-y-4">
             <CollaborationActivity />
             <DiscussionList />
-            <CommunityChat />
             <TutorCommunication />
+            <CommunityChat />
           </div>
           <div className="space-y-4">
             <ResourceShare />
