@@ -91,7 +91,6 @@ export const BeelineReader = () => {
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
-                width: "fit-content",
                 minHeight: "1.5em",
                 lineHeight: "1.5",
                 padding: "2px 0"
@@ -106,7 +105,7 @@ export const BeelineReader = () => {
   };
 
   return (
-    <div className="p-4 space-y-4 animate-fade-in w-[600px]">
+    <div className="p-4 space-y-4 animate-fade-in">
       <div className="flex items-center gap-2">
         <BookOpen className="w-4 h-4" />
         <h3 className="font-medium">Beeline Reader</h3>
