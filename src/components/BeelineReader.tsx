@@ -43,33 +43,70 @@ export const BeelineReader = () => {
 
   const processText = (input: string) => {
     const colors = COLOR_GRADIENTS[selectedGradient as keyof typeof COLOR_GRADIENTS];
+    const lines = input.split('\n');
     
     return (
-      <p 
-        style={{
-          backgroundImage: `linear-gradient(
-            ${angle}deg,
-            ${colors.start} 0%,
-            ${colors.middle} 40%,
-            ${colors.end} 60%,
-            ${colors.endMiddle} 100%
-          )`,
-          display: "inline",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
-          width: "fit-content",
-          whiteSpace: "pre-wrap",
-          wordBreak: "break-word"
-        }}
-      >
-        {input}
-      </p>
+      <div className="space-y-1">
+        {lines.map((line, index) => {
+          // Calculate which position in the 3-line cycle this line is
+          const cyclePosition = index % 3;
+          
+          let gradientStyle = {};
+          if (cyclePosition === 0) {
+            // First line of the cycle
+            gradientStyle = {
+              backgroundImage: `linear-gradient(
+                ${angle}deg,
+                ${colors.start} 0%,
+                ${colors.middle} 100%
+              )`
+            };
+          } else if (cyclePosition === 1) {
+            // Second line of the cycle
+            gradientStyle = {
+              backgroundImage: `linear-gradient(
+                ${angle}deg,
+                ${colors.middle} 0%,
+                ${colors.end} 100%
+              )`
+            };
+          } else {
+            // Third line of the cycle
+            gradientStyle = {
+              backgroundImage: `linear-gradient(
+                ${angle}deg,
+                ${colors.end} 0%,
+                ${colors.endMiddle} 80%,
+                ${colors.start} 100%
+              )`
+            };
+          }
+
+          return (
+            <p 
+              key={index}
+              style={{
+                ...gradientStyle,
+                display: "block",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                width: "fit-content",
+                minHeight: "1.5em",
+                lineHeight: "1.5",
+                padding: "2px 0"
+              }}
+            >
+              {line || "\u00A0"} {/* Use non-breaking space if line is empty */}
+            </p>
+          );
+        })}
+      </div>
     );
   };
 
   return (
-    <div className="p-4 space-y-4 animate-fade-in">
+    <div className="p-4 space-y-4 animate-fade-in w-[600px]">
       <div className="flex items-center gap-2">
         <BookOpen className="w-4 h-4" />
         <h3 className="font-medium">Beeline Reader</h3>
@@ -119,7 +156,7 @@ export const BeelineReader = () => {
 
       <div 
         ref={outputRef}
-        className="bg-background/50 p-3 rounded-lg min-h-[100px] text-left focus:outline-none focus:ring-2 focus:ring-primary leading-relaxed"
+        className="bg-background/50 p-3 rounded-lg min-h-[100px] text-left focus:outline-none focus:ring-2 focus:ring-primary h-[150px] overflow-auto"
         tabIndex={text ? 0 : -1}
         role="region"
         aria-label="Processed beeline text"
