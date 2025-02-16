@@ -1,12 +1,19 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Book, Link, FileText, Star, Calendar } from "lucide-react";
+import { Book, Link, FileText, Star, Calendar, UserPlus, Plus } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/input";
 
 interface Resource {
   id: string;
@@ -19,9 +26,25 @@ interface Resource {
   date?: Date;
 }
 
+interface Event {
+  id: string;
+  title: string;
+  description: string;
+  date: Date;
+  invitees: string[];
+  link?: string;
+}
+
 export const ResourceShare = () => {
   const { toast } = useToast();
   const [selectedDate, setSelectedDate] = useState<Date>();
+  const [events, setEvents] = useState<Event[]>([]);
+  const [newEvent, setNewEvent] = useState({
+    title: "",
+    description: "",
+    invitees: "",
+    link: ""
+  });
   const [resources, setResources] = useState<Resource[]>([
     {
       id: "1",
@@ -79,6 +102,39 @@ export const ResourceShare = () => {
     });
   };
 
+  const handleCreateEvent = () => {
+    if (!selectedDate || !newEvent.title) {
+      toast({
+        title: "Required Fields Missing",
+        description: "Please select a date and enter an event title",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const event: Event = {
+      id: Date.now().toString(),
+      title: newEvent.title,
+      description: newEvent.description,
+      date: selectedDate,
+      invitees: newEvent.invitees.split(',').map(email => email.trim()),
+      link: newEvent.link
+    };
+
+    setEvents(prev => [...prev, event]);
+    setNewEvent({
+      title: "",
+      description: "",
+      invitees: "",
+      link: ""
+    });
+
+    toast({
+      title: "Event Created",
+      description: "Your event has been scheduled and invitations will be sent"
+    });
+  };
+
   const handleRate = (id: string) => {
     setResources(prev =>
       prev.map(resource =>
@@ -99,6 +155,10 @@ export const ResourceShare = () => {
         resource.date.toDateString() === selectedDate.toDateString()
       )
     : resources;
+
+  const selectedDateEvents = events.filter(
+    event => event.date.toDateString() === selectedDate?.toDateString()
+  );
 
   return (
     <Card className="p-4">
@@ -125,24 +185,99 @@ export const ResourceShare = () => {
             className="mb-2"
           />
         </div>
-        <div className="flex flex-col space-y-4">
-          <div className="border rounded-md p-4">
-            <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Select Date (Optional)
-            </h3>
-            <CalendarComponent
-              mode="single"
-              selected={selectedDate}
-              onSelect={setSelectedDate}
-              className="rounded-md border"
-            />
-          </div>
-          <Button type="submit" className="w-full">
-            Share Resource
-          </Button>
-        </div>
+        <Button type="submit" className="w-full">
+          Share Resource
+        </Button>
       </form>
+
+      <div className="border rounded-md p-4 mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-sm font-medium flex items-center gap-2">
+            <Calendar className="h-4 w-4" />
+            Study Group Calendar
+          </h3>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Event
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Schedule Study Group Event</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 mt-4">
+                <Input
+                  placeholder="Event Title"
+                  value={newEvent.title}
+                  onChange={e => setNewEvent(prev => ({ ...prev, title: e.target.value }))}
+                />
+                <Textarea 
+                  placeholder="Event Description"
+                  value={newEvent.description}
+                  onChange={e => setNewEvent(prev => ({ ...prev, description: e.target.value }))}
+                  className="min-h-[100px]"
+                />
+                <Input
+                  placeholder="Meeting Link (optional)"
+                  value={newEvent.link}
+                  onChange={e => setNewEvent(prev => ({ ...prev, link: e.target.value }))}
+                />
+                <div>
+                  <label className="text-sm text-muted-foreground">
+                    Invite Users (comma-separated emails)
+                  </label>
+                  <Input
+                    placeholder="user@example.com, user2@example.com"
+                    value={newEvent.invitees}
+                    onChange={e => setNewEvent(prev => ({ ...prev, invitees: e.target.value }))}
+                  />
+                </div>
+                <Button onClick={handleCreateEvent} className="w-full">
+                  Create Event
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+        <CalendarComponent
+          mode="single"
+          selected={selectedDate}
+          onSelect={setSelectedDate}
+          className="rounded-md border"
+        />
+        {selectedDate && selectedDateEvents.length > 0 && (
+          <div className="mt-4 space-y-2">
+            <h4 className="font-medium text-sm">Events on {selectedDate.toLocaleDateString()}</h4>
+            {selectedDateEvents.map(event => (
+              <Card key={event.id} className="p-3 bg-muted/50">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h5 className="font-medium">{event.title}</h5>
+                    <p className="text-sm text-muted-foreground">{event.description}</p>
+                    {event.link && (
+                      <a 
+                        href={event.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary flex items-center mt-1 hover:underline"
+                      >
+                        <Link className="h-4 w-4 mr-1" />
+                        Join Meeting
+                      </a>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <UserPlus className="h-4 w-4" />
+                    <span>{event.invitees.length} invited</span>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
 
       <ScrollArea className="h-[400px]">
         <div className="space-y-4">
