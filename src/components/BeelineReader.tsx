@@ -55,25 +55,28 @@ export const BeelineReader = () => {
             gradientStyle = {
               background: `linear-gradient(${angle}deg, ${colors.start}, ${colors.middle})`,
               WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
               backgroundClip: "text",
-              color: "transparent"
+              WebkitTextFillColor: "transparent",
+              color: "transparent",
+              display: "inline-block"
             };
           } else if (cyclePosition === 1) {
             gradientStyle = {
               background: `linear-gradient(${angle}deg, ${colors.middle}, ${colors.end})`,
               WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
               backgroundClip: "text",
-              color: "transparent"
+              WebkitTextFillColor: "transparent",
+              color: "transparent",
+              display: "inline-block"
             };
           } else {
             gradientStyle = {
               background: `linear-gradient(${angle}deg, ${colors.end}, ${colors.endMiddle}, ${colors.start})`,
               WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
               backgroundClip: "text",
-              color: "transparent"
+              WebkitTextFillColor: "transparent",
+              color: "transparent",
+              display: "inline-block"
             };
           }
 
@@ -81,7 +84,7 @@ export const BeelineReader = () => {
             <p 
               key={index}
               style={gradientStyle}
-              className="min-h-[1.5em] leading-[1.5] py-[2px] block"
+              className="min-h-[1.5em] leading-[1.5] py-[2px] w-full"
             >
               {line || "\u00A0"}
             </p>
