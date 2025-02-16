@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus } from "lucide-react";
+import { Plus, X, Video } from "lucide-react";
 
 interface EventDialogProps {
   newEvent: {
@@ -24,6 +24,20 @@ interface EventDialogProps {
 }
 
 export const EventDialog = ({ newEvent, onChange, onSubmit }: EventDialogProps) => {
+  const createGoogleMeetLink = () => {
+    // Generate a unique meeting ID
+    const meetingId = `meet-${Math.random().toString(36).substring(2, 11)}`;
+    const meetLink = `https://meet.google.com/${meetingId}`;
+    onChange("link", meetLink);
+  };
+
+  const createZoomLink = () => {
+    // Using Zoom's web client link structure
+    const meetingId = Math.random().toString().substring(2, 11);
+    const zoomLink = `https://zoom.us/j/${meetingId}`;
+    onChange("link", zoomLink);
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -33,9 +47,16 @@ export const EventDialog = ({ newEvent, onChange, onSubmit }: EventDialogProps) 
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Schedule Study Group Event</DialogTitle>
-        </DialogHeader>
+        <div className="flex justify-between items-start">
+          <DialogHeader>
+            <DialogTitle>Schedule Study Group Event</DialogTitle>
+          </DialogHeader>
+          <DialogTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-6 w-6 p-0">
+              <X className="h-4 w-4" />
+            </Button>
+          </DialogTrigger>
+        </div>
         <div className="space-y-4 mt-4">
           <Input
             placeholder="Event Title"
@@ -48,11 +69,37 @@ export const EventDialog = ({ newEvent, onChange, onSubmit }: EventDialogProps) 
             onChange={e => onChange("description", e.target.value)}
             className="min-h-[100px]"
           />
-          <Input
-            placeholder="Meeting Link (optional)"
-            value={newEvent.link}
-            onChange={e => onChange("link", e.target.value)}
-          />
+          <div className="space-y-2">
+            <label className="text-sm text-muted-foreground">
+              Meeting Link
+            </label>
+            <div className="flex gap-2">
+              <Input
+                placeholder="Meeting Link (optional)"
+                value={newEvent.link}
+                onChange={e => onChange("link", e.target.value)}
+                className="flex-1"
+              />
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={createGoogleMeetLink}
+                className="flex items-center gap-1"
+              >
+                <Video className="h-4 w-4" />
+                Meet
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={createZoomLink}
+                className="flex items-center gap-1"
+              >
+                <Video className="h-4 w-4" />
+                Zoom
+              </Button>
+            </div>
+          </div>
           <div>
             <label className="text-sm text-muted-foreground">
               Invite Users (comma-separated emails)
