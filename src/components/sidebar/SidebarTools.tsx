@@ -41,7 +41,7 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
 
   return (
     <div className="space-y-2">
-      <div className="pt-4 border-t border-border">
+      <div className="pt-4 border-t border-border space-y-2"> {/* Added space-y-2 here */}
         <SidebarButton
           icon={Settings}
           label={t('navigation.settings')}
