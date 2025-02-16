@@ -45,11 +45,11 @@ export const Community = () => {
             <CollaborationActivity />
             <DiscussionList />
             <CommunityChat />
+            <TutorCommunication />
           </div>
           <div className="space-y-4">
             <ResourceShare />
             <StudyGroups />
-            <TutorCommunication />
           </div>
         </div>
       </div>
