@@ -48,15 +48,21 @@ export const FocusMode = () => {
 
   const enterFullscreen = async () => {
     try {
-      const element = document.documentElement;
-      if (element.requestFullscreen) {
-        await element.requestFullscreen();
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        await elem.requestFullscreen();
+      } else if ((elem as any).webkitRequestFullscreen) { // Safari
+        await (elem as any).webkitRequestFullscreen();
+      } else if ((elem as any).msRequestFullscreen) { // IE11
+        await (elem as any).msRequestFullscreen();
+      } else if ((elem as any).mozRequestFullScreen) { // Firefox
+        await (elem as any).mozRequestFullScreen();
       }
     } catch (error) {
       console.error('Error entering fullscreen:', error);
       toast({
         title: "Fullscreen mode failed",
-        description: "Could not enter fullscreen mode",
+        description: "Could not enter fullscreen mode. Please check your browser settings.",
         variant: "destructive",
       });
     }
@@ -64,8 +70,14 @@ export const FocusMode = () => {
 
   const exitFullscreen = async () => {
     try {
-      if (document.fullscreenElement && document.exitFullscreen) {
+      if (document.exitFullscreen) {
         await document.exitFullscreen();
+      } else if ((document as any).webkitExitFullscreen) { // Safari
+        await (document as any).webkitExitFullscreen();
+      } else if ((document as any).msExitFullscreen) { // IE11
+        await (document as any).msExitFullscreen();
+      } else if ((document as any).mozCancelFullScreen) { // Firefox
+        await (document as any).mozCancelFullScreen();
       }
     } catch (error) {
       console.error('Error exiting fullscreen:', error);
@@ -74,6 +86,7 @@ export const FocusMode = () => {
 
   const toggleFocusMode = async () => {
     if (!isActive) {
+      // Enter focus mode
       if (settings.blockNotifications && notificationPermission === "granted") {
         localStorage.setItem('previousNotificationState', 'enabled');
       }
@@ -82,22 +95,29 @@ export const FocusMode = () => {
           el.muted = true;
         });
       }
-      await enterFullscreen();
+      
+      // First set the state and then enter fullscreen
       setIsActive(true);
+      await enterFullscreen();
+      
       window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: true } }));
       toast({
         title: "Focus mode activated",
         description: "Your selected focus settings have been applied",
       });
     } else {
+      // Exit focus mode
       if (localStorage.getItem('previousNotificationState') === 'enabled') {
         localStorage.removeItem('previousNotificationState');
       }
       document.querySelectorAll('audio, video').forEach((el: HTMLMediaElement) => {
         el.muted = false;
       });
+      
+      // First exit fullscreen and then update state
       await exitFullscreen();
       setIsActive(false);
+      
       window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: false } }));
       toast({
         title: "Focus mode deactivated",
@@ -114,14 +134,26 @@ export const FocusMode = () => {
 
   React.useEffect(() => {
     const handleFullscreenChange = () => {
-      if (!document.fullscreenElement && isActive) {
+      if (!document.fullscreenElement && 
+          !(document as any).webkitFullscreenElement && 
+          !(document as any).mozFullScreenElement &&
+          !(document as any).msFullscreenElement && 
+          isActive) {
         toggleFocusMode();
       }
     };
 
+    // Add all vendor-prefixed versions of the event
     document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
     };
   }, [isActive]);
 
