@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Task } from "@/types/task";
 
@@ -27,7 +27,7 @@ export const useIncentives = (tasks: Task[]) => {
   const { toast } = useToast();
 
   // Daily Streaks
-  const updateStreak = () => {
+  const updateStreak = useCallback(() => {
     const today = new Date();
     const lastDate = new Date(streak.lastCompleted);
     
@@ -48,10 +48,10 @@ export const useIncentives = (tasks: Task[]) => {
     } else {
       setStreak({ count: 1, lastCompleted: today });
     }
-  };
+  }, [streak.count, streak.lastCompleted, toast]);
 
   // Category Mastery
-  const updateCategoryProgress = (category: string) => {
+  const updateCategoryProgress = useCallback((category: string) => {
     setCategoryProgress(prev => {
       const newCount = (prev[category] || 0) + 1;
       if (newCount === 5) {
@@ -62,10 +62,10 @@ export const useIncentives = (tasks: Task[]) => {
       }
       return { ...prev, [category]: newCount };
     });
-  };
+  }, [toast]);
 
   // Time-based Bonuses
-  const checkTimeBonus = (task: Task) => {
+  const checkTimeBonus = useCallback((task: Task) => {
     const now = new Date();
     const taskDate = new Date(task.createdAt);
     const hoursDiff = (now.getTime() - taskDate.getTime()) / (1000 * 60 * 60);
@@ -78,10 +78,10 @@ export const useIncentives = (tasks: Task[]) => {
       return 15;
     }
     return 0;
-  };
+  }, [toast]);
 
   // Combo Rewards
-  const updateCombo = () => {
+  const updateCombo = useCallback(() => {
     const now = new Date();
     if (lastTaskCompletionTime && 
         now.getTime() - lastTaskCompletionTime.getTime() < 5 * 60 * 1000) {
@@ -99,14 +99,14 @@ export const useIncentives = (tasks: Task[]) => {
       setComboMultiplier(1);
     }
     setLastTaskCompletionTime(now);
-  };
+  }, [lastTaskCompletionTime, toast]);
 
   // Challenge System
   const weeklyChallenge = {
     target: 5,
     category: "health",
     reward: 50,
-    checkProgress: (tasks: Task[]) => {
+    checkProgress: useCallback((tasks: Task[]) => {
       const weekStart = new Date();
       weekStart.setDate(weekStart.getDate() - weekStart.getDay());
       
@@ -124,11 +124,11 @@ export const useIncentives = (tasks: Task[]) => {
         return 50;
       }
       return 0;
-    }
+    }, [toast])
   };
 
   // Progress Milestones
-  const checkMilestones = (points: number) => {
+  const checkMilestones = useCallback((points: number) => {
     const milestones = [200, 300, 500, 750, 1000];
     const achieved = milestones.find(m => points >= m && points - 10 < m);
     
@@ -140,14 +140,14 @@ export const useIncentives = (tasks: Task[]) => {
       return Math.floor(achieved * 0.1);
     }
     return 0;
-  };
+  }, [toast]);
 
   // Task Difficulty Levels
-  const getTaskPoints = (task: Task) => {
+  const getTaskPoints = useCallback((task: Task) => {
     const basePoints = 10;
     const difficultyMultiplier = task.text.length > 50 ? 1.5 : 1;
     return Math.round(basePoints * difficultyMultiplier * comboMultiplier);
-  };
+  }, [comboMultiplier]);
 
   return {
     streak,

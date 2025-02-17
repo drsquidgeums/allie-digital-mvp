@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Task } from "@/types/task";
 import { useIncentives } from "./useIncentives";
@@ -30,7 +30,6 @@ export const useTasks = () => {
   } = useIncentives(tasks);
 
   useEffect(() => {
-    // Subscribe to changes
     const listener = (newTasks: Task[]) => {
       setTasks(newTasks);
     };
@@ -40,7 +39,7 @@ export const useTasks = () => {
     };
   }, []);
 
-  const calculateTotalPoints = () => {
+  const calculateTotalPoints = useCallback(() => {
     return tasks.reduce((total, task) => {
       if (task.completed) {
         const basePoints = task.points;
@@ -50,9 +49,9 @@ export const useTasks = () => {
       }
       return total;
     }, 0);
-  };
+  }, [tasks, checkTimeBonus, checkMilestones]);
 
-  const handleAddTask = (text: string, taskDate: Date) => {
+  const handleAddTask = useCallback((text: string, taskDate: Date) => {
     const randomCategory = categories[Math.floor(Math.random() * categories.length)];
     
     const newTask = {
@@ -73,9 +72,9 @@ export const useTasks = () => {
 
     sharedTasks = [...sharedTasks, newTask];
     notifyListeners();
-  };
+  }, [getTaskPoints]);
 
-  const handleToggleTask = (id: string) => {
+  const handleToggleTask = useCallback((id: string) => {
     sharedTasks = sharedTasks.map(task => {
       if (task.id === id) {
         const newStatus = !task.completed;
@@ -97,14 +96,14 @@ export const useTasks = () => {
       return task;
     });
     notifyListeners();
-  };
+  }, [updateStreak, updateCombo, updateCategoryProgress, weeklyChallenge, calculateTotalPoints]);
 
-  const handleDeleteTask = (id: string) => {
+  const handleDeleteTask = useCallback((id: string) => {
     sharedTasks = sharedTasks.filter(task => task.id !== id);
     notifyListeners();
-  };
+  }, []);
 
-  const handleUpdateTaskColor = (id: string, color: string) => {
+  const handleUpdateTaskColor = useCallback((id: string, color: string) => {
     sharedTasks = sharedTasks.map(task => {
       if (task.id === id) {
         return { ...task, color };
@@ -116,7 +115,7 @@ export const useTasks = () => {
       title: "Task updated",
       description: "Task color has been updated",
     });
-  };
+  }, [toast]);
 
   return {
     tasks,
