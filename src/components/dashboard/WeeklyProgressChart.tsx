@@ -84,6 +84,7 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
                 }
                 return <span className="text-[#7E69AB]">{value}</span>;
               }}
+              iconType="square"
               wrapperStyle={{
                 paddingTop: "10px"
               }}
