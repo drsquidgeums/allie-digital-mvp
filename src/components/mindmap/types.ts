@@ -9,7 +9,7 @@ export interface MindMapNode {
   type?: string;
   data: { 
     label: string;
-    textColor?: string;
+    textColor: string;
   };
   position: { x: number; y: number };
   style?: React.CSSProperties;
@@ -20,7 +20,7 @@ export type Node = {
   type: string;
   data: { 
     label: string;
-    textColor?: string;
+    textColor: string;
   };
   position: { x: number; y: number };
   style?: React.CSSProperties;
