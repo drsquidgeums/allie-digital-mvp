@@ -86,7 +86,7 @@ export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDe
         <Badge variant="outline" className="justify-center py-2">
           Total Tasks: {taskStats.total}
         </Badge>
-        <Badge variant="outline" className="justify-center py-2 bg-[#222222] dark:bg-[#333333] text-white">
+        <Badge variant="outline" className="justify-center py-2 bg-[#222222] dark:bg-[#F1F1F1] text-white dark:text-[#333333]">
           Completed: {taskStats.completed}
         </Badge>
         <Badge variant="outline" className="justify-center py-2 bg-[#7E69AB] dark:bg-[#7E69AB] text-white">

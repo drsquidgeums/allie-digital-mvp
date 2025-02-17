@@ -76,7 +76,7 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="completed" fill="#222222" name="Completed" />
+            <Bar dataKey="completed" fill="#222222" name="Completed" className="dark:fill-[#F1F1F1]" />
             <Bar dataKey="pending" fill="#7E69AB" name="Pending" />
           </BarChart>
         </ResponsiveContainer>
