@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { TaskPlanner } from "../TaskPlanner";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
@@ -21,10 +21,16 @@ export const TaskDashboard = React.memo(() => {
     handleUpdateTaskColor
   } = useTasks();
 
-  const handleAddTaskWithDate = React.useCallback((text: string) => {
+  const handleAddTaskWithDate = useCallback((text: string) => {
     const taskDate = date || new Date();
     handleAddTask(text, taskDate);
   }, [date, handleAddTask]);
+
+  // Separate points calculation from render
+  const [points, setPoints] = React.useState(0);
+  useEffect(() => {
+    setPoints(calculateTotalPoints());
+  }, [tasks, calculateTotalPoints]);
 
   return (
     <div className="flex h-screen bg-background">
@@ -71,7 +77,7 @@ export const TaskDashboard = React.memo(() => {
         </Card>
       </div>
       <TaskAchievements 
-        points={calculateTotalPoints()}
+        points={points}
         isOpen={showAchievement}
         onClose={() => setShowAchievement(false)}
       />

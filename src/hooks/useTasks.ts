@@ -1,10 +1,8 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Task } from "@/types/task";
 import { useIncentives } from "./useIncentives";
 
-// Create a shared state outside the hook
 let sharedTasks: Task[] = [];
 const listeners = new Set<(tasks: Task[]) => void>();
 
@@ -75,26 +73,34 @@ export const useTasks = () => {
   }, [getTaskPoints]);
 
   const handleToggleTask = useCallback((id: string) => {
-    sharedTasks = sharedTasks.map(task => {
-      if (task.id === id) {
-        const newStatus = !task.completed;
+    const task = sharedTasks.find(t => t.id === id);
+    if (!task) return;
+
+    const newStatus = !task.completed;
+    if (newStatus) {
+      updateStreak();
+      updateCombo();
+      updateCategoryProgress(task.category || 'general');
+      weeklyChallenge.checkProgress(sharedTasks);
+    }
+
+    sharedTasks = sharedTasks.map(t => {
+      if (t.id === id) {
+        const updatedTask = { ...t, completed: newStatus };
         if (newStatus) {
-          updateStreak();
-          updateCombo();
-          updateCategoryProgress(task.category || 'general');
-          weeklyChallenge.checkProgress(sharedTasks);
-          
-          const newTotalPoints = calculateTotalPoints() + task.points;
-          if (newTotalPoints >= 20 && newTotalPoints < 50 || 
-              newTotalPoints >= 50 && newTotalPoints < 100 ||
-              newTotalPoints >= 100) {
-            setShowAchievement(true);
+          const currentPoints = calculateTotalPoints();
+          const newPoints = currentPoints + updatedTask.points;
+          if (newPoints >= 20 && newPoints < 50 || 
+              newPoints >= 50 && newPoints < 100 ||
+              newPoints >= 100) {
+            setTimeout(() => setShowAchievement(true), 0);
           }
         }
-        return { ...task, completed: newStatus };
+        return updatedTask;
       }
-      return task;
+      return t;
     });
+    
     notifyListeners();
   }, [updateStreak, updateCombo, updateCategoryProgress, weeklyChallenge, calculateTotalPoints]);
 
