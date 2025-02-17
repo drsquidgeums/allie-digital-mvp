@@ -6,7 +6,6 @@ import { TaskPoints } from "./dashboard/TaskPoints";
 import { TaskInput } from "./dashboard/TaskInput";
 import { emitTaskNotification } from "@/utils/notifications";
 import { Badge } from "./ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Task } from "@/types/task";
 
 interface TaskPlannerProps {
@@ -19,28 +18,14 @@ interface TaskPlannerProps {
 
 export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDeleteTask }: TaskPlannerProps) => {
   const [showStarburst, setShowStarburst] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const { toast } = useToast();
 
-  const categories = [
-    { value: "all", label: "All Tasks" },
-    { value: "work", label: "Work" },
-    { value: "personal", label: "Personal" },
-    { value: "study", label: "Study" },
-    { value: "health", label: "Health" }
-  ];
-
   const points = tasks.reduce((total, task) => total + (task.completed ? task.points : 0), 0);
-  
-  const filteredTasks = tasks.filter(task => 
-    selectedCategory === "all" || 
-    (task.category === selectedCategory)
-  );
 
   const taskStats = {
-    total: filteredTasks.length,
-    completed: filteredTasks.filter(task => task.completed).length,
-    pending: filteredTasks.filter(task => !task.completed).length
+    total: tasks.length,
+    completed: tasks.filter(task => task.completed).length,
+    pending: tasks.filter(task => !task.completed).length
   };
 
   const handleAddTask = (text: string) => {
@@ -93,22 +78,8 @@ export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDe
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Task Manager</h2>
-        <div className="flex items-center gap-4">
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category.value} value={category.value}>
-                  {category.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -132,7 +103,7 @@ export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDe
       <TaskPoints points={points} />
       
       <div className="bg-card rounded-lg p-4 shadow-sm">
-        <TaskCharts tasks={filteredTasks} />
+        <TaskCharts tasks={tasks} />
       </div>
     </div>
   );

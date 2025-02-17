@@ -8,6 +8,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 interface Task {
   id: string;
@@ -34,10 +36,13 @@ const TASK_COLORS = [
   { value: "#FEC6A1", label: "Soft Orange" },
   { value: "#E5DEFF", label: "Soft Purple" },
   { value: "#FFDEE2", label: "Soft Pink" },
+  { value: "custom", label: "Custom Color" },
   { value: null, label: "No Color" },
 ];
 
 export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor }: TaskListProps) => {
+  const [customColor, setCustomColor] = useState("#000000");
+
   if (tasks.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground shadow-sm rounded-lg bg-card">
@@ -46,6 +51,13 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor 
       </div>
     );
   }
+
+  const handleColorSelect = (taskId: string, colorValue: string | null) => {
+    if (colorValue === "custom") {
+      return; // Don't update the color yet, wait for custom input
+    }
+    onUpdateTaskColor(taskId, colorValue || "");
+  };
 
   return (
     <div className="space-y-3">
@@ -92,18 +104,36 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor 
                 <Tag className="h-3 w-3" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="min-w-[200px]">
               {TASK_COLORS.map((color) => (
                 <DropdownMenuItem
                   key={color.value || "no-color"}
-                  onClick={() => onUpdateTaskColor(task.id, color.value || "")}
+                  onClick={() => handleColorSelect(task.id, color.value)}
                 >
-                  <div className="flex items-center gap-2">
-                    <div 
-                      className="w-4 h-4 rounded-full border border-border"
-                      style={{ backgroundColor: color.value || "transparent" }}
-                    />
-                    <span>{color.label}</span>
+                  <div className="flex items-center gap-2 w-full">
+                    {color.value === "custom" ? (
+                      <>
+                        <Input 
+                          type="color" 
+                          value={customColor}
+                          className="w-12 h-6 p-0 cursor-pointer"
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) => {
+                            setCustomColor(e.target.value);
+                            onUpdateTaskColor(task.id, e.target.value);
+                          }}
+                        />
+                        <span>Custom Color</span>
+                      </>
+                    ) : (
+                      <>
+                        <div 
+                          className="w-4 h-4 rounded-full border border-border"
+                          style={{ backgroundColor: color.value || "transparent" }}
+                        />
+                        <span>{color.label}</span>
+                      </>
+                    )}
                   </div>
                 </DropdownMenuItem>
               ))}
