@@ -79,13 +79,20 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
             <Tooltip />
             <Legend 
               formatter={(value) => {
-                const isDark = document.documentElement.classList.contains('dark');
-                const color = value === "Completed" ? (isDark ? '#F1F1F1' : '#222222') : '#7E69AB';
+                if (value === "Completed") {
+                  return (
+                    <span className="text-[#222222] dark:text-[#F1F1F1] flex items-center gap-2">
+                      <span 
+                        className="inline-block w-3 h-3 bg-[#222222] dark:bg-[#F1F1F1]"
+                      />
+                      {value}
+                    </span>
+                  );
+                }
                 return (
-                  <span style={{ color }} className="flex items-center gap-2">
+                  <span className="text-[#7E69AB] flex items-center gap-2">
                     <span 
-                      className="inline-block w-3 h-3" 
-                      style={{ backgroundColor: color }}
+                      className="inline-block w-3 h-3 bg-[#7E69AB]"
                     />
                     {value}
                   </span>
