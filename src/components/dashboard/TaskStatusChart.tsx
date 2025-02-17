@@ -2,7 +2,7 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { Task } from '@/types/task';
 
-const COLORS = ['#000000', '#7E69AB']; // Changed first color to black for light mode
+const COLORS = ['#222222', '#7E69AB']; // Anthracite grey for completed, Purple for pending
 
 interface TaskStatusChartProps {
   tasks: Task[];
@@ -59,4 +59,3 @@ export const TaskStatusChart = ({ tasks }: TaskStatusChartProps) => {
     </div>
   );
 };
-

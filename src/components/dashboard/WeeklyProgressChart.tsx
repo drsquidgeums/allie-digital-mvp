@@ -1,3 +1,4 @@
+
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { format, startOfWeek, addDays, addWeeks, subWeeks } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -75,7 +76,7 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="completed" fill="#1A1F2C" name="Completed" />
+            <Bar dataKey="completed" fill="#222222" name="Completed" />
             <Bar dataKey="pending" fill="#7E69AB" name="Pending" />
           </BarChart>
         </ResponsiveContainer>
