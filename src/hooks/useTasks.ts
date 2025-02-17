@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Task } from "@/types/task";
+import { useIncentives } from "./useIncentives";
 
 // Create a shared state outside the hook
 let sharedTasks: Task[] = [];
@@ -17,6 +18,16 @@ export const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>(sharedTasks);
   const [showAchievement, setShowAchievement] = useState(false);
   const { toast } = useToast();
+  
+  const {
+    updateStreak,
+    updateCategoryProgress,
+    checkTimeBonus,
+    updateCombo,
+    weeklyChallenge,
+    checkMilestones,
+    getTaskPoints,
+  } = useIncentives(tasks);
 
   useEffect(() => {
     // Subscribe to changes
@@ -30,11 +41,18 @@ export const useTasks = () => {
   }, []);
 
   const calculateTotalPoints = () => {
-    return tasks.reduce((total, task) => total + (task.completed ? task.points : 0), 0);
+    return tasks.reduce((total, task) => {
+      if (task.completed) {
+        const basePoints = task.points;
+        const timeBonus = checkTimeBonus(task);
+        const milestoneBonus = checkMilestones(total + basePoints);
+        return total + basePoints + timeBonus + milestoneBonus;
+      }
+      return total;
+    }, 0);
   };
 
   const handleAddTask = (text: string, taskDate: Date) => {
-    // Assign a random category if not specified
     const randomCategory = categories[Math.floor(Math.random() * categories.length)];
     
     const newTask = {
@@ -42,9 +60,17 @@ export const useTasks = () => {
       text,
       completed: false,
       createdAt: taskDate,
-      points: 10,
+      points: getTaskPoints({ 
+        id: Date.now().toString(),
+        text,
+        completed: false,
+        createdAt: taskDate,
+        points: 10,
+        category: randomCategory
+      }),
       category: randomCategory
     };
+
     sharedTasks = [...sharedTasks, newTask];
     notifyListeners();
   };
@@ -54,6 +80,11 @@ export const useTasks = () => {
       if (task.id === id) {
         const newStatus = !task.completed;
         if (newStatus) {
+          updateStreak();
+          updateCombo();
+          updateCategoryProgress(task.category || 'general');
+          weeklyChallenge.checkProgress(sharedTasks);
+          
           const newTotalPoints = calculateTotalPoints() + task.points;
           if (newTotalPoints >= 20 && newTotalPoints < 50 || 
               newTotalPoints >= 50 && newTotalPoints < 100 ||
