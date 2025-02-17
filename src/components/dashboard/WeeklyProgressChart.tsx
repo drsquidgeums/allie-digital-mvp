@@ -68,7 +68,6 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart 
             data={getBarChartData()} 
-            className="dark:[&_.recharts-legend-item:first-child_.recharts-legend-item-symbol]:!fill-[#F1F1F1] dark:[&_.recharts-legend-item:last-child_.recharts-legend-item-symbol]:!fill-[#7E69AB]"
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis 
@@ -88,6 +87,9 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
               wrapperStyle={{
                 paddingTop: "10px"
               }}
+              iconStyle={(entry) => ({
+                fill: entry.value === "Completed" ? (document.documentElement.classList.contains('dark') ? '#F1F1F1' : '#222222') : '#7E69AB'
+              })}
             />
             <Bar 
               dataKey="completed" 
