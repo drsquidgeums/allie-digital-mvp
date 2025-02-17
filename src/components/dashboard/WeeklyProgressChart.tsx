@@ -77,11 +77,26 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
             <Tooltip />
             <Legend 
               formatter={(value) => {
-                return <span className="dark:text-[#F1F1F1]">{value}</span>;
+                return value === "Completed" ? 
+                  <span className="dark:text-[#F1F1F1]">{value}</span> :
+                  <span className="dark:text-[#7E69AB]">{value}</span>;
+              }}
+              iconType="square"
+              wrapperStyle={{
+                paddingTop: "10px"
               }}
             />
-            <Bar dataKey="completed" fill="#222222" name="Completed" className="dark:fill-[#F1F1F1]" />
-            <Bar dataKey="pending" fill="#7E69AB" name="Pending" />
+            <Bar 
+              dataKey="completed" 
+              fill="#222222" 
+              name="Completed" 
+              className="dark:fill-[#F1F1F1]" 
+            />
+            <Bar 
+              dataKey="pending" 
+              fill="#7E69AB" 
+              name="Pending" 
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
