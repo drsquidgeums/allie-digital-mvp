@@ -66,7 +66,10 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
       </div>
       <div className="flex-1 min-h-0">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={getBarChartData()} className="[&_.recharts-legend-item:first-child_.recharts-legend-item-symbol]:dark:!fill-[#F1F1F1] [&_.recharts-legend-item:last-child_.recharts-legend-item-symbol]:dark:!fill-[#7E69AB]">
+          <BarChart 
+            data={getBarChartData()} 
+            className="dark:[&_.recharts-legend-item:first-child_.recharts-legend-item-symbol]:!fill-[#F1F1F1] dark:[&_.recharts-legend-item:last-child_.recharts-legend-item-symbol]:!fill-[#7E69AB]"
+          >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis 
               dataKey="name" 
