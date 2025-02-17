@@ -2,7 +2,7 @@
 import { useState, useCallback } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Connection, Edge, useNodesState, useEdgesState, addEdge } from '@xyflow/react';
-import { Node } from '../types';
+import { Node, NodeStyle } from '../types';
 import { initialNodes } from '../constants/nodeTypes';
 
 export const useMindMapState = () => {
@@ -23,6 +23,11 @@ export const useMindMapState = () => {
   const addNode = useCallback(() => {
     if (!newNodeText.trim()) return;
 
+    const nodeStyle: NodeStyle = {
+      background: selectedColor === 'custom' ? customColor : selectedColor,
+      color: selectedTextColor === 'custom' ? customTextColor : selectedTextColor,
+    };
+
     const newNode: Node = {
       id: `node_${Date.now()}`,
       type: 'default',
@@ -34,10 +39,7 @@ export const useMindMapState = () => {
         x: Math.random() * 500,
         y: Math.random() * 300,
       },
-      style: {
-        background: selectedColor === 'custom' ? customColor : selectedColor,
-        color: selectedTextColor === 'custom' ? customTextColor : selectedTextColor,
-      },
+      style: nodeStyle,
     };
 
     setNodes((nds) => [...nds, newNode]);
