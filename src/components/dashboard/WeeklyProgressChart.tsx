@@ -80,23 +80,9 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
             <Legend 
               formatter={(value) => {
                 if (value === "Completed") {
-                  return (
-                    <span className="text-[#222222] dark:text-[#F1F1F1] flex items-center gap-2">
-                      <span 
-                        className="inline-block w-3 h-3 bg-[#222222] dark:bg-[#F1F1F1]"
-                      />
-                      {value}
-                    </span>
-                  );
+                  return <span className="text-[#222222] dark:text-[#F1F1F1]">{value}</span>;
                 }
-                return (
-                  <span className="text-[#7E69AB] flex items-center gap-2">
-                    <span 
-                      className="inline-block w-3 h-3 bg-[#7E69AB]"
-                    />
-                    {value}
-                  </span>
-                );
+                return <span className="text-[#7E69AB]">{value}</span>;
               }}
               wrapperStyle={{
                 paddingTop: "10px"
