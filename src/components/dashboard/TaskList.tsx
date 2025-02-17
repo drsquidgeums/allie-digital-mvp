@@ -28,14 +28,6 @@ interface TaskListProps {
 }
 
 const TASK_COLORS = [
-  { value: "#9b87f5", label: "Primary Purple" },
-  { value: "#7E69AB", label: "Secondary Purple" },
-  { value: "#F97316", label: "Bright Orange" },
-  { value: "#0EA5E9", label: "Ocean Blue" },
-  { value: "#F2FCE2", label: "Soft Green" },
-  { value: "#FEC6A1", label: "Soft Orange" },
-  { value: "#E5DEFF", label: "Soft Purple" },
-  { value: "#FFDEE2", label: "Soft Pink" },
   { value: "custom", label: "Custom Color" },
   { value: null, label: "No Color" },
 ];
