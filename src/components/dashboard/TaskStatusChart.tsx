@@ -28,9 +28,12 @@ export const TaskStatusChart = ({ tasks }: TaskStatusChartProps) => {
               outerRadius={65}
               paddingAngle={5}
               dataKey="value"
-              label={({ name, value }) => `${name}: ${value}`}
+              label={({ name, value, fill }) => (
+                <text fill={fill} fontSize={12}>
+                  {`${name}: ${value}`}
+                </text>
+              )}
               labelLine={false}
-              className="text-foreground fill-foreground dark:text-gray-200"
             >
               {getPieChartData().map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -50,7 +53,7 @@ export const TaskStatusChart = ({ tasks }: TaskStatusChartProps) => {
                 paddingTop: "20px"
               }}
               formatter={(value, entry) => (
-                <span className="text-foreground dark:text-gray-200">{value}</span>
+                <span style={{ color: entry.color }}>{value}</span>
               )}
             />
           </PieChart>
