@@ -36,4 +36,9 @@
     --focus-ring: 0 0% 98%;
     --hover-bg: 240 3.7% 25%;
   }
+
+  /* Direct style for the legend symbol in dark mode */
+  .dark .recharts-legend-item:first-child .recharts-legend-item-symbol {
+    fill: #F1F1F1 !important;
+  }
 }
