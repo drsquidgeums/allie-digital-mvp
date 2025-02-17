@@ -3,22 +3,7 @@ import { useState, useCallback } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Connection, Edge, useNodesState, useEdgesState, addEdge } from '@xyflow/react';
 import { Node } from '../types';
-
-const initialNodes: Node[] = [
-  {
-    id: '1',
-    type: 'input',
-    data: { 
-      label: 'Main Topic',
-      textColor: '#000000'
-    },
-    position: { x: 250, y: 25 },
-    style: {
-      background: 'hsl(var(--muted))',
-      color: 'hsl(var(--muted-foreground))',
-    },
-  },
-];
+import { initialNodes } from '../constants/nodeTypes';
 
 export const useMindMapState = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
