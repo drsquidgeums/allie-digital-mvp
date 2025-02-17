@@ -40,7 +40,7 @@ const TASK_COLORS = [
 export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor }: TaskListProps) => {
   if (tasks.length === 0) {
     return (
-      <div className="text-center py-8 text-muted-foreground">
+      <div className="text-center py-8 text-muted-foreground shadow-sm rounded-lg bg-card">
         <p>No tasks yet</p>
         <p className="text-sm">Add some tasks to get started!</p>
       </div>
@@ -53,7 +53,7 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor 
         <div
           key={task.id}
           className={cn(
-            "flex items-center gap-3 p-3 rounded-lg transition-colors",
+            "flex items-center gap-3 p-3 rounded-lg transition-colors shadow-sm",
             task.color 
               ? "border-l-4" 
               : "hover:bg-accent/10 bg-accent/5",
