@@ -6,7 +6,7 @@ export interface ColorOption {
 
 export interface NodeStyle extends React.CSSProperties {
   background: string;
-  color?: string;
+  color: string; // Made color required instead of optional
 }
 
 export interface MindMapNode {

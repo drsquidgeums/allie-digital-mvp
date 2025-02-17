@@ -23,9 +23,11 @@ export const useMindMapState = () => {
   const addNode = useCallback(() => {
     if (!newNodeText.trim()) return;
 
+    const textColor = selectedTextColor === 'custom' ? customTextColor : selectedTextColor;
+    
     const nodeStyle: NodeStyle = {
       background: selectedColor === 'custom' ? customColor : selectedColor,
-      color: selectedTextColor === 'custom' ? customTextColor : selectedTextColor,
+      color: textColor,
     };
 
     const newNode: Node = {
@@ -33,7 +35,7 @@ export const useMindMapState = () => {
       type: 'default',
       data: { 
         label: newNodeText,
-        textColor: selectedTextColor === 'custom' ? customTextColor : selectedTextColor
+        textColor
       },
       position: {
         x: Math.random() * 500,
