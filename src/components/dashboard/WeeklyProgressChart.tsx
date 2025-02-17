@@ -39,8 +39,8 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
   };
 
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-between mb-6">
+    <div className="h-full flex flex-col">
+      <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold">Weekly Progress</h3>
         <div className="flex items-center gap-2">
           <Button
@@ -64,7 +64,7 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
           </Button>
         </div>
       </div>
-      <div className="h-64 w-full">
+      <div className="flex-1 min-h-0">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getBarChartData()}>
             <CartesianGrid strokeDasharray="3 3" />

@@ -8,7 +8,7 @@ interface TaskChartsProps {
 
 export const TaskCharts = ({ tasks }: TaskChartsProps) => {
   return (
-    <div className="flex flex-col space-y-8 bg-accent/10 p-6 rounded-lg mb-8">
+    <div className="h-full flex flex-col bg-accent/10 p-6 rounded-lg">
       <WeeklyProgressChart tasks={tasks} />
     </div>
   );

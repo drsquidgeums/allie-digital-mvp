@@ -77,33 +77,41 @@ export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDe
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Task Manager</h2>
+    <div className="h-full flex flex-col">
+      <div className="flex-none">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">Task Manager</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <Badge variant="outline" className="justify-center py-2">
+            Total Tasks: {taskStats.total}
+          </Badge>
+          <Badge variant="outline" className="justify-center py-2 bg-[#222222] dark:bg-[#F1F1F1] text-white dark:text-[#333333]">
+            Completed: {taskStats.completed}
+          </Badge>
+          <Badge variant="outline" className="justify-center py-2 bg-[#7E69AB] dark:bg-[#7E69AB] text-white">
+            Pending: {taskStats.pending}
+          </Badge>
+        </div>
+
+        <div className="mb-4">
+          <TaskInput 
+            selectedDate={selectedDate}
+            onAddTask={handleAddTask}
+            showStarburst={showStarburst}
+          />
+        </div>
+
+        <div className="mb-4">
+          <TaskPoints points={points} />
+        </div>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Badge variant="outline" className="justify-center py-2">
-          Total Tasks: {taskStats.total}
-        </Badge>
-        <Badge variant="outline" className="justify-center py-2 bg-[#222222] dark:bg-[#F1F1F1] text-white dark:text-[#333333]">
-          Completed: {taskStats.completed}
-        </Badge>
-        <Badge variant="outline" className="justify-center py-2 bg-[#7E69AB] dark:bg-[#7E69AB] text-white">
-          Pending: {taskStats.pending}
-        </Badge>
-      </div>
-
-      <TaskInput 
-        selectedDate={selectedDate}
-        onAddTask={handleAddTask}
-        showStarburst={showStarburst}
-      />
-
-      <TaskPoints points={points} />
       
-      <div className="bg-card rounded-lg p-4 shadow-sm">
-        <TaskCharts tasks={tasks} />
+      <div className="flex-1 min-h-0">
+        <div className="h-full bg-card rounded-lg p-4 shadow-sm">
+          <TaskCharts tasks={tasks} />
+        </div>
       </div>
     </div>
   );
