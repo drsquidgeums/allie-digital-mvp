@@ -6,7 +6,7 @@ export interface ColorOption {
 
 export interface NodeStyle extends React.CSSProperties {
   background: string;
-  color: string; // Made color required instead of optional
+  color: string;
 }
 
 export interface MindMapNode {
@@ -17,7 +17,7 @@ export interface MindMapNode {
     textColor: string;
   };
   position: { x: number; y: number };
-  style?: NodeStyle;
+  style: NodeStyle;  // Made style required
 }
 
 export type Node = {
@@ -28,7 +28,7 @@ export type Node = {
     textColor: string;
   };
   position: { x: number; y: number };
-  style?: NodeStyle;
+  style: NodeStyle;  // Made style required
 }
 
 export interface MindMapContainerProps {
