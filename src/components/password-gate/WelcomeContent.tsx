@@ -14,7 +14,7 @@ export const WelcomeContent: React.FC<WelcomeContentProps> = ({ colors }) => {
         <StarburstAnimation colors={colors} />
         <DustParticles colors={colors} />
       </div>
-      <h1 className="text-2xl font-bold mb-2 relative z-20 text-black">Allie AI</h1>
+      <h1 className="text-2xl font-bold mb-2 relative z-20 text-black">Allie.ai</h1>
       <p className="text-black relative z-20 whitespace-nowrap">
         Please enter the password to access the Web Application
       </p>
