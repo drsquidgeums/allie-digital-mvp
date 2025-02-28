@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 
 interface Message {
@@ -6,7 +7,7 @@ interface Message {
 }
 
 const INITIAL_MESSAGE: Message = {
-  text: "Hi! I'm Allie AI, your virtual AI learning assistant. What can I help you with today?",
+  text: "Hi! I'm Allie.ai, your virtual learning assistant. What can I help you with today?",
   isUser: false
 };
 

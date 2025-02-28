@@ -8,7 +8,7 @@ export const ChatHeader = () => {
   return (
     <div className="flex items-center gap-2" role="banner">
       <Bot className="w-4 h-4" aria-hidden="true" />
-      <h3 className="font-medium">{t('chat.title', 'Allie AI')}</h3>
+      <h3 className="font-medium">Allie.ai</h3>
     </div>
   );
 };
