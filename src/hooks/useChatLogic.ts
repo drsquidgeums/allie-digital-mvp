@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 interface Message {
   text: string;
@@ -16,7 +16,7 @@ export const useChatLogic = () => {
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getToolResponse = (input: string): string => {
+  const getToolResponse = useCallback((input: string): string => {
     const lowerInput = input.toLowerCase();
     
     if (lowerInput.includes("irlen") || lowerInput.includes("overlay")) {
@@ -52,9 +52,9 @@ export const useChatLogic = () => {
     }
 
     return "I can explain how our various tools help support different learning needs. You can ask about specific tools like the Irlen Overlay, OpenDyslexic font, Bionic Reader, Color Separator, Focus Mode, Pomodoro Timer, Mind Map, or Text-to-Speech feature. Which would you like to learn more about?";
-  };
+  }, []);
 
-  const handleSend = async () => {
+  const handleSend = useCallback(async () => {
     if (!input.trim() || isLoading) return;
 
     setIsLoading(true);
@@ -67,7 +67,7 @@ export const useChatLogic = () => {
       setMessages(prev => [...prev, { text: response, isUser: false }]);
       setIsLoading(false);
     }, 1000);
-  };
+  }, [input, isLoading, getToolResponse]);
 
   return {
     input,

@@ -1,31 +1,32 @@
-import React, { useRef, useEffect } from "react";
+
+import React, { useRef, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { ChatMessage } from "./chat/ChatMessage";
 import { ChatInput } from "./chat/ChatInput";
 import { ChatHeader } from "./chat/ChatHeader";
 import { useChatLogic } from "@/hooks/useChatLogic";
 
-export const AIAssistant = () => {
+export const AIAssistant = React.memo(() => {
   const { input, setInput, messages, isLoading, handleSend } = useChatLogic();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, scrollToBottom]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       setInput('');
     }
-  };
+  }, [setInput]);
 
   // Handle keyboard navigation within messages
-  const handleMessagesKeyDown = (e: React.KeyboardEvent) => {
+  const handleMessagesKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       e.preventDefault();
       const messages = chatContainerRef.current?.querySelectorAll('[role="article"]');
@@ -43,7 +44,16 @@ export const AIAssistant = () => {
 
       (messages[nextIndex] as HTMLElement).focus();
     }
-  };
+  }, []);
+
+  const memoizedInput = React.useMemo(() => (
+    <ChatInput
+      value={input}
+      onChange={setInput}
+      onSend={handleSend}
+      isLoading={isLoading}
+    />
+  ), [input, setInput, handleSend, isLoading]);
 
   return (
     <Card 
@@ -83,13 +93,10 @@ export const AIAssistant = () => {
           )}
           <div ref={messagesEndRef} />
         </div>
-        <ChatInput
-          value={input}
-          onChange={setInput}
-          onSend={handleSend}
-          isLoading={isLoading}
-        />
+        {memoizedInput}
       </div>
     </Card>
   );
-};
+});
+
+AIAssistant.displayName = "AIAssistant";

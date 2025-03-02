@@ -1,8 +1,14 @@
 
-import React from 'react';
-import { PdfViewer } from './viewers/PdfViewer';
-import { TextViewer } from './viewers/TextViewer';
+import React, { lazy, Suspense } from 'react';
 import { getFileType } from './FileConverter';
+
+// Lazy load the viewers
+const PdfViewer = lazy(() => import('./viewers/PdfViewer').then(module => ({
+  default: module.PdfViewer
+})));
+const TextViewer = lazy(() => import('./viewers/TextViewer').then(module => ({
+  default: module.TextViewer
+})));
 
 interface DocumentPreviewProps {
   file: File | null;
@@ -17,6 +23,12 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   selectedColor,
   isHighlighter
 }) => {
+  const LoadingFallback = () => (
+    <div className="flex items-center justify-center h-full">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+    </div>
+  );
+
   if (!file && !url) {
     return (
       <div 
@@ -36,17 +48,23 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         case 'pdf':
           return (
             <div className="h-full overflow-auto">
-              <PdfViewer
-                file={file}
-                url=""
-                selectedColor={selectedColor}
-                isHighlighter={isHighlighter}
-              />
+              <Suspense fallback={<LoadingFallback />}>
+                <PdfViewer
+                  file={file}
+                  url=""
+                  selectedColor={selectedColor}
+                  isHighlighter={isHighlighter}
+                />
+              </Suspense>
             </div>
           );
         case 'txt':
         case 'html':
-          return <TextViewer file={file} />;
+          return (
+            <Suspense fallback={<LoadingFallback />}>
+              <TextViewer file={file} />
+            </Suspense>
+          );
         default:
           return (
             <div 
@@ -76,12 +94,14 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     if (url.toLowerCase().endsWith('.pdf')) {
       return (
         <div className="h-full overflow-auto">
-          <PdfViewer
-            file={null}
-            url={url}
-            selectedColor={selectedColor}
-            isHighlighter={isHighlighter}
-          />
+          <Suspense fallback={<LoadingFallback />}>
+            <PdfViewer
+              file={null}
+              url={url}
+              selectedColor={selectedColor}
+              isHighlighter={isHighlighter}
+            />
+          </Suspense>
         </div>
       );
     }

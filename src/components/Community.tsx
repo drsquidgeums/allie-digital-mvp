@@ -1,20 +1,42 @@
 
-import React, { useRef } from "react";
+import React, { useRef, lazy, Suspense, memo } from "react";
 import { Card } from "@/components/ui/card";
 import { CommunityHeader } from "./community/CommunityHeader";
 import { CommunityStats } from "./community/CommunityStats";
-import { DiscussionList } from "./community/DiscussionList";
-import { CommunityChat } from "./community/CommunityChat";
-import { ResourceShare } from "./community/ResourceShare";
-import { StudyGroups } from "./community/StudyGroups";
 import { TaskPoints } from "./dashboard/TaskPoints";
 import { TaskAchievements } from "./dashboard/TaskAchievements";
 import { useTasks } from "@/hooks/useTasks";
-import CollaborationActivity from "./community/CollaborationActivity";
-import TutorCommunication from "./community/TutorCommunication";
-import { PollBox } from "./community/PollBox";
 
-export const Community = () => {
+// Lazy load less critical components
+const DiscussionList = lazy(() => import("./community/DiscussionList").then(module => ({
+  default: module.DiscussionList
+})));
+const CommunityChat = lazy(() => import("./community/CommunityChat").then(module => ({
+  default: module.CommunityChat
+})));
+const ResourceShare = lazy(() => import("./community/ResourceShare").then(module => ({
+  default: module.ResourceShare
+})));
+const StudyGroups = lazy(() => import("./community/StudyGroups").then(module => ({
+  default: module.StudyGroups
+})));
+const CollaborationActivity = lazy(() => import("./community/CollaborationActivity").then(module => ({
+  default: module.default
+})));
+const TutorCommunication = lazy(() => import("./community/TutorCommunication").then(module => ({
+  default: module.default
+})));
+const PollBox = lazy(() => import("./community/PollBox").then(module => ({
+  default: module.PollBox
+})));
+
+const LoadingComponent = () => (
+  <div className="flex items-center justify-center p-6 bg-muted/20 rounded-lg min-h-[200px]">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+  </div>
+);
+
+export const Community = memo(() => {
   const mainRef = useRef<HTMLDivElement>(null);
   const { calculateTotalPoints, showAchievement, setShowAchievement } = useTasks();
 
@@ -43,18 +65,34 @@ export const Community = () => {
         <CommunityStats />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="space-y-4">
-            <CollaborationActivity />
-            <DiscussionList />
-            <TutorCommunication />
-            <CommunityChat />
-            <PollBox />
+            <Suspense fallback={<LoadingComponent />}>
+              <CollaborationActivity />
+            </Suspense>
+            <Suspense fallback={<LoadingComponent />}>
+              <DiscussionList />
+            </Suspense>
+            <Suspense fallback={<LoadingComponent />}>
+              <TutorCommunication />
+            </Suspense>
+            <Suspense fallback={<LoadingComponent />}>
+              <CommunityChat />
+            </Suspense>
+            <Suspense fallback={<LoadingComponent />}>
+              <PollBox />
+            </Suspense>
           </div>
           <div className="space-y-4">
-            <ResourceShare />
-            <StudyGroups />
+            <Suspense fallback={<LoadingComponent />}>
+              <ResourceShare />
+            </Suspense>
+            <Suspense fallback={<LoadingComponent />}>
+              <StudyGroups />
+            </Suspense>
           </div>
         </div>
       </div>
     </Card>
   );
-};
+});
+
+Community.displayName = "Community";

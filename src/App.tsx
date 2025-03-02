@@ -1,12 +1,18 @@
 
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { BrowserRouter } from "react-router-dom";
 import { AppProviders } from "@/components/app/AppProviders";
-import { AppRoutes } from "@/components/app/AppRoutes";
-import { AppLogo } from "@/components/app/AppLogo";
 import { PasswordGate } from "@/components/PasswordGate";
+
+// Lazy load components that aren't needed immediately
+const AppRoutes = lazy(() => import("@/components/app/AppRoutes").then(module => ({
+  default: module.AppRoutes
+})));
+const AppLogo = lazy(() => import("@/components/app/AppLogo").then(module => ({
+  default: module.AppLogo
+})));
 
 const App = () => {
   // Reset authentication state on initial load
@@ -30,10 +36,18 @@ const App = () => {
     <BrowserRouter>
       <AppProviders>
         <div className="app-container">
-          <AppLogo />
+          <Suspense fallback={<div className="p-4">Loading...</div>}>
+            <AppLogo />
+          </Suspense>
           <Toaster />
           <Sonner />
-          <AppRoutes />
+          <Suspense fallback={
+            <div className="flex items-center justify-center h-screen">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          }>
+            <AppRoutes />
+          </Suspense>
         </div>
       </AppProviders>
     </BrowserRouter>

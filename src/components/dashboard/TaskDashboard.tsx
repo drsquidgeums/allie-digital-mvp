@@ -1,12 +1,16 @@
 
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo, lazy, Suspense } from "react";
 import { TaskPlanner } from "../TaskPlanner";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
-import { TaskListCard } from "./TaskListCard";
 import { Sidebar } from "@/components/Sidebar";
 import { TaskAchievements } from "./TaskAchievements";
 import { useTasks } from "@/hooks/useTasks";
+
+// Lazy load non-critical component
+const TaskListCard = lazy(() => import("./TaskListCard").then(module => ({
+  default: module.TaskListCard
+})));
 
 export const TaskDashboard = React.memo(() => {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -31,6 +35,29 @@ export const TaskDashboard = React.memo(() => {
   useEffect(() => {
     setPoints(calculateTotalPoints());
   }, [tasks, calculateTotalPoints]);
+
+  // Memoize the calendar section
+  const calendarSection = useMemo(() => (
+    <Card 
+      className="p-4 shadow-md border border-border"
+      role="region"
+      aria-label="Calendar date picker"
+    >
+      <h3 
+        className="text-lg font-semibold mb-2"
+        id="calendar-heading"
+      >
+        Select Date
+      </h3>
+      <Calendar
+        mode="single"
+        selected={date}
+        onSelect={setDate}
+        className="rounded-md border"
+        aria-labelledby="calendar-heading"
+      />
+    </Card>
+  ), [date, setDate]);
 
   return (
     <div className="flex h-screen bg-background">
@@ -70,31 +97,19 @@ export const TaskDashboard = React.memo(() => {
                   />
                 </Card>
                 <div className="space-y-6">
-                  <Card 
-                    className="p-4 shadow-md border border-border"
-                    role="region"
-                    aria-label="Calendar date picker"
-                  >
-                    <h3 
-                      className="text-lg font-semibold mb-2"
-                      id="calendar-heading"
-                    >
-                      Select Date
-                    </h3>
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      className="rounded-md border"
-                      aria-labelledby="calendar-heading"
+                  {calendarSection}
+                  <Suspense fallback={
+                    <div className="flex items-center justify-center p-6 bg-muted/20 rounded-lg min-h-[200px]">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                    </div>
+                  }>
+                    <TaskListCard
+                      tasks={tasks}
+                      onToggleTask={handleToggleTask}
+                      onDeleteTask={handleDeleteTask}
+                      onUpdateTaskColor={handleUpdateTaskColor}
                     />
-                  </Card>
-                  <TaskListCard
-                    tasks={tasks}
-                    onToggleTask={handleToggleTask}
-                    onDeleteTask={handleDeleteTask}
-                    onUpdateTaskColor={handleUpdateTaskColor}
-                  />
+                  </Suspense>
                 </div>
               </div>
             </div>
