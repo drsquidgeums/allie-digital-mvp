@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ThemeProvider } from "./ThemeProvider";
@@ -6,6 +7,8 @@ import { DocumentToolbar } from "./document-viewer/DocumentToolbar";
 import { DocumentPreview } from "./document-viewer/DocumentPreview";
 import { ToolbarTools } from "./document-viewer/ToolbarTools";
 import { UrlInput } from "./document-viewer/UrlInput";
+import { ColorHeader } from "./color-tool/ColorHeader";
+import { ColorPresets } from "./color-tool/ColorPresets";
 
 interface DocumentViewerProps {
   file: File | null;
@@ -13,7 +16,7 @@ interface DocumentViewerProps {
   isHighlighter?: boolean;
 }
 
-export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerProps) => {
+export const DocumentViewer = ({ selectedColor, isHighlighter = true }: DocumentViewerProps) => {
   const { toast } = useToast();
   const {
     url,
@@ -26,6 +29,8 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
     selectedFile,
     setSelectedFile,
   } = useDocumentViewer();
+
+  const presetColors = ["#F87171", "#FBBF24", "#34D399", "#60A5FA", "#A78BFA", "#FB7185", "#000000", "#6B7280"];
 
   // Auto-activate Bionic Reader and TTS when content is loaded
   useEffect(() => {
@@ -88,21 +93,38 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
       role="region"
       aria-label="Document viewer"
     >
-      <div className="p-4 border-b border-border">
-        <div className="flex items-center justify-between gap-2">
+      <div className="p-2 sm:p-3 md:p-4 border-b border-border">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
           <DocumentToolbar
             onUpload={handleUpload}
             onDownload={() => handleDownload(selectedFile)}
             onDelete={handleDelete}
             hasFile={!!selectedFile}
           />
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 mt-2 sm:mt-0">
             <ToolbarTools />
             <ThemeProvider />
           </div>
         </div>
+        
+        <div className="mt-3 flex flex-col sm:flex-row items-start sm:items-center gap-2">
+          <div className="w-full sm:w-auto">
+            <ColorHeader 
+              isHighlighter={!!isHighlighter} 
+              onHighlighterToggle={() => {}} 
+            />
+          </div>
+          <div className="w-full sm:w-auto mt-2 sm:mt-0">
+            <ColorPresets 
+              presetColors={presetColors}
+              isHighlighter={!!isHighlighter}
+              onColorSelect={() => {}}
+            />
+          </div>
+        </div>
       </div>
-      <div className="flex-1 p-4 relative">
+      
+      <div className="flex-1 p-2 sm:p-4 relative">
         <UrlInput 
           url={url}
           onChange={handleUrlChange}
@@ -134,3 +156,5 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
     </div>
   );
 };
+
+export default { DocumentViewer };
