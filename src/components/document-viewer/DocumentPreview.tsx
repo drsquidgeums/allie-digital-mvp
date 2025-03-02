@@ -32,26 +32,11 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   if (!file && !url) {
     return (
       <div 
-        className="flex flex-col items-center justify-center h-full text-muted-foreground p-4 text-center"
+        className="flex items-center justify-center h-full text-muted-foreground"
         role="status"
         aria-label="No document loaded"
       >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          className="h-12 w-12 mb-4 text-muted-foreground/50" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          stroke="currentColor"
-        >
-          <path 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            strokeWidth={2} 
-            d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
-          />
-        </svg>
-        <p className="text-base sm:text-lg">Upload a file or paste a URL to view</p>
-        <p className="text-sm mt-2 text-muted-foreground/70">Supported formats: PDF, TXT, HTML and web URLs</p>
+        Upload a file or paste a URL to view
       </div>
     );
   }
@@ -83,52 +68,22 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         default:
           return (
             <div 
-              className="flex flex-col items-center justify-center h-full text-destructive p-4 text-center"
+              className="text-destructive"
               role="alert"
               aria-live="polite"
             >
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                className="h-12 w-12 mb-4 text-destructive/70" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" 
-                />
-              </svg>
-              <p className="text-lg">Unsupported file type</p>
-              <p className="text-sm mt-2">Please upload a PDF, TXT, or HTML file</p>
+              Unsupported file type
             </div>
           );
       }
     } catch (error) {
       return (
         <div 
-          className="flex flex-col items-center justify-center h-full text-destructive p-4 text-center"
+          className="text-destructive"
           role="alert"
           aria-live="polite"
         >
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            className="h-12 w-12 mb-4 text-destructive/70" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
-            />
-          </svg>
-          <p className="text-lg">Error loading file</p>
-          <p className="text-sm mt-2">Please try again with a different file</p>
+          Error loading file
         </div>
       );
     }
