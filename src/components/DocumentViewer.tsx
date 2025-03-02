@@ -17,8 +17,20 @@ interface DocumentViewerProps {
   isHighlighter?: boolean;
 }
 
+/**
+ * DocumentViewer Component
+ * 
+ * A comprehensive document viewer that supports various file formats including PDF, TXT, and HTML.
+ * Features include document upload, URL loading, annotation tools, and accessibility features.
+ * 
+ * @param selectedColor - The currently selected annotation color
+ * @param isHighlighter - Boolean flag to determine if highlighter mode is active
+ * @returns A fully functional document viewer UI component
+ */
 export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerProps) => {
   const { toast } = useToast();
+  
+  // Custom hook that manages document state and actions
   const {
     url,
     setUrl,
@@ -31,10 +43,15 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
     setSelectedFile,
   } = useDocumentViewer();
 
-  // Auto-activate Bionic Reader and TTS when content is loaded
+  /**
+   * Auto-activates accessibility tools when content is loaded
+   * This useEffect activates Bionic Reader and Text-to-Speech tools
+   * when a document is loaded (either via file upload or URL)
+   */
   useEffect(() => {
     if (selectedFile || url) {
       try {
+        // Find and activate the Bionic Reader and TTS tools
         const toolbarTools = document.querySelectorAll('[data-tool-id]');
         const bionicTool = Array.from(toolbarTools).find(
           tool => tool.getAttribute('data-tool-id') === 'bionic'
@@ -43,6 +60,7 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
           tool => tool.getAttribute('data-tool-id') === 'tts'
         );
 
+        // Programmatically click the tools to activate them
         if (bionicTool instanceof HTMLElement) {
           bionicTool.click();
         }
@@ -61,6 +79,11 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
     }
   }, [selectedFile, url, toast]);
 
+  /**
+   * Handles keyboard events for the URL input field
+   * - Escape key clears the URL and removes focus
+   * - Enter key confirms the URL and shows a toast notification
+   */
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Escape') {
       setUrl('');
@@ -76,10 +99,17 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
     }
   };
 
+  /**
+   * Updates the URL state when the input field changes
+   */
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(e.target.value);
   };
 
+  /**
+   * Handles file upload from the file input
+   * Includes validation for file size (25MB limit)
+   */
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const file = e.target.files?.[0];
@@ -117,6 +147,7 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
       aria-label="Document viewer"
     >
       <ErrorBoundary>
+        {/* Document Toolbar Section */}
         <div className="p-4 border-b border-border">
           <div className="flex items-center justify-between gap-2">
             <DocumentToolbar
@@ -131,6 +162,8 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
             </div>
           </div>
         </div>
+        
+        {/* Document Content Area */}
         <div className="flex-1 p-4 relative">
           <UrlInput 
             url={url}
@@ -174,6 +207,8 @@ export const DocumentViewer = ({ selectedColor, isHighlighter }: DocumentViewerP
             </ErrorBoundary>
           </div>
         </div>
+        
+        {/* Hidden file input for document upload */}
         <input
           type="file"
           ref={fileInputRef}

@@ -6,7 +6,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
-// Lazy load the viewers
+// Lazy load the viewers for better performance
 const PdfViewer = lazy(() => import('./viewers/PdfViewer').then(module => ({
   default: module.PdfViewer
 })));
@@ -21,6 +21,18 @@ interface DocumentPreviewProps {
   isHighlighter?: boolean;
 }
 
+/**
+ * DocumentPreview Component
+ * 
+ * Renders different document viewers based on the file type or URL.
+ * Supports PDF, TXT, HTML files and URL content through iframes.
+ * Handles lazy loading of viewer components and error states.
+ * 
+ * @param file - The file to be displayed, if any
+ * @param url - The URL to be displayed, if any
+ * @param selectedColor - The currently selected annotation color
+ * @param isHighlighter - Boolean flag to determine if highlighter mode is active
+ */
 export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   file,
   url,
@@ -30,12 +42,18 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const { toast } = useToast();
   const [loadError, setLoadError] = useState<string | null>(null);
 
+  /**
+   * Loading indicator for lazy-loaded components
+   */
   const LoadingFallback = () => (
     <div className="flex items-center justify-center h-full">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" aria-label="Loading document"></div>
     </div>
   );
 
+  /**
+   * Custom error component for ErrorBoundary
+   */
   const ErrorFallback = ({ error, resetErrorBoundary }: { error: Error, resetErrorBoundary: () => void }) => (
     <div className="flex items-center justify-center h-full p-4">
       <Alert variant="destructive" className="max-w-md">
@@ -56,6 +74,9 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     </div>
   );
 
+  /**
+   * Handles errors from document loading and displays appropriate messages
+   */
   const handleError = (error: Error) => {
     console.error("Document preview error:", error);
     setLoadError(error.message || "Failed to load document");
@@ -66,6 +87,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     });
   };
 
+  // Display error state if there was a problem loading the document
   if (loadError) {
     return (
       <div 
@@ -90,6 +112,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     );
   }
 
+  // Display empty state when no document is loaded
   if (!file && !url) {
     return (
       <div 
@@ -105,6 +128,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     );
   }
 
+  // Handle file preview based on file type
   if (file) {
     try {
       const fileType = getFileType(file);
@@ -134,6 +158,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
             </ErrorBoundary>
           );
         default:
+          // Handle unsupported file types
           return (
             <div 
               className="flex items-center justify-center h-full p-4"
@@ -171,8 +196,9 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     }
   }
 
+  // Handle URL preview
   if (url) {
-    // Handle PDF URLs
+    // Special handling for PDF URLs
     if (url.toLowerCase().endsWith('.pdf')) {
       return (
         <div className="h-full overflow-auto">
