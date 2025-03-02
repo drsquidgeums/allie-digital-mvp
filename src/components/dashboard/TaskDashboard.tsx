@@ -1,7 +1,7 @@
 
 import React, { useCallback, useEffect } from "react";
 import { TaskPlanner } from "../TaskPlanner";
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { TaskListCard } from "./TaskListCard";
 import { Sidebar } from "@/components/Sidebar";
@@ -42,11 +42,14 @@ export const TaskDashboard = React.memo(() => {
         onFileDelete={() => {}}
       />
       <div className="flex-1 p-6">
-        <Card className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative">
+        <Card className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative shadow-md">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-2xl font-bold">Task Dashboard</CardTitle>
+          </CardHeader>
           <div className="container mx-auto py-4 px-4">
-            <div className="flex flex-col h-[calc(100vh-8rem)]">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-full">
-                <Card className="p-4 shadow-lg lg:col-span-2 overflow-auto">
+            <div className="flex flex-col h-[calc(100vh-12rem)]">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
+                <Card className="p-4 shadow-md lg:col-span-2 overflow-auto border border-border">
                   <TaskPlanner 
                     selectedDate={date}
                     tasks={tasks}
@@ -55,8 +58,9 @@ export const TaskDashboard = React.memo(() => {
                     onDeleteTask={handleDeleteTask}
                   />
                 </Card>
-                <div className="space-y-4">
-                  <Card className="p-4 shadow-lg">
+                <div className="space-y-6">
+                  <Card className="p-4 shadow-md border border-border">
+                    <h3 className="text-lg font-semibold mb-2">Select Date</h3>
                     <Calendar
                       mode="single"
                       selected={date}
