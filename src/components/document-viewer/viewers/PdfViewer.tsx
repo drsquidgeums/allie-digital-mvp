@@ -10,7 +10,8 @@ import {
   Position,
   ScaledPosition, 
   LTWHP,
-  Scaled
+  Scaled,
+  T_ViewportHighlight
 } from 'react-pdf-highlighter';
 import { PdfControls } from './pdf/PdfControls';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -22,22 +23,8 @@ import '@/styles/pdf-viewer.css';
 import { pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-// Define our highlight type that aligns with the library's IHighlight
-type HighlightContent = {
-  text?: string;
-  image?: string;
-};
-
-type HighlightType = {
-  id: string;
-  content: HighlightContent;
-  position: {
-    boundingRect: Scaled & { pageNumber: number };
-    rects: Array<Scaled & { pageNumber: number }>;
-    pageNumber: number;
-  };
-  comment?: { text: string }; // Match the library's Comment type
-};
+// Define our highlight type to match the library's IHighlight
+type HighlightType = IHighlight;
 
 interface PdfViewerProps {
   file: File | null;
@@ -56,8 +43,8 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   const [numPages, setNumPages] = useState(0);
   const [pdfDocument, setPdfDocument] = useState<string | null>(null);
   const [scale, setScale] = useState(1.2);
-  const [highlights, setHighlights] = useState<HighlightType[]>([]);
-  const [selectedHighlight, setSelectedHighlight] = useState<HighlightType | null>(null);
+  const [highlights, setHighlights] = useState<IHighlight[]>([]);
+  const [selectedHighlight, setSelectedHighlight] = useState<IHighlight | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Convert File to URL or use provided URL
@@ -83,12 +70,12 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   };
 
   // Create new highlight from selection
-  const addHighlight = (highlight: HighlightType) => {
+  const addHighlight = (highlight: IHighlight) => {
     setHighlights([...highlights, highlight]);
   };
 
   // Get scroll position for highlight scrolling
-  const scrollToHighlight = (highlight: HighlightType) => {
+  const scrollToHighlight = (highlight: IHighlight) => {
     const { pageNumber } = highlight.position;
     setCurrentPage(pageNumber);
     
@@ -113,21 +100,14 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     if (!isHighlighter) return null;
     
     // Create a new highlight with correct types
-    const newHighlight: HighlightType = {
+    const newHighlight: IHighlight = {
       id: `highlight_${Date.now()}`,
       content,
-      position: {
-        boundingRect: {
-          ...position.boundingRect,
-          pageNumber: position.pageNumber
-        },
-        rects: position.rects.map(rect => ({
-          ...rect,
-          pageNumber: position.pageNumber
-        })),
-        pageNumber: position.pageNumber
-      },
-      comment: { text: "" }
+      position,
+      comment: {
+        text: "",
+        emoji: "💬"
+      }
     };
     
     addHighlight(newHighlight);
@@ -163,9 +143,9 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
             {(pdfDocument) => (
               <PdfHighlighter
                 pdfDocument={pdfDocument}
-                enableAreaSelection={(event) => false}
+                enableAreaSelection={() => false}
                 highlightTransform={(
-                  highlight, 
+                  highlight: T_ViewportHighlight<IHighlight>, 
                   index, 
                   setTip, 
                   hideTip,
@@ -183,11 +163,13 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                       comment={highlight.comment}
                       key={index}
                       onClick={() => {
-                        setSelectedHighlight(highlight as any);
+                        setSelectedHighlight(highlight);
                       }}
                       onMouseOver={() => {
-                        setTip(highlight.content.text || "", highlight.position);
-                        setSelectedHighlight(highlight as any);
+                        if (highlight.content && highlight.content.text) {
+                          setTip(highlight, highlight.position);
+                        }
+                        setSelectedHighlight(highlight);
                       }}
                       onMouseOut={() => {
                         hideTip();
@@ -199,9 +181,9 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                 onScrollChange={() => {
                   setSelectedHighlight(null);
                 }}
-                scrollRef={() => containerRef.current}
+                scrollRef={containerRef}
                 onSelectionFinished={handleSelectionFinished}
-                highlights={highlights as any}
+                highlights={highlights}
               />
             )}
           </PdfLoader>
