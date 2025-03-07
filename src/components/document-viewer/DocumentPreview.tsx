@@ -7,9 +7,11 @@ import { EmptyState } from './viewers/EmptyState';
 import { ErrorDisplay } from './viewers/ErrorDisplay';
 import { LoadingFallback } from './viewers/LoadingFallback';
 import { IframeViewer } from './viewers/IframeViewer';
-import { PdfViewer } from './viewers/PdfViewer';
 
-// Lazy load the text viewer for better performance
+// Lazy load the viewers for better performance
+const PdfViewer = lazy(() => import('./viewers/PdfViewer').then(module => ({
+  default: module.PdfViewer
+})));
 const TextViewer = lazy(() => import('./viewers/TextViewer').then(module => ({
   default: module.TextViewer
 })));
@@ -75,19 +77,19 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   if (file) {
     try {
       const fileType = getFileType(file);
-      console.log("Rendering file type:", fileType);
-      
       switch (fileType) {
         case 'pdf':
           return (
             <div className="h-full overflow-auto">
               <ErrorBoundary>
-                <PdfViewer
-                  file={file}
-                  url=""
-                  selectedColor={selectedColor}
-                  isHighlighter={isHighlighter}
-                />
+                <Suspense fallback={<LoadingFallback />}>
+                  <PdfViewer
+                    file={file}
+                    url=""
+                    selectedColor={selectedColor}
+                    isHighlighter={isHighlighter}
+                  />
+                </Suspense>
               </ErrorBoundary>
             </div>
           );
@@ -127,12 +129,14 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       return (
         <div className="h-full overflow-auto">
           <ErrorBoundary>
-            <PdfViewer
-              file={null}
-              url={url}
-              selectedColor={selectedColor}
-              isHighlighter={isHighlighter}
-            />
+            <Suspense fallback={<LoadingFallback />}>
+              <PdfViewer
+                file={null}
+                url={url}
+                selectedColor={selectedColor}
+                isHighlighter={isHighlighter}
+              />
+            </Suspense>
           </ErrorBoundary>
         </div>
       );

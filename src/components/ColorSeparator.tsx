@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ChromePicker } from "react-color";
 import { useToast } from "@/hooks/use-toast";
@@ -11,8 +10,8 @@ interface ColorSeparatorProps {
 }
 
 export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
-  const [selectedColor, setSelectedColor] = React.useState("#ffff00"); // Default yellow for highlights
-  const [isHighlighter, setIsHighlighter] = React.useState(true); // Default to highlighter mode
+  const [selectedColor, setSelectedColor] = React.useState("#000000");
+  const [isHighlighter, setIsHighlighter] = React.useState(false);
   const { toast } = useToast();
 
   const handleColorChange = (color: any) => {
@@ -39,11 +38,11 @@ export const ColorSeparator = ({ onColorChange }: ColorSeparatorProps = {}) => {
   };
 
   const presetColors = [
-    "#FFFF00", // Yellow (default highlighter color)
-    "#FF9900", // Orange
-    "#99CC00", // Light Green
-    "#33B5E5", // Light Blue
     "#FF0000", // Red
+    "#00FF00", // Green
+    "#0000FF", // Blue
+    "#FFFF00", // Yellow
+    "#FF00FF", // Magenta
     "#9b87f5", // Primary Purple
     "#7E69AB", // Secondary Purple
     "#D6BCFA", // Light Purple
