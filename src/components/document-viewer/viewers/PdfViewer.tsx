@@ -1,7 +1,17 @@
 
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-import { PdfLoader, PdfHighlighter, Highlight, Popup, Tip } from 'react-pdf-highlighter';
+import { 
+  PdfLoader, 
+  PdfHighlighter, 
+  Highlight, 
+  Popup, 
+  Tip,
+  IHighlight,
+  Position,
+  ScaledPosition, 
+  LTWHP
+} from 'react-pdf-highlighter';
 import { PdfControls } from './pdf/PdfControls';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
@@ -11,31 +21,20 @@ import '@/styles/pdf-viewer.css';
 // Set worker path for PDF.js
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-type HighlightType = {
+// Define our highlight type that's compatible with the library's IHighlight
+interface HighlightType extends IHighlight {
   id: string;
   content: {
     text?: string;
     image?: string;
   };
   position: {
-    boundingRect: {
-      x1: number;
-      y1: number;
-      x2: number;
-      y2: number;
-      width: number;
-      height: number;
+    boundingRect: LTWHP & {
       pageNumber: number;
     };
-    rects: {
-      x1: number;
-      y1: number;
-      x2: number;
-      y2: number;
-      width: number;
-      height: number;
+    rects: Array<LTWHP & {
       pageNumber: number;
-    }[];
+    }>;
     pageNumber: number;
   };
   comment?: string;
@@ -111,6 +110,54 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     }, 300);
   };
 
+  // Function to handle setting the tip
+  const handleSetTip = (highlight: HighlightType, callback: () => Position) => {
+    setSelectedHighlight(highlight);
+  };
+
+  // Function to handle hiding the tip
+  const handleHideTip = () => {
+    setSelectedHighlight(null);
+  };
+
+  // Function to handle the scroll change
+  const handleScrollChange = () => {
+    setSelectedHighlight(null);
+  };
+
+  // Function to handle selection finished
+  const handleSelectionFinished = (
+    position: ScaledPosition,
+    content: { text?: string; image?: string },
+    hideTip: () => void,
+    transformSelection: () => void
+  ) => {
+    if (!isHighlighter) return null;
+    
+    const comment = "";
+    const newHighlight: HighlightType = {
+      id: `highlight_${Date.now()}`,
+      content,
+      position: {
+        ...position,
+        boundingRect: {
+          ...position.boundingRect,
+          pageNumber: position.pageNumber
+        },
+        rects: position.rects.map(rect => ({
+          ...rect,
+          pageNumber: position.pageNumber
+        }))
+      },
+      comment
+    };
+    
+    addHighlight(newHighlight);
+    hideTip();
+    transformSelection();
+    return null;
+  };
+
   // Loading state when PDF is not yet available
   if (!pdfDocument) {
     return (
@@ -158,47 +205,24 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                       comment={highlight.comment}
                       key={index}
                       onMouseOver={() => {
-                        setTip(highlight.content.text || '', () => highlight.position);
-                        setSelectedHighlight(highlight);
+                        setTip(highlight.content.text || '', highlight.position);
+                        setSelectedHighlight(highlight as HighlightType);
                       }}
                       onMouseOut={() => {
                         hideTip();
                         setSelectedHighlight(null);
                       }}
                       onClick={() => {
-                        setSelectedHighlight(highlight);
+                        setSelectedHighlight(highlight as HighlightType);
                       }}
-                      styleProps={{
-                        backgroundColor: highlightColor
-                      }}
+                      style={{ backgroundColor: highlightColor }}
                     />
                   );
                 }}
-                onScrollChange={() => {
-                  setSelectedHighlight(null);
-                }}
+                onScrollChange={handleScrollChange}
                 scrollRef={containerRef}
-                onSelectionFinished={(
-                  position,
-                  content,
-                  hideTip,
-                  transformSelection
-                ) => {
-                  if (!isHighlighter) return;
-                  
-                  const comment = "";
-                  const newHighlight = {
-                    id: `highlight_${Date.now()}`,
-                    content,
-                    position,
-                    comment
-                  };
-                  
-                  addHighlight(newHighlight);
-                  hideTip();
-                  transformSelection();
-                }}
-                highlights={highlights}
+                onSelectionFinished={handleSelectionFinished}
+                highlights={highlights as IHighlight[]}
               />
             )}
           </PdfLoader>
