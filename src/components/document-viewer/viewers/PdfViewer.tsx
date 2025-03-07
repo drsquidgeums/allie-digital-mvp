@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import { 
   PdfLoader, 
@@ -158,12 +157,12 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                       }}
                       onMouseOver={() => {
                         if (highlight.content && highlight.content.text) {
-                          // Fix: Use a proper callback function for setTip
-                          setTip((highlight) => (
+                          setTip(
                             <div className="highlight-tooltip">
                               {highlight.content.text}
-                            </div>
-                          ), highlight.position);
+                            </div>,
+                            highlight.position
+                          );
                         }
                         setSelectedHighlight(highlight);
                       }}
@@ -177,10 +176,8 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                 onScrollChange={() => {
                   setSelectedHighlight(null);
                 }}
-                // Fix: scrollRef expects a callback function
                 scrollRef={(scrollTo) => {
-                  // This function receives scrollTo function and returns nothing
-                  // It can be used to store the scrollTo function for later use
+                  // Store the scrollTo function or implement scrolling logic here
                 }}
                 onSelectionFinished={handleSelectionFinished}
                 highlights={highlights}
