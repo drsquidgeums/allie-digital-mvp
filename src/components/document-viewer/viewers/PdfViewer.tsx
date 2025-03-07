@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+
+import React, { useEffect, useRef, useState } from 'react';
 import { usePdfRenderer } from './pdf/usePdfRenderer';
-import { usePdfHighlighter } from './pdf/PdfHighlighter';
+import { usePdfHighlighter } from './pdf/usePdfHighlighter';
 import { PdfControls } from './pdf/PdfControls';
+import { LoadingFallback } from './LoadingFallback';
 
 interface PdfViewerProps {
   file: File | null;
@@ -17,11 +19,18 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   isHighlighter = false
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { pdf, currentPage, isLoading, loadPDF, renderPage, handlePageChange } = usePdfRenderer();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isTextLayerReady, setIsTextLayerReady] = useState(false);
+  const { pdf, currentPage, totalPages, isLoading, loadPDF, renderPage, handlePageChange } = usePdfRenderer();
   const { handleHighlight } = usePdfHighlighter();
 
   useEffect(() => {
-    loadPDF(file, url);
+    const loadDocument = async () => {
+      await loadPDF(file, url);
+    };
+    
+    loadDocument();
+    
     return () => {
       if (pdf) {
         pdf.destroy();
@@ -38,46 +47,81 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 
       const { page, viewport } = result;
       const canvas = canvasRef.current;
-      const context = canvas.getContext('2d')!;
+      const context = canvas.getContext('2d');
+      
+      if (!context) return;
 
+      // Set canvas dimensions to match PDF page dimensions
       canvas.height = viewport.height;
       canvas.width = viewport.width;
 
+      // Create the rendering context
       const renderContext = {
         canvasContext: context,
         viewport: viewport,
       };
 
-      await page.render(renderContext).promise;
+      try {
+        // Render the page
+        await page.render(renderContext).promise;
+        
+        // Wait a bit for the render to complete before enabling text layer
+        setTimeout(() => {
+          setIsTextLayerReady(true);
+        }, 100);
+      } catch (error) {
+        console.error('Error rendering PDF page:', error);
+      }
     };
 
-    renderCurrentPage();
-  }, [currentPage, renderPage]);
+    if (pdf) {
+      renderCurrentPage();
+    }
+  }, [currentPage, renderPage, pdf]);
+
+  // Apply selected color to text highlights
+  useEffect(() => {
+    if (containerRef.current && isHighlighter) {
+      const highlights = containerRef.current.querySelectorAll('.highlight');
+      highlights.forEach((highlight) => {
+        if (highlight instanceof HTMLElement) {
+          highlight.style.backgroundColor = selectedColor || '#ffff00';
+        }
+      });
+    }
+  }, [selectedColor, isHighlighter]);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <LoadingFallback />;
   }
 
   return (
-    <div className="flex flex-col h-full overflow-auto">
+    <div className="flex flex-col h-full" ref={containerRef}>
       <PdfControls
         currentPage={currentPage}
-        totalPages={pdf?.numPages || 1}
+        totalPages={totalPages || 1}
         onPageChange={handlePageChange}
         onHighlight={handleHighlight}
         selectedColor={selectedColor}
         isHighlighter={isHighlighter}
       />
-      <div className="flex-1 overflow-auto p-4">
-        <canvas
-          ref={canvasRef}
-          className="mx-auto"
-          style={{ backgroundColor: 'white' }}
-        />
+      <div className="flex-1 overflow-auto p-4 bg-white">
+        <div className="relative mx-auto" style={{ width: 'fit-content' }}>
+          <canvas
+            ref={canvasRef}
+            className="shadow-md"
+            style={{ display: 'block' }}
+          />
+          {isTextLayerReady && (
+            <div 
+              className="absolute top-0 left-0 right-0 bottom-0 pointer-events-auto"
+              style={{ 
+                opacity: 1,
+                userSelect: 'text'
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

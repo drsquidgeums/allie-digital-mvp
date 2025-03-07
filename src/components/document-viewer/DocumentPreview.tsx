@@ -77,6 +77,8 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   if (file) {
     try {
       const fileType = getFileType(file);
+      console.log("Rendering file type:", fileType);
+      
       switch (fileType) {
         case 'pdf':
           return (

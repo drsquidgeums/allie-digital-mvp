@@ -25,6 +25,7 @@ export const usePdfRenderer = () => {
   // State management
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [scale] = useState(1.5); // Default zoom level
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
@@ -38,7 +39,7 @@ export const usePdfRenderer = () => {
   const loadPDF = useCallback(async (file: File | null, url: string): Promise<void> => {
     try {
       setIsLoading(true);
-      let pdfData: Uint8Array;
+      let pdfData: Uint8Array | undefined;
 
       // Get PDF data from either file or URL
       if (file) {
@@ -51,6 +52,10 @@ export const usePdfRenderer = () => {
       } else {
         setIsLoading(false);
         return;
+      }
+
+      if (!pdfData) {
+        throw new Error("No PDF data available");
       }
 
       // Initialize PDF.js with the worker if needed
@@ -68,10 +73,12 @@ export const usePdfRenderer = () => {
 
       // Wait for the PDF to load and set initial state
       const pdfDoc = await loadingTask.promise;
+      console.log('PDF document loaded successfully:', pdfDoc);
+      
       setPdf(pdfDoc);
+      setTotalPages(pdfDoc.numPages);
       setCurrentPage(1);
-      await renderPage(1, pdfDoc);
-
+      
       toast({
         title: "PDF loaded",
         description: "Document has been loaded successfully",
@@ -102,6 +109,8 @@ export const usePdfRenderer = () => {
     if (!pdfDoc) return;
 
     try {
+      console.log(`Rendering page ${pageNumber} of PDF document`);
+      
       // Get the page object from the PDF document
       const page = await pdfDoc.getPage(pageNumber);
       
@@ -126,14 +135,15 @@ export const usePdfRenderer = () => {
    */
   const handlePageChange = useCallback((newPage: number): void => {
     if (pdf && newPage >= 1 && newPage <= pdf.numPages) {
+      console.log(`Changing to page ${newPage}`);
       setCurrentPage(newPage);
-      renderPage(newPage);
     }
-  }, [pdf, renderPage]);
+  }, [pdf]);
 
   return {
     pdf,
     currentPage,
+    totalPages,
     isLoading,
     loadPDF,
     renderPage,
