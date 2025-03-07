@@ -11,7 +11,7 @@ import {
   ScaledPosition, 
   LTWHP,
   Scaled,
-  T_ViewportHighlight
+  ViewportHighlight
 } from 'react-pdf-highlighter';
 import { PdfControls } from './pdf/PdfControls';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -145,7 +145,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                 pdfDocument={pdfDocument}
                 enableAreaSelection={() => false}
                 highlightTransform={(
-                  highlight: T_ViewportHighlight<IHighlight>, 
+                  highlight: ViewportHighlight<IHighlight>, 
                   index, 
                   setTip, 
                   hideTip,
@@ -181,7 +181,11 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                 onScrollChange={() => {
                   setSelectedHighlight(null);
                 }}
-                scrollRef={containerRef}
+                scrollRef={(highlight) => {
+                  if (containerRef.current && highlight) {
+                    scrollToHighlight(highlight);
+                  }
+                }}
                 onSelectionFinished={handleSelectionFinished}
                 highlights={highlights}
               />
