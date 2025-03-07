@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import { 
   PdfLoader, 
@@ -47,7 +46,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   const [selectedHighlight, setSelectedHighlight] = useState<IHighlight | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Convert File to URL or use provided URL
   useEffect(() => {
     if (file) {
       const fileURL = URL.createObjectURL(file);
@@ -62,24 +60,20 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     }
   }, [file, url]);
 
-  // Handle page change
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= numPages) {
       setCurrentPage(newPage);
     }
   };
 
-  // Create new highlight from selection
   const addHighlight = (highlight: IHighlight) => {
     setHighlights([...highlights, highlight]);
   };
 
-  // Get scroll position for highlight scrolling
   const scrollToHighlight = (highlight: IHighlight) => {
     const { pageNumber } = highlight.position;
     setCurrentPage(pageNumber);
     
-    // Scroll to position after page change
     setTimeout(() => {
       const highlightElement = document.querySelector(
         `[data-highlight-id="${highlight.id}"]`
@@ -90,7 +84,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     }, 300);
   };
 
-  // Function to handle selection finished
   const handleSelectionFinished = (
     position: ScaledPosition,
     content: { text?: string; image?: string },
@@ -99,7 +92,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   ) => {
     if (!isHighlighter) return null;
     
-    // Create a new highlight with correct types
     const newHighlight: IHighlight = {
       id: `highlight_${Date.now()}`,
       content,
@@ -116,7 +108,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     return null;
   };
 
-  // Loading state when PDF is not yet available
   if (!pdfDocument) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -125,7 +116,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     );
   }
 
-  // Render PDF with support for highlights
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <PdfControls
@@ -145,7 +135,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                 pdfDocument={pdfDocument}
                 enableAreaSelection={() => false}
                 highlightTransform={(
-                  highlight: ViewportHighlight<IHighlight>, 
+                  highlight, 
                   index, 
                   setTip, 
                   hideTip,
@@ -181,11 +171,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                 onScrollChange={() => {
                   setSelectedHighlight(null);
                 }}
-                scrollRef={(highlight) => {
-                  if (containerRef.current && highlight) {
-                    scrollToHighlight(highlight);
-                  }
-                }}
+                scrollRef={containerRef}
                 onSelectionFinished={handleSelectionFinished}
                 highlights={highlights}
               />
