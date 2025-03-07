@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Camera, ImageDown } from 'lucide-react';
+import { Camera } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { toPng } from 'html-to-image';
 import {
@@ -9,63 +9,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 export const ScreenshotButton = () => {
   const { toast } = useToast();
   const [isSelecting, setIsSelecting] = useState(false);
   const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
-
-  const takeFullPageScreenshot = async () => {
-    try {
-      toast({
-        title: "Capturing page screenshot",
-        description: "Please wait while we process your screenshot...",
-      });
-
-      // Wait a moment for UI to update
-      await new Promise(resolve => setTimeout(resolve, 100));
-
-      const element = document.body;
-      const scale = window.devicePixelRatio;
-
-      const dataUrl = await toPng(element, {
-        quality: 1.0,
-        pixelRatio: scale,
-        filter: (node) => {
-          const element = node as HTMLElement;
-          return (
-            !element.id?.includes('screenshot-overlay') &&
-            !element.id?.includes('selection-box') &&
-            !element.classList?.contains('radix-toast')
-          );
-        },
-      });
-
-      // Trigger download
-      const link = document.createElement('a');
-      link.download = 'page-screenshot.png';
-      link.href = dataUrl;
-      link.click();
-
-      toast({
-        title: "Screenshot captured",
-        description: "Full page screenshot has been downloaded",
-      });
-    } catch (error) {
-      console.error('Error taking screenshot:', error);
-      toast({
-        title: "Error",
-        description: "Failed to capture screenshot",
-        variant: "destructive",
-      });
-    }
-  };
 
   const startSelection = () => {
     setIsSelecting(true);
@@ -237,32 +185,25 @@ export const ScreenshotButton = () => {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <Tooltip>
+      <TooltipTrigger asChild>
         <Button
           variant="outline"
           size="sm"
+          onClick={startSelection}
           disabled={isSelecting}
           className={buttonClassName}
-          aria-label="Screenshot options"
+          aria-label="Capture screenshot"
         >
           <Camera className="h-4 w-4" aria-hidden="true" />
         </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={startSelection}>
-          <span className="flex items-center gap-2">
-            <Camera className="h-4 w-4" /> 
-            <span>Area Screenshot</span>
-          </span>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={takeFullPageScreenshot}>
-          <span className="flex items-center gap-2">
-            <ImageDown className="h-4 w-4" />
-            <span>Full Page Screenshot</span>
-          </span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </TooltipTrigger>
+      <TooltipContent 
+        side="bottom"
+        className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+      >
+        Capture screenshot
+      </TooltipContent>
+    </Tooltip>
   );
 };
