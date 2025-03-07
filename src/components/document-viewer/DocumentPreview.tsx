@@ -7,11 +7,9 @@ import { EmptyState } from './viewers/EmptyState';
 import { ErrorDisplay } from './viewers/ErrorDisplay';
 import { LoadingFallback } from './viewers/LoadingFallback';
 import { IframeViewer } from './viewers/IframeViewer';
+import { PdfViewer } from './viewers/PdfViewer';
 
-// Lazy load the viewers for better performance
-const PdfViewer = lazy(() => import('./viewers/PdfViewer').then(module => ({
-  default: module.PdfViewer
-})));
+// Lazy load the text viewer for better performance
 const TextViewer = lazy(() => import('./viewers/TextViewer').then(module => ({
   default: module.TextViewer
 })));
@@ -84,14 +82,12 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           return (
             <div className="h-full overflow-auto">
               <ErrorBoundary>
-                <Suspense fallback={<LoadingFallback />}>
-                  <PdfViewer
-                    file={file}
-                    url=""
-                    selectedColor={selectedColor}
-                    isHighlighter={isHighlighter}
-                  />
-                </Suspense>
+                <PdfViewer
+                  file={file}
+                  url=""
+                  selectedColor={selectedColor}
+                  isHighlighter={isHighlighter}
+                />
               </ErrorBoundary>
             </div>
           );
@@ -131,14 +127,12 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       return (
         <div className="h-full overflow-auto">
           <ErrorBoundary>
-            <Suspense fallback={<LoadingFallback />}>
-              <PdfViewer
-                file={null}
-                url={url}
-                selectedColor={selectedColor}
-                isHighlighter={isHighlighter}
-              />
-            </Suspense>
+            <PdfViewer
+              file={null}
+              url={url}
+              selectedColor={selectedColor}
+              isHighlighter={isHighlighter}
+            />
           </ErrorBoundary>
         </div>
       );
