@@ -1,4 +1,6 @@
+
 import React from 'react';
+import { Highlighter } from 'lucide-react';
 
 interface PdfControlsProps {
   currentPage: number;
@@ -39,10 +41,11 @@ export const PdfControls: React.FC<PdfControlsProps> = ({
       {isHighlighter && (
         <button
           onClick={onHighlight}
-          className="px-3 py-1 rounded"
+          className="flex items-center gap-1 px-3 py-1 rounded"
           style={{ backgroundColor: selectedColor, color: 'white' }}
         >
-          Highlight Selection
+          <Highlighter className="h-4 w-4" />
+          <span>Highlight Selection</span>
         </button>
       )}
     </div>
