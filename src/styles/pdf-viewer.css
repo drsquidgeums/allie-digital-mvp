@@ -114,3 +114,16 @@
   position: absolute;
   z-index: 1000;
 }
+
+/* Fix highlighting display */
+.Highlight__parts {
+  pointer-events: none;
+}
+
+.Highlight__part {
+  background-color: var(--highlight-color, rgba(255, 235, 59, 0.5));
+}
+
+.PdfHighlighter {
+  user-select: text;
+}
