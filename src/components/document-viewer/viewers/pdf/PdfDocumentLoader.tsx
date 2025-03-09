@@ -35,24 +35,40 @@ export const PdfDocumentLoader: React.FC<PdfDocumentLoaderProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Transform the highlight format to match the expected structure
-  const transformHighlights = (highlights: IHighlight[]): IHighlight[] => {
-    return highlights.map(highlight => ({
-      ...highlight,
-      position: {
-        ...highlight.position,
-        boundingRect: {
-          ...highlight.position.boundingRect,
-          // Add the missing properties required by the library
-          left: highlight.position.boundingRect.x || 0,
-          top: highlight.position.boundingRect.y || 0,
-        },
-        rects: highlight.position.rects.map(rect => ({
-          ...rect,
-          left: rect.x || 0,
-          top: rect.y || 0,
-        }))
+  const transformHighlights = (highlights: IHighlight[]): any[] => {
+    return highlights.map(highlight => {
+      // Create a deep copy to avoid mutating the original
+      const transformedHighlight = JSON.parse(JSON.stringify(highlight));
+      
+      if (transformedHighlight.position && transformedHighlight.position.boundingRect) {
+        // Add the required left and top properties
+        transformedHighlight.position.boundingRect = {
+          ...transformedHighlight.position.boundingRect,
+          // Use width/height directly if x/y are not available
+          left: transformedHighlight.position.boundingRect.left || 0,
+          top: transformedHighlight.position.boundingRect.top || 0,
+          right: transformedHighlight.position.boundingRect.right || 
+                 (transformedHighlight.position.boundingRect.left || 0) + 
+                 (transformedHighlight.position.boundingRect.width || 0),
+          bottom: transformedHighlight.position.boundingRect.bottom || 
+                  (transformedHighlight.position.boundingRect.top || 0) + 
+                  (transformedHighlight.position.boundingRect.height || 0)
+        };
       }
-    }));
+      
+      // Transform each rect in the rects array
+      if (transformedHighlight.position && transformedHighlight.position.rects) {
+        transformedHighlight.position.rects = transformedHighlight.position.rects.map((rect: any) => ({
+          ...rect,
+          left: rect.left || 0,
+          top: rect.top || 0,
+          right: rect.right || (rect.left || 0) + (rect.width || 0),
+          bottom: rect.bottom || (rect.top || 0) + (rect.height || 0)
+        }));
+      }
+      
+      return transformedHighlight;
+    });
   };
 
   const transformedHighlights = transformHighlights(highlights);
