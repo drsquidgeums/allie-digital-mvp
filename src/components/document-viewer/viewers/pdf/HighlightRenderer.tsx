@@ -26,29 +26,42 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
 }) => {
   const highlightColor = isSelected ? "rgba(255, 226, 143, 1)" : selectedColor || "rgba(255, 235, 59, 0.5)";
   
-  // Create the proper position format from the highlight position
-  const position = {
-    boundingRect: {
-      ...highlight.position.boundingRect,
-      left: highlight.position.boundingRect.width ? highlight.position.boundingRect.width : 0,
-      top: highlight.position.boundingRect.height ? highlight.position.boundingRect.height : 0,
-      right: (highlight.position.boundingRect.width || 0) + (highlight.position.boundingRect.width || 0),
-      bottom: (highlight.position.boundingRect.height || 0) + (highlight.position.boundingRect.height || 0)
-    },
-    rects: highlight.position.rects.map(rect => ({
-      ...rect,
-      left: rect.width ? rect.width : 0,
-      top: rect.height ? rect.height : 0,
-      right: (rect.width || 0) + (rect.width || 0),
-      bottom: (rect.height || 0) + (rect.height || 0)
-    })),
-    pageNumber: highlight.position.pageNumber
+  // Make sure the position object has all required properties
+  const ensureCompletePosition = (highlight: IHighlight) => {
+    // Deep clone the position to avoid modifying the original
+    const position = JSON.parse(JSON.stringify(highlight.position));
+    
+    // Ensure boundingRect has all required properties
+    if (position.boundingRect) {
+      position.boundingRect = {
+        ...position.boundingRect,
+        left: position.boundingRect.left || position.boundingRect.x || 0,
+        top: position.boundingRect.top || position.boundingRect.y || 0,
+        right: position.boundingRect.right || (position.boundingRect.x || 0) + (position.boundingRect.width || 0),
+        bottom: position.boundingRect.bottom || (position.boundingRect.y || 0) + (position.boundingRect.height || 0),
+      };
+    }
+    
+    // Ensure each rect in rects array has all required properties
+    if (position.rects && Array.isArray(position.rects)) {
+      position.rects = position.rects.map(rect => ({
+        ...rect,
+        left: rect.left || rect.x || 0,
+        top: rect.top || rect.y || 0,
+        right: rect.right || (rect.x || 0) + (rect.width || 0),
+        bottom: rect.bottom || (rect.y || 0) + (rect.height || 0),
+      }));
+    }
+    
+    return position;
   };
+  
+  const completePosition = ensureCompletePosition(highlight);
   
   return (
     <Highlight
       isScrolledTo={isScrolledTo}
-      position={position}
+      position={completePosition}
       comment={highlight.comment}
       key={index}
       onClick={() => onHighlightClick(highlight)}

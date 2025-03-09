@@ -34,6 +34,29 @@ export const PdfDocumentLoader: React.FC<PdfDocumentLoaderProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Transform the highlight format to match the expected structure
+  const transformHighlights = (highlights: IHighlight[]): IHighlight[] => {
+    return highlights.map(highlight => ({
+      ...highlight,
+      position: {
+        ...highlight.position,
+        boundingRect: {
+          ...highlight.position.boundingRect,
+          // Add the missing properties required by the library
+          left: highlight.position.boundingRect.x || 0,
+          top: highlight.position.boundingRect.y || 0,
+        },
+        rects: highlight.position.rects.map(rect => ({
+          ...rect,
+          left: rect.x || 0,
+          top: rect.y || 0,
+        }))
+      }
+    }));
+  };
+
+  const transformedHighlights = transformHighlights(highlights);
+
   return (
     <div className="flex-1 overflow-auto bg-gray-100" ref={containerRef}>
       <div className="pdf-container p-4">
@@ -85,7 +108,7 @@ export const PdfDocumentLoader: React.FC<PdfDocumentLoaderProps> = ({
                 // Store the scrollTo function or implement scrolling logic here
               }}
               onSelectionFinished={onSelectionFinished}
-              highlights={highlights}
+              highlights={transformedHighlights}
             />
           )}
         </PdfLoader>
