@@ -1,20 +1,10 @@
 
-import React, { lazy, Suspense, useState } from 'react';
-import { getFileType } from './FileConverter';
+import React, { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
-import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { EmptyState } from './viewers/EmptyState';
 import { ErrorDisplay } from './viewers/ErrorDisplay';
-import { LoadingFallback } from './viewers/LoadingFallback';
-import { IframeViewer } from './viewers/IframeViewer';
-
-// Lazy load the viewers for better performance
-const PdfViewer = lazy(() => import('./viewers/PdfViewer').then(module => ({
-  default: module.PdfViewer
-})));
-const TextViewer = lazy(() => import('./viewers/TextViewer').then(module => ({
-  default: module.TextViewer
-})));
+import { FileTypeHandler } from './viewers/file-viewers/FileTypeHandler';
+import { UrlHandler } from './viewers/file-viewers/UrlHandler';
 
 interface DocumentPreviewProps {
   file: File | null;
@@ -26,14 +16,8 @@ interface DocumentPreviewProps {
 /**
  * DocumentPreview Component
  * 
- * Renders different document viewers based on the file type or URL.
- * Supports PDF, TXT, HTML files and URL content through iframes.
- * Handles lazy loading of viewer components and error states.
- * 
- * @param file - The file to be displayed, if any
- * @param url - The URL to be displayed, if any
- * @param selectedColor - The currently selected annotation color
- * @param isHighlighter - Boolean flag to determine if highlighter mode is active
+ * Main container component that orchestrates the different document viewers
+ * based on input type (file or URL) and handles error states.
  */
 export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   file,
@@ -73,44 +57,16 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     return <EmptyState />;
   }
 
-  // Handle file preview based on file type
+  // Handle file preview
   if (file) {
     try {
-      const fileType = getFileType(file);
-      switch (fileType) {
-        case 'pdf':
-          return (
-            <div className="h-full overflow-auto">
-              <ErrorBoundary>
-                <Suspense fallback={<LoadingFallback />}>
-                  <PdfViewer
-                    file={file}
-                    url=""
-                    selectedColor={selectedColor}
-                    isHighlighter={isHighlighter}
-                  />
-                </Suspense>
-              </ErrorBoundary>
-            </div>
-          );
-        case 'txt':
-        case 'html':
-          return (
-            <ErrorBoundary>
-              <Suspense fallback={<LoadingFallback />}>
-                <TextViewer file={file} />
-              </Suspense>
-            </ErrorBoundary>
-          );
-        default:
-          // Handle unsupported file types
-          return (
-            <ErrorDisplay 
-              title="Unsupported File Type" 
-              description="The file type you're trying to view is not supported. Please try a PDF, TXT, or HTML file." 
-            />
-          );
-      }
+      return (
+        <FileTypeHandler
+          file={file}
+          selectedColor={selectedColor}
+          isHighlighter={isHighlighter}
+        />
+      );
     } catch (error) {
       handleError(error as Error);
       return (
@@ -124,32 +80,13 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
 
   // Handle URL preview
   if (url) {
-    // Special handling for PDF URLs
-    if (url.toLowerCase().endsWith('.pdf')) {
-      return (
-        <div className="h-full overflow-auto">
-          <ErrorBoundary>
-            <Suspense fallback={<LoadingFallback />}>
-              <PdfViewer
-                file={null}
-                url={url}
-                selectedColor={selectedColor}
-                isHighlighter={isHighlighter}
-              />
-            </Suspense>
-          </ErrorBoundary>
-        </div>
-      );
-    }
-
-    // Handle all other URLs with iframe
     return (
-      <ErrorBoundary>
-        <IframeViewer 
-          url={url} 
-          onError={() => setLoadError("Failed to load URL content")} 
-        />
-      </ErrorBoundary>
+      <UrlHandler
+        url={url}
+        selectedColor={selectedColor}
+        isHighlighter={isHighlighter}
+        onError={() => setLoadError("Failed to load URL content")}
+      />
     );
   }
 

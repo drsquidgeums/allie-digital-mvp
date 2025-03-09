@@ -63,15 +63,11 @@ export const PdfDocumentLoader: React.FC<PdfDocumentLoaderProps> = ({
                     onHighlightClick={() => setSelectedHighlight(highlight)}
                     onHighlightMouseOver={(highlight) => {
                       if (highlight.content && highlight.content.text) {
-                        // Create the tooltip content first
-                        const tipNode = (
+                        setTip(highlight, () => (
                           <div className="highlight-tooltip">
                             {highlight.content.text}
                           </div>
-                        );
-                        
-                        // Call setTip with highlight and callback function
-                        setTip(highlight, () => tipNode);
+                        ));
                       }
                       setSelectedHighlight(highlight);
                     }}

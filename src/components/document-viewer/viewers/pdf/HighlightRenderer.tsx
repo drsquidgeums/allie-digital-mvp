@@ -30,17 +30,17 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
   const position = {
     boundingRect: {
       ...highlight.position.boundingRect,
-      left: highlight.position.boundingRect.x || 0,
-      top: highlight.position.boundingRect.y || 0,
-      right: (highlight.position.boundingRect.x || 0) + (highlight.position.boundingRect.width || 0),
-      bottom: (highlight.position.boundingRect.y || 0) + (highlight.position.boundingRect.height || 0)
+      left: highlight.position.boundingRect.width ? highlight.position.boundingRect.width : 0,
+      top: highlight.position.boundingRect.height ? highlight.position.boundingRect.height : 0,
+      right: (highlight.position.boundingRect.width || 0) + (highlight.position.boundingRect.width || 0),
+      bottom: (highlight.position.boundingRect.height || 0) + (highlight.position.boundingRect.height || 0)
     },
     rects: highlight.position.rects.map(rect => ({
       ...rect,
-      left: rect.x || 0,
-      top: rect.y || 0,
-      right: (rect.x || 0) + (rect.width || 0),
-      bottom: (rect.y || 0) + (rect.height || 0)
+      left: rect.width ? rect.width : 0,
+      top: rect.height ? rect.height : 0,
+      right: (rect.width || 0) + (rect.width || 0),
+      bottom: (rect.height || 0) + (rect.height || 0)
     })),
     pageNumber: highlight.position.pageNumber
   };
