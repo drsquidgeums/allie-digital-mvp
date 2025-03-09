@@ -2,7 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
-import { highlightPlugin, RenderHighlightTargetProps, RenderHighlightsProps } from '@react-pdf-viewer/highlight';
+import { 
+  highlightPlugin, 
+  RenderHighlightTargetProps, 
+  RenderHighlightsProps 
+} from '@react-pdf-viewer/highlight';
 
 // Import the styles
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -35,7 +39,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 
   // Create the highlight plugin with custom settings
   const highlightPluginInstance = highlightPlugin({
-    enableAreaSelection: true,
     renderHighlightTarget: (props: RenderHighlightTargetProps) => (
       <div
         style={{
@@ -59,7 +62,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
               padding: '8px',
               color: isHighlighter ? 'black' : 'white',
             }}
-            onClick={() => props.onConfirm()}
+            onClick={() => props.trigger()}
           >
             {isHighlighter ? 'Highlight' : 'Annotate'}
           </button>
@@ -68,23 +71,25 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     ),
     renderHighlights: (props: RenderHighlightsProps) => (
       <div>
-        {props.highlights.map((highlight) => (
-          <div
-            key={highlight.id}
-            style={{
-              background: isHighlighter ? `${selectedColor}80` : 'transparent',
-              border: isHighlighter ? 'none' : `2px solid ${selectedColor}`,
-              borderRadius: '4px',
-              position: 'absolute',
-              left: `${highlight.position.boundingRect.left}px`,
-              top: `${highlight.position.boundingRect.top}px`,
-              height: `${highlight.position.boundingRect.height}px`,
-              width: `${highlight.position.boundingRect.width}px`,
-              zIndex: 1,
-            }}
-            onClick={() => props.onClick(highlight)}
-          />
-        ))}
+        {props.pageIndex === props.currentPage && props.annotations
+          .filter(annotation => annotation.pageIndex === props.pageIndex)
+          .map((highlight) => (
+            <div
+              key={highlight.id}
+              style={{
+                background: isHighlighter ? `${selectedColor}80` : 'transparent',
+                border: isHighlighter ? 'none' : `2px solid ${selectedColor}`,
+                borderRadius: '4px',
+                position: 'absolute',
+                left: `${highlight.bounds.left}px`,
+                top: `${highlight.bounds.top}px`,
+                height: `${highlight.bounds.height}px`,
+                width: `${highlight.bounds.width}px`,
+                zIndex: 1,
+              }}
+              onMouseEnter={() => props.jumpToHighlight(highlight)}
+            />
+          ))}
       </div>
     ),
   });
