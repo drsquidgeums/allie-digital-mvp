@@ -71,7 +71,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     ),
     renderHighlights: (props: RenderHighlightsProps) => (
       <div>
-        {props.highlightAreas
+        {props.highlights
           .filter(area => area.pageIndex === props.pageIndex)
           .map((highlight) => (
             <div
@@ -87,7 +87,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                 width: `${highlight.width}px`,
                 zIndex: 1,
               }}
-              onMouseEnter={() => props.gotoHighlightArea(highlight)}
+              onMouseEnter={() => props.jumpToHighlight(highlight)}
             />
           ))}
       </div>
