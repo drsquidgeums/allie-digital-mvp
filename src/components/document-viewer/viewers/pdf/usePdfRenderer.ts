@@ -38,7 +38,7 @@ export const usePdfRenderer = () => {
   const loadPDF = useCallback(async (file: File | null, url: string): Promise<void> => {
     try {
       setIsLoading(true);
-      let pdfData: Uint8Array;
+      let pdfData: Uint8Array | undefined;
 
       // Get PDF data from either file or URL
       if (file) {
@@ -56,6 +56,11 @@ export const usePdfRenderer = () => {
       // Initialize PDF.js with the worker if needed
       if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
         pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+      }
+
+      if (!pdfData) {
+        setIsLoading(false);
+        return;
       }
 
       // Create a loading task to parse the PDF data
