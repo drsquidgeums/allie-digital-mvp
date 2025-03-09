@@ -62,7 +62,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
               padding: '8px',
               color: isHighlighter ? 'black' : 'white',
             }}
-            onClick={() => props.trigger()}
+            onClick={() => props.toggle()}
           >
             {isHighlighter ? 'Highlight' : 'Annotate'}
           </button>
@@ -71,8 +71,8 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     ),
     renderHighlights: (props: RenderHighlightsProps) => (
       <div>
-        {props.pageIndex === props.currentPage && props.annotations
-          .filter(annotation => annotation.pageIndex === props.pageIndex)
+        {props.highlightAreas
+          .filter(area => area.pageIndex === props.pageIndex)
           .map((highlight) => (
             <div
               key={highlight.id}
@@ -81,13 +81,13 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                 border: isHighlighter ? 'none' : `2px solid ${selectedColor}`,
                 borderRadius: '4px',
                 position: 'absolute',
-                left: `${highlight.bounds.left}px`,
-                top: `${highlight.bounds.top}px`,
-                height: `${highlight.bounds.height}px`,
-                width: `${highlight.bounds.width}px`,
+                left: `${highlight.left}px`,
+                top: `${highlight.top}px`,
+                height: `${highlight.height}px`,
+                width: `${highlight.width}px`,
                 zIndex: 1,
               }}
-              onMouseEnter={() => props.jumpToHighlight(highlight)}
+              onMouseEnter={() => props.gotoHighlightArea(highlight)}
             />
           ))}
       </div>
