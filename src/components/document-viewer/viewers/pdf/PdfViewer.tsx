@@ -150,7 +150,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 
   return (
     <div className="h-full pdf-container">
-      <Worker workerUrl="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js">
+      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
         <div style={{ height: '100%' }}>
           <Viewer
             fileUrl={fileUrl}
