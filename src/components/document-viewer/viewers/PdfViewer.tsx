@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import { 
   PdfLoader, 
@@ -157,12 +158,15 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                       }}
                       onMouseOver={() => {
                         if (highlight.content && highlight.content.text) {
-                          setTip(
+                          // Create a tip component using the Tip component from the library
+                          const tipNode = (
                             <div className="highlight-tooltip">
                               {highlight.content.text}
-                            </div>,
-                            highlight.position
+                            </div>
                           );
+                          
+                          // Call setTip with the highlight position
+                          setTip(highlight, () => tipNode);
                         }
                         setSelectedHighlight(highlight);
                       }}
