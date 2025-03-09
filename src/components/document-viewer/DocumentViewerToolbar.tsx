@@ -1,0 +1,41 @@
+
+import React from "react";
+import { DocumentToolbar } from "./DocumentToolbar";
+import { ToolbarTools } from "./ToolbarTools";
+import { ThemeProvider } from "../ThemeProvider";
+
+interface DocumentViewerToolbarProps {
+  onUpload: () => void;
+  onDownload: () => void;
+  onDelete: () => void;
+  hasFile: boolean;
+}
+
+/**
+ * DocumentViewerToolbar Component
+ * 
+ * Container for all toolbar-related components and actions
+ */
+export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
+  onUpload,
+  onDownload,
+  onDelete,
+  hasFile
+}) => {
+  return (
+    <div className="p-4 border-b border-border">
+      <div className="flex items-center justify-between gap-2">
+        <DocumentToolbar
+          onUpload={onUpload}
+          onDownload={onDownload}
+          onDelete={onDelete}
+          hasFile={hasFile}
+        />
+        <div className="flex items-center gap-2">
+          <ToolbarTools />
+          <ThemeProvider />
+        </div>
+      </div>
+    </div>
+  );
+};
