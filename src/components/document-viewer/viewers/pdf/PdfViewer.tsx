@@ -4,14 +4,31 @@ import { Worker, Viewer } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import { 
   highlightPlugin, 
-  RenderHighlightTargetProps, 
-  RenderHighlightsProps 
+  RenderHighlightTargetProps
 } from '@react-pdf-viewer/highlight';
 
 // Import the styles
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import '@react-pdf-viewer/highlight/lib/styles/index.css';
+
+// Define a custom interface for the highlight areas based on actual plugin structure
+interface HighlightArea {
+  id: string;
+  pageIndex: number;
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+}
+
+// Define our own RenderHighlightsProps to match what the plugin actually provides
+interface CustomRenderHighlightsProps {
+  pageIndex: number;
+  areas?: HighlightArea[];
+  onMouseEnter?: (area: HighlightArea) => void;
+  onMouseLeave?: (area: HighlightArea) => void;
+}
 
 interface PdfViewerProps {
   file: File | null;
@@ -69,9 +86,9 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
         </div>
       </div>
     ),
-    renderHighlights: (props: RenderHighlightsProps) => (
+    renderHighlights: (props: CustomRenderHighlightsProps) => (
       <div>
-        {Array.isArray(props.areas) && props.areas
+        {props.areas && Array.isArray(props.areas) && props.areas
           .filter(area => area.pageIndex === props.pageIndex)
           .map((highlight) => (
             <div
@@ -87,7 +104,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                 width: `${highlight.width}px`,
                 zIndex: 1,
               }}
-              onMouseEnter={() => props.mouseEnter && props.mouseEnter(highlight)}
+              onMouseEnter={() => props.onMouseEnter && props.onMouseEnter(highlight)}
             />
           ))}
       </div>
