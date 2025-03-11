@@ -24,6 +24,7 @@ interface DocumentViewerProps {
  * @returns A fully functional document viewer UI component
  */
 export const DocumentViewer = ({ 
+  file,
   selectedColor, 
   isHighlighter 
 }: DocumentViewerProps) => {
