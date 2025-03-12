@@ -26,6 +26,8 @@ export const FileInputHandler: React.FC<FileInputHandlerProps> = ({
     try {
       const file = e.target.files?.[0];
       if (file) {
+        console.log("File selected in FileInputHandler:", file.name);
+        
         // Basic validation
         if (file.size > 25 * 1024 * 1024) { // 25MB limit
           toast({

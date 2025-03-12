@@ -22,7 +22,9 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
   isHighlighter
 }) => {
   try {
+    console.log("FileTypeHandler received file:", file?.name);
     const fileType = getFileType(file);
+    console.log("Detected file type:", fileType);
     
     switch (fileType) {
       case 'pdf':
@@ -47,6 +49,7 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
         );
     }
   } catch (error) {
+    console.error("Error in FileTypeHandler:", error);
     return (
       <ErrorDisplay 
         title="Error Loading File" 

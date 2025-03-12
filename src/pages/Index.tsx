@@ -23,6 +23,13 @@ const Index = () => {
   // State management for file selection and annotation color
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>("#000000");
+  const [isHighlighter, setIsHighlighter] = useState<boolean>(true);
+
+  // Function to handle file selection
+  const handleFileSelected = (file: File) => {
+    console.log("File selected in Index:", file.name);
+    setSelectedFile(file);
+  };
 
   /**
    * Loading indicator for the lazy-loaded DocumentViewer
@@ -67,7 +74,7 @@ const Index = () => {
               <DocumentViewer 
                 file={selectedFile}
                 selectedColor={selectedColor}
-                isHighlighter={true}
+                isHighlighter={isHighlighter}
               />
             </Suspense>
           </ErrorBoundary>

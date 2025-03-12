@@ -45,6 +45,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 }) => {
   const [fileUrl, setFileUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Create the plugins
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
@@ -112,17 +113,29 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   });
 
   useEffect(() => {
+    console.log("PdfViewer received file:", file?.name);
+    console.log("PdfViewer received url:", url);
+    
     setIsLoading(true);
+    setError(null);
+    
     if (file) {
-      // Create a URL for the file object
-      const objectUrl = URL.createObjectURL(file);
-      setFileUrl(objectUrl);
-      setIsLoading(false);
-      
-      // Clean up the URL when the component is unmounted
-      return () => {
-        URL.revokeObjectURL(objectUrl);
-      };
+      try {
+        // Create a URL for the file object
+        const objectUrl = URL.createObjectURL(file);
+        console.log("Created object URL:", objectUrl);
+        setFileUrl(objectUrl);
+        setIsLoading(false);
+        
+        // Clean up the URL when the component is unmounted
+        return () => {
+          URL.revokeObjectURL(objectUrl);
+        };
+      } catch (err) {
+        console.error("Error creating object URL:", err);
+        setError(err instanceof Error ? err.message : "Failed to load PDF file");
+        setIsLoading(false);
+      }
     } else if (url) {
       setFileUrl(url);
       setIsLoading(false);
@@ -136,6 +149,14 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     return (
       <div className="flex items-center justify-center h-full">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-red-500">Error: {error}</p>
       </div>
     );
   }
@@ -164,7 +185,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
             }}
             renderError={(error) => (
               <div className="flex items-center justify-center h-full">
-                <p>Failed to load PDF: {error.message}</p>
+                <p className="text-red-500">Failed to load PDF: {error.message}</p>
               </div>
             )}
           />

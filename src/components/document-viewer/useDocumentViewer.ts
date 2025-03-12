@@ -1,5 +1,5 @@
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
@@ -24,6 +24,11 @@ export const useDocumentViewer = () => {
   // References to DOM elements
   const fileInputRef = useRef<HTMLInputElement>(null);
   const documentRef = useRef<HTMLDivElement>(null);
+
+  // Log when selectedFile changes
+  useEffect(() => {
+    console.log("useDocumentViewer - selectedFile changed:", selectedFile?.name);
+  }, [selectedFile]);
 
   /**
    * Triggers the file input dialog

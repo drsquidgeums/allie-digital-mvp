@@ -27,6 +27,8 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   selectedColor,
   isHighlighter
 }) => {
+  console.log("PdfViewerWrapper received file:", file?.name);
+  
   return (
     <div className="h-full overflow-auto">
       <ErrorBoundary>

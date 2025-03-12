@@ -59,6 +59,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
 
   // Handle file preview
   if (file) {
+    console.log("DocumentPreview handling file:", file.name);
     try {
       return (
         <FileTypeHandler

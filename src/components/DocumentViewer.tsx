@@ -19,6 +19,7 @@ interface DocumentViewerProps {
  * A comprehensive document viewer that supports various file formats including PDF, TXT, and HTML.
  * Features include document upload, URL loading, annotation tools, and accessibility features.
  * 
+ * @param file - The file to display in the viewer
  * @param selectedColor - The currently selected annotation color
  * @param isHighlighter - Boolean flag to determine if highlighter mode is active
  * @returns A fully functional document viewer UI component
@@ -41,8 +42,14 @@ export const DocumentViewer = ({
     setSelectedFile,
   } = useDocumentViewer();
   
+  // Use the file prop if provided, otherwise use the internal state
+  const displayFile = file || selectedFile;
+  
   // Custom hook to handle document viewer side effects
-  useDocumentViewerEffects(selectedFile, url);
+  useDocumentViewerEffects(displayFile, url);
+
+  // Log the current file being displayed
+  console.log("DocumentViewer rendering with file:", displayFile?.name);
 
   return (
     <div 
@@ -54,9 +61,9 @@ export const DocumentViewer = ({
         {/* Document Toolbar Section */}
         <DocumentViewerToolbar
           onUpload={handleUpload}
-          onDownload={() => handleDownload(selectedFile)}
+          onDownload={() => handleDownload(displayFile)}
           onDelete={handleDelete}
-          hasFile={!!selectedFile}
+          hasFile={!!displayFile}
         />
         
         {/* Document Content Area */}
@@ -64,7 +71,7 @@ export const DocumentViewer = ({
           documentRef={documentRef}
           url={url}
           setUrl={setUrl}
-          selectedFile={selectedFile}
+          selectedFile={displayFile}
           selectedColor={selectedColor}
           isHighlighter={isHighlighter}
         />
