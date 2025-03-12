@@ -1,10 +1,13 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { PdfLoader, PdfHighlighter, Highlight, Popup, AreaHighlight } from 'react-pdf-highlighter';
+import { PdfLoader, PdfHighlighter } from 'react-pdf-highlighter';
 import { useToast } from '@/hooks/use-toast';
 import type { IHighlight, ScaledPosition } from 'react-pdf-highlighter';
-import { ZoomIn, ZoomOut, RotateCw, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import "@/styles/pdf-viewer.css";
+import { PdfToolbar } from './components/PdfToolbar';
+import { PdfHighlightPopup } from './components/PdfHighlightPopup';
+import { PdfFooter } from './components/PdfFooter';
+import { usePdfViewerControls } from './hooks/usePdfViewerControls';
 
 interface PdfViewerProps {
   file: File | null;
@@ -23,11 +26,22 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   const [highlights, setHighlights] = useState<Array<IHighlight>>([]);
   const [fileUrl, setFileUrl] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
-  const [scale, setScale] = useState<number>(1.0);
-  const [rotation, setRotation] = useState<number>(0);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [numPages, setNumPages] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  const {
+    scale,
+    rotation,
+    currentPage,
+    numPages,
+    zoomIn,
+    zoomOut,
+    rotateClockwise,
+    rotateCounterClockwise,
+    goToPreviousPage,
+    goToNextPage,
+    updateCurrentPage,
+    handleDocumentLoaded
+  } = usePdfViewerControls();
   
   useEffect(() => {
     try {
@@ -56,9 +70,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 
   useEffect(() => {
     setHighlights([]);
-    setScale(1.0);
-    setRotation(0);
-    setCurrentPage(1);
   }, [file, url]);
 
   const addHighlight = useCallback((highlight: IHighlight) => {
@@ -70,39 +81,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
       duration: 3000,
     });
   }, [toast]);
-
-  const updateCurrentPage = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handleDocumentLoaded = (numPages: number) => {
-    console.log(`Document loaded with ${numPages} pages`);
-    setNumPages(numPages);
-  };
-
-  const zoomIn = () => {
-    setScale((prevScale) => Math.min(prevScale + 0.2, 3));
-  };
-
-  const zoomOut = () => {
-    setScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
-  };
-
-  const rotateClockwise = () => {
-    setRotation((prevRotation) => (prevRotation + 90) % 360);
-  };
-
-  const rotateCounterClockwise = () => {
-    setRotation((prevRotation) => (prevRotation - 90 + 360) % 360);
-  };
-
-  const goToPreviousPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const goToNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, numPages));
-  };
 
   const enableAreaSelection = useCallback((event: MouseEvent) => {
     return isHighlighter && event.altKey;
@@ -128,67 +106,18 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   
   return (
     <div className="h-full flex flex-col">
-      <div className="bg-muted/30 p-2 border-b flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={zoomOut} 
-            disabled={scale <= 0.5}
-            title="Zoom out"
-          >
-            <ZoomOut size={16} />
-          </Button>
-          <span className="text-xs">{Math.round(scale * 100)}%</span>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={zoomIn} 
-            disabled={scale >= 3}
-            title="Zoom in"
-          >
-            <ZoomIn size={16} />
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={rotateCounterClockwise}
-            title="Rotate counterclockwise"
-          >
-            <RotateCcw size={16} />
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={rotateClockwise}
-            title="Rotate clockwise"
-          >
-            <RotateCw size={16} />
-          </Button>
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={goToPreviousPage} 
-            disabled={currentPage <= 1}
-            title="Previous page"
-          >
-            <ChevronLeft size={16} />
-          </Button>
-          <span className="text-xs">Page {currentPage} of {numPages || '?'}</span>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={goToNextPage} 
-            disabled={currentPage >= numPages}
-            title="Next page"
-          >
-            <ChevronRight size={16} />
-          </Button>
-        </div>
-      </div>
+      <PdfToolbar 
+        scale={scale}
+        rotation={rotation}
+        currentPage={currentPage}
+        numPages={numPages}
+        zoomIn={zoomIn}
+        zoomOut={zoomOut}
+        rotateClockwise={rotateClockwise}
+        rotateCounterClockwise={rotateCounterClockwise}
+        goToPreviousPage={goToPreviousPage}
+        goToNextPage={goToNextPage}
+      />
       
       <div 
         className="flex-1 overflow-auto pdf-container" 
@@ -247,38 +176,15 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                   viewportToScaled,
                   screenshot,
                   isScrolledTo
-                ) => {
-                  const isTextHighlight = !Boolean(highlight.content && highlight.content.image);
-
-                  const component = isTextHighlight ? (
-                    <Highlight
-                      isScrolledTo={isScrolledTo}
-                      position={highlight.position}
-                      comment={highlight.comment}
-                    />
-                  ) : (
-                    <AreaHighlight
-                      isScrolledTo={isScrolledTo}
-                      highlight={highlight}
-                      onChange={() => {}}
-                    />
-                  );
-
-                  return (
-                    <Popup
-                      popupContent={
-                        <div className="highlight-popup p-2">
-                          <div>{highlight.content.text}</div>
-                        </div>
-                      }
-                      onMouseOver={(popupContent) => setTip(highlight, (highlight) => popupContent)}
-                      onMouseOut={hideTip}
-                      key={String(index)}
-                    >
-                      {component}
-                    </Popup>
-                  );
-                }}
+                ) => (
+                  <PdfHighlightPopup
+                    highlight={highlight}
+                    index={index}
+                    isScrolledTo={isScrolledTo}
+                    setTip={setTip}
+                    hideTip={hideTip}
+                  />
+                )}
                 pdfScaleValue={scale}
                 rotation={rotation}
                 pageLabelComponent={(props) => {
@@ -294,11 +200,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
         </PdfLoader>
       </div>
       
-      {isHighlighter && (
-        <div className="text-xs text-muted-foreground p-2 border-t">
-          To highlight an area, hold Alt key and drag. To highlight text, simply select it.
-        </div>
-      )}
+      <PdfFooter isHighlighter={isHighlighter} />
     </div>
   );
 };
