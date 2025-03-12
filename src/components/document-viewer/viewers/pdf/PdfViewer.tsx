@@ -91,7 +91,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
       <PdfLoader 
         url={fileUrl} 
         beforeLoad={<div className="flex items-center justify-center h-full"><p className="animate-pulse">Loading PDF...</p></div>}
-        errorMessage="Failed to load PDF document"
+        errorMessage={<div className="text-red-500">Failed to load PDF document</div>}
       >
         {(pdfDocument) => (
           <PdfHighlighter
