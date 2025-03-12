@@ -1,5 +1,5 @@
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { lazy } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LoadingFallback } from '../LoadingFallback';
@@ -28,6 +28,25 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   isHighlighter
 }) => {
   console.log("PdfViewerWrapper received file:", file?.name);
+  
+  // Log the PDF.js versions
+  useEffect(() => {
+    if (file || url) {
+      console.log("Loading PDF viewer with file:", file?.name, "or URL:", url);
+      
+      // Force load the correct worker version
+      const preloadWorker = async () => {
+        try {
+          const worker = await import('pdfjs-dist/build/pdf.worker.entry');
+          console.log("PDF worker loaded:", worker);
+        } catch (error) {
+          console.error("Failed to preload PDF worker:", error);
+        }
+      };
+      
+      preloadWorker();
+    }
+  }, [file, url]);
   
   return (
     <div className="h-full overflow-auto">
