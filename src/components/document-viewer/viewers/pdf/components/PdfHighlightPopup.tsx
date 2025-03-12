@@ -5,7 +5,7 @@ import type { IHighlight } from 'react-pdf-highlighter';
 
 interface PdfHighlightPopupProps {
   highlight: IHighlight;
-  index: number;
+  index: number | string;
   isScrolledTo: boolean;
   setTip: (highlight: IHighlight, callback: (highlight: IHighlight) => JSX.Element) => void;
   hideTip: () => void;
@@ -44,7 +44,7 @@ export const PdfHighlightPopup: React.FC<PdfHighlightPopupProps> = ({
       }
       onMouseOver={(popupContent) => setTip(highlight, (highlight) => popupContent)}
       onMouseOut={hideTip}
-      key={String(index)}
+      key={typeof index === 'number' ? String(index) : index}
     >
       {component}
     </Popup>
