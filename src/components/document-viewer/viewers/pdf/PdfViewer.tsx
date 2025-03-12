@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
@@ -81,13 +82,23 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
               color: isHighlighter ? 'black' : 'white',
             }}
             onClick={() => {
-              const highlightState = props.toggle();
-              if (highlightState && typeof highlightState === 'object') {
+              // Create a new highlight with our custom properties
+              // Fixed: Explicitly handle the toggle() return value
+              props.toggle();
+              
+              // Create a new highlight based on the selection region
+              if (props.selectionRegion) {
                 const newHighlight: HighlightArea = {
-                  ...highlightState,
+                  id: `highlight-${Date.now()}`,
+                  pageIndex: props.pageIndex,
+                  left: props.selectionRegion.left,
+                  top: props.selectionRegion.top,
+                  width: props.selectionRegion.width,
+                  height: props.selectionRegion.height,
                   selectedColor,
                   isHighlighter
                 };
+                
                 setHighlights(prev => [...prev, newHighlight]);
                 console.log("Created highlight with color:", selectedColor, newHighlight);
               }
