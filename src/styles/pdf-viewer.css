@@ -138,6 +138,8 @@
 
 .Highlight__parts {
   opacity: 0.5;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .Highlight.Highlight--selected .Highlight__parts {
@@ -208,4 +210,37 @@
 /* Make sure highlights are properly visible */
 .Highlight__parts {
   z-index: 2;
+}
+
+/* React PDF Highlighter specific styles */
+.react-pdf__Page {
+  margin: 1em auto;
+  padding: 1em;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+.react-pdf__Document {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.react-pdf__message {
+  padding: 20px;
+  color: white;
+}
+
+/* Make sure PDF pages are visible with white background */
+.page {
+  position: relative;
+  background-color: white;
+  margin: 0 auto;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+/* PDF.js canvas elements */
+canvas {
+  display: block;
+  margin: 0 auto;
 }

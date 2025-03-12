@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { PdfLoader, PdfHighlighter, Highlight, Popup, AreaHighlight } from 'react-pdf-highlighter';
 import { useToast } from '@/hooks/use-toast';
 import type { IHighlight, ScaledPosition } from 'react-pdf-highlighter';
@@ -20,19 +20,32 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   const { toast } = useToast();
   const [highlights, setHighlights] = useState<Array<IHighlight>>([]);
   const [fileUrl, setFileUrl] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
   
   // Create object URL when file changes
   useEffect(() => {
-    if (file) {
-      const objectUrl = URL.createObjectURL(file);
-      setFileUrl(objectUrl);
-      
-      // Clean up the URL when component unmounts
-      return () => {
-        URL.revokeObjectURL(objectUrl);
-      };
-    } else if (url) {
-      setFileUrl(url);
+    try {
+      if (file) {
+        const objectUrl = URL.createObjectURL(file);
+        console.log("Created object URL for file:", objectUrl);
+        setFileUrl(objectUrl);
+        setError(null);
+        
+        // Clean up the URL when component unmounts
+        return () => {
+          console.log("Revoking object URL:", objectUrl);
+          URL.revokeObjectURL(objectUrl);
+        };
+      } else if (url) {
+        console.log("Using provided URL:", url);
+        setFileUrl(url);
+        setError(null);
+      } else {
+        setFileUrl("");
+      }
+    } catch (err) {
+      console.error("Error creating object URL:", err);
+      setError("Failed to load PDF file");
     }
   }, [file, url]);
 
@@ -41,7 +54,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     setHighlights([]);
   }, [file, url]);
 
-  const addHighlight = (highlight: IHighlight) => {
+  const addHighlight = useCallback((highlight: IHighlight) => {
     console.log("Adding highlight:", highlight);
     setHighlights((prev) => [...prev, highlight]);
     toast({
@@ -49,7 +62,19 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
       description: "Text has been highlighted successfully.",
       duration: 3000,
     });
-  };
+  }, [toast]);
+
+  const enableAreaSelection = useCallback((event: MouseEvent) => {
+    return event.altKey;
+  }, []);
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
 
   if (!fileUrl) {
     return (
@@ -63,11 +88,15 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   
   return (
     <div className="h-full pdf-container" style={{ '--highlight-color': selectedColor } as React.CSSProperties}>
-      <PdfLoader url={fileUrl} beforeLoad={<div className="flex items-center justify-center h-full">Loading PDF...</div>}>
+      <PdfLoader 
+        url={fileUrl} 
+        beforeLoad={<div className="flex items-center justify-center h-full"><p className="animate-pulse">Loading PDF...</p></div>}
+        errorMessage="Failed to load PDF document"
+      >
         {(pdfDocument) => (
           <PdfHighlighter
             pdfDocument={pdfDocument}
-            enableAreaSelection={(event) => event.altKey}
+            enableAreaSelection={enableAreaSelection}
             onScrollChange={() => {}}
             scrollRef={(scrollTo) => scrollTo}
             highlights={highlights}

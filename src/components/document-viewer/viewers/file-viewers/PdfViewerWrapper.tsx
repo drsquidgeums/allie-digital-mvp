@@ -4,6 +4,10 @@ import { lazy } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LoadingFallback } from '../LoadingFallback';
 import '@/styles/pdf-viewer.css';
+import { pdfjs } from 'react-pdf-highlighter';
+
+// Configure PDF.js worker
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 // Lazy load the PdfViewer component
 const PdfViewer = lazy(() => import('../pdf/PdfViewer').then(module => ({
@@ -35,18 +39,7 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   useEffect(() => {
     if (file || url) {
       console.log("Loading PDF viewer with file:", file?.name, "or URL:", url);
-      
-      // Force load the correct worker version
-      const preloadWorker = async () => {
-        try {
-          // Make sure PDF.js worker is loaded
-          await import('pdfjs-dist/build/pdf.worker.entry');
-        } catch (error) {
-          console.error("Failed to preload PDF worker:", error);
-        }
-      };
-      
-      preloadWorker();
+      console.log("Using PDF.js version:", pdfjs.version);
     }
   }, [file, url]);
   
