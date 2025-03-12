@@ -30,7 +30,7 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   file,
   url,
   selectedColor,
-  isHighlighter
+  isHighlighter = true
 }) => {
   console.log("PdfViewerWrapper received file:", file?.name);
   console.log("PdfViewerWrapper color settings:", selectedColor, isHighlighter);

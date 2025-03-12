@@ -186,33 +186,27 @@
   user-select: text;
 }
 
-/* Additional styling to ensure PDF pages render correctly */
-.rpv-core__viewer {
-  height: 100%;
-}
-
-.rpv-core__doc-loading {
+/* PDF viewer toolbar styles */
+.pdf-toolbar {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 8px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+}
+
+.pdf-toolbar-group {
+  display: flex;
+  gap: 4px;
   align-items: center;
-  height: 100%;
 }
 
-/* Ensure PDF pages are visible */
-.rpv-core__page-layer {
-  background-color: white;
+.pdf-page-label {
+  font-size: 0.875rem;
+  margin: 0 8px;
 }
 
-.rpv-core__text-layer {
-  z-index: 1;
-}
-
-/* Make sure highlights are properly visible */
-.Highlight__parts {
-  z-index: 2;
-}
-
-/* React PDF Highlighter specific styles */
+/* Ensure PDF pages are centered and sized correctly */
 .react-pdf__Page {
   margin: 1em auto;
   padding: 1em;
@@ -243,4 +237,48 @@
 canvas {
   display: block;
   margin: 0 auto;
+}
+
+/* Improved rotated page styling */
+.rotate-90 {
+  transform: rotate(90deg);
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.rotate-270 {
+  transform: rotate(270deg);
+}
+
+/* Additional styles for PDF viewer controls */
+.pdf-control-button {
+  padding: 4px 8px;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdf-control-button:hover {
+  background-color: #f0f0f0;
+}
+
+.pdf-control-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pdf-page-input {
+  width: 40px;
+  text-align: center;
+  margin: 0 4px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 2px 4px;
 }
