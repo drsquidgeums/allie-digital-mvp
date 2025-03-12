@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { PdfLoader, PdfHighlighter, Highlight, Popup, AreaHighlight } from 'react-pdf-highlighter';
 import { useToast } from '@/hooks/use-toast';
@@ -30,7 +29,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   const [numPages, setNumPages] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Create object URL when file changes
   useEffect(() => {
     try {
       if (file) {
@@ -39,7 +37,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
         setFileUrl(objectUrl);
         setError(null);
         
-        // Clean up the URL when component unmounts
         return () => {
           console.log("Revoking object URL:", objectUrl);
           URL.revokeObjectURL(objectUrl);
@@ -57,7 +54,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     }
   }, [file, url]);
 
-  // Reset highlights when file changes
   useEffect(() => {
     setHighlights([]);
     setScale(1.0);
@@ -132,7 +128,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   
   return (
     <div className="h-full flex flex-col">
-      {/* PDF Viewer Toolbar */}
       <div className="bg-muted/30 p-2 border-b flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Button 
@@ -195,7 +190,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
         </div>
       </div>
       
-      {/* PDF Container */}
       <div 
         className="flex-1 overflow-auto pdf-container" 
         style={{ '--highlight-color': selectedColor } as React.CSSProperties}
@@ -208,7 +202,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
           onError={(error) => console.error("PDF loader error:", error)}
         >
           {(pdfDocument) => {
-            // Set number of pages once PDF is loaded
             if (numPages === 0) {
               handleDocumentLoaded(pdfDocument.numPages);
             }
@@ -301,7 +294,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
         </PdfLoader>
       </div>
       
-      {/* Instructions for highlighting */}
       {isHighlighter && (
         <div className="text-xs text-muted-foreground p-2 border-t">
           To highlight an area, hold Alt key and drag. To highlight text, simply select it.
@@ -310,4 +302,3 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     </div>
   );
 };
-
