@@ -4,7 +4,7 @@ import { lazy } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LoadingFallback } from '../LoadingFallback';
 import '@/styles/pdf-viewer.css';
-import { pdfjs } from 'react-pdf-highlighter';
+import * as pdfjs from 'pdfjs-dist';
 
 // Configure PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
