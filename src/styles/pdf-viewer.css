@@ -1,4 +1,3 @@
-
 /* PDF Viewer Styles */
 .pdf-container {
   width: 100%;
@@ -181,4 +180,25 @@
 
 .PdfHighlighter {
   user-select: text;
+}
+
+/* react-pdf-highlighter styles */
+.PdfHighlighter {
+  height: 100%;
+}
+
+.Highlight {
+  background-color: yellow;
+}
+
+.Highlight__parts {
+  opacity: 1;
+}
+
+.Highlight__part {
+  cursor: pointer;
+}
+
+.PdfHighlighter__highlight-layer {
+  z-index: 2;
 }
