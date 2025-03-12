@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { PdfLoader, PdfHighlighter, Highlight, Popup, AreaHighlight } from 'react-pdf-highlighter';
 import { useToast } from '@/hooks/use-toast';
-import type { IHighlight } from 'react-pdf-highlighter';
+import type { IHighlight, ScaledPosition } from 'react-pdf-highlighter';
 
 interface PdfViewerProps {
   file: File | null;
@@ -43,9 +43,9 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
         {(pdfDocument) => (
           <PdfHighlighter
             pdfDocument={pdfDocument}
-            enableAreaSelection={true}
+            enableAreaSelection={(event) => event.altKey}
             onScrollChange={() => {}}
-            scrollRef={() => {}}
+            scrollRef={(scrollTo) => scrollTo}
             highlights={highlights}
             onSelectionFinished={(
               position,
@@ -53,8 +53,21 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
               hideTipAndSelection,
               transformSelection
             ) => {
-              addHighlight({ content, position, comment: '', id: `${Date.now()}` });
+              const newHighlight = { 
+                content, 
+                position, 
+                comment: {
+                  text: '',
+                  emoji: ''
+                }, 
+                id: `${Date.now()}` 
+              };
+              
+              addHighlight(newHighlight);
               hideTipAndSelection();
+              
+              // Return an empty div element as required by the type
+              return <div />;
             }}
             highlightTransform={(
               highlight,
