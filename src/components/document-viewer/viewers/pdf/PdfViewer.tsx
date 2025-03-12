@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { PdfLoader, PdfHighlighter } from 'react-pdf-highlighter';
 import { useToast } from '@/hooks/use-toast';
@@ -178,7 +179,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                 ) => (
                   <PdfHighlightPopup
                     highlight={highlight}
-                    index={index}
+                    index={String(index)}  // Convert index from number to string
                     isScrolledTo={isScrolledTo}
                     setTip={setTip}
                     hideTip={hideTip}
