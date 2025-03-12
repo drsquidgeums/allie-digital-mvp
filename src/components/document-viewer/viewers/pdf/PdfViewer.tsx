@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import { highlightPlugin } from '@react-pdf-viewer/highlight';
+import { useToast } from '@/hooks/use-toast';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
@@ -25,12 +26,15 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   selectedColor,
   isHighlighter = false
 }) => {
+  const { toast } = useToast();
   const {
     fileUrl,
     isLoading,
     error,
     highlights,
-    setHighlights
+    addHighlight,
+    removeHighlight,
+    setSelectedHighlight
   } = usePdfViewerState({ file, url });
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
@@ -43,13 +47,32 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
         {...props}
         selectedColor={selectedColor}
         isHighlighter={isHighlighter}
-        onHighlightCreated={(highlight) => setHighlights(prev => [...prev, highlight])}
+        onHighlightCreated={(highlight) => {
+          addHighlight(highlight);
+          toast({
+            title: "Text highlighted",
+            description: `Text has been ${isHighlighter ? 'highlighted' : 'underlined'} successfully.`,
+            duration: 3000,
+          });
+        }}
       />
     ),
     renderHighlights: (props) => (
-      <HighlightRenderer {...props} areas={highlights} />
+      <HighlightRenderer 
+        {...props} 
+        areas={highlights}
+        onHighlightClick={(highlight) => {
+          setSelectedHighlight(highlight.id);
+          console.log('Highlight clicked:', highlight);
+        }}
+      />
     ),
   });
+
+  // Log when highlights change
+  useEffect(() => {
+    console.log('Current highlights:', highlights);
+  }, [highlights]);
 
   if (isLoading) {
     return (
@@ -103,4 +126,3 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     </div>
   );
 };
-

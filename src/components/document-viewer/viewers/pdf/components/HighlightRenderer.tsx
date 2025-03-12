@@ -7,13 +7,15 @@ interface HighlightRendererProps {
   areas?: HighlightArea[];
   onMouseEnter?: (area: HighlightArea) => void;
   onMouseLeave?: (area: HighlightArea) => void;
+  onHighlightClick?: (area: HighlightArea) => void;
 }
 
 export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
   pageIndex,
   areas,
   onMouseEnter,
-  onMouseLeave
+  onMouseLeave,
+  onHighlightClick
 }) => {
   const [hoveredHighlight, setHoveredHighlight] = useState<string | null>(null);
 
@@ -27,13 +29,21 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
     if (onMouseLeave) onMouseLeave(highlight);
   };
 
+  const handleClick = (highlight: HighlightArea) => {
+    if (onHighlightClick) onHighlightClick(highlight);
+  };
+
+  if (!areas || !Array.isArray(areas) || areas.length === 0) {
+    return null;
+  }
+
   return (
-    <div>
-      {areas && Array.isArray(areas) && areas
+    <div className="highlight-container">
+      {areas
         .filter(area => area.pageIndex === pageIndex)
         .map((highlight) => {
-          const highlightColor = highlight.selectedColor;
-          const isHighlighterMode = highlight.isHighlighter;
+          const highlightColor = highlight.selectedColor || '#FFFF00';
+          const isHighlighterMode = highlight.isHighlighter !== false;
           const isHovered = hoveredHighlight === highlight.id;
           
           return (
@@ -52,13 +62,16 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
                 top: `${highlight.top}px`,
                 height: `${highlight.height}px`,
                 width: `${highlight.width}px`,
-                zIndex: isHovered ? 10 : 1,
+                zIndex: isHovered ? 10 : 5,
                 transition: 'all 0.2s ease',
                 cursor: 'pointer',
+                pointerEvents: 'all',
               }}
               onMouseEnter={() => handleMouseEnter(highlight)}
               onMouseLeave={() => handleMouseLeave(highlight)}
+              onClick={() => handleClick(highlight)}
               aria-label={`Highlight created with ${highlight.selectedColor} color`}
+              data-highlight-id={highlight.id}
             />
           );
         })}

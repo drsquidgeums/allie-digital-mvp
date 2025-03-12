@@ -2,7 +2,7 @@
 import React from 'react';
 import { RenderHighlightTargetProps } from '@react-pdf-viewer/highlight';
 import { HighlightArea } from '../hooks/usePdfViewerState';
-import { Highlighter, Palette, PenLine } from 'lucide-react';
+import { Highlighter, PenLine } from 'lucide-react';
 
 interface HighlightTargetProps extends RenderHighlightTargetProps {
   selectedColor: string;
@@ -29,27 +29,29 @@ export const HighlightTarget: React.FC<HighlightTargetProps> = ({
   ];
   
   const handleHighlight = (color: string, isHighlighterMode: boolean) => {
-    toggle();
+    if (!selectionRegion) return;
     
-    if (selectionRegion) {
-      const newHighlight: HighlightArea = {
-        id: `highlight-${Date.now()}`,
-        pageIndex: selectionRegion.pageIndex,
-        left: selectionRegion.left,
-        top: selectionRegion.top,
-        width: selectionRegion.width,
-        height: selectionRegion.height,
-        selectedColor: color,
-        isHighlighter: isHighlighterMode
-      };
-      
-      onHighlightCreated(newHighlight);
-      console.log("Created highlight with color:", color, newHighlight);
-    }
+    const newHighlight: HighlightArea = {
+      id: `highlight-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+      pageIndex: selectionRegion.pageIndex,
+      left: selectionRegion.left,
+      top: selectionRegion.top,
+      width: selectionRegion.width,
+      height: selectionRegion.height,
+      selectedColor: color,
+      isHighlighter: isHighlighterMode
+    };
+    
+    onHighlightCreated(newHighlight);
+    console.log("Created highlight:", newHighlight);
+    toggle();
   };
+
+  if (!selectionRegion) return null;
 
   return (
     <div
+      className="highlight-popup"
       style={{
         background: 'white',
         border: '1px solid rgba(0, 0, 0, 0.3)',
@@ -57,22 +59,27 @@ export const HighlightTarget: React.FC<HighlightTargetProps> = ({
         padding: '8px',
         position: 'absolute',
         left: `${selectionRegion.left}px`,
-        top: `${selectionRegion.top + selectionRegion.height}px`,
+        top: `${selectionRegion.top + selectionRegion.height + 10}px`,
         zIndex: 1000,
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+        minWidth: '240px'
       }}
     >
       <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2 mb-1">
-          <Highlighter className="w-4 h-4" />
-          <span className="text-xs font-medium">Highlight</span>
+        <div className="highlight-tabs">
+          <div className="highlight-tab active">Highlight Text</div>
         </div>
         
-        <div className="flex flex-wrap gap-1 mb-2">
+        <div className="flex items-center gap-2 mb-1">
+          <Highlighter className="w-4 h-4" />
+          <span className="text-xs font-medium">Highlighter</span>
+        </div>
+        
+        <div className="highlight-color-picker">
           {colors.map(color => (
             <button
               key={`highlighter-${color}`}
-              className="w-6 h-6 rounded-full border border-gray-300 transition-transform hover:scale-110"
+              className="highlight-color-option"
               style={{ backgroundColor: color }}
               onClick={() => handleHighlight(color, true)}
               aria-label={`Highlight with ${color} color`}
@@ -80,16 +87,16 @@ export const HighlightTarget: React.FC<HighlightTargetProps> = ({
           ))}
         </div>
         
-        <div className="flex items-center gap-2 mb-1">
+        <div className="flex items-center gap-2 mb-1 mt-2">
           <PenLine className="w-4 h-4" />
           <span className="text-xs font-medium">Underline</span>
         </div>
         
-        <div className="flex flex-wrap gap-1">
+        <div className="highlight-color-picker">
           {colors.map(color => (
             <button
               key={`underline-${color}`}
-              className="w-6 h-6 rounded-full border border-gray-300 transition-transform hover:scale-110"
+              className="highlight-color-option"
               style={{ backgroundColor: color }}
               onClick={() => handleHighlight(color, false)}
               aria-label={`Underline with ${color} color`}

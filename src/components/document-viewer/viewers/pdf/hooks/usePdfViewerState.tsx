@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 interface UsePdfViewerStateProps {
   file: File | null;
@@ -15,6 +15,7 @@ export interface HighlightArea {
   height: number;
   selectedColor?: string;
   isHighlighter?: boolean;
+  text?: string;
 }
 
 export const usePdfViewerState = ({ file, url }: UsePdfViewerStateProps) => {
@@ -23,6 +24,9 @@ export const usePdfViewerState = ({ file, url }: UsePdfViewerStateProps) => {
   const [error, setError] = useState<string | null>(null);
   const [highlights, setHighlights] = useState<HighlightArea[]>([]);
   const [selectedHighlight, setSelectedHighlight] = useState<string | null>(null);
+  
+  // Use ref to persist highlights between re-renders
+  const highlightsRef = useRef<HighlightArea[]>([]);
 
   useEffect(() => {
     console.log("PdfViewer received file:", file?.name);
@@ -55,9 +59,18 @@ export const usePdfViewerState = ({ file, url }: UsePdfViewerStateProps) => {
     }
   }, [file, url]);
 
+  // Sync state with ref to ensure persistence
+  useEffect(() => {
+    highlightsRef.current = highlights;
+  }, [highlights]);
+
   // Add a new highlight
   const addHighlight = useCallback((highlight: HighlightArea) => {
-    setHighlights(prev => [...prev, highlight]);
+    console.log("Adding highlight:", highlight);
+    setHighlights(prev => {
+      const newHighlights = [...prev, highlight];
+      return newHighlights;
+    });
   }, []);
 
   // Remove a highlight
@@ -72,6 +85,11 @@ export const usePdfViewerState = ({ file, url }: UsePdfViewerStateProps) => {
     );
   }, []);
 
+  // Get highlight by ID
+  const getHighlightById = useCallback((highlightId: string) => {
+    return highlightsRef.current.find(h => h.id === highlightId) || null;
+  }, []);
+
   return {
     fileUrl,
     isLoading,
@@ -82,6 +100,7 @@ export const usePdfViewerState = ({ file, url }: UsePdfViewerStateProps) => {
     setSelectedHighlight,
     addHighlight,
     removeHighlight,
-    updateHighlight
+    updateHighlight,
+    getHighlightById,
   };
 };

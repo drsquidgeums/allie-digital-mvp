@@ -48,6 +48,7 @@
   pointer-events: all;
 }
 
+/* Highlight popup styles */
 .highlight-popup {
   position: absolute;
   background: white;
@@ -56,7 +57,7 @@
   padding: 10px;
   min-width: 100px;
   max-width: 300px;
-  z-index: 10;
+  z-index: 100;
 }
 
 /* Tooltip styles */
@@ -68,10 +69,10 @@
   padding: 5px 10px;
   font-size: 0.85em;
   transition: opacity 0.2s;
-  z-index: 10;
+  z-index: 90;
 }
 
-/* Enhanced highlight styles */
+/* Color picker styles */
 .highlight-color-picker {
   display: flex;
   flex-wrap: wrap;
@@ -80,34 +81,49 @@
 }
 
 .highlight-color-option {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   cursor: pointer;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .highlight-color-option:hover {
   transform: scale(1.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Tab navigation for highlight popup */
 .highlight-tabs {
   display: flex;
   border-bottom: 1px solid #eee;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .highlight-tab {
   padding: 4px 8px;
   cursor: pointer;
   font-size: 12px;
+  font-weight: 500;
   border-bottom: 2px solid transparent;
+  color: #666;
 }
 
 .highlight-tab.active {
   border-color: #9b87f5;
   color: #9b87f5;
+}
+
+/* Highlight container in PDF */
+.highlight-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 3;
 }
 
 /* Additional styles for react-pdf-highlighter */
