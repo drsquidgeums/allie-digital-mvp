@@ -183,11 +183,14 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
             theme={{
               theme: 'light',
             }}
-            renderError={(error) => (
-              <div className="flex items-center justify-center h-full">
-                <p className="text-red-500">Failed to load PDF: {error.message}</p>
-              </div>
-            )}
+            renderError={(error) => {
+              console.error("PDF Viewer error:", error);
+              return (
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-red-500">Failed to load PDF: {error.message}</p>
+                </div>
+              );
+            }}
           />
         </div>
       </Worker>
