@@ -3,6 +3,7 @@ import React, { Suspense, useEffect } from 'react';
 import { lazy } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LoadingFallback } from '../LoadingFallback';
+import '@/styles/pdf-viewer.css';
 
 // Lazy load the PdfViewer component
 const PdfViewer = lazy(() => import('../pdf/PdfViewer').then(module => ({
@@ -38,8 +39,8 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
       // Force load the correct worker version
       const preloadWorker = async () => {
         try {
-          const worker = await import('pdfjs-dist/build/pdf.worker.entry');
-          console.log("PDF worker loaded:", worker);
+          // Make sure PDF.js worker is loaded
+          await import('pdfjs-dist/build/pdf.worker.entry');
         } catch (error) {
           console.error("Failed to preload PDF worker:", error);
         }

@@ -1,3 +1,4 @@
+
 /* PDF Viewer Styles */
 .pdf-container {
   width: 100%;
@@ -128,6 +129,7 @@
 /* Additional styles for react-pdf-highlighter */
 .PdfHighlighter {
   position: relative;
+  height: 100%;
 }
 
 .Highlight {
@@ -145,7 +147,7 @@
 .Highlight__part {
   cursor: pointer;
   position: absolute;
-  background: #ffeb3b;
+  background: var(--highlight-color, #ffeb3b);
   transition: background 0.3s;
 }
 
@@ -182,23 +184,28 @@
   user-select: text;
 }
 
-/* react-pdf-highlighter styles */
-.PdfHighlighter {
+/* Additional styling to ensure PDF pages render correctly */
+.rpv-core__viewer {
   height: 100%;
 }
 
-.Highlight {
-  background-color: yellow;
+.rpv-core__doc-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
+/* Ensure PDF pages are visible */
+.rpv-core__page-layer {
+  background-color: white;
+}
+
+.rpv-core__text-layer {
+  z-index: 1;
+}
+
+/* Make sure highlights are properly visible */
 .Highlight__parts {
-  opacity: 1;
-}
-
-.Highlight__part {
-  cursor: pointer;
-}
-
-.PdfHighlighter__highlight-layer {
   z-index: 2;
 }

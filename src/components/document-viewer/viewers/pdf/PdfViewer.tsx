@@ -1,8 +1,9 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PdfLoader, PdfHighlighter, Highlight, Popup, AreaHighlight } from 'react-pdf-highlighter';
 import { useToast } from '@/hooks/use-toast';
 import type { IHighlight, ScaledPosition } from 'react-pdf-highlighter';
+import "@/styles/pdf-viewer.css";
 
 interface PdfViewerProps {
   file: File | null;
@@ -18,10 +19,31 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 }) => {
   const { toast } = useToast();
   const [highlights, setHighlights] = useState<Array<IHighlight>>([]);
-  const fileUrl = file ? URL.createObjectURL(file) : url;
+  const [fileUrl, setFileUrl] = useState<string>("");
+  
+  // Create object URL when file changes
+  useEffect(() => {
+    if (file) {
+      const objectUrl = URL.createObjectURL(file);
+      setFileUrl(objectUrl);
+      
+      // Clean up the URL when component unmounts
+      return () => {
+        URL.revokeObjectURL(objectUrl);
+      };
+    } else if (url) {
+      setFileUrl(url);
+    }
+  }, [file, url]);
+
+  // Reset highlights when file changes
+  useEffect(() => {
+    setHighlights([]);
+  }, [file, url]);
 
   const addHighlight = (highlight: IHighlight) => {
-    setHighlights([...highlights, highlight]);
+    console.log("Adding highlight:", highlight);
+    setHighlights((prev) => [...prev, highlight]);
     toast({
       title: "Text highlighted",
       description: "Text has been highlighted successfully.",
@@ -37,9 +59,11 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     );
   }
 
+  console.log("Rendering PDF with URL:", fileUrl);
+  
   return (
-    <div className="h-full pdf-container">
-      <PdfLoader url={fileUrl} beforeLoad={<div>Loading...</div>}>
+    <div className="h-full pdf-container" style={{ '--highlight-color': selectedColor } as React.CSSProperties}>
+      <PdfLoader url={fileUrl} beforeLoad={<div className="flex items-center justify-center h-full">Loading PDF...</div>}>
         {(pdfDocument) => (
           <PdfHighlighter
             pdfDocument={pdfDocument}
