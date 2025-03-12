@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
@@ -12,7 +11,7 @@ import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import '@react-pdf-viewer/highlight/lib/styles/index.css';
 
-// Define a custom interface for the highlight areas based on actual plugin structure
+// Extend the HighlightArea interface with our custom properties
 interface HighlightArea {
   id: string;
   pageIndex: number;
@@ -20,9 +19,10 @@ interface HighlightArea {
   left: number;
   width: number;
   height: number;
+  selectedColor?: string;
+  isHighlighter?: boolean;
 }
 
-// Define our own RenderHighlightsProps to match what the plugin actually provides
 interface CustomRenderHighlightsProps {
   pageIndex: number;
   areas?: HighlightArea[];
@@ -56,7 +56,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     ],
   });
 
-  // Create the highlight plugin with custom settings
   const highlightPluginInstance = highlightPlugin({
     renderHighlightTarget: (props: RenderHighlightTargetProps) => (
       <div
@@ -82,13 +81,12 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
               color: isHighlighter ? 'black' : 'white',
             }}
             onClick={() => {
-              // Toggle the highlight and store it with the selected color
               const highlightState = props.toggle();
-              if (highlightState) {
-                const newHighlight = {
+              if (highlightState && typeof highlightState === 'object') {
+                const newHighlight: HighlightArea = {
                   ...highlightState,
-                  selectedColor: selectedColor,
-                  isHighlighter: isHighlighter
+                  selectedColor,
+                  isHighlighter
                 };
                 setHighlights(prev => [...prev, newHighlight]);
                 console.log("Created highlight with color:", selectedColor, newHighlight);
@@ -105,15 +103,15 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
         {props.areas && Array.isArray(props.areas) && props.areas
           .filter(area => area.pageIndex === props.pageIndex)
           .map((highlight) => {
-            // Find stored highlight data for this highlight
-            const storedHighlight = highlights.find(h => h.id === highlight.id) || { selectedColor, isHighlighter };
+            const highlightColor = highlight.selectedColor || selectedColor;
+            const isHighlighterMode = highlight.isHighlighter ?? isHighlighter;
             
             return (
               <div
                 key={highlight.id}
                 style={{
-                  background: storedHighlight.isHighlighter ? `${storedHighlight.selectedColor || selectedColor}80` : 'transparent',
-                  border: storedHighlight.isHighlighter ? 'none' : `2px solid ${storedHighlight.selectedColor || selectedColor}`,
+                  background: isHighlighterMode ? `${highlightColor}80` : 'transparent',
+                  border: isHighlighterMode ? 'none' : `2px solid ${highlightColor}`,
                   borderRadius: '4px',
                   position: 'absolute',
                   left: `${highlight.left}px`,
