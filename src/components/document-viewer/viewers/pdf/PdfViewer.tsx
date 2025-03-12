@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { PdfLoader, PdfHighlighter, Highlight, Popup, AreaHighlight } from 'react-pdf-highlighter';
 import { useToast } from '@/hooks/use-toast';
@@ -274,7 +273,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                       }
                       onMouseOver={(popupContent) => setTip(highlight, (highlight) => popupContent)}
                       onMouseOut={hideTip}
-                      key={index.toString()} // Fixed the TypeScript error by converting index to string
+                      key={String(index)}
                     >
                       {component}
                     </Popup>
