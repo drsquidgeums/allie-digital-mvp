@@ -20,16 +20,17 @@ export const PdfHighlightPopup: React.FC<PdfHighlightPopupProps> = ({
 }) => {
   const isTextHighlight = !Boolean(highlight.content && highlight.content.image);
 
+  // Cast the position to any to work around the type mismatch
   const component = isTextHighlight ? (
     <Highlight
       isScrolledTo={isScrolledTo}
-      position={highlight.position}
+      position={highlight.position as any}
       comment={highlight.comment}
     />
   ) : (
     <AreaHighlight
       isScrolledTo={isScrolledTo}
-      highlight={highlight}
+      highlight={highlight as any}
       onChange={() => {}}
     />
   );

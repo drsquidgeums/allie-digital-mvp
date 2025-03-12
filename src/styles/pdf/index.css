@@ -1,0 +1,8 @@
+
+/* PDF Viewer Styles Index */
+@import './pdf-base.css';
+@import './pdf-highlights.css';
+@import './pdf-popups.css';
+@import './pdf-controls.css';
+@import './pdf-ui-components.css';
+@import './pdf-text-layer.css';

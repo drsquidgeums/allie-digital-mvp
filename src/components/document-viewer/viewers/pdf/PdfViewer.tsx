@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { PdfLoader, PdfHighlighter } from 'react-pdf-highlighter';
 import { useToast } from '@/hooks/use-toast';
 import type { IHighlight, ScaledPosition } from 'react-pdf-highlighter';
-import "@/styles/pdf-viewer.css";
+import "@/styles/pdf/index.css";
 import { PdfToolbar } from './components/PdfToolbar';
 import { PdfHighlightPopup } from './components/PdfHighlightPopup';
 import { PdfFooter } from './components/PdfFooter';

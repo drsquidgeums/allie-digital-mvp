@@ -1,0 +1,69 @@
+
+/* PDF Highlight Styles */
+.pdf-highlight {
+  background-color: transparent;
+  position: relative;
+  cursor: pointer;
+}
+
+.pdf-highlight::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background-color: var(--highlight-color, #ffeb3b);
+  opacity: 0.5;
+}
+
+.pdf-highlight:hover::after {
+  height: 100%;
+}
+
+/* Highlight container in PDF */
+.highlight-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Additional styles for react-pdf-highlighter */
+.PdfHighlighter {
+  position: relative;
+  height: 100%;
+}
+
+.Highlight {
+  position: absolute;
+}
+
+.Highlight__parts {
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.Highlight.Highlight--selected .Highlight__parts {
+  opacity: 0.8;
+}
+
+.Highlight__part {
+  cursor: pointer;
+  position: absolute;
+  background: var(--highlight-color, #ffeb3b);
+  transition: background 0.3s;
+}
+
+/* Fix highlighting display */
+.Highlight__parts {
+  pointer-events: none;
+}
+
+.Highlight__part {
+  background-color: var(--highlight-color, rgba(255, 235, 59, 0.5));
+}
