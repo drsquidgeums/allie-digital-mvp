@@ -46,6 +46,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   const [fileUrl, setFileUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [highlights, setHighlights] = useState<HighlightArea[]>([]);
 
   // Create the plugins
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
@@ -80,7 +81,19 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
               padding: '8px',
               color: isHighlighter ? 'black' : 'white',
             }}
-            onClick={() => props.toggle()}
+            onClick={() => {
+              // Toggle the highlight and store it with the selected color
+              const highlightState = props.toggle();
+              if (highlightState) {
+                const newHighlight = {
+                  ...highlightState,
+                  selectedColor: selectedColor,
+                  isHighlighter: isHighlighter
+                };
+                setHighlights(prev => [...prev, newHighlight]);
+                console.log("Created highlight with color:", selectedColor, newHighlight);
+              }
+            }}
           >
             {isHighlighter ? 'Highlight' : 'Annotate'}
           </button>
@@ -91,23 +104,28 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
       <div>
         {props.areas && Array.isArray(props.areas) && props.areas
           .filter(area => area.pageIndex === props.pageIndex)
-          .map((highlight) => (
-            <div
-              key={highlight.id}
-              style={{
-                background: isHighlighter ? `${selectedColor}80` : 'transparent',
-                border: isHighlighter ? 'none' : `2px solid ${selectedColor}`,
-                borderRadius: '4px',
-                position: 'absolute',
-                left: `${highlight.left}px`,
-                top: `${highlight.top}px`,
-                height: `${highlight.height}px`,
-                width: `${highlight.width}px`,
-                zIndex: 1,
-              }}
-              onMouseEnter={() => props.onMouseEnter && props.onMouseEnter(highlight)}
-            />
-          ))}
+          .map((highlight) => {
+            // Find stored highlight data for this highlight
+            const storedHighlight = highlights.find(h => h.id === highlight.id) || { selectedColor, isHighlighter };
+            
+            return (
+              <div
+                key={highlight.id}
+                style={{
+                  background: storedHighlight.isHighlighter ? `${storedHighlight.selectedColor || selectedColor}80` : 'transparent',
+                  border: storedHighlight.isHighlighter ? 'none' : `2px solid ${storedHighlight.selectedColor || selectedColor}`,
+                  borderRadius: '4px',
+                  position: 'absolute',
+                  left: `${highlight.left}px`,
+                  top: `${highlight.top}px`,
+                  height: `${highlight.height}px`,
+                  width: `${highlight.width}px`,
+                  zIndex: 1,
+                }}
+                onMouseEnter={() => props.onMouseEnter && props.onMouseEnter(highlight)}
+              />
+            );
+          })}
       </div>
     ),
   });
@@ -115,6 +133,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   useEffect(() => {
     console.log("PdfViewer received file:", file?.name);
     console.log("PdfViewer received url:", url);
+    console.log("Current highlight color:", selectedColor, "isHighlighter:", isHighlighter);
     
     setIsLoading(true);
     setError(null);
@@ -143,7 +162,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
       setFileUrl('');
       setIsLoading(false);
     }
-  }, [file, url]);
+  }, [file, url, selectedColor, isHighlighter]);
 
   if (isLoading) {
     return (

@@ -28,6 +28,7 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   isHighlighter
 }) => {
   console.log("PdfViewerWrapper received file:", file?.name);
+  console.log("PdfViewerWrapper color settings:", selectedColor, isHighlighter);
   
   // Log the PDF.js versions
   useEffect(() => {

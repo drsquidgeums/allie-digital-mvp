@@ -23,6 +23,7 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
 }) => {
   try {
     console.log("FileTypeHandler received file:", file?.name);
+    console.log("FileTypeHandler color settings:", selectedColor, isHighlighter);
     const fileType = getFileType(file);
     console.log("Detected file type:", fileType);
     
@@ -32,7 +33,7 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
           <PdfViewerWrapper
             file={file}
             url=""
-            selectedColor={selectedColor}
+            selectedColor={selectedColor || '#FFFF00'} // Default to yellow if no color specified
             isHighlighter={isHighlighter}
           />
         );

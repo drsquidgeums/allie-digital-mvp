@@ -60,11 +60,12 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   // Handle file preview
   if (file) {
     console.log("DocumentPreview handling file:", file.name);
+    console.log("DocumentPreview color settings:", selectedColor, isHighlighter);
     try {
       return (
         <FileTypeHandler
           file={file}
-          selectedColor={selectedColor}
+          selectedColor={selectedColor || '#FFFF00'} // Default yellow if no color specified
           isHighlighter={isHighlighter}
         />
       );
@@ -84,7 +85,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     return (
       <UrlHandler
         url={url}
-        selectedColor={selectedColor}
+        selectedColor={selectedColor || '#FFFF00'} // Default yellow if no color specified
         isHighlighter={isHighlighter}
         onError={() => setLoadError("Failed to load URL content")}
       />
