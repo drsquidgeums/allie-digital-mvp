@@ -280,14 +280,14 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
                       }
                       onMouseOver={(popupContent) => setTip(highlight, (highlight) => popupContent)}
                       onMouseOut={hideTip}
-                      key={index}
+                      key={index.toString()}
                     >
                       {component}
                     </Popup>
                   );
                 }}
                 pdfScaleValue={scale}
-                pdfRotation={rotation}
+                rotation={rotation}
                 pageLabelComponent={(props) => {
                   const { pageNumber } = props;
                   if (pageNumber === currentPage) {
@@ -310,3 +310,4 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     </div>
   );
 };
+
