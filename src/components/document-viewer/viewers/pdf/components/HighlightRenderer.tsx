@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { HighlightArea } from '../hooks/usePdfViewerState';
 
 interface HighlightRendererProps {
@@ -15,6 +15,18 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
   onMouseEnter,
   onMouseLeave
 }) => {
+  const [hoveredHighlight, setHoveredHighlight] = useState<string | null>(null);
+
+  const handleMouseEnter = (highlight: HighlightArea) => {
+    setHoveredHighlight(highlight.id);
+    if (onMouseEnter) onMouseEnter(highlight);
+  };
+
+  const handleMouseLeave = (highlight: HighlightArea) => {
+    setHoveredHighlight(null);
+    if (onMouseLeave) onMouseLeave(highlight);
+  };
+
   return (
     <div>
       {areas && Array.isArray(areas) && areas
@@ -22,26 +34,34 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
         .map((highlight) => {
           const highlightColor = highlight.selectedColor;
           const isHighlighterMode = highlight.isHighlighter;
+          const isHovered = hoveredHighlight === highlight.id;
           
           return (
             <div
               key={highlight.id}
               style={{
-                background: isHighlighterMode ? `${highlightColor}80` : 'transparent',
-                border: isHighlighterMode ? 'none' : `2px solid ${highlightColor}`,
+                background: isHighlighterMode 
+                  ? `${highlightColor}${isHovered ? 'C0' : '80'}` // More opaque when hovered
+                  : 'transparent',
+                border: isHighlighterMode 
+                  ? 'none' 
+                  : `${isHovered ? 3 : 2}px solid ${highlightColor}`,
                 borderRadius: '4px',
                 position: 'absolute',
                 left: `${highlight.left}px`,
                 top: `${highlight.top}px`,
                 height: `${highlight.height}px`,
                 width: `${highlight.width}px`,
-                zIndex: 1,
+                zIndex: isHovered ? 10 : 1,
+                transition: 'all 0.2s ease',
+                cursor: 'pointer',
               }}
-              onMouseEnter={() => onMouseEnter && onMouseEnter(highlight)}
+              onMouseEnter={() => handleMouseEnter(highlight)}
+              onMouseLeave={() => handleMouseLeave(highlight)}
+              aria-label={`Highlight created with ${highlight.selectedColor} color`}
             />
           );
         })}
     </div>
   );
 };
-
