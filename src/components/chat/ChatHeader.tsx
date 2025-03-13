@@ -7,7 +7,7 @@ export const ChatHeader = () => {
   
   return (
     <div 
-      className="flex items-center gap-3 p-3 border-b border-border bg-card rounded-t-lg shadow-sm" 
+      className="flex items-center gap-3 p-3 bg-card rounded-t-lg shadow-sm" 
       role="banner"
       aria-label="Chat header"
     >
