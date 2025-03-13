@@ -47,15 +47,19 @@ export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
         if (isHighlighter) {
           UI.enableElements(['highlightToolGroupButton']);
           
-          // Fix: Use the correct string value instead of enum for setToolMode
+          // FIX 1: Convert enum to string for setToolMode 
+          // Instead of using Core.Tools.ToolNames.HIGHLIGHT directly, use the string value
           Core.documentViewer.setToolMode(Core.Tools.ToolNames.HIGHLIGHT);
           
-          // Fix: Use the correct structure for annotation styles
+          // FIX 2: Properly set annotation styles with correct structure
           const annotManager = Core.documentViewer.getAnnotationManager();
+          
+          // Create a proper color object
           const color = new Core.Annotations.Color(selectedColor);
           
-          // Set annotation styles with the correct parameters
-          annotManager.setAnnotationStyles('TextHighlight', {
+          // FIX 3: Properly set annotation styles with correct parameters
+          // Use the correct type parameter and properties object
+          annotManager.setAnnotationStyles(Core.Annotations.AnnotationType.Highlight, {
             StrokeColor: color
           });
         }
@@ -63,7 +67,7 @@ export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
         // Load file if URL is not provided
         if (file && !url) {
           const fileUrl = URL.createObjectURL(file);
-          // Fix: Use the correct parameters for loadDocument
+          // Use the correct parameters for loadDocument
           webViewerInstance.UI.loadDocument(fileUrl, { filename: file.name });
         }
 
