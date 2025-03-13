@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,9 +16,10 @@ export const PomodoroSettings = () => {
           value={state.workMinutes}
           onChange={(e) => dispatch({ 
             type: 'SET_WORK_MINUTES', 
-            payload: Number(e.target.value) 
+            payload: Number(e.target.value) || 1
           })}
           min="1"
+          max="60"
           disabled={state.isActive}
           className="h-9"
         />
@@ -29,9 +31,10 @@ export const PomodoroSettings = () => {
           value={state.shortBreakMinutes}
           onChange={(e) => dispatch({ 
             type: 'SET_SHORT_BREAK', 
-            payload: Number(e.target.value) 
+            payload: Number(e.target.value) || 1
           })}
           min="1"
+          max="30"
           disabled={state.isActive}
           className="h-9"
         />
@@ -43,9 +46,10 @@ export const PomodoroSettings = () => {
           value={state.longBreakMinutes}
           onChange={(e) => dispatch({ 
             type: 'SET_LONG_BREAK', 
-            payload: Number(e.target.value) 
+            payload: Number(e.target.value) || 1
           })}
           min="1"
+          max="60"
           disabled={state.isActive}
           className="h-9"
         />

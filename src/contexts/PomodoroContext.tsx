@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useMemo } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Task } from "@/types/task";
 import { useTasks } from "@/hooks/useTasks";
@@ -55,32 +54,47 @@ const pomodoroReducer = (state: PomodoroState, action: PomodoroAction): Pomodoro
       return { ...state, isActive: !state.isActive };
     case 'RESET_TIMER':
       return {
-        ...initialState,
+        ...state, 
+        workMinutes: initialState.workMinutes,
+        seconds: initialState.seconds,
+        isActive: initialState.isActive,
+        isWork: initialState.isWork,
         completedPomodoros: state.completedPomodoros,
         sessionGoal: state.sessionGoal,
-        taskPomodoros: state.taskPomodoros
+        taskPomodoros: state.taskPomodoros,
+        currentTask: state.currentTask
       };
     case 'TICK':
-      if (state.seconds === 0) {
-        if (state.workMinutes === 0) {
-          return {
-            ...state,
-            isWork: !state.isWork,
-            workMinutes: state.isWork ? 
-              (state.completedPomodoros % 4 === 0 ? state.longBreakMinutes : state.shortBreakMinutes) : 
-              initialState.workMinutes,
-            isActive: false
-          };
-        }
+      if (state.seconds > 0) {
+        return { ...state, seconds: state.seconds - 1 };
+      }
+      
+      if (state.workMinutes > 0) {
         return { ...state, workMinutes: state.workMinutes - 1, seconds: 59 };
       }
-      return { ...state, seconds: state.seconds - 1 };
+      
+      return {
+        ...state,
+        isActive: false,
+        isWork: !state.isWork,
+        workMinutes: state.isWork 
+          ? (state.completedPomodoros % 4 === 0 ? state.longBreakMinutes : state.shortBreakMinutes) 
+          : initialState.workMinutes,
+        seconds: 0
+      };
     case 'COMPLETE_POMODORO':
-      if (!state.currentTask) return { ...state, completedPomodoros: state.completedPomodoros + 1 };
+      if (!state.currentTask) {
+        return { 
+          ...state, 
+          completedPomodoros: state.completedPomodoros + 1 
+        };
+      }
+      
       const newTaskPomodoros = {
         ...state.taskPomodoros,
         [state.currentTask]: (state.taskPomodoros[state.currentTask] || 0) + 1
       };
+      
       return {
         ...state,
         completedPomodoros: state.completedPomodoros + 1,
@@ -102,7 +116,15 @@ export const PomodoroProvider = ({ children }: { children: React.ReactNode }) =>
   const [state, dispatch] = useReducer(pomodoroReducer, initialState);
   const { toast } = useToast();
   const { handleToggleTask } = useTasks();
-  const notificationSound = new Audio('/sounds/notification-bell.mp3');
+  
+  const notificationSound = useMemo(() => {
+    if (typeof window !== 'undefined') {
+      const audio = new Audio('/sounds/notification-bell.mp3');
+      audio.volume = 0.5;
+      return audio;
+    }
+    return null;
+  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -118,21 +140,15 @@ export const PomodoroProvider = ({ children }: { children: React.ReactNode }) =>
 
   useEffect(() => {
     if (state.workMinutes === 0 && state.seconds === 0) {
-      // Play sound with error handling and volume adjustment
-      notificationSound.volume = 0.5; // Set volume to 50%
-      notificationSound.play().catch(error => {
-        console.error('Error playing notification sound:', error);
-        // Still show toast even if sound fails
-        toast({
-          title: "Time's up!",
-          description: "Your Pomodoro session has ended",
+      if (notificationSound) {
+        notificationSound.play().catch(error => {
+          console.error('Error playing notification sound:', error);
         });
-      });
+      }
 
       if (state.isWork) {
         dispatch({ type: 'COMPLETE_POMODORO' });
         
-        // Check if task has completed enough pomodoros
         if (state.currentTask && (state.taskPomodoros[state.currentTask] || 0) >= 4) {
           handleToggleTask(state.currentTask);
           toast({
@@ -154,7 +170,8 @@ export const PomodoroProvider = ({ children }: { children: React.ReactNode }) =>
         });
       }
     }
-  }, [state.workMinutes, state.seconds, state.isWork, state.completedPomodoros, state.currentTask, state.taskPomodoros, handleToggleTask, toast]);
+  }, [state.workMinutes, state.seconds, state.isWork, state.completedPomodoros, 
+      state.currentTask, state.taskPomodoros, handleToggleTask, toast, notificationSound]);
 
   return (
     <PomodoroContext.Provider value={{ state, dispatch }}>

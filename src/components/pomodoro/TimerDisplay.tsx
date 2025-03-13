@@ -1,10 +1,20 @@
+
 import React from "react";
 import { Progress } from "@/components/ui/progress";
 import { usePomodoroContext } from "@/contexts/PomodoroContext";
 
 export const TimerDisplay = () => {
   const { state } = usePomodoroContext();
-  const progress = ((state.workMinutes * 60 + state.seconds) / (state.isWork ? (25 * 60) : (state.shortBreakMinutes * 60))) * 100;
+  
+  // Calculate progress percentage based on current phase
+  const totalSeconds = state.isWork 
+    ? state.workMinutes * 60 
+    : (state.completedPomodoros % 4 === 0 && !state.isWork 
+        ? state.longBreakMinutes * 60 
+        : state.shortBreakMinutes * 60);
+  
+  const remainingSeconds = (state.workMinutes * 60) + state.seconds;
+  const progress = (remainingSeconds / totalSeconds) * 100;
 
   return (
     <div className="space-y-4">
