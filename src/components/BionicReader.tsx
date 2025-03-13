@@ -17,7 +17,7 @@ export const BionicReader = () => {
       return (
         <span 
           key={`${word}-${index}`}
-          className="inline-block"
+          className="inline-block mr-1" // Added margin-right for spacing
           role="text"
           tabIndex={0}
           onKeyDown={(e) => {
@@ -37,7 +37,6 @@ export const BionicReader = () => {
         >
           <strong>{word.slice(0, midPoint)}</strong>
           {word.slice(midPoint)}
-          {' '}
         </span>
       );
     });
