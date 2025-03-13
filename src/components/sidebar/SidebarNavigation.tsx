@@ -1,7 +1,7 @@
 
 import React, { useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Monitor, CheckSquare, Brain, Bot } from "lucide-react";
+import { Monitor, CheckSquare, Brain } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 import { useTranslation } from "react-i18next";
 
@@ -27,12 +27,6 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       label: t('navigation.tasks'),
       icon: CheckSquare,
       path: "/tasks"
-    },
-    {
-      id: "ai-assistant",
-      label: t('navigation.aiAssistant'),
-      icon: Bot,
-      path: "/ai-assistant"
     },
     {
       id: "mind-map",

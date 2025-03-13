@@ -1,3 +1,4 @@
+
 import React from "react";
 import { PomodoroTimer } from "../PomodoroTimer";
 import { TextToSpeech } from "../TextToSpeech";
@@ -5,7 +6,6 @@ import { BionicReader } from "../BionicReader";
 import { FocusMode } from "../FocusMode";
 import { IrlenOverlay } from "../IrlenOverlay";
 import { MindMap } from "../MindMap";
-import { AIAssistant } from "../AIAssistant";
 import { ColorSeparator } from "../ColorSeparator";
 import { FileList } from "../FileList";
 
@@ -38,8 +38,6 @@ export const SidebarContent = ({
         return <IrlenOverlay />;
       case "mindmap":
         return <MindMap />;
-      case "ai":
-        return <AIAssistant />;
       case "color":
         return <ColorSeparator onColorChange={onColorChange} />;
       case "files":

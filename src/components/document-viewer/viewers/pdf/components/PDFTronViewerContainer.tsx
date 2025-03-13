@@ -66,13 +66,17 @@ const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
           
           // Use the correct API for PDFTron
           if (docViewer.getTool) {
-            const tool = docViewer.getTool('AnnotationCreateTextHighlight');
-            if (tool) {
-              // Set tool mode with string identifier for the tool
-              docViewer.setToolMode('AnnotationCreateTextHighlight');
-              
-              // Apply color settings through the annotation manager's default style
-              annotManager.getAnnotationProperties('TextHighlight').StrokeColor = colorObj;
+            // Correctly set the tool mode
+            docViewer.setToolMode(Core.Tools.ToolNames.HIGHLIGHT);
+            
+            // Get the highlight tool
+            const highlightTool = docViewer.getTool(Core.Tools.ToolNames.HIGHLIGHT);
+            
+            // Apply color settings if the tool exists
+            if (highlightTool && highlightTool.setStyles) {
+              highlightTool.setStyles({
+                StrokeColor: colorObj
+              });
             }
           }
         }
@@ -90,11 +94,27 @@ const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
         Core.documentViewer.addEventListener('documentLoaded', async () => {
           try {
             const doc = Core.documentViewer.getDocument();
-            const textContent = await doc.extractTextData();
-            setDocumentContent(textContent.text || '');
             
-            if (onContentLoaded && textContent.text) {
-              onContentLoaded(textContent.text, file?.name || url?.split('/').pop() || 'document');
+            // Use the correct method to extract text based on PDFTron API
+            let textContent = '';
+            if (doc.getTextData) {
+              const textData = await doc.getTextData();
+              textContent = textData.text || '';
+            } else {
+              // Fallback method
+              const pageCount = doc.getPageCount();
+              let allText = '';
+              for (let i = 1; i <= pageCount; i++) {
+                const text = await doc.loadPageText(i);
+                allText += text + '\n';
+              }
+              textContent = allText;
+            }
+            
+            setDocumentContent(textContent);
+            
+            if (onContentLoaded && textContent) {
+              onContentLoaded(textContent, file?.name || url?.split('/').pop() || 'document');
             }
             
             setIsLoading(false);
