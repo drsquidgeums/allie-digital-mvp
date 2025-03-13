@@ -1,18 +1,15 @@
 
 import React, { Suspense, useEffect } from 'react';
-import { lazy } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LoadingFallback } from '../LoadingFallback';
 import '@/styles/pdf/pdf-base.css';
-import * as pdfjs from 'pdfjs-dist';
 
-// Configure PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-
-// Lazy load the PdfViewer component
-const PDFTronViewer = lazy(() => import('../pdf/components/PDFTronViewer').then(module => ({
-  default: module.PDFTronViewer
-})));
+// Lazy load the PDF viewer component
+const CustomPDFViewer = React.lazy(() => 
+  import('../pdf/components/CustomPDFViewer').then(module => ({
+    default: module.CustomPDFViewer
+  }))
+);
 
 interface PdfViewerWrapperProps {
   file: File | null;
@@ -24,7 +21,7 @@ interface PdfViewerWrapperProps {
 /**
  * PdfViewerWrapper Component
  * 
- * Wraps the PDFTron viewer component with error boundary and suspense
+ * Wraps the PDF viewer component with error boundary and suspense
  */
 export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   file,
@@ -35,11 +32,11 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   console.log("PdfViewerWrapper received file:", file?.name);
   console.log("PdfViewerWrapper color settings:", selectedColor, isHighlighter);
   
-  // Log the PDF.js versions
+  // Log when loading PDF viewer
   useEffect(() => {
     if (file || url) {
       console.log("Loading PDF viewer with file:", file?.name, "or URL:", url);
-      console.log("Using PDFTron WebViewer");
+      console.log("Using Custom PDF-LIB Viewer");
     }
   }, [file, url]);
   
@@ -47,7 +44,7 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
     <div className="h-full overflow-auto">
       <ErrorBoundary>
         <Suspense fallback={<LoadingFallback />}>
-          <PDFTronViewer
+          <CustomPDFViewer
             file={file}
             url={url}
             selectedColor={selectedColor}

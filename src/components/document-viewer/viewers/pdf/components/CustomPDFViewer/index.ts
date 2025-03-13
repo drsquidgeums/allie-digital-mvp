@@ -1,0 +1,2 @@
+
+export { CustomPDFViewer } from '../CustomPDFViewer';
