@@ -48,21 +48,21 @@ export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
           UI.enableElements(['highlightToolGroupButton']);
           
           // Use type assertion to fix the first error
-          Core.documentViewer.setToolMode(('AnnotationCreateTextHighlight' as any));
+          Core.documentViewer.setToolMode(Core.Tools.ToolNames.HIGHLIGHT);
           
           const annotManager = Core.documentViewer.getAnnotationManager();
           
-          // Create a proper color object
-          const color = new Core.Annotations.Color(selectedColor);
+          // Parse the selected color to create a proper color object
+          const colorObj = new Core.Annotations.Color(selectedColor);
           
-          // Fix for the TS2554 error: Expected 3-4 arguments, but got 1
-          // The setAnnotationStyles method expects more arguments
-          annotManager.setAnnotationStyles(
-            Core.Tools.ToolNames.HIGHLIGHT, // Use the proper tool name constant
-            color,                          // Pass the color directly
-            null,                           // Optional third argument (null is fine)
-            null                            // Optional fourth argument (null is fine)
-          );
+          // Get the current highlight style
+          const highlightStyle = annotManager.getHighlightStyle();
+          
+          // Set the color for the highlight style
+          highlightStyle.StrokeColor = colorObj;
+          
+          // Apply the updated style - correct usage of setHighlightStyle method
+          annotManager.setHighlightStyle(highlightStyle);
         }
 
         // Load file if URL is not provided
