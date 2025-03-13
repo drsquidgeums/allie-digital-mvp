@@ -1,6 +1,8 @@
 
 import React from 'react';
-import { PDFTronViewer } from './PDFTronViewer';
+import { Document, Page } from 'react-pdf';
+import { useToast } from '@/hooks/use-toast';
+import { HighlightableDocument } from './HighlightableDocument';
 
 interface CustomPDFViewerProps {
   file: File | null;
@@ -15,13 +17,41 @@ export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
   selectedColor,
   isHighlighter = true
 }) => {
+  const pdfSource = file ? { data: file } : url ? { url } : null;
+  const { toast } = useToast();
+  
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    toast({
+      title: "PDF Loaded Successfully",
+      description: `Document has ${numPages} pages`,
+    });
+  };
+  
+  const onDocumentLoadError = (error: Error) => {
+    console.error("Error loading PDF:", error);
+    toast({
+      variant: "destructive",
+      title: "Failed to load PDF",
+      description: "There was an error loading the document. Please try again.",
+    });
+  };
+
+  if (!pdfSource) {
+    return (
+      <div className="flex items-center justify-center h-full bg-muted/20">
+        <p className="text-muted-foreground">No document loaded. Please select a PDF file.</p>
+      </div>
+    );
+  }
+  
   return (
     <div className="h-full flex flex-col">
-      <PDFTronViewer
-        file={file}
-        url={url}
+      <HighlightableDocument
+        file={pdfSource}
         selectedColor={selectedColor}
         isHighlighter={isHighlighter}
+        onLoadSuccess={onDocumentLoadSuccess}
+        onLoadError={onDocumentLoadError}
       />
     </div>
   );

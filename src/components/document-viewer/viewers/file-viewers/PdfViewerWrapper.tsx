@@ -36,7 +36,7 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   useEffect(() => {
     if (file || url) {
       console.log("Loading PDF viewer with file:", file?.name, "or URL:", url);
-      console.log("Using Custom PDF-LIB Viewer");
+      console.log("Using React-PDF Viewer with custom highlighting");
     }
   }, [file, url]);
   

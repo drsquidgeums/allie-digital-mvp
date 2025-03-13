@@ -1,0 +1,61 @@
+
+/* PDF Highlighting Styles */
+.pdf-highlight {
+  background-color: transparent;
+  position: relative;
+  cursor: pointer;
+}
+
+.highlight-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.highlight-item {
+  position: absolute;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  transition: opacity 0.2s ease;
+}
+
+.highlight-item:hover {
+  opacity: 0.8;
+}
+
+/* PDF Viewer Container */
+.pdf-viewer-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: #f8f9fa;
+  position: relative;
+}
+
+.pdf-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  background-color: white;
+}
+
+.pdf-content-area {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  background-color: #e5e7eb;
+  padding: 1rem;
+}
+
+/* Text Selection Styling */
+::selection {
+  background-color: var(--highlight-color, rgba(255, 255, 0, 0.3));
+}
