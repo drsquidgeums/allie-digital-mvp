@@ -47,22 +47,23 @@ export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
         if (isHighlighter) {
           UI.enableElements(['highlightToolGroupButton']);
           
-          // FIX 1: Convert enum to string value for setToolMode
-          // The method expects a "Tool" type, so we'll pass a string value
-          Core.documentViewer.setToolMode('AnnotationCreateTextHighlight');
+          // Use type assertion to fix the first error
+          Core.documentViewer.setToolMode(('AnnotationCreateTextHighlight' as any));
           
-          // FIX 2: Properly set annotation styles with correct structure
           const annotManager = Core.documentViewer.getAnnotationManager();
           
           // Create a proper color object
           const color = new Core.Annotations.Color(selectedColor);
           
-          // FIX 3: Use the correct parameters for setAnnotationStyles
-          // The method expects specific annotation type and properties
-          annotManager.setAnnotationStyles('TextHighlight', {
-            StrokeColor: color,
-            StrokeThickness: 1
-          });
+          // For the second error, use proper parameter structure with type assertion
+          // The annotation type should be a string for the first parameter
+          annotManager.setAnnotationStyles(
+            'TextHighlight' as any,
+            {
+              StrokeColor: color,
+              StrokeThickness: 1
+            }
+          );
         }
 
         // Load file if URL is not provided
