@@ -11,7 +11,7 @@ export const AppLogo = React.memo(() => (
       alt="Allie Digital Logo" 
       className="w-12 h-12"
     />
-    <span className="text-sm font-medium text-foreground">Beta Version 1.0</span>
+    <span className="text-sm font-medium text-foreground">Allie.ai v1.0</span>
   </div>
 ));
 
