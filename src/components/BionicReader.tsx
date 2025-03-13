@@ -9,15 +9,17 @@ export const BionicReader = () => {
   const outputRef = useRef<HTMLDivElement>(null);
 
   const processBionicText = (input: string) => {
-    // Normalize spaces and split by whitespace
+    // Normalize spaces and split by whitespace while preserving spaces
     const words = input.replace(/\s+/g, ' ').trim().split(' ');
     
     return words.map((word, index) => {
+      if (!word) return null; // Skip empty strings
+      
       const midPoint = Math.ceil(word.length / 2);
       return (
         <span 
           key={`${word}-${index}`}
-          className="inline-block mr-1" // Added margin-right for spacing
+          className="inline-block mr-1.5" // Added margin-right for spacing between words
           role="text"
           tabIndex={0}
           onKeyDown={(e) => {
