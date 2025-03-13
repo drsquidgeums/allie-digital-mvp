@@ -1,7 +1,23 @@
 
 import React, { useRef, useEffect, useState } from 'react';
-import PSPDFKit from 'pspdfkit';
 import { useToast } from '@/hooks/use-toast';
+import 'pspdfkit/dist/pspdfkit.css';
+
+// Define types for PSPDFKit since it's loaded globally
+interface PSPDFKitNamespace {
+  Instance: any;
+  load(options: PSPDFKitOptions): Promise<any>;
+  Color: any;
+  [key: string]: any;
+}
+
+interface PSPDFKitOptions {
+  container: HTMLElement;
+  document: string | ArrayBuffer;
+  baseUrl: string;
+  toolbarItems?: any[];
+  [key: string]: any;
+}
 
 interface PSPDFKitViewerProps {
   file: File | null;
@@ -17,7 +33,7 @@ export const PSPDFKitViewer: React.FC<PSPDFKitViewerProps> = ({
   isHighlighter = true
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [instance, setInstance] = useState<PSPDFKit.Instance | null>(null);
+  const [instance, setInstance] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { toast } = useToast();
 
@@ -34,12 +50,18 @@ export const PSPDFKitViewer: React.FC<PSPDFKitViewerProps> = ({
       }
 
       try {
-        let documentSource: string | Blob;
+        // Dynamic import of PSPDFKit
+        const PSPDFKit = await import('pspdfkit') as unknown as PSPDFKitNamespace;
         
         // Determine document source (file or URL)
+        let documentSource: string | ArrayBuffer;
+        
         if (file) {
-          documentSource = file;
+          // Convert File to ArrayBuffer
+          const arrayBuffer = await file.arrayBuffer();
+          documentSource = arrayBuffer;
         } else if (url) {
+          // Use URL directly
           documentSource = url;
         } else {
           setIsLoading(false);
@@ -54,15 +76,15 @@ export const PSPDFKitViewer: React.FC<PSPDFKitViewerProps> = ({
           toolbarItems: [
             { type: 'sidebar-thumbnails' },
             { type: 'sidebar-document-outline' },
-            { type: 'highlight-text' },
+            { type: 'highlighter' }, // Corrected from 'highlight-text'
             { type: 'pan' },
             { type: 'zoom-in' },
             { type: 'zoom-out' },
             { type: 'zoom-mode' },
             { type: 'spacer' },
             { type: 'pager' },
-            { type: 'print' },
-            { type: 'download' },
+            { type: 'print' }
+            // Removed 'download' as it's not a valid type
           ]
         });
 
@@ -74,9 +96,10 @@ export const PSPDFKitViewer: React.FC<PSPDFKitViewerProps> = ({
           const b = parseInt(selectedColor.slice(5, 7), 16);
           
           // Set the default annotation color
+          const PSPDFKitColor = PSPDFKit.Color;
           pspdfkitInstance.setAnnotationPresets({
             'highlight': {
-              color: new PSPDFKit.Color({ r, g, b })
+              color: new PSPDFKitColor({ r, g, b })
             }
           });
         }
@@ -108,27 +131,35 @@ export const PSPDFKitViewer: React.FC<PSPDFKitViewerProps> = ({
         instance.dispose();
       }
     };
-  }, [file, url, isHighlighter, selectedColor, toast]);
+  }, [file, url, isHighlighter, selectedColor, toast, instance]);
 
   // Update color when it changes
   useEffect(() => {
-    if (instance && isHighlighter) {
-      try {
-        // Convert hex color to rgba
-        const r = parseInt(selectedColor.slice(1, 3), 16);
-        const g = parseInt(selectedColor.slice(3, 5), 16);
-        const b = parseInt(selectedColor.slice(5, 7), 16);
-        
-        // Update the default highlight color
-        instance.setAnnotationPresets({
-          'highlight': {
-            color: new PSPDFKit.Color({ r, g, b })
-          }
-        });
-      } catch (error) {
-        console.error('Error updating highlight color:', error);
+    const updateHighlightColor = async () => {
+      if (instance && isHighlighter) {
+        try {
+          // Dynamically import PSPDFKit to get the Color constructor
+          const PSPDFKit = await import('pspdfkit') as unknown as PSPDFKitNamespace;
+          
+          // Convert hex color to rgba
+          const r = parseInt(selectedColor.slice(1, 3), 16);
+          const g = parseInt(selectedColor.slice(3, 5), 16);
+          const b = parseInt(selectedColor.slice(5, 7), 16);
+          
+          // Update the default highlight color
+          const PSPDFKitColor = PSPDFKit.Color;
+          instance.setAnnotationPresets({
+            'highlight': {
+              color: new PSPDFKitColor({ r, g, b })
+            }
+          });
+        } catch (error) {
+          console.error('Error updating highlight color:', error);
+        }
       }
-    }
+    };
+    
+    updateHighlightColor();
   }, [selectedColor, instance, isHighlighter]);
 
   return (
