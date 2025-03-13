@@ -7,24 +7,49 @@
   position: relative;
 }
 
-/* PDF.js Express specific styles */
-.pdfjs-express-viewer {
-  width: 100%;
-  height: 100%;
-  background: var(--background);
+/* react-pdf specific styles */
+.react-pdf__Document {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Make sure the PDF.js Express WebViewer takes all available space */
-#viewer {
-  height: 100%;
-  width: 100%;
+.react-pdf__Page {
+  margin: 1em 0;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.react-pdf__Page__canvas {
+  display: block;
+  user-select: none;
+}
+
+.react-pdf__Page__textContent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   overflow: hidden;
+  opacity: 0.2;
+  line-height: 1.0;
 }
 
-/* Fix for PDF.js Express toolbar in dark mode */
-.dark .pdf-viewer-toolbar {
-  background-color: hsl(var(--card));
-  color: hsl(var(--card-foreground));
+.react-pdf__Page__annotations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.react-pdf__Page__annotations.annotationLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 /* Loading overlay for PDF viewports */
@@ -39,4 +64,21 @@
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.1);
   z-index: 10;
+}
+
+/* Make PDF viewer responsive */
+@media (max-width: 768px) {
+  .react-pdf__Page {
+    margin: 0.5em 0;
+  }
+  
+  .react-pdf__Page__canvas {
+    max-width: 100%;
+    height: auto !important;
+  }
+}
+
+/* Dark mode support */
+.dark .react-pdf__Page {
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
 }

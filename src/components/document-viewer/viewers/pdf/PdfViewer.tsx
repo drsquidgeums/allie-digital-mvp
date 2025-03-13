@@ -1,7 +1,18 @@
 
-import React from 'react';
-import { PdfJsExpressViewer } from './components/PdfJsExpressViewer';
-import { PdfFooter } from './components/PdfFooter';
+import React, { useState } from 'react';
+import { Document, Page } from 'react-pdf';
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  ZoomIn, 
+  ZoomOut, 
+  RotateCw 
+} from 'lucide-react';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
+import '@/styles/pdf/pdf-base.css';
 
 interface PdfViewerProps {
   file: File | null;
@@ -16,18 +27,136 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   selectedColor,
   isHighlighter = true
 }) => {
-  console.log("Rendering PDF with URL:", url || "from file");
+  const [numPages, setNumPages] = useState<number>(0);
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [scale, setScale] = useState<number>(1.0);
+  const [rotation, setRotation] = useState<number>(0);
+  const { toast } = useToast();
+  
+  // File source determination
+  const pdfSource = file ? { data: file } : url ? { url } : null;
+  
+  // PDF load success handler
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    setNumPages(numPages);
+    setPageNumber(1);
+    
+    toast({
+      title: "PDF Loaded Successfully",
+      description: `Document has ${numPages} pages`,
+    });
+    
+    console.log("PDF document loaded successfully with", numPages, "pages");
+  };
+  
+  // PDF load error handler
+  const onDocumentLoadError = (error: Error) => {
+    console.error("Error loading PDF:", error);
+    
+    toast({
+      variant: "destructive",
+      title: "Failed to load PDF",
+      description: "There was an error loading the document. Please try again.",
+    });
+  };
+  
+  // Page navigation
+  const changePage = (offset: number) => {
+    const newPage = pageNumber + offset;
+    if (newPage >= 1 && newPage <= numPages) {
+      setPageNumber(newPage);
+    }
+  };
+  
+  // Zoom controls
+  const zoom = (factor: number) => {
+    const newScale = scale + factor;
+    // Limit zoom between 0.5 and 3
+    if (newScale >= 0.5 && newScale <= 3) {
+      setScale(newScale);
+    }
+  };
+  
+  // Rotate document
+  const rotateDocument = () => {
+    setRotation((rotation + 90) % 360);
+  };
+  
+  if (!pdfSource) {
+    return (
+      <div className="flex items-center justify-center h-full bg-muted/20">
+        <p className="text-muted-foreground">No document loaded. Please select a PDF file.</p>
+      </div>
+    );
+  }
   
   return (
-    <div className="h-full flex flex-col">
-      <PdfJsExpressViewer
-        file={file}
-        url={url}
-        selectedColor={selectedColor}
-        isHighlighter={isHighlighter}
-      />
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* PDF Controls */}
+      <div className="flex items-center justify-between p-2 bg-card border-b">
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => changePage(-1)}
+            disabled={pageNumber <= 1}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          
+          <span className="text-sm">
+            {pageNumber} / {numPages}
+          </span>
+          
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => changePage(1)}
+            disabled={pageNumber >= numPages}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        <div className="flex items-center space-x-2">
+          <Button variant="outline" size="sm" onClick={() => zoom(-0.1)}>
+            <ZoomOut className="h-4 w-4" />
+          </Button>
+          
+          <span className="text-sm">{Math.round(scale * 100)}%</span>
+          
+          <Button variant="outline" size="sm" onClick={() => zoom(0.1)}>
+            <ZoomIn className="h-4 w-4" />
+          </Button>
+          
+          <Button variant="outline" size="sm" onClick={rotateDocument}>
+            <RotateCw className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
       
-      <PdfFooter isHighlighter={isHighlighter} />
+      {/* PDF Document */}
+      <div className="flex-1 overflow-auto flex justify-center bg-muted/10 p-4">
+        <Document
+          file={pdfSource}
+          onLoadSuccess={onDocumentLoadSuccess}
+          onLoadError={onDocumentLoadError}
+          loading={
+            <div className="flex items-center justify-center h-full">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          }
+        >
+          <Page
+            pageNumber={pageNumber}
+            scale={scale}
+            rotate={rotation}
+            renderTextLayer={true}
+            renderAnnotationLayer={true}
+            className="shadow-lg"
+          />
+        </Document>
+      </div>
     </div>
   );
 };
