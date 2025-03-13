@@ -1,5 +1,6 @@
 
 import { useState, useCallback } from "react";
+import { createOpenAIClient, SYSTEM_PROMPT } from "@/utils/openai";
 
 interface Message {
   text: string;
@@ -11,13 +12,17 @@ const INITIAL_MESSAGE: Message = {
   isUser: false
 };
 
-export const useChatLogic = () => {
+export const useChatLogic = (documentContent?: string) => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getToolResponse = useCallback((input: string): string => {
+  const getToolResponse = useCallback((input: string, docContent?: string): string => {
     const lowerInput = input.toLowerCase();
+    
+    if (docContent && (lowerInput.includes("explain") || lowerInput.includes("what is") || lowerInput.includes("definition") || lowerInput.includes("mean"))) {
+      return `I can help explain concepts from your document. Please specify which term or concept you'd like me to explain, or I can analyze the content and highlight key concepts for you.`;
+    }
     
     if (lowerInput.includes("irlen") || lowerInput.includes("overlay")) {
       return "The Irlen Overlay tool helps users with visual processing difficulties, including dyslexia. It adds a colored overlay to the screen which can reduce visual stress and make text easier to read. You can choose from different colors to find what works best for you.";
@@ -54,6 +59,39 @@ export const useChatLogic = () => {
     return "I can explain how our various tools help support different learning needs. You can ask about specific tools like the Irlen Overlay, OpenDyslexic font, Bionic Reader, Color Separator, Focus Mode, Pomodoro Timer, Mind Map, or Text-to-Speech feature. Which would you like to learn more about?";
   }, []);
 
+  const analyzeDocument = useCallback(async (content: string): Promise<string> => {
+    if (!content) {
+      return "No document content available. Please upload or open a document first.";
+    }
+
+    try {
+      const openai = await createOpenAIClient();
+      if (!openai) {
+        return "I'm unable to analyze the document right now. Please try again later.";
+      }
+
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: `${SYSTEM_PROMPT} You are analyzing document content for a student with learning differences. Identify 3-5 key concepts and provide simple explanations for each one.`
+          },
+          {
+            role: "user",
+            content: `Analyze this document content and identify key concepts that might be difficult to understand: ${content.substring(0, 4000)}`
+          }
+        ],
+        temperature: 0.5
+      });
+
+      return response.choices[0].message.content || "I couldn't identify any complex concepts in this document.";
+    } catch (error) {
+      console.error("Error analyzing document:", error);
+      return "I encountered an error while analyzing your document. Please try again later.";
+    }
+  }, []);
+
   const handleSend = useCallback(async () => {
     if (!input.trim() || isLoading) return;
 
@@ -61,19 +99,27 @@ export const useChatLogic = () => {
     setMessages(prev => [...prev, { text: input, isUser: true }]);
     setInput("");
 
-    const response = getToolResponse(input);
+    let response = "";
+    
+    // Check if this is a request to analyze the document
+    if (documentContent && input.toLowerCase().includes("analyze") && input.toLowerCase().includes("document")) {
+      response = await analyzeDocument(documentContent);
+    } else {
+      response = getToolResponse(input, documentContent);
+    }
     
     setTimeout(() => {
       setMessages(prev => [...prev, { text: response, isUser: false }]);
       setIsLoading(false);
     }, 1000);
-  }, [input, isLoading, getToolResponse]);
+  }, [input, isLoading, getToolResponse, analyzeDocument, documentContent]);
 
   return {
     input,
     setInput,
     messages,
     isLoading,
-    handleSend
+    handleSend,
+    analyzeDocument
   };
 };
