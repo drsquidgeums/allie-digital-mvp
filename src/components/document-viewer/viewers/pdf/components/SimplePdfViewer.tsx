@@ -72,6 +72,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
         const viewer = new Viewer({
           domContainer: containerRef.current,
           template,
+          inputs: [{}], // Add empty inputs array as required by pdfme Viewer
           options: {
             readonly: true, // View-only mode
           },
