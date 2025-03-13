@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Viewer } from '@pdfme/ui';
-import { generatePdf } from '@pdfme/generator';
+import { generate } from '@pdfme/generator';
 import { BLANK_PDF } from '@pdfme/common';
 import { useToast } from '@/hooks/use-toast';
 
@@ -49,8 +49,24 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
           pdfData = new Uint8Array(arrayBuffer);
         }
 
+        // Create a basic empty schema structure required by pdfme
+        const emptySchema = [
+          [
+            {
+              name: 'empty',
+              type: 'text',
+              position: { x: 0, y: 0 },
+              width: 0,
+              height: 0,
+            }
+          ]
+        ];
+
         // Initialize viewer with PDF data or blank PDF
-        const template = pdfData ? { basePdf: pdfData } : { basePdf: BLANK_PDF };
+        const template = {
+          basePdf: pdfData || BLANK_PDF,
+          schemas: emptySchema
+        };
 
         // Create and initialize the viewer
         const viewer = new Viewer({
