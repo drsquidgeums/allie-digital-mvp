@@ -46,14 +46,14 @@ export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
         // Enable text highlighting
         if (isHighlighter) {
           UI.enableElements(['highlightToolGroupButton']);
+          // Fix: Use the proper setToolMode format with a string
           Core.documentViewer.setToolMode(Core.Tools.ToolNames.HIGHLIGHT);
           
-          // Set the highlight color
+          // Set the highlight color - Fix: Use the proper format for annotation styles
           const annotManager = Core.documentViewer.getAnnotationManager();
           annotManager.setAnnotationStyles({
-            'TextHighlight': {
-              StrokeColor: new Core.Annotations.Color(selectedColor),
-              StrokeThickness: 1
+            TextHighlight: {
+              StrokeColor: new Core.Annotations.Color(selectedColor)
             }
           });
         }
@@ -61,7 +61,7 @@ export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
         // Load file if URL is not provided
         if (file && !url) {
           const fileUrl = URL.createObjectURL(file);
-          UI.loadDocument(fileUrl);
+          webViewerInstance.UI.loadDocument(fileUrl, { filename: file.name });
         }
 
         // Notify parent component about the instance
