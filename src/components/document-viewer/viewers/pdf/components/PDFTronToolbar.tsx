@@ -45,15 +45,15 @@ export const PDFTronToolbar: React.FC<PDFTronToolbarProps> = ({
   
   // Handle tool selection
   const handlePanTool = () => {
-    Core.documentViewer.setToolMode(Core.Tools.ToolNames.PAN);
+    Core.documentViewer.setToolMode(Core.documentViewer.getTool('Pan'));
   };
   
   const handleTextSelectTool = () => {
-    Core.documentViewer.setToolMode(Core.Tools.ToolNames.TEXT_SELECT);
+    Core.documentViewer.setToolMode(Core.documentViewer.getTool('TextSelect'));
   };
   
   const handleHighlighterTool = () => {
-    Core.documentViewer.setToolMode(Core.Tools.ToolNames.HIGHLIGHT);
+    Core.documentViewer.setToolMode(Core.documentViewer.getTool('AnnotationCreateTextHighlight'));
   };
   
   return (

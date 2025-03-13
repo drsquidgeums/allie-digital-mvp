@@ -47,22 +47,18 @@ export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
         if (isHighlighter) {
           UI.enableElements(['highlightToolGroupButton']);
           
-          // Use type assertion to fix the first error
-          Core.documentViewer.setToolMode(Core.Tools.ToolNames.HIGHLIGHT);
+          // Set the tool mode to highlight
+          const docViewer = Core.documentViewer;
+          docViewer.setToolMode(docViewer.getTool('AnnotationCreateTextHighlight'));
           
-          const annotManager = Core.documentViewer.getAnnotationManager();
+          // Apply the highlight color
+          const annotManager = docViewer.getAnnotationManager();
           
           // Parse the selected color to create a proper color object
           const colorObj = new Core.Annotations.Color(selectedColor);
           
-          // Get the current highlight style
-          const highlightStyle = annotManager.getHighlightStyle();
-          
-          // Set the color for the highlight style
-          highlightStyle.StrokeColor = colorObj;
-          
-          // Apply the updated style - correct usage of setHighlightStyle method
-          annotManager.setHighlightStyle(highlightStyle);
+          // Apply color to text highlight annotations
+          annotManager.setTextHighlightColor(colorObj);
         }
 
         // Load file if URL is not provided

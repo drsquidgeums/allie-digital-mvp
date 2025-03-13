@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { PSPDFKitViewer } from './PSPDFKitViewer';
+import { PDFTronViewer } from './PDFTronViewer';
 
 interface CustomPDFViewerProps {
   file: File | null;
@@ -17,7 +17,7 @@ export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
 }) => {
   return (
     <div className="h-full flex flex-col">
-      <PSPDFKitViewer
+      <PDFTronViewer
         file={file}
         url={url}
         selectedColor={selectedColor}
@@ -26,3 +26,5 @@ export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
     </div>
   );
 };
+
+export default CustomPDFViewer;

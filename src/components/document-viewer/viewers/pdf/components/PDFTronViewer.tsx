@@ -23,13 +23,15 @@ export const PDFTronViewer: React.FC<PDFTronViewerProps> = ({
   useEffect(() => {
     if (instance && isHighlighter) {
       const { Core } = instance;
-      const annotManager = Core.documentViewer.getAnnotationManager();
-      annotManager.setAnnotationStyles({
-        'TextHighlight': {
-          StrokeColor: new Core.Annotations.Color(selectedColor),
-          StrokeThickness: 1
-        }
-      });
+      try {
+        const annotManager = Core.documentViewer.getAnnotationManager();
+        const color = new Core.Annotations.Color(selectedColor);
+        
+        // Apply the new color
+        annotManager.setTextHighlightColor(color);
+      } catch (error) {
+        console.error('Error updating highlight color:', error);
+      }
     }
   }, [selectedColor, instance, isHighlighter]);
 
