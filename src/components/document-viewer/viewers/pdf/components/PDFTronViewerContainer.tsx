@@ -29,7 +29,7 @@ export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
       
       setIsLoading(true);
       try {
-        // Initialize WebViewer
+        // Initialize WebViewer with proper configuration
         const webViewerInstance = await WebViewer({
           path: '/public', // Path to PDFTron assets
           initialDoc: url || '', // Use URL if available
@@ -47,32 +47,32 @@ export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
         if (isHighlighter) {
           UI.enableElements(['highlightToolGroupButton']);
           
-          // Set the tool mode to highlight - using proper method signature
+          // Set the tool mode to highlight with proper method call
           const docViewer = Core.documentViewer;
           
-          // Use AnnotationCreateTextHighlight as a string since we don't have access to the enum directly
-          docViewer.setToolMode(docViewer.getTool('AnnotationCreateTextHighlight'));
-          
-          // Apply the highlight color
+          // Get annotation manager
           const annotManager = docViewer.getAnnotationManager();
           
           // Parse the selected color to create a proper color object
           const colorObj = new Core.Annotations.Color(selectedColor);
           
-          // Set the color for text highlight annotations through the annotationManager
-          // Use proper method for PDFTron WebViewer API
-          const highlightTool = docViewer.getTool('AnnotationCreateTextHighlight');
-          if (highlightTool) {
-            highlightTool.StrokeColor = colorObj;
-            
-            // Alternative approach if the above doesn't work
-            annotManager.setAnnotationStyles({
-              'TextHighlight': {
-                StrokeColor: colorObj,
-                StrokeThickness: 1
-              }
-            });
+          // Set the highlight tool properly
+          if (docViewer.getTool) {
+            const highlightTool = docViewer.getTool('AnnotationCreateTextHighlight');
+            if (highlightTool) {
+              // Apply color to the tool via annotation manager
+              annotManager.setHighlightColors([colorObj]);
+              
+              // Set the tool mode with proper method signature
+              docViewer.setToolMode(docViewer.getTool('AnnotationCreateTextHighlight'));
+            }
           }
+          
+          // Set annotation styles with proper parameters
+          annotManager.setAnnotationStyles('TextHighlight', {
+            StrokeColor: colorObj,
+            StrokeThickness: 1
+          });
         }
 
         // Load file if URL is not provided

@@ -14,7 +14,7 @@ interface AIAssistantProps {
 }
 
 export const AIAssistant = React.memo(({ documentContent, documentName }: AIAssistantProps) => {
-  const { input, setInput, messages, isLoading, handleSend, analyzeDocument } = useChatLogic(documentContent);
+  const { input, setInput, messages, setMessages, isLoading, handleSend, analyzeDocument } = useChatLogic(documentContent);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [analyzing, setAnalyzing] = useState(false);

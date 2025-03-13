@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from "react";
 import { createOpenAIClient, SYSTEM_PROMPT } from "@/utils/openai";
 
@@ -118,6 +117,7 @@ export const useChatLogic = (documentContent?: string) => {
     input,
     setInput,
     messages,
+    setMessages,
     isLoading,
     handleSend,
     analyzeDocument
