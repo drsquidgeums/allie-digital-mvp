@@ -55,14 +55,13 @@ export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
           // Create a proper color object
           const color = new Core.Annotations.Color(selectedColor);
           
-          // For the second error, use proper parameter structure with type assertion
-          // The annotation type should be a string for the first parameter
+          // Fix for the TS2554 error: Expected 3-4 arguments, but got 1
+          // The setAnnotationStyles method expects more arguments
           annotManager.setAnnotationStyles(
-            'TextHighlight' as any,
-            {
-              StrokeColor: color,
-              StrokeThickness: 1
-            }
+            Core.Tools.ToolNames.HIGHLIGHT, // Use the proper tool name constant
+            color,                          // Pass the color directly
+            null,                           // Optional third argument (null is fine)
+            null                            // Optional fourth argument (null is fine)
           );
         }
 
