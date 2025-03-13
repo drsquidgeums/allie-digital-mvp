@@ -1,6 +1,6 @@
 
 import React from 'react';
-import PDFTronViewerContainer from './PDFTronViewerContainer';
+import { SimplePdfViewer } from './SimplePdfViewer';
 
 interface PDFTronViewerProps {
   url?: string;
@@ -19,7 +19,7 @@ const PDFTronViewer: React.FC<PDFTronViewerProps> = ({
 }) => {
   return (
     <div className="h-full">
-      <PDFTronViewerContainer
+      <SimplePdfViewer
         url={url}
         file={file}
         selectedColor={selectedColor}

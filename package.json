@@ -12,8 +12,9 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
-    "@pdftron/pdfjs-express": "^8.7.5",
-    "@pdftron/webviewer": "^8.9.0",
+    "@pdfme/common": "^5.3.13",
+    "@pdfme/generator": "^5.3.13",
+    "@pdfme/ui": "^5.3.13",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-aspect-ratio": "^1.1.0",

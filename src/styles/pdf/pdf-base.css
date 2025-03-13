@@ -7,140 +7,40 @@
   position: relative;
 }
 
-/* react-pdf specific styles */
-.react-pdf__Document {
+/* Highlight styles */
+.pdf-highlight {
+  background-color: transparent;
+  position: relative;
+  cursor: pointer;
+}
+
+.pdf-highlight::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background-color: var(--highlight-color, #ffeb3b);
+  opacity: 0.5;
+}
+
+.pdf-highlight:hover::after {
+  height: 100%;
+}
+
+/* Loading indicator */
+.pdf-loading {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.react-pdf__Page {
-  margin: 1em 0;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-}
-
-.react-pdf__Page__canvas {
-  display: block;
-  user-select: none;
-}
-
-.react-pdf__Page__textContent {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow: hidden;
-  opacity: 0.2;
-  line-height: 1.0;
-}
-
-.react-pdf__Page__annotations {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
-.react-pdf__Page__annotations.annotationLayer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
-/* Loading overlay for PDF viewports */
-.pdf-loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.1);
-  z-index: 10;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 }
 
 /* Make PDF viewer responsive */
 @media (max-width: 768px) {
-  .react-pdf__Page {
-    margin: 0.5em 0;
+  .pdf-container {
+    padding: 0.5rem;
   }
-  
-  .react-pdf__Page__canvas {
-    max-width: 100%;
-    height: auto !important;
-  }
-}
-
-/* Dark mode support */
-.dark .react-pdf__Page {
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
-}
-
-/* PDFTron WebViewer specific styles */
-.WebViewer {
-  height: 100%;
-  width: 100%;
-}
-
-/* Override PDFTron toolbar to fit our design */
-.Header {
-  background-color: var(--background) !important;
-  border-bottom: 1px solid var(--border) !important;
-}
-
-/* Style for annotation tools */
-.AnnotationTools {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.AnnotationTool {
-  padding: 0.25rem 0.5rem;
-  background-color: var(--primary);
-  color: var(--primary-foreground);
-  border-radius: 0.25rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.75rem;
-}
-
-.AnnotationTool:hover {
-  opacity: 0.9;
-}
-
-/* PDF viewer container */
-.pdf-viewer-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-
-/* Viewer toolbar */
-.pdf-viewer-toolbar {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem;
-  border-bottom: 1px solid var(--border);
-  background-color: var(--background);
-}
-
-/* Viewer content area */
-.pdf-viewer-content {
-  flex: 1;
-  overflow: auto;
-  position: relative;
 }
