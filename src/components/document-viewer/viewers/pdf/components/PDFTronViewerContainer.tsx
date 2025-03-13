@@ -1,31 +1,35 @@
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import WebViewer from '@pdftron/webviewer';
-import { useToast } from '@/hooks/use-toast';
 
 interface PDFTronViewerContainerProps {
-  file: File | null;
-  url: string;
+  url?: string;
+  file?: File;
   selectedColor: string;
-  isHighlighter?: boolean;
-  onInstanceReady: (instance: any) => void;
+  isHighlighter: boolean;
+  onContentLoaded?: (content: string, fileName: string) => void;
 }
 
-export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
-  file,
+const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
   url,
+  file,
   selectedColor,
-  isHighlighter = true,
-  onInstanceReady
+  isHighlighter,
+  onContentLoaded
 }) => {
-  const viewerRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const viewer = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [documentContent, setDocumentContent] = useState<string>('');
 
   useEffect(() => {
-    // Function to initialize the WebViewer
-    const initWebViewer = async () => {
-      if (!viewerRef.current) return;
+    if (!viewer.current) return;
+
+    const initializeViewer = async () => {
+      // If neither a URL nor a file is provided, don't attempt to initialize the viewer
+      if (!url && !file) {
+        setIsLoading(false);
+        return;
+      }
       
       setIsLoading(true);
       try {
@@ -33,17 +37,21 @@ export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
         const webViewerInstance = await WebViewer({
           path: '/public', // Path to PDFTron assets
           initialDoc: url || '', // Use URL if available
-          licenseKey: 'demo:1660528915345:7a61525303000000001b55ca42ea9a620e0d8042bbf18d4e3b41bf35e', // Replace with your actual license key
-        }, viewerRef.current);
+        }, viewer.current);
 
-        // Get access to the core API
-        const { Core, UI } = webViewerInstance;
-
-        // Set up the UI
-        UI.setTheme('dark');
-        UI.enableFeatures([UI.Feature.TextSelection]);
+        const { UI, Core } = webViewerInstance;
         
-        // Enable text highlighting
+        // If a file is provided, load it instead of the URL
+        if (file) {
+          const fileReader = new FileReader();
+          fileReader.onload = async (e) => {
+            const arrayBuffer = e.target?.result as ArrayBuffer;
+            const blob = new Blob([arrayBuffer], { type: file.type });
+            await Core.documentViewer.loadDocument(blob, { filename: file.name });
+          };
+          fileReader.readAsArrayBuffer(file);
+        }
+        
         if (isHighlighter) {
           UI.enableElements(['highlightToolGroupButton']);
           
@@ -56,67 +64,69 @@ export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
           // Parse the selected color to create a proper color object
           const colorObj = new Core.Annotations.Color(selectedColor);
           
-          // Set the highlight tool properly
+          // Use the correct API for PDFTron
           if (docViewer.getTool) {
-            const highlightTool = docViewer.getTool('AnnotationCreateTextHighlight');
-            if (highlightTool) {
-              // Apply color to the tool via annotation manager
-              annotManager.setHighlightColors([colorObj]);
+            const tool = docViewer.getTool('AnnotationCreateTextHighlight');
+            if (tool) {
+              // Set tool mode with string identifier for the tool
+              docViewer.setToolMode('AnnotationCreateTextHighlight');
               
-              // Set the tool mode with proper method signature
-              docViewer.setToolMode(docViewer.getTool('AnnotationCreateTextHighlight'));
+              // Apply color settings through the annotation manager's default style
+              annotManager.getAnnotationProperties('TextHighlight').StrokeColor = colorObj;
             }
           }
-          
-          // Set annotation styles with proper parameters
-          annotManager.setAnnotationStyles('TextHighlight', {
-            StrokeColor: colorObj,
-            StrokeThickness: 1
-          });
         }
 
         // Load file if URL is not provided
-        if (file && !url) {
-          const fileUrl = URL.createObjectURL(file);
-          // Use the correct parameters for loadDocument
-          webViewerInstance.UI.loadDocument(fileUrl, { filename: file.name });
+        if (!url && file) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            Core.documentViewer.loadDocument(reader.result as ArrayBuffer, { filename: file.name });
+          };
+          reader.readAsArrayBuffer(file);
         }
 
-        // Notify parent component about the instance
-        onInstanceReady(webViewerInstance);
-        setIsLoading(false);
-        
-        // Notify successful loading
-        toast({
-          title: "PDF loaded",
-          description: "Your PDF document has been loaded successfully.",
-          duration: 3000,
+        // Extract text when document is loaded
+        Core.documentViewer.addEventListener('documentLoaded', async () => {
+          try {
+            const doc = Core.documentViewer.getDocument();
+            const textContent = await doc.extractTextData();
+            setDocumentContent(textContent.text || '');
+            
+            if (onContentLoaded && textContent.text) {
+              onContentLoaded(textContent.text, file?.name || url?.split('/').pop() || 'document');
+            }
+            
+            setIsLoading(false);
+          } catch (error) {
+            console.error('Error extracting text:', error);
+            setIsLoading(false);
+          }
         });
+
       } catch (error) {
         console.error('Error initializing WebViewer:', error);
         setIsLoading(false);
-        toast({
-          title: "Error",
-          description: "Failed to load PDF viewer",
-          variant: "destructive",
-        });
       }
     };
 
-    // Initialize the viewer
-    initWebViewer();
+    initializeViewer();
 
-    // No cleanup here, we'll handle it in the parent component
-  }, [file, url, isHighlighter, selectedColor, toast, onInstanceReady]);
+    return () => {
+      // Clean up
+    };
+  }, [url, file, isHighlighter, selectedColor, onContentLoaded]);
 
   return (
-    <div className="relative flex-1 overflow-auto">
+    <div className="relative h-full">
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-background/50 z-10">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
       )}
-      <div className="h-full w-full" ref={viewerRef}></div>
+      <div ref={viewer} className="h-full w-full"></div>
     </div>
   );
 };
+
+export default PDFTronViewerContainer;

@@ -1,9 +1,10 @@
 
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, useContext } from "react";
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
 
 // Lazy load DocumentViewer component for better initial load performance
 const DocumentViewer = lazy(() => import("@/components/DocumentViewer").then(module => ({
@@ -24,11 +25,19 @@ const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>("#000000");
   const [isHighlighter, setIsHighlighter] = useState<boolean>(true);
+  const [documentContent, setDocumentContent] = useState<string>("");
+  const [documentName, setDocumentName] = useState<string>("");
 
   // Function to handle file selection
   const handleFileSelected = (file: File) => {
     console.log("File selected in Index:", file.name);
     setSelectedFile(file);
+  };
+
+  // Function to handle document content loaded
+  const handleContentLoaded = (content: string, name: string) => {
+    setDocumentContent(content);
+    setDocumentName(name);
   };
 
   /**
@@ -75,10 +84,15 @@ const Index = () => {
                 file={selectedFile}
                 selectedColor={selectedColor}
                 isHighlighter={isHighlighter}
+                onContentLoaded={handleContentLoaded}
               />
             </Suspense>
           </ErrorBoundary>
         </WorkspaceLayout>
+        <FloatingAIAssistant 
+          documentContent={documentContent}
+          documentName={documentName}
+        />
       </ErrorBoundary>
     </div>
   );

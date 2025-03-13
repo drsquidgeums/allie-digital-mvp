@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { BrowserRouter } from "react-router-dom";
 import { AppProviders } from "@/components/app/AppProviders";
 import { PasswordGate } from "@/components/PasswordGate";
+import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
 
 // Lazy load components that aren't needed immediately
 const AppRoutes = lazy(() => import("@/components/app/AppRoutes").then(module => ({
@@ -48,6 +49,7 @@ const App = () => {
           }>
             <AppRoutes />
           </Suspense>
+          <FloatingAIAssistant />
         </div>
       </AppProviders>
     </BrowserRouter>
