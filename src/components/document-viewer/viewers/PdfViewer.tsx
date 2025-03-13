@@ -7,7 +7,7 @@ import { PdfPagination } from './pdf/PdfPagination';
 import { useHighlightManager } from './pdf/useHighlightManager';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
-import '@/styles/pdf-viewer.css';
+import '@/styles/pdf/pdf-base.css';
 
 // Set worker path for PDF.js
 import { pdfjs } from 'react-pdf';

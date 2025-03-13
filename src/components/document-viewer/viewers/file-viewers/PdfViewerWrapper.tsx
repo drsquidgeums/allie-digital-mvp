@@ -3,7 +3,7 @@ import React, { Suspense, useEffect } from 'react';
 import { lazy } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LoadingFallback } from '../LoadingFallback';
-import '@/styles/pdf-viewer.css';
+import '@/styles/pdf/pdf-base.css';
 import * as pdfjs from 'pdfjs-dist';
 
 // Configure PDF.js worker
