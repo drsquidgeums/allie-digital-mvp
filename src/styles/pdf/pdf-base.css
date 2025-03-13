@@ -82,3 +82,65 @@
 .dark .react-pdf__Page {
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
 }
+
+/* PDFTron WebViewer specific styles */
+.WebViewer {
+  height: 100%;
+  width: 100%;
+}
+
+/* Override PDFTron toolbar to fit our design */
+.Header {
+  background-color: var(--background) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* Style for annotation tools */
+.AnnotationTools {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.AnnotationTool {
+  padding: 0.25rem 0.5rem;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.AnnotationTool:hover {
+  opacity: 0.9;
+}
+
+/* PDF viewer container */
+.pdf-viewer-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Viewer toolbar */
+.pdf-viewer-toolbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--background);
+}
+
+/* Viewer content area */
+.pdf-viewer-content {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+}
