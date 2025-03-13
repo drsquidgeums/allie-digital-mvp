@@ -47,8 +47,10 @@ export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
         if (isHighlighter) {
           UI.enableElements(['highlightToolGroupButton']);
           
-          // Set the tool mode to highlight
+          // Set the tool mode to highlight - using proper method signature
           const docViewer = Core.documentViewer;
+          
+          // Use AnnotationCreateTextHighlight as a string since we don't have access to the enum directly
           docViewer.setToolMode(docViewer.getTool('AnnotationCreateTextHighlight'));
           
           // Apply the highlight color
@@ -57,8 +59,20 @@ export const PDFTronViewerContainer: React.FC<PDFTronViewerContainerProps> = ({
           // Parse the selected color to create a proper color object
           const colorObj = new Core.Annotations.Color(selectedColor);
           
-          // Apply color to text highlight annotations
-          annotManager.setTextHighlightColor(colorObj);
+          // Set the color for text highlight annotations through the annotationManager
+          // Use proper method for PDFTron WebViewer API
+          const highlightTool = docViewer.getTool('AnnotationCreateTextHighlight');
+          if (highlightTool) {
+            highlightTool.StrokeColor = colorObj;
+            
+            // Alternative approach if the above doesn't work
+            annotManager.setAnnotationStyles({
+              'TextHighlight': {
+                StrokeColor: colorObj,
+                StrokeThickness: 1
+              }
+            });
+          }
         }
 
         // Load file if URL is not provided

@@ -46,13 +46,19 @@ export const usePdfJsExpress = ({
         // Enable text highlighting
         if (isHighlighter) {
           UI.enableElements(['highlightToolGroupButton']);
-          Core.setToolMode(Core.ToolModes.AnnotationCreateTextHighlight);
+          
+          // Set the proper tool mode using the document viewer
+          const docViewer = Core.documentViewer;
+          docViewer.setToolMode(docViewer.getTool('AnnotationCreateTextHighlight'));
           
           // Set the highlight color
-          const annotManager = Core.documentViewer.getAnnotationManager();
+          const annotManager = docViewer.getAnnotationManager();
+          const colorObj = new Core.Annotations.Color(selectedColor);
+          
+          // Apply to annotation styles
           annotManager.setAnnotationStyles({
             'TextHighlight': {
-              StrokeColor: new Core.Annotations.Color(selectedColor),
+              StrokeColor: colorObj,
               StrokeThickness: 1
             }
           });
@@ -61,7 +67,7 @@ export const usePdfJsExpress = ({
         // Load file if URL is not provided
         if (file && !url) {
           const fileUrl = URL.createObjectURL(file);
-          UI.loadDocument(fileUrl);
+          UI.loadDocument(fileUrl, { filename: file.name });
         }
 
         // Save instance for further interactions
@@ -100,10 +106,13 @@ export const usePdfJsExpress = ({
   useEffect(() => {
     if (instance && isHighlighter) {
       const { Core } = instance;
-      const annotManager = Core.documentViewer.getAnnotationManager();
+      const docViewer = Core.documentViewer;
+      const annotManager = docViewer.getAnnotationManager();
+      const colorObj = new Core.Annotations.Color(selectedColor);
+      
       annotManager.setAnnotationStyles({
         'TextHighlight': {
-          StrokeColor: new Core.Annotations.Color(selectedColor),
+          StrokeColor: colorObj,
           StrokeThickness: 1
         }
       });
