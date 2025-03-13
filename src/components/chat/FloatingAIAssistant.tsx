@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { MessageCircle, X, Maximize2, Minimize2, Sparkles } from "lucide-react";
+import { Bot, MessageCircle, X, Maximize2, Minimize2, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
@@ -157,7 +157,7 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = ({
           className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-primary hover:bg-primary/90"
           aria-label="Open AI Assistant"
         >
-          <MessageCircle className="h-6 w-6" />
+          <Bot className="h-6 w-6" />
         </Button>
       )}
     </div>

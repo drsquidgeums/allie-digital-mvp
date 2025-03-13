@@ -70,7 +70,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
 
         // Create and initialize the viewer
         const viewer = new Viewer({
-          container: containerRef.current,
+          domContainer: containerRef.current,
           template,
           options: {
             readonly: true, // View-only mode

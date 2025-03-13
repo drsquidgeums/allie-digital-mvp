@@ -6,7 +6,7 @@ import { ChatInput } from "./chat/ChatInput";
 import { ChatHeader } from "./chat/ChatHeader";
 import { useChatLogic } from "@/hooks/useChatLogic";
 import { Button } from "./ui/button";
-import { FileText, Sparkles } from "lucide-react";
+import { Bot, FileText, Sparkles } from "lucide-react";
 
 interface AIAssistantProps {
   documentContent?: string;
