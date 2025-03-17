@@ -60,10 +60,10 @@
 }
 
 /* Fix highlighting display */
-.Highlight__parts {
+[class^="highlight-"] .Highlight__parts {
   pointer-events: none;
 }
 
-.Highlight__part {
-  background-color: var(--highlight-color, rgba(255, 235, 59, 0.5));
+[class^="highlight-"] .Highlight__part {
+  background-color: inherit;
 }

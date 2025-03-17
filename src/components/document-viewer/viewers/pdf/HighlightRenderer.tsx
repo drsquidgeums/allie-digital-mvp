@@ -65,42 +65,37 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
   
   const completePosition = ensureCompletePosition(highlight);
   
-  // Create custom container element to apply styling
-  const HighlightContainer = ({ children }: { children: React.ReactNode }) => {
-    // Define the style for the container
-    const containerStyle = {
-      "--highlight-color": highlightColor,
-    } as React.CSSProperties;
-    
-    return (
-      <div 
-        style={containerStyle} 
-        data-testid={`highlight-${index}`}
-        data-highlight-id={highlight.id}
-      >
-        {children}
-      </div>
-    );
-  };
+  // Create a unique class for this highlight
+  const highlightClass = `highlight-${index}-${highlight.id?.replace(/\W/g, '-')}`;
   
-  // Add a global style to the document only once
+  // Apply the highlight color using a dynamic style element
   React.useEffect(() => {
-    // Check if we've already added this style
-    const styleId = 'highlight-styles';
-    if (!document.getElementById(styleId)) {
-      const styleEl = document.createElement('style');
-      styleEl.id = styleId;
-      styleEl.innerHTML = `
-        [data-testid^="highlight-"] .Highlight__parts {
-          background-color: var(--highlight-color, rgba(255, 235, 59, 0.5)) !important;
-        }
-      `;
-      document.head.appendChild(styleEl);
-    }
-  }, []);
+    const styleEl = document.createElement('style');
+    styleEl.id = `highlight-style-${index}-${highlight.id}`;
+    styleEl.innerHTML = `
+      .${highlightClass} .Highlight__parts .Highlight__part {
+        background-color: ${highlightColor} !important;
+      }
+    `;
+    
+    // Add the style element to the document head
+    document.head.appendChild(styleEl);
+    
+    // Clean up when the component unmounts
+    return () => {
+      const existingStyle = document.getElementById(`highlight-style-${index}-${highlight.id}`);
+      if (existingStyle) {
+        document.head.removeChild(existingStyle);
+      }
+    };
+  }, [highlightClass, highlightColor, index, highlight.id]);
   
   return (
-    <HighlightContainer>
+    <div 
+      className={highlightClass}
+      data-testid={`highlight-${index}`}
+      data-highlight-id={highlight.id}
+    >
       <Highlight
         isScrolledTo={isScrolledTo}
         position={completePosition}
@@ -109,6 +104,6 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
         onMouseOver={() => onHighlightMouseOver(highlight)}
         onMouseOut={onHighlightMouseOut}
       />
-    </HighlightContainer>
+    </div>
   );
 };
