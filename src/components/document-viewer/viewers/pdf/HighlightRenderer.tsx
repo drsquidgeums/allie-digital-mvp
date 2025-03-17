@@ -65,33 +65,50 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
   
   const completePosition = ensureCompletePosition(highlight);
   
-  // Create custom class to apply style as className instead of style prop
-  const highlightClass = `pdf-highlight-${index}`;
-  
-  // Add a dynamic style tag to the document head
-  React.useEffect(() => {
-    const styleEl = document.createElement('style');
-    styleEl.innerHTML = `
-      .${highlightClass} .Highlight__parts {
-        background-color: ${highlightColor} !important;
-      }
-    `;
-    document.head.appendChild(styleEl);
+  // Create custom container element to apply styling
+  const HighlightContainer = ({ children }: { children: React.ReactNode }) => {
+    // Define the style for the container
+    const containerStyle = {
+      "--highlight-color": highlightColor,
+    } as React.CSSProperties;
     
-    return () => {
-      document.head.removeChild(styleEl);
-    };
-  }, [highlightClass, highlightColor]);
+    return (
+      <div 
+        style={containerStyle} 
+        data-testid={`highlight-${index}`}
+        data-highlight-id={highlight.id}
+      >
+        {children}
+      </div>
+    );
+  };
+  
+  // Add a global style to the document only once
+  React.useEffect(() => {
+    // Check if we've already added this style
+    const styleId = 'highlight-styles';
+    if (!document.getElementById(styleId)) {
+      const styleEl = document.createElement('style');
+      styleEl.id = styleId;
+      styleEl.innerHTML = `
+        [data-testid^="highlight-"] .Highlight__parts {
+          background-color: var(--highlight-color, rgba(255, 235, 59, 0.5)) !important;
+        }
+      `;
+      document.head.appendChild(styleEl);
+    }
+  }, []);
   
   return (
-    <Highlight
-      isScrolledTo={isScrolledTo}
-      position={completePosition}
-      comment={highlight.comment}
-      onClick={() => onHighlightClick(highlight)}
-      onMouseOver={() => onHighlightMouseOver(highlight)}
-      onMouseOut={onHighlightMouseOut}
-      className={highlightClass}
-    />
+    <HighlightContainer>
+      <Highlight
+        isScrolledTo={isScrolledTo}
+        position={completePosition}
+        comment={highlight.comment}
+        onClick={() => onHighlightClick(highlight)}
+        onMouseOver={() => onHighlightMouseOver(highlight)}
+        onMouseOut={onHighlightMouseOut}
+      />
+    </HighlightContainer>
   );
 };
