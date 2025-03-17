@@ -65,15 +65,33 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
   
   const completePosition = ensureCompletePosition(highlight);
   
+  // Create custom class to apply style as className instead of style prop
+  const highlightClass = `pdf-highlight-${index}`;
+  
+  // Add a dynamic style tag to the document head
+  React.useEffect(() => {
+    const styleEl = document.createElement('style');
+    styleEl.innerHTML = `
+      .${highlightClass} .Highlight__parts {
+        background-color: ${highlightColor} !important;
+      }
+    `;
+    document.head.appendChild(styleEl);
+    
+    return () => {
+      document.head.removeChild(styleEl);
+    };
+  }, [highlightClass, highlightColor]);
+  
   return (
     <Highlight
       isScrolledTo={isScrolledTo}
       position={completePosition}
-      comment={highlight.comment || { text: "", emoji: "💬" }}
+      comment={highlight.comment}
       onClick={() => onHighlightClick(highlight)}
       onMouseOver={() => onHighlightMouseOver(highlight)}
       onMouseOut={onHighlightMouseOut}
-      style={{ backgroundColor: highlightColor }}
+      className={highlightClass}
     />
   );
 };

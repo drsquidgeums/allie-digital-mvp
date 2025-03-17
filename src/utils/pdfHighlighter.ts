@@ -28,14 +28,8 @@ export interface HighlightContent {
 }
 
 // Custom type that extends IHighlight but adds color property
-export interface PdfHighlight extends Omit<IHighlight, 'comment'> {
+export interface PdfHighlight extends IHighlight {
   id: string;
-  position: HighlightPosition;
-  content: HighlightContent;
-  comment: {
-    text: string;
-    emoji?: string;
-  };
   color?: string;
 }
 

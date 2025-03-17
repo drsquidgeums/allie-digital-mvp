@@ -202,36 +202,20 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
       {/* PDF Document with Highlighter */}
       <div className="flex-1 overflow-auto flex justify-center" style={pdfBackgroundStyle}>
         <div className="pdf-container" style={{ transform: `scale(${scale})`, transformOrigin: 'center top' }}>
-          <PdfHighlighter
-            url={pdfUrl}
-            onScrollChange={() => setSelectedHighlight(null)}
-            scrollRef={null}
-            onSelectionFinished={handleSelectionFinished}
-            highlights={highlights}
-            enableAreaSelection={(event) => Boolean(event.altKey)}
-            highlightTransform={(highlight, index, setTip, hideTip, viewportToScaled, screenshot, isScrolledTo) => {
-              const component = (
-                <Popup
-                  popupContent={() => (
-                    <div className="highlight-popup p-2">
-                      <div>{highlight.content?.text}</div>
-                    </div>
-                  )}
-                  onMouseOver={() => setTip(highlight, () => highlight.content?.text || "")}
-                  onMouseOut={hideTip}
-                >
-                  <AreaHighlight
-                    highlight={highlight}
-                    onChange={() => {}}
-                    isScrolledTo={isScrolledTo}
-                  />
-                </Popup>
-              );
-
-              return component;
-            }}
-            pdfDocument={null} // This will be set internally by PdfHighlighter
-          />
+          {/* Using Document and Page components for simpler viewing without highlighting */}
+          <Document
+            file={pdfUrl}
+            onLoadSuccess={onDocumentLoadSuccess}
+            onLoadError={onDocumentLoadError}
+          >
+            <Page 
+              pageNumber={pageNumber} 
+              scale={scale} 
+              rotate={rotation} 
+              renderTextLayer={true}
+              renderAnnotationLayer={true}
+            />
+          </Document>
         </div>
       </div>
       

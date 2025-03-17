@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { PdfHighlighter, Highlight, Popup, AreaHighlight, IHighlight } from 'react-pdf-highlighter';
+import { Document, Page, pdfjs } from 'react-pdf';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { 
@@ -16,7 +16,6 @@ import '@/styles/pdf/pdf-highlighter.css';
 import '@/styles/pdf/pdf-highlights.css';
 
 // Set PDF.js worker path
-import { pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 interface SimplePdfViewerProps {
@@ -27,8 +26,36 @@ interface SimplePdfViewerProps {
   onContentLoaded?: (content: string, fileName: string) => void;
 }
 
-// Extended interface to include color property
-interface ExtendedHighlight extends IHighlight {
+// Extended interface for highlights
+interface HighlightItem {
+  id: string;
+  content: {
+    text?: string;
+    image?: string;
+  };
+  position: {
+    boundingRect: {
+      x1: number;
+      y1: number;
+      x2: number;
+      y2: number;
+      width: number;
+      height: number;
+    };
+    rects: {
+      x1: number;
+      y1: number;
+      x2: number;
+      y2: number;
+      width: number;
+      height: number;
+    }[];
+    pageNumber: number;
+  };
+  comment: {
+    text: string;
+    emoji?: string;
+  };
   color?: string;
 }
 
@@ -42,7 +69,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [scale, setScale] = useState<number>(1.0);
-  const [highlights, setHighlights] = useState<ExtendedHighlight[]>([]);
+  const [highlights, setHighlights] = useState<HighlightItem[]>([]);
   const [selectedHighlightId, setSelectedHighlightId] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -58,12 +85,12 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
     };
   }, [file, pdfUrl]);
 
-  const addHighlight = (highlight: Omit<ExtendedHighlight, 'color'>) => {
+  const addHighlight = (highlight: Omit<HighlightItem, 'color'>) => {
     console.log("Adding highlight:", highlight);
     const newHighlight = {
       ...highlight,
       color: selectedColor,
-    } as ExtendedHighlight;
+    } as HighlightItem;
     
     setHighlights(prev => [...prev, newHighlight]);
     
@@ -105,29 +132,46 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
     }
   };
 
-  // Handle highlight selection finish
-  const handleSelectionFinished = (
-    position: any,
-    content: { text?: string; image?: string },
-    hideTip: () => void,
-    transformSelection: () => void
-  ) => {
-    if (!isHighlighter) return null;
-
-    const newHighlight = {
+  // Handle text selection
+  const handleTextSelect = () => {
+    const selection = window.getSelection();
+    if (!selection || selection.toString().trim() === '') return;
+    
+    // Create a simple highlight object
+    const range = selection.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    const container = document.querySelector('.pdf-container');
+    if (!container) return;
+    
+    const containerRect = container.getBoundingClientRect();
+    
+    const highlight: Omit<HighlightItem, 'color'> = {
       id: `highlight-${Date.now()}`,
-      content,
-      position,
-      comment: {
-        text: "",
-        emoji: "💬"
-      }
+      content: { text: selection.toString() },
+      position: {
+        boundingRect: {
+          x1: rect.left - containerRect.left,
+          y1: rect.top - containerRect.top,
+          x2: rect.right - containerRect.left,
+          y2: rect.bottom - containerRect.top,
+          width: rect.width,
+          height: rect.height
+        },
+        rects: [{
+          x1: rect.left - containerRect.left,
+          y1: rect.top - containerRect.top,
+          x2: rect.right - containerRect.left,
+          y2: rect.bottom - containerRect.top,
+          width: rect.width,
+          height: rect.height
+        }],
+        pageNumber: pageNumber
+      },
+      comment: { text: '' }
     };
-
-    addHighlight(newHighlight);
-    hideTip();
-    transformSelection();
-    return null;
+    
+    addHighlight(highlight);
+    selection.removeAllRanges();
   };
 
   return (
@@ -176,6 +220,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
               backgroundColor: isHighlighter ? selectedColor : 'transparent',
               color: isHighlighter ? getContrastColor(selectedColor) : 'currentColor'
             }}
+            onClick={handleTextSelect}
           >
             <Highlighter className="h-4 w-4" />
           </Button>
@@ -192,61 +237,60 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
         </div>
       </div>
       
-      {/* PDF Document with Highlighter */}
+      {/* PDF Document */}
       <div 
         className="flex-1 overflow-auto flex justify-center bg-zinc-800"
         style={{ 
           transformOrigin: 'center top'
         }}
       >
-        <div style={{ transform: `scale(${scale})` }}>
+        <div className="pdf-container relative" style={{ transform: `scale(${scale})` }}>
           {pdfUrl && (
-            <PdfHighlighter
-              url={pdfUrl}
-              onDocumentLoad={({ numPages }) => {
+            <Document
+              file={pdfUrl}
+              onLoadSuccess={({ numPages }) => {
                 setNumPages(numPages);
                 console.log("Document loaded with", numPages, "pages");
               }}
-              onSelectionFinished={handleSelectionFinished}
-              highlights={highlights}
-              enableAreaSelection={(event) => Boolean(event.altKey)}
-              highlightTransform={(
-                highlight,
-                index,
-                setTip,
-                hideTip,
-                viewportToScaled,
-                screenshot,
-                isScrolledTo
-              ) => {
-                const isSelected = selectedHighlightId === highlight.id;
-                const highlightColor = (highlight as ExtendedHighlight).color || selectedColor;
-                
-                return (
-                  <Popup
-                    popupContent={() => (
-                      <div className="bg-white p-2 rounded shadow-lg max-w-sm">
-                        {highlight.content?.text}
-                      </div>
-                    )}
-                    onMouseOver={() => {
-                      if (highlight.content && highlight.content.text) {
-                        setTip(highlight, () => highlight.content?.text || "");
-                      }
-                    }}
-                    onMouseOut={hideTip}
-                  >
-                    <Highlight
-                      isScrolledTo={isScrolledTo}
-                      position={highlight.position}
-                      comment={highlight.comment || { text: "", emoji: "💬" }}
-                      onClick={() => setSelectedHighlightId(isSelected ? null : highlight.id)}
-                      style={{ backgroundColor: highlightColor }}
-                    />
-                  </Popup>
-                );
-              }}
-            />
+              loading={<div className="loading">Loading document...</div>}
+              error={<div className="error">Failed to load document</div>}
+            >
+              <Page 
+                pageNumber={pageNumber} 
+                renderTextLayer={true}
+                renderAnnotationLayer={true}
+              />
+              
+              {/* Custom highlight overlay */}
+              <div className="highlights-layer absolute top-0 left-0 w-full h-full pointer-events-none">
+                {highlights
+                  .filter(h => h.position.pageNumber === pageNumber)
+                  .map(highlight => (
+                    <div
+                      key={highlight.id}
+                      className="highlight-item pointer-events-auto"
+                      style={{
+                        position: 'absolute',
+                        left: `${highlight.position.boundingRect.x1}px`,
+                        top: `${highlight.position.boundingRect.y1}px`,
+                        width: `${highlight.position.boundingRect.width}px`,
+                        height: `${highlight.position.boundingRect.height}px`,
+                        backgroundColor: `${highlight.color}80`, // 50% opacity
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => setSelectedHighlightId(
+                        selectedHighlightId === highlight.id ? null : highlight.id
+                      )}
+                    >
+                      {highlight.content.text && (
+                        <div className="highlight-tooltip opacity-0 hover:opacity-100 absolute bottom-full bg-white p-2 rounded shadow-md text-sm">
+                          {highlight.content.text}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+              </div>
+            </Document>
           )}
         </div>
       </div>
