@@ -37,6 +37,69 @@ export interface PdfHighlight extends Omit<IHighlight, 'comment'> {
   };
 }
 
+// Helper functions for position conversion
+export const convertToScaledPosition = (position: any): any => {
+  // Ensure the position has all required properties
+  if (position.boundingRect) {
+    // Convert from left/top to x1/y1 format
+    if (!position.boundingRect.x1 && position.boundingRect.left !== undefined) {
+      position.boundingRect.x1 = position.boundingRect.left;
+      position.boundingRect.y1 = position.boundingRect.top;
+      position.boundingRect.x2 = position.boundingRect.right;
+      position.boundingRect.y2 = position.boundingRect.bottom;
+    }
+  }
+  
+  // Handle rects array similarly
+  if (position.rects && Array.isArray(position.rects)) {
+    position.rects = position.rects.map((rect: any) => {
+      // Copy left, top, right, bottom to x1, y1, x2, y2 if needed
+      if (!rect.x1 && rect.left !== undefined) {
+        rect.x1 = rect.left;
+        rect.y1 = rect.top;
+        rect.x2 = rect.right;
+        rect.y2 = rect.bottom;
+      }
+      return rect;
+    });
+  }
+  
+  return position;
+};
+
+export const convertToLTWHPosition = (position: any): any => {
+  // Ensure the position has all required properties
+  if (position.boundingRect) {
+    // Convert from x1/y1 to left/top format
+    if (!position.boundingRect.left && position.boundingRect.x1 !== undefined) {
+      position.boundingRect.left = position.boundingRect.x1;
+      position.boundingRect.top = position.boundingRect.y1;
+      position.boundingRect.right = position.boundingRect.x2;
+      position.boundingRect.bottom = position.boundingRect.y2;
+      position.boundingRect.width = position.boundingRect.x2 - position.boundingRect.x1;
+      position.boundingRect.height = position.boundingRect.y2 - position.boundingRect.y1;
+    }
+  }
+  
+  // Handle rects array similarly
+  if (position.rects && Array.isArray(position.rects)) {
+    position.rects = position.rects.map((rect: any) => {
+      // Copy x1, y1, x2, y2 to left, top, right, bottom if needed
+      if (!rect.left && rect.x1 !== undefined) {
+        rect.left = rect.x1;
+        rect.top = rect.y1;
+        rect.right = rect.x2;
+        rect.bottom = rect.y2;
+        rect.width = rect.x2 - rect.x1;
+        rect.height = rect.y2 - rect.y1;
+      }
+      return rect;
+    });
+  }
+  
+  return position;
+};
+
 export const usePdfHighlighter = (initialColor: string = '#ffeb3b') => {
   const [highlights, setHighlights] = useState<PdfHighlight[]>([]);
   const [selectedColor, setSelectedColor] = useState<string>(initialColor);
@@ -81,6 +144,8 @@ export const usePdfHighlighter = (initialColor: string = '#ffeb3b') => {
     updateHighlight,
     removeHighlight,
     changeColor,
-    updateHighlightColor
+    updateHighlightColor,
+    convertToScaledPosition,
+    convertToLTWHPosition
   };
 };

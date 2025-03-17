@@ -6,9 +6,11 @@ import {
   Tip, 
   Highlight, 
   Popup, 
-  AreaHighlight 
+  AreaHighlight,
+  IHighlight,
+  Position as RPPosition,
+  ScaledPosition
 } from 'react-pdf-highlighter';
-import type { IHighlight, Position } from 'react-pdf-highlighter';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { 
@@ -28,9 +30,75 @@ interface SimplePdfHighlighterProps {
   isHighlighter?: boolean;
 }
 
+// Extend the IHighlight interface to include color property
 interface PdfHighlight extends IHighlight {
   color?: string;
 }
+
+// Position adapter to convert between different position formats
+const convertPosition = (position: any): any => {
+  // Ensure the position has all required properties
+  if (position.boundingRect) {
+    // Add x1, y1, x2, y2 if they don't exist but left, top, right, bottom do
+    if (!position.boundingRect.x1 && position.boundingRect.left !== undefined) {
+      position.boundingRect.x1 = position.boundingRect.left;
+      position.boundingRect.y1 = position.boundingRect.top;
+      position.boundingRect.x2 = position.boundingRect.right;
+      position.boundingRect.y2 = position.boundingRect.bottom;
+    }
+    
+    // Add left, top, right, bottom if they don't exist but x1, y1, x2, y2 do
+    if (!position.boundingRect.left && position.boundingRect.x1 !== undefined) {
+      position.boundingRect.left = position.boundingRect.x1;
+      position.boundingRect.top = position.boundingRect.y1;
+      position.boundingRect.right = position.boundingRect.x2;
+      position.boundingRect.bottom = position.boundingRect.y2;
+    }
+    
+    // Add width and height if missing
+    if (!position.boundingRect.width) {
+      position.boundingRect.width = 
+        position.boundingRect.right - position.boundingRect.left;
+    }
+    if (!position.boundingRect.height) {
+      position.boundingRect.height = 
+        position.boundingRect.bottom - position.boundingRect.top;
+    }
+  }
+  
+  // Handle rects array similarly
+  if (position.rects && Array.isArray(position.rects)) {
+    position.rects = position.rects.map((rect: any) => {
+      // Copy x1, y1, x2, y2 to left, top, right, bottom if needed
+      if (!rect.left && rect.x1 !== undefined) {
+        rect.left = rect.x1;
+        rect.top = rect.y1;
+        rect.right = rect.x2;
+        rect.bottom = rect.y2;
+      }
+      
+      // Copy left, top, right, bottom to x1, y1, x2, y2 if needed
+      if (!rect.x1 && rect.left !== undefined) {
+        rect.x1 = rect.left;
+        rect.y1 = rect.top;
+        rect.x2 = rect.right;
+        rect.y2 = rect.bottom;
+      }
+      
+      // Add width and height if missing
+      if (!rect.width) {
+        rect.width = rect.right - rect.left;
+      }
+      if (!rect.height) {
+        rect.height = rect.bottom - rect.top;
+      }
+      
+      return rect;
+    });
+  }
+  
+  return position;
+};
 
 export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
   file,
@@ -92,10 +160,10 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
   
   // Handle selection finish (when user highlights text)
   const handleSelectionFinished = useCallback(
-    (position: Position, content: { text?: string; image?: string }, hideTip: () => void) => {
+    (position: ScaledPosition, content: { text?: string; image?: string }, hideTip: () => void, transformSelection: () => void) => {
       const highlight = {
         id: `highlight-${Date.now()}`,
-        position,
+        position: convertPosition(position),
         content,
         comment: {
           text: content.text || "",
@@ -104,9 +172,14 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
         color: selectedColor
       };
       
-      addHighlight(highlight);
+      // Add the highlight
+      const newHighlight = addHighlight(highlight as PdfHighlight);
+      
+      // Hide tip and clear selection
       hideTip();
-      return highlight;
+      if (transformSelection) transformSelection();
+      
+      return newHighlight;
     },
     [addHighlight, selectedColor]
   );
@@ -136,7 +209,7 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
   
   // Render the highlight
   const renderHighlight = useCallback(
-    (highlight: PdfHighlight, index: number, setTip: any, hideTip: () => void, isScrolledTo: boolean) => {
+    (highlight: PdfHighlight, index: number, setTip: any, hideTip: () => void, viewportToScaled: any, screenshot: any, isScrolledTo: boolean) => {
       const isSelected = selectedHighlight?.id === highlight.id;
       const highlightColor = highlight.color || selectedColor;
       
@@ -156,7 +229,10 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
         document.head.appendChild(styleEl);
       }
       
-      const component = (
+      // Convert position to ensure compatibility
+      const adaptedPosition = convertPosition(highlight.position);
+      
+      return (
         <div 
           className={highlightClass}
           data-testid={`highlight-${index}`}
@@ -164,7 +240,7 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
         >
           <Highlight
             isScrolledTo={isScrolledTo}
-            position={highlight.position}
+            position={adaptedPosition}
             comment={highlight.comment}
             onClick={() => setSelectedHighlight(highlight)}
             onMouseOver={() => {
@@ -179,23 +255,6 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
             onMouseOut={hideTip}
           />
         </div>
-      );
-      
-      return (
-        <Popup
-          popupContent={
-            <div className="highlight-popup bg-white p-2 rounded shadow-md">
-              {highlight.content.text && (
-                <div className="mb-2">{highlight.content.text}</div>
-              )}
-            </div>
-          }
-          onMouseOver={popupContent => setTip(highlight, () => popupContent)}
-          onMouseOut={hideTip}
-          key={`popup-${highlight.id}`}
-        >
-          {component}
-        </Popup>
       );
     },
     [selectedColor, selectedHighlight]
@@ -273,10 +332,11 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
                 onScrollChange={() => setSelectedHighlight(null)}
                 scrollRef={scrollTo => { scrollViewerRef.current = scrollTo; }}
                 onSelectionFinished={handleSelectionFinished}
-                highlightTransform={(highlight, index, setTip, hideTip, _, __, isScrolledTo) => 
-                  renderHighlight(highlight as PdfHighlight, index, setTip, hideTip, isScrolledTo)
-                }
-                highlights={highlights}
+                highlightTransform={renderHighlight}
+                highlights={highlights.map(h => ({
+                  ...h,
+                  position: convertPosition(h.position)
+                }))}
                 onDocumentLoad={({ numPages }) => {
                   setNumPages(numPages);
                   toast({

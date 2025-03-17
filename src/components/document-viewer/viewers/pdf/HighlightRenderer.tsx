@@ -46,17 +46,25 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
               (position.boundingRect.left || position.boundingRect.x1 || 0) + (position.boundingRect.width || 0),
         bottom: position.boundingRect.bottom || position.boundingRect.y2 || 
                (position.boundingRect.top || position.boundingRect.y1 || 0) + (position.boundingRect.height || 0),
+        width: position.boundingRect.width || 
+              (position.boundingRect.right || position.boundingRect.x2) - 
+              (position.boundingRect.left || position.boundingRect.x1),
+        height: position.boundingRect.height || 
+               (position.boundingRect.bottom || position.boundingRect.y2) - 
+               (position.boundingRect.top || position.boundingRect.y1)
       };
     }
     
     // Ensure each rect in rects array has all required properties
     if (position.rects && Array.isArray(position.rects)) {
-      position.rects = position.rects.map(rect => ({
+      position.rects = position.rects.map((rect: any) => ({
         ...rect,
         left: rect.left || rect.x1 || 0,
         top: rect.top || rect.y1 || 0,
         right: rect.right || rect.x2 || (rect.left || rect.x1 || 0) + (rect.width || 0),
         bottom: rect.bottom || rect.y2 || (rect.top || rect.y1 || 0) + (rect.height || 0),
+        width: rect.width || (rect.right || rect.x2) - (rect.left || rect.x1),
+        height: rect.height || (rect.bottom || rect.y2) - (rect.top || rect.y1)
       }));
     }
     
