@@ -27,11 +27,15 @@ export interface HighlightContent {
   image?: string;
 }
 
-export interface PdfHighlight extends IHighlight {
+// Custom type that extends IHighlight but adds color property
+export interface PdfHighlight extends Omit<IHighlight, 'comment'> {
   id: string;
   position: HighlightPosition;
   content: HighlightContent;
-  comment: string;
+  comment: {
+    text: string;
+    emoji?: string;
+  };
   color?: string;
 }
 
@@ -40,7 +44,7 @@ export const usePdfHighlighter = (initialColor: string = '#ffeb3b') => {
   const [selectedColor, setSelectedColor] = useState<string>(initialColor);
   
   // Add highlight
-  const addHighlight = useCallback((highlight: PdfHighlight) => {
+  const addHighlight = useCallback((highlight: Omit<PdfHighlight, 'color'>) => {
     const newHighlight = {
       ...highlight,
       color: selectedColor

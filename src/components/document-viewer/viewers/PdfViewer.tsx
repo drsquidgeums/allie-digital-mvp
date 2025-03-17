@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-import { PdfHighlighter, Highlight, Popup, AreaHighlight } from 'react-pdf-highlighter';
+import { PdfHighlighter, Popup, AreaHighlight } from 'react-pdf-highlighter';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { 
@@ -123,7 +123,10 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
       id: `highlight-${Date.now()}`,
       content,
       position,
-      comment: "",
+      comment: {
+        text: "",
+        emoji: "💬"
+      },
     });
     hideTip();
     transformSelection();
@@ -205,23 +208,29 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
             scrollRef={null}
             onSelectionFinished={handleSelectionFinished}
             highlights={highlights}
-            enableAreaSelection={(event) => event.altKey}
+            enableAreaSelection={(event) => Boolean(event.altKey)}
             highlightTransform={(highlight, index, setTip, hideTip, viewportToScaled, screenshot, isScrolledTo) => {
               const component = (
-                <Highlight
-                  key={index}
-                  position={highlight.position}
-                  onClick={() => setSelectedHighlight(highlight)}
-                  onMouseOver={(popupData) => popupData && setTip(highlight, () => popupData)}
+                <Popup
+                  popupContent={() => (
+                    <div className="highlight-popup p-2">
+                      <div>{highlight.content?.text}</div>
+                    </div>
+                  )}
+                  onMouseOver={() => setTip(highlight, () => highlight.content?.text || "")}
                   onMouseOut={hideTip}
-                  isScrolledTo={isScrolledTo}
-                  comment={highlight.comment}
-                />
+                >
+                  <AreaHighlight
+                    highlight={highlight}
+                    onChange={() => {}}
+                    isScrolledTo={isScrolledTo}
+                  />
+                </Popup>
               );
 
               return component;
             }}
-            pdfDocument={{}}
+            pdfDocument={null} // This will be set internally by PdfHighlighter
           />
         </div>
       </div>

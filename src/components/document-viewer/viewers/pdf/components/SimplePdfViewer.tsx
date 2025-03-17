@@ -27,6 +27,11 @@ interface SimplePdfViewerProps {
   onContentLoaded?: (content: string, fileName: string) => void;
 }
 
+// Extended interface to include color property
+interface ExtendedHighlight extends IHighlight {
+  color?: string;
+}
+
 export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   file,
   url = '',
@@ -37,7 +42,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [scale, setScale] = useState<number>(1.0);
-  const [highlights, setHighlights] = useState<IHighlight[]>([]);
+  const [highlights, setHighlights] = useState<ExtendedHighlight[]>([]);
   const [selectedHighlightId, setSelectedHighlightId] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -53,9 +58,14 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
     };
   }, [file, pdfUrl]);
 
-  const addHighlight = (highlight: IHighlight) => {
+  const addHighlight = (highlight: Omit<ExtendedHighlight, 'color'>) => {
     console.log("Adding highlight:", highlight);
-    setHighlights(prev => [...prev, highlight]);
+    const newHighlight = {
+      ...highlight,
+      color: selectedColor,
+    } as ExtendedHighlight;
+    
+    setHighlights(prev => [...prev, newHighlight]);
     
     toast({
       title: "Highlight Added",
@@ -108,8 +118,10 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
       id: `highlight-${Date.now()}`,
       content,
       position,
-      color: selectedColor,
-      comment: ""
+      comment: {
+        text: "",
+        emoji: "💬"
+      }
     };
 
     addHighlight(newHighlight);
@@ -197,7 +209,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
               }}
               onSelectionFinished={handleSelectionFinished}
               highlights={highlights}
-              enableAreaSelection={false}
+              enableAreaSelection={(event) => Boolean(event.altKey)}
               highlightTransform={(
                 highlight,
                 index,
@@ -208,27 +220,30 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
                 isScrolledTo
               ) => {
                 const isSelected = selectedHighlightId === highlight.id;
-                const highlightColor = highlight.color || selectedColor;
+                const highlightColor = (highlight as ExtendedHighlight).color || selectedColor;
                 
                 return (
-                  <Highlight
-                    key={index}
-                    position={highlight.position}
-                    onClick={() => setSelectedHighlightId(isSelected ? null : highlight.id)}
-                    onMouseOver={(popupContent) => {
+                  <Popup
+                    popupContent={() => (
+                      <div className="bg-white p-2 rounded shadow-lg max-w-sm">
+                        {highlight.content?.text}
+                      </div>
+                    )}
+                    onMouseOver={() => {
                       if (highlight.content && highlight.content.text) {
-                        setTip(highlight, () => (
-                          <div className="bg-white p-2 rounded shadow-lg max-w-sm">
-                            {highlight.content.text}
-                          </div>
-                        ));
+                        setTip(highlight, () => highlight.content?.text || "");
                       }
                     }}
                     onMouseOut={hideTip}
-                    isScrolledTo={isScrolledTo}
-                    comment={highlight.comment}
-                    color={highlightColor}
-                  />
+                  >
+                    <Highlight
+                      isScrolledTo={isScrolledTo}
+                      position={highlight.position}
+                      comment={highlight.comment || { text: "", emoji: "💬" }}
+                      onClick={() => setSelectedHighlightId(isSelected ? null : highlight.id)}
+                      style={{ backgroundColor: highlightColor }}
+                    />
+                  </Popup>
                 );
               }}
             />

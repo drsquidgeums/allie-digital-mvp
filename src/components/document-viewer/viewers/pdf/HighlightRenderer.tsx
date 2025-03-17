@@ -3,14 +3,18 @@ import React from 'react';
 import { Highlight } from 'react-pdf-highlighter';
 import { IHighlight } from 'react-pdf-highlighter';
 
+interface ExtendedHighlight extends IHighlight {
+  color?: string;
+}
+
 interface HighlightRendererProps {
-  highlight: IHighlight;
+  highlight: ExtendedHighlight;
   index: number;
   isScrolledTo: boolean;
   selectedColor: string;
   isSelected: boolean;
-  onHighlightClick: (highlight: IHighlight) => void;
-  onHighlightMouseOver: (highlight: IHighlight) => void;
+  onHighlightClick: (highlight: ExtendedHighlight) => void;
+  onHighlightMouseOver: (highlight: ExtendedHighlight) => void;
   onHighlightMouseOut: () => void;
 }
 
@@ -28,7 +32,7 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
   const highlightColor = highlight.color || (isSelected ? "rgba(255, 226, 143, 1)" : selectedColor || "rgba(255, 235, 59, 0.5)");
   
   // Make sure the position object has all required properties
-  const ensureCompletePosition = (highlight: IHighlight) => {
+  const ensureCompletePosition = (highlight: ExtendedHighlight) => {
     // Deep clone the position to avoid modifying the original
     const position = JSON.parse(JSON.stringify(highlight.position));
     
@@ -65,12 +69,11 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
     <Highlight
       isScrolledTo={isScrolledTo}
       position={completePosition}
-      comment={highlight.comment}
-      key={index}
+      comment={highlight.comment || { text: "", emoji: "💬" }}
       onClick={() => onHighlightClick(highlight)}
       onMouseOver={() => onHighlightMouseOver(highlight)}
       onMouseOut={onHighlightMouseOut}
-      color={highlightColor}
+      style={{ backgroundColor: highlightColor }}
     />
   );
 };
