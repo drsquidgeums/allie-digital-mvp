@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { IHighlight } from 'react-pdf-highlighter';
 
 export interface HighlightPosition {
@@ -27,7 +27,7 @@ export interface HighlightContent {
   image?: string;
 }
 
-// Custom type that extends IHighlight but adds color property
+// Custom type that extends IHighlight and adds color property
 export interface PdfHighlight extends Omit<IHighlight, 'comment'> {
   id: string;
   color?: string;

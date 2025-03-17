@@ -40,12 +40,12 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
     if (position.boundingRect) {
       position.boundingRect = {
         ...position.boundingRect,
-        left: position.boundingRect.left || 0,
-        top: position.boundingRect.top || 0,
-        right: position.boundingRect.right || 
-              (position.boundingRect.left || 0) + (position.boundingRect.width || 0),
-        bottom: position.boundingRect.bottom || 
-               (position.boundingRect.top || 0) + (position.boundingRect.height || 0),
+        left: position.boundingRect.left || position.boundingRect.x1 || 0,
+        top: position.boundingRect.top || position.boundingRect.y1 || 0,
+        right: position.boundingRect.right || position.boundingRect.x2 || 
+              (position.boundingRect.left || position.boundingRect.x1 || 0) + (position.boundingRect.width || 0),
+        bottom: position.boundingRect.bottom || position.boundingRect.y2 || 
+               (position.boundingRect.top || position.boundingRect.y1 || 0) + (position.boundingRect.height || 0),
       };
     }
     
@@ -53,10 +53,10 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
     if (position.rects && Array.isArray(position.rects)) {
       position.rects = position.rects.map(rect => ({
         ...rect,
-        left: rect.left || 0,
-        top: rect.top || 0,
-        right: rect.right || (rect.left || 0) + (rect.width || 0),
-        bottom: rect.bottom || (rect.top || 0) + (rect.height || 0),
+        left: rect.left || rect.x1 || 0,
+        top: rect.top || rect.y1 || 0,
+        right: rect.right || rect.x2 || (rect.left || rect.x1 || 0) + (rect.width || 0),
+        bottom: rect.bottom || rect.y2 || (rect.top || rect.y1 || 0) + (rect.height || 0),
       }));
     }
     
@@ -73,7 +73,7 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
     const styleEl = document.createElement('style');
     styleEl.id = `highlight-style-${index}-${highlight.id}`;
     styleEl.innerHTML = `
-      .${highlightClass} .Highlight__parts .Highlight__part {
+      .${highlightClass} .Highlight__part {
         background-color: ${highlightColor} !important;
       }
     `;
