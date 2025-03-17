@@ -24,7 +24,8 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
   onHighlightMouseOver,
   onHighlightMouseOut
 }) => {
-  const highlightColor = isSelected ? "rgba(255, 226, 143, 1)" : selectedColor || "rgba(255, 235, 59, 0.5)";
+  // Use the highlight's color if available, otherwise use the selected color or default yellow
+  const highlightColor = highlight.color || (isSelected ? "rgba(255, 226, 143, 1)" : selectedColor || "rgba(255, 235, 59, 0.5)");
   
   // Make sure the position object has all required properties
   const ensureCompletePosition = (highlight: IHighlight) => {
@@ -69,6 +70,7 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
       onClick={() => onHighlightClick(highlight)}
       onMouseOver={() => onHighlightMouseOver(highlight)}
       onMouseOut={onHighlightMouseOut}
+      color={highlightColor}
     />
   );
 };
