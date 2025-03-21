@@ -180,7 +180,7 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
       hideTip();
       if (transformSelection) transformSelection();
       
-      // Return null to satisfy the TypeScript requirement for returning React Element | null
+      // Must return null to make TypeScript happy
       return null;
     },
     [addHighlight, selectedColor]
@@ -339,7 +339,7 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
                   ...h,
                   position: convertPosition(h.position)
                 }))}
-                onDocumentLoad={({ numPages }) => {
+                onDocumentReady={({ numPages }) => {
                   setNumPages(numPages);
                   toast({
                     title: "PDF Loaded Successfully",
