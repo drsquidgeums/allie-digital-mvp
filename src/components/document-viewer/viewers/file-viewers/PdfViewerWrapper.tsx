@@ -9,12 +9,16 @@ import '@/styles/pdf/pdf-accessibility.css';
 interface PdfViewerWrapperProps {
   file: File | null;
   url: string;
+  selectedColor?: string;
+  isHighlighter?: boolean;
 }
 
-export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({ file, url }) => {
-  // Default highlight color
-  const selectedColor = '#ffeb3b';
-  
+export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({ 
+  file, 
+  url,
+  selectedColor = '#ffeb3b',
+  isHighlighter = true 
+}) => {
   return (
     <div className="h-full w-full flex flex-col relative">
       {/* Skip link for keyboard users */}
@@ -26,7 +30,7 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({ file, url })
         file={file}
         url={url}
         selectedColor={selectedColor}
-        isHighlighter={true}
+        isHighlighter={isHighlighter}
       />
     </div>
   );
