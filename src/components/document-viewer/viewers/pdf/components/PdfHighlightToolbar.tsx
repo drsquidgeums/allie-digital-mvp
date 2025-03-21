@@ -1,7 +1,13 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Highlighter } from 'lucide-react';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  ZoomIn, 
+  ZoomOut, 
+  Highlighter 
+} from 'lucide-react';
 
 interface PdfHighlightToolbarProps {
   pageNumber: number;
@@ -31,19 +37,25 @@ export const PdfHighlightToolbar: React.FC<PdfHighlightToolbarProps> = ({
     return 0.2126 * r + 0.7152 * g + 0.0722 * b;
   };
 
+  // Determine text color based on background luminance
+  const textColor = isHighlighter && selectedColor ? 
+    (getLuminance(selectedColor) > 0.5 ? '#000000' : '#ffffff') : 
+    'currentColor';
+
   return (
-    <div className="flex items-center justify-between p-2 bg-zinc-800 text-white border-b">
+    <div className="flex items-center justify-between p-2 bg-background border-b">
       <div className="flex items-center space-x-2">
         <Button
           variant="outline"
           size="sm"
           onClick={() => onPageChange(-1)}
           disabled={pageNumber <= 1}
+          className="text-foreground border-input hover:bg-accent hover:text-accent-foreground"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
         
-        <span className="text-sm">
+        <span className="text-sm text-foreground">
           {pageNumber} / {numPages}
         </span>
         
@@ -52,32 +64,47 @@ export const PdfHighlightToolbar: React.FC<PdfHighlightToolbarProps> = ({
           size="sm"
           onClick={() => onPageChange(1)}
           disabled={pageNumber >= numPages}
+          className="text-foreground border-input hover:bg-accent hover:text-accent-foreground"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
       
       <div className="flex items-center space-x-2">
-        <Button variant="outline" size="sm" onClick={() => onZoomChange(-0.1)}>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => onZoomChange(-0.1)}
+          className="text-foreground border-input hover:bg-accent hover:text-accent-foreground"
+        >
           <ZoomOut className="h-4 w-4" />
         </Button>
         
-        <span className="text-sm">{Math.round(zoom * 100)}%</span>
+        <span className="text-sm text-foreground">{Math.round(zoom * 100)}%</span>
         
-        <Button variant="outline" size="sm" onClick={() => onZoomChange(0.1)}>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => onZoomChange(0.1)}
+          className="text-foreground border-input hover:bg-accent hover:text-accent-foreground"
+        >
           <ZoomIn className="h-4 w-4" />
         </Button>
         
-        <Button
-          variant="outline"
-          size="sm"
-          style={{
-            backgroundColor: isHighlighter ? selectedColor : 'transparent',
-            color: isHighlighter ? (getLuminance(selectedColor) > 0.5 ? '#000' : '#fff') : 'currentColor'
-          }}
-        >
-          <Highlighter className="h-4 w-4" />
-        </Button>
+        {isHighlighter && (
+          <Button
+            variant="outline"
+            size="sm"
+            style={{
+              backgroundColor: selectedColor,
+              color: textColor,
+              borderColor: 'var(--border)'
+            }}
+            className="flex items-center justify-center"
+          >
+            <Highlighter className="h-4 w-4" />
+          </Button>
+        )}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import { LoadingFallback } from '../LoadingFallback';
 // Lazy load the SimplePdfViewer component
 const SimplePdfViewer = React.lazy(() => 
   import('../pdf/SimplePdfViewer').then(module => ({
-    default: module.SimplePdfViewer || module.default
+    default: module.SimplePdfViewer
   }))
 );
 
@@ -39,7 +39,7 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   }, [file, url]);
   
   return (
-    <div className="h-full overflow-auto">
+    <div className="h-full overflow-auto border rounded-md bg-background">
       <ErrorBoundary>
         <Suspense fallback={<LoadingFallback />}>
           <SimplePdfViewer

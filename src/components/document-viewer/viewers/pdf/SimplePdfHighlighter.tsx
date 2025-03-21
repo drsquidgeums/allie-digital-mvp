@@ -124,11 +124,11 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
       />
       
       {/* PDF Content with Highlighting */}
-      <div className="flex-1 overflow-auto bg-zinc-800">
+      <div className="flex-1 overflow-auto bg-accent/10">
         <div style={{ transform: `scale(${zoom})`, transformOrigin: 'center top' }}>
           <PdfLoader 
             url={pdfUrl} 
-            beforeLoad={<div className="loading">Loading PDF...</div>}
+            beforeLoad={<div className="flex items-center justify-center p-8 text-foreground">Loading PDF...</div>}
           >
             {pdfDocument => {
               // Update the number of pages once the document is loaded
