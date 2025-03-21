@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useCallback } from 'react';
 import { 
   PdfLoader, 
@@ -161,7 +160,6 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
   // Handle selection finish (when user highlights text)
   const handleSelectionFinished = useCallback(
     (position: ScaledPosition, content: { text?: string; image?: string }, hideTip: () => void, transformSelection: () => void) => {
-      // Create the highlight object
       const highlight = {
         id: `highlight-${Date.now()}`,
         position: convertPosition(position),
@@ -173,14 +171,11 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
         color: selectedColor
       };
       
-      // Add the highlight
       addHighlight(highlight as PdfHighlight);
       
-      // Hide tip and clear selection
       hideTip();
       if (transformSelection) transformSelection();
       
-      // Must return null to make TypeScript happy
       return null;
     },
     [addHighlight, selectedColor]
@@ -215,10 +210,8 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
       const isSelected = selectedHighlight?.id === highlight.id;
       const highlightColor = highlight.color || selectedColor;
       
-      // Create a unique class for this highlight
       const highlightClass = `highlight-${index}-${highlight.id?.replace(/\W/g, '-')}`;
       
-      // Insert a style element for this highlight
       const styleId = `highlight-style-${index}-${highlight.id}`;
       if (!document.getElementById(styleId)) {
         const styleEl = document.createElement('style');
@@ -231,7 +224,6 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
         document.head.appendChild(styleEl);
       }
       
-      // Convert position to ensure compatibility
       const adaptedPosition = convertPosition(highlight.position);
       
       return (
@@ -339,13 +331,6 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
                   ...h,
                   position: convertPosition(h.position)
                 }))}
-                onLoadSuccess={({ numPages }) => {
-                  setNumPages(numPages);
-                  toast({
-                    title: "PDF Loaded Successfully",
-                    description: `Document has ${numPages} pages`,
-                  });
-                }}
               />
             )}
           </PdfLoader>
@@ -395,11 +380,9 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
 
 // Helper function to determine text color based on background luminance
 function getLuminance(hexColor: string): number {
-  // Convert hex to RGB
   const r = parseInt(hexColor.slice(1, 3), 16) / 255;
   const g = parseInt(hexColor.slice(3, 5), 16) / 255;
   const b = parseInt(hexColor.slice(5, 7), 16) / 255;
   
-  // Calculate luminance
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
