@@ -339,7 +339,7 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
                   ...h,
                   position: convertPosition(h.position)
                 }))}
-                onDocumentReady={({ numPages }) => {
+                onDocumentLoad={({ numPages }) => {
                   setNumPages(numPages);
                   toast({
                     title: "PDF Loaded Successfully",
