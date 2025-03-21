@@ -5,11 +5,16 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
   DialogTrigger
-} from '@/components/ui/dialog';
+} from '@/components/ui/dialog/dialog-root';
+import { DialogFooter } from '@/components/ui/dialog/dialog-footer';
 import { Button } from '@/components/ui/button';
 import { Keyboard } from 'lucide-react';
+
+interface KeyboardShortcutsDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
 
 interface ShortcutItemProps {
   keys: string[];
@@ -29,14 +34,9 @@ const ShortcutItem: React.FC<ShortcutItemProps> = ({ keys, description }) => (
   </div>
 );
 
-export const KeyboardShortcutsDialog: React.FC = () => {
+export const KeyboardShortcutsDialog: React.FC<KeyboardShortcutsDialogProps> = ({ open, onOpenChange }) => {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="icon" aria-label="Keyboard shortcuts">
-          <Keyboard className="h-4 w-4" />
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Keyboard Shortcuts</DialogTitle>
@@ -59,7 +59,7 @@ export const KeyboardShortcutsDialog: React.FC = () => {
           </div>
         </div>
         <DialogFooter>
-          <Button type="button" variant="secondary">
+          <Button type="button" variant="secondary" onClick={() => onOpenChange(false)}>
             Close
           </Button>
         </DialogFooter>
