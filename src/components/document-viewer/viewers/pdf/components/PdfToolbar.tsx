@@ -1,93 +1,98 @@
 
 import React from 'react';
-import { ZoomIn, ZoomOut, RotateCw, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  ZoomIn, 
+  ZoomOut, 
+  Highlighter
+} from 'lucide-react';
 
 interface PdfToolbarProps {
-  scale: number;
-  rotation: number;
-  currentPage: number;
+  pageNumber: number;
   numPages: number;
-  zoomIn: () => void;
-  zoomOut: () => void;
-  rotateClockwise: () => void;
-  rotateCounterClockwise: () => void;
-  goToPreviousPage: () => void;
-  goToNextPage: () => void;
+  zoom: number;
+  isTextSelected: boolean;
+  selectedColor: string;
+  isHighlighter: boolean;
+  onPageChange: (offset: number) => void;
+  onZoomChange: (delta: number) => void;
+  onHighlight: () => void;
 }
 
 export const PdfToolbar: React.FC<PdfToolbarProps> = ({
-  scale,
-  rotation,
-  currentPage,
+  pageNumber,
   numPages,
-  zoomIn,
-  zoomOut,
-  rotateClockwise,
-  rotateCounterClockwise,
-  goToPreviousPage,
-  goToNextPage
+  zoom,
+  isTextSelected,
+  selectedColor,
+  isHighlighter,
+  onPageChange,
+  onZoomChange,
+  onHighlight
 }) => {
+  // Helper function to determine text color based on background color
+  const getContrastColor = (hexColor: string): string => {
+    const r = parseInt(hexColor.slice(1, 3), 16);
+    const g = parseInt(hexColor.slice(3, 5), 16);
+    const b = parseInt(hexColor.slice(5, 7), 16);
+    
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    return luminance > 0.5 ? '#000000' : '#FFFFFF';
+  };
+
   return (
-    <div className="bg-muted/30 p-2 border-b flex items-center justify-between">
+    <div className="flex items-center justify-between p-2 bg-zinc-800 text-white border-b">
       <div className="flex items-center space-x-2">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={zoomOut} 
-          disabled={scale <= 0.5}
-          title="Zoom out"
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onPageChange(-1)}
+          disabled={pageNumber <= 1}
         >
-          <ZoomOut size={16} />
+          <ChevronLeft className="h-4 w-4" />
         </Button>
-        <span className="text-xs">{Math.round(scale * 100)}%</span>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={zoomIn} 
-          disabled={scale >= 3}
-          title="Zoom in"
+        
+        <span className="text-sm">
+          {pageNumber} / {numPages}
+        </span>
+        
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onPageChange(1)}
+          disabled={pageNumber >= numPages}
         >
-          <ZoomIn size={16} />
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={rotateCounterClockwise}
-          title="Rotate counterclockwise"
-        >
-          <RotateCcw size={16} />
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={rotateClockwise}
-          title="Rotate clockwise"
-        >
-          <RotateCw size={16} />
+          <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
       
       <div className="flex items-center space-x-2">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={goToPreviousPage} 
-          disabled={currentPage <= 1}
-          title="Previous page"
-        >
-          <ChevronLeft size={16} />
+        <Button variant="outline" size="sm" onClick={() => onZoomChange(-0.1)}>
+          <ZoomOut className="h-4 w-4" />
         </Button>
-        <span className="text-xs">Page {currentPage} of {numPages || '?'}</span>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={goToNextPage} 
-          disabled={currentPage >= numPages}
-          title="Next page"
-        >
-          <ChevronRight size={16} />
+        
+        <span className="text-sm">{Math.round(zoom * 100)}%</span>
+        
+        <Button variant="outline" size="sm" onClick={() => onZoomChange(0.1)}>
+          <ZoomIn className="h-4 w-4" />
         </Button>
+        
+        {isHighlighter && (
+          <Button
+            variant="outline"
+            size="sm"
+            style={{
+              backgroundColor: isTextSelected ? selectedColor : 'transparent',
+              color: isTextSelected ? getContrastColor(selectedColor) : 'currentColor'
+            }}
+            onClick={onHighlight}
+          >
+            <Highlighter className="h-4 w-4" />
+          </Button>
+        )}
       </div>
     </div>
   );

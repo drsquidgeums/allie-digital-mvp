@@ -6,7 +6,7 @@ import { LoadingFallback } from '../LoadingFallback';
 // Lazy load the SimplePdfViewer component
 const SimplePdfViewer = React.lazy(() => 
   import('../pdf/SimplePdfViewer').then(module => ({
-    default: module.SimplePdfViewer
+    default: module.default
   }))
 );
 

@@ -1,41 +1,30 @@
 
 import { useState, useCallback } from 'react';
+import { Highlight } from '../components/HighlightLayer';
 
-export interface DocumentHighlight {
-  id: string;
-  pageNumber: number;
-  content: string;
-  position: {
-    top: number;
-    left: number;
-    width: number;
-    height: number;
-  };
-  color: string;
-}
-
-export const useDocumentHighlights = (defaultColor: string = '#ffeb3b') => {
-  const [highlights, setHighlights] = useState<DocumentHighlight[]>([]);
+export const useDocumentHighlights = (initialColor: string) => {
+  const [highlights, setHighlights] = useState<Highlight[]>([]);
   const [selectedHighlightId, setSelectedHighlightId] = useState<string | null>(null);
 
-  // Add a new highlight
-  const addHighlight = useCallback((highlight: DocumentHighlight) => {
+  // Add highlight
+  const addHighlight = useCallback((highlight: Highlight) => {
     setHighlights(prev => [...prev, highlight]);
   }, []);
 
-  // Remove a highlight
+  // Remove highlight
   const removeHighlight = useCallback((id: string) => {
     setHighlights(prev => prev.filter(h => h.id !== id));
+    setSelectedHighlightId(null);
   }, []);
 
-  // Update a highlight's color
+  // Update highlight color
   const updateHighlightColor = useCallback((id: string, color: string) => {
     setHighlights(prev => 
       prev.map(h => h.id === id ? { ...h, color } : h)
     );
   }, []);
 
-  // Get a highlight by its ID
+  // Get highlight by ID
   const getHighlightById = useCallback((id: string) => {
     return highlights.find(h => h.id === id) || null;
   }, [highlights]);
