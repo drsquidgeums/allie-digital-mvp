@@ -1,55 +1,35 @@
 
-import React, { Suspense, useEffect } from 'react';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { LoadingFallback } from '../LoadingFallback';
-
-// Lazy load the SimplePdfViewer component
-const SimplePdfViewer = React.lazy(() => 
-  import('../pdf/SimplePdfViewer').then(module => ({
-    default: module.default
-  }))
-);
+import React from 'react';
+import SimplePdfViewer from '../../viewers/pdf/SimplePdfViewer';
+import '@/styles/pdf/pdf-base.css';
+import '@/styles/pdf/pdf-highlights.css';
+import '@/styles/pdf/pdf-toolbar.css';
+import '@/styles/pdf/pdf-accessibility.css';
 
 interface PdfViewerWrapperProps {
   file: File | null;
   url: string;
-  selectedColor: string;
-  isHighlighter?: boolean;
 }
 
-/**
- * PdfViewerWrapper Component
- * 
- * Wraps the PDF viewer component with error boundary and suspense
- */
-export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
-  file,
-  url,
-  selectedColor,
-  isHighlighter = true
-}) => {
-  console.log("PdfViewerWrapper received file:", file?.name);
-  console.log("PdfViewerWrapper color settings:", selectedColor, isHighlighter);
-  
-  // Log when loading PDF viewer
-  useEffect(() => {
-    if (file || url) {
-      console.log("Loading PDF viewer with file:", file?.name, "or URL:", url);
-    }
-  }, [file, url]);
+export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({ file, url }) => {
+  // Default highlight color
+  const selectedColor = '#ffeb3b';
   
   return (
-    <div className="h-full overflow-auto border rounded-md bg-background">
-      <ErrorBoundary>
-        <Suspense fallback={<LoadingFallback />}>
-          <SimplePdfViewer
-            file={file}
-            url={url}
-            selectedColor={selectedColor}
-            isHighlighter={isHighlighter}
-          />
-        </Suspense>
-      </ErrorBoundary>
+    <div className="h-full w-full flex flex-col relative">
+      {/* Skip link for keyboard users */}
+      <a href="#pdf-content" className="skip-link">
+        Skip to PDF content
+      </a>
+      
+      <SimplePdfViewer
+        file={file}
+        url={url}
+        selectedColor={selectedColor}
+        isHighlighter={true}
+      />
     </div>
   );
 };
+
+export default PdfViewerWrapper;

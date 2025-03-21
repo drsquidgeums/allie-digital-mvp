@@ -16,11 +16,29 @@ export const HighlightPopup: React.FC<HighlightPopupProps> = ({
   onClose
 }) => {
   const colors = ["#ffeb3b", "#ff9800", "#f44336", "#4caf50", "#2196f3", "#9c27b0"];
+  
+  const colorNames = {
+    "#ffeb3b": "Yellow",
+    "#ff9800": "Orange",
+    "#f44336": "Red",
+    "#4caf50": "Green",
+    "#2196f3": "Blue",
+    "#9c27b0": "Purple"
+  };
 
   return (
-    <div className="absolute bottom-4 right-4 bg-white p-4 rounded shadow-lg z-50">
-      <h3 className="text-sm font-medium mb-2">Highlight Options</h3>
-      <div className="flex flex-wrap gap-2 mb-3">
+    <div 
+      className="absolute bottom-4 right-4 bg-white p-4 rounded shadow-lg z-50"
+      role="dialog"
+      aria-label="Highlight Options"
+    >
+      <h3 className="text-sm font-medium mb-2" id="highlight-options-title">Highlight Options</h3>
+      <div 
+        className="flex flex-wrap gap-2 mb-3"
+        role="radiogroup"
+        aria-labelledby="highlight-color-selection"
+      >
+        <span id="highlight-color-selection" className="sr-only">Select highlight color</span>
         {colors.map(color => (
           <button 
             key={color} 
@@ -32,6 +50,9 @@ export const HighlightPopup: React.FC<HighlightPopupProps> = ({
               border: "1px solid #ccc"
             }}
             onClick={() => onColorChange(selectedHighlightId, color)}
+            aria-label={`${colorNames[color as keyof typeof colorNames] || color} color`}
+            role="radio"
+            aria-checked="false"
           />
         ))}
       </div>
@@ -40,6 +61,7 @@ export const HighlightPopup: React.FC<HighlightPopupProps> = ({
           variant="destructive"
           size="sm"
           onClick={() => onDelete(selectedHighlightId)}
+          aria-label="Delete highlight"
         >
           Delete
         </Button>
@@ -47,6 +69,7 @@ export const HighlightPopup: React.FC<HighlightPopupProps> = ({
           variant="outline"
           size="sm"
           onClick={onClose}
+          aria-label="Close highlight options"
         >
           Close
         </Button>

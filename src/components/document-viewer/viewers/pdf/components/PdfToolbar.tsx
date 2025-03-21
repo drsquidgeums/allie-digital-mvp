@@ -1,12 +1,14 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Tooltip } from '@/components/ui/tooltip';
 import { 
   ChevronLeft, 
   ChevronRight, 
   ZoomIn, 
   ZoomOut, 
-  Highlighter
+  Highlighter,
+  Keyboard
 } from 'lucide-react';
 
 interface PdfToolbarProps {
@@ -19,6 +21,7 @@ interface PdfToolbarProps {
   onPageChange: (offset: number) => void;
   onZoomChange: (delta: number) => void;
   onHighlight: () => void;
+  onKeyboardHelp?: () => void;
 }
 
 export const PdfToolbar: React.FC<PdfToolbarProps> = ({
@@ -30,7 +33,8 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
   isHighlighter,
   onPageChange,
   onZoomChange,
-  onHighlight
+  onHighlight,
+  onKeyboardHelp
 }) => {
   // Helper function to determine text color based on background color
   const getContrastColor = (hexColor: string): string => {
@@ -46,53 +50,88 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
   return (
     <div className="flex items-center justify-between p-2 bg-zinc-800 text-white border-b">
       <div className="flex items-center space-x-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onPageChange(-1)}
-          disabled={pageNumber <= 1}
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-        
-        <span className="text-sm">
-          {pageNumber} / {numPages}
-        </span>
-        
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onPageChange(1)}
-          disabled={pageNumber >= numPages}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
-      
-      <div className="flex items-center space-x-2">
-        <Button variant="outline" size="sm" onClick={() => onZoomChange(-0.1)}>
-          <ZoomOut className="h-4 w-4" />
-        </Button>
-        
-        <span className="text-sm">{Math.round(zoom * 100)}%</span>
-        
-        <Button variant="outline" size="sm" onClick={() => onZoomChange(0.1)}>
-          <ZoomIn className="h-4 w-4" />
-        </Button>
-        
-        {isHighlighter && (
+        <Tooltip content="Previous page (Left Arrow)">
           <Button
             variant="outline"
             size="sm"
-            style={{
-              backgroundColor: isTextSelected ? selectedColor : 'transparent',
-              color: isTextSelected ? getContrastColor(selectedColor) : 'currentColor'
-            }}
-            onClick={onHighlight}
+            onClick={() => onPageChange(-1)}
+            disabled={pageNumber <= 1}
+            aria-label="Previous page"
           >
-            <Highlighter className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4" />
           </Button>
+        </Tooltip>
+        
+        <span className="text-sm" aria-live="polite">
+          {pageNumber} / {numPages}
+        </span>
+        
+        <Tooltip content="Next page (Right Arrow)">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onPageChange(1)}
+            disabled={pageNumber >= numPages}
+            aria-label="Next page"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </Tooltip>
+      </div>
+      
+      <div className="flex items-center space-x-2">
+        <Tooltip content="Zoom out (Ctrl + -)">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => onZoomChange(-0.1)}
+            aria-label="Zoom out"
+          >
+            <ZoomOut className="h-4 w-4" />
+          </Button>
+        </Tooltip>
+        
+        <span className="text-sm" aria-live="polite">{Math.round(zoom * 100)}%</span>
+        
+        <Tooltip content="Zoom in (Ctrl + +)">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => onZoomChange(0.1)}
+            aria-label="Zoom in"
+          >
+            <ZoomIn className="h-4 w-4" />
+          </Button>
+        </Tooltip>
+        
+        {isHighlighter && (
+          <Tooltip content="Highlight selected text">
+            <Button
+              variant="outline"
+              size="sm"
+              style={{
+                backgroundColor: isTextSelected ? selectedColor : 'transparent',
+                color: isTextSelected ? getContrastColor(selectedColor) : 'currentColor'
+              }}
+              onClick={onHighlight}
+              aria-label="Highlight text"
+              disabled={!isTextSelected}
+            >
+              <Highlighter className="h-4 w-4" />
+            </Button>
+          </Tooltip>
         )}
+        
+        <Tooltip content="Keyboard shortcuts">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onKeyboardHelp}
+            aria-label="Keyboard shortcuts"
+          >
+            <Keyboard className="h-4 w-4" />
+          </Button>
+        </Tooltip>
       </div>
     </div>
   );
