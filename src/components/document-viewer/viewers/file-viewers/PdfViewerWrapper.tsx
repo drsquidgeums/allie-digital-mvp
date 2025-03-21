@@ -3,10 +3,10 @@ import React, { Suspense, useEffect } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LoadingFallback } from '../LoadingFallback';
 
-// Lazy load the new PDF viewer component
+// Lazy load the SimplePdfViewer component
 const SimplePdfViewer = React.lazy(() => 
   import('../pdf/SimplePdfViewer').then(module => ({
-    default: module.SimplePdfViewer
+    default: module.SimplePdfViewer || module.default
   }))
 );
 

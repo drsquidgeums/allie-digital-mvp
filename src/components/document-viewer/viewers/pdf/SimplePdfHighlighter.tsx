@@ -2,8 +2,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { 
   PdfLoader, 
-  PdfHighlighter as ReactPdfHighlighter, 
-  ScaledPosition
+  PdfHighlighter as ReactPdfHighlighter
 } from 'react-pdf-highlighter';
 import { useToast } from '@/hooks/use-toast';
 import '@/styles/pdf/pdf-highlights.css';
@@ -30,6 +29,7 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [zoom, setZoom] = useState<number>(1.0);
+  const [loading, setLoading] = useState<boolean>(true);
   const scrollViewerRef = useRef<any>(null);
   const { toast } = useToast();
   
@@ -70,6 +70,17 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
       return newZoom >= 0.5 && newZoom <= 3 ? newZoom : prevZoom;
     });
   }, []);
+  
+  // Handle document load success
+  const handleDocumentLoad = useCallback((totalPages: number) => {
+    setNumPages(totalPages);
+    setLoading(false);
+    
+    toast({
+      title: "PDF Loaded Successfully",
+      description: `Document has ${totalPages} pages`,
+    });
+  }, [toast]);
   
   // Render the highlight
   const renderHighlight = useCallback(
@@ -118,28 +129,28 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
           <PdfLoader 
             url={pdfUrl} 
             beforeLoad={<div className="loading">Loading PDF...</div>}
-            onSuccess={(pdfDocument) => {
-              setNumPages(pdfDocument.numPages);
-              toast({
-                title: "PDF Loaded Successfully",
-                description: `Document has ${pdfDocument.numPages} pages`,
-              });
-            }}
           >
-            {pdfDocument => (
-              <ReactPdfHighlighter
-                pdfDocument={pdfDocument}
-                enableAreaSelection={isHighlighter ? () => true : () => false}
-                onScrollChange={() => setSelectedHighlight(null)}
-                scrollRef={scrollTo => { scrollViewerRef.current = scrollTo; }}
-                onSelectionFinished={handleSelectionFinished}
-                highlightTransform={renderHighlight}
-                highlights={highlights.map(h => ({
-                  ...h,
-                  position: convertPosition(h.position)
-                }))}
-              />
-            )}
+            {pdfDocument => {
+              // Update the number of pages once the document is loaded
+              if (numPages === 0 && pdfDocument.numPages) {
+                handleDocumentLoad(pdfDocument.numPages);
+              }
+              
+              return (
+                <ReactPdfHighlighter
+                  pdfDocument={pdfDocument}
+                  enableAreaSelection={isHighlighter ? () => true : () => false}
+                  onScrollChange={() => setSelectedHighlight(null)}
+                  scrollRef={scrollTo => { scrollViewerRef.current = scrollTo; }}
+                  onSelectionFinished={handleSelectionFinished}
+                  highlightTransform={renderHighlight}
+                  highlights={highlights.map(h => ({
+                    ...h,
+                    position: convertPosition(h.position)
+                  }))}
+                />
+              );
+            }}
           </PdfLoader>
         </div>
       </div>

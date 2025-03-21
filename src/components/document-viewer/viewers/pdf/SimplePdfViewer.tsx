@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useDocumentHighlights } from './hooks/useDocumentHighlights';
+import '@/styles/pdf/pdf-base.css';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
@@ -38,7 +39,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   const { toast } = useToast();
   
   // Get the PDF source from either file or URL
-  const pdfSource = file ? { data: file } : url ? { url } : null;
+  const pdfSource = file ? file : url;
   
   // Use custom hook for highlight management
   const { 
@@ -47,18 +48,19 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
     removeHighlight, 
     updateHighlightColor,
     selectedHighlightId, 
-    setSelectedHighlightId 
+    setSelectedHighlightId,
+    getHighlightById
   } = useDocumentHighlights(selectedColor);
 
   // Clean up object URLs when component unmounts or file changes
   useEffect(() => {
-    if (file && typeof pdfSource?.data !== 'string') {
+    if (file) {
       const objectUrl = URL.createObjectURL(file);
       return () => {
         URL.revokeObjectURL(objectUrl);
       };
     }
-  }, [file, pdfSource]);
+  }, [file]);
 
   // Handle document load success
   const handleDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
@@ -256,7 +258,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
                 .map(highlight => (
                   <div
                     key={highlight.id}
-                    className="absolute pointer-events-auto cursor-pointer"
+                    className="highlight-area"
                     style={{
                       top: highlight.position.top,
                       left: highlight.position.left,
@@ -276,7 +278,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
       </div>
       
       {/* Highlight Options Popup */}
-      {selectedHighlightId && (
+      {selectedHighlightId && getHighlightById(selectedHighlightId) && (
         <div className="absolute bottom-4 right-4 bg-white p-4 rounded shadow-lg z-50">
           <h3 className="text-sm font-medium mb-2">Highlight Options</h3>
           <div className="flex flex-wrap gap-2 mb-3">
