@@ -44,7 +44,7 @@
 
 .Highlight__parts {
   opacity: 0.5;
-  pointer-events: none;
+  pointer-events: auto;
   z-index: 2;
 }
 
