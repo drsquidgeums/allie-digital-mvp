@@ -161,6 +161,7 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
   // Handle selection finish (when user highlights text)
   const handleSelectionFinished = useCallback(
     (position: ScaledPosition, content: { text?: string; image?: string }, hideTip: () => void, transformSelection: () => void) => {
+      // Create the highlight object
       const highlight = {
         id: `highlight-${Date.now()}`,
         position: convertPosition(position),
@@ -179,7 +180,9 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
       hideTip();
       if (transformSelection) transformSelection();
       
-      return newHighlight;
+      // The critical fix: return null instead of the highlight object
+      // This matches the expected return type of Element | null
+      return null;
     },
     [addHighlight, selectedColor]
   );
