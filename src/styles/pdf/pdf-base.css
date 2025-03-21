@@ -1,46 +1,48 @@
 
 /* Base styles for PDF viewers */
-.pdf-container {
-  height: 100%;
-  overflow: hidden;
-  background-color: #f8f9fa;
-  position: relative;
-}
-
-/* Highlight styles */
-.pdf-highlight {
-  background-color: transparent;
-  position: relative;
-  cursor: pointer;
-}
-
-.pdf-highlight::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 2px;
-  background-color: var(--highlight-color, #ffeb3b);
-  opacity: 0.5;
-}
-
-.pdf-highlight:hover::after {
-  height: 100%;
+.pdf-page {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 1rem;
+  background-color: white;
 }
 
 /* Loading indicator */
-.pdf-loading {
+.loading-indicator {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 200px;
   width: 100%;
+  color: white;
+  font-size: 1rem;
+}
+
+/* Error message */
+.error-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  width: 100%;
+  color: #f87171;
+  font-size: 1rem;
+}
+
+/* Highlight styles */
+.highlight-area {
+  position: absolute;
+  border-radius: 2px;
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+
+.highlight-area:hover {
+  opacity: 0.8 !important;
 }
 
 /* Make PDF viewer responsive */
 @media (max-width: 768px) {
-  .pdf-container {
+  .pdf-page {
     padding: 0.5rem;
   }
 }

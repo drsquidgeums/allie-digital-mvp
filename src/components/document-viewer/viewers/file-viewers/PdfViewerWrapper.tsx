@@ -2,13 +2,11 @@
 import React, { Suspense, useEffect } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LoadingFallback } from '../LoadingFallback';
-import '@/styles/pdf/pdf-base.css';
-import '@/styles/pdf/pdf-highlights.css';
 
-// Lazy load the PDF viewer component
-const SimplePdfHighlighter = React.lazy(() => 
-  import('../pdf/SimplePdfHighlighter').then(module => ({
-    default: module.SimplePdfHighlighter
+// Lazy load the new PDF viewer component
+const SimplePdfViewer = React.lazy(() => 
+  import('../pdf/SimplePdfViewer').then(module => ({
+    default: module.SimplePdfViewer
   }))
 );
 
@@ -37,15 +35,14 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   useEffect(() => {
     if (file || url) {
       console.log("Loading PDF viewer with file:", file?.name, "or URL:", url);
-      console.log("Using React-PDF-Highlighter with color:", selectedColor);
     }
-  }, [file, url, selectedColor]);
+  }, [file, url]);
   
   return (
     <div className="h-full overflow-auto">
       <ErrorBoundary>
         <Suspense fallback={<LoadingFallback />}>
-          <SimplePdfHighlighter
+          <SimplePdfViewer
             file={file}
             url={url}
             selectedColor={selectedColor}
