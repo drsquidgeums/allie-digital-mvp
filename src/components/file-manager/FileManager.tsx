@@ -1,7 +1,6 @@
-
-import React, { useRef } from 'react';
+import React from 'react';
 import { Button } from "@/components/ui/button";
-import { FileText, Upload, Download, Trash2 } from "lucide-react";
+import { FileText, Download, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ManagedFile, useFileManager } from '@/hooks/useFileManager';
 import { 
@@ -20,24 +19,8 @@ interface FileManagerProps {
 export const FileManager: React.FC<FileManagerProps> = ({ 
   onFileSelect 
 }) => {
-  const { files, loading, uploadFile, deleteFile, downloadFile } = useFileManager();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { files, loading, deleteFile, downloadFile } = useFileManager();
   const { toast } = useToast();
-  
-  const handleFileUpload = () => {
-    fileInputRef.current?.click();
-  };
-  
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      try {
-        await uploadFile(file);
-      } catch (error) {
-        console.error("Error handling file:", error);
-      }
-    }
-  };
 
   const handleFileSelect = (file: ManagedFile) => {
     if (onFileSelect) {
@@ -52,24 +35,6 @@ export const FileManager: React.FC<FileManagerProps> = ({
           <FileText className="h-6 w-6" />
           My Files
         </h1>
-        <div>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            className="hidden"
-            accept=".pdf,.doc,.docx,.txt,.html"
-            aria-label="Upload file"
-          />
-          <Button 
-            onClick={handleFileUpload}
-            className="flex items-center gap-2"
-            disabled={loading}
-          >
-            <Upload className="h-4 w-4" />
-            Upload File
-          </Button>
-        </div>
       </div>
 
       <div className="border rounded-md p-4 bg-card">
@@ -135,7 +100,7 @@ export const FileManager: React.FC<FileManagerProps> = ({
         
         {!loading && files.length === 0 && (
           <div className="text-sm text-muted-foreground p-4 text-center border border-dashed rounded-md">
-            No files uploaded yet. Click Upload to add files.
+            No files uploaded yet. Use the Toolbox to upload files.
           </div>
         )}
       </div>
