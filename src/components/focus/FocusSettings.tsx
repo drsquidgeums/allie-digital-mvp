@@ -8,6 +8,10 @@ export const FocusSettings = () => {
 
   return (
     <div className="space-y-4">
+      <div className="text-xs text-muted-foreground mb-4 p-2 bg-muted/30 rounded-md">
+        <p>Select which distractions to block. These selections will only activate when you click 'Enter Focus Mode'.</p>
+      </div>
+    
       <FocusSettingSwitch
         label="Block Notifications"
         description="Block browser notifications during focus mode"
@@ -35,10 +39,6 @@ export const FocusSettings = () => {
         checked={settings.muteAudio}
         onCheckedChange={(checked) => updateSetting('muteAudio', checked)}
       />
-      
-      <div className="text-xs text-muted-foreground mt-4 p-2 bg-muted/30 rounded-md">
-        <p>Select which distractions to block. Settings will only activate when you click "Enter Focus Mode".</p>
-      </div>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import React, { useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -90,22 +89,15 @@ export const FocusMode = () => {
 
   const toggleFocusMode = async () => {
     if (!isActive) {
-      // Enter focus mode
-      // First set the state and then enter fullscreen
       setIsActive(true);
       await enterFullscreen();
       
-      // Apply settings
-      // Note: Most effects are now handled by the useFocusModeEffects hook
-      
-      // Play a notification sound to indicate entering focus mode
       const audio = new Audio('/sounds/notification-bell.mp3');
       audio.volume = 0.3;
       audio.play().catch(e => console.error('Could not play notification sound:', e));
       
       window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: true } }));
       
-      // Update toast message to indicate which settings are active
       const activeSettings = Object.entries(settings)
         .filter(([_, value]) => value)
         .map(([key]) => {
@@ -128,8 +120,6 @@ export const FocusMode = () => {
         description: settingsMessage,
       });
     } else {
-      // Exit focus mode
-      // First exit fullscreen and then update state
       await exitFullscreen();
       setIsActive(false);
       
@@ -163,7 +153,6 @@ export const FocusMode = () => {
       }
     };
 
-    // Add all vendor-prefixed versions of the event
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
     document.addEventListener('mozfullscreenchange', handleFullscreenChange);
