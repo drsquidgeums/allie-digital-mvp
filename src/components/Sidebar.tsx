@@ -7,34 +7,14 @@ import { SidebarContent } from "./sidebar/SidebarContent";
 import { ThemeToggle } from "./ThemeToggle";
 
 interface SidebarProps {
-  onFileUpload: (file: File) => void;
   onColorChange: (color: string) => void;
-  uploadedFiles: File[];
-  onFileSelect: (file: File) => void;
-  onFileDelete: (file: File) => void;
 }
 
 export const Sidebar = React.memo(({ 
-  onFileUpload, 
-  onColorChange, 
-  uploadedFiles, 
-  onFileSelect,
-  onFileDelete
+  onColorChange
 }: SidebarProps) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [activeComponent, setActiveComponent] = React.useState<string | null>("files");
+  const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      onFileUpload(file);
-    }
-  };
-
-  const handleTriggerFileInput = () => {
-    fileInputRef.current?.click();
-  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -59,15 +39,6 @@ export const Sidebar = React.memo(({
           setActiveComponent={setActiveComponent}
         />
 
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          className="hidden"
-          accept=".pdf,.doc,.docx,.txt,.html"
-          aria-label="Upload file"
-        />
-
         <SidebarTools 
           activeComponent={activeComponent}
           setActiveComponent={setActiveComponent}
@@ -77,10 +48,6 @@ export const Sidebar = React.memo(({
       <SidebarContent 
         activeComponent={activeComponent}
         onColorChange={onColorChange}
-        uploadedFiles={uploadedFiles}
-        onFileSelect={onFileSelect}
-        onFileDelete={onFileDelete}
-        onFileUpload={handleTriggerFileInput}
       />
 
       <div className="absolute bottom-4 left-4">

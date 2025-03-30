@@ -7,24 +7,15 @@ import { FocusMode } from "../FocusMode";
 import { IrlenOverlay } from "../IrlenOverlay";
 import { MindMap } from "../MindMap";
 import { ColorSeparator } from "../ColorSeparator";
-import { FileList } from "../FileList";
 
 interface SidebarContentProps {
   activeComponent: string | null;
   onColorChange: (color: string) => void;
-  uploadedFiles: File[];
-  onFileSelect: (file: File) => void;
-  onFileDelete: (file: File) => void;
-  onFileUpload: () => void;
 }
 
 export const SidebarContent = ({ 
   activeComponent,
-  onColorChange,
-  uploadedFiles,
-  onFileSelect,
-  onFileDelete,
-  onFileUpload
+  onColorChange
 }: SidebarContentProps) => {
   const renderActiveComponent = () => {
     switch (activeComponent) {
@@ -42,12 +33,6 @@ export const SidebarContent = ({
         return <MindMap />;
       case "color":
         return <ColorSeparator onColorChange={onColorChange} />;
-      case "files":
-        return <FileList 
-          files={uploadedFiles} 
-          onFileSelect={onFileSelect}
-          onFileDelete={onFileDelete}
-        />;
       default:
         return null;
     }
