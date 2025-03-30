@@ -86,9 +86,10 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
         aria-label="Mind map flow diagram"
       >
         <Controls 
-          className="bg-background/80 shadow-md backdrop-blur-sm border border-border/30 rounded-lg m-4" 
+          className="bg-background/80 shadow-md backdrop-blur-sm border-none rounded-lg m-4 z-50" 
           aria-label="Mind map controls" 
           showInteractive={false}
+          position="top-right"
         />
         <Background 
           gap={20} 

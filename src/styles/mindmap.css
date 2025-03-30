@@ -35,6 +35,11 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border-radius: 6px !important;
     overflow: hidden;
+    border: none !important;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 50 !important;
   }
 
   .react-flow__controls-button {
@@ -47,6 +52,7 @@
     justify-content: center !important;
     transition: all 0.2s !important;
     background: transparent !important;
+    border: none !important;
   }
 
   .react-flow__controls-button:hover {
@@ -99,12 +105,12 @@
   /* Dark mode styles */
   .dark .react-flow__controls {
     background-color: hsl(var(--background));
-    border-color: hsl(var(--border));
+    border-color: transparent;
   }
 
   .dark .react-flow__controls-button {
     background-color: transparent;
-    border-color: hsl(var(--border));
+    border-color: transparent;
     color: hsl(var(--foreground));
   }
 

@@ -23,7 +23,7 @@ export const TaskListCard = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskCo
   const { t } = useTranslation();
   
   return (
-    <Card className="p-6 shadow-md">
+    <Card className="p-6 shadow-sm border-none">
       <h2 className="text-lg font-semibold mb-4">{t('tasks.title')}</h2>
       <TaskList
         tasks={tasks}

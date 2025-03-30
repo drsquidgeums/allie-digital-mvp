@@ -43,12 +43,12 @@ export const TaskDashboard: React.FC = () => {
             />
           </div>
           <div className="space-y-6">
-            <Card className="p-4">
+            <Card className="p-4 border-none shadow-sm">
               <Calendar
                 mode="single"
                 selected={selectedDate}
                 onSelect={(date) => date && setSelectedDate(date)}
-                className="rounded-md"
+                className="rounded-md border-none"
               />
             </Card>
             <TaskListCard

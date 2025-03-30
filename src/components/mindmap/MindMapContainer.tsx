@@ -7,7 +7,6 @@ import { MindMapContainerProps } from './types';
 import { toast } from "sonner";
 import { ReactFlowProvider } from '@xyflow/react';
 import { getShapeStyle } from './utils/shapeUtils';
-import { SHAPE_CONFIGS } from './constants/shapeConfigs';
 
 export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   nodes,
@@ -89,8 +88,10 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
           />
         </ReactFlowProvider>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 z-10">
-        <MindMapCreativeToolbar onShapeSelect={handleShapeSelect} />
+      <div className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none">
+        <div className="pointer-events-auto">
+          <MindMapCreativeToolbar onShapeSelect={handleShapeSelect} />
+        </div>
       </div>
     </div>
   );
