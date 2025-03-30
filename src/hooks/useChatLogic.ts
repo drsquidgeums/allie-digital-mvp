@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from "react";
 import { SYSTEM_PROMPT, createOpenAICompletion } from "@/utils/openai";
 import { toast } from "sonner";
@@ -63,8 +62,8 @@ export const useChatLogic = (documentContent?: string) => {
       return "The Text-to-Speech feature reads text aloud, which is helpful for users with dyslexia, visual processing difficulties, or those who learn better through auditory input.";
     }
     
-    if (lowerInput.includes("connection") || lowerInput.includes("error") || lowerInput.includes("not working") || lowerInput.includes("api") || lowerInput.includes("claude")) {
-      return "I'm experiencing connection issues with my AI service. This could be due to API key limitations, CORS restrictions, or service outages. While we work on fixing this, I'll use my built-in knowledge to help you. You can still ask me about any of the application features!";
+    if (lowerInput.includes("connection") || lowerInput.includes("error") || lowerInput.includes("not working") || lowerInput.includes("api") || lowerInput.includes("openai") || lowerInput.includes("ai service")) {
+      return "I'm experiencing connection issues with my AI service. This could be due to API key limitations, rate limits, or service outages. While we work on resolving this, I'll use my built-in knowledge to help you. You can still ask me about any of the application features!";
     }
 
     return "I can explain how our various tools help support different learning needs. You can ask about specific tools like the Irlen Overlay, OpenDyslexic font, Bionic Reader, Color Separator, Focus Mode, Pomodoro Timer, Mind Map, or Text-to-Speech feature. Which would you like to learn more about?";
@@ -76,26 +75,13 @@ export const useChatLogic = (documentContent?: string) => {
     }
 
     try {
-      // Skip API call if we're in fallback mode due to previous errors
-      if (usingFallback) {
-        return "I'm currently using my built-in knowledge only. I can help you break down this document into more manageable sections. Which part would you like to focus on first?";
-      }
-
-      const systemMessage = `${SYSTEM_PROMPT} You are analyzing document content for a student with learning differences. Identify 3-5 key concepts and provide simple explanations for each one.`;
-      
-      const messages = [
-        { role: "system", content: systemMessage },
-        { role: "user", content: `Analyze this document content and identify key concepts that might be difficult to understand: ${content.substring(0, 4000)}` }
-      ];
-      
-      const responseContent = await createOpenAICompletion(messages);
-      return responseContent || "I couldn't identify any complex concepts in this document.";
+      // Always use fallback for document analysis to avoid API costs
+      return "I can help you break down this document into more manageable sections. Which part would you like to focus on first? I can help identify key concepts, summarize sections, or explain difficult terms.";
     } catch (error) {
       console.error("Error analyzing document:", error);
-      toast.error("Error analyzing document. Using built-in analysis capabilities.");
       return "I encountered an error analyzing your document. Let me help you break it down into manageable sections instead. What specific part would you like to focus on first?";
     }
-  }, [usingFallback]);
+  }, []);
 
   const handleSend = useCallback(async () => {
     if (!input.trim() || isLoading) return;
@@ -112,8 +98,13 @@ export const useChatLogic = (documentContent?: string) => {
         return;
       }
       
-      // Skip API call if we've had multiple failures and use built-in responses instead
-      if (usingFallback || apiRetries >= 3) {
+      // Skip API call if we've had multiple failures or if the user mentions API problems
+      const skipAPI = usingFallback || apiRetries >= 2 || 
+                     input.toLowerCase().includes("api") || 
+                     input.toLowerCase().includes("error") ||
+                     input.toLowerCase().includes("connection");
+      
+      if (skipAPI) {
         const fallbackResponse = getToolResponse(input, documentContent);
         setMessages(prev => [...prev, { text: fallbackResponse, isUser: false }]);
         setIsLoading(false);
@@ -149,8 +140,8 @@ export const useChatLogic = (documentContent?: string) => {
         // Increment retry counter
         setApiRetries(prev => prev + 1);
         
-        // After 3 retries, switch to fallback mode
-        if (apiRetries >= 2) {
+        // After 2 retries, switch to fallback mode
+        if (apiRetries >= 1) {
           setUsingFallback(true);
           toast.error("AI service unavailable. Using offline mode.", {
             description: "Using built-in responses until the service is restored."

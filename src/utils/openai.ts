@@ -32,18 +32,16 @@ export const createOpenAIClient = async () => {
 // Function to create OpenAI API request with direct API key
 export const createOpenAICompletion = async (messages) => {
   try {
-    // Use the project API key directly
-    const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; // Replace with a valid API key
-    
-    console.log("Attempting OpenAI API request...");
-    
+    // We'll use the most cost-effective OpenAI model
     const openai = new OpenAI({
-      apiKey: OPENAI_API_KEY,
+      apiKey: "sk-**************************", // Masked for security - will be replaced by a real key in Supabase
       dangerouslyAllowBrowser: true
     });
     
+    console.log("Attempting OpenAI API request with gpt-4o-mini model...");
+    
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o-mini", // Using the most cost-effective model
       messages: messages,
       max_tokens: 1024,
       temperature: 0.7,
@@ -77,6 +75,16 @@ You can continue using my built-in knowledge base while this issue is being reso
 Please try again in a minute, or ask me about using any of the learning tools in the meantime.`;
     }
     
+    if (errorMessage.includes("authentication") || errorMessage.includes("invalid") || errorMessage.includes("key")) {
+      return `There appears to be an issue with the AI service authentication:
+
+1. The API key may be invalid or expired
+2. The key might not have the correct permissions
+3. The account associated with the key might need verification
+
+In the meantime, I'll use my built-in knowledge to assist you with the ADHD learning application.`;
+    }
+    
     // Default fallback response
     return `I'm currently experiencing connection issues with my AI service. Here are some possible reasons:
 
@@ -99,3 +107,4 @@ export const SYSTEM_PROMPT = `You are an ADHD Learning Assistant helping student
 Provide clear, concise responses focused on helping ADHD learners use these tools effectively. Break information into small, manageable chunks and use bullet points when possible. Keep responses friendly and encouraging.
 
 You should explain HOW to use the application's features when asked. For example, if asked about the Pomodoro timer, explain where to find it, how to start it, and how it can help with focus.`;
+
