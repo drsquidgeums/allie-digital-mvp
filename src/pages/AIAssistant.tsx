@@ -1,11 +1,10 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import DocumentViewer from "@/components/DocumentViewer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sidebar } from "@/components/Sidebar";
 
-const AIAssistant = () => {
+const AIAssistant: React.FC = () => {
   const [documentContent, setDocumentContent] = useState<string>("");
   const [documentName, setDocumentName] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("#FFFF00");
@@ -20,15 +19,13 @@ const AIAssistant = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background">
-      <Sidebar 
-        onFileUpload={() => {}} 
-        onColorChange={handleColorChange}
-        uploadedFiles={[]}
-        onFileSelect={() => {}}
-        onFileDelete={() => {}}
-      />
-      <div className="flex-1 p-6">
+    <div className="flex min-h-screen bg-background">
+      <div className="sticky top-0 h-screen">
+        <Sidebar 
+          onColorChange={(color: string) => handleColorChange(color)}
+        />
+      </div>
+      <div className="flex-1 p-6 overflow-y-auto">
         <Tabs defaultValue="document" className="h-full">
           <TabsList className="mb-4">
             <TabsTrigger value="document">Document</TabsTrigger>

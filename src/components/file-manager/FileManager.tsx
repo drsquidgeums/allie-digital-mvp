@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { FileText, Download, Trash2, RefreshCw } from "lucide-react";
@@ -13,13 +12,7 @@ import {
   TableRow 
 } from "@/components/ui/table";
 
-interface FileManagerProps {
-  onFileSelect?: (file: ManagedFile) => void;
-}
-
-export const FileManager: React.FC<FileManagerProps> = ({ 
-  onFileSelect 
-}) => {
+export const FileManager: React.FC = () => {
   const { files, loading, deleteFile, downloadFile, refreshFiles } = useFileManager();
   const { toast } = useToast();
 
@@ -30,12 +23,6 @@ export const FileManager: React.FC<FileManagerProps> = ({
   useEffect(() => {
     console.log("FileManager files updated:", files.length);
   }, [files]);
-
-  const handleFileSelect = (file: ManagedFile) => {
-    if (onFileSelect) {
-      onFileSelect(file);
-    }
-  };
 
   const handleRefresh = async () => {
     await refreshFiles();
@@ -80,13 +67,9 @@ export const FileManager: React.FC<FileManagerProps> = ({
               {files.map((file) => (
                 <TableRow key={file.id}>
                   <TableCell>
-                    <Button 
-                      variant="link" 
-                      onClick={() => handleFileSelect(file)}
-                      className="p-0 h-auto text-left justify-start font-normal"
-                    >
+                    <div className="text-left font-normal">
                       {file.name}
-                    </Button>
+                    </div>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {file.type || "Unknown"}
