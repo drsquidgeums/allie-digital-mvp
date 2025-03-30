@@ -45,10 +45,10 @@ export const FocusMode = () => {
       aria-label="Focus Mode Settings"
       tabIndex={0}
     >
-      <CardHeader>
+      <CardHeader className="pb-2 pt-4">
         <CardTitle className="text-lg">Focus Mode</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="pt-0 space-y-4">
         <div 
           role="status" 
           aria-live="polite"
