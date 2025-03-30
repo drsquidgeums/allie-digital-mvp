@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { FileText, Download, Trash2 } from "lucide-react";
+import { FileText, Download, Trash2, RefreshCw } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ManagedFile, useFileManager } from '@/hooks/useFileManager';
 import { 
@@ -20,7 +20,7 @@ interface FileManagerProps {
 export const FileManager: React.FC<FileManagerProps> = ({ 
   onFileSelect 
 }) => {
-  const { files, loading, deleteFile, downloadFile } = useFileManager();
+  const { files, loading, deleteFile, downloadFile, refreshFiles } = useFileManager();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -37,6 +37,10 @@ export const FileManager: React.FC<FileManagerProps> = ({
     }
   };
 
+  const handleRefresh = async () => {
+    await refreshFiles();
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -44,6 +48,15 @@ export const FileManager: React.FC<FileManagerProps> = ({
           <FileText className="h-6 w-6" />
           My Files
         </h1>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={handleRefresh} 
+          disabled={loading}
+        >
+          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          Refresh
+        </Button>
       </div>
 
       <div className="border rounded-md p-4 bg-card">
