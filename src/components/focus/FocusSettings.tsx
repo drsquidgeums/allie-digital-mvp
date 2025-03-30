@@ -8,7 +8,7 @@ export const FocusSettings = () => {
 
   return (
     <div className="space-y-3">
-      <div className="text-xs text-muted-foreground mb-2 p-1 bg-muted/30 rounded-md">
+      <div className="text-xs text-muted-foreground mb-1 p-1 bg-muted/30 rounded-md">
         <p>Select which distractions to block. These selections will only activate when you click 'Enter Focus Mode'.</p>
       </div>
     

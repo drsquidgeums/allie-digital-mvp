@@ -45,7 +45,7 @@ export const FocusMode = () => {
       aria-label="Focus Mode Settings"
       tabIndex={0}
     >
-      <CardHeader className="pb-2 pt-4">
+      <CardHeader className="pb-1 pt-3">
         <CardTitle className="text-lg">Focus Mode</CardTitle>
       </CardHeader>
       <CardContent className="pt-0 space-y-4">
