@@ -10,7 +10,20 @@ export interface NodeStyle {
   borderRadius?: string;
 }
 
-export interface Node extends FlowNode {
+// Define a more specific MindMapNode type that ensures all required fields are present
+export interface MindMapNode extends FlowNode {
+  id: string;
+  type: string; // Make type required for our MindMapNode
+  data: {
+    label: string;
+    textColor?: string;
+    shape?: string;
+    color?: string;
+  };
+  position: {
+    x: number;
+    y: number;
+  };
   style?: NodeStyle;
 }
 
@@ -20,7 +33,7 @@ export interface ColorOption {
 }
 
 export interface MindMapContainerProps {
-  nodes: Node[];
+  nodes: MindMapNode[];
   edges: Edge[];
   onNodesChange: (changes: NodeChange[]) => void;
   onEdgesChange: (changes: EdgeChange[]) => void;

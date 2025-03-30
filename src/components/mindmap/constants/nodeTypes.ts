@@ -1,13 +1,14 @@
 
 import { ImageNode } from '../nodes/ImageNode';
 import { ShapeNode } from '../nodes/ShapeNode';
+import { MindMapNode } from '../types';
 
 export const nodeTypes = {
   imageNode: ImageNode,
   shapeNode: ShapeNode,
 };
 
-export const initialNodes = [
+export const initialNodes: MindMapNode[] = [
   {
     id: '1',
     type: 'input',

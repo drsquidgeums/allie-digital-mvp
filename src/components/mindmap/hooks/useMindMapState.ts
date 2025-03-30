@@ -2,11 +2,11 @@
 import { useState, useCallback } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Connection, Edge, useNodesState, useEdgesState, addEdge } from '@xyflow/react';
-import { Node, NodeStyle } from '../types';
+import { MindMapNode, NodeStyle } from '../types';
 import { initialNodes } from '../constants/nodeTypes';
 
 export const useMindMapState = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState<MindMapNode>(initialNodes as MindMapNode[]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedColor, setSelectedColor] = useState('hsl(var(--muted))');
   const [customColor, setCustomColor] = useState("#FFFFFF");
@@ -30,7 +30,7 @@ export const useMindMapState = () => {
       color: textColor,
     };
 
-    const newNode: Node = {
+    const newNode: MindMapNode = {
       id: `node_${Date.now()}`,
       type: 'default',
       data: { 
@@ -66,7 +66,7 @@ export const useMindMapState = () => {
   }, [setNodes, setEdges, toast]);
 
   const clearCanvas = useCallback(() => {
-    setNodes(initialNodes);
+    setNodes(initialNodes as MindMapNode[]);
     setEdges([]);
     
     toast({

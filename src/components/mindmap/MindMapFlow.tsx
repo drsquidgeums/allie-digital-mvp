@@ -6,9 +6,10 @@ import {
   Background,
   useReactFlow,
 } from '@xyflow/react';
+import { MindMapNode } from './types';
 
 interface MindMapFlowProps {
-  nodes: any[];
+  nodes: MindMapNode[];
   edges: any[];
   onNodesChange: (changes: any) => void;
   onEdgesChange: (changes: any) => void;
