@@ -28,13 +28,13 @@ export const ShapeButton = ({ id, icon: Icon, label, description, onClick }: Sha
           size="icon" 
           onClick={onClick}
           onKeyDown={handleKeyDown}
-          className="h-8 w-8 rounded-md hover:bg-primary/10 focus:ring-1 focus:ring-ring"
+          className="h-8 w-8 rounded-md hover:bg-primary/10 transition-all focus-visible:ring-1 focus-visible:ring-primary"
           aria-label={description}
         >
-          <Icon className="h-4 w-4" aria-hidden="true" />
+          <Icon className="h-4 w-4 text-foreground/80" aria-hidden="true" />
         </Button>
       </TooltipTrigger>
-      <TooltipContent side="bottom">{description}</TooltipContent>
+      <TooltipContent side="bottom" className="text-xs font-medium">{description}</TooltipContent>
     </Tooltip>
   );
 };

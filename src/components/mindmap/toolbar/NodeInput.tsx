@@ -31,7 +31,7 @@ export const NodeInput: React.FC<NodeInputProps> = ({
           value={newNodeText}
           onChange={(e) => setNewNodeText(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="h-9 min-w-[180px] pr-10"
+          className="h-9 min-w-[200px] pr-10 bg-background/80 border-border/60 focus-visible:ring-primary/30"
           aria-label="Node text input"
         />
         <Button
@@ -40,7 +40,7 @@ export const NodeInput: React.FC<NodeInputProps> = ({
           variant="ghost"
           onClick={onAddNode}
           disabled={!newNodeText.trim()}
-          className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+          className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-foreground/70 hover:text-foreground"
           aria-label="Add node"
         >
           <Plus className="h-4 w-4" />

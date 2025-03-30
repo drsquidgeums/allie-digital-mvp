@@ -42,7 +42,7 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
       case 'f':
         if (event.ctrlKey || event.metaKey) {
           event.preventDefault();
-          fitView({ duration: 200 });
+          fitView({ duration: 400, padding: 0.2 });
         }
         break;
       case 'Escape':
@@ -63,7 +63,7 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
       tabIndex={0}
       role="application"
       aria-label="Mind map canvas"
-      className="focus:outline-none focus:ring-2 focus:ring-ring h-full"
+      className="focus:outline-none focus:ring-1 focus:ring-primary/30 h-full"
     >
       <ReactFlow
         nodes={nodes}
@@ -73,23 +73,29 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
         onConnect={onConnect}
         fitView
         nodeTypes={nodeTypes}
-        className="bg-background/80 dark:bg-background/95"
+        className="bg-background"
         defaultEdgeOptions={{
-          style: { stroke: 'var(--border)', strokeWidth: 1.5 },
+          style: { 
+            stroke: 'var(--border)', 
+            strokeWidth: 1.5,
+            strokeDasharray: '5,5'
+          },
           animated: true,
         }}
+        proOptions={{ hideAttribution: true }}
         aria-label="Mind map flow diagram"
       >
         <Controls 
-          className="bg-card shadow-md border border-border/40 rounded-lg m-4" 
+          className="bg-background/80 shadow-md backdrop-blur-sm border border-border/30 rounded-lg m-4" 
           aria-label="Mind map controls" 
           showInteractive={false}
         />
         <Background 
-          gap={24} 
+          gap={20} 
           size={1.5} 
           color="var(--border)" 
-          className="bg-background/80 dark:bg-background/95"
+          variant="dots"
+          className="bg-background"
         />
       </ReactFlow>
     </div>

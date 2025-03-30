@@ -24,17 +24,17 @@ export const ExportButtons: React.FC<ExportButtonsProps> = ({
     <div className="flex items-center gap-2">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="flex items-center gap-1">
+          <Button variant="outline" size="sm" className="flex items-center gap-1 text-sm h-9 px-3 bg-background/80 border-border/60 hover:bg-background/90">
             <FileDown className="h-4 w-4" />
             <span>Export</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={onExportJpg}>
+        <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuItem onClick={onExportJpg} className="cursor-pointer">
             <Download className="h-4 w-4 mr-2" />
             Export as Image
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={onExportJson}>
+          <DropdownMenuItem onClick={onExportJson} className="cursor-pointer">
             <FileDown className="h-4 w-4 mr-2" />
             Export as JSON
           </DropdownMenuItem>
@@ -44,7 +44,7 @@ export const ExportButtons: React.FC<ExportButtonsProps> = ({
       <Button 
         variant="outline" 
         size="sm"
-        className="text-red-500 hover:text-red-600 hover:bg-red-100/10"
+        className="h-9 px-3 text-destructive hover:text-destructive border-border/60 hover:bg-destructive/5 hover:border-destructive/30"
         onClick={onClear}
       >
         <Trash2 className="h-4 w-4" />

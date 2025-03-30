@@ -29,7 +29,7 @@
 
   .react-flow__controls {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px !important;
+    border-radius: 6px !important;
     overflow: hidden;
   }
 
@@ -42,36 +42,50 @@
     align-items: center !important;
     justify-content: center !important;
     transition: all 0.2s !important;
+    background: transparent !important;
+  }
+
+  .react-flow__controls-button:hover {
+    background: var(--primary) !important;
+    color: var(--background) !important;
   }
 
   /* Make connections prettier */
   .react-flow__edge-path {
-    stroke-width: 2;
+    stroke-width: 1.5;
     transition: stroke 0.2s, stroke-width 0.2s;
   }
 
   .react-flow__edge:hover .react-flow__edge-path {
-    stroke-width: 3;
+    stroke-width: 2.5;
+    stroke: var(--primary);
   }
 
   /* Node styles */
   .react-flow__node {
-    transition: transform 0.2s;
+    transition: transform 0.1s, filter 0.2s;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
   }
 
   .react-flow__node.selected {
-    transform: scale(1.02);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+    transform: scale(1.01);
   }
 
   /* Connection lines */
   .react-flow__connection-path {
     stroke: var(--primary);
-    stroke-width: 2;
+    stroke-width: 1.5;
   }
 
   /* Handle hover effects for better UX */
   .react-flow__handle {
+    width: 8px;
+    height: 8px;
+    border-width: 2px;
     transition: opacity 0.2s, transform 0.2s;
+    background-color: var(--background);
+    border-color: var(--primary);
   }
 
   .react-flow__handle:hover {
@@ -80,18 +94,19 @@
 
   /* Dark mode styles */
   .dark .react-flow__controls {
-    background-color: hsl(var(--card));
+    background-color: hsl(var(--background));
     border-color: hsl(var(--border));
   }
 
   .dark .react-flow__controls-button {
-    background-color: hsl(var(--card));
+    background-color: transparent;
     border-color: hsl(var(--border));
     color: hsl(var(--foreground));
   }
 
   .dark .react-flow__controls-button:hover {
-    background-color: hsl(var(--accent));
+    background-color: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
   }
 
   .dark .react-flow__attribution {
@@ -122,5 +137,13 @@
 
   .react-flow__node-resizer {
     border-color: var(--primary) !important;
+  }
+  
+  .react-flow__node-resizer-handle {
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 50% !important;
+    background-color: var(--primary) !important;
+    border: 2px solid var(--background) !important;
   }
 }

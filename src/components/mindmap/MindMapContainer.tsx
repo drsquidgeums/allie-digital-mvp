@@ -7,6 +7,7 @@ import { MindMapContainerProps } from './types';
 import { toast } from "sonner";
 import { ReactFlowProvider } from '@xyflow/react';
 import { getShapeStyle } from './utils/shapeUtils';
+import { SHAPE_CONFIGS } from './constants/shapeConfigs';
 
 export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   nodes,
@@ -54,7 +55,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
 
   return (
     <div 
-      className="w-full h-[calc(100vh-12rem)] bg-background border border-border rounded-xl overflow-hidden flex flex-col shadow-md animate-fade-in"
+      className="w-full h-[calc(100vh-12rem)] bg-background rounded-xl overflow-hidden flex flex-col shadow-lg animate-fade-in relative"
       role="application"
       aria-label="Mind map editor"
     >
@@ -88,7 +89,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
           />
         </ReactFlowProvider>
       </div>
-      <div className="flex-shrink-0">
+      <div className="absolute bottom-0 left-0 right-0 z-10">
         <MindMapCreativeToolbar onShapeSelect={handleShapeSelect} />
       </div>
     </div>

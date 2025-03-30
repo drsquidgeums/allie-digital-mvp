@@ -38,6 +38,7 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
+      inputRef.current.select();
     }
   }, [isEditing]);
 
@@ -57,7 +58,7 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
         minWidth={100}
         minHeight={100}
         isVisible={selected}
-        lineClassName="border-primary/50"
+        lineClassName="border-primary/30"
         handleClassName="h-3 w-3 bg-primary border-2 border-background"
       />
       <Handle 
@@ -75,6 +76,7 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
           color: data.textColor || getContrastColor(data.color),
           minHeight: '100px',
           minWidth: '100px',
+          borderRadius: data.shape === 'circle' ? '50%' : '4px',
         }}
       >
         {isEditing ? (
@@ -85,7 +87,7 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
             onChange={(e) => setLabel(e.target.value)}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className="bg-transparent text-center border-none outline-none focus:ring-2 focus:ring-primary px-2 py-1 w-full"
+            className="bg-transparent text-center border-none outline-none focus:ring-2 focus:ring-primary/50 px-2 py-1 w-full"
             style={{ color: data.textColor || getContrastColor(data.color) }}
             autoFocus
             aria-label="Edit node text"

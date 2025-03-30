@@ -18,7 +18,7 @@ interface ShapeGroupProps {
 
 export const ShapeGroup = ({ shapes, onShapeSelect }: ShapeGroupProps) => {
   return (
-    <Card className="flex items-center space-x-1 p-1 rounded-lg border border-border/40 bg-background/50">
+    <Card className="flex items-center space-x-1 p-1 rounded-lg border border-border/40 bg-background/50 shadow-sm">
       {shapes.map((shape) => (
         <ShapeButton
           key={shape.id}
