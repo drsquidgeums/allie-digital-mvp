@@ -1,21 +1,38 @@
+
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Sidebar } from "@/components/Sidebar";
+import { useFileManager } from "@/hooks/useFileManager";
 
 interface WorkspaceLayoutProps {
   children: React.ReactNode;
 }
 
 export const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) => {
+  const { files, uploadFile, deleteFile, downloadFile } = useFileManager();
+  
+  const handleFileUpload = async (file: File) => {
+    try {
+      await uploadFile(file);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       <div className="sticky top-0 h-screen">
         <Sidebar 
-          onFileUpload={() => {}}
+          onFileUpload={handleFileUpload}
           onColorChange={() => {}}
-          uploadedFiles={[]}
-          onFileSelect={() => {}}
-          onFileDelete={() => {}}
+          uploadedFiles={files.map(f => f.file).filter(Boolean) as File[]}
+          onFileSelect={(file) => {}}
+          onFileDelete={(file) => {
+            const fileToDelete = files.find(f => f.file === file);
+            if (fileToDelete) {
+              deleteFile(fileToDelete);
+            }
+          }}
         />
       </div>
       <div className="flex-1 p-6 overflow-y-auto">
