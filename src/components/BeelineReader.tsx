@@ -1,5 +1,5 @@
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { BookOpen, ChevronDown } from "lucide-react";
 import { Input } from "./ui/input";
 import { Slider } from "./ui/slider";
