@@ -1,7 +1,9 @@
+
 {
   "navigation": {
     "fileUploader": "File Uploader",
-    "tasks": "Task Planner",
+    "toolbox": "Toolbox",
+    "tasks": "Task Planner", 
     "aiAssistant": "AI Assistant",
     "mindMap": "Mind Map",
     "settings": "Settings",

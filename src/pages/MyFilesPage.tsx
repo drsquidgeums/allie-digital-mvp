@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 import { FileManager } from "@/components/file-manager/FileManager";
 import { DocumentViewer } from "@/components/DocumentViewer";
