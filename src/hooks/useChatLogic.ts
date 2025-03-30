@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { createOpenAIClient, SYSTEM_PROMPT } from "@/utils/openai";
+import { SYSTEM_PROMPT, createClaudeCompletion } from "@/utils/openai";
 import { toast } from "sonner";
 
 interface Message {
@@ -65,28 +65,15 @@ export const useChatLogic = (documentContent?: string) => {
     }
 
     try {
-      const openai = await createOpenAIClient();
-      if (!openai) {
-        toast.error("Unable to connect to AI service. Please check your API key.");
-        return "I'm unable to analyze the document right now. Please try again later.";
-      }
-
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: `${SYSTEM_PROMPT} You are analyzing document content for a student with learning differences. Identify 3-5 key concepts and provide simple explanations for each one.`
-          },
-          {
-            role: "user",
-            content: `Analyze this document content and identify key concepts that might be difficult to understand: ${content.substring(0, 4000)}`
-          }
-        ],
-        temperature: 0.5
-      });
-
-      return response.choices[0].message.content || "I couldn't identify any complex concepts in this document.";
+      const systemMessage = `${SYSTEM_PROMPT} You are analyzing document content for a student with learning differences. Identify 3-5 key concepts and provide simple explanations for each one.`;
+      
+      const messages = [
+        { role: "system", content: systemMessage },
+        { role: "user", content: `Analyze this document content and identify key concepts that might be difficult to understand: ${content.substring(0, 4000)}` }
+      ];
+      
+      const responseContent = await createClaudeCompletion(messages);
+      return responseContent || "I couldn't identify any complex concepts in this document.";
     } catch (error) {
       console.error("Error analyzing document:", error);
       toast.error("Error analyzing document. Please try again later.");
@@ -109,43 +96,33 @@ export const useChatLogic = (documentContent?: string) => {
         return;
       }
       
-      const openai = await createOpenAIClient();
-      
-      if (!openai) {
+      try {
+        const chatHistory = messages.map(msg => ({
+          role: msg.isUser ? "user" : "assistant",
+          content: msg.text
+        }));
+        
+        chatHistory.unshift({
+          role: "system",
+          content: SYSTEM_PROMPT
+        });
+        
+        chatHistory.push({
+          role: "user",
+          content: input
+        });
+        
+        const responseText = await createClaudeCompletion(chatHistory);
+        setMessages(prev => [...prev, { text: responseText, isUser: false }]);
+      } catch (error) {
+        console.error("Error getting Claude response:", error);
+        toast.error("Error connecting to AI service. Using built-in responses.");
+        
         const fallbackResponse = getToolResponse(input, documentContent);
         setMessages(prev => [...prev, { text: fallbackResponse, isUser: false }]);
-        setIsLoading(false);
-        return;
       }
-      
-      const chatResponse = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: SYSTEM_PROMPT
-          },
-          ...messages.map(msg => ({
-            role: msg.isUser ? "user" : "assistant",
-            content: msg.text
-          })),
-          {
-            role: "user",
-            content: input
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 500
-      });
-      
-      const responseText = chatResponse.choices[0].message.content || 
-        "I'm sorry, I'm not able to help with that right now.";
-        
-      setMessages(prev => [...prev, { text: responseText, isUser: false }]);
     } catch (error) {
-      console.error("Error getting AI response:", error);
-      toast.error("Error connecting to AI service. Using built-in responses.");
-      
+      console.error("Error in chat flow:", error);
       const fallbackResponse = getToolResponse(input, documentContent);
       setMessages(prev => [...prev, { text: fallbackResponse, isUser: false }]);
     } finally {
