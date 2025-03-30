@@ -43,7 +43,7 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
 
   return (
     <div 
-      className="relative"
+      className="relative group"
       role="button"
       aria-label={`${data.shape} node with text: ${label}`}
       tabIndex={0}
@@ -57,19 +57,24 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
         minWidth={100}
         minHeight={100}
         isVisible={selected}
+        lineClassName="border-primary/50"
+        handleClassName="h-3 w-3 bg-primary border-2 border-background"
       />
       <Handle 
         type="target" 
         position={Position.Top}
+        className="w-3 h-3 bg-primary border-2 border-background opacity-0 group-hover:opacity-100 transition-opacity"
         role="button"
         aria-label="Connection target point"
       />
       <div 
-        className="w-full h-full flex items-center justify-center"
+        className="w-full h-full flex items-center justify-center transition-all duration-200 shadow-sm hover:shadow-md"
         onDoubleClick={handleDoubleClick}
         style={{
           backgroundColor: data.color,
           color: data.textColor || getContrastColor(data.color),
+          minHeight: '100px',
+          minWidth: '100px',
         }}
       >
         {isEditing ? (
@@ -80,18 +85,19 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
             onChange={(e) => setLabel(e.target.value)}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className="bg-transparent text-center border-none outline-none focus:ring-2 focus:ring-ring"
+            className="bg-transparent text-center border-none outline-none focus:ring-2 focus:ring-primary px-2 py-1 w-full"
             style={{ color: data.textColor || getContrastColor(data.color) }}
             autoFocus
             aria-label="Edit node text"
           />
         ) : (
-          <span className="text-sm font-medium">{label}</span>
+          <span className="text-sm font-medium p-2 text-center w-full break-words">{label || 'Double-click to edit'}</span>
         )}
       </div>
       <Handle 
         type="source" 
         position={Position.Bottom}
+        className="w-3 h-3 bg-primary border-2 border-background opacity-0 group-hover:opacity-100 transition-opacity"
         role="button"
         aria-label="Connection source point"
       />

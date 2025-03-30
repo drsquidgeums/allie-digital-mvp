@@ -1,6 +1,7 @@
+
 @layer base {
   .react-flow {
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     overflow: hidden;
   }
 
@@ -26,35 +27,100 @@
     overflow: hidden;
   }
 
+  .react-flow__controls {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px !important;
+    overflow: hidden;
+  }
+
+  .react-flow__controls-button {
+    border-radius: 0 !important;
+    width: 24px !important;
+    height: 24px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s !important;
+  }
+
+  /* Make connections prettier */
+  .react-flow__edge-path {
+    stroke-width: 2;
+    transition: stroke 0.2s, stroke-width 0.2s;
+  }
+
+  .react-flow__edge:hover .react-flow__edge-path {
+    stroke-width: 3;
+  }
+
+  /* Node styles */
+  .react-flow__node {
+    transition: transform 0.2s;
+  }
+
+  .react-flow__node.selected {
+    transform: scale(1.02);
+  }
+
+  /* Connection lines */
+  .react-flow__connection-path {
+    stroke: var(--primary);
+    stroke-width: 2;
+  }
+
+  /* Handle hover effects for better UX */
+  .react-flow__handle {
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .react-flow__handle:hover {
+    transform: scale(1.2);
+  }
+
   /* Dark mode styles */
   .dark .react-flow__controls {
-    background-color: #333333;
-    border-color: #444444;
+    background-color: hsl(var(--card));
+    border-color: hsl(var(--border));
   }
 
   .dark .react-flow__controls-button {
-    background-color: #403E43;
-    border-color: #555555;
-    color: #ffffff;
+    background-color: hsl(var(--card));
+    border-color: hsl(var(--border));
+    color: hsl(var(--foreground));
   }
 
   .dark .react-flow__controls-button:hover {
-    background-color: #4a4a4a;
+    background-color: hsl(var(--accent));
   }
 
-  /* Sepia mode styles */
-  .sepia .react-flow__controls {
-    background-color: #e8dccc;
-    border-color: #d4c5b0;
+  .dark .react-flow__attribution {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: hsl(var(--foreground));
   }
 
-  .sepia .react-flow__controls-button {
-    background-color: #d4c5b0;
-    border-color: #c0b09a;
-    color: #5c4d3d;
+  .dark .react-flow__edge-path {
+    stroke: hsl(var(--border));
   }
 
-  .sepia .react-flow__controls-button:hover {
-    background-color: #c0b09a;
+  .dark .react-flow__edge:hover .react-flow__edge-path {
+    stroke: hsl(var(--primary));
+  }
+
+  /* Improved edge interactions */
+  .react-flow__edge-interaction {
+    stroke: var(--primary);
+    stroke-opacity: 0.3;
+    stroke-width: 10;
+  }
+
+  /* Background patterns */
+  .react-flow__background-pattern {
+    color: var(--border);
+    opacity: 0.3;
+  }
+
+  .react-flow__node-resizer {
+    border-color: var(--primary) !important;
   }
 }

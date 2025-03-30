@@ -1,8 +1,8 @@
 
 import React from 'react';
 import '@xyflow/react/dist/style.css';
+import '../styles/mindmap.css';
 import { MindMapContainer } from './mindmap/MindMapContainer';
-import { ColorOption } from './mindmap/types';
 import { useMindMapState } from './mindmap/hooks/useMindMapState';
 import { downloadMindMapAsJpg, downloadMindMapAsJson } from './mindmap/utils/mindMapUtils';
 import { nodeTypes } from './mindmap/constants/nodeTypes';

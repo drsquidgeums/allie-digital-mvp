@@ -1,7 +1,13 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Download, Trash2 } from "lucide-react";
-import { toast } from "sonner";
+import { Download, FileDown, Trash2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface ExportButtonsProps {
   onExportJpg: () => void;
@@ -16,41 +22,32 @@ export const ExportButtons: React.FC<ExportButtonsProps> = ({
 }) => {
   return (
     <div className="flex items-center gap-2">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="sm" className="flex items-center gap-1">
+            <FileDown className="h-4 w-4" />
+            <span>Export</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={onExportJpg}>
+            <Download className="h-4 w-4 mr-2" />
+            Export as Image
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={onExportJson}>
+            <FileDown className="h-4 w-4 mr-2" />
+            Export as JSON
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      
       <Button 
-        onClick={() => {
-          onExportJpg();
-          toast("Mind map exported as JPG");
-        }} 
         variant="outline" 
-        size="icon" 
-        className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
-        aria-label="Export as JPG"
+        size="sm"
+        className="text-red-500 hover:text-red-600 hover:bg-red-100/10"
+        onClick={onClear}
       >
-        <Download className="w-4 h-4 text-foreground" aria-hidden="true" />
-      </Button>
-      <Button 
-        onClick={() => {
-          onExportJson();
-          toast("Mind map exported as JSON");
-        }} 
-        variant="outline" 
-        size="icon" 
-        className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
-        aria-label="Export as JSON"
-      >
-        <span className="text-[10px] font-medium">JSON</span>
-      </Button>
-      <Button 
-        onClick={() => {
-          onClear();
-          toast("Canvas cleared");
-        }} 
-        variant="outline" 
-        size="icon" 
-        className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
-        aria-label="Clear canvas"
-      >
-        <Trash2 className="w-4 h-4 text-foreground" aria-hidden="true" />
+        <Trash2 className="h-4 w-4" />
       </Button>
     </div>
   );

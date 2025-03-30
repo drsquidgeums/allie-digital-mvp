@@ -1,8 +1,8 @@
-import React from 'react';
-import { Input } from "@/components/ui/input";
+
+import React, { KeyboardEvent } from 'react';
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
 
 interface NodeInputProps {
   newNodeText: string;
@@ -15,40 +15,37 @@ export const NodeInput: React.FC<NodeInputProps> = ({
   setNewNodeText,
   onAddNode,
 }) => {
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && newNodeText.trim()) {
       e.preventDefault();
       onAddNode();
-      toast("Node added successfully");
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      setNewNodeText('');
-      (e.target as HTMLElement).blur();
     }
   };
 
   return (
     <div className="flex items-center gap-2">
-      <Input
-        value={newNodeText}
-        onChange={(e) => setNewNodeText(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Add a node..."
-        className="w-64 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-        aria-label="New node text"
-      />
-      <Button 
-        onClick={() => {
-          onAddNode();
-          toast("Node added successfully");
-        }} 
-        size="icon" 
-        variant="outline" 
-        className="bg-background hover:bg-accent focus:ring-2 focus:ring-ring"
-        aria-label="Add node"
-      >
-        <Plus className="w-4 h-4 text-foreground" aria-hidden="true" />
-      </Button>
+      <div className="relative">
+        <Input
+          type="text"
+          placeholder="Add new node..."
+          value={newNodeText}
+          onChange={(e) => setNewNodeText(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="h-9 min-w-[180px] pr-10"
+          aria-label="Node text input"
+        />
+        <Button
+          type="submit"
+          size="icon"
+          variant="ghost"
+          onClick={onAddNode}
+          disabled={!newNodeText.trim()}
+          className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+          aria-label="Add node"
+        >
+          <Plus className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 };

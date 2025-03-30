@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { ShapeButton } from './ShapeButton';
 import { LucideIcon } from 'lucide-react';
+import { Card } from "@/components/ui/card";
 
-interface Shape {
+interface ShapeProps {
   id: string;
   icon: LucideIcon;
   label: string;
@@ -10,20 +12,23 @@ interface Shape {
 }
 
 interface ShapeGroupProps {
-  shapes: Shape[];
-  onShapeSelect: (shape: string, label: string) => void;
+  shapes: ShapeProps[];
+  onShapeSelect: (shape: string, label?: string) => void;
 }
 
 export const ShapeGroup = ({ shapes, onShapeSelect }: ShapeGroupProps) => {
   return (
-    <div className="flex items-center space-x-1">
+    <Card className="flex items-center space-x-1 p-1 rounded-lg border border-border/40 bg-background/50">
       {shapes.map((shape) => (
         <ShapeButton
           key={shape.id}
-          {...shape}
-          onClick={() => onShapeSelect(shape.id, shape.label)}
+          id={shape.id}
+          icon={shape.icon}
+          label={shape.label}
+          description={shape.description}
+          onClick={() => onShapeSelect(shape.id, '')}
         />
       ))}
-    </div>
+    </Card>
   );
 };

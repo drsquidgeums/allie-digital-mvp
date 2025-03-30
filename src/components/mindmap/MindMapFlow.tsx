@@ -1,10 +1,10 @@
+
 import React, { useCallback } from 'react';
 import {
   ReactFlow,
   Controls,
   Background,
   useReactFlow,
-  Node,
 } from '@xyflow/react';
 
 interface MindMapFlowProps {
@@ -73,15 +73,24 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
         onConnect={onConnect}
         fitView
         nodeTypes={nodeTypes}
-        className="bg-workspace dark:bg-background"
+        className="bg-background/80 dark:bg-background/95"
+        defaultEdgeOptions={{
+          style: { stroke: 'var(--border)', strokeWidth: 1.5 },
+          animated: true,
+        }}
         aria-label="Mind map flow diagram"
       >
         <Controls 
-          className="bg-workspace dark:bg-muted border-border dark:border-muted-foreground/20"
-          aria-label="Mind map controls"
+          className="bg-card shadow-md border border-border/40 rounded-lg m-4" 
+          aria-label="Mind map controls" 
           showInteractive={false}
         />
-        <Background className="bg-workspace dark:bg-background" />
+        <Background 
+          gap={24} 
+          size={1.5} 
+          color="var(--border)" 
+          className="bg-background/80 dark:bg-background/95"
+        />
       </ReactFlow>
     </div>
   );

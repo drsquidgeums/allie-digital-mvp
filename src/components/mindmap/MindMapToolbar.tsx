@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Network } from "lucide-react";
-import { ColorOption } from './types';
 import { ColorSelector } from './toolbar/ColorSelector';
 import { NodeInput } from './toolbar/NodeInput';
 import { ExportButtons } from './toolbar/ExportButtons';
@@ -21,8 +20,8 @@ interface MindMapToolbarProps {
   onExportJpg: () => void;
   onExportJson: () => void;
   onClear: () => void;
-  colorOptions: ColorOption[];
-  textColorOptions: ColorOption[];
+  colorOptions: any[];
+  textColorOptions: any[];
 }
 
 export const MindMapToolbar = ({
@@ -45,22 +44,23 @@ export const MindMapToolbar = ({
 }: MindMapToolbarProps) => {
   return (
     <div 
-      className="p-4 border-b flex items-center justify-between bg-background"
+      className="p-3 border-b border-border/50 flex items-center justify-between bg-card/70 backdrop-blur-sm"
       role="toolbar"
       aria-label="Mind map toolbar"
     >
       <div className="flex items-center gap-2">
-        <Network className="w-4 h-4 text-foreground" aria-hidden="true" />
+        <Network className="w-5 h-5 text-primary" aria-hidden="true" />
         <h3 className="font-medium text-foreground">Mind Map</h3>
       </div>
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2 mr-4">
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <ColorSelector
             selectedColor={selectedColor}
             setSelectedColor={setSelectedColor}
             customColor={customColor}
             setCustomColor={setCustomColor}
             colorOptions={colorOptions}
+            label="Node color"
           />
           <ColorSelector
             selectedColor={selectedTextColor}
@@ -68,6 +68,7 @@ export const MindMapToolbar = ({
             customColor={customTextColor}
             setCustomColor={setCustomTextColor}
             colorOptions={textColorOptions}
+            label="Text color"
           />
         </div>
         <NodeInput

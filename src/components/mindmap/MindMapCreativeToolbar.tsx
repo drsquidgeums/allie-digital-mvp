@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Separator } from "@/components/ui/separator";
 import { 
@@ -39,13 +40,13 @@ export const MindMapCreativeToolbar = ({
 
   return (
     <div 
-      className="p-4 border-t bg-background flex items-center justify-between"
+      className="p-3 border-t border-border/50 bg-card/70 backdrop-blur-sm flex items-center justify-between"
       role="toolbar"
       aria-label="Shape selection toolbar"
     >
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-4">
         <ShapeGroup shapes={shapes} onShapeSelect={onShapeSelect} />
-        <Separator orientation="vertical" className="h-6" />
+        <Separator orientation="vertical" className="h-8" />
         <ShapeGroup shapes={tools} onShapeSelect={onShapeSelect} />
       </div>
     </div>

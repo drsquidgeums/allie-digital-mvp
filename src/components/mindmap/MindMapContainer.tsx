@@ -3,7 +3,7 @@ import React from 'react';
 import { MindMapToolbar } from './MindMapToolbar';
 import { MindMapFlow } from './MindMapFlow';
 import { MindMapCreativeToolbar } from './MindMapCreativeToolbar';
-import { ColorOption, MindMapContainerProps } from './types';
+import { MindMapContainerProps } from './types';
 import { toast } from "sonner";
 import { ReactFlowProvider } from '@xyflow/react';
 import { getShapeStyle } from './utils/shapeUtils';
@@ -54,7 +54,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
 
   return (
     <div 
-      className="w-full h-[600px] bg-workspace border-none rounded-lg overflow-hidden flex flex-col animate-fade-in"
+      className="w-full h-[calc(100vh-12rem)] bg-background border border-border rounded-xl overflow-hidden flex flex-col shadow-md animate-fade-in"
       role="application"
       aria-label="Mind map editor"
     >
@@ -76,7 +76,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
         colorOptions={colorOptions}
         textColorOptions={textColorOptions}
       />
-      <div className="flex-1 min-h-0 bg-workspace">
+      <div className="flex-1 min-h-0">
         <ReactFlowProvider>
           <MindMapFlow
             nodes={nodes}
