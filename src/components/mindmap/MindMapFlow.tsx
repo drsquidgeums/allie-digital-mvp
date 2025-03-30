@@ -94,7 +94,6 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
           gap={20} 
           size={1.5} 
           color="var(--border)" 
-          variant="dots"
           className="bg-background"
         />
       </ReactFlow>
