@@ -13,26 +13,45 @@ export interface ManagedFile {
   file?: File;
 }
 
+// Create a singleton instance to share state across components
+let globalFiles: ManagedFile[] = [];
+let listeners: (() => void)[] = [];
+
+const notifyListeners = () => {
+  listeners.forEach(listener => listener());
+};
+
 export function useFileManager() {
-  const [files, setFiles] = useState<ManagedFile[]>([]);
+  const [files, setFiles] = useState<ManagedFile[]>(globalFiles);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   
-  // Load files from local storage on mount
+  // Register component as a listener
   useEffect(() => {
-    const savedFiles = localStorage.getItem('uploadedFiles');
-    if (savedFiles) {
-      try {
-        setFiles(JSON.parse(savedFiles));
-      } catch (error) {
-        console.error('Error loading saved files:', error);
+    const listener = () => setFiles([...globalFiles]);
+    listeners.push(listener);
+    
+    // If there are files in localStorage but not in global state on first mount
+    if (globalFiles.length === 0) {
+      const savedFiles = localStorage.getItem('uploadedFiles');
+      if (savedFiles) {
+        try {
+          globalFiles = JSON.parse(savedFiles);
+          setFiles([...globalFiles]);
+        } catch (error) {
+          console.error('Error loading saved files:', error);
+        }
       }
     }
+    
+    return () => {
+      listeners = listeners.filter(l => l !== listener);
+    };
   }, []);
 
-  // Save files to local storage whenever they change
+  // Save files to local storage whenever they change globally
   useEffect(() => {
-    const filesToSave = files.map(({ id, name, size, type, lastModified, url }) => ({
+    const filesToSave = globalFiles.map(({ id, name, size, type, lastModified, url }) => ({
       id, name, size, type, lastModified, url
     }));
     localStorage.setItem('uploadedFiles', JSON.stringify(filesToSave));
@@ -57,8 +76,10 @@ export function useFileManager() {
         file: newFile
       };
       
-      // Add to files state
-      setFiles(prev => [...prev, fileObject]);
+      // Add to global files state
+      globalFiles = [...globalFiles, fileObject];
+      notifyListeners();
+      setFiles([...globalFiles]);
       
       toast({
         title: "File uploaded",
@@ -86,8 +107,10 @@ export function useFileManager() {
         URL.revokeObjectURL(fileToDelete.url);
       }
       
-      // Remove from files state
-      setFiles(prev => prev.filter(file => file.id !== fileToDelete.id));
+      // Remove from global files state
+      globalFiles = globalFiles.filter(file => file.id !== fileToDelete.id);
+      notifyListeners();
+      setFiles([...globalFiles]);
       
       toast({
         title: "File deleted",
