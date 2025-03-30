@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ScrollArea } from "./ui/scroll-area";
 import { FileItem } from "./file-list/FileItem";
@@ -28,16 +29,9 @@ export const FileList = ({ files, onFileSelect, onFileDelete }: FileListProps) =
     }
   };
 
+  // If there are no files, return null instead of the "No files uploaded yet" message
   if (files.length === 0) {
-    return (
-      <div 
-        className="text-sm text-muted-foreground p-4 text-center"
-        role="status"
-        aria-label="No files uploaded"
-      >
-        No files uploaded yet
-      </div>
-    );
+    return null;
   }
 
   return (
