@@ -17,16 +17,16 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
 
   const navigationItems = [
     {
-      id: "myfiles",
-      label: "My Files",
-      icon: FileText,
-      path: "/my-files"
-    },
-    {
       id: "files",
       label: "Toolbox",
       icon: Monitor,
       path: "/toolbox"
+    },
+    {
+      id: "myfiles",
+      label: "My Files",
+      icon: FileText,
+      path: "/my-files"
     },
     {
       id: "tasks",

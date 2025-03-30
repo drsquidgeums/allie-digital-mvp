@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import { TaskDashboard } from "@/components/dashboard/TaskDashboard";
 import AIAssistant from "@/pages/AIAssistant";
@@ -11,7 +11,7 @@ import MyFilesPage from "@/pages/MyFilesPage";
 
 export const AppRoutes = React.memo(() => (
   <Routes>
-    <Route path="/" element={<Index />} />
+    <Route path="/" element={<Navigate to="/toolbox" replace />} />
     <Route path="/toolbox" element={<Index />} />
     <Route path="/my-files" element={<MyFilesPage />} />
     <Route path="/file-uploader" element={<Index />} />

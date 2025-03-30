@@ -22,7 +22,7 @@ export const Sidebar = React.memo(({
   onFileDelete
 }: SidebarProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [activeComponent, setActiveComponent] = React.useState<string | null>("myfiles");
+  const [activeComponent, setActiveComponent] = React.useState<string | null>("files");
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
