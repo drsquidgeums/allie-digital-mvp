@@ -1,6 +1,7 @@
 
 import React from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useFileManager } from "@/hooks/useFileManager";
 
 interface FileInputHandlerProps {
   fileInputRef: React.RefObject<HTMLInputElement>;
@@ -17,12 +18,13 @@ export const FileInputHandler: React.FC<FileInputHandlerProps> = ({
   onFileChange 
 }) => {
   const { toast } = useToast();
+  const { uploadFile } = useFileManager();
 
   /**
    * Handles file upload from the file input
    * Includes validation for file size (25MB limit)
    */
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const file = e.target.files?.[0];
       if (file) {
@@ -38,10 +40,15 @@ export const FileInputHandler: React.FC<FileInputHandlerProps> = ({
           return;
         }
         
+        // Update local state for document viewer
         onFileChange(file);
+        
+        // Also upload to file manager (which stores in Supabase)
+        await uploadFile(file);
+        
         toast({
           title: "File uploaded",
-          description: `${file.name} has been added to the viewer`,
+          description: `${file.name} has been added to the viewer and saved to your files`,
         });
       }
     } catch (error) {
