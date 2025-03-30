@@ -20,6 +20,8 @@ export const AppRoutes = React.memo(() => (
     <Route path="/mind-map" element={<MindMapDashboard />} />
     <Route path="/settings" element={<SettingsPage />} />
     <Route path="/community" element={<CommunityPage />} />
+    {/* Add a catch-all route to redirect to toolbox */}
+    <Route path="*" element={<Navigate to="/toolbox" replace />} />
   </Routes>
 ));
 

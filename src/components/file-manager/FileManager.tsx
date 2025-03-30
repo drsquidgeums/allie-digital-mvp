@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { FileText, Download, Trash2, RefreshCw, ExternalLink } from "lucide-react";
+import { FileText, Download, Trash2, ExternalLink } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ManagedFile } from '@/hooks/file-manager/types';
 import { useFileManager } from '@/hooks/file-manager';
@@ -22,15 +22,13 @@ export const FileManager: React.FC = () => {
 
   useEffect(() => {
     console.log("FileManager mounted, files count:", files.length);
+    // Auto-refresh files when component mounts
+    refreshFiles();
   }, []);
 
   useEffect(() => {
     console.log("FileManager files updated:", files.length);
   }, [files]);
-
-  const handleRefresh = async () => {
-    await refreshFiles();
-  };
 
   const openInToolbox = (file: ManagedFile) => {
     // Store the file ID in sessionStorage so the main document viewer can access it
@@ -52,15 +50,6 @@ export const FileManager: React.FC = () => {
           <FileText className="h-6 w-6" />
           My Files
         </h1>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={handleRefresh} 
-          disabled={loading}
-        >
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-          Refresh
-        </Button>
       </div>
 
       <div className="border rounded-md p-4 bg-card">
