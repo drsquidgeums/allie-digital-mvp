@@ -18,8 +18,7 @@ export const switchLanguage = async (languageCode: string) => {
     if (success) {
       const selectedLanguage = supportedLanguages.find(lang => lang.code === languageCode);
       
-      toast({
-        title: "Language Changed",
+      toast("Language Changed", {
         description: `Application language has been changed to ${selectedLanguage?.name || languageCode}`,
       });
       
@@ -28,8 +27,7 @@ export const switchLanguage = async (languageCode: string) => {
     return false;
   } catch (error) {
     console.error('Error changing language:', error);
-    toast({
-      title: "Error",
+    toast("Error", {
       description: "Failed to change language. Please try again.",
       variant: "destructive",
     });
