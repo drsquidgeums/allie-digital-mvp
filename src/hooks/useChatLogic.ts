@@ -1,5 +1,6 @@
+
 import { useState, useCallback } from "react";
-import { SYSTEM_PROMPT, createClaudeCompletion } from "@/utils/openai";
+import { SYSTEM_PROMPT, createOpenAICompletion } from "@/utils/openai";
 import { toast } from "sonner";
 
 interface Message {
@@ -81,7 +82,7 @@ export const useChatLogic = (documentContent?: string) => {
         { role: "user", content: `Analyze this document content and identify key concepts that might be difficult to understand: ${content.substring(0, 4000)}` }
       ];
       
-      const responseContent = await createClaudeCompletion(messages);
+      const responseContent = await createOpenAICompletion(messages);
       return responseContent || "I couldn't identify any complex concepts in this document.";
     } catch (error) {
       console.error("Error analyzing document:", error);
@@ -105,9 +106,9 @@ export const useChatLogic = (documentContent?: string) => {
         return;
       }
       
-      // First try Claude API
+      // Try OpenAI API
       try {
-        console.log("Attempting to get a response from Claude API...");
+        console.log("Attempting to get a response from OpenAI API...");
         
         const chatHistory = messages.map(msg => ({
           role: msg.isUser ? "user" : "assistant",
@@ -124,11 +125,11 @@ export const useChatLogic = (documentContent?: string) => {
           content: input
         });
         
-        const responseText = await createClaudeCompletion(chatHistory);
+        const responseText = await createOpenAICompletion(chatHistory);
         setApiRetries(0); // Reset retries on successful call
         setMessages(prev => [...prev, { text: responseText, isUser: false }]);
       } catch (error) {
-        console.error("Error getting Claude response:", error);
+        console.error("Error getting OpenAI response:", error);
         
         // Increment retry counter
         setApiRetries(prev => prev + 1);
