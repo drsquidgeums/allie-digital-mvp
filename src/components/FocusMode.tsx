@@ -104,9 +104,28 @@ export const FocusMode = () => {
       audio.play().catch(e => console.error('Could not play notification sound:', e));
       
       window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: true } }));
+      
+      // Update toast message to indicate which settings are active
+      const activeSettings = Object.entries(settings)
+        .filter(([_, value]) => value)
+        .map(([key]) => {
+          switch(key) {
+            case 'blockNotifications': return 'notifications blocked';
+            case 'blockPopups': return 'popups blocked';
+            case 'blockSocialMedia': return 'social media hidden';
+            case 'muteAudio': return 'audio muted';
+            default: return '';
+          }
+        })
+        .filter(Boolean);
+      
+      const settingsMessage = activeSettings.length > 0 
+        ? `Active settings: ${activeSettings.join(', ')}`
+        : 'No distraction blocking settings enabled';
+        
       toast({
         title: "Focus mode activated",
-        description: "Your selected focus settings have been applied",
+        description: settingsMessage,
       });
     } else {
       // Exit focus mode
@@ -169,7 +188,7 @@ export const FocusMode = () => {
       <CardHeader>
         <CardTitle className="text-lg">Focus Mode</CardTitle>
         <CardDescription className="text-sm">
-          Customize your focus session settings
+          Select which distractions to block during your focus session
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

@@ -22,10 +22,10 @@ export const useFocusSettings = () => {
       }
     }
     
-    // Default settings if none found
+    // Default settings if none found - all turned off by default
     return {
-      blockNotifications: true,
-      blockPopups: true,
+      blockNotifications: false,
+      blockPopups: false,
       blockSocialMedia: false,
       muteAudio: false,
     };

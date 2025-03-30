@@ -10,31 +10,35 @@ export const FocusSettings = () => {
     <div className="space-y-4">
       <FocusSettingSwitch
         label="Block Notifications"
-        description="Mute all notifications during focus mode"
+        description="Block browser notifications during focus mode"
         checked={settings.blockNotifications}
         onCheckedChange={(checked) => updateSetting('blockNotifications', checked)}
       />
 
       <FocusSettingSwitch
         label="Block Popups"
-        description="Prevent popup dialogs during focus mode"
+        description="Prevent popup dialogs and alerts during focus mode"
         checked={settings.blockPopups}
         onCheckedChange={(checked) => updateSetting('blockPopups', checked)}
       />
 
       <FocusSettingSwitch
         label="Block Social Media"
-        description="Hide social media elements during focus mode"
+        description="Hide elements tagged as social media during focus mode"
         checked={settings.blockSocialMedia}
         onCheckedChange={(checked) => updateSetting('blockSocialMedia', checked)}
       />
 
       <FocusSettingSwitch
         label="Mute Audio"
-        description="Mute all audio during focus mode"
+        description="Mute all audio and video elements during focus mode"
         checked={settings.muteAudio}
         onCheckedChange={(checked) => updateSetting('muteAudio', checked)}
       />
+      
+      <div className="text-xs text-muted-foreground mt-4 p-2 bg-muted/30 rounded-md">
+        <p>Select which distractions to block. Settings will only activate when you click "Enter Focus Mode".</p>
+      </div>
     </div>
   );
 };
