@@ -7,7 +7,9 @@ const MindMapDashboard = React.memo(() => {
   return (
     <WorkspaceLayout>
       <div className="p-6 h-full">
-        <MindMap />
+        <div className="bg-background rounded-lg shadow-sm h-full">
+          <MindMap />
+        </div>
       </div>
     </WorkspaceLayout>
   );

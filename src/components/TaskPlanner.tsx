@@ -78,7 +78,7 @@ export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDe
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex-none">
+      <div className="flex-none mb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Task Manager</h2>
         </div>
