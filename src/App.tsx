@@ -6,11 +6,9 @@ import { BrowserRouter } from "react-router-dom";
 import { AppProviders } from "@/components/app/AppProviders";
 import { PasswordGate } from "@/components/PasswordGate";
 import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
+import { AppRoutes } from "@/components/app/AppRoutes";
 
 // Lazy load components that aren't needed immediately
-const AppRoutes = lazy(() => import("@/components/app/AppRoutes").then(module => ({
-  default: module.AppRoutes
-})));
 const AppLogo = lazy(() => import("@/components/app/AppLogo").then(module => ({
   default: module.AppLogo
 })));
