@@ -52,7 +52,7 @@ export const MindMapCreativeToolbar = ({
                 { value: 'hsl(var(--primary))', label: 'Primary' },
                 { value: 'hsl(var(--secondary))', label: 'Secondary' },
                 { value: 'hsl(var(--accent))', label: 'Accent' },
-                { value: 'hsl(var(--muted))', label: 'Muted' },
+                { value: 'hsl(var(--muted))', label: 'Shape Color' },
                 { value: 'custom', label: 'Custom' },
               ]}
               label="Shape color"
@@ -64,11 +64,11 @@ export const MindMapCreativeToolbar = ({
               customColor={customTextColor}
               setCustomColor={setCustomTextColor}
               colorOptions={[
-                { value: 'auto', label: 'Auto' },
-                { value: 'hsl(var(--foreground))', label: 'Default' },
-                { value: 'hsl(var(--primary))', label: 'Primary' },
-                { value: 'hsl(var(--secondary))', label: 'Secondary' },
-                { value: 'custom', label: 'Custom' },
+                { value: 'auto', label: 'Auto Text' },
+                { value: 'hsl(var(--foreground))', label: 'Default Text' },
+                { value: 'hsl(var(--primary))', label: 'Primary Text' },
+                { value: 'hsl(var(--secondary))', label: 'Secondary Text' },
+                { value: 'custom', label: 'Custom Text' },
               ]}
               label="Text color"
               type="text"

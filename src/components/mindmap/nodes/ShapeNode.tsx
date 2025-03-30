@@ -42,12 +42,16 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
     }
   }, [isEditing]);
 
+  // Add info tooltip to let users know they can delete with delete key
+  const deleteTooltip = selected ? "Press Delete key to remove this node" : "";
+
   return (
     <div 
       className="relative group"
       role="button"
       aria-label={`${data.shape} node with text: ${label}`}
       tabIndex={0}
+      title={deleteTooltip}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           handleDoubleClick();
