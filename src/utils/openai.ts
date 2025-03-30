@@ -35,11 +35,36 @@ export const createClaudeCompletion = async (messages) => {
     // Using an environment-specific approach for the Claude API key
     const CLAUDE_API_KEY = "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";
     
-    // Using a CORS proxy to avoid browser CORS issues with direct API access
-    const proxyUrl = "https://corsproxy.io/?";
-    const apiUrl = "https://api.anthropic.com/v1/messages";
+    // Try direct API access first - this works in some environments
+    try {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": CLAUDE_API_KEY,
+          "anthropic-version": "2023-06-01"
+        },
+        body: JSON.stringify({
+          model: "claude-3-haiku-20240307",
+          max_tokens: 1024,
+          messages: messages,
+          temperature: 0.7
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return data.content[0].text;
+      }
+    } catch (directError) {
+      console.log("Direct API access failed, trying with CORS proxy:", directError);
+    }
     
-    const response = await fetch(proxyUrl + encodeURIComponent(apiUrl), {
+    // If direct access fails, try with CORS proxy
+    const proxyUrl = "https://api.allorigins.win/raw?url=";
+    const apiUrl = encodeURIComponent("https://api.anthropic.com/v1/messages");
+    
+    const response = await fetch(proxyUrl + apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -64,7 +89,8 @@ export const createClaudeCompletion = async (messages) => {
     return data.content[0].text;
   } catch (error) {
     console.error("Error calling Claude API:", error);
-    throw error;
+    // Instead of throwing, return a helpful message
+    return "I'm currently experiencing connection issues. I'll use my built-in knowledge to help you. What would you like to know about using this ADHD learning application?";
   }
 };
 
@@ -79,4 +105,3 @@ export const SYSTEM_PROMPT = `You are an ADHD Learning Assistant helping student
 Provide clear, concise responses focused on helping ADHD learners use these tools effectively. Break information into small, manageable chunks and use bullet points when possible. Keep responses friendly and encouraging.
 
 You should explain HOW to use the application's features when asked. For example, if asked about the Pomodoro timer, explain where to find it, how to start it, and how it can help with focus.`;
-

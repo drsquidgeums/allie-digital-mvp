@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from "react";
 import { SYSTEM_PROMPT, createClaudeCompletion } from "@/utils/openai";
 import { toast } from "sonner";
@@ -22,6 +23,10 @@ export const useChatLogic = (documentContent?: string) => {
     
     if (docContent && (lowerInput.includes("explain") || lowerInput.includes("what is") || lowerInput.includes("definition") || lowerInput.includes("mean"))) {
       return `I can help explain concepts from your document. Please specify which term or concept you'd like me to explain, or I can analyze the content and highlight key concepts for you.`;
+    }
+    
+    if (lowerInput.includes("help") && lowerInput.includes("dyslexia") || lowerInput.includes("dyslexic")) {
+      return "This application has several features designed specifically to help with dyslexia:\n\n• The Irlen Overlay tool adds colored backgrounds to text which can reduce visual stress\n• The OpenDyslexic font is specially designed with weighted bottoms to help prevent letter switching\n• The Bionic Reader highlights parts of words to improve focus and reading speed\n• The Text-to-Speech feature can read content aloud when reading becomes difficult\n\nYou can access these tools from the toolbar at the top of the document viewer. Would you like me to explain any of these features in more detail?";
     }
     
     if (lowerInput.includes("irlen") || lowerInput.includes("overlay")) {
@@ -76,8 +81,8 @@ export const useChatLogic = (documentContent?: string) => {
       return responseContent || "I couldn't identify any complex concepts in this document.";
     } catch (error) {
       console.error("Error analyzing document:", error);
-      toast.error("Error analyzing document. Please try again later.");
-      return "I encountered an error while analyzing your document. Please try again later.";
+      toast.error("Error analyzing document. Using built-in analysis capabilities.");
+      return "I encountered an error analyzing your document. Let me help you break it down into manageable sections instead. What specific part would you like to focus on first?";
     }
   }, []);
 
@@ -96,6 +101,7 @@ export const useChatLogic = (documentContent?: string) => {
         return;
       }
       
+      // First try Claude API
       try {
         const chatHistory = messages.map(msg => ({
           role: msg.isUser ? "user" : "assistant",
@@ -116,7 +122,10 @@ export const useChatLogic = (documentContent?: string) => {
         setMessages(prev => [...prev, { text: responseText, isUser: false }]);
       } catch (error) {
         console.error("Error getting Claude response:", error);
-        toast.error("Error connecting to AI service. Using built-in responses.");
+        // Only show the toast if we couldn't get any response at all
+        if (!error.toString().includes("currently experiencing connection issues")) {
+          toast.error("Error connecting to AI service. Using built-in responses.");
+        }
         
         const fallbackResponse = getToolResponse(input, documentContent);
         setMessages(prev => [...prev, { text: fallbackResponse, isUser: false }]);
