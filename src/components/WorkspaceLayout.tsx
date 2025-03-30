@@ -13,9 +13,23 @@ export const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) =
   
   const handleFileUpload = async (file: File) => {
     try {
+      console.log("Uploading file in WorkspaceLayout:", file.name);
       await uploadFile(file);
     } catch (error) {
-      console.error("Error uploading file:", error);
+      console.error("Error uploading file in WorkspaceLayout:", error);
+    }
+  };
+
+  const handleFileDelete = (file: File) => {
+    const fileToDelete = files.find(f => 
+      f.file && f.file.name === file.name && f.file.size === file.size
+    );
+    
+    if (fileToDelete) {
+      console.log("Deleting file in WorkspaceLayout:", fileToDelete.name);
+      deleteFile(fileToDelete);
+    } else {
+      console.error("Could not find file to delete:", file.name);
     }
   };
 
@@ -25,14 +39,9 @@ export const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) =
         <Sidebar 
           onFileUpload={handleFileUpload}
           onColorChange={() => {}}
-          uploadedFiles={files.map(f => f.file).filter(Boolean) as File[]}
+          uploadedFiles={files.filter(f => f.file).map(f => f.file!)}
           onFileSelect={() => {}}
-          onFileDelete={(file) => {
-            const fileToDelete = files.find(f => f.file === file);
-            if (fileToDelete) {
-              deleteFile(fileToDelete);
-            }
-          }}
+          onFileDelete={handleFileDelete}
         />
       </div>
       <div className="flex-1 p-6 overflow-y-auto">

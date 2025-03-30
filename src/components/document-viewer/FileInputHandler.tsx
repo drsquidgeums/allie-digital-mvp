@@ -44,7 +44,8 @@ export const FileInputHandler: React.FC<FileInputHandlerProps> = ({
         onFileChange(file);
         
         // Also upload to file manager (which stores in Supabase)
-        await uploadFile(file);
+        const uploadedFile = await uploadFile(file);
+        console.log("File uploaded successfully:", uploadedFile);
         
         toast({
           title: "File uploaded",
@@ -58,6 +59,11 @@ export const FileInputHandler: React.FC<FileInputHandlerProps> = ({
         description: "There was a problem processing your file",
         variant: "destructive",
       });
+    } finally {
+      // Clear the file input to allow uploading the same file again
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 
