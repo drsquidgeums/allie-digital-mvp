@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { createOpenAIClient, SYSTEM_PROMPT } from "@/utils/openai";
+import { toast } from "sonner";
 
 interface Message {
   text: string;
@@ -66,6 +67,7 @@ export const useChatLogic = (documentContent?: string) => {
     try {
       const openai = await createOpenAIClient();
       if (!openai) {
+        toast.error("Unable to connect to AI service. Please check your API key.");
         return "I'm unable to analyze the document right now. Please try again later.";
       }
 
@@ -87,6 +89,7 @@ export const useChatLogic = (documentContent?: string) => {
       return response.choices[0].message.content || "I couldn't identify any complex concepts in this document.";
     } catch (error) {
       console.error("Error analyzing document:", error);
+      toast.error("Error analyzing document. Please try again later.");
       return "I encountered an error while analyzing your document. Please try again later.";
     }
   }, []);
@@ -98,20 +101,57 @@ export const useChatLogic = (documentContent?: string) => {
     setMessages(prev => [...prev, { text: input, isUser: true }]);
     setInput("");
 
-    let response = "";
-    
-    // Check if this is a request to analyze the document
-    if (documentContent && input.toLowerCase().includes("analyze") && input.toLowerCase().includes("document")) {
-      response = await analyzeDocument(documentContent);
-    } else {
-      response = getToolResponse(input, documentContent);
-    }
-    
-    setTimeout(() => {
-      setMessages(prev => [...prev, { text: response, isUser: false }]);
+    try {
+      if (documentContent && input.toLowerCase().includes("analyze") && input.toLowerCase().includes("document")) {
+        const response = await analyzeDocument(documentContent);
+        setMessages(prev => [...prev, { text: response, isUser: false }]);
+        setIsLoading(false);
+        return;
+      }
+      
+      const openai = await createOpenAIClient();
+      
+      if (!openai) {
+        const fallbackResponse = getToolResponse(input, documentContent);
+        setMessages(prev => [...prev, { text: fallbackResponse, isUser: false }]);
+        setIsLoading(false);
+        return;
+      }
+      
+      const chatResponse = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: SYSTEM_PROMPT
+          },
+          ...messages.map(msg => ({
+            role: msg.isUser ? "user" : "assistant",
+            content: msg.text
+          })),
+          {
+            role: "user",
+            content: input
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 500
+      });
+      
+      const responseText = chatResponse.choices[0].message.content || 
+        "I'm sorry, I'm not able to help with that right now.";
+        
+      setMessages(prev => [...prev, { text: responseText, isUser: false }]);
+    } catch (error) {
+      console.error("Error getting AI response:", error);
+      toast.error("Error connecting to AI service. Using built-in responses.");
+      
+      const fallbackResponse = getToolResponse(input, documentContent);
+      setMessages(prev => [...prev, { text: fallbackResponse, isUser: false }]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
-  }, [input, isLoading, getToolResponse, analyzeDocument, documentContent]);
+    }
+  }, [input, isLoading, getToolResponse, analyzeDocument, documentContent, messages]);
 
   return {
     input,

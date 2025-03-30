@@ -157,7 +157,7 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = ({
           className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-primary hover:bg-primary/90"
           aria-label="Open AI Assistant"
         >
-          <Bot className="h-10 w-10" />
+          <Bot className="h-6 w-6" />
         </Button>
       )}
     </div>
