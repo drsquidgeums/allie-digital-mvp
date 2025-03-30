@@ -11,6 +11,7 @@ import {
 import { FocusSettings } from "./focus/FocusSettings";
 import { FocusModeActions } from "./focus/FocusModeActions";
 import { useFocusSettings } from "@/hooks/useFocusSettings";
+import { useFocusModeEffects } from "./focus/useFocusModeEffects";
 
 export const FocusMode = () => {
   const [isActive, setIsActive] = React.useState(false);
@@ -18,6 +19,9 @@ export const FocusMode = () => {
   const { settings } = useFocusSettings();
   const { toast } = useToast();
   const cardRef = useRef<HTMLDivElement>(null);
+  
+  // Apply focus mode effects when active
+  useFocusModeEffects(isActive, settings);
 
   React.useEffect(() => {
     if ("Notification" in window) {
@@ -87,18 +91,17 @@ export const FocusMode = () => {
   const toggleFocusMode = async () => {
     if (!isActive) {
       // Enter focus mode
-      if (settings.blockNotifications && notificationPermission === "granted") {
-        localStorage.setItem('previousNotificationState', 'enabled');
-      }
-      if (settings.muteAudio) {
-        document.querySelectorAll('audio, video').forEach((el: HTMLMediaElement) => {
-          el.muted = true;
-        });
-      }
-      
       // First set the state and then enter fullscreen
       setIsActive(true);
       await enterFullscreen();
+      
+      // Apply settings
+      // Note: Most effects are now handled by the useFocusModeEffects hook
+      
+      // Play a notification sound to indicate entering focus mode
+      const audio = new Audio('/sounds/notification-bell.mp3');
+      audio.volume = 0.3;
+      audio.play().catch(e => console.error('Could not play notification sound:', e));
       
       window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: true } }));
       toast({
@@ -107,13 +110,6 @@ export const FocusMode = () => {
       });
     } else {
       // Exit focus mode
-      if (localStorage.getItem('previousNotificationState') === 'enabled') {
-        localStorage.removeItem('previousNotificationState');
-      }
-      document.querySelectorAll('audio, video').forEach((el: HTMLMediaElement) => {
-        el.muted = false;
-      });
-      
       // First exit fullscreen and then update state
       await exitFullscreen();
       setIsActive(false);
@@ -139,7 +135,12 @@ export const FocusMode = () => {
           !(document as any).mozFullScreenElement &&
           !(document as any).msFullscreenElement && 
           isActive) {
-        toggleFocusMode();
+        setIsActive(false);
+        window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: false } }));
+        toast({
+          title: "Focus mode deactivated",
+          description: "Fullscreen mode was exited",
+        });
       }
     };
 
@@ -155,7 +156,7 @@ export const FocusMode = () => {
       document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
       document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
     };
-  }, [isActive]);
+  }, [isActive, toast]);
 
   return (
     <Card 

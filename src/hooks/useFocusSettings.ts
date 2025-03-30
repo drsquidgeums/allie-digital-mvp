@@ -8,16 +8,39 @@ export interface FocusSettings {
   muteAudio: boolean;
 }
 
+const FOCUS_SETTINGS_KEY = 'focus_settings';
+
 export const useFocusSettings = () => {
-  const [settings, setSettings] = useState<FocusSettings>({
-    blockNotifications: true,
-    blockPopups: true,
-    blockSocialMedia: false,
-    muteAudio: false,
+  const [settings, setSettings] = useState<FocusSettings>(() => {
+    // Try to load settings from localStorage
+    const savedSettings = localStorage.getItem(FOCUS_SETTINGS_KEY);
+    if (savedSettings) {
+      try {
+        return JSON.parse(savedSettings);
+      } catch (e) {
+        console.error('Failed to parse saved focus settings:', e);
+      }
+    }
+    
+    // Default settings if none found
+    return {
+      blockNotifications: true,
+      blockPopups: true,
+      blockSocialMedia: false,
+      muteAudio: false,
+    };
   });
 
+  // Save settings to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem(FOCUS_SETTINGS_KEY, JSON.stringify(settings));
+  }, [settings]);
+
   const updateSetting = (key: keyof FocusSettings, value: boolean) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
+    setSettings(prev => {
+      const newSettings = { ...prev, [key]: value };
+      return newSettings;
+    });
   };
 
   return { settings, updateSetting };
