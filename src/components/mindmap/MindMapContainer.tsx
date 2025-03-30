@@ -32,6 +32,12 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   textColorOptions,
   nodeTypes,
 }) => {
+  // Add deleteNode prop to hook up to useMindMapState's deleteNode function
+  const handleDeleteNode = (nodeId: string) => {
+    onNodesChange([{ type: 'remove', id: nodeId }]);
+    toast(`Node deleted`);
+  };
+
   const handleShapeSelect = (shape: string, label?: string) => {
     const nodeStyle = getShapeStyle(shape, selectedColor, customColor);
 
@@ -85,12 +91,23 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
+            onDeleteNode={handleDeleteNode}
           />
         </ReactFlowProvider>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none">
+      <div className="absolute bottom-0 left-0 right-0 z-[5] pointer-events-none">
         <div className="pointer-events-auto">
-          <MindMapCreativeToolbar onShapeSelect={handleShapeSelect} />
+          <MindMapCreativeToolbar 
+            onShapeSelect={handleShapeSelect}
+            selectedColor={selectedColor}
+            setSelectedColor={setSelectedColor}
+            customColor={customColor}
+            setCustomColor={setCustomColor}
+            selectedTextColor={selectedTextColor}
+            setSelectedTextColor={setSelectedTextColor}
+            customTextColor={customTextColor}
+            setCustomTextColor={setCustomTextColor}
+          />
         </div>
       </div>
     </div>

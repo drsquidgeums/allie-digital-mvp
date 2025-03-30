@@ -14,6 +14,7 @@ interface MindMapFlowProps {
   onEdgesChange: (changes: any) => void;
   onConnect: (connection: any) => void;
   nodeTypes: any;
+  onDeleteNode?: (nodeId: string) => void;
 }
 
 export const MindMapFlow: React.FC<MindMapFlowProps> = ({
@@ -23,6 +24,7 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
   onEdgesChange,
   onConnect,
   nodeTypes,
+  onDeleteNode,
 }) => {
   const { fitView } = useReactFlow();
 
@@ -32,11 +34,8 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
     switch (event.key) {
       case 'Delete':
       case 'Backspace':
-        if (selectedNodes.length) {
-          onNodesChange(selectedNodes.map(node => ({
-            type: 'remove',
-            id: node.id,
-          })));
+        if (selectedNodes.length && onDeleteNode) {
+          selectedNodes.forEach(node => onDeleteNode(node.id));
         }
         break;
       case 'f':
@@ -55,7 +54,7 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
         );
         break;
     }
-  }, [nodes, onNodesChange, fitView]);
+  }, [nodes, onNodesChange, fitView, onDeleteNode]);
 
   return (
     <div 

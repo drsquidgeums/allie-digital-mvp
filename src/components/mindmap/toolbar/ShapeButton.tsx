@@ -34,7 +34,9 @@ export const ShapeButton = ({ id, icon: Icon, label, description, onClick }: Sha
           <Icon className="h-4 w-4 text-foreground/80" aria-hidden="true" />
         </Button>
       </TooltipTrigger>
-      <TooltipContent side="bottom" className="text-xs font-medium">{description}</TooltipContent>
+      <TooltipContent side="top" align="center" className="text-xs font-medium">
+        {description}
+      </TooltipContent>
     </Tooltip>
   );
 };

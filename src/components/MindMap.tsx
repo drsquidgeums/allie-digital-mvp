@@ -26,6 +26,7 @@ export const MindMap = () => {
     onEdgesChange,
     onConnect,
     addNode,
+    deleteNode,
     clearCanvas,
   } = useMindMapState();
 

@@ -1,42 +1,30 @@
 
+import { Edge, Node as FlowNode, NodeChange, EdgeChange, Connection } from '@xyflow/react';
+
+export interface NodeStyle {
+  background?: string;
+  color?: string;
+  border?: string;
+  width?: number;
+  height?: number;
+  borderRadius?: string;
+}
+
+export interface Node extends FlowNode {
+  style?: NodeStyle;
+}
+
 export interface ColorOption {
-  label: string;
   value: string;
-}
-
-export interface NodeStyle extends React.CSSProperties {
-  background: string;
-  color: string;
-}
-
-export interface MindMapNode {
-  id: string;
-  type?: string;
-  data: { 
-    label: string;
-    textColor: string;
-  };
-  position: { x: number; y: number };
-  style: NodeStyle;  // Made style required
-}
-
-export type Node = {
-  id: string;
-  type: string;
-  data: { 
-    label: string;
-    textColor: string;
-  };
-  position: { x: number; y: number };
-  style: NodeStyle;  // Made style required
+  label: string;
 }
 
 export interface MindMapContainerProps {
   nodes: Node[];
-  edges: any[];
-  onNodesChange: (changes: any) => void;
-  onEdgesChange: (changes: any) => void;
-  onConnect: (connection: any) => void;
+  edges: Edge[];
+  onNodesChange: (changes: NodeChange[]) => void;
+  onEdgesChange: (changes: EdgeChange[]) => void;
+  onConnect: (connection: Connection | Edge) => void;
   selectedColor: string;
   setSelectedColor: (color: string) => void;
   customColor: string;
@@ -53,5 +41,5 @@ export interface MindMapContainerProps {
   onClear: () => void;
   colorOptions: ColorOption[];
   textColorOptions: ColorOption[];
-  nodeTypes: any;
+  nodeTypes: Record<string, React.ComponentType<any>>;
 }

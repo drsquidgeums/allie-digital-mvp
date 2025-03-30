@@ -53,6 +53,18 @@ export const useMindMapState = () => {
     });
   }, [newNodeText, selectedColor, customColor, selectedTextColor, customTextColor, setNodes, toast]);
 
+  const deleteNode = useCallback((nodeId: string) => {
+    setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+    setEdges((eds) => eds.filter(
+      (edge) => edge.source !== nodeId && edge.target !== nodeId
+    ));
+    
+    toast({
+      title: "Node deleted",
+      description: "Mind map node has been removed",
+    });
+  }, [setNodes, setEdges, toast]);
+
   const clearCanvas = useCallback(() => {
     setNodes(initialNodes);
     setEdges([]);
@@ -80,6 +92,7 @@ export const useMindMapState = () => {
     onEdgesChange,
     onConnect,
     addNode,
+    deleteNode,
     clearCanvas,
   };
 };

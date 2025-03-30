@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Network } from "lucide-react";
-import { ColorSelector } from './toolbar/ColorSelector';
 import { NodeInput } from './toolbar/NodeInput';
 import { ExportButtons } from './toolbar/ExportButtons';
 import { Separator } from "@/components/ui/separator";
@@ -27,25 +26,15 @@ interface MindMapToolbarProps {
 }
 
 export const MindMapToolbar = ({
-  selectedColor,
-  setSelectedColor,
-  customColor,
-  setCustomColor,
-  selectedTextColor,
-  setSelectedTextColor,
-  customTextColor,
-  setCustomTextColor,
   newNodeText,
   setNewNodeText,
   onAddNode,
   onExportJpg,
   onExportJson,
   onClear,
-  colorOptions,
-  textColorOptions,
 }: MindMapToolbarProps) => {
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={300}>
       <div 
         className="p-3 border-b border-border/30 flex items-center justify-between bg-background shadow-sm z-10"
         role="toolbar"
@@ -56,30 +45,12 @@ export const MindMapToolbar = ({
           <h3 className="font-medium text-foreground">Mind Map</h3>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
-            <ColorSelector
-              selectedColor={selectedColor}
-              setSelectedColor={setSelectedColor}
-              customColor={customColor}
-              setCustomColor={setCustomColor}
-              colorOptions={colorOptions}
-              label="Node color"
-            />
-            <ColorSelector
-              selectedColor={selectedTextColor}
-              setSelectedColor={setSelectedTextColor}
-              customColor={customTextColor}
-              setCustomColor={setCustomTextColor}
-              colorOptions={textColorOptions}
-              label="Text color"
-            />
-          </div>
-          <Separator orientation="vertical" className="h-8" />
           <NodeInput
             newNodeText={newNodeText}
             setNewNodeText={setNewNodeText}
             onAddNode={onAddNode}
           />
+          <Separator orientation="vertical" className="h-8" />
           <ExportButtons
             onExportJpg={onExportJpg}
             onExportJson={onExportJson}
