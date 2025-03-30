@@ -29,7 +29,7 @@ export const switchLanguage = async (languageCode: string) => {
     console.error('Error changing language:', error);
     toast("Error", {
       description: "Failed to change language. Please try again.",
-      variant: "destructive",
+      // Remove the variant property as it's not supported by the Sonner toast API
     });
     return false;
   }
