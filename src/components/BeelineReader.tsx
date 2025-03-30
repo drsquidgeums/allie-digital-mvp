@@ -49,7 +49,9 @@ export const BeelineReader = () => {
     return (
       <div className="space-y-1">
         {lines.map((line, index) => {
+          // Calculate cycle position within a group of 3
           const cyclePosition = index % 3;
+          
           const style: React.CSSProperties = {
             display: "block",
             width: "100%",
