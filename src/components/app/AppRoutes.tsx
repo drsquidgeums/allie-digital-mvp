@@ -14,7 +14,7 @@ export const AppRoutes = React.memo(() => (
     <Route path="/" element={<Navigate to="/toolbox" replace />} />
     <Route path="/toolbox" element={<Index />} />
     <Route path="/my-files" element={<MyFilesPage />} />
-    <Route path="/file-uploader" element={<Index />} />
+    <Route path="/file-uploader" element={<Navigate to="/toolbox" replace />} />
     <Route path="/tasks" element={<TaskDashboard />} />
     <Route path="/ai-assistant" element={<AIAssistant />} />
     <Route path="/mind-map" element={<MindMapDashboard />} />

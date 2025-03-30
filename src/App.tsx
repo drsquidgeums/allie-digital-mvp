@@ -2,7 +2,7 @@
 import React, { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Navigate } from "react-router-dom";
 import { AppProviders } from "@/components/app/AppProviders";
 import { PasswordGate } from "@/components/PasswordGate";
 import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
