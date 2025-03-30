@@ -10,15 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-
-interface Task {
-  id: string;
-  text: string;
-  completed: boolean;
-  createdAt: Date;
-  points: number;
-  color?: string;
-}
+import { Task } from "@/types/task";
 
 interface TaskListProps {
   tasks: Task[];
@@ -28,6 +20,11 @@ interface TaskListProps {
 }
 
 const TASK_COLORS = [
+  { value: "#4CAF50", label: "Green" },
+  { value: "#2196F3", label: "Blue" },
+  { value: "#FFC107", label: "Yellow" },
+  { value: "#F44336", label: "Red" },
+  { value: "#9C27B0", label: "Purple" },
   { value: "custom", label: "Custom Color" },
   { value: null, label: "No Color" },
 ];

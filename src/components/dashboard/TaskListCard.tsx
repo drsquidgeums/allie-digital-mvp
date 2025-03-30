@@ -2,15 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { TaskList } from "./TaskList";
 import { useTranslation } from "react-i18next";
-
-interface Task {
-  id: string;
-  text: string;
-  completed: boolean;
-  createdAt: Date;
-  points: number;
-  color?: string;
-}
+import { Task } from "@/types/task";
 
 interface TaskListCardProps {
   tasks: Task[];
