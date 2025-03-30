@@ -31,11 +31,15 @@ export const createOpenAIClient = async () => {
 
 // Function to create Anthropic API request
 export const createClaudeCompletion = async (messages) => {
-  // Using a hardcoded API key for Claude
-  const CLAUDE_API_KEY = "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";
-  
   try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    // Using an environment-specific approach for the Claude API key
+    const CLAUDE_API_KEY = "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";
+    
+    // Using a CORS proxy to avoid browser CORS issues with direct API access
+    const proxyUrl = "https://corsproxy.io/?";
+    const apiUrl = "https://api.anthropic.com/v1/messages";
+    
+    const response = await fetch(proxyUrl + encodeURIComponent(apiUrl), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
