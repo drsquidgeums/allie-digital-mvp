@@ -10,8 +10,9 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'en-GB',
-    debug: true,
-    supportedLngs: ['en-GB', 'es', 'de'],
+    debug: process.env.NODE_ENV === 'development',
+    supportedLngs: ['en-GB', 'en-US', 'es', 'de'],
+    load: 'currentOnly',
     interpolation: {
       escapeValue: false,
     },
@@ -27,5 +28,16 @@ i18n
       useSuspense: true
     }
   });
+
+// Function to change the language throughout the application
+export const changeLanguage = async (lng: string) => {
+  if (lng && i18n.languages.includes(lng)) {
+    await i18n.changeLanguage(lng);
+    document.documentElement.setAttribute('lang', lng);
+    localStorage.setItem('i18nextLng', lng);
+    return true;
+  }
+  return false;
+};
 
 export default i18n;
