@@ -1,12 +1,14 @@
+
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Mic, MicOff, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { usePersistedText } from "@/hooks/usePersistedText";
 
 export const SpeechToText = () => {
   const [isListening, setIsListening] = useState(false);
-  const [transcript, setTranscript] = useState("");
+  const [transcript, setTranscript] = usePersistedText("stt");
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const { toast } = useToast();
 

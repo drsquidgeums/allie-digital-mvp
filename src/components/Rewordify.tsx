@@ -1,9 +1,11 @@
-import React, { useState, useRef } from "react";
+
+import React, { useRef } from "react";
 import { SpellCheck } from "lucide-react";
 import { Input } from "./ui/input";
+import { usePersistedText } from "@/hooks/usePersistedText";
 
 export const Rewordify = () => {
-  const [text, setText] = useState("");
+  const [text, setText] = usePersistedText("rewordify");
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
 

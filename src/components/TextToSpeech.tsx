@@ -1,11 +1,13 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Play, Pause, Square } from "lucide-react";
+import { usePersistedText } from "@/hooks/usePersistedText";
 
 export const TextToSpeech = () => {
-  const [text, setText] = React.useState("");
+  const [text, setText] = usePersistedText("tts");
   const [selectedVoice, setSelectedVoice] = React.useState("");
   const [voices, setVoices] = React.useState<SpeechSynthesisVoice[]>([]);
   const [isPlaying, setIsPlaying] = React.useState(false);

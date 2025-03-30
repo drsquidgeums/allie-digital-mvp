@@ -1,10 +1,11 @@
 
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { Input } from "./ui/input";
 import { Eye } from "lucide-react";
+import { usePersistedText } from "@/hooks/usePersistedText";
 
 export const BionicReader = () => {
-  const [text, setText] = useState("");
+  const [text, setText] = usePersistedText("bionic");
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
 
