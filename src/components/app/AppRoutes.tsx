@@ -7,11 +7,13 @@ import AIAssistant from "@/pages/AIAssistant";
 import MindMapDashboard from "@/pages/MindMapDashboard";
 import CommunityPage from "@/pages/CommunityPage";
 import SettingsPage from "@/pages/SettingsPage";
+import MyFilesPage from "@/pages/MyFilesPage";
 
 export const AppRoutes = React.memo(() => (
   <Routes>
     <Route path="/" element={<Index />} />
     <Route path="/toolbox" element={<Index />} />
+    <Route path="/my-files" element={<MyFilesPage />} />
     <Route path="/file-uploader" element={<Index />} />
     <Route path="/tasks" element={<TaskDashboard />} />
     <Route path="/ai-assistant" element={<AIAssistant />} />

@@ -8,7 +8,6 @@ import { IrlenOverlay } from "../IrlenOverlay";
 import { MindMap } from "../MindMap";
 import { ColorSeparator } from "../ColorSeparator";
 import { FileList } from "../FileList";
-import { MyFiles } from "../MyFiles";
 
 interface SidebarContentProps {
   activeComponent: string | null;
@@ -29,13 +28,6 @@ export const SidebarContent = ({
 }: SidebarContentProps) => {
   const renderActiveComponent = () => {
     switch (activeComponent) {
-      case "myfiles":
-        return <MyFiles 
-          files={uploadedFiles} 
-          onFileSelect={onFileSelect} 
-          onFileDelete={onFileDelete}
-          onUploadClick={onFileUpload}
-        />;
       case "pomodoro":
         return <PomodoroTimer />;
       case "tts":

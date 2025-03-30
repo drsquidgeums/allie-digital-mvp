@@ -20,11 +20,11 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       id: "myfiles",
       label: "My Files",
       icon: FileText,
-      path: "/"
+      path: "/my-files"
     },
     {
       id: "files",
-      label: "Toolbox",
+      label: t('navigation.toolbox'),
       icon: Monitor,
       path: "/toolbox"
     },
@@ -62,7 +62,7 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
           key={id}
           icon={icon}
           label={label}
-          isActive={id === activeComponent}
+          isActive={location.pathname === path}
           onClick={(e) => handleNavigation(e, id, path)}
           className="sidebar-nav-link"
         />
