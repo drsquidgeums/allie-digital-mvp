@@ -19,6 +19,17 @@ const MyFilesPage: React.FC = () => {
     // Convert ManagedFile back to File object for the DocumentViewer
     if (file.file) {
       setSelectedFile(file.file);
+    } else if (file.url) {
+      // If we don't have the File object but have a URL, we can fetch it
+      fetch(file.url)
+        .then(response => response.blob())
+        .then(blob => {
+          const newFile = new File([blob], file.name, { type: file.type });
+          setSelectedFile(newFile);
+        })
+        .catch(error => {
+          console.error("Error fetching file from URL:", error);
+        });
     }
   };
 

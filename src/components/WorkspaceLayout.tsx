@@ -9,7 +9,7 @@ interface WorkspaceLayoutProps {
 }
 
 export const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) => {
-  const { files, uploadFile, deleteFile, downloadFile } = useFileManager();
+  const { files, uploadFile, deleteFile } = useFileManager();
   
   const handleFileUpload = async (file: File) => {
     try {
@@ -26,7 +26,7 @@ export const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) =
           onFileUpload={handleFileUpload}
           onColorChange={() => {}}
           uploadedFiles={files.map(f => f.file).filter(Boolean) as File[]}
-          onFileSelect={(file) => {}}
+          onFileSelect={() => {}}
           onFileDelete={(file) => {
             const fileToDelete = files.find(f => f.file === file);
             if (fileToDelete) {

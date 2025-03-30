@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/utils/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { useToast } from './use-toast';
 
 export interface ManagedFile {
@@ -38,11 +38,11 @@ const initializeFiles = async () => {
     
     // Convert storage data to ManagedFile format
     const files: ManagedFile[] = await Promise.all(
-      storageData.map(async (item) => {
+      storageData.filter(item => !item.id.endsWith('/')).map(async (item) => {
         const { data: urlData } = await supabase
           .storage
           .from('files')
-          .createSignedUrl(`${item.name}`, 60 * 60 * 24); // 24 hours expiry
+          .createSignedUrl(item.name, 60 * 60 * 24); // 24 hours expiry
         
         return {
           id: item.id,
@@ -64,34 +64,8 @@ const initializeFiles = async () => {
   }
 };
 
-// Initialize the bucket if it doesn't exist
-const initializeStorage = async () => {
-  try {
-    // Check if bucket exists and create it if not
-    const { data: buckets } = await supabase.storage.listBuckets();
-    const filesBucket = buckets?.find(bucket => bucket.name === 'files');
-    
-    if (!filesBucket) {
-      console.log('Creating files bucket in Supabase storage');
-      const { error } = await supabase.storage.createBucket('files', {
-        public: false,
-        fileSizeLimit: 50 * 1024 * 1024, // 50MB
-      });
-      
-      if (error) {
-        console.error('Error creating files bucket:', error);
-      }
-    }
-    
-    // Now load files
-    await initializeFiles();
-  } catch (error) {
-    console.error('Error initializing storage:', error);
-  }
-};
-
-// Initialize storage when the module loads
-initializeStorage();
+// Initialize by loading files from Supabase storage
+initializeFiles();
 
 export function useFileManager() {
   const [files, setFiles] = useState<ManagedFile[]>(globalFiles);
@@ -146,13 +120,14 @@ export function useFileManager() {
       
       // Create a file object with metadata
       const fileObject: ManagedFile = {
-        id: uploadData.id || `file_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+        id: uploadData.path || `file_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
         name: newFile.name,
         size: newFile.size,
         type: newFile.type,
         lastModified: newFile.lastModified,
         url: urlData.signedUrl,
-        path: filePath
+        path: filePath,
+        file: newFile
       };
       
       // Add to global files state
