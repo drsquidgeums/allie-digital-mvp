@@ -1,8 +1,10 @@
+
 import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { FileText, Download, Trash2, RefreshCw } from "lucide-react";
+import { FileText, Download, Trash2, RefreshCw, ExternalLink } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ManagedFile, useFileManager } from '@/hooks/useFileManager';
+import { useNavigate } from 'react-router-dom';
 import { 
   Table, 
   TableBody, 
@@ -15,6 +17,7 @@ import {
 export const FileManager: React.FC = () => {
   const { files, loading, deleteFile, downloadFile, refreshFiles } = useFileManager();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("FileManager mounted, files count:", files.length);
@@ -26,6 +29,19 @@ export const FileManager: React.FC = () => {
 
   const handleRefresh = async () => {
     await refreshFiles();
+  };
+
+  const openInToolbox = (file: ManagedFile) => {
+    // Store the file ID in sessionStorage so the main document viewer can access it
+    sessionStorage.setItem('selectedFileId', file.id);
+    
+    // Navigate to the document viewer (root route)
+    navigate('/');
+    
+    toast({
+      title: "Opening in Document Viewer",
+      description: `${file.name} will open in the document viewer`,
+    });
   };
 
   return (
@@ -79,6 +95,15 @@ export const FileManager: React.FC = () => {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => openInToolbox(file)}
+                        aria-label={`Open ${file.name} in Document Viewer`}
+                        title="Open in Document Viewer"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </Button>
                       <Button
                         variant="ghost"
                         size="icon"

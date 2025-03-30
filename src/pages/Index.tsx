@@ -1,10 +1,11 @@
 
-import React, { useState, lazy, Suspense, useContext } from "react";
+import React, { useState, lazy, Suspense, useEffect } from "react";
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
+import { useFileManager } from "@/hooks/useFileManager";
 
 // Lazy load DocumentViewer component for better initial load performance
 const DocumentViewer = lazy(() => import("@/components/DocumentViewer").then(module => ({
@@ -27,6 +28,24 @@ const Index = () => {
   const [isHighlighter, setIsHighlighter] = useState<boolean>(true);
   const [documentContent, setDocumentContent] = useState<string>("");
   const [documentName, setDocumentName] = useState<string>("");
+  const { files } = useFileManager();
+
+  useEffect(() => {
+    // Check if there's a selected file ID in sessionStorage
+    const selectedFileId = sessionStorage.getItem('selectedFileId');
+    
+    if (selectedFileId && files.length > 0) {
+      const fileToOpen = files.find(file => file.id === selectedFileId);
+      
+      if (fileToOpen?.file) {
+        console.log("Opening file from MyFiles:", fileToOpen.name);
+        setSelectedFile(fileToOpen.file);
+        
+        // Clear the selection after it's been used
+        sessionStorage.removeItem('selectedFileId');
+      }
+    }
+  }, [files]);
 
   // Function to handle file selection
   const handleFileSelected = (file: File) => {
