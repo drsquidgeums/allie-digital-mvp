@@ -3,7 +3,8 @@ import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { FileText, Download, Trash2, RefreshCw, ExternalLink } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { ManagedFile, useFileManager } from '@/hooks/useFileManager';
+import { ManagedFile } from '@/hooks/file-manager/types';
+import { useFileManager } from '@/hooks/file-manager';
 import { useNavigate } from 'react-router-dom';
 import { 
   Table, 

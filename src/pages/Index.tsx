@@ -1,11 +1,10 @@
-
 import React, { useState, lazy, Suspense, useEffect } from "react";
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
-import { useFileManager } from "@/hooks/useFileManager";
+import { useFileManager } from "@/hooks/file-manager";
 
 // Lazy load DocumentViewer component for better initial load performance
 const DocumentViewer = lazy(() => import("@/components/DocumentViewer").then(module => ({
