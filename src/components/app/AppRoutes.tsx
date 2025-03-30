@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Index from "@/pages/Index";
@@ -10,6 +11,7 @@ import SettingsPage from "@/pages/SettingsPage";
 export const AppRoutes = React.memo(() => (
   <Routes>
     <Route path="/" element={<Index />} />
+    <Route path="/toolbox" element={<Index />} />
     <Route path="/file-uploader" element={<Index />} />
     <Route path="/tasks" element={<TaskDashboard />} />
     <Route path="/ai-assistant" element={<AIAssistant />} />

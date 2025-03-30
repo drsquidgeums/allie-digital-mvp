@@ -1,7 +1,7 @@
 
 import React, { useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Monitor, CheckSquare, Brain } from "lucide-react";
+import { Monitor, CheckSquare, Brain, FileText } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 import { useTranslation } from "react-i18next";
 
@@ -17,10 +17,16 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
 
   const navigationItems = [
     {
+      id: "myfiles",
+      label: "My Files",
+      icon: FileText,
+      path: "/"
+    },
+    {
       id: "files",
       label: "Toolbox",
       icon: Monitor,
-      path: "/"
+      path: "/toolbox"
     },
     {
       id: "tasks",
@@ -56,7 +62,7 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
           key={id}
           icon={icon}
           label={label}
-          isActive={isPathActive(path)}
+          isActive={id === activeComponent}
           onClick={(e) => handleNavigation(e, id, path)}
           className="sidebar-nav-link"
         />

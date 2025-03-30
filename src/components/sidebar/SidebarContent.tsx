@@ -8,6 +8,7 @@ import { IrlenOverlay } from "../IrlenOverlay";
 import { MindMap } from "../MindMap";
 import { ColorSeparator } from "../ColorSeparator";
 import { FileList } from "../FileList";
+import { MyFiles } from "../MyFiles";
 
 interface SidebarContentProps {
   activeComponent: string | null;
@@ -15,6 +16,7 @@ interface SidebarContentProps {
   uploadedFiles: File[];
   onFileSelect: (file: File) => void;
   onFileDelete: (file: File) => void;
+  onFileUpload: () => void;
 }
 
 export const SidebarContent = ({ 
@@ -22,10 +24,18 @@ export const SidebarContent = ({
   onColorChange,
   uploadedFiles,
   onFileSelect,
-  onFileDelete
+  onFileDelete,
+  onFileUpload
 }: SidebarContentProps) => {
   const renderActiveComponent = () => {
     switch (activeComponent) {
+      case "myfiles":
+        return <MyFiles 
+          files={uploadedFiles} 
+          onFileSelect={onFileSelect} 
+          onFileDelete={onFileDelete}
+          onUploadClick={onFileUpload}
+        />;
       case "pomodoro":
         return <PomodoroTimer />;
       case "tts":

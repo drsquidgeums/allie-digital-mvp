@@ -22,7 +22,7 @@ export const Sidebar = React.memo(({
   onFileDelete
 }: SidebarProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [activeComponent, setActiveComponent] = React.useState<string | null>("files");
+  const [activeComponent, setActiveComponent] = React.useState<string | null>("myfiles");
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,6 +30,10 @@ export const Sidebar = React.memo(({
     if (file) {
       onFileUpload(file);
     }
+  };
+
+  const handleTriggerFileInput = () => {
+    fileInputRef.current?.click();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -76,6 +80,7 @@ export const Sidebar = React.memo(({
         uploadedFiles={uploadedFiles}
         onFileSelect={onFileSelect}
         onFileDelete={onFileDelete}
+        onFileUpload={handleTriggerFileInput}
       />
 
       <div className="absolute bottom-4 left-4">
