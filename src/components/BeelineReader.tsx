@@ -49,8 +49,14 @@ export const BeelineReader = () => {
     return (
       <div className="space-y-1">
         {lines.map((line, index) => {
-          // Calculate cycle position within a group of 3
+          // Apply one of three different gradients based on the line's position within each group of 3
           const cyclePosition = index % 3;
+          
+          // Define the gradient for this line based on its cycle position
+          const gradientStyle = 
+            cyclePosition === 0 ? `linear-gradient(${angle}deg, ${colors.start}, ${colors.middle})` :
+            cyclePosition === 1 ? `linear-gradient(${angle}deg, ${colors.middle}, ${colors.end})` :
+            `linear-gradient(${angle}deg, ${colors.end}, ${colors.endMiddle}, ${colors.start})`;
           
           const style: React.CSSProperties = {
             display: "block",
@@ -58,11 +64,7 @@ export const BeelineReader = () => {
             minHeight: "1.5em",
             lineHeight: 1.5,
             padding: "2px 0",
-            backgroundImage: cyclePosition === 0
-              ? `linear-gradient(${angle}deg, ${colors.start}, ${colors.middle})`
-              : cyclePosition === 1
-              ? `linear-gradient(${angle}deg, ${colors.middle}, ${colors.end})`
-              : `linear-gradient(${angle}deg, ${colors.end}, ${colors.endMiddle}, ${colors.start})`,
+            backgroundImage: gradientStyle,
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             WebkitTextFillColor: "transparent",
@@ -136,10 +138,11 @@ export const BeelineReader = () => {
 
       <div 
         ref={outputRef}
-        className="bg-background/50 p-3 rounded-lg min-h-[100px] text-left focus:outline-none focus:ring-2 focus:ring-primary h-[150px] overflow-auto"
+        className="bg-background/50 p-3 rounded-lg min-h-[100px] text-left focus:outline-none focus:ring-2 focus:ring-primary overflow-auto"
         tabIndex={text ? 0 : -1}
         role="region"
         aria-label="Processed beeline text"
+        style={{ height: text ? 'auto' : '150px', maxHeight: '300px' }}
       >
         {text && processText(text)}
       </div>
