@@ -60,7 +60,7 @@ export const MindMapCreativeToolbar = ({
             />
             <ColorSelector
               selectedColor={selectedTextColor}
-              setSelectedTextColor={setSelectedTextColor}
+              setSelectedColor={setSelectedTextColor}
               customColor={customTextColor}
               setCustomColor={setCustomTextColor}
               colorOptions={[

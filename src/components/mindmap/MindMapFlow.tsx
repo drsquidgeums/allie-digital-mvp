@@ -5,6 +5,7 @@ import {
   Controls,
   Background,
   useReactFlow,
+  ConnectionLineType
 } from '@xyflow/react';
 import { MindMapNode } from './types';
 
@@ -82,14 +83,14 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
           },
           animated: true,
           deletable: true,
-          type: 'smoothstep',
+          type: 'step',
         }}
         connectionLineStyle={{
           stroke: '#9b87f5',
           strokeWidth: 2,
           strokeDasharray: '5,5',
         }}
-        connectionLineType="smoothstep"
+        connectionLineType={ConnectionLineType.Step}
         snapToGrid={true}
         snapGrid={[10, 10]}
         proOptions={{ hideAttribution: true }}
