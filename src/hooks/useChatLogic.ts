@@ -18,6 +18,7 @@ export const useChatLogic = (documentContent?: string) => {
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
   const [apiRetries, setApiRetries] = useState(0);
+  const [usingFallback, setUsingFallback] = useState(false);
 
   const getToolResponse = useCallback((input: string, docContent?: string): string => {
     const lowerInput = input.toLowerCase();
@@ -75,6 +76,11 @@ export const useChatLogic = (documentContent?: string) => {
     }
 
     try {
+      // Skip API call if we're in fallback mode due to previous errors
+      if (usingFallback) {
+        return "I'm currently using my built-in knowledge only. I can help you break down this document into more manageable sections. Which part would you like to focus on first?";
+      }
+
       const systemMessage = `${SYSTEM_PROMPT} You are analyzing document content for a student with learning differences. Identify 3-5 key concepts and provide simple explanations for each one.`;
       
       const messages = [
@@ -89,7 +95,7 @@ export const useChatLogic = (documentContent?: string) => {
       toast.error("Error analyzing document. Using built-in analysis capabilities.");
       return "I encountered an error analyzing your document. Let me help you break it down into manageable sections instead. What specific part would you like to focus on first?";
     }
-  }, []);
+  }, [usingFallback]);
 
   const handleSend = useCallback(async () => {
     if (!input.trim() || isLoading) return;
@@ -102,6 +108,14 @@ export const useChatLogic = (documentContent?: string) => {
       if (documentContent && input.toLowerCase().includes("analyze") && input.toLowerCase().includes("document")) {
         const response = await analyzeDocument(documentContent);
         setMessages(prev => [...prev, { text: response, isUser: false }]);
+        setIsLoading(false);
+        return;
+      }
+      
+      // Skip API call if we've had multiple failures and use built-in responses instead
+      if (usingFallback || apiRetries >= 3) {
+        const fallbackResponse = getToolResponse(input, documentContent);
+        setMessages(prev => [...prev, { text: fallbackResponse, isUser: false }]);
         setIsLoading(false);
         return;
       }
@@ -127,6 +141,7 @@ export const useChatLogic = (documentContent?: string) => {
         
         const responseText = await createOpenAICompletion(chatHistory);
         setApiRetries(0); // Reset retries on successful call
+        setUsingFallback(false); // Reset fallback mode on success
         setMessages(prev => [...prev, { text: responseText, isUser: false }]);
       } catch (error) {
         console.error("Error getting OpenAI response:", error);
@@ -134,16 +149,14 @@ export const useChatLogic = (documentContent?: string) => {
         // Increment retry counter
         setApiRetries(prev => prev + 1);
         
-        // After 3 retries, show a special message
+        // After 3 retries, switch to fallback mode
         if (apiRetries >= 2) {
-          toast.error("API connection issues persisting. Using offline mode.", {
-            description: "Check your network connection or try again later."
+          setUsingFallback(true);
+          toast.error("AI service unavailable. Using offline mode.", {
+            description: "Using built-in responses until the service is restored."
           });
-        }
-        
-        // Only show the toast if we couldn't get any response at all
-        if (!error.toString().includes("currently experiencing connection issues")) {
-          toast.error("Error connecting to AI service. Using built-in responses.");
+        } else {
+          toast.error("Error connecting to AI service. Trying built-in responses.");
         }
         
         const fallbackResponse = getToolResponse(input, documentContent);
@@ -156,7 +169,7 @@ export const useChatLogic = (documentContent?: string) => {
     } finally {
       setIsLoading(false);
     }
-  }, [input, isLoading, getToolResponse, analyzeDocument, documentContent, messages, apiRetries]);
+  }, [input, isLoading, getToolResponse, analyzeDocument, documentContent, messages, apiRetries, usingFallback]);
 
   return {
     input,
@@ -165,6 +178,7 @@ export const useChatLogic = (documentContent?: string) => {
     setMessages,
     isLoading,
     handleSend,
-    analyzeDocument
+    analyzeDocument,
+    usingFallback
   };
 };

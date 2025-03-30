@@ -33,7 +33,7 @@ export const createOpenAIClient = async () => {
 export const createOpenAICompletion = async (messages) => {
   try {
     // Use the project API key directly
-    const OPENAI_API_KEY = "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";
+    const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; // Replace with a valid API key
     
     console.log("Attempting OpenAI API request...");
     
@@ -54,13 +54,35 @@ export const createOpenAICompletion = async (messages) => {
   } catch (error) {
     console.error("OpenAI API error:", error);
     
-    // Improved fallback response with troubleshooting info
+    // Check for specific error types
+    const errorMessage = error?.toString() || "";
+    const errorDetails = error?.error || {};
+    
+    if (errorDetails.type === "insufficient_quota" || errorMessage.includes("quota")) {
+      return `I'm currently experiencing API quota limits. This happens when:
+
+1. The API key has exceeded its usage limits
+2. The billing information needs to be updated
+3. The free tier limits have been reached
+
+You can continue using my built-in knowledge base while this issue is being resolved. What would you like to know about using the learning tools?`;
+    }
+    
+    if (errorMessage.includes("rate limit")) {
+      return `I've hit a rate limit with my AI service. This is a temporary issue that occurs when:
+
+1. Too many requests are made in a short time
+2. The API has usage restrictions in place
+
+Please try again in a minute, or ask me about using any of the learning tools in the meantime.`;
+    }
+    
+    // Default fallback response
     return `I'm currently experiencing connection issues with my AI service. Here are some possible reasons:
 
 1. Network connectivity issues: Check your internet connection
-2. API key issues: The OpenAI API key may be expired or invalid
-3. Rate limits: You may have hit OpenAI's rate limits
-4. Service outage: OpenAI's service might be temporarily down
+2. Service outage: The AI service might be temporarily down
+3. Configuration problems: There might be an issue with my setup
 
 Meanwhile, I'll use my built-in knowledge to help you. What would you like to know about using this ADHD learning application?`;
   }
