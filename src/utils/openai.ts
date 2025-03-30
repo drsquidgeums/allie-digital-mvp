@@ -1,24 +1,25 @@
 
 import OpenAI from "openai";
-import { supabase } from './supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from "sonner";
 
 // Create an OpenAI client
 export const createOpenAIClient = async () => {
   try {
-    const { data: { secret: apiKey }, error } = await supabase
+    // Attempt to get the API key from Supabase, but handle the case where the table doesn't exist
+    const { data, error } = await supabase
       .from('secrets')
       .select('secret')
       .eq('name', 'OPENAI_API_KEY')
       .single();
 
-    if (error || !apiKey) {
+    if (error || !data?.secret) {
       console.error('OpenAI API key not found in Supabase');
       return null;
     }
 
     return new OpenAI({
-      apiKey,
+      apiKey: data.secret,
       dangerouslyAllowBrowser: true
     });
   } catch (error) {

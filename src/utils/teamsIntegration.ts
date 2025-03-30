@@ -1,4 +1,5 @@
-import { supabase } from '@/utils/supabase';
+
+import { supabase } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
 
 export interface TeamsAuthConfig {
@@ -11,14 +12,20 @@ export const connectToTeams = async () => {
     // Microsoft Teams OAuth endpoint
     const teamsAuthUrl = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize`;
     
-    // Get Teams credentials from Supabase
+    // Try to get Teams credentials from Supabase, but handle the case where the table doesn't exist
     const { data: config, error: configError } = await supabase
       .from('teams_config')
-      .select('client_id, tenant_id')
+      .select('*')
       .single();
     
     if (configError || !config) {
-      throw new Error('Teams configuration not found');
+      console.error('Teams configuration not found in Supabase');
+      throw new Error('Teams configuration not available. Please set up the teams_config table in Supabase with client_id and tenant_id columns.');
+    }
+
+    // Check if the config has the required properties
+    if (!config.client_id || !config.tenant_id) {
+      throw new Error('Invalid Teams configuration. Missing client_id or tenant_id.');
     }
 
     // Construct OAuth URL with required parameters
