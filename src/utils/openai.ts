@@ -14,7 +14,6 @@ export const createOpenAIClient = async () => {
 
     if (error || !apiKey) {
       console.error('OpenAI API key not found in Supabase');
-      toast.error("OpenAI API key not found. Please add it in your Supabase database.");
       return null;
     }
 
@@ -24,7 +23,6 @@ export const createOpenAIClient = async () => {
     });
   } catch (error) {
     console.error('Error creating OpenAI client:', error);
-    toast.error("Error connecting to OpenAI. Check console for details.");
     return null;
   }
 };
@@ -32,11 +30,12 @@ export const createOpenAIClient = async () => {
 // Function to create OpenAI API request with direct API key
 export const createOpenAICompletion = async (messages) => {
   try {
-    // We'll use the most cost-effective OpenAI model
-    const openai = new OpenAI({
-      apiKey: "sk-**************************", // Masked for security - will be replaced by a real key in Supabase
-      dangerouslyAllowBrowser: true
-    });
+    // Create client using key from Supabase if available
+    const openai = await createOpenAIClient();
+    
+    if (!openai) {
+      throw new Error("No valid OpenAI client available");
+    }
     
     console.log("Attempting OpenAI API request with gpt-4o-mini model...");
     
@@ -86,13 +85,16 @@ In the meantime, I'll use my built-in knowledge to assist you with the ADHD lear
     }
     
     // Default fallback response
-    return `I'm currently experiencing connection issues with my AI service. Here are some possible reasons:
+    return `I'm currently using my built-in knowledge to assist you. The AI service is unavailable, but I can still help with:
 
-1. Network connectivity issues: Check your internet connection
-2. Service outage: The AI service might be temporarily down
-3. Configuration problems: There might be an issue with my setup
+- Using the Pomodoro Timer for focused study
+- Setting up Mind Mapping tools for visual organization
+- Managing tasks with our point-based reward system
+- Reading assistance with color overlays and the bionic reader
+- Focus mode settings to reduce distractions
+- PDF annotation and highlighting features
 
-Meanwhile, I'll use my built-in knowledge to help you. What would you like to know about using this ADHD learning application?`;
+What would you like help with today?`;
   }
 };
 
@@ -107,4 +109,3 @@ export const SYSTEM_PROMPT = `You are an ADHD Learning Assistant helping student
 Provide clear, concise responses focused on helping ADHD learners use these tools effectively. Break information into small, manageable chunks and use bullet points when possible. Keep responses friendly and encouraging.
 
 You should explain HOW to use the application's features when asked. For example, if asked about the Pomodoro timer, explain where to find it, how to start it, and how it can help with focus.`;
-

@@ -74,13 +74,8 @@ export const useChatLogic = (documentContent?: string) => {
       return "No document content available. Please upload or open a document first.";
     }
 
-    try {
-      // Always use fallback for document analysis to avoid API costs
-      return "I can help you break down this document into more manageable sections. Which part would you like to focus on first? I can help identify key concepts, summarize sections, or explain difficult terms.";
-    } catch (error) {
-      console.error("Error analyzing document:", error);
-      return "I encountered an error analyzing your document. Let me help you break it down into manageable sections instead. What specific part would you like to focus on first?";
-    }
+    // Always use fallback for document analysis to avoid API costs
+    return "I can help you break down this document into more manageable sections. Which part would you like to focus on first? I can help identify key concepts, summarize sections, or explain difficult terms.";
   }, []);
 
   const handleSend = useCallback(async () => {
@@ -91,6 +86,7 @@ export const useChatLogic = (documentContent?: string) => {
     setInput("");
 
     try {
+      // Check for specific document analysis request
       if (documentContent && input.toLowerCase().includes("analyze") && input.toLowerCase().includes("document")) {
         const response = await analyzeDocument(documentContent);
         setMessages(prev => [...prev, { text: response, isUser: false }]);
@@ -98,20 +94,21 @@ export const useChatLogic = (documentContent?: string) => {
         return;
       }
       
-      // Skip API call if we've had multiple failures or if the user mentions API problems
-      const skipAPI = usingFallback || apiRetries >= 2 || 
-                     input.toLowerCase().includes("api") || 
-                     input.toLowerCase().includes("error") ||
-                     input.toLowerCase().includes("connection");
+      // Always skip API for API-related queries or after authentication errors
+      const skipAPITerms = ['api', 'key', 'token', 'auth', 'error', 'connection', 'quota', 'limit', 'invalid'];
+      const shouldSkipAPI = usingFallback || 
+                          apiRetries >= 1 || 
+                          skipAPITerms.some(term => input.toLowerCase().includes(term));
       
-      if (skipAPI) {
+      if (shouldSkipAPI) {
+        // Use fallback response system instead of API
         const fallbackResponse = getToolResponse(input, documentContent);
         setMessages(prev => [...prev, { text: fallbackResponse, isUser: false }]);
         setIsLoading(false);
         return;
       }
       
-      // Try OpenAI API
+      // Try OpenAI API if not skipping
       try {
         console.log("Attempting to get a response from OpenAI API...");
         
@@ -131,24 +128,25 @@ export const useChatLogic = (documentContent?: string) => {
         });
         
         const responseText = await createOpenAICompletion(chatHistory);
+        
+        // Check if the response indicates an API issue
+        if (responseText.includes("API") && responseText.includes("issue")) {
+          throw new Error("API authentication issue detected in response");
+        }
+        
         setApiRetries(0); // Reset retries on successful call
         setUsingFallback(false); // Reset fallback mode on success
         setMessages(prev => [...prev, { text: responseText, isUser: false }]);
       } catch (error) {
         console.error("Error getting OpenAI response:", error);
         
-        // Increment retry counter
+        // After first error, switch to fallback mode permanently
+        setUsingFallback(true);
         setApiRetries(prev => prev + 1);
         
-        // After 2 retries, switch to fallback mode
-        if (apiRetries >= 1) {
-          setUsingFallback(true);
-          toast.error("AI service unavailable. Using offline mode.", {
-            description: "Using built-in responses until the service is restored."
-          });
-        } else {
-          toast.error("Error connecting to AI service. Trying built-in responses.");
-        }
+        toast.error("Using built-in assistant responses", {
+          description: "AI service unavailable - using offline mode"
+        });
         
         const fallbackResponse = getToolResponse(input, documentContent);
         setMessages(prev => [...prev, { text: fallbackResponse, isUser: false }]);
