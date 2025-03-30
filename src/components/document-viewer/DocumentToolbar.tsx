@@ -1,7 +1,7 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Download, Upload, Trash2 } from 'lucide-react';
-import { NotificationCenter } from '../NotificationCenter';
 import {
   Tooltip,
   TooltipContent,
@@ -95,19 +95,6 @@ export const DocumentToolbar = ({
 
         <ScreenshotButton />
       </div>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div>
-            <NotificationCenter />
-          </div>
-        </TooltipTrigger>
-        <TooltipContent 
-          side="bottom"
-          className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
-        >
-          Notifications
-        </TooltipContent>
-      </Tooltip>
     </div>
   );
 };
