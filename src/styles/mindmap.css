@@ -44,10 +44,12 @@
   height: var(--flow-handle-height);
   border-radius: 50%;
   background-color: var(--flow-handle-color);
+  opacity: 1;
 }
 
 .react-flow__handle:hover {
   transform: scale(1.2);
+  opacity: 1 !important;
 }
 
 /* Edge styling for better visibility */
@@ -58,6 +60,12 @@
 .react-flow__edge.selected .react-flow__edge-path {
   stroke: hsl(var(--primary)) !important;
   stroke-width: 3;
+}
+
+/* Connection line styling */
+.react-flow__connection-path {
+  stroke: #9b87f5;
+  stroke-width: 2;
 }
 
 /* Controls styling for better accessibility */

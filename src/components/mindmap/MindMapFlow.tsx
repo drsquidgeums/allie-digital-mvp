@@ -76,12 +76,21 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
         className="bg-background"
         defaultEdgeOptions={{
           style: { 
-            stroke: 'var(--border)', 
-            strokeWidth: 1.5,
-            strokeDasharray: '5,5'
+            stroke: '#9b87f5', 
+            strokeWidth: 2,
+            strokeDasharray: 'none'
           },
           animated: true,
+          deletable: true,
         }}
+        connectionLineStyle={{
+          stroke: '#9b87f5',
+          strokeWidth: 2,
+          strokeDasharray: '5,5',
+        }}
+        connectionLineComponent={null}
+        snapToGrid={true}
+        snapGrid={[10, 10]}
         proOptions={{ hideAttribution: true }}
         aria-label="Mind map flow diagram"
       >

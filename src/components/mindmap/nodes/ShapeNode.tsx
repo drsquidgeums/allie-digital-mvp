@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Handle, Position, NodeResizer } from '@xyflow/react';
 
@@ -61,13 +60,25 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
         lineClassName="border-primary/30"
         handleClassName="h-3 w-3 bg-primary border-2 border-background"
       />
+      
       <Handle 
         type="target" 
         position={Position.Top}
-        className="w-3 h-3 bg-primary border-2 border-background opacity-0 group-hover:opacity-100 transition-opacity"
+        className="w-3 h-3 bg-primary border-2 border-background opacity-100 group-hover:opacity-100 transition-opacity"
         role="button"
         aria-label="Connection target point"
+        id="top"
       />
+      
+      <Handle 
+        type="source" 
+        position={Position.Left}
+        className="w-3 h-3 bg-primary border-2 border-background opacity-0 group-hover:opacity-100 transition-opacity"
+        role="button"
+        aria-label="Connection source point"
+        id="left"
+      />
+      
       <div 
         className="w-full h-full flex items-center justify-center transition-all duration-200 shadow-sm hover:shadow-md"
         onDoubleClick={handleDoubleClick}
@@ -96,12 +107,23 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
           <span className="text-sm font-medium p-2 text-center w-full break-words">{label || 'Double-click to edit'}</span>
         )}
       </div>
+      
       <Handle 
         type="source" 
-        position={Position.Bottom}
+        position={Position.Right}
         className="w-3 h-3 bg-primary border-2 border-background opacity-0 group-hover:opacity-100 transition-opacity"
         role="button"
         aria-label="Connection source point"
+        id="right"
+      />
+      
+      <Handle 
+        type="source" 
+        position={Position.Bottom}
+        className="w-3 h-3 bg-primary border-2 border-background opacity-100 group-hover:opacity-100 transition-opacity"
+        role="button"
+        aria-label="Connection source point"
+        id="bottom"
       />
     </div>
   );

@@ -67,11 +67,22 @@ export const ImageNode: React.FC<ImageNodeProps> = ({ data }) => {
         height: dimensions.height,
       }}
     >
+      {/* TOP HANDLE */}
       <Handle 
         type="target" 
         position={Position.Top} 
-        className="w-3 h-3 bg-primary border-2 border-background opacity-0 group-hover:opacity-100 transition-opacity"
+        className="w-3 h-3 bg-primary border-2 border-background opacity-100 group-hover:opacity-100 transition-opacity"
+        id="top"
       />
+      
+      {/* LEFT HANDLE */}
+      <Handle 
+        type="source" 
+        position={Position.Left} 
+        className="w-3 h-3 bg-primary border-2 border-background opacity-0 group-hover:opacity-100 transition-opacity"
+        id="left"
+      />
+      
       {imageUrl ? (
         <img 
           src={imageUrl} 
@@ -88,10 +99,21 @@ export const ImageNode: React.FC<ImageNodeProps> = ({ data }) => {
           </div>
         </div>
       )}
+      
+      {/* RIGHT HANDLE */}
+      <Handle 
+        type="source" 
+        position={Position.Right}
+        className="w-3 h-3 bg-primary border-2 border-background opacity-0 group-hover:opacity-100 transition-opacity"
+        id="right"
+      />
+      
+      {/* BOTTOM HANDLE */}
       <Handle 
         type="source" 
         position={Position.Bottom}
-        className="w-3 h-3 bg-primary border-2 border-background opacity-0 group-hover:opacity-100 transition-opacity" 
+        className="w-3 h-3 bg-primary border-2 border-background opacity-100 group-hover:opacity-100 transition-opacity"
+        id="bottom"
       />
     </div>
   );
