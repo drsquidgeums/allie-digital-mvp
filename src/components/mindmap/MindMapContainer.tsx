@@ -82,7 +82,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
         colorOptions={colorOptions}
         textColorOptions={textColorOptions}
       />
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 relative">
         <ReactFlowProvider>
           <MindMapFlow
             nodes={nodes}
@@ -95,7 +95,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
           />
         </ReactFlowProvider>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 z-[5] pointer-events-none">
+      <div className="absolute bottom-0 left-0 right-0 z-50 pointer-events-none">
         <div className="pointer-events-auto">
           <MindMapCreativeToolbar 
             onShapeSelect={handleShapeSelect}

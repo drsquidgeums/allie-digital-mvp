@@ -10,16 +10,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTasks } from "@/hooks/useTasks";
+import { Badge } from "@/components/ui/badge";
 
 export const TaskSelector = () => {
   const { state, dispatch } = usePomodoroContext();
   const { tasks } = useTasks();
 
+  // Only show incomplete tasks
   const incompleteTasks = tasks.filter(task => !task.completed);
 
   return (
-    <div className="space-y-2">
-      <Label>Current Task</Label>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <Label>Current Task</Label>
+        {state.currentTask && (
+          <Badge variant="outline" className="ml-2">
+            {state.taskPomodoros[state.currentTask] || 0}/4 pomodoros
+          </Badge>
+        )}
+      </div>
+      
       <Select
         value={state.currentTask || "no-task"}
         onValueChange={(value) => dispatch({ 
@@ -28,23 +38,28 @@ export const TaskSelector = () => {
         })}
         disabled={state.isActive}
       >
-        <SelectTrigger>
-          <SelectValue placeholder="Select a task" />
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Select a task to focus on" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="max-h-[300px]">
+          <SelectItem value="no-task">No task selected</SelectItem>
           {incompleteTasks.length === 0 ? (
-            <SelectItem value="no-task" disabled>No tasks available</SelectItem>
+            <SelectItem value="no-tasks-available" disabled>No tasks available</SelectItem>
           ) : (
             incompleteTasks.map((task) => (
-              <SelectItem key={task.id} value={task.id}>
-                {task.text} {state.taskPomodoros[task.id] ? 
-                  `(${state.taskPomodoros[task.id]}/4 pomodoros)` : 
-                  '(0/4 pomodoros)'}
+              <SelectItem key={task.id} value={task.id} className="flex items-center justify-between py-2">
+                <div className="flex items-center">
+                  <span className="truncate max-w-[180px]">{task.text}</span>
+                </div>
               </SelectItem>
             ))
           )}
         </SelectContent>
       </Select>
+      
+      <div className="text-xs text-muted-foreground">
+        <p>Complete 4 pomodoros to automatically mark a task as complete</p>
+      </div>
     </div>
   );
 };

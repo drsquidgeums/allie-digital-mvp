@@ -18,6 +18,7 @@ interface ColorSelectorProps {
   setCustomColor: (color: string) => void;
   colorOptions: ColorOption[];
   label?: string;
+  type: 'shape' | 'text';
 }
 
 export const ColorSelector: React.FC<ColorSelectorProps> = ({
@@ -26,7 +27,8 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
   customColor,
   setCustomColor,
   colorOptions,
-  label = "Color"
+  label = "Color",
+  type
 }) => {
   return (
     <div className="flex items-center gap-2">
@@ -37,8 +39,10 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
           toast(`${label} changed to ${colorOptions.find(c => c.value === value)?.label || 'custom'}`);
         }}
       >
-        <SelectTrigger className="w-[120px] h-9">
-          <SelectValue placeholder="Select color" />
+        <SelectTrigger className={`w-[150px] h-9 flex items-center gap-2 ${type === 'shape' ? 'border-primary/30' : 'border-secondary/30'}`}>
+          <span className={`w-3 h-3 rounded-full inline-block mr-1 ${selectedColor === 'custom' ? '' : ''}`} 
+                style={{ backgroundColor: selectedColor === 'custom' ? customColor : (selectedColor !== 'auto' ? selectedColor : '#888888') }}></span>
+          <SelectValue placeholder={type === 'shape' ? "Shape color" : "Text color"} />
         </SelectTrigger>
         <SelectContent>
           {colorOptions.map((color) => (
@@ -47,10 +51,15 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
               value={color.value}
               className="flex items-center gap-2"
             >
-              {color.value !== 'custom' && (
+              {color.value !== 'custom' && color.value !== 'auto' && (
                 <div 
                   className="w-3 h-3 rounded-full inline-block mr-2" 
                   style={{ backgroundColor: color.value }} 
+                />
+              )}
+              {color.value === 'auto' && (
+                <div 
+                  className="w-3 h-3 rounded-full inline-block mr-2 bg-gradient-to-r from-primary to-secondary" 
                 />
               )}
               {color.label}
@@ -60,11 +69,11 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
       </Select>
       {selectedColor === 'custom' && (
         <ColorPicker
-          label="Pick custom color"
+          label={`Pick custom ${type} color`}
           value={customColor}
           onChange={(color) => {
             setCustomColor(color);
-            toast("Custom color updated");
+            toast(`Custom ${type} color updated`);
           }}
         />
       )}

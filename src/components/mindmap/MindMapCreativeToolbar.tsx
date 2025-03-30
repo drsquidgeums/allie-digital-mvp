@@ -55,11 +55,12 @@ export const MindMapCreativeToolbar = ({
                 { value: 'hsl(var(--muted))', label: 'Muted' },
                 { value: 'custom', label: 'Custom' },
               ]}
-              label="Node color"
+              label="Shape color"
+              type="shape"
             />
             <ColorSelector
               selectedColor={selectedTextColor}
-              setSelectedColor={setSelectedTextColor}
+              setSelectedTextColor={setSelectedTextColor}
               customColor={customTextColor}
               setCustomColor={setCustomTextColor}
               colorOptions={[
@@ -70,6 +71,7 @@ export const MindMapCreativeToolbar = ({
                 { value: 'custom', label: 'Custom' },
               ]}
               label="Text color"
+              type="text"
             />
           </div>
         </div>

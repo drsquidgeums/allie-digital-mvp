@@ -82,13 +82,14 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
           },
           animated: true,
           deletable: true,
+          type: 'smoothstep',
         }}
         connectionLineStyle={{
           stroke: '#9b87f5',
           strokeWidth: 2,
           strokeDasharray: '5,5',
         }}
-        connectionLineComponent={null}
+        connectionLineType="smoothstep"
         snapToGrid={true}
         snapGrid={[10, 10]}
         proOptions={{ hideAttribution: true }}

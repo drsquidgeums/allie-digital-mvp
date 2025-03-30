@@ -1,7 +1,6 @@
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Handle, Position } from '@xyflow/react';
-import { Image, Upload } from 'lucide-react';
 
 interface ImageNodeProps {
   data: {
@@ -79,7 +78,7 @@ export const ImageNode: React.FC<ImageNodeProps> = ({ data }) => {
       <Handle 
         type="source" 
         position={Position.Left} 
-        className="w-3 h-3 bg-primary border-2 border-background opacity-0 group-hover:opacity-100 transition-opacity"
+        className="w-3 h-3 bg-primary border-2 border-background opacity-70 group-hover:opacity-100 transition-opacity"
         id="left"
       />
       
@@ -92,10 +91,10 @@ export const ImageNode: React.FC<ImageNodeProps> = ({ data }) => {
         />
       ) : (
         <div className="flex flex-col items-center justify-center w-full h-full text-sm text-muted-foreground p-4 gap-2">
-          <Image className="w-8 h-8 mb-2 opacity-50" />
+          <img src="/placeholder.svg" className="w-12 h-12 mb-2 opacity-50" alt="Placeholder" />
           <p>Right-click to upload an image</p>
           <div className={`absolute inset-0 bg-primary/5 border-2 border-dashed border-primary/20 rounded-md flex items-center justify-center ${isHovering ? 'opacity-100' : 'opacity-0'} transition-opacity`}>
-            <Upload className="w-6 h-6 text-primary/50" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-primary/50"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
           </div>
         </div>
       )}
@@ -104,7 +103,7 @@ export const ImageNode: React.FC<ImageNodeProps> = ({ data }) => {
       <Handle 
         type="source" 
         position={Position.Right}
-        className="w-3 h-3 bg-primary border-2 border-background opacity-0 group-hover:opacity-100 transition-opacity"
+        className="w-3 h-3 bg-primary border-2 border-background opacity-70 group-hover:opacity-100 transition-opacity"
         id="right"
       />
       

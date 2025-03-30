@@ -8,7 +8,7 @@ import { Task } from "@/types/task";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { TaskInput } from "@/components/dashboard/TaskInput";
@@ -17,6 +17,7 @@ export const TaskDashboard: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [showCompleted, setShowCompleted] = useState<boolean>(true);
+  const [filterByDate, setFilterByDate] = useState<boolean>(false);
   const { toast } = useToast();
   const { 
     tasks, 
@@ -28,8 +29,8 @@ export const TaskDashboard: React.FC = () => {
 
   // Group tasks by completion status
   const groupedTasks = useMemo(() => {
-    // Filter tasks for the selected date
-    const filteredTasks = tasks.filter(task => {
+    // Apply date filter only if filterByDate is true
+    const filteredTasks = filterByDate ? tasks.filter(task => {
       if (!selectedDate) return true;
       
       const taskDate = new Date(task.createdAt);
@@ -38,20 +39,20 @@ export const TaskDashboard: React.FC = () => {
         taskDate.getMonth() === selectedDate.getMonth() &&
         taskDate.getFullYear() === selectedDate.getFullYear()
       );
-    });
+    }) : tasks;
 
     return {
       todo: filteredTasks.filter(task => !task.completed),
       completed: filteredTasks.filter(task => task.completed),
     };
-  }, [tasks, selectedDate]);
+  }, [tasks, selectedDate, filterByDate]);
 
   return (
     <WorkspaceLayout>
       <div className="p-4 h-full max-w-[1600px] mx-auto">
         <div className="mb-6 flex flex-col md:flex-row justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold mb-1">Task Board</h1>
+            <h1 className="text-2xl font-bold mb-1">Task Planner</h1>
             <p className="text-muted-foreground">
               {selectedDate.toLocaleDateString('en-US', { 
                 weekday: 'long', 
@@ -78,6 +79,15 @@ export const TaskDashboard: React.FC = () => {
                 onCheckedChange={setShowCompleted}
               />
               <Label htmlFor="show-completed">Show Completed</Label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Switch 
+                id="filter-by-date" 
+                checked={filterByDate} 
+                onCheckedChange={setFilterByDate}
+              />
+              <Label htmlFor="filter-by-date">Filter by Date</Label>
             </div>
           </div>
         </div>

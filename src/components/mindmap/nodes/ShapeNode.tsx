@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Handle, Position, NodeResizer } from '@xyflow/react';
 
@@ -73,7 +74,7 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
       <Handle 
         type="source" 
         position={Position.Left}
-        className="w-3 h-3 bg-primary border-2 border-background opacity-0 group-hover:opacity-100 transition-opacity"
+        className="w-3 h-3 bg-primary border-2 border-background opacity-70 group-hover:opacity-100 transition-opacity"
         role="button"
         aria-label="Connection source point"
         id="left"
@@ -111,7 +112,7 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
       <Handle 
         type="source" 
         position={Position.Right}
-        className="w-3 h-3 bg-primary border-2 border-background opacity-0 group-hover:opacity-100 transition-opacity"
+        className="w-3 h-3 bg-primary border-2 border-background opacity-70 group-hover:opacity-100 transition-opacity"
         role="button"
         aria-label="Connection source point"
         id="right"
