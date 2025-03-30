@@ -31,8 +31,11 @@ export const FileManager: React.FC = () => {
   }, [files]);
 
   const openInToolbox = (file: ManagedFile) => {
-    // Store the file ID in sessionStorage so the main document viewer can access it
+    // Store both file ID and URL in sessionStorage
     sessionStorage.setItem('selectedFileId', file.id);
+    if (file.url) {
+      sessionStorage.setItem('selectedFileUrl', file.url);
+    }
     
     // Navigate to the document viewer (root route)
     navigate('/');

@@ -1,3 +1,4 @@
+
 import React, { useState, lazy, Suspense, useEffect } from "react";
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -32,6 +33,7 @@ const Index = () => {
   useEffect(() => {
     // Check if there's a selected file ID in sessionStorage
     const selectedFileId = sessionStorage.getItem('selectedFileId');
+    const selectedFileUrl = sessionStorage.getItem('selectedFileUrl');
     
     if (selectedFileId && files.length > 0) {
       const fileToOpen = files.find(file => file.id === selectedFileId);
@@ -42,6 +44,24 @@ const Index = () => {
         
         // Clear the selection after it's been used
         sessionStorage.removeItem('selectedFileId');
+        sessionStorage.removeItem('selectedFileUrl');
+      } else if (selectedFileUrl && fileToOpen) {
+        // If we don't have the File object but have URL, need to fetch it
+        console.log("Fetching file from URL:", selectedFileUrl);
+        fetch(selectedFileUrl)
+          .then(response => response.blob())
+          .then(blob => {
+            const file = new File([blob], fileToOpen.name, { type: fileToOpen.type || 'application/octet-stream' });
+            setSelectedFile(file);
+          })
+          .catch(error => {
+            console.error("Error loading file from URL:", error);
+          })
+          .finally(() => {
+            // Clear the selection after it's been used
+            sessionStorage.removeItem('selectedFileId');
+            sessionStorage.removeItem('selectedFileUrl');
+          });
       }
     }
   }, [files]);
