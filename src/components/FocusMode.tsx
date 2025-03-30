@@ -8,11 +8,12 @@ import {
 } from "@/components/ui/card";
 import { FocusSettings } from "./focus/FocusSettings";
 import { FocusModeActions } from "./focus/FocusModeActions";
+import { FocusModeStatus } from "./focus/FocusModeStatus";
 import { useFocusSettings } from "@/hooks/useFocusSettings";
 import { useFocusModeEffects } from "./focus/useFocusModeEffects";
 import { useNotificationPermission } from "@/hooks/useNotificationPermission";
 import { useFullscreenChangeEffect } from "@/hooks/useFullscreenChangeEffect";
-import { useFocusModeControl } from "@/hooks/useFocusModeControl";
+import { useFocusModeControl } from "@/hooks/focus/useFocusModeControl";
 
 export const FocusMode = () => {
   const { settings } = useFocusSettings();
@@ -49,13 +50,7 @@ export const FocusMode = () => {
         <CardTitle className="text-lg">Focus Mode</CardTitle>
       </CardHeader>
       <CardContent className="pt-0 space-y-4">
-        <div 
-          role="status" 
-          aria-live="polite"
-          className="sr-only"
-        >
-          {isActive ? "Focus mode is active" : "Focus mode is inactive"}
-        </div>
+        <FocusModeStatus isActive={isActive} />
         <FocusSettings />
         <FocusModeActions
           isActive={isActive}

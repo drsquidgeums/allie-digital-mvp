@@ -1,8 +1,8 @@
 
 import { useState, useCallback } from "react";
-import { useToast } from "./use-toast";
-import { useFullscreen } from "./useFullscreen";
-import { FocusSettings } from "./useFocusSettings";
+import { useToast } from "../use-toast";
+import { useFullscreen } from "../useFullscreen";
+import { FocusSettings } from "../useFocusSettings";
 
 export const useFocusModeControl = (settings: FocusSettings) => {
   const [isActive, setIsActive] = useState(false);
