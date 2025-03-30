@@ -1,147 +1,75 @@
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from './use-toast';
+import { ManagedFile } from '@/types/file';
+import { useToast } from '@/hooks/use-toast';
+import { 
+  fetchFiles, 
+  uploadFileToStorage, 
+  deleteFileFromStorage,
+  createDownloadUrl
+} from '@/services/fileService';
+import {
+  getFiles,
+  setFiles,
+  addFile,
+  removeFile,
+  registerListener
+} from '@/store/fileStore';
 
-export interface ManagedFile {
-  id: string;
-  name: string;
-  size: number;
-  type: string;
-  lastModified: number;
-  url?: string;
-  file?: File;
-  path?: string; // Path in Supabase storage
-}
+// Re-export ManagedFile interface for backwards compatibility
+export type { ManagedFile };
 
-// Create a singleton instance to share state across components
-let globalFiles: ManagedFile[] = [];
-let listeners: (() => void)[] = [];
-
-const notifyListeners = () => {
-  listeners.forEach(listener => listener());
-};
-
-// Initialize by loading files from Supabase storage
-const initializeFiles = async () => {
-  try {
-    console.log('Initializing files from Supabase storage');
-    const { data: storageData, error } = await supabase
-      .storage
-      .from('files')
-      .list();
-      
-    if (error) {
-      console.error('Error fetching files from storage:', error);
-      return;
-    }
-    
-    // Convert storage data to ManagedFile format
-    const files: ManagedFile[] = await Promise.all(
-      storageData.filter(item => !item.id.endsWith('/')).map(async (item) => {
-        const { data: urlData } = await supabase
-          .storage
-          .from('files')
-          .createSignedUrl(item.name, 60 * 60 * 24); // 24 hours expiry
-        
-        return {
-          id: item.id,
-          name: item.name,
-          size: item.metadata?.size || 0,
-          type: item.metadata?.mimetype || 'application/octet-stream',
-          lastModified: new Date(item.created_at).getTime(),
-          url: urlData?.signedUrl,
-          path: item.name
-        };
-      })
-    );
-    
-    globalFiles = files;
-    console.log('Loaded files from Supabase:', globalFiles.length);
-    notifyListeners();
-  } catch (error) {
-    console.error('Error initializing files from Supabase:', error);
-  }
-};
-
-// Initialize by loading files from Supabase storage
-initializeFiles();
-
+/**
+ * Hook for managing file operations across the application
+ */
 export function useFileManager() {
-  const [files, setFiles] = useState<ManagedFile[]>(globalFiles);
+  const [files, setLocalFiles] = useState<ManagedFile[]>(getFiles());
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   
-  // Register component as a listener
+  // Register component as a listener for global file state changes
   useEffect(() => {
-    console.log('useFileManager hook initialized, current global files:', globalFiles.length);
-    const listener = () => {
-      console.log('Listener triggered, updating local state with global files:', globalFiles.length);
-      setFiles([...globalFiles]);
-    };
+    console.log('useFileManager hook initialized, current global files:', getFiles().length);
     
-    listeners.push(listener);
+    // Create a cleanup function to remove the listener when component unmounts
+    const unregister = registerListener(() => {
+      console.log('Listener triggered, updating local state with global files:', getFiles().length);
+      setLocalFiles([...getFiles()]);
+    });
     
     // Ensure local state is synced with global state on mount
-    setFiles([...globalFiles]);
+    setLocalFiles([...getFiles()]);
     
-    return () => {
-      listeners = listeners.filter(l => l !== listener);
-    };
+    // If no files are loaded yet, initialize them
+    if (getFiles().length === 0) {
+      refreshFiles();
+    }
+    
+    return unregister;
   }, []);
   
+  /**
+   * Uploads a file to storage and adds it to global state
+   */
   const handleFileUpload = async (newFile: File) => {
     setLoading(true);
     try {
-      console.log('Uploading file to Supabase:', newFile.name);
-      
-      // Create a unique file path to avoid collisions
-      const filePath = `${Date.now()}_${newFile.name.replace(/\s+/g, '_')}`;
-      
       // Upload to Supabase storage
-      const { data: uploadData, error: uploadError } = await supabase
-        .storage
-        .from('files')
-        .upload(filePath, newFile);
+      const fileObject = await uploadFileToStorage(newFile);
+      
+      if (fileObject) {
+        // Add to global files state
+        addFile(fileObject);
+        setLocalFiles([...getFiles()]);
         
-      if (uploadError) {
-        throw new Error(`Upload failed: ${uploadError.message}`);
-      }
-      
-      // Get the URL for the uploaded file
-      const { data: urlData } = await supabase
-        .storage
-        .from('files')
-        .createSignedUrl(filePath, 60 * 60 * 24); // 24 hour expiry
+        toast({
+          title: "File uploaded",
+          description: `${newFile.name} has been uploaded to Supabase storage`,
+        });
         
-      if (!urlData?.signedUrl) {
-        throw new Error('Failed to generate signed URL');
+        return fileObject;
       }
-      
-      // Create a file object with metadata
-      const fileObject: ManagedFile = {
-        id: uploadData.path || `file_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-        name: newFile.name,
-        size: newFile.size,
-        type: newFile.type,
-        lastModified: newFile.lastModified,
-        url: urlData.signedUrl,
-        path: filePath,
-        file: newFile
-      };
-      
-      // Add to global files state
-      globalFiles = [...globalFiles, fileObject];
-      console.log('File added to global state, new count:', globalFiles.length);
-      notifyListeners();
-      setFiles([...globalFiles]);
-      
-      toast({
-        title: "File uploaded",
-        description: `${newFile.name} has been uploaded to Supabase storage`,
-      });
-      
-      return fileObject;
+      throw new Error('File upload failed');
     } catch (error) {
       console.error("Error uploading file:", error);
       toast({
@@ -155,25 +83,19 @@ export function useFileManager() {
     }
   };
 
+  /**
+   * Deletes a file from storage and removes it from global state
+   */
   const handleFileDelete = async (fileToDelete: ManagedFile) => {
     try {
       if (fileToDelete.path) {
         // Delete from Supabase storage
-        const { error } = await supabase
-          .storage
-          .from('files')
-          .remove([fileToDelete.path]);
-          
-        if (error) {
-          throw new Error(`Delete failed: ${error.message}`);
-        }
+        await deleteFileFromStorage(fileToDelete.path);
       }
       
       // Remove from global files state
-      globalFiles = globalFiles.filter(file => file.id !== fileToDelete.id);
-      console.log('File deleted from global state, new count:', globalFiles.length);
-      notifyListeners();
-      setFiles([...globalFiles]);
+      removeFile(fileToDelete.id);
+      setLocalFiles([...getFiles()]);
       
       toast({
         title: "File deleted",
@@ -189,6 +111,9 @@ export function useFileManager() {
     }
   };
 
+  /**
+   * Downloads a file from storage
+   */
   const handleFileDownload = async (file: ManagedFile) => {
     try {
       // If we already have a URL, use it
@@ -207,17 +132,10 @@ export function useFileManager() {
       } 
       // If the URL has expired, generate a new one
       else if (file.path) {
-        const { data, error } = await supabase
-          .storage
-          .from('files')
-          .createSignedUrl(file.path, 60 * 60); // 1 hour expiry
-          
-        if (error || !data?.signedUrl) {
-          throw new Error('Failed to generate download URL');
-        }
+        const signedUrl = await createDownloadUrl(file.path);
         
         const a = document.createElement("a");
-        a.href = data.signedUrl;
+        a.href = signedUrl;
         a.download = file.name;
         document.body.appendChild(a);
         a.click();
@@ -240,11 +158,16 @@ export function useFileManager() {
     }
   };
 
-  // Refresh files from Supabase storage
+  /**
+   * Refreshes files from Supabase storage
+   */
   const refreshFiles = async () => {
     setLoading(true);
     try {
-      await initializeFiles();
+      const freshFiles = await fetchFiles();
+      setFiles(freshFiles);
+      setLocalFiles([...freshFiles]);
+      
       toast({
         title: "Files refreshed",
         description: "Your files have been refreshed from storage",
@@ -259,6 +182,13 @@ export function useFileManager() {
       setLoading(false);
     }
   };
+
+  // Initialize by loading files from Supabase storage if not already loaded
+  useEffect(() => {
+    if (getFiles().length === 0 && !loading) {
+      refreshFiles().catch(console.error);
+    }
+  }, []);
 
   return {
     files,
