@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from "react";
 import { SYSTEM_PROMPT, createClaudeCompletion } from "@/utils/openai";
 import { toast } from "sonner";
@@ -17,6 +16,7 @@ export const useChatLogic = (documentContent?: string) => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
+  const [apiRetries, setApiRetries] = useState(0);
 
   const getToolResponse = useCallback((input: string, docContent?: string): string => {
     const lowerInput = input.toLowerCase();
@@ -59,6 +59,10 @@ export const useChatLogic = (documentContent?: string) => {
     
     if (lowerInput.includes("text") && lowerInput.includes("speech")) {
       return "The Text-to-Speech feature reads text aloud, which is helpful for users with dyslexia, visual processing difficulties, or those who learn better through auditory input.";
+    }
+    
+    if (lowerInput.includes("connection") || lowerInput.includes("error") || lowerInput.includes("not working") || lowerInput.includes("api") || lowerInput.includes("claude")) {
+      return "I'm experiencing connection issues with my AI service. This could be due to API key limitations, CORS restrictions, or service outages. While we work on fixing this, I'll use my built-in knowledge to help you. You can still ask me about any of the application features!";
     }
 
     return "I can explain how our various tools help support different learning needs. You can ask about specific tools like the Irlen Overlay, OpenDyslexic font, Bionic Reader, Color Separator, Focus Mode, Pomodoro Timer, Mind Map, or Text-to-Speech feature. Which would you like to learn more about?";
@@ -103,6 +107,8 @@ export const useChatLogic = (documentContent?: string) => {
       
       // First try Claude API
       try {
+        console.log("Attempting to get a response from Claude API...");
+        
         const chatHistory = messages.map(msg => ({
           role: msg.isUser ? "user" : "assistant",
           content: msg.text
@@ -119,9 +125,21 @@ export const useChatLogic = (documentContent?: string) => {
         });
         
         const responseText = await createClaudeCompletion(chatHistory);
+        setApiRetries(0); // Reset retries on successful call
         setMessages(prev => [...prev, { text: responseText, isUser: false }]);
       } catch (error) {
         console.error("Error getting Claude response:", error);
+        
+        // Increment retry counter
+        setApiRetries(prev => prev + 1);
+        
+        // After 3 retries, show a special message
+        if (apiRetries >= 2) {
+          toast.error("API connection issues persisting. Using offline mode.", {
+            description: "Check your network connection or try again later."
+          });
+        }
+        
         // Only show the toast if we couldn't get any response at all
         if (!error.toString().includes("currently experiencing connection issues")) {
           toast.error("Error connecting to AI service. Using built-in responses.");
@@ -137,7 +155,7 @@ export const useChatLogic = (documentContent?: string) => {
     } finally {
       setIsLoading(false);
     }
-  }, [input, isLoading, getToolResponse, analyzeDocument, documentContent, messages]);
+  }, [input, isLoading, getToolResponse, analyzeDocument, documentContent, messages, apiRetries]);
 
   return {
     input,
