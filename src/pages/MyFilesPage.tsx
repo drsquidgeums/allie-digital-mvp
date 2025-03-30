@@ -10,7 +10,12 @@ const MyFilesPage: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<string>("#FFFF00");
   const [isHighlighter, setIsHighlighter] = useState<boolean>(true);
   
+  useEffect(() => {
+    console.log("MyFilesPage mounted");
+  }, []);
+  
   const handleFileSelect = (file: ManagedFile) => {
+    console.log("File selected in MyFilesPage:", file.name);
     // Convert ManagedFile back to File object for the DocumentViewer
     if (file.file) {
       setSelectedFile(file.file);

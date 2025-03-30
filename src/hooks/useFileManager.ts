@@ -21,6 +21,19 @@ const notifyListeners = () => {
   listeners.forEach(listener => listener());
 };
 
+// Load saved files from localStorage at initial script execution
+(() => {
+  try {
+    const savedFiles = localStorage.getItem('uploadedFiles');
+    if (savedFiles) {
+      globalFiles = JSON.parse(savedFiles);
+      console.log('Loaded files from localStorage:', globalFiles.length);
+    }
+  } catch (error) {
+    console.error('Error loading initial files from localStorage:', error);
+  }
+})();
+
 export function useFileManager() {
   const [files, setFiles] = useState<ManagedFile[]>(globalFiles);
   const [loading, setLoading] = useState(false);
@@ -28,21 +41,16 @@ export function useFileManager() {
   
   // Register component as a listener
   useEffect(() => {
-    const listener = () => setFiles([...globalFiles]);
+    console.log('useFileManager hook initialized, current global files:', globalFiles.length);
+    const listener = () => {
+      console.log('Listener triggered, updating local state with global files:', globalFiles.length);
+      setFiles([...globalFiles]);
+    };
+    
     listeners.push(listener);
     
-    // If there are files in localStorage but not in global state on first mount
-    if (globalFiles.length === 0) {
-      const savedFiles = localStorage.getItem('uploadedFiles');
-      if (savedFiles) {
-        try {
-          globalFiles = JSON.parse(savedFiles);
-          setFiles([...globalFiles]);
-        } catch (error) {
-          console.error('Error loading saved files:', error);
-        }
-      }
-    }
+    // Ensure local state is synced with global state on mount
+    setFiles([...globalFiles]);
     
     return () => {
       listeners = listeners.filter(l => l !== listener);
@@ -55,11 +63,13 @@ export function useFileManager() {
       id, name, size, type, lastModified, url
     }));
     localStorage.setItem('uploadedFiles', JSON.stringify(filesToSave));
+    console.log('Files saved to localStorage:', filesToSave.length);
   }, [files]);
   
   const handleFileUpload = async (newFile: File) => {
     setLoading(true);
     try {
+      console.log('Uploading file:', newFile.name);
       // Create a file object with metadata
       const fileId = `file_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
       
@@ -78,6 +88,7 @@ export function useFileManager() {
       
       // Add to global files state
       globalFiles = [...globalFiles, fileObject];
+      console.log('File added to global state, new count:', globalFiles.length);
       notifyListeners();
       setFiles([...globalFiles]);
       
@@ -109,6 +120,7 @@ export function useFileManager() {
       
       // Remove from global files state
       globalFiles = globalFiles.filter(file => file.id !== fileToDelete.id);
+      console.log('File deleted from global state, new count:', globalFiles.length);
       notifyListeners();
       setFiles([...globalFiles]);
       

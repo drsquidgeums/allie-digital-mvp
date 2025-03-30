@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { FileText, Download, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -22,6 +22,14 @@ export const FileManager: React.FC<FileManagerProps> = ({
 }) => {
   const { files, loading, deleteFile, downloadFile } = useFileManager();
   const { toast } = useToast();
+
+  useEffect(() => {
+    console.log("FileManager mounted, files count:", files.length);
+  }, []);
+
+  useEffect(() => {
+    console.log("FileManager files updated:", files.length);
+  }, [files]);
 
   const handleFileSelect = (file: ManagedFile) => {
     if (onFileSelect) {
