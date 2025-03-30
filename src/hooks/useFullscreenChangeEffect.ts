@@ -2,7 +2,10 @@
 import { useEffect } from "react";
 import { useToast } from "./use-toast";
 
-export const useFullscreenChangeEffect = (isActive: boolean, setIsActive: (active: boolean) => void) => {
+export const useFullscreenChangeEffect = (
+  isActive: boolean, 
+  onFullscreenExit: (setIsActive: (active: boolean) => void) => void
+) => {
   const { toast } = useToast();
 
   useEffect(() => {
@@ -12,12 +15,18 @@ export const useFullscreenChangeEffect = (isActive: boolean, setIsActive: (activ
           !(document as any).mozFullScreenElement &&
           !(document as any).msFullscreenElement && 
           isActive) {
-        setIsActive(false);
-        window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: false } }));
-        toast({
-          title: "Focus mode deactivated",
-          description: "Fullscreen mode was exited",
-        });
+        
+        const setIsActive = (active: boolean) => {
+          if (active === false) {
+            window.dispatchEvent(new CustomEvent('focusModeChanged', { detail: { active: false } }));
+            toast({
+              title: "Focus mode deactivated",
+              description: "Fullscreen mode was exited",
+            });
+          }
+        };
+        
+        onFullscreenExit(setIsActive);
       }
     };
 
@@ -32,5 +41,5 @@ export const useFullscreenChangeEffect = (isActive: boolean, setIsActive: (activ
       document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
       document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
     };
-  }, [isActive, setIsActive, toast]);
+  }, [isActive, onFullscreenExit, toast]);
 };
