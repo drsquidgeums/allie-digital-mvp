@@ -46,7 +46,7 @@ export const usePdfHighlights = (initialColor: string = '#ffeb3b') => {
       
       addHighlight(highlight as PdfHighlight);
       
-      hideTip();
+      if (hideTip) hideTip();
       if (transformSelection) transformSelection();
       
       return null;

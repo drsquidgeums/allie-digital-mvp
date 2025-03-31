@@ -32,15 +32,17 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [scale, setScale] = useState<number>(1.0);
   const { toast } = useToast();
+  const [selectedHighlightId, setSelectedHighlightId] = useState<string | null>(null);
 
   // Use our custom hook for managing highlights
   const {
     highlights,
-    selectedHighlightId,
-    setSelectedHighlightId,
-    updateHighlight,
-    deleteHighlight,
-    handleTextSelection
+    selectedHighlight,
+    setSelectedHighlight,
+    addHighlight,
+    removeHighlight,
+    updateHighlightColor,
+    handleSelectionFinished
   } = usePdfHighlights(selectedColor);
 
   // File source determination
@@ -78,14 +80,35 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   };
 
   // Handle text selection for highlighting
-  const handleSelectText = () => {
+  const handleTextSelection = () => {
     if (isHighlighter) {
-      handleTextSelection(pageNumber);
-      
-      toast({
-        title: "Highlight Added",
-        description: "Text has been highlighted in the document",
-      });
+      const selection = window.getSelection();
+      if (selection && selection.toString().trim() !== '') {
+        const range = selection.getRangeAt(0);
+        const position = {
+          boundingRect: range.getBoundingClientRect(),
+          rects: Array.from(range.getClientRects()),
+          pageNumber
+        };
+        
+        const content = {
+          text: selection.toString()
+        };
+        
+        handleSelectionFinished(
+          position as any,
+          content,
+          () => {/* hide tip function */},
+          () => {/* transform selection function */}
+        );
+        
+        toast({
+          title: "Highlight Added",
+          description: "Text has been highlighted in the document",
+        });
+        
+        selection.removeAllRanges();
+      }
     }
   };
 
@@ -109,8 +132,11 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
         selectedColor={selectedColor}
         onChangePage={changePage}
         onZoom={zoom}
-        onTextSelect={handleSelectText}
-        onDeleteHighlight={deleteHighlight}
+        onTextSelect={handleTextSelection}
+        onDeleteHighlight={(id) => {
+          removeHighlight(id);
+          setSelectedHighlightId(null);
+        }}
       />
       
       {/* PDF Document with Highlights */}
@@ -132,7 +158,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
       {selectedHighlightId && (
         <ColorSelectionPopup
           selectedHighlightId={selectedHighlightId}
-          onUpdateHighlight={updateHighlight}
+          onUpdateHighlight={updateHighlightColor}
         />
       )}
     </div>
