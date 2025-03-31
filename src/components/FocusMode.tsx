@@ -39,15 +39,27 @@ export const FocusMode = () => {
 
   return (
     <Card 
-      className="w-full animate-fade-in"
+      className={`w-full animate-fade-in transition-all duration-300 ${
+        isActive ? 'border-primary shadow-lg shadow-primary/20' : ''
+      }`}
       ref={cardRef}
       onKeyDown={handleKeyDown}
       role="region"
       aria-label="Focus Mode Settings"
       tabIndex={0}
+      data-active={isActive}
     >
       <CardHeader className="pb-1 pt-3">
-        <CardTitle className="text-lg">Focus Mode</CardTitle>
+        <CardTitle className={`text-lg flex items-center gap-2 ${
+          isActive ? 'text-primary' : ''
+        }`}>
+          Focus Mode
+          {isActive && (
+            <span className="text-xs bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
+              Active
+            </span>
+          )}
+        </CardTitle>
       </CardHeader>
       <CardContent className="pt-0 space-y-4">
         <FocusModeStatus isActive={isActive} />

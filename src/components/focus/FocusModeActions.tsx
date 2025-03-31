@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Focus, MinusCircle, Bell } from "lucide-react";
@@ -21,7 +22,7 @@ export const FocusModeActions = ({
         <Button
           variant="outline"
           onClick={onRequestNotifications}
-          className="w-full text-[10px]"
+          className="w-full text-xs"
         >
           <Bell className="w-4 h-4 mr-2" />
           Enable Notifications
@@ -31,11 +32,14 @@ export const FocusModeActions = ({
       <Button 
         onClick={onToggleFocus}
         variant={isActive ? "destructive" : "default"}
-        className="w-full flex items-center text-[10px]"
+        className={`w-full flex items-center text-xs transition-all duration-300 ${
+          isActive ? 'shadow-md shadow-destructive/30 ring-1 ring-destructive' : 
+          'shadow hover:shadow-md hover:shadow-primary/20'
+        }`}
       >
         {isActive ? (
           <>
-            <MinusCircle className="w-4 h-4 mr-2" />
+            <MinusCircle className="w-4 h-4 mr-2 animate-pulse" />
             <span>Exit Focus Mode</span>
           </>
         ) : (
