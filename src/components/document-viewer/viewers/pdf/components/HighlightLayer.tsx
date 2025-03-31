@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-interface Highlight {
+export interface Highlight {
   id: string;
   position: {
     pageNumber: number;
