@@ -2,6 +2,7 @@
 import OpenAI from "openai";
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from "sonner";
+import { handleError } from '@/utils/errorHandling';
 
 // Create an OpenAI client
 export const createOpenAIClient = async () => {
@@ -23,7 +24,11 @@ export const createOpenAIClient = async () => {
       dangerouslyAllowBrowser: true
     });
   } catch (error) {
-    console.error('Error creating OpenAI client:', error);
+    handleError(error, {
+      title: 'OpenAI Client Error', 
+      fallbackMessage: 'Error initializing AI client',
+      showToast: false
+    });
     return null;
   }
 };
