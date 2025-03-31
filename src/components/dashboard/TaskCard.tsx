@@ -90,15 +90,26 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <div 
-                className={cn(
-                  "absolute right-0 top-0 bottom-0 w-1.5 rounded-r-md transition-colors",
-                  task.color ? "" : "hidden"
-                )} 
-                style={{ backgroundColor: task.color || "transparent" }}
-              />
+                className="flex items-center ml-2"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowOptions(true);
+                }}
+              >
+                <div 
+                  className={cn(
+                    "h-5 w-5 rounded-full border transition-transform hover:scale-110",
+                    !task.color && "border-dashed"
+                  )}
+                  style={{ 
+                    backgroundColor: task.color || "transparent",
+                    borderColor: task.color ? task.color : undefined
+                  }}
+                />
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right" className="text-xs">
-              Click to edit task
+              Click to change color
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
