@@ -30,6 +30,21 @@ export const useFocusModeControl = (settings: FocusSettings) => {
           } 
         }));
         
+        // Explicitly disable ambient music when focus mode is activated
+        if (window.globalAudioPlayer && !window.globalAudioPlayer.paused) {
+          console.log('Pausing ambient music due to focus mode activation');
+          window.globalAudioPlayer.pause();
+          
+          // Dispatch specific event for the audio player
+          window.dispatchEvent(new CustomEvent('audioMutingChanged', { 
+            detail: { 
+              muted: true,
+              forced: true,
+              source: 'focus-mode-ambient-disable'
+            } 
+          }));
+        }
+        
         // Create a human-readable list of active settings
         const activeSettings = Object.entries(settings)
           .filter(([_, value]) => value)
