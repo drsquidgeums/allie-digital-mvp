@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Task } from "@/types/task";
+import { useTranslation } from "react-i18next";
 
 interface TaskListProps {
   tasks: Task[];
@@ -25,18 +26,19 @@ const TASK_COLORS = [
   { value: "#FFC107", label: "Yellow" },
   { value: "#F44336", label: "Red" },
   { value: "#9C27B0", label: "Purple" },
-  { value: "custom", label: "Custom Color" },
-  { value: null, label: "No Color" },
+  { value: "custom", label: "Custom Colour" },
+  { value: null, label: "No Colour" },
 ];
 
 export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor }: TaskListProps) => {
   const [customColor, setCustomColor] = useState("#000000");
+  const { t } = useTranslation();
 
   if (tasks.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground shadow-sm rounded-lg bg-card">
-        <p>No tasks yet</p>
-        <p className="text-sm">Add some tasks to get started!</p>
+        <p>{t('tasks.empty')}</p>
+        <p className="text-sm">{t('tasks.addTask')}</p>
       </div>
     );
   }
@@ -101,7 +103,7 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor 
                 >
                   <div className="flex items-center gap-2 w-full">
                     {color.value === "custom" ? (
-                      <>
+                      <div className="flex items-center gap-2 w-full">
                         <Input 
                           type="color" 
                           value={customColor}
@@ -112,8 +114,8 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor 
                             onUpdateTaskColor(task.id, e.target.value);
                           }}
                         />
-                        <span>Custom Color</span>
-                      </>
+                        <span>Custom Colour</span>
+                      </div>
                     ) : (
                       <>
                         <div 

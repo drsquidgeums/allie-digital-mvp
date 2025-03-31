@@ -3,6 +3,7 @@ import React from 'react';
 import { ColorOption } from '../types';
 import { ColorPicker } from '../../ColorPicker';
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { 
   Select, 
   SelectContent, 
@@ -30,6 +31,9 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
   label = "Color",
   type
 }) => {
+  const { i18n } = useTranslation();
+  const isUKEnglish = i18n.language.startsWith('en-GB');
+
   return (
     <div className="flex items-center gap-2">
       <Select
@@ -42,7 +46,7 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
         <SelectTrigger className={`w-[150px] h-9 flex items-center gap-2 ${type === 'shape' ? 'border-primary/30' : 'border-secondary/30'}`}>
           <span className={`w-3 h-3 rounded-full inline-block mr-1 ${selectedColor === 'custom' ? '' : ''}`} 
                 style={{ backgroundColor: selectedColor === 'custom' ? customColor : (selectedColor !== 'auto' ? selectedColor : '#888888') }}></span>
-          <SelectValue placeholder={type === 'shape' ? "Shape color" : "Text color"} />
+          <SelectValue placeholder={type === 'shape' ? (isUKEnglish ? "Shape colour" : "Shape color") : (isUKEnglish ? "Text colour" : "Text color")} />
         </SelectTrigger>
         <SelectContent>
           {colorOptions.map((color) => (
@@ -69,11 +73,11 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
       </Select>
       {selectedColor === 'custom' && (
         <ColorPicker
-          label={`Pick custom ${type} color`}
+          label={`Pick custom ${type} ${isUKEnglish ? "colour" : "color"}`}
           value={customColor}
           onChange={(color) => {
             setCustomColor(color);
-            toast(`Custom ${type} color updated`);
+            toast(`Custom ${type} ${isUKEnglish ? "colour" : "color"} updated`);
           }}
         />
       )}

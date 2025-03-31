@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Task } from "@/types/task";
 import { Tag } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   Tooltip,
   TooltipContent,
@@ -25,14 +26,15 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   onUpdateColor
 }) => {
   const [showOptions, setShowOptions] = useState(false);
+  const { i18n } = useTranslation();
   
   const colorOptions = [
-    { value: "#4CAF50", label: "Green" },
-    { value: "#2196F3", label: "Blue" },
-    { value: "#FFC107", label: "Yellow" },
-    { value: "#F44336", label: "Red" },
-    { value: "#9C27B0", label: "Purple" },
-    { value: "", label: "None" }
+    { value: "#4CAF50", label: i18n.language.startsWith('en-GB') ? "Green" : "Green" },
+    { value: "#2196F3", label: i18n.language.startsWith('en-GB') ? "Blue" : "Blue" },
+    { value: "#FFC107", label: i18n.language.startsWith('en-GB') ? "Yellow" : "Yellow" },
+    { value: "#F44336", label: i18n.language.startsWith('en-GB') ? "Red" : "Red" },
+    { value: "#9C27B0", label: i18n.language.startsWith('en-GB') ? "Purple" : "Purple" },
+    { value: "", label: i18n.language.startsWith('en-GB') ? "None" : "None" }
   ];
   
   return (
@@ -109,7 +111,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
               </div>
             </TooltipTrigger>
             <TooltipContent side="right" className="text-xs">
-              Click to change color
+              {i18n.language.startsWith('en-GB') ? "Click to change colour" : "Click to change color"}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -119,7 +121,9 @@ export const TaskCard: React.FC<TaskCardProps> = ({
         <div className="mt-3 pt-3 border-t border-border/40">
           <div className="flex items-center gap-2 mb-3">
             <Tag className="h-4 w-4 text-muted-foreground" />
-            <p className="text-xs font-medium">Task Color:</p>
+            <p className="text-xs font-medium">
+              {i18n.language.startsWith('en-GB') ? "Task Colour:" : "Task Color:"}
+            </p>
           </div>
           
           <div className="flex flex-wrap gap-2 mb-2">
@@ -139,6 +143,22 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                 }}
               />
             ))}
+
+            {/* Custom color input */}
+            <div className="relative w-6 h-6">
+              <input 
+                type="color"
+                className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => {
+                  e.stopPropagation();
+                  onUpdateColor(e.target.value);
+                }}
+              />
+              <div className="w-6 h-6 rounded-full border border-dashed flex items-center justify-center">
+                <span className="text-xs">+</span>
+              </div>
+            </div>
           </div>
           
           <div className="mt-3 flex justify-end">
