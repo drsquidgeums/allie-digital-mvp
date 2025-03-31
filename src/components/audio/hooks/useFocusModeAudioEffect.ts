@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useAudioPersistence } from './useAudioPersistence';
 
 export const useFocusModeAudioEffect = (
   audioRef: React.RefObject<HTMLAudioElement>,
@@ -8,7 +9,7 @@ export const useFocusModeAudioEffect = (
   setIsPlaying: (playing: boolean) => void
 ) => {
   const [isFocusModeActive, setIsFocusModeActive] = useState(false);
-  const [wasPausedByFocusMode, setWasPausedByFocusMode] = useState(false);
+  const { wasPausedByFocusMode, setWasPausedByFocusMode } = useAudioPersistence(audioRef, isPlaying, setIsPlaying);
   const { toast } = useToast();
 
   // Listen for focus mode changes
@@ -32,10 +33,6 @@ export const useFocusModeAudioEffect = (
           title: "Music paused",
           description: "Music playback paused due to Focus Mode",
         });
-      } else if (!active && wasPausedByFocusMode && wasInFocusMode) {
-        setWasPausedByFocusMode(false);
-        console.log('Music control aware of focus mode deactivation');
-        // Don't automatically resume playback - let the user decide
       }
     };
     
@@ -68,7 +65,7 @@ export const useFocusModeAudioEffect = (
       window.removeEventListener('focusModeChanged', handleFocusModeChange as EventListener);
       window.removeEventListener('audioMutingChanged', handleAudioMutingChanged as EventListener);
     };
-  }, [audioRef, wasPausedByFocusMode, isFocusModeActive, setIsPlaying, toast]);
+  }, [audioRef, wasPausedByFocusMode, isFocusModeActive, setIsPlaying, setWasPausedByFocusMode, toast]);
 
   return {
     isFocusModeActive,
