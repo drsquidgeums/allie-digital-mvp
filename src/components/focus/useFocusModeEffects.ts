@@ -51,10 +51,20 @@ export const useFocusModeEffects = (isActive: boolean, settings: FocusSettings) 
   useEffect(() => {
     if (!isActive || !settings.muteAudio) return;
 
-    // Store original muted states
+    // Store original muted states for all media elements
     const mediaElements = document.querySelectorAll('audio, video');
     const originalMutedStates = new Map();
     
+    // Special handling for the global audio player
+    if (window.globalAudioPlayer) {
+      originalMutedStates.set('globalAudioPlayer', window.globalAudioPlayer.muted);
+      window.globalAudioPlayer.muted = true;
+      
+      // Also store original volume to restore it later
+      originalMutedStates.set('globalAudioPlayerVolume', window.globalAudioPlayer.volume);
+    }
+    
+    // Handle all other media elements
     mediaElements.forEach((element) => {
       const el = element as HTMLMediaElement;
       originalMutedStates.set(el, el.muted);
@@ -83,6 +93,12 @@ export const useFocusModeEffects = (isActive: boolean, settings: FocusSettings) 
         const wasOriginallyMuted = originalMutedStates.get(el);
         el.muted = wasOriginallyMuted || false;
       });
+      
+      // Restore global audio player state
+      if (window.globalAudioPlayer) {
+        window.globalAudioPlayer.muted = originalMutedStates.get('globalAudioPlayer') || false;
+      }
+      
       observer.disconnect();
     };
   }, [isActive, settings.muteAudio]);
