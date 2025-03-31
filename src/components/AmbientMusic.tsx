@@ -1,24 +1,18 @@
 
-import React, { useState, useEffect } from "react";
-import { Button } from "./ui/button";
-import { Music, Volume2, VolumeX, Repeat } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
 } from "@/components/ui/popover";
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
 import { MUSIC_OPTIONS } from "./audio/MusicOptions";
 import { useAudioPlayer } from "./audio/useAudioPlayer";
 import { useFocusMode } from "@/hooks/useFocusMode";
+import { MusicButton } from "./audio/MusicButton";
+import { MusicPopoverContent } from "./audio/MusicPopoverContent";
 
 export const AmbientMusic = () => {
   const { 
@@ -46,7 +40,7 @@ export const AmbientMusic = () => {
       const currentMusic = MUSIC_OPTIONS.find(opt => opt.id === selectedMusic);
       togglePlay(currentMusic);
     }
-  }, [isFocusModeActive]);
+  }, [isFocusModeActive, isPlaying, selectedMusic, togglePlay]);
 
   const handleMusicSelection = (value: string) => {
     if (isDisabled) return;
@@ -74,27 +68,7 @@ export const AmbientMusic = () => {
     <Popover>
       <Tooltip>
         <TooltipTrigger asChild>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className={`h-9 w-9 relative bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-                isPlaying ? "text-primary ring-2 ring-primary" : ""
-              } ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
-              disabled={isDisabled}
-              aria-disabled={isDisabled}
-              title={isDisabled ? "Disabled during Focus Mode" : "Ambient Music"}
-            >
-              <Music className="h-4 w-4" />
-              {isPlaying && (
-                <div 
-                  className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"
-                  role="status"
-                  aria-label="Music playing"
-                />
-              )}
-            </Button>
-          </PopoverTrigger>
+          <MusicButton isPlaying={isPlaying} isDisabled={isDisabled} />
         </TooltipTrigger>
         <TooltipContent 
           side="bottom"
@@ -107,98 +81,19 @@ export const AmbientMusic = () => {
         className="w-64 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]" 
         align="end"
       >
-        {isDisabled ? (
-          <div className="p-4 text-center text-sm text-muted-foreground">
-            Music player is disabled while Focus Mode is active.
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <div className="font-medium text-sm mb-2">Ambient Music</div>
-            <RadioGroup
-              value={selectedMusic}
-              onValueChange={handleMusicSelection}
-              className="space-y-2"
-              aria-label="Select background music"
-            >
-              {MUSIC_OPTIONS.map((option) => (
-                <div key={option.id} className="flex items-center space-x-2">
-                  <RadioGroupItem 
-                    value={option.id} 
-                    id={option.id}
-                    aria-label={option.name}
-                  />
-                  <Label 
-                    htmlFor={option.id}
-                    className="flex-1 text-left cursor-pointer"
-                  >
-                    {option.name}
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="volume-control" className="text-sm">
-                  Volume
-                </Label>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0"
-                  onClick={toggleMute}
-                  aria-label={isMuted ? "Unmute" : "Mute"}
-                >
-                  {isMuted ? (
-                    <VolumeX className="h-4 w-4" aria-hidden="true" />
-                  ) : (
-                    <Volume2 className="h-4 w-4" aria-hidden="true" />
-                  )}
-                </Button>
-              </div>
-              <Slider
-                id="volume-control"
-                min={0}
-                max={100}
-                step={1}
-                value={[isMuted ? 0 : volume * 100]}
-                onValueChange={handleVolumeChange}
-                className="cursor-pointer"
-                aria-label="Adjust volume"
-              />
-            </div>
-
-            <div className="flex items-center justify-between space-x-2">
-              <Label htmlFor="loop-toggle" className="text-sm cursor-pointer">
-                Loop Playback
-              </Label>
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="loop-toggle"
-                  checked={isLooping}
-                  onCheckedChange={toggleLoop}
-                  aria-label="Toggle loop playback"
-                />
-                <Repeat 
-                  className={`h-4 w-4 ${isLooping ? 'text-primary' : 'text-muted-foreground'}`}
-                  aria-hidden="true"
-                />
-              </div>
-            </div>
-
-            <Button
-              onClick={handlePlayToggle}
-              className={`w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-                isPlaying 
-                  ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground" 
-                  : "bg-primary hover:bg-primary/90 text-primary-foreground"
-              }`}
-              aria-label={isPlaying ? "Stop music playback" : "Start music playback"}
-            >
-              {isPlaying ? "Stop Music" : "Play Music"}
-            </Button>
-          </div>
-        )}
+        <MusicPopoverContent 
+          isDisabled={isDisabled}
+          selectedMusic={selectedMusic}
+          isPlaying={isPlaying}
+          volume={volume}
+          isMuted={isMuted}
+          isLooping={isLooping}
+          handleMusicSelection={handleMusicSelection}
+          handlePlayToggle={handlePlayToggle}
+          handleVolumeChange={handleVolumeChange}
+          toggleMute={toggleMute}
+          toggleLoop={toggleLoop}
+        />
       </PopoverContent>
     </Popover>
   );
