@@ -65,7 +65,10 @@ export const useFocusModeEffects = (isActive: boolean, settings: FocusSettings) 
       
       // Ensure the audio is properly muted and paused
       window.globalAudioPlayer.muted = true;
-      window.globalAudioPlayer.pause();
+      if (!window.globalAudioPlayer.paused) {
+        console.log('Pausing global audio player due to focus mode');
+        window.globalAudioPlayer.pause();
+      }
       
       console.log('Global audio player muted and paused');
     } else {
@@ -81,6 +84,7 @@ export const useFocusModeEffects = (isActive: boolean, settings: FocusSettings) 
       
       // Also pause the media to ensure it's fully silenced
       if (!el.paused) {
+        console.log('Pausing media element due to focus mode:', el);
         el.pause();
       }
     });
@@ -94,6 +98,7 @@ export const useFocusModeEffects = (isActive: boolean, settings: FocusSettings) 
               const mediaEl = node as HTMLMediaElement;
               mediaEl.muted = true;
               mediaEl.pause();
+              console.log('Muted and paused dynamically added audio/video element');
             }
           });
         }
@@ -103,8 +108,17 @@ export const useFocusModeEffects = (isActive: boolean, settings: FocusSettings) 
     observer.observe(document.body, { childList: true, subtree: true });
 
     // Dispatch an event to notify all components about audio muting
-    const event = new CustomEvent('audioMutingChanged', { detail: { muted: true } });
+    const event = new CustomEvent('focusModeChanged', { 
+      detail: { 
+        active: true, 
+        settings: settings
+      } 
+    });
     window.dispatchEvent(event);
+    
+    // Also dispatch a specific audio muting event
+    const audioEvent = new CustomEvent('audioMutingChanged', { detail: { muted: true } });
+    window.dispatchEvent(audioEvent);
 
     return () => {
       console.log('Focus mode audio muting deactivated');

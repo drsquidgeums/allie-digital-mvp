@@ -8,7 +8,28 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
   const [volume, setVolume] = useState(0.2);
   const [isMuted, setIsMuted] = useState(false);
   const [isLooping, setIsLooping] = useState(true);
+  const [isFocusModeActive, setIsFocusModeActive] = useState(false);
   const { toast } = useToast();
+
+  // Listen for focus mode changes
+  useEffect(() => {
+    const handleFocusModeChange = (event: CustomEvent) => {
+      const { active, settings } = event.detail;
+      setIsFocusModeActive(active && settings?.muteAudio);
+      
+      if (active && settings?.muteAudio && audioRef.current && !audioRef.current.paused) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+        console.log('Audio paused due to focus mode activation with mute setting');
+      }
+    };
+    
+    window.addEventListener('focusModeChanged', handleFocusModeChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('focusModeChanged', handleFocusModeChange as EventListener);
+    };
+  }, [audioRef]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -64,6 +85,16 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
       toast({
         title: "Please select a music option",
         description: "Choose from the available music options to play",
+      });
+      return;
+    }
+
+    // Check if we're in focus mode with mute audio enabled
+    if (isFocusModeActive) {
+      toast({
+        title: "Cannot play audio",
+        description: "Audio is muted due to Focus Mode. Exit Focus Mode or disable 'Mute Audio' setting to play music.",
+        variant: "destructive",
       });
       return;
     }
