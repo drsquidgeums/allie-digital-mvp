@@ -91,13 +91,13 @@ export const IrlenOverlay = () => {
         </TooltipTrigger>
         <TooltipContent 
           side="bottom"
-          className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+          className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md"
         >
           Irlen Overlay
         </TooltipContent>
       </Tooltip>
       <PopoverContent 
-        className="w-48 bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]" 
+        className="w-48 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]" 
         align="end"
       >
         <div className="space-y-2">

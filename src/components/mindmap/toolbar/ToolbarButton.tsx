@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -27,7 +28,7 @@ export const ToolbarButton = ({ icon, label, onClick, isActive }: ToolbarButtonP
           {icon}
         </Button>
       </TooltipTrigger>
-      <TooltipContent>
+      <TooltipContent className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md">
         <p>{label}</p>
       </TooltipContent>
     </Tooltip>

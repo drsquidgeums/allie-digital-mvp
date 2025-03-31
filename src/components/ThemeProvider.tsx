@@ -53,13 +53,13 @@ export const ThemeProvider = () => {
             </TooltipTrigger>
             <TooltipContent 
               side="bottom" 
-              className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+              className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md"
             >
               Customise Font
             </TooltipContent>
           </Tooltip>
           <PopoverContent 
-            className="w-[200px] p-4 dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]"
+            className="w-[200px] p-4 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
             align="end"
           >
             <FontSelector selectedFont={selectedFont} onFontChange={handleFontChange} />
