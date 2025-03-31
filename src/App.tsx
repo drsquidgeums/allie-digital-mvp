@@ -7,9 +7,7 @@ import { AppProviders } from "@/components/app/AppProviders";
 import { PasswordGate } from "@/components/PasswordGate";
 import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
 import { AppRoutes } from "@/components/app/AppRoutes";
-
-// Lazy load components that aren't needed immediately
-const AppLogo = lazy(() => import("@/components/app/AppLogo"));
+import { AppLogo } from "@/components/app/AppLogo";
 
 const App = () => {
   // Reset authentication state on initial load
@@ -33,9 +31,7 @@ const App = () => {
     <BrowserRouter>
       <AppProviders>
         <div className="app-container">
-          <Suspense fallback={<div className="p-4">Loading...</div>}>
-            <AppLogo />
-          </Suspense>
+          <AppLogo />
           <Toaster />
           <Sonner />
           <Suspense fallback={
