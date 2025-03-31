@@ -20,13 +20,19 @@ export const useDocumentHighlights = (initialColor: string) => {
   const addHighlight = useCallback((highlight: Highlight) => {
     setHighlights(prev => {
       const newHighlights = [...prev, highlight];
-      announce(`Highlight added: "${highlight.content}"`);
+      const contentText = highlight.content.text || '';
+      announce(`Highlight added: "${contentText}"`);
       return newHighlights;
     });
     
+    const displayText = highlight.content.text || '';
+    const truncatedText = displayText.length > 20 
+      ? `${displayText.substring(0, 20)}...` 
+      : displayText;
+    
     toast({
       title: "Highlight Added",
-      description: `Text has been highlighted: "${highlight.content.substring(0, 20)}${highlight.content.length > 20 ? '...' : ''}"`,
+      description: `Text has been highlighted: "${truncatedText}"`,
     });
   }, [toast, announce]);
 
@@ -37,7 +43,8 @@ export const useDocumentHighlights = (initialColor: string) => {
       const newHighlights = prev.filter(h => h.id !== id);
       
       if (highlightToRemove) {
-        announce(`Highlight removed: "${highlightToRemove.content}"`);
+        const contentText = highlightToRemove.content.text || '';
+        announce(`Highlight removed: "${contentText}"`);
       }
       
       return newHighlights;
@@ -77,7 +84,7 @@ export const useDocumentHighlights = (initialColor: string) => {
 
   // Get highlights for a specific page
   const getHighlightsForPage = useCallback((pageNumber: number) => {
-    return highlights.filter(h => h.pageNumber === pageNumber);
+    return highlights.filter(h => h.position.pageNumber === pageNumber);
   }, [highlights]);
 
   // Select next/previous highlight on the current page
@@ -93,7 +100,8 @@ export const useDocumentHighlights = (initialColor: string) => {
       // If no highlight is selected, select the first or last one
       const newSelectedHighlight = direction === 'next' ? pageHighlights[0] : pageHighlights[pageHighlights.length - 1];
       setSelectedHighlightId(newSelectedHighlight.id);
-      announce(`Selected highlight: "${newSelectedHighlight.content}"`);
+      const contentText = newSelectedHighlight.content.text || '';
+      announce(`Selected highlight: "${contentText}"`);
       return;
     }
     
@@ -104,7 +112,8 @@ export const useDocumentHighlights = (initialColor: string) => {
       // If the selected highlight is not on the current page, select the first or last one
       const newSelectedHighlight = direction === 'next' ? pageHighlights[0] : pageHighlights[pageHighlights.length - 1];
       setSelectedHighlightId(newSelectedHighlight.id);
-      announce(`Selected highlight: "${newSelectedHighlight.content}"`);
+      const contentText = newSelectedHighlight.content.text || '';
+      announce(`Selected highlight: "${contentText}"`);
       return;
     }
     
@@ -115,7 +124,8 @@ export const useDocumentHighlights = (initialColor: string) => {
     
     // Select the next/previous highlight
     setSelectedHighlightId(pageHighlights[nextIndex].id);
-    announce(`Selected highlight ${nextIndex + 1} of ${pageHighlights.length}: "${pageHighlights[nextIndex].content}"`);
+    const contentText = pageHighlights[nextIndex].content.text || '';
+    announce(`Selected highlight ${nextIndex + 1} of ${pageHighlights.length}: "${contentText}"`);
   }, [selectedHighlightId, getHighlightsForPage, announce]);
 
   return {
