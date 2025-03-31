@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Glasses, GlassesOff } from 'lucide-react';
+import { Glasses, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface FocusModeStatusProps {
@@ -21,7 +22,7 @@ export const FocusModeStatus: React.FC<FocusModeStatusProps> = ({ isActive }) =>
           {isActive ? (
             <Glasses className="h-5 w-5 text-primary animate-pulse" />
           ) : (
-            <GlassesOff className="h-5 w-5 text-muted-foreground" />
+            <EyeOff className="h-5 w-5 text-muted-foreground" />
           )}
           <span className={cn(
             "font-medium",

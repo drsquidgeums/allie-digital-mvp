@@ -9,18 +9,28 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
   const [isMuted, setIsMuted] = useState(false);
   const [isLooping, setIsLooping] = useState(true);
   const [isFocusModeActive, setIsFocusModeActive] = useState(false);
+  const [wasPausedByFocusMode, setWasPausedByFocusMode] = useState(false);
   const { toast } = useToast();
 
   // Listen for focus mode changes
   useEffect(() => {
     const handleFocusModeChange = (event: CustomEvent) => {
       const { active, settings } = event.detail;
+      const wasInFocusMode = isFocusModeActive;
       setIsFocusModeActive(active && settings?.muteAudio);
       
       if (active && settings?.muteAudio && audioRef.current && !audioRef.current.paused) {
         audioRef.current.pause();
+        setWasPausedByFocusMode(true);
         setIsPlaying(false);
         console.log('Audio paused due to focus mode activation with mute setting');
+      } else if (!active && wasPausedByFocusMode && wasInFocusMode) {
+        // When focus mode is deactivated and music was paused by focus mode,
+        // we don't auto-resume here because the useAudioMuteEffect will handle playback restoration
+        setWasPausedByFocusMode(false);
+        if (audioRef.current?.paused) {
+          console.log('Music control aware of focus mode deactivation');
+        }
       }
     };
     
@@ -29,7 +39,7 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
     return () => {
       window.removeEventListener('focusModeChanged', handleFocusModeChange as EventListener);
     };
-  }, [audioRef]);
+  }, [audioRef, wasPausedByFocusMode, isFocusModeActive]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -55,6 +65,31 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
       }
     };
   }, [toast]);
+
+  // Update playing state when audio events occur
+  useEffect(() => {
+    const handlePlay = () => {
+      setIsPlaying(true);
+      console.log('Audio play detected, updating state');
+    };
+
+    const handlePause = () => {
+      setIsPlaying(false);
+      console.log('Audio pause detected, updating state');
+    };
+
+    if (audioRef.current) {
+      audioRef.current.addEventListener('play', handlePlay);
+      audioRef.current.addEventListener('pause', handlePause);
+    }
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.removeEventListener('play', handlePlay);
+        audioRef.current.removeEventListener('pause', handlePause);
+      }
+    };
+  }, [audioRef]);
 
   const handleVolumeChange = (newVolume: number) => {
     if (!audioRef.current) return;

@@ -11,12 +11,13 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
     // Store original muted states for all media elements
     const mediaElements = document.querySelectorAll('audio, video');
     const originalMutedStates = new Map();
+    const originalPlaybackStates = new Map();
     
     // Special handling for the global audio player
     if (window.globalAudioPlayer) {
       originalMutedStates.set('globalAudioPlayer', window.globalAudioPlayer.muted);
       originalMutedStates.set('globalAudioPlayerVolume', window.globalAudioPlayer.volume);
-      originalMutedStates.set('globalAudioPlayerPlaying', !window.globalAudioPlayer.paused);
+      originalPlaybackStates.set('globalAudioPlayer', !window.globalAudioPlayer.paused);
       
       // Ensure the audio is properly muted and paused
       window.globalAudioPlayer.muted = true;
@@ -34,7 +35,7 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
     mediaElements.forEach((element) => {
       const el = element as HTMLMediaElement;
       originalMutedStates.set(el, el.muted);
-      originalMutedStates.set(`${el.id || 'anonymous'}_playing`, !el.paused);
+      originalPlaybackStates.set(el, !el.paused);
       el.muted = true;
       
       // Also pause the media to ensure it's fully silenced
@@ -51,6 +52,8 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
           mutation.addedNodes.forEach((node) => {
             if ((node as Element).tagName === 'AUDIO' || (node as Element).tagName === 'VIDEO') {
               const mediaEl = node as HTMLMediaElement;
+              originalMutedStates.set(mediaEl, mediaEl.muted);
+              originalPlaybackStates.set(mediaEl, !mediaEl.paused);
               mediaEl.muted = true;
               mediaEl.pause();
               console.log('Muted and paused dynamically added audio/video element');
@@ -82,19 +85,29 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
       mediaElements.forEach((element) => {
         const el = element as HTMLMediaElement;
         const wasOriginallyMuted = originalMutedStates.get(el);
-        const wasPlaying = originalMutedStates.get(`${el.id || 'anonymous'}_playing`);
+        const wasPlaying = originalPlaybackStates.get(el);
+        
         el.muted = wasOriginallyMuted || false;
         
-        // Don't automatically resume playback when exiting focus mode
-        // This is intentional as suddenly playing audio might be disruptive
+        // Resume playback if element was playing originally
+        if (wasPlaying) {
+          console.log('Resuming media element that was previously playing:', el);
+          el.play().catch(e => console.error('Error resuming media element:', e));
+        }
       });
       
       // Restore global audio player state
       if (window.globalAudioPlayer) {
         window.globalAudioPlayer.muted = originalMutedStates.get('globalAudioPlayer') || false;
+        window.globalAudioPlayer.volume = originalMutedStates.get('globalAudioPlayerVolume') || 0.2;
         
-        // We don't automatically resume playback as it might be disruptive
-        console.log('Global audio player mute state restored');
+        // Resume the global audio player if it was playing before
+        if (originalPlaybackStates.get('globalAudioPlayer')) {
+          console.log('Resuming global audio player that was previously playing');
+          window.globalAudioPlayer.play().catch(e => console.error('Error resuming global audio player:', e));
+        }
+        
+        console.log('Global audio player state restored');
       }
       
       observer.disconnect();
