@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { ManagedFile } from './types';
@@ -164,11 +163,6 @@ export function useFileManager() {
       const freshFiles = await fetchFiles();
       setFiles(freshFiles);
       setLocalFiles([...freshFiles]);
-      
-      toast({
-        title: "Files refreshed",
-        description: "Your files have been refreshed from storage",
-      });
     } catch (error) {
       toast({
         title: "Refresh failed",
