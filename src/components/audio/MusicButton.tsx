@@ -25,7 +25,6 @@ export const MusicButton = ({
         } ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
         disabled={isDisabled}
         aria-disabled={isDisabled}
-        title={isDisabled ? "Disabled during Focus Mode" : "Ambient Music"}
       >
         <Music className="h-4 w-4" />
         {isPlaying && (

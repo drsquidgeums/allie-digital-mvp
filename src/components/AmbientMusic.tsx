@@ -71,11 +71,13 @@ export const AmbientMusic = () => {
       <Popover>
         <Tooltip>
           <TooltipTrigger asChild>
-            <MusicButton isPlaying={isPlaying} isDisabled={isDisabled} />
+            <div>
+              <MusicButton isPlaying={isPlaying} isDisabled={isDisabled} />
+            </div>
           </TooltipTrigger>
           <TooltipContent 
             side="bottom"
-            className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+            className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md"
           >
             {isDisabled ? "Music disabled during Focus Mode" : "Ambient Music"}
           </TooltipContent>
