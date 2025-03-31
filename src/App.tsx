@@ -9,9 +9,7 @@ import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
 import { AppRoutes } from "@/components/app/AppRoutes";
 
 // Lazy load components that aren't needed immediately
-const AppLogo = lazy(() => import("@/components/app/AppLogo").then(module => ({
-  default: module.AppLogo
-})));
+const AppLogo = lazy(() => import("@/components/app/AppLogo"));
 
 const App = () => {
   // Reset authentication state on initial load

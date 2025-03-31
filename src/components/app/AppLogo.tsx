@@ -1,7 +1,7 @@
 
 import React from "react";
 
-export const AppLogo = React.memo(() => (
+const AppLogo = React.memo(() => (
   <div 
     className="fixed top-0 left-0 w-64 bg-card z-50 p-4 flex items-center gap-3 border-b border-r border-border"
     role="banner"
@@ -16,3 +16,7 @@ export const AppLogo = React.memo(() => (
 ));
 
 AppLogo.displayName = "AppLogo";
+
+// Export both as default and named export
+export default AppLogo;
+export { AppLogo };
