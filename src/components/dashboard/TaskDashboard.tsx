@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 import { useTasks } from "@/hooks/useTasks";
@@ -8,10 +7,16 @@ import { Task } from "@/types/task";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { TaskInput } from "@/components/dashboard/TaskInput";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export const TaskDashboard: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -27,9 +32,7 @@ export const TaskDashboard: React.FC = () => {
     handleUpdateTaskColor
   } = useTasks();
 
-  // Group tasks by completion status
   const groupedTasks = useMemo(() => {
-    // Apply date filter only if filterByDate is true
     const filteredTasks = filterByDate ? tasks.filter(task => {
       if (!selectedDate) return true;
       
@@ -112,7 +115,6 @@ export const TaskDashboard: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* To-Do Column */}
           <TaskColumn 
             title="To Do" 
             tasks={groupedTasks.todo}
@@ -123,7 +125,6 @@ export const TaskDashboard: React.FC = () => {
             className="bg-background border border-dashed border-accent/50 rounded-lg"
           />
 
-          {/* Completed Column */}
           {showCompleted && (
             <TaskColumn
               title="Completed" 
@@ -203,7 +204,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   
-  // Task color options
   const colorOptions = [
     { value: "#4CAF50", label: "Green" },
     { value: "#2196F3", label: "Blue" },
@@ -216,7 +216,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
   return (
     <Card 
       className={cn(
-        "p-4 transition-all hover:shadow-md cursor-pointer",
+        "p-4 transition-all hover:shadow-md cursor-pointer relative",
         task.color ? "border-l-4" : "border"
       )}
       style={{
@@ -263,19 +263,40 @@ const TaskCard: React.FC<TaskCardProps> = ({
             </span>
           </div>
         </div>
+        
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div 
+                className={cn(
+                  "absolute right-0 top-0 bottom-0 w-1.5 rounded-r-md transition-colors",
+                  task.color ? "" : "hidden"
+                )} 
+                style={{ backgroundColor: task.color || "transparent" }}
+              />
+            </TooltipTrigger>
+            <TooltipContent side="right" className="text-xs">
+              Click to edit task
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
       
-      {/* Task options */}
       {showOptions && (
         <div className="mt-3 pt-3 border-t border-border/40">
-          <p className="text-xs font-medium mb-2">Task Color:</p>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex items-center gap-2 mb-3">
+            <Tag className="h-4 w-4 text-muted-foreground" />
+            <p className="text-xs font-medium">Task Color:</p>
+          </div>
+          
+          <div className="flex flex-wrap gap-2 mb-2">
             {colorOptions.map((color) => (
               <button
                 key={color.value || 'none'}
                 className={cn(
-                  "w-6 h-6 rounded-full border",
-                  color.value ? "" : "bg-background border-dashed"
+                  "w-6 h-6 rounded-full border transition-transform hover:scale-110",
+                  color.value ? "" : "bg-background border-dashed",
+                  task.color === color.value ? "ring-2 ring-offset-2 ring-primary" : ""
                 )}
                 style={{ backgroundColor: color.value || undefined }}
                 aria-label={color.label}
