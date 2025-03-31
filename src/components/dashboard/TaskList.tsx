@@ -18,6 +18,7 @@ interface TaskListProps {
   onToggleTask: (id: string) => void;
   onDeleteTask: (id: string) => void;
   onUpdateTaskColor: (id: string, color: string) => void;
+  isLoading?: boolean;
 }
 
 const TASK_COLORS = [
@@ -30,9 +31,19 @@ const TASK_COLORS = [
   { value: null, label: "No Colour" },
 ];
 
-export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor }: TaskListProps) => {
+export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor, isLoading = false }: TaskListProps) => {
   const [customColor, setCustomColor] = useState("#000000");
   const { t } = useTranslation();
+  const { i18n } = useTranslation();
+  const isUKEnglish = i18n.language === 'en-GB';
+
+  if (isLoading) {
+    return (
+      <div className="text-center py-8 text-muted-foreground shadow-sm rounded-lg bg-card">
+        <p>{t('common.loadingText')}</p>
+      </div>
+    );
+  }
 
   if (tasks.length === 0) {
     return (
@@ -114,7 +125,7 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor 
                             onUpdateTaskColor(task.id, e.target.value);
                           }}
                         />
-                        <span>Custom Colour</span>
+                        <span>{isUKEnglish ? "Custom Colour" : "Custom Color"}</span>
                       </div>
                     ) : (
                       <>

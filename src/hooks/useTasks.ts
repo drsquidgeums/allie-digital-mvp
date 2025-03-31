@@ -4,7 +4,7 @@ import { useTaskOperations } from "./tasks/useTaskOperations";
 import { useTaskPoints } from "./tasks/useTaskPoints";
 
 export const useTasks = () => {
-  const { tasks, updateTasks } = useTaskStore();
+  const { tasks, loading, updateTasks } = useTaskStore();
   const { calculateTotalPoints } = useTaskPoints(tasks);
   const {
     showAchievement,
@@ -17,6 +17,7 @@ export const useTasks = () => {
 
   return {
     tasks,
+    loading,
     showAchievement,
     setShowAchievement,
     calculateTotalPoints,

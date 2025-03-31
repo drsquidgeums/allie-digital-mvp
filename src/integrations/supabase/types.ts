@@ -30,6 +30,39 @@ export type Database = {
         }
         Relationships: []
       }
+      tasks: {
+        Row: {
+          category: string | null
+          color: string | null
+          completed: boolean | null
+          created_at: string | null
+          id: string
+          points: number | null
+          text: string
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          color?: string | null
+          completed?: boolean | null
+          created_at?: string | null
+          id?: string
+          points?: number | null
+          text: string
+          user_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          color?: string | null
+          completed?: boolean | null
+          created_at?: string | null
+          id?: string
+          points?: number | null
+          text?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       teams_config: {
         Row: {
           client_id: string

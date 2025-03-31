@@ -16,6 +16,7 @@ export const TaskDashboard: React.FC = () => {
   
   const { 
     tasks, 
+    loading,
     handleAddTask, 
     handleToggleTask, 
     handleDeleteTask,
@@ -78,6 +79,7 @@ export const TaskDashboard: React.FC = () => {
             onToggleTask={handleToggleTask}
             onDeleteTask={handleDeleteTask}
             onUpdateTaskColor={handleUpdateTaskColor}
+            isLoading={loading}
             emptyMessage="No tasks to do! Add some using the form above."
             className="bg-background border border-dashed border-accent/50 rounded-lg"
           />
@@ -89,6 +91,7 @@ export const TaskDashboard: React.FC = () => {
               onToggleTask={handleToggleTask}
               onDeleteTask={handleDeleteTask}
               onUpdateTaskColor={handleUpdateTaskColor}
+              isLoading={loading}
               emptyMessage="No completed tasks yet. Complete a task to see it here!"
               className="bg-background/50 border border-dashed border-muted/50 rounded-lg"
             />
