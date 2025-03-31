@@ -65,22 +65,12 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
       aria-label="Mind map editor"
     >
       <MindMapToolbar
-        selectedColor={selectedColor}
-        setSelectedColor={setSelectedColor}
-        customColor={customColor}
-        setCustomColor={setCustomColor}
-        selectedTextColor={selectedTextColor}
-        setSelectedTextColor={setSelectedTextColor}
-        customTextColor={customTextColor}
-        setCustomTextColor={setCustomTextColor}
         newNodeText={newNodeText}
         setNewNodeText={setNewNodeText}
         onAddNode={onAddNode}
         onExportJpg={onExportJpg}
         onExportJson={onExportJson}
         onClear={onClear}
-        colorOptions={colorOptions}
-        textColorOptions={textColorOptions}
       />
       <div className="flex-1 min-h-0 relative">
         <ReactFlowProvider>

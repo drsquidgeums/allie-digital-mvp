@@ -2,20 +2,17 @@
 import { ColorOption } from '../types';
 
 export const colorOptions: ColorOption[] = [
-  { label: 'Default', value: 'hsl(var(--muted))' },
-  { label: 'Purple', value: '#E5DEFF' },
-  { label: 'Green', value: '#F2FCE2' },
-  { label: 'Yellow', value: '#FEF7CD' },
-  { label: 'Orange', value: '#FEC6A1' },
-  { label: 'Pink', value: '#FFDEE2' },
-  { label: 'Blue', value: '#D3E4FD' },
-  { label: 'Custom', value: 'custom' },
+  { value: 'hsl(var(--primary))', label: 'Primary' },
+  { value: 'hsl(var(--secondary))', label: 'Secondary' },
+  { value: 'hsl(var(--accent))', label: 'Accent' },
+  { value: 'hsl(var(--muted))', label: 'Shape Color' },
+  { value: 'custom', label: 'Custom' },
 ];
 
 export const textColorOptions: ColorOption[] = [
-  { label: 'Auto', value: 'auto' },
-  { label: 'Black', value: '#000000' },
-  { label: 'White', value: '#FFFFFF' },
-  { label: 'Gray', value: '#666666' },
-  { label: 'Custom', value: 'custom' },
+  { value: 'auto', label: 'Text' },
+  { value: 'hsl(var(--foreground))', label: 'Default Text' },
+  { value: 'hsl(var(--primary))', label: 'Primary Text' },
+  { value: 'hsl(var(--secondary))', label: 'Secondary Text' },
+  { value: 'custom', label: 'Custom Text' },
 ];

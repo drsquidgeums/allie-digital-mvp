@@ -6,32 +6,18 @@ import {
   Download, 
   Image, 
   Trash2, 
-  Layout, 
-  Square, 
-  Circle,
-  Triangle
+  Layout
 } from "lucide-react";
 import { toast } from "sonner";
-import { ColorSelector } from './toolbar/ColorSelector';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const MindMapToolbar = ({ 
-  selectedColor,
-  setSelectedColor,
-  customColor,
-  setCustomColor,
-  selectedTextColor,
-  setSelectedTextColor,
-  customTextColor,
-  setCustomTextColor,
   newNodeText,
   setNewNodeText,
   onAddNode,
   onExportJpg,
   onExportJson,
   onClear,
-  colorOptions,
-  textColorOptions
 }) => {
   const [showExportOptions, setShowExportOptions] = useState(false);
   
@@ -67,30 +53,6 @@ export const MindMapToolbar = ({
         />
         <Button type="submit" size="sm">Add</Button>
       </form>
-      
-      <div className="flex items-center gap-2">
-        <ColorSelector
-          selectedColor={selectedColor}
-          setSelectedColor={setSelectedColor}
-          customColor={customColor}
-          setCustomColor={setCustomColor}
-          colorOptions={colorOptions}
-          label="Shape color"
-          type="shape"
-        />
-      </div>
-      
-      <div className="flex items-center gap-2">
-        <ColorSelector
-          selectedColor={selectedTextColor}
-          setSelectedColor={setSelectedTextColor}
-          customColor={customTextColor}
-          setCustomColor={setCustomTextColor}
-          colorOptions={textColorOptions}
-          label="Text color"
-          type="text"
-        />
-      </div>
       
       <div className="flex items-center gap-2 ml-auto">
         <Tooltip>
