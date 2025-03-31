@@ -7,6 +7,7 @@ import {
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { MUSIC_OPTIONS } from "./audio/MusicOptions";
@@ -66,36 +67,38 @@ export const AmbientMusic = () => {
   };
 
   return (
-    <Popover>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <MusicButton isPlaying={isPlaying} isDisabled={isDisabled} />
-        </TooltipTrigger>
-        <TooltipContent 
-          side="bottom"
-          className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+    <TooltipProvider>
+      <Popover>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <MusicButton isPlaying={isPlaying} isDisabled={isDisabled} />
+          </TooltipTrigger>
+          <TooltipContent 
+            side="bottom"
+            className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+          >
+            {isDisabled ? "Music disabled during Focus Mode" : "Ambient Music"}
+          </TooltipContent>
+        </Tooltip>
+        <PopoverContent 
+          className="w-64 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]" 
+          align="end"
         >
-          {isDisabled ? "Music disabled during Focus Mode" : "Ambient Music"}
-        </TooltipContent>
-      </Tooltip>
-      <PopoverContent 
-        className="w-64 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]" 
-        align="end"
-      >
-        <MusicPopoverContent 
-          isDisabled={isDisabled}
-          selectedMusic={selectedMusic}
-          isPlaying={isPlaying}
-          volume={volume}
-          isMuted={isMuted}
-          isLooping={isLooping}
-          handleMusicSelection={handleMusicSelection}
-          handlePlayToggle={handlePlayToggle}
-          handleVolumeChange={handleVolumeChange}
-          toggleMute={toggleMute}
-          toggleLoop={toggleLoop}
-        />
-      </PopoverContent>
-    </Popover>
+          <MusicPopoverContent 
+            isDisabled={isDisabled}
+            selectedMusic={selectedMusic}
+            isPlaying={isPlaying}
+            volume={volume}
+            isMuted={isMuted}
+            isLooping={isLooping}
+            handleMusicSelection={handleMusicSelection}
+            handlePlayToggle={handlePlayToggle}
+            handleVolumeChange={handleVolumeChange}
+            toggleMute={toggleMute}
+            toggleLoop={toggleLoop}
+          />
+        </PopoverContent>
+      </Popover>
+    </TooltipProvider>
   );
 };
