@@ -7,6 +7,7 @@ import {
 import {
   Tooltip,
   TooltipContent,
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { MUSIC_OPTIONS } from "./audio/MusicOptions";
 import { useAudioPlayer } from "./audio/useAudioPlayer";

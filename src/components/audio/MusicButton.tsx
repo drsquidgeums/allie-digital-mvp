@@ -3,9 +3,6 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Music } from "lucide-react";
 import {
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
