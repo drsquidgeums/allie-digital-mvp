@@ -21,6 +21,7 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
       
       // Ensure the audio is properly muted and paused
       window.globalAudioPlayer.muted = true;
+      window.globalAudioPlayer.volume = 0;
       if (!window.globalAudioPlayer.paused) {
         console.log('Pausing global audio player due to focus mode');
         window.globalAudioPlayer.pause();
@@ -37,6 +38,7 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
       originalMutedStates.set(el, el.muted);
       originalPlaybackStates.set(el, !el.paused);
       el.muted = true;
+      el.volume = 0;
       
       // Also pause the media to ensure it's fully silenced
       if (!el.paused) {
@@ -55,6 +57,7 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
               originalMutedStates.set(mediaEl, mediaEl.muted);
               originalPlaybackStates.set(mediaEl, !mediaEl.paused);
               mediaEl.muted = true;
+              mediaEl.volume = 0;
               mediaEl.pause();
               console.log('Muted and paused dynamically added audio/video element');
             }

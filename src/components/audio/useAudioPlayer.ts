@@ -21,8 +21,9 @@ export const useAudioPlayer = () => {
         // If focus mode is activated with muteAudio setting, pause any playing music
         if (!audioRef.current.paused) {
           console.log('Pausing audio due to focus mode activation');
+          audioRef.current.pause();
+          setIsPlaying(false);
           setWasPausedByFocusMode(true);
-          // Note: The actual pausing is handled by the useAudioMuteEffect hook
         }
       } else if (!active && wasPausedByFocusMode && selectedMusic) {
         // Focus mode deactivation is handled by the useAudioMuteEffect hook
@@ -38,7 +39,7 @@ export const useAudioPlayer = () => {
     return () => {
       window.removeEventListener('focusModeChanged', handleFocusModeChange as EventListener);
     };
-  }, [audioRef, wasPausedByFocusMode, selectedMusic, isPlaying]);
+  }, [audioRef, wasPausedByFocusMode, selectedMusic, isPlaying, setIsPlaying]);
 
   return {
     isPlaying,

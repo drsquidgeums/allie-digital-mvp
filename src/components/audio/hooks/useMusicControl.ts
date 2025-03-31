@@ -17,16 +17,21 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
     const handleFocusModeChange = (event: CustomEvent) => {
       const { active, settings } = event.detail;
       const wasInFocusMode = isFocusModeActive;
-      setIsFocusModeActive(active && settings?.muteAudio);
+      const shouldMuteAudio = active && settings?.muteAudio;
       
-      if (active && settings?.muteAudio && audioRef.current && !audioRef.current.paused) {
+      setIsFocusModeActive(shouldMuteAudio);
+      
+      if (shouldMuteAudio && audioRef.current && !audioRef.current.paused) {
         audioRef.current.pause();
         setWasPausedByFocusMode(true);
         setIsPlaying(false);
         console.log('Audio paused due to focus mode activation with mute setting');
+        
+        toast({
+          title: "Music paused",
+          description: "Music playback paused due to Focus Mode",
+        });
       } else if (!active && wasPausedByFocusMode && wasInFocusMode) {
-        // When focus mode is deactivated and music was paused by focus mode,
-        // we don't auto-resume here because the useAudioMuteEffect will handle playback restoration
         setWasPausedByFocusMode(false);
         if (audioRef.current?.paused) {
           console.log('Music control aware of focus mode deactivation');
@@ -34,12 +39,25 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
       }
     };
     
+    // Listen for specific audio muting events
+    const handleAudioMutingChanged = (event: CustomEvent) => {
+      const { muted } = event.detail;
+      if (muted && audioRef.current && !audioRef.current.paused) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+        setWasPausedByFocusMode(true);
+        console.log('Audio paused due to audio muting event');
+      }
+    };
+    
     window.addEventListener('focusModeChanged', handleFocusModeChange as EventListener);
+    window.addEventListener('audioMutingChanged', handleAudioMutingChanged as EventListener);
     
     return () => {
       window.removeEventListener('focusModeChanged', handleFocusModeChange as EventListener);
+      window.removeEventListener('audioMutingChanged', handleAudioMutingChanged as EventListener);
     };
-  }, [audioRef, wasPausedByFocusMode, isFocusModeActive]);
+  }, [audioRef, wasPausedByFocusMode, isFocusModeActive, toast]);
 
   useEffect(() => {
     if (audioRef.current) {
