@@ -4,7 +4,7 @@ import { Task } from "@/types/task";
 import { toast } from "sonner";
 import { useIncentives } from "../useIncentives";
 import { useTaskPoints } from "./useTaskPoints";
-import { supabase } from "@/integrations/supabase/client";
+import { extendedSupabase } from "@/integrations/extendedSupabaseClient";
 
 const categories = ["work", "personal", "study", "health"];
 
@@ -45,7 +45,7 @@ export const useTaskOperations = (tasks: Task[], updateTasks: (tasks: Task[]) =>
 
     try {
       // Insert task into Supabase
-      const { data, error } = await supabase
+      const { data, error } = await extendedSupabase
         .from('tasks')
         .insert({
           text: newTask.text,
@@ -68,10 +68,10 @@ export const useTaskOperations = (tasks: Task[], updateTasks: (tasks: Task[]) =>
           id: data[0].id,
           text: data[0].text,
           completed: data[0].completed || false,
-          createdAt: new Date(data[0].created_at),
+          createdAt: new Date(data[0].created_at as string),
           points: data[0].points || 10,
-          color: data[0].color,
-          category: data[0].category
+          color: data[0].color as string | undefined,
+          category: data[0].category as string | undefined
         };
 
         updateTasks([persistedTask, ...tasks]);
@@ -91,7 +91,7 @@ export const useTaskOperations = (tasks: Task[], updateTasks: (tasks: Task[]) =>
       const newStatus = !task.completed;
       
       // Update task in Supabase
-      const { error } = await supabase
+      const { error } = await extendedSupabase
         .from('tasks')
         .update({ completed: newStatus })
         .eq('id', id);
@@ -135,7 +135,7 @@ export const useTaskOperations = (tasks: Task[], updateTasks: (tasks: Task[]) =>
   const handleDeleteTask = useCallback(async (id: string) => {
     try {
       // Delete task from Supabase
-      const { error } = await supabase
+      const { error } = await extendedSupabase
         .from('tasks')
         .delete()
         .eq('id', id);
@@ -159,7 +159,7 @@ export const useTaskOperations = (tasks: Task[], updateTasks: (tasks: Task[]) =>
   const handleUpdateTaskColor = useCallback(async (id: string, color: string) => {
     try {
       // Update task color in Supabase
-      const { error } = await supabase
+      const { error } = await extendedSupabase
         .from('tasks')
         .update({ color })
         .eq('id', id);

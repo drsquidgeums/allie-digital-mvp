@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Task } from "@/types/task";
-import { supabase } from "@/integrations/supabase/client";
+import { extendedSupabase } from "@/integrations/extendedSupabaseClient";
 import { toast } from "sonner";
 
 // Shared state for tasks
@@ -21,7 +21,7 @@ export const useTaskStore = () => {
     const fetchTasks = async () => {
       try {
         setLoading(true);
-        const { data, error } = await supabase
+        const { data, error } = await extendedSupabase
           .from('tasks')
           .select('*')
           .order('created_at', { ascending: false });
@@ -37,7 +37,7 @@ export const useTaskStore = () => {
           id: task.id,
           text: task.text,
           completed: task.completed || false,
-          createdAt: new Date(task.created_at),
+          createdAt: new Date(task.created_at as string),
           points: task.points || 10,
           color: task.color || undefined,
           category: task.category || undefined
@@ -55,7 +55,7 @@ export const useTaskStore = () => {
     fetchTasks();
 
     // Set up realtime subscription
-    const channel = supabase
+    const channel = extendedSupabase
       .channel('tasks-changes')
       .on('postgres_changes', 
         { 
@@ -71,7 +71,7 @@ export const useTaskStore = () => {
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      extendedSupabase.removeChannel(channel);
     };
   }, []);
 
