@@ -19,6 +19,8 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
       const wasInFocusMode = isFocusModeActive;
       const shouldMuteAudio = active && settings?.muteAudio;
       
+      console.log('Focus mode change detected in music control:', { active, settings, shouldMuteAudio });
+      
       setIsFocusModeActive(shouldMuteAudio);
       
       if (shouldMuteAudio && audioRef.current && !audioRef.current.paused) {
@@ -42,11 +44,19 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
     // Listen for specific audio muting events
     const handleAudioMutingChanged = (event: CustomEvent) => {
       const { muted } = event.detail;
+      
+      console.log('Audio muting event in music control:', { muted });
+      
       if (muted && audioRef.current && !audioRef.current.paused) {
         audioRef.current.pause();
         setIsPlaying(false);
         setWasPausedByFocusMode(true);
         console.log('Audio paused due to audio muting event');
+        
+        toast({
+          title: "Music paused",
+          description: "Music playback paused due to Audio Muting",
+        });
       }
     };
     

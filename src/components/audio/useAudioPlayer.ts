@@ -26,18 +26,33 @@ export const useAudioPlayer = () => {
           setWasPausedByFocusMode(true);
         }
       } else if (!active && wasPausedByFocusMode && selectedMusic) {
-        // Focus mode deactivation is handled by the useAudioMuteEffect hook
-        // This method will be notified of the playing state changes via event listeners
+        // When focus mode is deactivated, restore previous state if music was paused by focus mode
         setWasPausedByFocusMode(false);
         console.log('Audio player received focus mode deactivation');
       }
     };
 
-    // Add event listener for focus mode changes
+    // Listen specifically for audio muting events
+    const handleAudioMutingChanged = (event: CustomEvent) => {
+      const { muted } = event.detail;
+      
+      console.log('Audio muting changed in audio player:', { muted, audioRef: !!audioRef.current, isPlaying });
+      
+      if (muted && audioRef.current && !audioRef.current.paused) {
+        console.log('Pausing audio due to audio muting event');
+        audioRef.current.pause();
+        setIsPlaying(false);
+        setWasPausedByFocusMode(true);
+      }
+    };
+
+    // Add event listeners for focus mode changes
     window.addEventListener('focusModeChanged', handleFocusModeChange as EventListener);
+    window.addEventListener('audioMutingChanged', handleAudioMutingChanged as EventListener);
     
     return () => {
       window.removeEventListener('focusModeChanged', handleFocusModeChange as EventListener);
+      window.removeEventListener('audioMutingChanged', handleAudioMutingChanged as EventListener);
     };
   }, [audioRef, wasPausedByFocusMode, selectedMusic, isPlaying, setIsPlaying]);
 

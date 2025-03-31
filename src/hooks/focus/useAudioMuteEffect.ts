@@ -90,12 +90,18 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
         const wasOriginallyMuted = originalMutedStates.get(el);
         const wasPlaying = originalPlaybackStates.get(el);
         
-        el.muted = wasOriginallyMuted || false;
-        
-        // Resume playback if element was playing originally
-        if (wasPlaying) {
-          console.log('Resuming media element that was previously playing:', el);
-          el.play().catch(e => console.error('Error resuming media element:', e));
+        if (el) {
+          el.muted = wasOriginallyMuted || false;
+          
+          // Only restore volume if the element still exists
+          try {
+            if (wasPlaying && el.play) {
+              console.log('Resuming media element that was previously playing:', el);
+              // Don't automatically resume playback, let the user decide
+            }
+          } catch (e) {
+            console.error('Error accessing media element:', e);
+          }
         }
       });
       
@@ -104,13 +110,9 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
         window.globalAudioPlayer.muted = originalMutedStates.get('globalAudioPlayer') || false;
         window.globalAudioPlayer.volume = originalMutedStates.get('globalAudioPlayerVolume') || 0.2;
         
-        // Resume the global audio player if it was playing before
-        if (originalPlaybackStates.get('globalAudioPlayer')) {
-          console.log('Resuming global audio player that was previously playing');
-          window.globalAudioPlayer.play().catch(e => console.error('Error resuming global audio player:', e));
-        }
-        
-        console.log('Global audio player state restored');
+        // Don't automatically resume the global audio player
+        // This will be handled by the audio player component
+        console.log('Global audio player state restored but not automatically resumed');
       }
       
       observer.disconnect();
