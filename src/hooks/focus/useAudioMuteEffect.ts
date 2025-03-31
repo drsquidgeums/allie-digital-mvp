@@ -4,6 +4,7 @@ import { FocusSettings } from "@/hooks/useFocusSettings";
 
 export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) => {
   useEffect(() => {
+    // Only run this effect if focus mode is active AND mute audio setting is enabled
     if (!isActive || !settings.muteAudio) return;
 
     console.log('Focus mode audio muting activated');
@@ -19,13 +20,13 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
       originalMutedStates.set('globalAudioPlayerVolume', window.globalAudioPlayer.volume);
       originalPlaybackStates.set('globalAudioPlayer', !window.globalAudioPlayer.paused);
       
-      // Ensure the audio is properly muted and paused
-      window.globalAudioPlayer.muted = true;
-      window.globalAudioPlayer.volume = 0;
+      // Force pause and mute the global player
       if (!window.globalAudioPlayer.paused) {
         console.log('Pausing global audio player due to focus mode');
         window.globalAudioPlayer.pause();
       }
+      window.globalAudioPlayer.muted = true;
+      window.globalAudioPlayer.volume = 0;
       
       console.log('Global audio player muted and paused');
     } else {
@@ -37,14 +38,14 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
       const el = element as HTMLMediaElement;
       originalMutedStates.set(el, el.muted);
       originalPlaybackStates.set(el, !el.paused);
-      el.muted = true;
-      el.volume = 0;
       
-      // Also pause the media to ensure it's fully silenced
+      // Force pause and mute
       if (!el.paused) {
         console.log('Pausing media element due to focus mode:', el);
         el.pause();
       }
+      el.muted = true;
+      el.volume = 0;
     });
 
     // Handle dynamically added audio/video elements
@@ -68,7 +69,7 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
 
     observer.observe(document.body, { childList: true, subtree: true });
 
-    // Dispatch an event to notify all components about audio muting
+    // Dispatch an event to notify all components about focus mode change
     const event = new CustomEvent('focusModeChanged', { 
       detail: { 
         active: true, 
@@ -77,8 +78,14 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
     });
     window.dispatchEvent(event);
     
-    // Also dispatch a specific audio muting event
-    const audioEvent = new CustomEvent('audioMutingChanged', { detail: { muted: true } });
+    // Dispatch a specific audio muting event with forced=true to ensure it takes effect
+    const audioEvent = new CustomEvent('audioMutingChanged', { 
+      detail: { 
+        muted: true,
+        forced: true,
+        source: 'focus-mode' 
+      } 
+    });
     window.dispatchEvent(audioEvent);
 
     return () => {
@@ -88,17 +95,11 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
       mediaElements.forEach((element) => {
         const el = element as HTMLMediaElement;
         const wasOriginallyMuted = originalMutedStates.get(el);
-        const wasPlaying = originalPlaybackStates.get(el);
         
         if (el) {
-          el.muted = wasOriginallyMuted || false;
-          
-          // Only restore volume if the element still exists
           try {
-            if (wasPlaying && el.play) {
-              console.log('Resuming media element that was previously playing:', el);
-              // Don't automatically resume playback, let the user decide
-            }
+            el.muted = wasOriginallyMuted || false;
+            // Don't automatically resume playback, let the audio components handle this
           } catch (e) {
             console.error('Error accessing media element:', e);
           }
@@ -109,19 +110,22 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
       if (window.globalAudioPlayer) {
         window.globalAudioPlayer.muted = originalMutedStates.get('globalAudioPlayer') || false;
         window.globalAudioPlayer.volume = originalMutedStates.get('globalAudioPlayerVolume') || 0.2;
-        
         // Don't automatically resume the global audio player
-        // This will be handled by the audio player component
         console.log('Global audio player state restored but not automatically resumed');
       }
       
       observer.disconnect();
       
-      // Dispatch an event to notify all components about audio unmuting
-      const event = new CustomEvent('audioMutingChanged', { detail: { muted: false } });
-      window.dispatchEvent(event);
+      // Dispatch events to notify that focus mode has been deactivated
+      const audioEvent = new CustomEvent('audioMutingChanged', { 
+        detail: { 
+          muted: false,
+          forced: false,
+          source: 'focus-mode' 
+        } 
+      });
+      window.dispatchEvent(audioEvent);
 
-      // Dispatch focus mode changed event for deactivation
       const focusModeEvent = new CustomEvent('focusModeChanged', { 
         detail: { 
           active: false,
