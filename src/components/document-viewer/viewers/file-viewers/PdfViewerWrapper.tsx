@@ -1,10 +1,12 @@
 
-import React from 'react';
-import SimplePdfViewer from '../../viewers/pdf/SimplePdfViewer';
+import React, { useState } from 'react';
+import { PSPDFKitViewer } from '../pdf/components/PSPDFKitViewer';
+import { SimplePdfViewer } from '../pdf/SimplePdfViewer';
 import '@/styles/pdf/pdf-base.css';
 import '@/styles/pdf/pdf-highlights.css';
 import '@/styles/pdf/pdf-toolbar.css';
 import '@/styles/pdf/pdf-accessibility.css';
+import '@/styles/pdf/pspdfkit.css';
 
 interface PdfViewerWrapperProps {
   file: File | null;
@@ -19,6 +21,13 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   selectedColor = '#ffeb3b',
   isHighlighter = true 
 }) => {
+  const [useFallback, setUseFallback] = useState<boolean>(false);
+
+  // Function to handle PSPDFKit loading errors
+  const handlePSPDFKitError = () => {
+    setUseFallback(true);
+  };
+
   return (
     <div className="h-full w-full flex flex-col relative">
       {/* Skip link for keyboard users */}
@@ -26,12 +35,21 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
         Skip to PDF content
       </a>
       
-      <SimplePdfViewer
-        file={file}
-        url={url}
-        selectedColor={selectedColor}
-        isHighlighter={isHighlighter}
-      />
+      {!useFallback ? (
+        <PSPDFKitViewer
+          file={file}
+          url={url}
+          selectedColor={selectedColor}
+          isHighlighter={isHighlighter}
+        />
+      ) : (
+        <SimplePdfViewer
+          file={file}
+          url={url}
+          selectedColor={selectedColor}
+          isHighlighter={isHighlighter}
+        />
+      )}
     </div>
   );
 };

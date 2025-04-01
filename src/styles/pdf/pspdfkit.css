@@ -3,7 +3,8 @@
 .PSPDFKit-Container {
   width: 100%;
   height: 100%;
-  background-color: #f0f0f0;
+  background-color: var(--muted);
+  border-radius: var(--radius);
 }
 
 /* Customize PSPDFKit UI colors to match our app */
@@ -11,4 +12,36 @@
   --pspdfkit-primary: var(--primary);
   --pspdfkit-sidebar-background: var(--background);
   --pspdfkit-sidebar-foreground: var(--foreground);
+}
+
+/* Ensure consistent toolbar appearance */
+.PSPDFKit-Toolbar {
+  background-color: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Style annotations to match our app theme */
+.PSPDFKit-AnnotationLayerElement {
+  opacity: 0.75;
+}
+
+/* Highlight appearance */
+.PSPDFKit-AnnotationLayerElement[data-annotation-type="highlight"] {
+  mix-blend-mode: multiply;
+}
+
+/* Improve accessibility */
+.PSPDFKit-Annotation:focus {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Dark mode adjustments */
+.dark .PSPDFKit-Container {
+  --pspdfkit-background: var(--card);
+  --pspdfkit-toolbar: var(--card);
+  --pspdfkit-toolbar-button: var(--muted-foreground);
+  --pspdfkit-toolbar-button-hover: var(--accent);
+  --pspdfkit-page-background: var(--background);
+  color-scheme: dark;
 }

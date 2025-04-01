@@ -1,6 +1,6 @@
 
 // Export the CustomPDFViewer component
-export { CustomPDFViewer } from '../CustomPDFViewer';
+export { CustomPDFViewer } from './CustomPDFViewer';
 
 // Import PSPDFKit styles
 import 'pspdfkit/dist/pspdfkit.css';
