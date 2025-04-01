@@ -2,6 +2,8 @@
 import React from 'react';
 import { EmptyState } from './viewers/EmptyState';
 import { ErrorDisplay } from './viewers/ErrorDisplay';
+import { PdfViewer } from './viewers/PdfViewer';
+import { getFileType } from './FileConverter';
 
 interface DocumentPreviewProps {
   file: File | null;
@@ -12,7 +14,6 @@ interface DocumentPreviewProps {
  * DocumentPreview Component
  * 
  * Main container component that handles different document types
- * Currently stripped of PDF functionality as we're starting fresh
  */
 export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   file,
@@ -22,8 +23,18 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   if (!file && !url) {
     return <EmptyState />;
   }
+  
+  // Handle PDF files specifically with PSPDFKit
+  if (file && getFileType(file) === 'pdf') {
+    return <PdfViewer file={file} url="" />;
+  }
+  
+  // Handle PDF URLs
+  if (url && url.toLowerCase().endsWith('.pdf')) {
+    return <PdfViewer file={null} url={url} />;
+  }
 
-  // For now, just display basic file information
+  // For non-PDF files, display basic file information
   return (
     <div className="flex flex-col items-center justify-center h-full w-full p-8 bg-muted/10">
       {file && (
@@ -32,7 +43,9 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           <p><strong>Name:</strong> {file.name}</p>
           <p><strong>Type:</strong> {file.type}</p>
           <p><strong>Size:</strong> {Math.round(file.size / 1024)} KB</p>
-          <p className="mt-4 text-muted-foreground">PDF viewer has been removed and will be reimplemented</p>
+          {getFileType(file) !== 'pdf' && (
+            <p className="mt-4 text-muted-foreground">This file type is not fully supported yet</p>
+          )}
         </div>
       )}
       
@@ -40,7 +53,9 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         <div className="text-center">
           <h3 className="text-xl font-medium mb-2">URL loaded</h3>
           <p><strong>URL:</strong> {url}</p>
-          <p className="mt-4 text-muted-foreground">PDF viewer has been removed and will be reimplemented</p>
+          {!url.toLowerCase().endsWith('.pdf') && (
+            <p className="mt-4 text-muted-foreground">Non-PDF URLs may not display correctly</p>
+          )}
         </div>
       )}
     </div>
