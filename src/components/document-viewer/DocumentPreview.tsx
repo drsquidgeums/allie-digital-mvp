@@ -1,96 +1,50 @@
 
-import React, { useState } from 'react';
-import { useToast } from "@/hooks/use-toast";
+import React from 'react';
 import { EmptyState } from './viewers/EmptyState';
 import { ErrorDisplay } from './viewers/ErrorDisplay';
-import { FileTypeHandler } from './viewers/file-viewers/FileTypeHandler';
-import { UrlHandler } from './viewers/file-viewers/UrlHandler';
 
 interface DocumentPreviewProps {
   file: File | null;
   url: string;
-  selectedColor: string;
-  isHighlighter?: boolean;
 }
 
 /**
  * DocumentPreview Component
  * 
- * Main container component that orchestrates the different document viewers
- * based on input type (file or URL) and handles error states.
+ * Main container component that handles different document types
+ * Currently stripped of PDF functionality as we're starting fresh
  */
 export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   file,
-  url,
-  selectedColor,
-  isHighlighter
+  url
 }) => {
-  const { toast } = useToast();
-  const [loadError, setLoadError] = useState<string | null>(null);
-
-  /**
-   * Handles errors from document loading and displays appropriate messages
-   */
-  const handleError = (error: Error) => {
-    console.error("Document preview error:", error);
-    setLoadError(error.message || "Failed to load document");
-    toast({
-      title: "Document Error",
-      description: "There was a problem displaying this document",
-      variant: "destructive",
-    });
-  };
-
-  // Display error state if there was a problem loading the document
-  if (loadError) {
-    return (
-      <ErrorDisplay 
-        title="Document Error" 
-        description={loadError}
-        onRetry={() => setLoadError(null)} 
-      />
-    );
-  }
-
   // Display empty state when no document is loaded
   if (!file && !url) {
     return <EmptyState />;
   }
 
-  // Handle file preview
-  if (file) {
-    console.log("DocumentPreview handling file:", file.name);
-    console.log("DocumentPreview color settings:", selectedColor, isHighlighter);
-    try {
-      return (
-        <FileTypeHandler
-          file={file}
-          selectedColor={selectedColor || '#FFFF00'} // Default yellow if no color specified
-          isHighlighter={isHighlighter}
-        />
-      );
-    } catch (error) {
-      handleError(error as Error);
-      return (
-        <ErrorDisplay 
-          title="Error Loading File" 
-          description="There was a problem loading this file. Please try again or use a different file." 
-        />
-      );
-    }
-  }
-
-  // Handle URL preview
-  if (url) {
-    return (
-      <UrlHandler
-        url={url}
-        selectedColor={selectedColor || '#FFFF00'} // Default yellow if no color specified
-        isHighlighter={isHighlighter}
-        onError={() => setLoadError("Failed to load URL content")}
-      />
-    );
-  }
-
-  return null;
+  // For now, just display basic file information
+  return (
+    <div className="flex flex-col items-center justify-center h-full w-full p-8 bg-muted/10">
+      {file && (
+        <div className="text-center">
+          <h3 className="text-xl font-medium mb-2">File loaded</h3>
+          <p><strong>Name:</strong> {file.name}</p>
+          <p><strong>Type:</strong> {file.type}</p>
+          <p><strong>Size:</strong> {Math.round(file.size / 1024)} KB</p>
+          <p className="mt-4 text-muted-foreground">PDF viewer has been removed and will be reimplemented</p>
+        </div>
+      )}
+      
+      {!file && url && (
+        <div className="text-center">
+          <h3 className="text-xl font-medium mb-2">URL loaded</h3>
+          <p><strong>URL:</strong> {url}</p>
+          <p className="mt-4 text-muted-foreground">PDF viewer has been removed and will be reimplemented</p>
+        </div>
+      )}
+    </div>
+  );
 };
+
+export default DocumentPreview;
