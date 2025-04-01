@@ -1,10 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { useToast } from '@/hooks/use-toast';
 import { ErrorDisplay } from '../../ErrorDisplay';
 import { PdfToolbar } from './PdfToolbar';
 import { usePdfHighlighter } from '@/utils/pdfHighlighter';
+import { usePdfHighlighter as useRangyHighlighter } from '@/components/document-viewer/viewers/pdf/PdfHighlighter';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
@@ -35,8 +36,10 @@ export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
   const [scale, setScale] = useState<number>(1.0);
   const [error, setError] = useState<Error | null>(null);
   const [isTextSelected, setIsTextSelected] = useState(false);
+  const documentContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { addHighlight, highlights } = usePdfHighlighter(selectedColor);
+  const { handleHighlight } = useRangyHighlighter();
   
   // Determine file source for react-pdf
   const pdfSource = file ? file : url || null;
@@ -59,6 +62,26 @@ export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
     };
   }, []);
   
+  // Add highlight CSS style
+  useEffect(() => {
+    const styleEl = document.createElement('style');
+    styleEl.id = 'pdf-highlight-styles';
+    styleEl.innerHTML = `
+      .highlight {
+        background-color: ${selectedColor};
+        border-radius: 2px;
+      }
+    `;
+    document.head.appendChild(styleEl);
+    
+    return () => {
+      const existingStyle = document.getElementById('pdf-highlight-styles');
+      if (existingStyle) {
+        document.head.removeChild(existingStyle);
+      }
+    };
+  }, [selectedColor]);
+
   // PDF load success handler
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
@@ -99,40 +122,11 @@ export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
   };
 
   // Handle highlight
-  const handleHighlight = () => {
-    const selection = window.getSelection();
-    if (!selection || selection.isCollapsed) return;
+  const doHighlightSelection = () => {
+    if (!documentContainerRef.current) return;
     
     try {
-      // Get the selected text
-      const text = selection.toString();
-      
-      // Create a unique ID for this highlight
-      const highlightId = `highlight_${Date.now()}`;
-      
-      // Create highlight object
-      addHighlight({
-        id: highlightId,
-        content: { text },
-        comment: { text: '' },
-        position: {
-          // This is a simple position; in a real app, you'd need to calculate the actual coordinates
-          pageNumber,
-          boundingRect: { x1: 0, y1: 0, x2: 100, y2: 50, width: 100, height: 50 },
-          rects: [{ x1: 0, y1: 0, x2: 100, y2: 50, width: 100, height: 50 }]
-        },
-      });
-      
-      // Apply highlighting to the DOM
-      // This requires more complex logic with a library like rangy or selection.js
-      // For now, we'll just show a toast notification
-      toast({
-        title: "Text Highlighted",
-        description: `"${text.length > 30 ? text.substring(0, 30) + '...' : text}"`,
-      });
-      
-      // Clear selection after highlighting
-      selection.removeAllRanges();
+      handleHighlight();
       setIsTextSelected(false);
     } catch (error) {
       console.error('Error highlighting text:', error);
@@ -187,14 +181,17 @@ export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
         isHighlighter={isHighlighter}
         onPageChange={changePage}
         onZoomChange={zoom}
-        onHighlight={handleHighlight}
+        onHighlight={doHighlightSelection}
         onKeyboardHelp={() => {}}
         isHighlightMode={highlightEnabled}
         onToggleHighlight={toggleHighlightMode}
       />
       
       {/* PDF Document */}
-      <div className="flex-1 overflow-auto flex justify-center bg-muted/10 p-4">
+      <div 
+        className="flex-1 overflow-auto flex justify-center bg-muted/10 p-4"
+        ref={documentContainerRef}
+      >
         <Document
           file={pdfSource}
           onLoadSuccess={onDocumentLoadSuccess}

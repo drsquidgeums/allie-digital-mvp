@@ -13,7 +13,8 @@ import {
   ZoomIn, 
   ZoomOut, 
   Highlighter,
-  Keyboard
+  Keyboard,
+  TextCursor
 } from 'lucide-react';
 
 interface PdfToolbarProps {
@@ -135,6 +136,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                     size="sm"
                     onClick={onToggleHighlight}
                     aria-label="Toggle highlight mode"
+                    className={isHighlightMode ? "bg-primary text-primary-foreground" : ""}
                   >
                     <Highlighter className="h-4 w-4" />
                   </Button>
@@ -156,7 +158,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                       aria-label="Highlight text"
                       disabled={!isTextSelected}
                     >
-                      <Highlighter className="h-4 w-4" />
+                      <TextCursor className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>Highlight selected text</TooltipContent>
