@@ -24,7 +24,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     return <EmptyState />;
   }
   
-  // Handle PDF files specifically with PSPDFKit
+  // Handle PDF files
   if (file && getFileType(file) === 'pdf') {
     return <PdfViewer file={file} url="" />;
   }

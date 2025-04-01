@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { PdfViewer as PdfViewerComponent } from './pdf/PdfViewer';
+import { PdfViewerWrapper } from '../viewers/file-viewers/PdfViewerWrapper';
 import { useToast } from '@/hooks/use-toast';
 
 interface PdfViewerProps {
@@ -35,7 +35,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   }
   
   return (
-    <PdfViewerComponent 
+    <PdfViewerWrapper 
       file={file} 
       url={url} 
       selectedColor={selectedColor}
