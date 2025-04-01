@@ -38,3 +38,18 @@ export const extractTextFromFile = async (file: File): Promise<string> => {
   // For other file types, return a placeholder message
   return `Text extraction not yet implemented for ${file.type} files`;
 };
+
+/**
+ * Reads a text file and returns its content
+ * 
+ * @param file - The text file to read
+ * @returns Promise that resolves to the text content
+ */
+export const readTextFile = async (file: File): Promise<string> => {
+  try {
+    return await file.text();
+  } catch (error) {
+    console.error('Error reading text file:', error);
+    return 'Could not read file content';
+  }
+};

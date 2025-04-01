@@ -71,13 +71,11 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({ file, url }) => {
               { type: "pan" },
               { type: "print" },
               { type: "download" }
-            ],
-            instantJSON: {
-              annotations: []
-            }
+            ]
           });
           
           setInstance(newInstance);
+          setIsLoading(false);
           
           toast({
             title: "PDF Loaded",
@@ -86,13 +84,12 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({ file, url }) => {
         }
       } catch (error) {
         console.error("PSPDFKit loading error:", error);
+        setIsLoading(false);
         toast({
           variant: "destructive",
           title: "PDF Loading Failed",
           description: "There was a problem loading the PDF. Please try again.",
         });
-      } finally {
-        setIsLoading(false);
       }
     };
     
@@ -104,7 +101,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({ file, url }) => {
         instance.dispose();
       }
     };
-  }, [file, url]);
+  }, [file, url, toast, instance]);
   
   // Update theme when it changes
   useEffect(() => {
