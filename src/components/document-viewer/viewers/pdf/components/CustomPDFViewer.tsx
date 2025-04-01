@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { useToast } from '@/hooks/use-toast';
 import { ErrorDisplay } from '../../ErrorDisplay';
+import { PdfToolbar } from './PdfToolbar';
+import { usePdfHighlighter } from '@/utils/pdfHighlighter';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
@@ -14,19 +16,27 @@ interface CustomPDFViewerProps {
   url: string;
   selectedColor: string;
   isHighlighter?: boolean;
+  highlightEnabled?: boolean;
+  setHighlightEnabled?: (enabled: boolean) => void;
+  setSelectedColor?: (color: string) => void;
 }
 
 export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
   file,
   url,
   selectedColor,
-  isHighlighter = true
+  isHighlighter = true,
+  highlightEnabled = false,
+  setHighlightEnabled = () => {},
+  setSelectedColor = () => {}
 }) => {
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [scale, setScale] = useState<number>(1.0);
   const [error, setError] = useState<Error | null>(null);
+  const [isTextSelected, setIsTextSelected] = useState(false);
   const { toast } = useToast();
+  const { addHighlight, highlights } = usePdfHighlighter(selectedColor);
   
   // Determine file source for react-pdf
   const pdfSource = file ? file : url || null;
@@ -35,6 +45,19 @@ export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
     // Reset error state when the file or URL changes
     setError(null);
   }, [file, url]);
+
+  // Track text selection in the document
+  useEffect(() => {
+    const handleSelectionChange = () => {
+      const selection = window.getSelection();
+      setIsTextSelected(!!selection && !selection.isCollapsed);
+    };
+
+    document.addEventListener('selectionchange', handleSelectionChange);
+    return () => {
+      document.removeEventListener('selectionchange', handleSelectionChange);
+    };
+  }, []);
   
   // PDF load success handler
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
@@ -70,6 +93,66 @@ export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
     }
   };
 
+  // Handle zoom
+  const zoom = (factor: number) => {
+    setScale(prev => Math.max(0.5, Math.min(3, prev + factor)));
+  };
+
+  // Handle highlight
+  const handleHighlight = () => {
+    const selection = window.getSelection();
+    if (!selection || selection.isCollapsed) return;
+    
+    try {
+      // Get the selected text
+      const text = selection.toString();
+      
+      // Create a unique ID for this highlight
+      const highlightId = `highlight_${Date.now()}`;
+      
+      // Create highlight object
+      addHighlight({
+        id: highlightId,
+        content: { text },
+        comment: { text: '' },
+        position: {
+          // This is a simple position; in a real app, you'd need to calculate the actual coordinates
+          pageNumber,
+          boundingRect: { x1: 0, y1: 0, x2: 100, y2: 50, width: 100, height: 50 },
+          rects: [{ x1: 0, y1: 0, x2: 100, y2: 50, width: 100, height: 50 }]
+        },
+      });
+      
+      // Apply highlighting to the DOM
+      // This requires more complex logic with a library like rangy or selection.js
+      // For now, we'll just show a toast notification
+      toast({
+        title: "Text Highlighted",
+        description: `"${text.length > 30 ? text.substring(0, 30) + '...' : text}"`,
+      });
+      
+      // Clear selection after highlighting
+      selection.removeAllRanges();
+      setIsTextSelected(false);
+    } catch (error) {
+      console.error('Error highlighting text:', error);
+      toast({
+        variant: "destructive",
+        title: "Highlighting Error",
+        description: "Could not highlight the selected text",
+      });
+    }
+  };
+
+  // Toggle highlight mode
+  const toggleHighlightMode = () => {
+    setHighlightEnabled(!highlightEnabled);
+    toast({
+      title: !highlightEnabled ? "Highlight Mode Activated" : "Highlight Mode Deactivated",
+      description: !highlightEnabled ? "Select text to highlight it" : "Regular viewing mode"
+    });
+  };
+
   // Handle retry
   const handleRetry = () => {
     setError(null);
@@ -95,47 +178,20 @@ export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* PDF Controls */}
-      <div className="flex items-center justify-between p-2 bg-card border-b">
-        <div className="flex items-center space-x-2">
-          <button
-            className="px-2 py-1 text-sm bg-muted rounded hover:bg-muted/80"
-            onClick={() => changePage(-1)}
-            disabled={pageNumber <= 1}
-          >
-            Previous
-          </button>
-          
-          <span className="text-sm">
-            {pageNumber} / {numPages || '?'}
-          </span>
-          
-          <button
-            className="px-2 py-1 text-sm bg-muted rounded hover:bg-muted/80"
-            onClick={() => changePage(1)}
-            disabled={pageNumber >= numPages}
-          >
-            Next
-          </button>
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <button 
-            className="px-2 py-1 text-sm bg-muted rounded hover:bg-muted/80"
-            onClick={() => setScale(prev => Math.max(0.5, prev - 0.1))}
-          >
-            Zoom Out
-          </button>
-          
-          <span className="text-sm">{Math.round(scale * 100)}%</span>
-          
-          <button 
-            className="px-2 py-1 text-sm bg-muted rounded hover:bg-muted/80"
-            onClick={() => setScale(prev => Math.min(3, prev + 0.1))}
-          >
-            Zoom In
-          </button>
-        </div>
-      </div>
+      <PdfToolbar
+        pageNumber={pageNumber}
+        numPages={numPages}
+        zoom={scale}
+        isTextSelected={isTextSelected}
+        selectedColor={selectedColor}
+        isHighlighter={isHighlighter}
+        onPageChange={changePage}
+        onZoomChange={zoom}
+        onHighlight={handleHighlight}
+        onKeyboardHelp={() => {}}
+        isHighlightMode={highlightEnabled}
+        onToggleHighlight={toggleHighlightMode}
+      />
       
       {/* PDF Document */}
       <div className="flex-1 overflow-auto flex justify-center bg-muted/10 p-4">

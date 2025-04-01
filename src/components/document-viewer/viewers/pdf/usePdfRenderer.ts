@@ -55,8 +55,9 @@ export const usePdfRenderer = () => {
       }
 
       // Initialize PDF.js with the worker if needed
-      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+      const workerSrcUrl = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+      if (pdfjsLib.GlobalWorkerOptions.workerSrc !== workerSrcUrl) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrcUrl;
       }
 
       if (!pdfData) {

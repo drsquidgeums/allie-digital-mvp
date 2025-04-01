@@ -1,33 +1,35 @@
 
 import React from 'react';
-import { CustomPDFViewer } from '../../viewers/pdf/components/CustomPDFViewer';
+import CustomPDFViewer from '../pdf/components/CustomPDFViewer';
 
 interface PdfViewerWrapperProps {
   file: File | null;
   url: string;
   selectedColor?: string;
   isHighlighter?: boolean;
+  highlightEnabled?: boolean;
+  setHighlightEnabled?: (enabled: boolean) => void;
+  setSelectedColor?: (color: string) => void;
 }
 
-/**
- * PdfViewerWrapper Component
- * 
- * A wrapper for the PDF viewer component to handle props and configuration
- */
 export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   file,
   url,
   selectedColor = '#FFFF00',
-  isHighlighter
+  isHighlighter = true,
+  highlightEnabled = false,
+  setHighlightEnabled = () => {},
+  setSelectedColor = () => {}
 }) => {
   return (
     <CustomPDFViewer 
       file={file} 
-      url={url}
-      selectedColor={selectedColor}
+      url={url} 
+      selectedColor={selectedColor} 
       isHighlighter={isHighlighter}
+      highlightEnabled={highlightEnabled}
+      setHighlightEnabled={setHighlightEnabled}
+      setSelectedColor={setSelectedColor}
     />
   );
 };
-
-export default PdfViewerWrapper;
