@@ -1,7 +1,11 @@
 
 import React from 'react';
-import { PdfViewerWrapper } from '../viewers/file-viewers/PdfViewerWrapper';
+import { PdfViewerWrapper } from './file-viewers/PdfViewerWrapper';
 import { useToast } from '@/hooks/use-toast';
+import { pdfjs } from 'react-pdf';
+
+// Ensure PDF.js worker is configured properly here as well
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 interface PdfViewerProps {
   file: File | null;

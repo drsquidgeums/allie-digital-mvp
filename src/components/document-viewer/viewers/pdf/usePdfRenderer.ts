@@ -2,11 +2,12 @@
 import { useState, useCallback } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import * as pdfjsLib from 'pdfjs-dist';
+import { pdfjs } from 'react-pdf';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 
 // Configure PDF.js worker using a reliable CDN
-const workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface PdfRendererResult {
   page: any;

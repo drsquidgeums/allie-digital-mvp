@@ -1,10 +1,13 @@
 
-import React, { useState } from 'react';
-import { Document, Page } from 'react-pdf';
+import React, { useState, useEffect } from 'react';
+import { Document, Page, pdfjs } from 'react-pdf';
 import { useToast } from '@/hooks/use-toast';
 import { ErrorDisplay } from '../../ErrorDisplay';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
+
+// Configure PDF.js worker using a reliable CDN
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 interface CustomPDFViewerProps {
   file: File | null;
@@ -27,6 +30,11 @@ export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
   
   // Determine file source for react-pdf
   const pdfSource = file ? file : url || null;
+  
+  useEffect(() => {
+    // Reset error state when the file or URL changes
+    setError(null);
+  }, [file, url]);
   
   // PDF load success handler
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
