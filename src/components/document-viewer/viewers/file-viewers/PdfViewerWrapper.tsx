@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { PdfViewer } from '../PdfViewer';
+import { CustomPDFViewer } from '../../viewers/pdf/components/CustomPDFViewer';
 
 interface PdfViewerWrapperProps {
   file: File | null;
@@ -12,7 +12,7 @@ interface PdfViewerWrapperProps {
 /**
  * PdfViewerWrapper Component
  * 
- * A wrapper for the PdfViewer component to handle props and configuration
+ * A wrapper for the PDF viewer component to handle props and configuration
  */
 export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   file,
@@ -21,9 +21,11 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   isHighlighter
 }) => {
   return (
-    <PdfViewer 
+    <CustomPDFViewer 
       file={file} 
-      url={url} 
+      url={url}
+      selectedColor={selectedColor}
+      isHighlighter={isHighlighter}
     />
   );
 };
