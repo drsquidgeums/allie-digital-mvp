@@ -80,31 +80,37 @@ export const PSPDFKitViewer: React.FC<PSPDFKitViewerProps> = ({
         });
 
         // Set up event listeners for annotations
-        pspdfkitInstance.addEventListener('annotations.create', (annotations) => {
-          if (isHighlighter && annotations.length > 0) {
-            const annotation = annotations[0];
-            if (annotation.type === 'highlight') {
-              notifyHighlightAction('add', { text: annotation.note?.text || '' });
+        pspdfkitInstance.addEventListener('annotations.create', (annotations: any) => {
+          if (isHighlighter && annotations && Array.isArray(annotations)) {
+            if (annotations.length > 0) {
+              const annotation = annotations[0];
+              if (annotation.type === 'highlight') {
+                notifyHighlightAction('add', { text: annotation.note?.text || '' });
+              }
             }
           }
         });
 
         // Set up event listeners for annotations
-        pspdfkitInstance.addEventListener('annotations.update', (annotations) => {
-          if (isHighlighter && annotations.length > 0) {
-            const annotation = annotations[0];
-            if (annotation.type === 'highlight') {
-              notifyHighlightAction('update');
+        pspdfkitInstance.addEventListener('annotations.update', (annotations: any) => {
+          if (isHighlighter && annotations && Array.isArray(annotations)) {
+            if (annotations.length > 0) {
+              const annotation = annotations[0];
+              if (annotation.type === 'highlight') {
+                notifyHighlightAction('update');
+              }
             }
           }
         });
 
         // Set up event listeners for annotations
-        pspdfkitInstance.addEventListener('annotations.delete', (annotations) => {
-          if (isHighlighter && annotations.length > 0) {
-            const annotation = annotations[0];
-            if (annotation.type === 'highlight') {
-              notifyHighlightAction('remove');
+        pspdfkitInstance.addEventListener('annotations.delete', (annotations: any) => {
+          if (isHighlighter && annotations && Array.isArray(annotations)) {
+            if (annotations.length > 0) {
+              const annotation = annotations[0];
+              if (annotation.type === 'highlight') {
+                notifyHighlightAction('remove');
+              }
             }
           }
         });
