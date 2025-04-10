@@ -1,19 +1,17 @@
 
 import React from 'react';
 
-/**
- * LoadingFallback Component
- * 
- * Displays a loading spinner while document content is being loaded.
- * Used as a fallback for Suspense.
- */
-export const LoadingFallback: React.FC = () => {
+interface LoadingFallbackProps {
+  message?: string;
+}
+
+export const LoadingFallback: React.FC<LoadingFallbackProps> = ({ message = "Loading..." }) => {
   return (
-    <div className="flex items-center justify-center h-full">
-      <div 
-        className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" 
-        aria-label="Loading document"
-      ></div>
+    <div className="flex flex-col items-center justify-center h-full w-full p-8">
+      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mb-4"></div>
+      <p className="text-muted-foreground">{message}</p>
     </div>
   );
 };
+
+export default LoadingFallback;
