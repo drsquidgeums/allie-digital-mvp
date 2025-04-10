@@ -26,12 +26,12 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   
   // Handle PDF files
   if (file && getFileType(file) === 'pdf') {
-    return <PdfViewer file={file} url="" isHighlighter={true} />;
+    return <PdfViewer file={file} url="" />;
   }
   
   // Handle PDF URLs
   if (url && url.toLowerCase().endsWith('.pdf')) {
-    return <PdfViewer file={null} url={url} isHighlighter={true} />;
+    return <PdfViewer file={null} url={url} />;
   }
 
   // For non-PDF files, display basic file information
