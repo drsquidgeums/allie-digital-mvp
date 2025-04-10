@@ -1,8 +1,9 @@
 
 import React from 'react';
 import PspdfkitViewer from '../PspdfkitViewer';
+import PdfiumViewer from './PdfiumViewer'; 
 import FallbackPDFViewer from './FallbackPDFViewer';
-import { usePspdfkitAvailability } from '../hooks/usePspdfkitAvailability';
+import { usePdfViewerAvailability, PdfViewerType } from '../hooks/usePdfViewerAvailability';
 import { LoadingFallback } from '../../LoadingFallback';
 
 interface CustomPDFViewerProps {
@@ -24,40 +25,55 @@ export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
   setHighlightEnabled = () => {},
   setSelectedColor = () => {}
 }) => {
-  const { useFallback, isChecking } = usePspdfkitAvailability();
+  const { viewerType, isChecking } = usePdfViewerAvailability();
   
-  // Show loading state while checking PSPDFKit availability
+  // Show loading state while checking viewer availability
   if (isChecking) {
     return <LoadingFallback message="Initializing PDF viewer..." />;
   }
 
-  // Based on availability, use PSPDFKit or fallback to react-pdf
-  if (useFallback) {
-    return (
-      <FallbackPDFViewer 
-        file={file} 
-        url={url} 
-        selectedColor={selectedColor}
-        isHighlighter={isHighlighter}
-        highlightEnabled={highlightEnabled}
-        setHighlightEnabled={setHighlightEnabled}
-        setSelectedColor={setSelectedColor}
-      />
-    );
+  // Select the appropriate viewer based on availability
+  switch (viewerType) {
+    case PdfViewerType.PSPDFKIT:
+      return (
+        <PspdfkitViewer
+          file={file}
+          url={url}
+          selectedColor={selectedColor}
+          isHighlighter={isHighlighter}
+          highlightEnabled={highlightEnabled}
+          setHighlightEnabled={setHighlightEnabled}
+          setSelectedColor={setSelectedColor}
+        />
+      );
+    
+    case PdfViewerType.PDFIUM:
+      return (
+        <PdfiumViewer
+          file={file}
+          url={url}
+          selectedColor={selectedColor}
+          isHighlighter={isHighlighter}
+          highlightEnabled={highlightEnabled}
+          setHighlightEnabled={setHighlightEnabled}
+          setSelectedColor={setSelectedColor}
+        />
+      );
+    
+    case PdfViewerType.REACT_PDF:
+    default:
+      return (
+        <FallbackPDFViewer 
+          file={file} 
+          url={url} 
+          selectedColor={selectedColor}
+          isHighlighter={isHighlighter}
+          highlightEnabled={highlightEnabled}
+          setHighlightEnabled={setHighlightEnabled}
+          setSelectedColor={setSelectedColor}
+        />
+      );
   }
-  
-  // Use PSPDFKit by default
-  return (
-    <PspdfkitViewer
-      file={file}
-      url={url}
-      selectedColor={selectedColor}
-      isHighlighter={isHighlighter}
-      highlightEnabled={highlightEnabled}
-      setHighlightEnabled={setHighlightEnabled}
-      setSelectedColor={setSelectedColor}
-    />
-  );
 };
 
 export default CustomPDFViewer;
