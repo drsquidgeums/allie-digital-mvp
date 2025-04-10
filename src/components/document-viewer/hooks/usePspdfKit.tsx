@@ -11,17 +11,38 @@ export const usePspdfKit = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const checkPspdfKit = async () => {
+    const initializePspdfKit = async () => {
       try {
         // Check if the PSPDFKit files are accessible
-        const response = await fetch('/pspdfkit/pspdfkit.js', { method: 'HEAD' });
+        const scriptResponse = await fetch('/pspdfkit/pspdfkit.js', { method: 'HEAD' });
+        const cssResponse = await fetch('/pspdfkit/pspdfkit.css', { method: 'HEAD' });
         
-        if (!response.ok) {
-          throw new Error('PSPDFKit files not found. Make sure PSPDFKit is properly installed.');
+        if (!scriptResponse.ok || !cssResponse.ok) {
+          throw new Error('PSPDFKit files not found. Please make sure PSPDFKit is properly set up.');
         }
         
-        setIsReady(true);
-        console.log('PSPDFKit resources verified successfully');
+        // Load PSPDFKit script and CSS dynamically
+        const script = document.createElement('script');
+        script.src = '/pspdfkit/pspdfkit.js';
+        script.async = true;
+        
+        const link = document.createElement('link');
+        link.href = '/pspdfkit/pspdfkit.css';
+        link.rel = 'stylesheet';
+        
+        document.head.appendChild(link);
+        
+        script.onload = () => {
+          console.log('PSPDFKit script loaded successfully');
+          setIsReady(true);
+        };
+        
+        script.onerror = (e) => {
+          console.error('Error loading PSPDFKit script:', e);
+          setError(new Error('Failed to load PSPDFKit script. Make sure it is properly installed.'));
+        };
+        
+        document.head.appendChild(script);
       } catch (err) {
         console.error('PSPDFKit initialization error:', err);
         setError(err instanceof Error ? err : new Error('Unknown error initializing PSPDFKit'));
@@ -29,13 +50,27 @@ export const usePspdfKit = () => {
         toast({
           variant: "destructive",
           title: "PSPDFKit Error",
-          description: "Could not load PDF viewer. Some features may be unavailable.",
+          description: "Could not initialize PSPDFKit. Some features may be unavailable.",
         });
       }
     };
     
-    checkPspdfKit();
-  }, []);
+    initializePspdfKit();
+    
+    // Cleanup function to remove script and link elements
+    return () => {
+      const script = document.querySelector('script[src="/pspdfkit/pspdfkit.js"]');
+      const link = document.querySelector('link[href="/pspdfkit/pspdfkit.css"]');
+      
+      if (script) {
+        document.head.removeChild(script);
+      }
+      
+      if (link) {
+        document.head.removeChild(link);
+      }
+    };
+  }, [toast]);
 
   return { 
     isReady, 
