@@ -1,8 +1,12 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { PdfViewerWrapper } from './file-viewers/PdfViewerWrapper';
 import { useToast } from '@/hooks/use-toast';
+import { pdfjs } from 'react-pdf';
 import { useHighlightUtils } from '@/hooks/document-viewer/useHighlightUtils';
+
+// Ensure PDF.js worker is configured properly here as well
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 interface PdfViewerProps {
   file: File | null;
@@ -14,7 +18,7 @@ interface PdfViewerProps {
 /**
  * PDF Viewer Component
  * 
- * Renders PDFs using PDFium viewer
+ * Renders PDFs using react-pdf library with fallback to native PDF viewer
  */
 export const PdfViewer: React.FC<PdfViewerProps> = ({ 
   file, 
@@ -23,6 +27,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   isHighlighter = true
 }) => {
   const { toast } = useToast();
+  const [highlightEnabled, setHighlightEnabled] = useState<boolean>(false);
   const { selectedColor: activeColor, setSelectedColor } = useHighlightUtils(selectedColor);
   
   // Determine source of PDF content
@@ -42,6 +47,9 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
       url={url} 
       selectedColor={activeColor}
       isHighlighter={isHighlighter}
+      highlightEnabled={highlightEnabled}
+      setHighlightEnabled={setHighlightEnabled}
+      setSelectedColor={setSelectedColor}
     />
   );
 };

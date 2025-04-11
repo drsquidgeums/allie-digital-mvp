@@ -1,7 +1,6 @@
 
 import React from 'react';
-import PDFiumViewerComponent from '../pdf/PDFiumViewerComponent';
-import { useToast } from '@/hooks/use-toast';
+import PspdfkitViewer from '../pdf/PspdfkitViewer';
 
 interface PdfViewerWrapperProps {
   file: File | null;
@@ -22,21 +21,14 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   setHighlightEnabled = () => {},
   setSelectedColor = () => {}
 }) => {
-  const { toast } = useToast();
-  
-  const handleError = (error: Error) => {
-    toast({
-      variant: "destructive",
-      title: "PDF Viewer Error",
-      description: error.message || "Failed to load PDF document"
-    });
-  };
-  
   return (
-    <PDFiumViewerComponent 
+    <PspdfkitViewer 
       file={file} 
-      url={url}
-      onError={handleError}
+      url={url} 
+      selectedColor={selectedColor} 
+      isHighlighter={isHighlighter}
+      highlightEnabled={highlightEnabled}
+      setHighlightEnabled={setHighlightEnabled}
     />
   );
 };

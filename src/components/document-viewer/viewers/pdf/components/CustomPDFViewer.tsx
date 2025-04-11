@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { useToast } from '@/hooks/use-toast';
@@ -6,6 +5,7 @@ import { ErrorDisplay } from '../../ErrorDisplay';
 import { PdfToolbar } from './PdfToolbar';
 import { usePdfHighlighter } from '@/utils/pdfHighlighter';
 import { usePdfHighlighter as useRangyHighlighter } from '@/components/document-viewer/viewers/pdf/PdfHighlighter';
+import PspdfkitViewer from '../PspdfkitViewer';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
@@ -23,6 +23,65 @@ interface CustomPDFViewerProps {
 }
 
 export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
+  file,
+  url,
+  selectedColor,
+  isHighlighter = true,
+  highlightEnabled = false,
+  setHighlightEnabled = () => {},
+  setSelectedColor = () => {}
+}) => {
+  const [useFallback, setUseFallback] = useState(false);
+  const { toast } = useToast();
+  
+  // Try to use PSPDFKit first, with fallback to react-pdf
+  useEffect(() => {
+    const checkPspdfkit = async () => {
+      try {
+        const response = await fetch('/pspdfkit/pspdfkit.js', { method: 'HEAD' });
+        if (!response.ok) {
+          setUseFallback(true);
+          console.log('PSPDFKit not available, using fallback PDF viewer');
+        }
+      } catch (error) {
+        setUseFallback(true);
+        console.log('Error checking PSPDFKit, using fallback PDF viewer:', error);
+      }
+    };
+    
+    checkPspdfkit();
+  }, []);
+
+  // Based on availability, use PSPDFKit or fallback to react-pdf
+  if (useFallback) {
+    return (
+      <FallbackPDFViewer 
+        file={file} 
+        url={url} 
+        selectedColor={selectedColor}
+        isHighlighter={isHighlighter}
+        highlightEnabled={highlightEnabled}
+        setHighlightEnabled={setHighlightEnabled}
+        setSelectedColor={setSelectedColor}
+      />
+    );
+  }
+  
+  // Use PSPDFKit by default
+  return (
+    <PspdfkitViewer
+      file={file}
+      url={url}
+      selectedColor={selectedColor}
+      isHighlighter={isHighlighter}
+      highlightEnabled={highlightEnabled}
+      setHighlightEnabled={setHighlightEnabled}
+    />
+  );
+};
+
+// Fallback PDF viewer using react-pdf and rangy for highlighting
+const FallbackPDFViewer: React.FC<CustomPDFViewerProps> = ({
   file,
   url,
   selectedColor,
