@@ -99,7 +99,7 @@ export const DocumentViewer = ({
           url={url}
           setUrl={setUrl}
           selectedFile={displayFile}
-          selectedColor={selectedColor || "#FFEB3B"} // Default yellow highlight color
+          selectedColor={selectedColor}
           isHighlighter={isHighlighter}
         />
         

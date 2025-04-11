@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { WelcomeHeader } from "./password-gate/WelcomeHeader";
@@ -19,6 +20,10 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     if (password === DEMO_PASSWORD) {
       localStorage.setItem("isAuthenticated", "true");
       onAuthenticated();
+      toast({
+        title: "Success",
+        description: "Welcome to the application!",
+      });
     } else {
       toast({
         title: "Error",

@@ -1,0 +1,10 @@
+
+/* Import all PDF-related styles */
+@import './pdf-base.css';
+@import './pdf-highlights.css';
+@import './pdf-highlighter.css';
+@import './pdf-popups.css';
+@import './pdf-text-layer.css';
+@import './pdf-ui-components.css';
+@import './pdf-toolbar.css';
+@import './pspdfkit.css';
