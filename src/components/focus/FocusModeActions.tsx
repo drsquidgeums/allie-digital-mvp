@@ -29,26 +29,26 @@ export const FocusModeActions = ({
         </Button>
       )}
 
-      <Button 
-        onClick={onToggleFocus}
-        variant={isActive ? "destructive" : "default"}
-        className={`w-full flex items-center text-xs transition-all duration-300 ${
-          isActive ? 'shadow-md shadow-destructive/30 ring-1 ring-destructive' : 
-          'shadow hover:shadow-md hover:shadow-primary/20'
-        }`}
-      >
-        {isActive ? (
-          <>
-            <MinusCircle className="w-4 h-4 mr-2 animate-pulse" />
-            <span>Exit Focus Mode</span>
-          </>
-        ) : (
-          <>
-            <Focus className="w-4 h-4 mr-2" />
-            <span>Enter Focus Mode</span>
-          </>
-        )}
-      </Button>
+      <div className="space-y-2">
+        <Button 
+          onClick={onToggleFocus}
+          variant={isActive ? "destructive" : "default"}
+          className="w-full flex items-center text-xs"
+        >
+          <Focus className="w-4 h-4 mr-2" />
+          <span>Enter Focus Mode</span>
+        </Button>
+
+        <Button 
+          onClick={onToggleFocus}
+          variant="destructive"
+          className="w-full flex items-center text-xs"
+          disabled={!isActive}
+        >
+          <MinusCircle className="w-4 h-4 mr-2" />
+          <span>Exit Focus Mode</span>
+        </Button>
+      </div>
     </div>
   );
 };
