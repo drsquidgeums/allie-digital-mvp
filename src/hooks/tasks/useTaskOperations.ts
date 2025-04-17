@@ -179,9 +179,9 @@ export const useTaskOperations = (tasks: Task[], updateTasks: (tasks: Task[]) =>
       });
       
       updateTasks(updatedTasks);
-      toast({
-        title: "Task updated",
-        description: "Task colour has been updated",
+      // Fix: Replace toast with object syntax to toast() function call
+      toast("Task updated", {
+        description: "Task colour has been updated"
       });
     } catch (err) {
       console.error('Error in handleUpdateTaskColor:', err);
