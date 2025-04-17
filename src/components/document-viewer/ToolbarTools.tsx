@@ -1,5 +1,5 @@
 
-import { BookOpen, Mic, Eye, Timer, Text, Focus, SpellCheck } from "lucide-react";
+import { BookOpen, Mic, Eye, Timer, Text, Focus, SpellCheck, XCircle } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { BionicReader } from "../BionicReader";
@@ -9,9 +9,12 @@ import { BeelineReader } from "../BeelineReader";
 import { FocusMode } from "../FocusMode";
 import { SpeechToText } from "../SpeechToText";
 import { Rewordify } from "../Rewordify";
+import { useFocusMode } from "@/hooks/useFocusMode";
+import { Button } from "@/components/ui/button";
 
 export const ToolbarTools = () => {
   const { t } = useTranslation();
+  const { isFocusModeActive } = useFocusMode();
 
   return (
     <div className="flex items-center gap-2">
@@ -64,6 +67,22 @@ export const ToolbarTools = () => {
         content={<FocusMode />}
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
+      {isFocusModeActive && (
+        <Button
+          variant="destructive"
+          size="sm"
+          className="flex items-center gap-2"
+          onClick={() => {
+            // Dispatch focus mode deactivation event
+            window.dispatchEvent(new CustomEvent('focusModeChanged', { 
+              detail: { active: false } 
+            }));
+          }}
+        >
+          <XCircle className="h-4 w-4" />
+          <span>Exit Focus Mode</span>
+        </Button>
+      )}
     </div>
   );
 };
