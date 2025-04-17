@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { MusicOption } from "./MusicOptions";
 import { MusicSelector } from "./MusicSelector";
 import { MusicControls } from "./MusicControls";
+import { AlertCircle } from "lucide-react";
 
 interface MusicPopoverContentProps {
   isDisabled: boolean;
@@ -34,8 +35,19 @@ export const MusicPopoverContent = ({
 }: MusicPopoverContentProps) => {
   if (isDisabled) {
     return (
-      <div className="p-4 text-center text-sm text-muted-foreground">
-        Music player is disabled while Focus Mode is active.
+      <div className="p-4 space-y-4">
+        <div className="flex items-center gap-2 text-sm text-amber-500 bg-amber-500/10 p-2 rounded-md border border-amber-200 dark:border-amber-900">
+          <AlertCircle className="h-4 w-4" />
+          <span>Music is disabled while Focus Mode's "Mute Audio" setting is active</span>
+        </div>
+        
+        <Button
+          onClick={handlePlayToggle}
+          className="w-full bg-muted text-muted-foreground cursor-not-allowed"
+          disabled
+        >
+          Music Playback Blocked
+        </Button>
       </div>
     );
   }

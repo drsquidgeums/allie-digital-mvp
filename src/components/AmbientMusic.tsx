@@ -14,8 +14,11 @@ import { MUSIC_OPTIONS } from "./audio/MusicOptions";
 import { useAudioPlayer } from "./audio/useAudioPlayer";
 import { MusicButton } from "./audio/MusicButton";
 import { MusicPopoverContent } from "./audio/MusicPopoverContent";
+import { useFocusMode } from "@/hooks/useFocusMode";
 
 export const AmbientMusic = () => {
+  const { isFocusModeActive, focusModeSettings } = useFocusMode();
+  
   const { 
     isPlaying, 
     selectedMusic, 
@@ -37,6 +40,11 @@ export const AmbientMusic = () => {
   };
 
   const handlePlayToggle = () => {
+    // If focus mode is active and mute audio setting is enabled, prevent music from playing
+    if (isFocusModeActive && focusModeSettings?.muteAudio) {
+      return;
+    }
+    
     const currentMusic = MUSIC_OPTIONS.find(opt => opt.id === selectedMusic);
     togglePlay(currentMusic);
   };
@@ -66,7 +74,7 @@ export const AmbientMusic = () => {
           align="end"
         >
           <MusicPopoverContent 
-            isDisabled={false}
+            isDisabled={isFocusModeActive && focusModeSettings?.muteAudio}
             selectedMusic={selectedMusic}
             isPlaying={isPlaying}
             volume={volume}

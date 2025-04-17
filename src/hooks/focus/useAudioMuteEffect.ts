@@ -5,7 +5,20 @@ import { FocusSettings } from "@/hooks/useFocusSettings";
 export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) => {
   useEffect(() => {
     // Only run this effect if focus mode is active AND mute audio setting is explicitly enabled
-    if (!isActive || !settings.muteAudio) return;
+    if (!isActive || !settings.muteAudio) {
+      // If mute setting is disabled but focus mode is active, we may need to restore audio
+      if (isActive) {
+        console.log('Focus mode active but audio muting disabled');
+        window.dispatchEvent(new CustomEvent('audioMutingChanged', { 
+          detail: { 
+            muted: false,
+            forced: false,
+            source: 'focus-mode-mute-disabled'
+          } 
+        }));
+      }
+      return;
+    }
 
     console.log('Focus mode audio muting activated');
     
@@ -79,7 +92,7 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
       console.log('Focus mode audio muting deactivated');
       
       // Only restore states if we're actually exiting focus mode or disabling the mute setting
-      if (!settings.muteAudio) {
+      if (!isActive || !settings.muteAudio) {
         // Restore original muted states
         mediaElements.forEach((element) => {
           const el = element as HTMLMediaElement;
