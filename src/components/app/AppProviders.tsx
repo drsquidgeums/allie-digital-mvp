@@ -1,53 +1,28 @@
 
-import React, { Suspense, useEffect } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React, { PropsWithChildren } from "react";
 import { ThemeProvider as NextThemeProvider } from "next-themes";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { PomodoroProvider } from "@/contexts/PomodoroContext";
-import "@/i18n/config"; // Fixed import path using alias
-import { useTranslation } from "react-i18next";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      retry: false,
-      staleTime: Infinity
-    },
-  },
-});
+// Initialize QueryClient
+const queryClient = new QueryClient();
 
-interface AppProvidersProps {
-  children: React.ReactNode;
-}
-
-// Language initializer component to set document language
-const LanguageInitializer = () => {
-  const { i18n } = useTranslation();
-  
-  useEffect(() => {
-    // Set document language attribute when the app mounts
-    document.documentElement.setAttribute('lang', i18n.language);
-  }, [i18n.language]);
-  
-  return null;
-};
-
-export const AppProviders = React.memo(({ children }: AppProvidersProps) => (
-  <Suspense fallback="Loading...">
+export const AppProviders = ({ children }: PropsWithChildren) => {
+  return (
     <QueryClientProvider client={queryClient}>
-      <NextThemeProvider attribute="class" defaultTheme="light" enableSystem>
+      <NextThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+      >
         <TooltipProvider>
-          <PomodoroProvider>
-            <LanguageInitializer />
+          <ErrorBoundary>
             {children}
-          </PomodoroProvider>
+          </ErrorBoundary>
         </TooltipProvider>
       </NextThemeProvider>
     </QueryClientProvider>
-  </Suspense>
-));
-
-AppProviders.displayName = "AppProviders";
+  );
+};
