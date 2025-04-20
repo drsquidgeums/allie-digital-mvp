@@ -13,20 +13,34 @@ interface SavedUrl {
 
 export const useSavedUrls = () => {
   const [savedUrls, setSavedUrls] = useState<SavedUrl[]>([]);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const saveUrl = async (url: string) => {
     try {
+      setLoading(true);
       const { data: userData } = await supabase.auth.getUser();
       if (!userData?.user) {
         throw new Error('User not authenticated');
       }
 
+      // Create a meaningful name from the URL
+      let name = url.split('/').pop() || 'Untitled Document';
+      // Remove query parameters if present
+      name = name.split('?')[0];
+      // Remove file extension if present
+      name = name.replace(/\.[^/.]+$/, "");
+      // Decode URL encoding
+      name = decodeURIComponent(name);
+      // Limit name length and capitalize
+      name = name.length > 30 ? name.substring(0, 30) + '...' : name;
+      name = name.charAt(0).toUpperCase() + name.slice(1);
+
       const { data, error } = await supabase
         .from('saved_urls')
         .insert({
           url,
-          name: url.split('/').pop() || 'Untitled Document',
+          name: name || 'Untitled Document',
           user_id: userData.user.id
         })
         .select()
@@ -34,26 +48,21 @@ export const useSavedUrls = () => {
 
       if (error) throw error;
 
+      // Add the new URL to the state
       setSavedUrls(prev => [...prev, data]);
       
-      toast({
-        title: "URL Saved",
-        description: "The document URL has been saved to My Files",
-      });
-
       return data;
     } catch (error) {
       console.error('Error saving URL:', error);
-      toast({
-        title: "Error",
-        description: "Failed to save URL. Please try again.",
-        variant: "destructive",
-      });
+      throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchSavedUrls = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from('saved_urls')
         .select('*')
@@ -63,6 +72,8 @@ export const useSavedUrls = () => {
       setSavedUrls(data || []);
     } catch (error) {
       console.error('Error fetching saved URLs:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,6 +83,7 @@ export const useSavedUrls = () => {
 
   return {
     savedUrls,
+    loading,
     saveUrl,
     refreshUrls: fetchSavedUrls
   };

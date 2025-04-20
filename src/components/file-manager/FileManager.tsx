@@ -1,6 +1,7 @@
+
 import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { FileText, Download, Trash2, ExternalLink } from "lucide-react";
+import { FileText, Download, Trash2, ExternalLink, Link2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ManagedFile } from '@/hooks/file-manager/types';
 import { useFileManager } from '@/hooks/file-manager';
@@ -16,8 +17,8 @@ import {
 } from "@/components/ui/table";
 
 export const FileManager: React.FC = () => {
-  const { files, loading, deleteFile, downloadFile, refreshFiles } = useFileManager();
-  const { savedUrls, refreshUrls } = useSavedUrls();
+  const { files, loading: filesLoading, deleteFile, downloadFile, refreshFiles } = useFileManager();
+  const { savedUrls, loading: urlsLoading, refreshUrls } = useSavedUrls();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -46,6 +47,8 @@ export const FileManager: React.FC = () => {
       description: `${file.name} will open in the document viewer`,
     });
   };
+  
+  const loading = filesLoading || urlsLoading;
 
   return (
     <div className="space-y-6">
@@ -122,12 +125,13 @@ export const FileManager: React.FC = () => {
               {savedUrls.map((savedUrl) => (
                 <TableRow key={savedUrl.id}>
                   <TableCell>
-                    <div className="text-left font-normal">
+                    <div className="text-left font-normal flex items-center gap-2">
+                      <Link2 className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
                       {savedUrl.name}
                     </div>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    URL Document
+                    Web Document
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     -

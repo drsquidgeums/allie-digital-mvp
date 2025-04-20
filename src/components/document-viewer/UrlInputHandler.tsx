@@ -14,7 +14,7 @@ export const UrlInputHandler: React.FC<UrlInputHandlerProps> = ({
   setUrl 
 }) => {
   const { toast } = useToast();
-  const { saveUrl } = useSavedUrls();
+  const { saveUrl, refreshUrls } = useSavedUrls();
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Escape') {
@@ -27,12 +27,20 @@ export const UrlInputHandler: React.FC<UrlInputHandlerProps> = ({
           // Save URL to database
           await saveUrl(url.trim());
           
+          // Refresh the list of saved URLs to update My Files
+          refreshUrls();
+          
           toast({
-            title: "URL loaded",
-            description: "Document URL has been loaded and saved",
+            title: "URL saved",
+            description: "Document URL has been loaded and saved to My Files",
           });
         } catch (error) {
           console.error('Error saving URL:', error);
+          toast({
+            title: "Error",
+            description: "Failed to save URL. Please try again.",
+            variant: "destructive",
+          });
         }
       }
     }
