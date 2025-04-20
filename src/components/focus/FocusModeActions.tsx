@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Focus, Bell, XCircle } from "lucide-react";
+import { Focus, MinusCircle, Bell } from "lucide-react";
 
 interface FocusModeActionsProps {
   isActive: boolean;
@@ -32,11 +32,14 @@ export const FocusModeActions = ({
       <Button 
         onClick={onToggleFocus}
         variant={isActive ? "destructive" : "default"}
-        className="w-full flex items-center text-xs"
+        className={`w-full flex items-center text-xs transition-all duration-300 ${
+          isActive ? 'shadow-md shadow-destructive/30 ring-1 ring-destructive' : 
+          'shadow hover:shadow-md hover:shadow-primary/20'
+        }`}
       >
         {isActive ? (
           <>
-            <XCircle className="w-4 h-4 mr-2" />
+            <MinusCircle className="w-4 h-4 mr-2 animate-pulse" />
             <span>Exit Focus Mode</span>
           </>
         ) : (

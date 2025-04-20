@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -12,13 +12,11 @@ import {
 } from "@/components/ui/tooltip";
 import { MUSIC_OPTIONS } from "./audio/MusicOptions";
 import { useAudioPlayer } from "./audio/useAudioPlayer";
+import { useFocusMode } from "@/hooks/useFocusMode";
 import { MusicButton } from "./audio/MusicButton";
 import { MusicPopoverContent } from "./audio/MusicPopoverContent";
-import { useFocusMode } from "@/hooks/useFocusMode";
 
 export const AmbientMusic = () => {
-  const { isFocusModeActive, focusModeSettings } = useFocusMode();
-  
   const { 
     isPlaying, 
     selectedMusic, 
@@ -31,8 +29,24 @@ export const AmbientMusic = () => {
     toggleMute,
     toggleLoop 
   } = useAudioPlayer();
+  
+  const { isFocusModeActive } = useFocusMode();
+  const [isDisabled, setIsDisabled] = useState(false);
+  
+  useEffect(() => {
+    setIsDisabled(isFocusModeActive);
+    
+    // When focus mode is activated, we'll get the disable event from useFocusModeControl
+    // But we still need to make sure the component state reflects this
+    if (isFocusModeActive && isPlaying) {
+      const currentMusic = MUSIC_OPTIONS.find(opt => opt.id === selectedMusic);
+      togglePlay(currentMusic);
+    }
+  }, [isFocusModeActive, isPlaying, selectedMusic, togglePlay]);
 
   const handleMusicSelection = (value: string) => {
+    if (isDisabled) return;
+    
     const music = MUSIC_OPTIONS.find((opt) => opt.id === value);
     if (music) {
       handleMusicChange(music);
@@ -40,16 +54,15 @@ export const AmbientMusic = () => {
   };
 
   const handlePlayToggle = () => {
-    // If focus mode is active and mute audio setting is enabled, prevent music from playing
-    if (isFocusModeActive && focusModeSettings?.muteAudio) {
-      return;
-    }
+    if (isDisabled) return;
     
     const currentMusic = MUSIC_OPTIONS.find(opt => opt.id === selectedMusic);
     togglePlay(currentMusic);
   };
 
   const handleVolumeChange = (value: number[]) => {
+    if (isDisabled) return;
+    
     setVolume(value[0]);
   };
 
@@ -59,14 +72,14 @@ export const AmbientMusic = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <div>
-              <MusicButton isPlaying={isPlaying} isDisabled={false} />
+              <MusicButton isPlaying={isPlaying} isDisabled={isDisabled} />
             </div>
           </TooltipTrigger>
           <TooltipContent 
             side="bottom"
             className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md"
           >
-            Ambient Music
+            {isDisabled ? "Music disabled during Focus Mode" : "Ambient Music"}
           </TooltipContent>
         </Tooltip>
         <PopoverContent 
@@ -74,7 +87,7 @@ export const AmbientMusic = () => {
           align="end"
         >
           <MusicPopoverContent 
-            isDisabled={isFocusModeActive && focusModeSettings?.muteAudio}
+            isDisabled={isDisabled}
             selectedMusic={selectedMusic}
             isPlaying={isPlaying}
             volume={volume}

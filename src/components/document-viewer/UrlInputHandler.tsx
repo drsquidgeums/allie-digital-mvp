@@ -2,50 +2,46 @@
 import React from "react";
 import { useToast } from "@/hooks/use-toast";
 import { UrlInput } from "./UrlInput";
-import { useSavedUrls } from "@/hooks/useSavedUrls";
 
 interface UrlInputHandlerProps {
   url: string;
   setUrl: (url: string) => void;
 }
 
+/**
+ * UrlInputHandler Component
+ * 
+ * Manages URL input field and associated handlers
+ */
 export const UrlInputHandler: React.FC<UrlInputHandlerProps> = ({ 
   url, 
   setUrl 
 }) => {
   const { toast } = useToast();
-  const { saveUrl, refreshUrls } = useSavedUrls();
 
-  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+  /**
+   * Handles keyboard events for the URL input field
+   * - Escape key clears the URL and removes focus
+   * - Enter key confirms the URL and shows a toast notification
+   */
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Escape') {
       setUrl('');
       e.currentTarget.blur();
     } else if (e.key === 'Enter') {
       e.preventDefault();
       if (url.trim()) {
-        try {
-          // Save URL 
-          await saveUrl(url.trim());
-          
-          // Refresh the list of saved URLs to update My Files
-          refreshUrls();
-          
-          toast({
-            title: "URL saved",
-            description: "Document URL has been saved to My Files",
-          });
-        } catch (error) {
-          console.error('Error saving URL:', error);
-          toast({
-            title: "Error",
-            description: "Failed to save URL. Please try again.",
-            variant: "destructive",
-          });
-        }
+        toast({
+          title: "URL loaded",
+          description: "Document URL has been loaded into the viewer",
+        });
       }
     }
   };
 
+  /**
+   * Updates the URL state when the input field changes
+   */
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(e.target.value);
   };

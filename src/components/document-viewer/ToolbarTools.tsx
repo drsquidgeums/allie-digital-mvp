@@ -9,11 +9,9 @@ import { BeelineReader } from "../BeelineReader";
 import { FocusMode } from "../FocusMode";
 import { SpeechToText } from "../SpeechToText";
 import { Rewordify } from "../Rewordify";
-import { useFocusMode } from "@/hooks/useFocusMode";
 
 export const ToolbarTools = () => {
   const { t } = useTranslation();
-  const { isFocusModeActive } = useFocusMode();
 
   return (
     <div className="flex items-center gap-2">

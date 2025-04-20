@@ -1,12 +1,11 @@
 
 import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { FileText, Download, Trash2, ExternalLink, Link2 } from "lucide-react";
+import { FileText, Download, Trash2, ExternalLink } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ManagedFile } from '@/hooks/file-manager/types';
 import { useFileManager } from '@/hooks/file-manager';
 import { useNavigate } from 'react-router-dom';
-import { useSavedUrls } from '@/hooks/useSavedUrls';
 import { 
   Table, 
   TableBody, 
@@ -17,29 +16,28 @@ import {
 } from "@/components/ui/table";
 
 export const FileManager: React.FC = () => {
-  const { files, loading: filesLoading, deleteFile, downloadFile, refreshFiles } = useFileManager();
-  const { savedUrls, loading: urlsLoading, refreshUrls } = useSavedUrls();
+  const { files, loading, deleteFile, downloadFile, refreshFiles } = useFileManager();
   const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
     console.log("FileManager mounted, files count:", files.length);
+    // Auto-refresh files when component mounts
     refreshFiles();
-    refreshUrls();
   }, []);
 
-  const openInToolbox = (file: ManagedFile | { url: string; name: string }) => {
-    if ('url' in file) {
-      // Handle URL type
+  useEffect(() => {
+    console.log("FileManager files updated:", files.length);
+  }, [files]);
+
+  const openInToolbox = (file: ManagedFile) => {
+    // Store both file ID and URL in sessionStorage
+    sessionStorage.setItem('selectedFileId', file.id);
+    if (file.url) {
       sessionStorage.setItem('selectedFileUrl', file.url);
-    } else {
-      // Handle regular file
-      sessionStorage.setItem('selectedFileId', file.id);
-      if (file.url) {
-        sessionStorage.setItem('selectedFileUrl', file.url);
-      }
     }
     
+    // Navigate to the document viewer (root route)
     navigate('/');
     
     toast({
@@ -47,8 +45,6 @@ export const FileManager: React.FC = () => {
       description: `${file.name} will open in the document viewer`,
     });
   };
-  
-  const loading = filesLoading || urlsLoading;
 
   return (
     <div className="space-y-6">
@@ -66,7 +62,7 @@ export const FileManager: React.FC = () => {
           </div>
         )}
         
-        {!loading && (files.length > 0 || savedUrls.length > 0) && (
+        {!loading && files.length > 0 && (
           <Table>
             <TableHeader>
               <TableRow>
@@ -121,43 +117,13 @@ export const FileManager: React.FC = () => {
                   </TableCell>
                 </TableRow>
               ))}
-              
-              {savedUrls.map((savedUrl) => (
-                <TableRow key={savedUrl.id}>
-                  <TableCell>
-                    <div className="text-left font-normal flex items-center gap-2">
-                      <Link2 className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
-                      {savedUrl.name}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    Web Document
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    -
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => openInToolbox(savedUrl)}
-                        aria-label={`Open ${savedUrl.name} in Document Viewer`}
-                        title="Open in Document Viewer"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
             </TableBody>
           </Table>
         )}
         
-        {!loading && files.length === 0 && savedUrls.length === 0 && (
+        {!loading && files.length === 0 && (
           <div className="text-sm text-muted-foreground p-4 text-center border border-dashed rounded-md">
-            No files or saved URLs yet. Use the Toolbox to upload files or save document URLs.
+            No files uploaded yet. Use the Toolbox to upload files.
           </div>
         )}
       </div>
@@ -165,6 +131,7 @@ export const FileManager: React.FC = () => {
   );
 };
 
+// Utility function to format bytes to human-readable format
 function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) return '0 Bytes';
   
