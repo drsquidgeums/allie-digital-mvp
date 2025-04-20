@@ -24,7 +24,7 @@ export const UrlInputHandler: React.FC<UrlInputHandlerProps> = ({
       e.preventDefault();
       if (url.trim()) {
         try {
-          // Save URL to database
+          // Save URL 
           await saveUrl(url.trim());
           
           // Refresh the list of saved URLs to update My Files
@@ -32,7 +32,7 @@ export const UrlInputHandler: React.FC<UrlInputHandlerProps> = ({
           
           toast({
             title: "URL saved",
-            description: "Document URL has been loaded and saved to My Files",
+            description: "Document URL has been saved to My Files",
           });
         } catch (error) {
           console.error('Error saving URL:', error);

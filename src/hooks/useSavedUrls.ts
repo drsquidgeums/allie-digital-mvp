@@ -20,10 +20,7 @@ export const useSavedUrls = () => {
     try {
       setLoading(true);
       const { data: userData } = await supabase.auth.getUser();
-      if (!userData?.user) {
-        throw new Error('User not authenticated');
-      }
-
+      
       // Create a meaningful name from the URL
       let name = url.split('/').pop() || 'Untitled Document';
       // Remove query parameters if present
@@ -36,6 +33,23 @@ export const useSavedUrls = () => {
       name = name.length > 30 ? name.substring(0, 30) + '...' : name;
       name = name.charAt(0).toUpperCase() + name.slice(1);
 
+      // If user is not authenticated, store in local storage
+      if (!userData?.user) {
+        const localUrls = JSON.parse(localStorage.getItem('savedUrls') || '[]');
+        const newUrl = {
+          id: crypto.randomUUID(),
+          url,
+          name: name || 'Untitled Document',
+          created_at: new Date().toISOString(),
+          last_accessed: null
+        };
+        
+        localStorage.setItem('savedUrls', JSON.stringify([newUrl, ...localUrls]));
+        setSavedUrls(prev => [newUrl, ...prev]);
+        return newUrl;
+      }
+
+      // If authenticated, save to database
       const { data, error } = await supabase
         .from('saved_urls')
         .insert({
@@ -49,7 +63,7 @@ export const useSavedUrls = () => {
       if (error) throw error;
 
       // Add the new URL to the state
-      setSavedUrls(prev => [...prev, data]);
+      setSavedUrls(prev => [data, ...prev]);
       
       return data;
     } catch (error) {
@@ -63,13 +77,24 @@ export const useSavedUrls = () => {
   const fetchSavedUrls = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('saved_urls')
-        .select('*')
-        .order('created_at', { ascending: false });
+      
+      // Try to get authenticated user
+      const { data: userData } = await supabase.auth.getUser();
+      
+      if (userData?.user) {
+        // Fetch from database for authenticated users
+        const { data, error } = await supabase
+          .from('saved_urls')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setSavedUrls(data || []);
+        if (error) throw error;
+        setSavedUrls(data || []);
+      } else {
+        // Fetch from local storage for unauthenticated users
+        const localUrls = JSON.parse(localStorage.getItem('savedUrls') || '[]');
+        setSavedUrls(localUrls);
+      }
     } catch (error) {
       console.error('Error fetching saved URLs:', error);
     } finally {
