@@ -1,6 +1,7 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PspdfkitViewer from '../pdf/PspdfkitViewer';
+import CustomPDFViewer from '../pdf/components/CustomPDFViewer';
+import usePspdfKit from '@/components/document-viewer/hooks/usePspdfKit';
 
 interface PdfViewerWrapperProps {
   file: File | null;
@@ -21,6 +22,29 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   setHighlightEnabled = () => {},
   setSelectedColor = () => {}
 }) => {
+  const { isReady, isFallbackRequired } = usePspdfKit();
+  const [useFallback, setUseFallback] = useState(false);
+
+  useEffect(() => {
+    if (isFallbackRequired) {
+      setUseFallback(true);
+    }
+  }, [isFallbackRequired]);
+
+  if (useFallback || isFallbackRequired) {
+    return (
+      <CustomPDFViewer
+        file={file}
+        url={url}
+        selectedColor={selectedColor}
+        isHighlighter={isHighlighter}
+        highlightEnabled={highlightEnabled}
+        setHighlightEnabled={setHighlightEnabled}
+        setSelectedColor={setSelectedColor}
+      />
+    );
+  }
+
   return (
     <PspdfkitViewer 
       file={file} 

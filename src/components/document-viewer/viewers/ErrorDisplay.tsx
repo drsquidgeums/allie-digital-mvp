@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 interface ErrorDisplayProps {
   title?: string;
   description?: string;
-  onRetry?: () => void;
+  onRetry?: (() => void) | null;
 }
 
 export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
