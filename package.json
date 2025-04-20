@@ -70,6 +70,7 @@
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^3.4.120",
     "pdfkit": "^0.16.0",
+    "prosemirror-commands": "^1.7.1",
     "prosemirror-schema-basic": "^1.2.4",
     "prosemirror-view": "^1.39.1",
     "pspdfkit": "^2024.8.2",
