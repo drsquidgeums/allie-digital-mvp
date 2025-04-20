@@ -16,7 +16,7 @@ export const MusicButton = ({
   isDisabled,
 }: MusicButtonProps) => {
   return (
-    <PopoverTrigger asChild>
+    <PopoverTrigger>
       <Button
         variant="outline"
         size="sm"

@@ -27,7 +27,10 @@ export const MusicControls = ({
     <div className="space-y-2">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="volume-control" className="text-sm">
+          <Label
+            htmlFor="volume-control"
+            className="text-sm"
+          >
             Volume
           </Label>
           <Button
@@ -45,24 +48,24 @@ export const MusicControls = ({
           </Button>
         </div>
         <Slider
-          id="volume-control"
+          defaultValue={[isMuted ? 0 : volume * 100]}
           min={0}
           max={100}
           step={1}
-          value={[isMuted ? 0 : volume * 100]}
           onValueChange={handleVolumeChange}
-          className="cursor-pointer"
           aria-label="Adjust volume"
         />
       </div>
 
       <div className="flex items-center justify-between space-x-2">
-        <Label htmlFor="loop-toggle" className="text-sm cursor-pointer">
+        <Label
+          htmlFor="loop-toggle"
+          className="text-sm cursor-pointer"
+        >
           Loop Playback
         </Label>
         <div className="flex items-center space-x-2">
           <Switch
-            id="loop-toggle"
             checked={isLooping}
             onCheckedChange={toggleLoop}
             aria-label="Toggle loop playback"
