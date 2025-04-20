@@ -9,33 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      saved_urls: {
-        Row: {
-          created_at: string
-          id: string
-          last_accessed: string | null
-          name: string
-          url: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          last_accessed?: string | null
-          name: string
-          url: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          last_accessed?: string | null
-          name?: string
-          url?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       secrets: {
         Row: {
           created_at: string | null

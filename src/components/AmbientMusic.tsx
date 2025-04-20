@@ -3,7 +3,6 @@ import React from "react";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
 } from "@/components/ui/popover";
 import {
   Tooltip,
@@ -58,7 +57,7 @@ export const AmbientMusic = () => {
     <TooltipProvider>
       <Popover>
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <div>
               <MusicButton isPlaying={isPlaying} isDisabled={false} />
             </div>

@@ -2,13 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger,
-  SelectValue 
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Play, Pause, Square } from "lucide-react";
 import { usePersistedText } from "@/hooks/usePersistedText";
 

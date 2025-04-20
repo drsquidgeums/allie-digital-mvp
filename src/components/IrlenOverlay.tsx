@@ -67,8 +67,8 @@ export const IrlenOverlay = () => {
   return (
     <Popover>
       <Tooltip>
-        <TooltipTrigger>
-          <PopoverTrigger>
+        <TooltipTrigger asChild>
+          <PopoverTrigger asChild>
             <div className="relative">
               <Button
                 variant="outline"

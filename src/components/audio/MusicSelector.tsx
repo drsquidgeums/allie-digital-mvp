@@ -15,7 +15,7 @@ export const MusicSelector = ({
 }: MusicSelectorProps) => {
   return (
     <RadioGroup
-      defaultValue={selectedMusic}
+      value={selectedMusic}
       onValueChange={handleMusicSelection}
       className="space-y-2"
       aria-label="Select background music"
