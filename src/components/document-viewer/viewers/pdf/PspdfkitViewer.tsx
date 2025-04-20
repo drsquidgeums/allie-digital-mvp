@@ -215,9 +215,10 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
   if (error) {
     return (
       <ErrorDisplay
-        title="PDF Viewer Notice"
-        description="The advanced PDF viewer couldn't be loaded. Using the built-in viewer instead."
+        title="PDF Viewer"
+        description="Using the standard PDF viewer. All core viewing and annotation features are available."
         onRetry={null}
+        variant="info"
       />
     );
   }
