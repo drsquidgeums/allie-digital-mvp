@@ -22,9 +22,19 @@ export const Editor: React.FC = () => {
   useEffect(() => {
     if (!editorRef.current || viewRef.current) return;
 
-    // Create the editor state
+    // Create initial document with some content
+    const doc = mySchema.nodeFromJSON({
+      type: 'doc',
+      content: [{
+        type: 'paragraph',
+        content: [{ type: 'text', text: 'Start typing here...' }]
+      }]
+    });
+
+    // Create the editor state with the document
     const state = EditorState.create({
       schema: mySchema,
+      doc,
       plugins: [keymap(baseKeymap)]
     });
 
@@ -45,10 +55,10 @@ export const Editor: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full h-full bg-background">
+    <div className="w-full h-full bg-background border border-input rounded-md overflow-hidden">
       <div 
         ref={editorRef} 
-        className="prose prose-sm max-w-none h-full p-4 focus-within:outline-none"
+        className="prose prose-sm max-w-none h-full p-4 focus-within:outline-none min-h-[300px]"
         role="textbox"
         aria-label="Document editor"
       />
