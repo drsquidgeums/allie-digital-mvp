@@ -6,6 +6,7 @@ import { Schema } from 'prosemirror-model';
 import { schema } from 'prosemirror-schema-basic';
 import { addListNodes } from 'prosemirror-schema-list';
 import { baseKeymap } from 'prosemirror-commands';
+import { keymap } from 'prosemirror-keymap';
 
 // Extend the basic schema with list support
 const mySchema = new Schema({
@@ -23,7 +24,7 @@ export const Editor: React.FC = () => {
     // Create the editor state
     const state = EditorState.create({
       schema: mySchema,
-      plugins: [baseKeymap]
+      plugins: [keymap(baseKeymap)]
     });
 
     // Create the editor view
