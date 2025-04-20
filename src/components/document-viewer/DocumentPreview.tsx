@@ -19,6 +19,12 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     return <EmptyState />;
   }
 
-  // Show the editor for all cases
-  return <Editor />;
+  console.log("Rendering Editor in DocumentPreview");
+  
+  // Show the editor component
+  return (
+    <div className="h-full flex flex-col">
+      <Editor />
+    </div>
+  );
 };
