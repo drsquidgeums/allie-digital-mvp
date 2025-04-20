@@ -7,6 +7,7 @@ import { schema } from 'prosemirror-schema-basic';
 import { addListNodes } from 'prosemirror-schema-list';
 import { baseKeymap } from 'prosemirror-commands';
 import { keymap } from 'prosemirror-keymap';
+import 'prosemirror-view/style/prosemirror.css';
 
 // Extend the basic schema with list support
 const mySchema = new Schema({
