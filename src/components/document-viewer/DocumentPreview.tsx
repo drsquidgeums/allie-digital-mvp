@@ -34,7 +34,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   
   // Use the FileTypeHandler when we have a file
   if (file) {
-    return <FileTypeHandler file={file} selectedColor={selectedColor} isHighlighter={isHighlighter} />;
+    return <FileTypeHandler file={file} selectedColor={selectedColor} isHighlighter={isHighlighter} onSave={onSave} />;
   }
   
   // Handle PDF URLs
