@@ -11,14 +11,15 @@ export const getFileType = (file: File): string => {
   const fileName = file.name.toLowerCase();
   const fileType = file.type.toLowerCase();
   
-  // Check for Microsoft Word document types
-  if (fileName.endsWith('.doc') || fileName.endsWith('.docx')) {
-    return 'document';
-  }
-  
-  // Handle PDF files
+  // Handle PDF files first (most commonly used)
   if (fileName.endsWith('.pdf') || fileType.includes('pdf')) {
     return 'pdf';
+  }
+  
+  // Check for Microsoft Word document types
+  if (fileName.endsWith('.doc') || fileName.endsWith('.docx') || 
+      fileType.includes('msword') || fileType.includes('wordprocessingml')) {
+    return 'document';
   }
   
   // Handle text files
@@ -32,7 +33,7 @@ export const getFileType = (file: File): string => {
   }
   
   // Default to unknown type
-  return 'unknown';
+  return fileType || 'unknown';
 };
 
 /**
