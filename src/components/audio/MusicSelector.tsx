@@ -23,9 +23,10 @@ export const MusicSelector = ({
         <div key={option.id} className="flex items-center space-x-2">
           <RadioGroupItem 
             value={option.id}
-            aria-label={option.name}
+            id={option.id}
           />
           <Label
+            htmlFor={option.id}
             className="flex-1 text-left cursor-pointer"
           >
             {option.name}

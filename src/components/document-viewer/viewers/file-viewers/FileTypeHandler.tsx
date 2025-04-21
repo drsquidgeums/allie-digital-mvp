@@ -10,6 +10,7 @@ interface FileTypeHandlerProps {
   file: File;
   selectedColor: string;
   isHighlighter?: boolean;
+  onSave?: (content: string, fileName: string) => void;
 }
 
 /**
@@ -20,7 +21,8 @@ interface FileTypeHandlerProps {
 export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
   file,
   selectedColor,
-  isHighlighter
+  isHighlighter,
+  onSave
 }) => {
   try {
     console.log("FileTypeHandler received file:", file?.name);
@@ -46,12 +48,12 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
         fileType === 'html' ||
         file.name.toLowerCase().endsWith('.doc') || 
         file.name.toLowerCase().endsWith('.docx')) {
-      return <WordEditor file={file} url="" />;
+      return <WordEditor file={file} url="" onSave={onSave} />;
     }
     
     // Default to the Word Editor for other file types
     console.log("Using default Word Editor for unrecognized file type:", fileType);
-    return <WordEditor file={file} url="" />;
+    return <WordEditor file={file} url="" onSave={onSave} />;
   } catch (error) {
     console.error("Error in FileTypeHandler:", error);
     return (
