@@ -3,11 +3,13 @@ import React from 'react';
 import { EmptyState } from './viewers/EmptyState';
 import { ErrorDisplay } from './viewers/ErrorDisplay';
 import { PdfViewer } from './viewers/PdfViewer';
+import { WordEditor } from './viewers/word-editor/WordEditor';
 import { getFileType } from './FileConverter';
 
 interface DocumentPreviewProps {
   file: File | null;
   url: string;
+  onSave?: (content: string, fileName: string) => void;
 }
 
 /**
@@ -17,11 +19,17 @@ interface DocumentPreviewProps {
  */
 export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   file,
-  url
+  url,
+  onSave
 }) => {
   // Display empty state when no document is loaded
   if (!file && !url) {
     return <EmptyState />;
+  }
+  
+  // Handle Word documents
+  if (file && (file.name.endsWith('.doc') || file.name.endsWith('.docx'))) {
+    return <WordEditor file={file} url="" onSave={onSave} />;
   }
   
   // Handle PDF files
@@ -34,7 +42,17 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     return <PdfViewer file={null} url={url} isHighlighter={true} />;
   }
 
-  // For non-PDF files, display basic file information
+  // For text files and HTML files, use the word editor
+  if (file && (getFileType(file) === 'txt' || getFileType(file) === 'html')) {
+    return <WordEditor file={file} url="" onSave={onSave} />;
+  }
+  
+  // For non-PDF URLs, try to load them in the word editor
+  if (url && !url.toLowerCase().endsWith('.pdf')) {
+    return <WordEditor file={null} url={url} onSave={onSave} />;
+  }
+
+  // For other file types, display basic file information with option to open in editor
   return (
     <div className="flex flex-col items-center justify-center h-full w-full p-8 bg-muted/10">
       {file && (
@@ -43,9 +61,20 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           <p><strong>Name:</strong> {file.name}</p>
           <p><strong>Type:</strong> {file.type}</p>
           <p><strong>Size:</strong> {Math.round(file.size / 1024)} KB</p>
-          {getFileType(file) !== 'pdf' && (
-            <p className="mt-4 text-muted-foreground">This file type is not fully supported yet</p>
-          )}
+          <div className="mt-4">
+            <button 
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
+              onClick={() => {
+                // Attempt to open in word editor
+                const editorContent = `<p>Imported from ${file.name}</p>`;
+                if (onSave) {
+                  onSave(editorContent, file.name);
+                }
+              }}
+            >
+              Open in Editor
+            </button>
+          </div>
         </div>
       )}
       
@@ -53,9 +82,20 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         <div className="text-center">
           <h3 className="text-xl font-medium mb-2">URL loaded</h3>
           <p><strong>URL:</strong> {url}</p>
-          {!url.toLowerCase().endsWith('.pdf') && (
-            <p className="mt-4 text-muted-foreground">Non-PDF URLs may not display correctly</p>
-          )}
+          <div className="mt-4">
+            <button 
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
+              onClick={() => {
+                // Attempt to open in word editor
+                const editorContent = `<p>Imported from URL: ${url}</p>`;
+                if (onSave) {
+                  onSave(editorContent, "Imported URL.html");
+                }
+              }}
+            >
+              Open in Editor
+            </button>
+          </div>
         </div>
       )}
     </div>

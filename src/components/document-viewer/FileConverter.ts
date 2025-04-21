@@ -1,4 +1,3 @@
-
 /**
  * Gets the type of file based on its extension or mimetype
  * 
@@ -6,21 +5,31 @@
  * @returns The determined file type as a string ('pdf', 'txt', etc.)
  */
 export const getFileType = (file: File): string => {
-  // First check by mimetype
-  if (file.type) {
-    if (file.type.includes('pdf')) return 'pdf';
-    if (file.type.includes('text/plain')) return 'txt';
-    if (file.type.includes('text/html')) return 'html';
+  const fileName = file.name.toLowerCase();
+  const fileType = file.type.toLowerCase();
+  
+  // Check for document types first
+  if (fileName.endsWith('.doc') || fileName.endsWith('.docx')) {
+    return 'document';
   }
   
-  // Fallback to extension check
-  const name = file.name.toLowerCase();
-  if (name.endsWith('.pdf')) return 'pdf';
-  if (name.endsWith('.txt')) return 'txt';
-  if (name.endsWith('.html') || name.endsWith('.htm')) return 'html';
+  // Handle PDF files
+  if (fileName.endsWith('.pdf') || fileType.includes('pdf')) {
+    return 'pdf';
+  }
   
-  // Return original type if no match
-  return file.type.split('/')[0] || 'unknown';
+  // Handle text files
+  if (fileType.includes('text') || fileName.endsWith('.txt')) {
+    return 'txt';
+  }
+  
+  // Handle HTML files
+  if (fileType.includes('html') || fileName.endsWith('.html') || fileName.endsWith('.htm')) {
+    return 'html';
+  }
+  
+  // Default to unknown type
+  return 'unknown';
 };
 
 /**

@@ -18,8 +18,8 @@ interface DocumentViewerProps {
 /**
  * DocumentViewer Component
  * 
- * A comprehensive document viewer that supports various file formats including PDF, TXT, and HTML.
- * Features include document upload, URL loading, annotation tools, and accessibility features.
+ * A comprehensive document viewer and editor that supports various file formats.
+ * Features include document upload, URL loading, annotation tools, and editing capabilities.
  * 
  * @param file - The file to display in the viewer
  * @param selectedColor - The currently selected annotation color
@@ -78,6 +78,16 @@ export const DocumentViewer = ({
   // Log the current file being displayed
   console.log("DocumentViewer rendering with file:", displayFile?.name);
 
+  // Handle saving document content
+  const handleDocumentSave = async (content: string, fileName: string) => {
+    if (onContentLoaded) {
+      onContentLoaded(content, fileName);
+    }
+    
+    // Update document content state
+    setDocumentContent(content);
+  };
+
   return (
     <div 
       className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative"
@@ -101,6 +111,7 @@ export const DocumentViewer = ({
           selectedFile={displayFile}
           selectedColor={selectedColor || "#FFEB3B"} // Default yellow highlight color
           isHighlighter={isHighlighter}
+          onSave={handleDocumentSave}
         />
         
         {/* Hidden file input for document upload */}

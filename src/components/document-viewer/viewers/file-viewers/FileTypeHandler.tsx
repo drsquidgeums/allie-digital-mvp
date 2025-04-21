@@ -4,6 +4,7 @@ import { getFileType } from '../../FileConverter';
 import { PdfViewerWrapper } from './PdfViewerWrapper';
 import { TextViewerWrapper } from './TextViewerWrapper';
 import { ErrorDisplay } from '../ErrorDisplay';
+import { WordEditor } from '../word-editor/WordEditor';
 
 interface FileTypeHandlerProps {
   file: File;
@@ -27,6 +28,11 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
     const fileType = getFileType(file);
     console.log("Detected file type:", fileType);
     
+    // Check for word documents first
+    if (file.name.endsWith('.doc') || file.name.endsWith('.docx')) {
+      return <WordEditor file={file} url="" />;
+    }
+    
     switch (fileType) {
       case 'pdf':
         return (
@@ -39,15 +45,10 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
         );
       case 'txt':
       case 'html':
-        return <TextViewerWrapper file={file} />;
+        return <WordEditor file={file} url="" />;
       default:
-        // Handle unsupported file types
-        return (
-          <ErrorDisplay 
-            title="Unsupported File Type" 
-            description="The file type you're trying to view is not supported. Please try a PDF, TXT, or HTML file." 
-          />
-        );
+        // Try to open unknown types in the word editor
+        return <WordEditor file={file} url="" />;
     }
   } catch (error) {
     console.error("Error in FileTypeHandler:", error);
