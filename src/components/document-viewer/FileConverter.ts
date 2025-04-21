@@ -1,3 +1,4 @@
+
 /**
  * Gets the type of file based on its extension or mimetype
  * 
@@ -5,10 +6,12 @@
  * @returns The determined file type as a string ('pdf', 'txt', etc.)
  */
 export const getFileType = (file: File): string => {
+  if (!file) return 'unknown';
+  
   const fileName = file.name.toLowerCase();
   const fileType = file.type.toLowerCase();
   
-  // Check for document types first
+  // Check for Microsoft Word document types
   if (fileName.endsWith('.doc') || fileName.endsWith('.docx')) {
     return 'document';
   }
@@ -39,13 +42,29 @@ export const getFileType = (file: File): string => {
  * @returns Promise that resolves to the extracted text content
  */
 export const extractTextFromFile = async (file: File): Promise<string> => {
-  // For text files, simply read as text
-  if (file.type.includes('text/') || file.name.endsWith('.txt')) {
-    return await file.text();
-  }
+  if (!file) return '';
   
-  // For other file types, return a placeholder message
-  return `Text extraction not yet implemented for ${file.type} files`;
+  try {
+    // For text files, simply read as text
+    if (file.type.includes('text/') || 
+        file.name.endsWith('.txt') || 
+        file.name.endsWith('.html') || 
+        file.name.endsWith('.htm')) {
+      return await file.text();
+    }
+    
+    // For Word documents, we'll need to implement Word document parsing
+    if (file.name.endsWith('.doc') || file.name.endsWith('.docx')) {
+      // Basic placeholder for now
+      return `Content from ${file.name}`;
+    }
+    
+    // For other file types, return a placeholder message
+    return `Text extraction not yet implemented for ${file.type} files`;
+  } catch (error) {
+    console.error('Error extracting text from file:', error);
+    return `Error extracting text from ${file.name}`;
+  }
 };
 
 /**
@@ -55,6 +74,8 @@ export const extractTextFromFile = async (file: File): Promise<string> => {
  * @returns Promise that resolves to the text content
  */
 export const readTextFile = async (file: File): Promise<string> => {
+  if (!file) return '';
+  
   try {
     return await file.text();
   } catch (error) {

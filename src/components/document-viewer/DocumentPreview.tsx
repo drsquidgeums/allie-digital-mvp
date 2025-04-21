@@ -9,6 +9,8 @@ import { getFileType } from './FileConverter';
 interface DocumentPreviewProps {
   file: File | null;
   url: string;
+  selectedColor?: string;
+  isHighlighter?: boolean;
   onSave?: (content: string, fileName: string) => void;
 }
 
@@ -20,6 +22,8 @@ interface DocumentPreviewProps {
 export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   file,
   url,
+  selectedColor = '#FFFF00',
+  isHighlighter = true,
   onSave
 }) => {
   // Display empty state when no document is loaded
@@ -33,13 +37,13 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   }
   
   // Handle PDF files
-  if (file && getFileType(file) === 'pdf') {
-    return <PdfViewer file={file} url="" isHighlighter={true} />;
+  if (file && (getFileType(file) === 'pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
+    return <PdfViewer file={file} url="" selectedColor={selectedColor} isHighlighter={isHighlighter} />;
   }
   
   // Handle PDF URLs
   if (url && url.toLowerCase().endsWith('.pdf')) {
-    return <PdfViewer file={null} url={url} isHighlighter={true} />;
+    return <PdfViewer file={null} url={url} selectedColor={selectedColor} isHighlighter={isHighlighter} />;
   }
 
   // For text files and HTML files, use the word editor

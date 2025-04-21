@@ -28,28 +28,30 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
     const fileType = getFileType(file);
     console.log("Detected file type:", fileType);
     
-    // Check for word documents first
-    if (file.name.endsWith('.doc') || file.name.endsWith('.docx')) {
+    // Handle different file types
+    if (fileType === 'pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+      return (
+        <PdfViewerWrapper
+          file={file}
+          url=""
+          selectedColor={selectedColor || '#FFFF00'} // Default to yellow if no color specified
+          isHighlighter={isHighlighter}
+        />
+      );
+    }
+    
+    // For Word documents and other text-based files, use the Word Editor
+    if (fileType === 'document' || 
+        fileType === 'txt' || 
+        fileType === 'html' ||
+        file.name.toLowerCase().endsWith('.doc') || 
+        file.name.toLowerCase().endsWith('.docx')) {
       return <WordEditor file={file} url="" />;
     }
     
-    switch (fileType) {
-      case 'pdf':
-        return (
-          <PdfViewerWrapper
-            file={file}
-            url=""
-            selectedColor={selectedColor || '#FFFF00'} // Default to yellow if no color specified
-            isHighlighter={isHighlighter}
-          />
-        );
-      case 'txt':
-      case 'html':
-        return <WordEditor file={file} url="" />;
-      default:
-        // Try to open unknown types in the word editor
-        return <WordEditor file={file} url="" />;
-    }
+    // Default to the Word Editor for other file types
+    console.log("Using default Word Editor for unrecognized file type:", fileType);
+    return <WordEditor file={file} url="" />;
   } catch (error) {
     console.error("Error in FileTypeHandler:", error);
     return (
