@@ -11,7 +11,6 @@ interface DocumentViewerContentProps {
   selectedFile: File | null;
   selectedColor: string;
   isHighlighter?: boolean;
-  onSave?: (content: string, fileName: string) => void;
 }
 
 /**
@@ -25,8 +24,7 @@ export const DocumentViewerContent: React.FC<DocumentViewerContentProps> = ({
   setUrl,
   selectedFile,
   selectedColor,
-  isHighlighter,
-  onSave
+  isHighlighter
 }) => {
   return (
     <div className="flex-1 p-4 relative">
@@ -45,13 +43,7 @@ export const DocumentViewerContent: React.FC<DocumentViewerContentProps> = ({
             </div>
           }
         >
-          <DocumentPreview 
-            file={selectedFile} 
-            url={url} 
-            selectedColor={selectedColor}
-            isHighlighter={isHighlighter}
-            onSave={onSave}
-          />
+          <DocumentPreview file={selectedFile} url={url} />
         </ErrorBoundary>
       </div>
     </div>

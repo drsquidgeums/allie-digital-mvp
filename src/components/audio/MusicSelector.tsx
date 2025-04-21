@@ -18,14 +18,16 @@ export const MusicSelector = ({
       value={selectedMusic}
       onValueChange={handleMusicSelection}
       className="space-y-2"
+      aria-label="Select background music"
     >
       {MUSIC_OPTIONS.map((option) => (
         <div key={option.id} className="flex items-center space-x-2">
           <RadioGroupItem 
-            value={option.id}
+            value={option.id} 
             id={option.id}
+            aria-label={option.name}
           />
-          <Label
+          <Label 
             htmlFor={option.id}
             className="flex-1 text-left cursor-pointer"
           >

@@ -5,7 +5,7 @@ import { useToast } from '@/hooks/use-toast';
 import { pdfjs } from 'react-pdf';
 import { useHighlightUtils } from '@/hooks/document-viewer/useHighlightUtils';
 
-// Ensure PDF.js worker is configured properly 
+// Ensure PDF.js worker is configured properly here as well
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 interface PdfViewerProps {

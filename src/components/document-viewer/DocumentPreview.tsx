@@ -3,16 +3,11 @@ import React from 'react';
 import { EmptyState } from './viewers/EmptyState';
 import { ErrorDisplay } from './viewers/ErrorDisplay';
 import { PdfViewer } from './viewers/PdfViewer';
-import { WordEditor } from './viewers/word-editor/WordEditor';
 import { getFileType } from './FileConverter';
-import { FileTypeHandler } from './viewers/file-viewers/FileTypeHandler';
 
 interface DocumentPreviewProps {
   file: File | null;
   url: string;
-  selectedColor?: string;
-  isHighlighter?: boolean;
-  onSave?: (content: string, fileName: string) => void;
 }
 
 /**
@@ -22,38 +17,48 @@ interface DocumentPreviewProps {
  */
 export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   file,
-  url,
-  selectedColor = '#FFFF00',
-  isHighlighter = true,
-  onSave
+  url
 }) => {
   // Display empty state when no document is loaded
   if (!file && !url) {
     return <EmptyState />;
   }
   
-  // Use the FileTypeHandler when we have a file
-  if (file) {
-    return <FileTypeHandler file={file} selectedColor={selectedColor} isHighlighter={isHighlighter} onSave={onSave} />;
+  // Handle PDF files
+  if (file && getFileType(file) === 'pdf') {
+    return <PdfViewer file={file} url="" isHighlighter={true} />;
   }
   
   // Handle PDF URLs
   if (url && url.toLowerCase().endsWith('.pdf')) {
-    return <PdfViewer file={null} url={url} selectedColor={selectedColor} isHighlighter={isHighlighter} />;
-  }
-  
-  // For non-PDF URLs, try to load them in the word editor
-  if (url) {
-    return <WordEditor file={null} url={url} onSave={onSave} />;
+    return <PdfViewer file={null} url={url} isHighlighter={true} />;
   }
 
-  // Fallback error display if we somehow get here
+  // For non-PDF files, display basic file information
   return (
-    <ErrorDisplay 
-      title="Unsupported Document" 
-      description="This document type is not supported."
-      variant="info" 
-    />
+    <div className="flex flex-col items-center justify-center h-full w-full p-8 bg-muted/10">
+      {file && (
+        <div className="text-center">
+          <h3 className="text-xl font-medium mb-2">File loaded</h3>
+          <p><strong>Name:</strong> {file.name}</p>
+          <p><strong>Type:</strong> {file.type}</p>
+          <p><strong>Size:</strong> {Math.round(file.size / 1024)} KB</p>
+          {getFileType(file) !== 'pdf' && (
+            <p className="mt-4 text-muted-foreground">This file type is not fully supported yet</p>
+          )}
+        </div>
+      )}
+      
+      {!file && url && (
+        <div className="text-center">
+          <h3 className="text-xl font-medium mb-2">URL loaded</h3>
+          <p><strong>URL:</strong> {url}</p>
+          {!url.toLowerCase().endsWith('.pdf') && (
+            <p className="mt-4 text-muted-foreground">Non-PDF URLs may not display correctly</p>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
 

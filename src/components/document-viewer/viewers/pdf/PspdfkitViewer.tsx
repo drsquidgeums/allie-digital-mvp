@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import usePspdfKit from '@/components/document-viewer/hooks/usePspdfKit';
 import { PdfToolbar } from './components/PdfToolbar';
-import { ErrorDisplay } from '../../viewers/ErrorDisplay';
 
 interface PspdfkitViewerProps {
   file: File | null;
@@ -214,12 +213,13 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
 
   if (error) {
     return (
-      <ErrorDisplay
-        title="PDF Viewer"
-        description="Using the standard PDF viewer. All core viewing and annotation features are available."
-        onRetry={null}
-        variant="info"
-      />
+      <div className="flex items-center justify-center h-full">
+        <div className="max-w-md p-6 bg-card rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">Error Loading PDF Viewer</h3>
+          <p className="text-muted-foreground mb-4">{error.message}</p>
+          <p className="text-sm">Please ensure PSPDFKit is properly installed and configured.</p>
+        </div>
+      </div>
     );
   }
 

@@ -8,7 +8,6 @@ import { useToast } from '@/hooks/use-toast';
 export const usePspdfKit = () => {
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [isFallbackRequired, setIsFallbackRequired] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -19,9 +18,7 @@ export const usePspdfKit = () => {
         const cssResponse = await fetch('/pspdfkit/pspdfkit.css', { method: 'HEAD' });
         
         if (!scriptResponse.ok || !cssResponse.ok) {
-          console.log('PSPDFKit files not accessible, using fallback viewer');
-          setIsFallbackRequired(true);
-          throw new Error('PSPDFKit files not found. The application will use a built-in alternative PDF viewer.');
+          throw new Error('PSPDFKit files not found. Please make sure PSPDFKit is properly set up.');
         }
         
         // Load PSPDFKit script and CSS dynamically
@@ -42,20 +39,18 @@ export const usePspdfKit = () => {
         
         script.onerror = (e) => {
           console.error('Error loading PSPDFKit script:', e);
-          setIsFallbackRequired(true);
-          setError(new Error('Failed to load PSPDFKit. Using alternative PDF viewer.'));
+          setError(new Error('Failed to load PSPDFKit script. Make sure it is properly installed.'));
         };
         
         document.head.appendChild(script);
       } catch (err) {
         console.error('PSPDFKit initialization error:', err);
-        setIsFallbackRequired(true);
         setError(err instanceof Error ? err : new Error('Unknown error initializing PSPDFKit'));
         
-        // Show a less alarming toast message
         toast({
-          title: "PDF Viewer Notice",
-          description: "Using built-in PDF viewer. Some advanced features may be limited.",
+          variant: "destructive",
+          title: "PSPDFKit Error",
+          description: "Could not initialize PSPDFKit. Some features may be unavailable.",
         });
       }
     };
@@ -79,8 +74,7 @@ export const usePspdfKit = () => {
 
   return { 
     isReady, 
-    error,
-    isFallbackRequired 
+    error 
   };
 };
 

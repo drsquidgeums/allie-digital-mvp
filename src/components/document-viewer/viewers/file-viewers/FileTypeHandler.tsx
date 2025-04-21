@@ -4,13 +4,11 @@ import { getFileType } from '../../FileConverter';
 import { PdfViewerWrapper } from './PdfViewerWrapper';
 import { TextViewerWrapper } from './TextViewerWrapper';
 import { ErrorDisplay } from '../ErrorDisplay';
-import { WordEditor } from '../word-editor/WordEditor';
 
 interface FileTypeHandlerProps {
   file: File;
   selectedColor: string;
   isHighlighter?: boolean;
-  onSave?: (content: string, fileName: string) => void;
 }
 
 /**
@@ -21,8 +19,7 @@ interface FileTypeHandlerProps {
 export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
   file,
   selectedColor,
-  isHighlighter,
-  onSave
+  isHighlighter
 }) => {
   try {
     console.log("FileTypeHandler received file:", file?.name);
@@ -30,30 +27,28 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
     const fileType = getFileType(file);
     console.log("Detected file type:", fileType);
     
-    // Handle different file types
-    if (fileType === 'pdf' || file.name.toLowerCase().endsWith('.pdf')) {
-      return (
-        <PdfViewerWrapper
-          file={file}
-          url=""
-          selectedColor={selectedColor || '#FFFF00'} // Default to yellow if no color specified
-          isHighlighter={isHighlighter}
-        />
-      );
+    switch (fileType) {
+      case 'pdf':
+        return (
+          <PdfViewerWrapper
+            file={file}
+            url=""
+            selectedColor={selectedColor || '#FFFF00'} // Default to yellow if no color specified
+            isHighlighter={isHighlighter}
+          />
+        );
+      case 'txt':
+      case 'html':
+        return <TextViewerWrapper file={file} />;
+      default:
+        // Handle unsupported file types
+        return (
+          <ErrorDisplay 
+            title="Unsupported File Type" 
+            description="The file type you're trying to view is not supported. Please try a PDF, TXT, or HTML file." 
+          />
+        );
     }
-    
-    // For Word documents and other text-based files, use the Word Editor
-    if (fileType === 'document' || 
-        fileType === 'txt' || 
-        fileType === 'html' ||
-        file.name.toLowerCase().endsWith('.doc') || 
-        file.name.toLowerCase().endsWith('.docx')) {
-      return <WordEditor file={file} url="" onSave={onSave} />;
-    }
-    
-    // Default to the Word Editor for other file types
-    console.log("Using default Word Editor for unrecognized file type:", fileType);
-    return <WordEditor file={file} url="" onSave={onSave} />;
   } catch (error) {
     console.error("Error in FileTypeHandler:", error);
     return (

@@ -6,34 +6,21 @@
  * @returns The determined file type as a string ('pdf', 'txt', etc.)
  */
 export const getFileType = (file: File): string => {
-  if (!file) return 'unknown';
-  
-  const fileName = file.name.toLowerCase();
-  const fileType = file.type.toLowerCase();
-  
-  // Handle PDF files first (most commonly used)
-  if (fileName.endsWith('.pdf') || fileType.includes('pdf')) {
-    return 'pdf';
+  // First check by mimetype
+  if (file.type) {
+    if (file.type.includes('pdf')) return 'pdf';
+    if (file.type.includes('text/plain')) return 'txt';
+    if (file.type.includes('text/html')) return 'html';
   }
   
-  // Check for Microsoft Word document types
-  if (fileName.endsWith('.doc') || fileName.endsWith('.docx') || 
-      fileType.includes('msword') || fileType.includes('wordprocessingml')) {
-    return 'document';
-  }
+  // Fallback to extension check
+  const name = file.name.toLowerCase();
+  if (name.endsWith('.pdf')) return 'pdf';
+  if (name.endsWith('.txt')) return 'txt';
+  if (name.endsWith('.html') || name.endsWith('.htm')) return 'html';
   
-  // Handle text files
-  if (fileType.includes('text') || fileName.endsWith('.txt')) {
-    return 'txt';
-  }
-  
-  // Handle HTML files
-  if (fileType.includes('html') || fileName.endsWith('.html') || fileName.endsWith('.htm')) {
-    return 'html';
-  }
-  
-  // Default to unknown type
-  return fileType || 'unknown';
+  // Return original type if no match
+  return file.type.split('/')[0] || 'unknown';
 };
 
 /**
@@ -43,29 +30,13 @@ export const getFileType = (file: File): string => {
  * @returns Promise that resolves to the extracted text content
  */
 export const extractTextFromFile = async (file: File): Promise<string> => {
-  if (!file) return '';
-  
-  try {
-    // For text files, simply read as text
-    if (file.type.includes('text/') || 
-        file.name.endsWith('.txt') || 
-        file.name.endsWith('.html') || 
-        file.name.endsWith('.htm')) {
-      return await file.text();
-    }
-    
-    // For Word documents, we'll need to implement Word document parsing
-    if (file.name.endsWith('.doc') || file.name.endsWith('.docx')) {
-      // Basic placeholder for now
-      return `Content from ${file.name}`;
-    }
-    
-    // For other file types, return a placeholder message
-    return `Text extraction not yet implemented for ${file.type} files`;
-  } catch (error) {
-    console.error('Error extracting text from file:', error);
-    return `Error extracting text from ${file.name}`;
+  // For text files, simply read as text
+  if (file.type.includes('text/') || file.name.endsWith('.txt')) {
+    return await file.text();
   }
+  
+  // For other file types, return a placeholder message
+  return `Text extraction not yet implemented for ${file.type} files`;
 };
 
 /**
@@ -75,8 +46,6 @@ export const extractTextFromFile = async (file: File): Promise<string> => {
  * @returns Promise that resolves to the text content
  */
 export const readTextFile = async (file: File): Promise<string> => {
-  if (!file) return '';
-  
   try {
     return await file.text();
   } catch (error) {
