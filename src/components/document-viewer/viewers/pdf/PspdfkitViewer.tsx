@@ -1,7 +1,7 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import usePspdfKit from '@/components/document-viewer/hooks/usePspdfKit';
+import { usePspdfkitInstance } from './hooks/usePspdfkitInstance';
+import PspdfkitErrorFallback from './components/PspdfkitErrorFallback';
 import { PdfToolbar } from './components/PdfToolbar';
 
 interface PspdfkitViewerProps {
@@ -21,99 +21,43 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
   highlightEnabled = false,
   setHighlightEnabled = () => {},
 }) => {
-  const { isReady, error } = usePspdfKit();
-  const [instance, setInstance] = useState<any>(null);
+  const { toast } = useToast();
   const [pageNumber, setPageNumber] = useState(1);
   const [numPages, setNumPages] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [isTextSelected, setIsTextSelected] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
 
-  useEffect(() => {
-    let PSPDFKit: any;
-    let pspdfkitInstance: any;
+  const { containerRef, instance, sdkError } = usePspdfkitInstance({
+    file,
+    url,
+    onReady: (inst) => {
+      setNumPages(inst.totalPageCount);
+      setPageNumber(inst.viewState.currentPageIndex + 1);
 
-    const loadPdf = async () => {
-      try {
-        if (!containerRef.current || !isReady) return;
+      inst.addEventListener('viewState.currentPageIndex.change', (pageIndex: number) => {
+        setPageNumber(pageIndex + 1);
+      });
+      inst.addEventListener('viewState.zoom.change', (newZoom: number) => {
+        setZoom(newZoom);
+      });
+      inst.addEventListener('textSelection.change', (textSelection: any) => {
+        setIsTextSelected(textSelection && !textSelection.isEmpty);
+      });
 
-        // Clear container in case it already has content
-        containerRef.current.innerHTML = '';
+      toast({
+        title: "PDF loaded successfully",
+        description: `Document has ${inst.totalPageCount} pages`,
+      });
+    },
+    onError: (err) => {
+      toast({
+        variant: "destructive",
+        title: "PDF Loading Error",
+        description: err instanceof Error ? err.message : "Failed to load PDF viewer",
+      });
+    }
+  });
 
-        // Import PSPDFKit dynamically
-        PSPDFKit = await import('pspdfkit');
-
-        // Determine source based on file or URL
-        let source;
-        if (file) {
-          const arrayBuffer = await file.arrayBuffer();
-          source = { data: new Uint8Array(arrayBuffer) };
-        } else if (url) {
-          source = { url };
-        } else {
-          return;
-        }
-
-        // Load the PDF document
-        pspdfkitInstance = await PSPDFKit.load({
-          container: containerRef.current,
-          document: source,
-          baseUrl: `${window.location.protocol}//${window.location.host}/pspdfkit/`,
-          theme: document.documentElement.classList.contains('dark') ? PSPDFKit.Theme.DARK : PSPDFKit.Theme.LIGHT,
-          toolbarItems: [
-            { type: "sidebar-thumbnails" },
-            { type: "sidebar-document-outline" },
-            { type: "sidebar-annotations" },
-            { type: "text-highlighter" },
-          ],
-        });
-
-        // Store instance and update page info
-        setInstance(pspdfkitInstance);
-        setNumPages(pspdfkitInstance.totalPageCount);
-        setPageNumber(pspdfkitInstance.viewState.currentPageIndex + 1);
-        
-        // Listen for page changes
-        pspdfkitInstance.addEventListener('viewState.currentPageIndex.change', (pageIndex: number) => {
-          setPageNumber(pageIndex + 1);
-        });
-
-        // Listen for zoom changes
-        pspdfkitInstance.addEventListener('viewState.zoom.change', (newZoom: number) => {
-          setZoom(newZoom);
-        });
-
-        // Listen for text selection
-        pspdfkitInstance.addEventListener('textSelection.change', (textSelection: any) => {
-          setIsTextSelected(textSelection && !textSelection.isEmpty);
-        });
-
-        toast({
-          title: "PDF loaded successfully",
-          description: `Document has ${pspdfkitInstance.totalPageCount} pages`,
-        });
-      } catch (err) {
-        console.error('Error loading PSPDFKit:', err);
-        toast({
-          variant: "destructive",
-          title: "PDF Loading Error",
-          description: err instanceof Error ? err.message : "Failed to load PDF viewer",
-        });
-      }
-    };
-
-    loadPdf();
-
-    // Cleanup on unmount
-    return () => {
-      if (instance) {
-        instance.dispose();
-      }
-    };
-  }, [file, url, isReady, toast]);
-
-  // Handle page navigation
   const handlePageChange = (offset: number) => {
     if (!instance) return;
     
@@ -125,7 +69,6 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
     }
   };
 
-  // Handle zoom changes
   const handleZoomChange = (delta: number) => {
     if (!instance) return;
     
@@ -137,30 +80,24 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
     }
   };
 
-  // Handle text highlighting
   const handleHighlight = () => {
     if (!instance) return;
     
     try {
       const textSelection = instance.textSelection;
       if (textSelection && !textSelection.isEmpty) {
-        // Get the currently selected text
         const selectedText = textSelection.toString();
         
-        // Create a highlight annotation
         const annotation = new instance.constructor.Annotations.HighlightAnnotation({
           pageIndex: instance.viewState.currentPageIndex,
           rects: textSelection.rects,
           color: new instance.constructor.Color(selectedColor),
         });
         
-        // Add annotation to the document
         instance.createAnnotation(annotation);
         
-        // Clear the selection
         instance.textSelection.clear();
         
-        // Show success message
         toast({
           title: "Text highlighted",
           description: selectedText.length > 50 
@@ -182,19 +119,15 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
     }
   };
 
-  // Toggle highlight mode
   const toggleHighlightMode = () => {
     if (!instance) return;
     
     if (!highlightEnabled) {
-      // Enable highlighter tool
       instance.setToolMode(instance.constructor.ToolMode.TEXT_HIGHLIGHTER);
     } else {
-      // Switch back to text selection
       instance.setToolMode(instance.constructor.ToolMode.TEXT_SELECTION);
     }
     
-    // Update state
     setHighlightEnabled(!highlightEnabled);
     
     toast({
@@ -203,7 +136,6 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
     });
   };
 
-  // Handle keyboard shortcuts
   const handleKeyboardHelp = () => {
     toast({
       title: "Keyboard Shortcuts",
@@ -211,21 +143,10 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
     });
   };
 
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="max-w-md p-6 bg-card rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-2">Error Loading PDF Viewer</h3>
-          <p className="text-muted-foreground mb-4">{error.message}</p>
-          <p className="text-sm">Please ensure PSPDFKit is properly installed and configured.</p>
-        </div>
-      </div>
-    );
-  }
+  if (sdkError) return <PspdfkitErrorFallback error={sdkError} />;
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      {/* PDF Controls */}
       <PdfToolbar
         pageNumber={pageNumber}
         numPages={numPages}
@@ -240,14 +161,12 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
         onKeyboardHelp={handleKeyboardHelp}
         onToggleHighlight={toggleHighlightMode}
       />
-      
-      {/* PDF Document */}
       <div 
         ref={containerRef} 
         className="flex-1 relative"
         data-testid="pspdfkit-container"
       >
-        {!isReady && (
+        {!instance && (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </div>
