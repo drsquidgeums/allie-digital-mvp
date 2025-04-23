@@ -15,7 +15,7 @@ interface Activity {
   timestamp: string;
 }
 
-interface CollaborationActivityProps {
+export interface CollaborationActivityProps {
   activities?: Activity[]; // Make activities optional with the ? operator
 }
 
@@ -101,5 +101,5 @@ export const CollaborationActivity: React.FC<CollaborationActivityProps> = ({ ac
   );
 };
 
-// Default export for lazy loading
-export default { CollaborationActivity };
+// Export as default for compatibility with previous imports
+export default CollaborationActivity;

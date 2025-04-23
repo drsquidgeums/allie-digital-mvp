@@ -7,6 +7,9 @@ import { OTPInput, SlotProps } from "input-otp";
 import { cn } from "@/lib/utils";
 import { cva } from "class-variance-authority";
 
+// Create a context to pass the OTP input context properly
+const OTPInputContext = React.createContext<any>(null);
+
 const InputOTP = React.forwardRef<
   React.ElementRef<typeof OTPInput>,
   React.ComponentPropsWithoutRef<typeof OTPInput>
@@ -30,9 +33,6 @@ const InputOTPGroup = React.forwardRef<
   <div ref={ref} className={cn("flex items-center", className)} {...props} />
 ))
 InputOTPGroup.displayName = "InputOTPGroup"
-
-// Create a context to pass the OTP input context properly
-const OTPInputContext = React.createContext<any>(null);
 
 const InputOTPSlot = React.forwardRef<
   React.ElementRef<"div">,
