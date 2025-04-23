@@ -4,6 +4,7 @@ import { DocumentToolbar } from "./DocumentToolbar";
 import { ToolbarTools } from "./ToolbarTools";
 import { ThemeProvider } from "../ThemeProvider";
 import { AmbientMusic } from "../AmbientMusic";
+import { FocusMode } from "../FocusMode";
 
 interface DocumentViewerToolbarProps {
   onUpload: () => void;
@@ -27,13 +28,13 @@ export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
           onDelete={onDelete}
           hasFile={hasFile}
         />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ml-auto">
           <ToolbarTools />
           <AmbientMusic />
+          <FocusMode />
           <ThemeProvider />
         </div>
       </div>
     </div>
   );
 };
-
