@@ -2,6 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Focus, MinusCircle, Bell } from "lucide-react";
+import { useFocusMode } from "@/hooks/useFocusMode";
 
 interface FocusModeActionsProps {
   isActive: boolean;
@@ -16,6 +17,12 @@ export const FocusModeActions = ({
   onToggleFocus,
   onRequestNotifications,
 }: FocusModeActionsProps) => {
+  // Get the current focus mode state to ensure it's in sync
+  const { isFocusModeActive } = useFocusMode();
+  
+  // Use the effective state (either from props or from the global state)
+  const effectiveActive = isActive || isFocusModeActive;
+
   return (
     <div className="space-y-4">
       {notificationPermission === "default" && (
@@ -31,13 +38,13 @@ export const FocusModeActions = ({
 
       <Button 
         onClick={onToggleFocus}
-        variant={isActive ? "destructive" : "default"}
+        variant={effectiveActive ? "destructive" : "default"}
         className={`w-full flex items-center text-xs transition-all duration-300 ${
-          isActive ? 'shadow-md shadow-destructive/30 ring-1 ring-destructive' : 
+          effectiveActive ? 'shadow-md shadow-destructive/30 ring-1 ring-destructive' : 
           'shadow hover:shadow-md hover:shadow-primary/20'
         }`}
       >
-        {isActive ? (
+        {effectiveActive ? (
           <>
             <MinusCircle className="w-4 h-4 mr-2 animate-pulse" />
             <span>Exit Focus Mode</span>

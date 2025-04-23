@@ -1,13 +1,32 @@
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useToast } from "../use-toast";
 import { useFullscreen } from "../useFullscreen";
 import { FocusSettings } from "../useFocusSettings";
+import { getFocusModeState } from "../useFocusMode";
 
 export const useFocusModeControl = (settings: FocusSettings) => {
-  const [isActive, setIsActive] = useState(false);
+  // Initialize from global state
+  const [isActive, setIsActive] = useState(() => {
+    const globalState = getFocusModeState();
+    return globalState.active;
+  });
+  
   const { enterFullscreen, exitFullscreen } = useFullscreen();
   const { toast } = useToast();
+
+  // Sync with global state changes
+  useEffect(() => {
+    const handleFocusModeChange = (event: CustomEvent) => {
+      setIsActive(event.detail.active);
+    };
+
+    window.addEventListener('focusModeChanged', handleFocusModeChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('focusModeChanged', handleFocusModeChange as EventListener);
+    };
+  }, []);
 
   const toggleFocusMode = useCallback(async () => {
     try {
