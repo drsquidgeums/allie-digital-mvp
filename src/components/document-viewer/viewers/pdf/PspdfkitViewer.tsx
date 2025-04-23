@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import usePspdfKit from '@/components/document-viewer/hooks/usePspdfKit';
@@ -11,6 +10,7 @@ interface PspdfkitViewerProps {
   isHighlighter?: boolean;
   highlightEnabled?: boolean;
   setHighlightEnabled?: (enabled: boolean) => void;
+  setSelectedColor?: (color: string) => void;
 }
 
 export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
@@ -20,6 +20,7 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
   isHighlighter = true,
   highlightEnabled = false,
   setHighlightEnabled = () => {},
+  setSelectedColor = () => {},
 }) => {
   const { isReady, error } = usePspdfKit();
   const [instance, setInstance] = useState<any>(null);
@@ -113,7 +114,6 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
     };
   }, [file, url, isReady, toast]);
 
-  // Handle page navigation
   const handlePageChange = (offset: number) => {
     if (!instance) return;
     
@@ -125,7 +125,6 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
     }
   };
 
-  // Handle zoom changes
   const handleZoomChange = (delta: number) => {
     if (!instance) return;
     
@@ -137,7 +136,6 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
     }
   };
 
-  // Handle text highlighting
   const handleHighlight = () => {
     if (!instance) return;
     
@@ -182,7 +180,6 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
     }
   };
 
-  // Toggle highlight mode
   const toggleHighlightMode = () => {
     if (!instance) return;
     
@@ -203,7 +200,6 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
     });
   };
 
-  // Handle keyboard shortcuts
   const handleKeyboardHelp = () => {
     toast({
       title: "Keyboard Shortcuts",
@@ -225,7 +221,6 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      {/* PDF Controls */}
       <PdfToolbar
         pageNumber={pageNumber}
         numPages={numPages}
@@ -241,7 +236,6 @@ export const PspdfkitViewer: React.FC<PspdfkitViewerProps> = ({
         onToggleHighlight={toggleHighlightMode}
       />
       
-      {/* PDF Document */}
       <div 
         ref={containerRef} 
         className="flex-1 relative"
