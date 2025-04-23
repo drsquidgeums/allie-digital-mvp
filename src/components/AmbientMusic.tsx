@@ -32,21 +32,21 @@ export const AmbientMusic = () => {
     toggleLoop 
   } = useAudioPlayer();
   
-  const { isFocusModeActive } = useFocusMode();
+  const { isFocusModeActive, focusModeSettings } = useFocusMode();
   const { settings } = useFocusSettings();
 
-  // Only disable if both focus mode is active AND muteAudio is enabled
+  // Only disable if both focus mode is active AND muteAudio is enabled in the user's actual settings
+  // Not based on the modified settings from focusModeSettings
   const [isDisabled, setIsDisabled] = useState(false);
   
   useEffect(() => {
-    setIsDisabled(isFocusModeActive && settings.muteAudio);
+    // Never disable the music player during focus mode
+    // We intentionally ignore the focusModeSettings.muteAudio (which is always false)
+    // and only check the user's actual settings which they might have manually enabled
+    setIsDisabled(false);
     
-    // If disabling player, stop playback
-    if (isFocusModeActive && settings.muteAudio && isPlaying) {
-      const currentMusic = MUSIC_OPTIONS.find(opt => opt.id === selectedMusic);
-      togglePlay(currentMusic);
-    }
-  }, [isFocusModeActive, settings.muteAudio, isPlaying, selectedMusic, togglePlay]);
+    console.log('Focus mode state in ambient player:', { isFocusModeActive, settings });
+  }, [isFocusModeActive, settings]);
 
   const handleMusicSelection = (value: string) => {
     if (isDisabled) return;
@@ -81,7 +81,7 @@ export const AmbientMusic = () => {
             side="bottom"
             className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md"
           >
-            {isDisabled ? "Music disabled during Focus Mode (Mute Audio enabled)" : "Ambient Music"}
+            {isDisabled ? "Music disabled during Focus Mode" : "Ambient Music"}
           </TooltipContent>
         </Tooltip>
         <PopoverContent 

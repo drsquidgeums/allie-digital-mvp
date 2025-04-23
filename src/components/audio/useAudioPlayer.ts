@@ -11,23 +11,16 @@ export const useAudioPlayer = () => {
   const { isPlaying, togglePlay, volume, setVolume, isMuted, toggleMute, isLooping, toggleLoop, setIsPlaying } = useMusicControl(audioRef);
   const { selectedMusic, handleMusicChange } = useMusicSelection(audioRef, isPlaying);
   const { wasPausedByFocusMode, setWasPausedByFocusMode } = useAudioPersistence(audioRef, isPlaying, setIsPlaying);
+  
+  // We still get the focus mode state for logging purposes only
   const { isFocusModeActive, focusModeSettings } = useFocusMode();
 
-  // Listen for audio muting only if focus mode is active AND muteAudio is true
+  // Listen for audio muting only for logging purposes
   useEffect(() => {
     const handleAudioMutingChanged = (event: CustomEvent) => {
       const { muted, forced } = event.detail;
-      
-      // Only pause if Mute Audio is enabled in settings
-      const muteAudioIsOn = focusModeSettings?.muteAudio;
-      console.log('Audio muting changed in audio player:', { muted, forced, audioRef: !!audioRef.current, isPlaying, muteAudioIsOn });
-      
-      if (muted && forced && muteAudioIsOn && audioRef.current && !audioRef.current.paused) {
-        console.log('Pausing audio due to forced audio muting event');
-        audioRef.current.pause();
-        setIsPlaying(false);
-        setWasPausedByFocusMode(true);
-      }
+      console.log('Audio muting changed in audio player, ignoring event:', { muted, forced });
+      // We intentionally don't do anything with the event to ensure music continues playing
     };
 
     window.addEventListener('audioMutingChanged', handleAudioMutingChanged as EventListener);
@@ -35,7 +28,7 @@ export const useAudioPlayer = () => {
     return () => {
       window.removeEventListener('audioMutingChanged', handleAudioMutingChanged as EventListener);
     };
-  }, [audioRef, isPlaying, setIsPlaying, setWasPausedByFocusMode, focusModeSettings]);
+  }, []);
 
   return {
     isPlaying,
