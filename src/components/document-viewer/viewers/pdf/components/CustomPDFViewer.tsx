@@ -1,79 +1,60 @@
 
 import React from 'react';
-import PspdfkitViewer from '../PspdfkitViewer';
-import PdfiumViewer from './PdfiumViewer'; 
-import FallbackPDFViewer from './FallbackPDFViewer';
-import { usePdfViewerAvailability, PdfViewerType } from '../hooks/usePdfViewerAvailability';
-import { LoadingFallback } from '../../LoadingFallback';
+import { Document, Page } from 'react-pdf';
+import { useToast } from '@/hooks/use-toast';
+import { HighlightableDocument } from './HighlightableDocument';
 
 interface CustomPDFViewerProps {
   file: File | null;
   url: string;
   selectedColor: string;
   isHighlighter?: boolean;
-  highlightEnabled?: boolean;
-  setHighlightEnabled?: (enabled: boolean) => void;
-  setSelectedColor?: (color: string) => void;
 }
 
 export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
   file,
   url,
   selectedColor,
-  isHighlighter = true,
-  highlightEnabled = false,
-  setHighlightEnabled = () => {},
-  setSelectedColor = () => {}
+  isHighlighter = true
 }) => {
-  const { viewerType, isChecking } = usePdfViewerAvailability();
+  const pdfSource = file ? { data: file } : url ? { url } : null;
+  const { toast } = useToast();
   
-  // Show loading state while checking viewer availability
-  if (isChecking) {
-    return <LoadingFallback message="Initializing PDF viewer..." />;
-  }
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    toast({
+      title: "PDF Loaded Successfully",
+      description: `Document has ${numPages} pages`,
+    });
+  };
+  
+  const onDocumentLoadError = (error: Error) => {
+    console.error("Error loading PDF:", error);
+    toast({
+      variant: "destructive",
+      title: "Failed to load PDF",
+      description: "There was an error loading the document. Please try again.",
+    });
+  };
 
-  // Select the appropriate viewer based on availability
-  switch (viewerType) {
-    case PdfViewerType.PSPDFKIT:
-      return (
-        <PspdfkitViewer
-          file={file}
-          url={url}
-          selectedColor={selectedColor}
-          isHighlighter={isHighlighter}
-          highlightEnabled={highlightEnabled}
-          setHighlightEnabled={setHighlightEnabled}
-          setSelectedColor={setSelectedColor}
-        />
-      );
-    
-    case PdfViewerType.PDFIUM:
-      return (
-        <PdfiumViewer
-          file={file}
-          url={url}
-          selectedColor={selectedColor}
-          isHighlighter={isHighlighter}
-          highlightEnabled={highlightEnabled}
-          setHighlightEnabled={setHighlightEnabled}
-          setSelectedColor={setSelectedColor}
-        />
-      );
-    
-    case PdfViewerType.REACT_PDF:
-    default:
-      return (
-        <FallbackPDFViewer 
-          file={file} 
-          url={url} 
-          selectedColor={selectedColor}
-          isHighlighter={isHighlighter}
-          highlightEnabled={highlightEnabled}
-          setHighlightEnabled={setHighlightEnabled}
-          setSelectedColor={setSelectedColor}
-        />
-      );
+  if (!pdfSource) {
+    return (
+      <div className="flex items-center justify-center h-full bg-muted/20">
+        <p className="text-muted-foreground">No document loaded. Please select a PDF file.</p>
+      </div>
+    );
   }
+  
+  return (
+    <div className="h-full flex flex-col">
+      <HighlightableDocument
+        file={pdfSource}
+        selectedColor={selectedColor}
+        isHighlighter={isHighlighter}
+        onLoadSuccess={onDocumentLoadSuccess}
+        onLoadError={onDocumentLoadError}
+      />
+    </div>
+  );
 };
 
 export default CustomPDFViewer;

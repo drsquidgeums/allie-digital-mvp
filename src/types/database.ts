@@ -5,33 +5,6 @@ import { Database as SupabaseDatabase } from "@/integrations/supabase/types";
 export interface ExtendedDatabase extends SupabaseDatabase {
   public: {
     Tables: {
-      saved_urls: {
-        Row: {
-          created_at: string;
-          id: string;
-          last_accessed: string | null;
-          name: string;
-          url: string;
-          user_id: string;
-        };
-        Insert: {
-          created_at?: string;
-          id?: string;
-          last_accessed?: string | null;
-          name: string;
-          url: string;
-          user_id: string;
-        };
-        Update: {
-          created_at?: string;
-          id?: string;
-          last_accessed?: string | null;
-          name?: string;
-          url?: string;
-          user_id?: string;
-        };
-        Relationships: [];
-      };
       tasks: {
         Row: {
           id: string;

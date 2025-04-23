@@ -1,6 +1,7 @@
+
 import React, { useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Monitor, CheckSquare, Lightbulb, FileText } from "lucide-react";
+import { Monitor, CheckSquare, Brain, FileText } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 import { useTranslation } from "react-i18next";
 
@@ -36,7 +37,7 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
     {
       id: "mind-map",
       label: t('navigation.mindMap'),
-      icon: Lightbulb,
+      icon: Brain,
       path: "/mind-map"
     }
   ];
