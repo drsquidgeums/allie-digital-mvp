@@ -1,8 +1,10 @@
-import * as React from "react"
-import { OTPInput, OTPInputContext } from "input-otp"
-import { Dot } from "lucide-react"
+"use client";
 
-import { cn } from "@/lib/utils"
+import { Circle } from "lucide-react";
+import * as React from "react";
+import { OTPInput, SlotProps } from "input-otp";
+import { cn } from "@/lib/utils";
+import { cva } from "class-variance-authority";
 
 const InputOTP = React.forwardRef<
   React.ElementRef<typeof OTPInput>,
@@ -61,7 +63,7 @@ const InputOTPSeparator = React.forwardRef<
   React.ComponentPropsWithoutRef<"div">
 >(({ ...props }, ref) => (
   <div ref={ref} role="separator" {...props}>
-    <Dot />
+    <Circle />
   </div>
 ))
 InputOTPSeparator.displayName = "InputOTPSeparator"

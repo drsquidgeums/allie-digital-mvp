@@ -1,68 +1,73 @@
+import React from 'react';
+import { 
+  MessageSquare, 
+  FileEdit, 
+  Upload, 
+  Monitor 
+} from 'lucide-react';
 
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Users, HandshakeIcon } from "lucide-react";
+interface Activity {
+  id: string;
+  type: 'comment' | 'edit' | 'upload' | 'collaboration';
+  user: string;
+  content: string;
+  timestamp: string;
+}
 
-const CollaborationActivity = () => {
-  const activities = [
-    {
-      id: 1,
-      title: "Group Study Session",
-      participants: ["Alex", "Maria", "John"],
-      status: "Active",
-      subject: "Mathematics"
-    },
-    {
-      id: 2,
-      title: "Peer Review",
-      participants: ["Sarah", "James"],
-      status: "Starting Soon",
-      subject: "English Literature"
+interface CollaborationActivityProps {
+  activities: Activity[];
+}
+
+export const CollaborationActivity: React.FC<CollaborationActivityProps> = ({ activities }) => {
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (minutes < 60) {
+      return minutes <= 1 ? 'a minute ago' : `${minutes} minutes ago`;
+    } else if (hours < 24) {
+      return hours <= 1 ? 'an hour ago' : `${hours} hours ago`;
+    } else if (days < 7) {
+      return days <= 1 ? 'yesterday' : `${days} days ago`;
+    } else {
+      return date.toLocaleDateString();
     }
-  ];
+  };
+
+  const getActivityIcon = (type: string) => {
+    switch (type) {
+      case 'comment':
+        return <MessageSquare className="h-4 w-4 text-blue-500" />;
+      case 'edit':
+        return <FileEdit className="h-4 w-4 text-amber-500" />;
+      case 'upload':
+        return <Upload className="h-4 w-4 text-green-500" />;
+      case 'collaboration':
+        return <Monitor className="h-4 w-4 text-purple-500" />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <Card className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Active Collaborations</h2>
-        <Button variant="outline" size="sm">
-          <Users className="h-4 w-4 mr-2" />
-          Join Activity
-        </Button>
-      </div>
-      <div className="space-y-4">
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold">Recent Activity</h2>
+      <ul className="space-y-4">
         {activities.map((activity) => (
-          <div
-            key={activity.id}
-            className="p-3 border rounded-lg dark:border-white/20 hover:bg-accent/50 transition-colors"
-          >
-            <div className="flex justify-between items-start mb-2">
-              <div>
-                <h3 className="font-medium">{activity.title}</h3>
-                <p className="text-sm text-muted-foreground">
-                  Subject: {activity.subject}
-                </p>
-              </div>
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                activity.status === "Active" 
-                  ? "bg-green-500/20 text-green-800 dark:text-green-400" 
-                  : "bg-yellow-500/20 text-yellow-800 dark:text-yellow-400"
-              }`}>
-                {activity.status}
-              </span>
+          <li key={activity.id} className="flex items-start space-x-3">
+            {getActivityIcon(activity.type)}
+            <div>
+              <div className="text-sm font-medium leading-none">{activity.user}</div>
+              <p className="text-sm text-muted-foreground">{activity.content}</p>
+              <time className="text-xs text-gray-500">{formatDate(activity.timestamp)}</time>
             </div>
-            <div className="flex items-center gap-2 mt-2">
-              <Users className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">
-                {activity.participants.join(", ")}
-              </span>
-            </div>
-          </div>
+          </li>
         ))}
-      </div>
-    </Card>
+      </ul>
+    </div>
   );
 };
-
-export default CollaborationActivity;

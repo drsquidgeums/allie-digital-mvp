@@ -1,6 +1,5 @@
-
 import React, { useRef } from "react";
-import { SpellCheck } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { Input } from "./ui/input";
 import { usePersistedText } from "@/hooks/usePersistedText";
 
@@ -10,7 +9,6 @@ export const Rewordify = () => {
   const outputRef = useRef<HTMLDivElement>(null);
 
   const simplifyText = (input: string) => {
-    // Expanded dictionary of complex words and their simpler alternatives
     const simplifications: { [key: string]: string } = {
       "therefore": "so",
       "however": "but",
@@ -98,17 +96,13 @@ export const Rewordify = () => {
       "withstand": "resist"
     };
 
-    // Process the text word by word, preserving punctuation and spacing
     return input.split(/(\s+|[.,!?;:])/g).map(segment => {
-      // If it's just whitespace or punctuation, return it unchanged
       if (/^\s+$/.test(segment) || /^[.,!?;:]$/.test(segment)) {
         return segment;
       }
 
-      // Check if the word (lowercase) exists in our dictionary
       const lowercaseWord = segment.toLowerCase();
       if (simplifications[lowercaseWord]) {
-        // Preserve original capitalization
         if (segment[0] === segment[0].toUpperCase()) {
           return simplifications[lowercaseWord].charAt(0).toUpperCase() + 
                  simplifications[lowercaseWord].slice(1);
@@ -135,7 +129,7 @@ export const Rewordify = () => {
       aria-label="Rewordify Tool"
     >
       <div className="flex items-center gap-2">
-        <SpellCheck className="w-4 h-4" aria-hidden="true" />
+        <Pencil className="w-4 h-4" aria-hidden="true" />
         <h3 className="font-medium">Rewordify</h3>
       </div>
       <Input

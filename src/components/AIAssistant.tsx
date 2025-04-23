@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { ChatMessage } from "./chat/ChatMessage";
@@ -6,7 +5,7 @@ import { ChatInput } from "./chat/ChatInput";
 import { ChatHeader } from "./chat/ChatHeader";
 import { useChatLogic } from "@/hooks/useChatLogic";
 import { Button } from "./ui/button";
-import { Bot, FileText, Sparkles } from "lucide-react";
+import { Bot, FileText, Star } from "lucide-react";
 
 interface AIAssistantProps {
   documentContent?: string;
@@ -33,7 +32,6 @@ export const AIAssistant = React.memo(({ documentContent, documentName }: AIAssi
     }
   }, [setInput]);
 
-  // Handle keyboard navigation within messages
   const handleMessagesKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       e.preventDefault();
@@ -107,7 +105,7 @@ export const AIAssistant = React.memo(({ documentContent, documentName }: AIAssi
               onClick={handleAnalyzeDocument}
               disabled={analyzing || isLoading}
             >
-              <Sparkles className="h-3 w-3" />
+              <Star className="h-3 w-3" />
               Analyze Concepts
             </Button>
           </div>
