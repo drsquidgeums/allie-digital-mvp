@@ -12,13 +12,18 @@ let globalFocusModeState: FocusModeState = {
   settings: null
 };
 
+// Define custom event type for TypeScript
+interface FocusModeChangeEvent extends CustomEvent {
+  detail: FocusModeState;
+}
+
 export const useFocusMode = () => {
   const [isFocusModeActive, setIsFocusModeActive] = useState(globalFocusModeState.active);
   const [focusModeSettings, setFocusModeSettings] = useState<any>(globalFocusModeState.settings);
 
   // Update local state when global state changes
   useEffect(() => {
-    const handleFocusModeChange = (event: CustomEvent) => {
+    const handleFocusModeChange = (event: FocusModeChangeEvent) => {
       const newActive = event.detail.active;
       const newSettings = event.detail.settings;
       

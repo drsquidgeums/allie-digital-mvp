@@ -24,16 +24,19 @@ interface State {
  * Based on React's Error Boundary pattern: https://reactjs.org/docs/error-boundaries.html
  */
 export class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false,
-    error: null
-  };
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      hasError: false,
+      error: null
+    };
+  }
 
   /**
    * Static lifecycle method invoked after an error has been thrown by a descendant component
    * Returns the new state to be used for rendering the fallback UI
    */
-  public static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 
@@ -41,7 +44,7 @@ export class ErrorBoundary extends Component<Props, State> {
    * Lifecycle method invoked after an error has been thrown by a descendant component
    * Used for side effects like logging the error
    */
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("Uncaught error:", error, errorInfo);
     
     // Notify the user about the error through the notification system
@@ -58,7 +61,7 @@ export class ErrorBoundary extends Component<Props, State> {
     this.setState({ hasError: false, error: null });
   }
 
-  public render() {
+  render() {
     // If there's an error, show either the custom fallback or the default error UI
     if (this.state.hasError) {
       if (this.props.fallback) {
