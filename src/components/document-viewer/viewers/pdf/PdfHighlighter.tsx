@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import * as rangy from 'rangy';
 import { useToast } from "@/hooks/use-toast";
@@ -22,7 +23,7 @@ export const usePdfHighlighter = () => {
       
       highlighterRef.current.addClassApplier(rangy.createClassApplier('highlight', {
         ignoreWhiteSpace: true,
-        tagNames: ['span', 'a']
+        tagNames: ['span', 'a', 'div', 'p', 'text']
       }));
     } catch (error) {
       console.error('Error initializing Rangy:', error);
@@ -42,16 +43,29 @@ export const usePdfHighlighter = () => {
     
     try {
       const selection = rangy.getSelection();
-      if (selection.rangeCount > 0) {
+      if (selection && selection.rangeCount > 0) {
+        // Get the text being highlighted
+        const selectedText = selection.toString();
+        
+        // Apply highlighting to the selection
         highlighterRef.current.highlightSelection('highlight', {
           exclusive: false
         });
         
+        // Clear the selection
+        selection.removeAllRanges();
+        
+        // Show success message
         toast({
           title: "Text highlighted",
-          description: "Selection has been highlighted",
+          description: selectedText.length > 50 
+            ? `"${selectedText.substring(0, 50)}..."` 
+            : `"${selectedText}"`,
         });
+        
+        return true;
       }
+      return false;
     } catch (error) {
       console.error('Error highlighting text:', error);
       toast({
@@ -59,8 +73,35 @@ export const usePdfHighlighter = () => {
         description: "Failed to highlight text",
         variant: "destructive",
       });
+      return false;
     }
   };
 
-  return { handleHighlight };
+  const removeAllHighlights = () => {
+    if (!highlighterRef.current) {
+      console.error('Highlighter not initialized');
+      return;
+    }
+    
+    try {
+      highlighterRef.current.removeAllHighlights();
+      
+      toast({
+        title: "Highlights cleared",
+        description: "All text highlights have been removed",
+      });
+    } catch (error) {
+      console.error('Error removing highlights:', error);
+      toast({
+        title: "Error",
+        description: "Failed to remove highlights",
+        variant: "destructive",
+      });
+    }
+  };
+
+  return { 
+    handleHighlight,
+    removeAllHighlights
+  };
 };

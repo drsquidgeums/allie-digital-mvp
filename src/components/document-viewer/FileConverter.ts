@@ -1,91 +1,55 @@
 
-import mammoth from 'mammoth';
-import { PDFDocument } from 'pdf-lib';
-import * as pdfjsLib from 'pdfjs-dist';
-
-// Configure PDF.js worker
-const workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
-
-export async function convertDocxToHtml(file: File): Promise<string> {
-  const arrayBuffer = await file.arrayBuffer();
-  const result = await mammoth.convertToHtml({ arrayBuffer });
-  return result.value;
-}
-
-export async function readTextFile(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => resolve(e.target?.result as string);
-    reader.onerror = (e) => reject(e);
-    reader.readAsText(file);
-  });
-}
-
-export async function loadPdfDocument(file: File): Promise<ArrayBuffer> {
-  return await file.arrayBuffer();
-}
-
-export function getFileType(file: File): string {
-  const extension = file.name.split('.').pop()?.toLowerCase() || '';
-  switch (extension) {
-    case 'pdf':
-      return 'pdf';
-    case 'docx':
-      return 'docx';
-    case 'txt':
-      return 'txt';
-    case 'html':
-      return 'html';
-    default:
-      throw new Error('Unsupported file type');
+/**
+ * Gets the type of file based on its extension or mimetype
+ * 
+ * @param file - The file to check
+ * @returns The determined file type as a string ('pdf', 'txt', etc.)
+ */
+export const getFileType = (file: File): string => {
+  // First check by mimetype
+  if (file.type) {
+    if (file.type.includes('pdf')) return 'pdf';
+    if (file.type.includes('text/plain')) return 'txt';
+    if (file.type.includes('text/html')) return 'html';
   }
-}
-
-export async function extractTextFromFile(file: File): Promise<string> {
-  const fileType = getFileType(file);
   
-  switch (fileType) {
-    case 'pdf':
-      return extractTextFromPdf(file);
-    case 'docx':
-      const html = await convertDocxToHtml(file);
-      return stripHtmlTags(html);
-    case 'txt':
-      return readTextFile(file);
-    case 'html':
-      const content = await readTextFile(file);
-      return stripHtmlTags(content);
-    default:
-      throw new Error('Unsupported file type for text extraction');
-  }
-}
+  // Fallback to extension check
+  const name = file.name.toLowerCase();
+  if (name.endsWith('.pdf')) return 'pdf';
+  if (name.endsWith('.txt')) return 'txt';
+  if (name.endsWith('.html') || name.endsWith('.htm')) return 'html';
+  
+  // Return original type if no match
+  return file.type.split('/')[0] || 'unknown';
+};
 
-async function extractTextFromPdf(file: File): Promise<string> {
+/**
+ * Extracts text content from a file
+ * 
+ * @param file - The file to extract text from
+ * @returns Promise that resolves to the extracted text content
+ */
+export const extractTextFromFile = async (file: File): Promise<string> => {
+  // For text files, simply read as text
+  if (file.type.includes('text/') || file.name.endsWith('.txt')) {
+    return await file.text();
+  }
+  
+  // For other file types, return a placeholder message
+  return `Text extraction not yet implemented for ${file.type} files`;
+};
+
+/**
+ * Reads a text file and returns its content
+ * 
+ * @param file - The text file to read
+ * @returns Promise that resolves to the text content
+ */
+export const readTextFile = async (file: File): Promise<string> => {
   try {
-    const arrayBuffer = await file.arrayBuffer();
-    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-    const pdf = await loadingTask.promise;
-    
-    let textContent = '';
-    
-    // Extract text from each page
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      const strings = content.items.map(item => 'str' in item ? item.str : '');
-      textContent += strings.join(' ') + '\n';
-    }
-    
-    return textContent;
+    return await file.text();
   } catch (error) {
-    console.error('Error extracting text from PDF:', error);
-    return 'Failed to extract text from PDF';
+    console.error('Error reading text file:', error);
+    return 'Could not read file content';
   }
-}
-
-function stripHtmlTags(html: string): string {
-  // Remove HTML tags and decode entities
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  return doc.body.textContent || '';
-}
+};

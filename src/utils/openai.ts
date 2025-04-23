@@ -2,6 +2,7 @@
 import OpenAI from "openai";
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from "sonner";
+import { handleError } from '@/utils/errorHandling';
 
 // Create an OpenAI client
 export const createOpenAIClient = async () => {
@@ -23,7 +24,11 @@ export const createOpenAIClient = async () => {
       dangerouslyAllowBrowser: true
     });
   } catch (error) {
-    console.error('Error creating OpenAI client:', error);
+    handleError(error, {
+      title: 'OpenAI Client Error', 
+      fallbackMessage: 'Error initializing AI client',
+      showToast: false
+    });
     return null;
   }
 };
@@ -110,3 +115,31 @@ export const SYSTEM_PROMPT = `You are an ADHD Learning Assistant helping student
 Provide clear, concise responses focused on helping ADHD learners use these tools effectively. Break information into small, manageable chunks and use bullet points when possible. Keep responses friendly and encouraging.
 
 You should explain HOW to use the application's features when asked. For example, if asked about the Pomodoro timer, explain where to find it, how to start it, and how it can help with focus.`;
+
+// Tutor-specific system prompt
+export const TUTOR_PROMPT = `You are an experienced tutor specializing in helping students with ADHD, dyslexia, and other learning differences. Your communication style is:
+
+1. Encouraging and positive, focusing on strengths
+2. Clear and concise with short paragraphs and bullet points
+3. Specific with practical strategies tailored to learning differences
+
+When answering questions:
+- Suggest appropriate study techniques for students with attention challenges
+- Recommend which accessibility tools in the application might help (Irlen overlays, bionic reader, etc.)
+- Break down complex tasks into manageable steps
+- Provide immediate, actionable advice
+
+Remember to connect any advice to the app's features like the Pomodoro timer, mind mapping tool, or focus mode when relevant.`;
+
+// Function to get tutor-specific response
+export const createTutorResponse = async (question, tutorName, subject) => {
+  const messages = [
+    { 
+      role: "system", 
+      content: `${TUTOR_PROMPT}\n\nYou are ${tutorName}, a tutor specializing in ${subject}. Keep your responses conversational, helpful and focused on learning strategies.` 
+    },
+    { role: "user", content: question }
+  ];
+  
+  return createOpenAICompletion(messages);
+};

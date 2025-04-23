@@ -1,6 +1,6 @@
 
 import React, { useRef } from "react";
-import { SpellCheck as SpellCheckIcon } from "lucide-react";  // Use alias to ensure correct import
+import { SpellCheck } from "lucide-react";
 import { Input } from "./ui/input";
 import { usePersistedText } from "@/hooks/usePersistedText";
 
@@ -135,7 +135,7 @@ export const Rewordify = () => {
       aria-label="Rewordify Tool"
     >
       <div className="flex items-center gap-2">
-        <SpellCheckIcon className="w-4 h-4" aria-hidden="true" />
+        <SpellCheck className="w-4 h-4" aria-hidden="true" />
         <h3 className="font-medium">Rewordify</h3>
       </div>
       <Input
