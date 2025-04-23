@@ -13,8 +13,7 @@ import {
   ZoomIn, 
   ZoomOut, 
   Highlighter,
-  Keyboard,
-  TextCursor
+  Keyboard
 } from 'lucide-react';
 
 interface PdfToolbarProps {
@@ -24,12 +23,10 @@ interface PdfToolbarProps {
   isTextSelected: boolean;
   selectedColor: string;
   isHighlighter: boolean;
-  isHighlightMode: boolean;
   onPageChange: (offset: number) => void;
   onZoomChange: (delta: number) => void;
   onHighlight: () => void;
   onKeyboardHelp?: () => void;
-  onToggleHighlight: () => void;
 }
 
 export const PdfToolbar: React.FC<PdfToolbarProps> = ({
@@ -39,12 +36,10 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
   isTextSelected,
   selectedColor,
   isHighlighter,
-  isHighlightMode,
   onPageChange,
   onZoomChange,
   onHighlight,
-  onKeyboardHelp,
-  onToggleHighlight
+  onKeyboardHelp
 }) => {
   // Helper function to determine text color based on background color
   const getContrastColor = (hexColor: string): string => {
@@ -128,43 +123,24 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
           </Tooltip>
           
           {isHighlighter && (
-            <>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={isHighlightMode ? "default" : "outline"}
-                    size="sm"
-                    onClick={onToggleHighlight}
-                    aria-label="Toggle highlight mode"
-                    className={isHighlightMode ? "bg-primary text-primary-foreground" : ""}
-                  >
-                    <Highlighter className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Toggle highlight mode (H)</TooltipContent>
-              </Tooltip>
-
-              {isHighlightMode && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      style={{
-                        backgroundColor: selectedColor,
-                        color: getContrastColor(selectedColor)
-                      }}
-                      onClick={onHighlight}
-                      aria-label="Highlight text"
-                      disabled={!isTextSelected}
-                    >
-                      <TextCursor className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Highlight selected text</TooltipContent>
-                </Tooltip>
-              )}
-            </>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  style={{
+                    backgroundColor: isTextSelected ? selectedColor : 'transparent',
+                    color: isTextSelected ? getContrastColor(selectedColor) : 'currentColor'
+                  }}
+                  onClick={onHighlight}
+                  aria-label="Highlight text"
+                  disabled={!isTextSelected}
+                >
+                  <Highlighter className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Highlight selected text</TooltipContent>
+            </Tooltip>
           )}
           
           <Tooltip>

@@ -43,7 +43,12 @@ export const DocumentViewerContent: React.FC<DocumentViewerContentProps> = ({
             </div>
           }
         >
-          <DocumentPreview file={selectedFile} url={url} />
+          <DocumentPreview 
+            file={selectedFile} 
+            url={url} 
+            selectedColor={selectedColor}
+            isHighlighter={isHighlighter} 
+          />
         </ErrorBoundary>
       </div>
     </div>
