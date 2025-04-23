@@ -31,8 +31,8 @@ export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
         <div className="flex items-center gap-2 ml-auto">
           <ToolbarTools />
           <AmbientMusic />
-          <FocusMode />
           <ThemeProvider />
+          <FocusMode />
         </div>
       </div>
     </div>
