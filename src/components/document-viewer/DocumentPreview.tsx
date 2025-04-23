@@ -4,6 +4,8 @@ import { EmptyState } from './viewers/EmptyState';
 import { ErrorDisplay } from './viewers/ErrorDisplay';
 import { PdfViewer } from './viewers/PdfViewer';
 import { getFileType } from './FileConverter';
+import { FileTypeHandler } from './viewers/file-viewers/FileTypeHandler';
+import { UrlHandler } from './viewers/file-viewers/UrlHandler';
 
 interface DocumentPreviewProps {
   file: File | null;
@@ -24,42 +26,22 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     return <EmptyState />;
   }
   
-  // Handle PDF files
-  if (file && getFileType(file) === 'pdf') {
-    return <PdfViewer file={file} url="" isHighlighter={true} />;
+  // Handle file-based content
+  if (file) {
+    console.log("DocumentPreview: rendering file", file.name);
+    // Use the FileTypeHandler for files
+    return <FileTypeHandler file={file} selectedColor="#FFFF00" isHighlighter={true} />;
   }
   
-  // Handle PDF URLs
-  if (url && url.toLowerCase().endsWith('.pdf')) {
-    return <PdfViewer file={null} url={url} isHighlighter={true} />;
+  // Handle URL-based content
+  if (url) {
+    console.log("DocumentPreview: rendering URL", url);
+    // Use the UrlHandler for URLs
+    return <UrlHandler url={url} selectedColor="#FFFF00" isHighlighter={true} onError={() => console.error("URL loading error")} />;
   }
 
-  // For non-PDF files, display basic file information
-  return (
-    <div className="flex flex-col items-center justify-center h-full w-full p-8 bg-muted/10">
-      {file && (
-        <div className="text-center">
-          <h3 className="text-xl font-medium mb-2">File loaded</h3>
-          <p><strong>Name:</strong> {file.name}</p>
-          <p><strong>Type:</strong> {file.type}</p>
-          <p><strong>Size:</strong> {Math.round(file.size / 1024)} KB</p>
-          {getFileType(file) !== 'pdf' && (
-            <p className="mt-4 text-muted-foreground">This file type is not fully supported yet</p>
-          )}
-        </div>
-      )}
-      
-      {!file && url && (
-        <div className="text-center">
-          <h3 className="text-xl font-medium mb-2">URL loaded</h3>
-          <p><strong>URL:</strong> {url}</p>
-          {!url.toLowerCase().endsWith('.pdf') && (
-            <p className="mt-4 text-muted-foreground">Non-PDF URLs may not display correctly</p>
-          )}
-        </div>
-      )}
-    </div>
-  );
+  // Fallback if we somehow reach this point
+  return <EmptyState />;
 };
 
 export default DocumentPreview;

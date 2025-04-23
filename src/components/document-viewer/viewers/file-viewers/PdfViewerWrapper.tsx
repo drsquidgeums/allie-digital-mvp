@@ -1,6 +1,7 @@
 
 import React from 'react';
 import PspdfkitViewer from '../pdf/PspdfkitViewer';
+import { CustomPDFViewer } from '../pdf/components/CustomPDFViewer';
 
 interface PdfViewerWrapperProps {
   file: File | null;
@@ -21,14 +22,16 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   setHighlightEnabled = () => {},
   setSelectedColor = () => {}
 }) => {
+  // First try to use our custom PDF viewer that will select the best available PDF library
   return (
-    <PspdfkitViewer 
-      file={file} 
-      url={url} 
-      selectedColor={selectedColor} 
+    <CustomPDFViewer
+      file={file}
+      url={url}
+      selectedColor={selectedColor}
       isHighlighter={isHighlighter}
       highlightEnabled={highlightEnabled}
       setHighlightEnabled={setHighlightEnabled}
+      setSelectedColor={setSelectedColor}
     />
   );
 };
