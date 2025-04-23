@@ -34,13 +34,14 @@ export const usePspdfkitInstance = ({ file, url, onReady, onError }: UsePspdfkit
           return;
         }
 
-        localInstance = await PSPDFKit.load({
+        // Use the default export and its methods instead of accessing properties directly
+        localInstance = await PSPDFKit.default.load({
           container: containerRef.current,
           document: source,
           baseUrl: `${window.location.protocol}//${window.location.host}/pspdfkit/`,
           theme: document.documentElement.classList.contains('dark')
-            ? PSPDFKit.Theme.DARK
-            : PSPDFKit.Theme.LIGHT,
+            ? PSPDFKit.default.Theme.DARK 
+            : PSPDFKit.default.Theme.LIGHT,
           toolbarItems: [
             { type: "sidebar-thumbnails" },
             { type: "sidebar-document-outline" },
