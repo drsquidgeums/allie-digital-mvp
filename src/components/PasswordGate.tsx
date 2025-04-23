@@ -2,23 +2,31 @@
 import React, { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { WelcomeHeader } from "./password-gate/WelcomeHeader";
-import { PasswordForm } from "./password-gate/PasswordForm";
+import { EmailForm } from "./password-gate/EmailForm";
 
-const DEMO_PASSWORD = "allie2024";
+// List of approved tester emails
+const APPROVED_EMAILS = [
+  "tester1@example.com",
+  "tester2@example.com",
+  // Add your actual tester emails here
+];
 
 interface PasswordGateProps {
   onAuthenticated: () => void;
 }
 
 export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === DEMO_PASSWORD) {
+    const normalizedEmail = email.toLowerCase().trim();
+    
+    if (APPROVED_EMAILS.includes(normalizedEmail)) {
       localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("userEmail", normalizedEmail);
       onAuthenticated();
       toast({
         title: "Success",
@@ -26,8 +34,8 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
       });
     } else {
       toast({
-        title: "Error",
-        description: "Incorrect password. Please try again.",
+        title: "Access Denied",
+        description: "Sorry, this email is not authorized to access the application.",
         variant: "destructive",
       });
     }
@@ -76,10 +84,13 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         style={{ backgroundColor: 'rgba(255, 255, 255, 0.94)' }} 
       />
       <div className="w-full max-w-xl space-y-8 p-8 relative">
-        <WelcomeHeader colors={colors} />
-        <PasswordForm 
-          password={password}
-          setPassword={setPassword}
+        <WelcomeHeader colors={[
+          '#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#8B00FF',
+          '#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#8B00FF',
+        ]} />
+        <EmailForm 
+          email={email}
+          setEmail={setEmail}
           onSubmit={handleSubmit}
         />
       </div>
