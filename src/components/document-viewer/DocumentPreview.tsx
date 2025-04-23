@@ -24,9 +24,14 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     return <EmptyState />;
   }
   
-  // Handle PDF files and URLs with PDFium viewer
-  if (file && getFileType(file) === 'pdf' || url && url.toLowerCase().endsWith('.pdf')) {
-    return <PdfViewer file={file} url={url} />;
+  // Handle PDF files
+  if (file && getFileType(file) === 'pdf') {
+    return <PdfViewer file={file} url="" isHighlighter={true} />;
+  }
+  
+  // Handle PDF URLs
+  if (url && url.toLowerCase().endsWith('.pdf')) {
+    return <PdfViewer file={null} url={url} isHighlighter={true} />;
   }
 
   // For non-PDF files, display basic file information

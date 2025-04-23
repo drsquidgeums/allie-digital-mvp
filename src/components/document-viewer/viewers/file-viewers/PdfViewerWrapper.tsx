@@ -1,5 +1,6 @@
+
 import React from 'react';
-import PDFiumViewerComponent from '../pdf/PDFiumViewerComponent';
+import PspdfkitViewer from '../pdf/PspdfkitViewer';
 
 interface PdfViewerWrapperProps {
   file: File | null;
@@ -21,9 +22,13 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
   setSelectedColor = () => {}
 }) => {
   return (
-    <PDFiumViewerComponent 
+    <PspdfkitViewer 
       file={file} 
       url={url} 
+      selectedColor={selectedColor} 
+      isHighlighter={isHighlighter}
+      highlightEnabled={highlightEnabled}
+      setHighlightEnabled={setHighlightEnabled}
     />
   );
 };
