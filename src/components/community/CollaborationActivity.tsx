@@ -16,7 +16,7 @@ interface Activity {
 }
 
 interface CollaborationActivityProps {
-  activities: Activity[];
+  activities?: Activity[]; // Make activities optional with the ? operator
 }
 
 export const CollaborationActivity: React.FC<CollaborationActivityProps> = ({ activities = [] }) => {
