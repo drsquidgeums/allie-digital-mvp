@@ -1,6 +1,5 @@
-
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { Bot, MessageCircle, X, Maximize2, Minimize2, Sparkle } from "lucide-react";
+import { Bot, MessageCircle, X, Maximize2, Minimize2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
@@ -110,7 +109,8 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = ({
                     onClick={handleAnalyzeDocument}
                     disabled={analyzing || isLoading}
                   >
-                    <Sparkle className="h-3 w-3" />
+                    {/* Using an alternative icon since Sparkle doesn't exist */}
+                    <FileText className="h-3 w-3" />
                     Analyze
                   </Button>
                 </div>
