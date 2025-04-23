@@ -31,6 +31,9 @@ export const useFocusModeControl = (settings: FocusSettings) => {
   const toggleFocusMode = useCallback(async () => {
     try {
       if (!isActive) {
+        // Create a copy of settings without muteAudio
+        const modifiedSettings = { ...settings, muteAudio: false };
+        
         // Activate focus mode
         setIsActive(true);
         await enterFullscreen();
@@ -41,46 +44,30 @@ export const useFocusModeControl = (settings: FocusSettings) => {
         audio.setAttribute('aria-hidden', 'true');
         await audio.play().catch(e => console.error('Could not play notification sound:', e));
         
-        // Dispatch focus mode event for other components
+        // Dispatch focus mode event for other components with modified settings
         window.dispatchEvent(new CustomEvent('focusModeChanged', { 
           detail: { 
             active: true,
-            settings
+            settings: modifiedSettings
           } 
         }));
         
-        // Explicitly disable ambient music when focus mode is activated
-        if (window.globalAudioPlayer && !window.globalAudioPlayer.paused) {
-          console.log('Pausing ambient music due to focus mode activation');
-          window.globalAudioPlayer.pause();
-          
-          // Dispatch specific event for the audio player
-          window.dispatchEvent(new CustomEvent('audioMutingChanged', { 
-            detail: { 
-              muted: true,
-              forced: true,
-              source: 'focus-mode-ambient-disable'
-            } 
-          }));
-        }
-        
-        // Create a human-readable list of active settings
-        const activeSettings = Object.entries(settings)
-          .filter(([_, value]) => value)
+        // Create a human-readable list of active settings (excluding muteAudio)
+        const activeSettings = Object.entries(modifiedSettings)
+          .filter(([key, value]) => value && key !== 'muteAudio')
           .map(([key]) => {
             switch(key) {
               case 'blockNotifications': return 'notifications blocked';
               case 'blockPopups': return 'popups blocked';
               case 'blockSocialMedia': return 'social media hidden';
-              case 'muteAudio': return 'audio muted';
               default: return '';
             }
           })
           .filter(Boolean);
         
         const settingsMessage = activeSettings.length > 0 
-          ? `Active settings: ${activeSettings.join(', ')}`
-          : 'No distraction blocking settings enabled';
+          ? `Active settings: ${activeSettings.join(', ')}. Audio playback remains unaffected.`
+          : 'No distraction blocking settings enabled. Audio playback continues.';
           
         toast({
           title: "Focus mode activated",
