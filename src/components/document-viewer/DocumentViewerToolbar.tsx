@@ -3,6 +3,7 @@ import React from "react";
 import { DocumentToolbar } from "./DocumentToolbar";
 import { ToolbarTools } from "./ToolbarTools";
 import { ThemeProvider } from "../ThemeProvider";
+import { AmbientMusic } from "../AmbientMusic";
 
 interface DocumentViewerToolbarProps {
   onUpload: () => void;
@@ -11,11 +12,6 @@ interface DocumentViewerToolbarProps {
   hasFile: boolean;
 }
 
-/**
- * DocumentViewerToolbar Component
- * 
- * Container for all toolbar-related components and actions
- */
 export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
   onUpload,
   onDownload,
@@ -33,9 +29,11 @@ export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
         />
         <div className="flex items-center gap-2">
           <ToolbarTools />
+          <AmbientMusic />
           <ThemeProvider />
         </div>
       </div>
     </div>
   );
 };
+
