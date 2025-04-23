@@ -35,7 +35,7 @@ export const FocusSettings = () => {
 
       <FocusSettingSwitch
         label="Mute Audio"
-        description="Mute all audio and video elements during focus mode (disables ambient music player)"
+        description="Mute all audio and video elements during focus mode"
         checked={settings.muteAudio}
         onCheckedChange={(checked) => updateSetting('muteAudio', checked)}
       />

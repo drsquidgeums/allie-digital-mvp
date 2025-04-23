@@ -1,10 +1,10 @@
 
 import React, { Suspense, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider as NextThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { PomodoroProvider } from "@/contexts/PomodoroContext";
-import "@/i18n/config"; 
+import "@/i18n/config"; // Fixed import path using alias
 import { useTranslation } from "react-i18next";
 
 const queryClient = new QueryClient({
@@ -38,14 +38,14 @@ const LanguageInitializer = () => {
 export const AppProviders = React.memo(({ children }: AppProvidersProps) => (
   <Suspense fallback="Loading...">
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+      <NextThemeProvider attribute="class" defaultTheme="light" enableSystem>
         <TooltipProvider>
           <PomodoroProvider>
             <LanguageInitializer />
             {children}
           </PomodoroProvider>
         </TooltipProvider>
-      </ThemeProvider>
+      </NextThemeProvider>
     </QueryClientProvider>
   </Suspense>
 ));

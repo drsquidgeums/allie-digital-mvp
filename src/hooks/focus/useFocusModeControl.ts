@@ -1,40 +1,17 @@
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useToast } from "../use-toast";
 import { useFullscreen } from "../useFullscreen";
 import { FocusSettings } from "../useFocusSettings";
-import { getFocusModeState } from "../useFocusMode";
 
 export const useFocusModeControl = (settings: FocusSettings) => {
-  // Initialize from global state
-  const [isActive, setIsActive] = useState(() => {
-    const globalState = getFocusModeState();
-    return globalState.active;
-  });
-  
+  const [isActive, setIsActive] = useState(false);
   const { enterFullscreen, exitFullscreen } = useFullscreen();
   const { toast } = useToast();
-
-  // Sync with global state changes
-  useEffect(() => {
-    const handleFocusModeChange = (event: CustomEvent) => {
-      setIsActive(event.detail.active);
-    };
-
-    window.addEventListener('focusModeChanged', handleFocusModeChange as EventListener);
-    
-    return () => {
-      window.removeEventListener('focusModeChanged', handleFocusModeChange as EventListener);
-    };
-  }, []);
 
   const toggleFocusMode = useCallback(async () => {
     try {
       if (!isActive) {
-        // Create a copy of settings with muteAudio always set to false
-        // This ensures the ambient music player is never disabled automatically
-        const modifiedSettings = { ...settings, muteAudio: false };
-        
         // Activate focus mode
         setIsActive(true);
         await enterFullscreen();
@@ -45,30 +22,46 @@ export const useFocusModeControl = (settings: FocusSettings) => {
         audio.setAttribute('aria-hidden', 'true');
         await audio.play().catch(e => console.error('Could not play notification sound:', e));
         
-        // Dispatch focus mode event for other components with modified settings
+        // Dispatch focus mode event for other components
         window.dispatchEvent(new CustomEvent('focusModeChanged', { 
           detail: { 
             active: true,
-            settings: modifiedSettings
+            settings
           } 
         }));
         
-        // Create a human-readable list of active settings (excluding muteAudio)
-        const activeSettings = Object.entries(modifiedSettings)
-          .filter(([key, value]) => value && key !== 'muteAudio')
+        // Explicitly disable ambient music when focus mode is activated
+        if (window.globalAudioPlayer && !window.globalAudioPlayer.paused) {
+          console.log('Pausing ambient music due to focus mode activation');
+          window.globalAudioPlayer.pause();
+          
+          // Dispatch specific event for the audio player
+          window.dispatchEvent(new CustomEvent('audioMutingChanged', { 
+            detail: { 
+              muted: true,
+              forced: true,
+              source: 'focus-mode-ambient-disable'
+            } 
+          }));
+        }
+        
+        // Create a human-readable list of active settings
+        const activeSettings = Object.entries(settings)
+          .filter(([_, value]) => value)
           .map(([key]) => {
             switch(key) {
               case 'blockNotifications': return 'notifications blocked';
               case 'blockPopups': return 'popups blocked';
               case 'blockSocialMedia': return 'social media hidden';
+              case 'muteAudio': return 'audio muted';
               default: return '';
             }
           })
           .filter(Boolean);
         
         const settingsMessage = activeSettings.length > 0 
-          ? `Active settings: ${activeSettings.join(', ')}. Audio playback remains unaffected.`
-          : 'No distraction blocking settings enabled. Audio playback continues.';
+          ? `Active settings: ${activeSettings.join(', ')}`
+          : 'No distraction blocking settings enabled';
           
         toast({
           title: "Focus mode activated",

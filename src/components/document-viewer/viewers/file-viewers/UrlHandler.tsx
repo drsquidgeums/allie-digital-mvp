@@ -22,11 +22,8 @@ export const UrlHandler: React.FC<UrlHandlerProps> = ({
   isHighlighter,
   onError
 }) => {
-  console.log("UrlHandler received URL:", url);
-  
   // Special handling for PDF URLs
   if (url.toLowerCase().endsWith('.pdf')) {
-    console.log("Rendering PDF viewer for URL:", url);
     return (
       <PdfViewerWrapper
         file={null}

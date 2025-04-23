@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
 } from "@/components/ui/popover";
 import {
   Tooltip,
@@ -14,7 +13,6 @@ import {
 import { MUSIC_OPTIONS } from "./audio/MusicOptions";
 import { useAudioPlayer } from "./audio/useAudioPlayer";
 import { useFocusMode } from "@/hooks/useFocusMode";
-import { useFocusSettings } from "@/hooks/useFocusSettings";
 import { MusicButton } from "./audio/MusicButton";
 import { MusicPopoverContent } from "./audio/MusicPopoverContent";
 
@@ -32,21 +30,19 @@ export const AmbientMusic = () => {
     toggleLoop 
   } = useAudioPlayer();
   
-  const { isFocusModeActive, focusModeSettings } = useFocusMode();
-  const { settings } = useFocusSettings();
-
-  // Only disable if both focus mode is active AND muteAudio is enabled in the user's actual settings
-  // Not based on the modified settings from focusModeSettings
+  const { isFocusModeActive } = useFocusMode();
   const [isDisabled, setIsDisabled] = useState(false);
   
   useEffect(() => {
-    // Never disable the music player during focus mode
-    // We intentionally ignore the focusModeSettings.muteAudio (which is always false)
-    // and only check the user's actual settings which they might have manually enabled
-    setIsDisabled(false);
+    setIsDisabled(isFocusModeActive);
     
-    console.log('Focus mode state in ambient player:', { isFocusModeActive, settings });
-  }, [isFocusModeActive, settings]);
+    // When focus mode is activated, we'll get the disable event from useFocusModeControl
+    // But we still need to make sure the component state reflects this
+    if (isFocusModeActive && isPlaying) {
+      const currentMusic = MUSIC_OPTIONS.find(opt => opt.id === selectedMusic);
+      togglePlay(currentMusic);
+    }
+  }, [isFocusModeActive, isPlaying, selectedMusic, togglePlay]);
 
   const handleMusicSelection = (value: string) => {
     if (isDisabled) return;
@@ -74,8 +70,10 @@ export const AmbientMusic = () => {
     <TooltipProvider>
       <Popover>
         <Tooltip>
-          <TooltipTrigger>
-            <MusicButton isPlaying={isPlaying} isDisabled={isDisabled} />
+          <TooltipTrigger asChild>
+            <div>
+              <MusicButton isPlaying={isPlaying} isDisabled={isDisabled} />
+            </div>
           </TooltipTrigger>
           <TooltipContent 
             side="bottom"

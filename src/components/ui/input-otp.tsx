@@ -1,14 +1,8 @@
+import * as React from "react"
+import { OTPInput, OTPInputContext } from "input-otp"
+import { Dot } from "lucide-react"
 
-"use client";
-
-import { Circle } from "lucide-react";
-import * as React from "react";
-import { OTPInput, SlotProps } from "input-otp";
-import { cn } from "@/lib/utils";
-import { cva } from "class-variance-authority";
-
-// Create a context to pass the OTP input context properly
-const OTPInputContext = React.createContext<any>(null);
+import { cn } from "@/lib/utils"
 
 const InputOTP = React.forwardRef<
   React.ElementRef<typeof OTPInput>,
@@ -38,12 +32,8 @@ const InputOTPSlot = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div"> & { index: number }
 >(({ index, className, ...props }, ref) => {
-  // Use useContext to get the OTP input context
-  const inputOTPContext = React.useContext(OTPInputContext);
-  
-  // Safely access the slots with a fallback
-  const slot = inputOTPContext?.slots?.[index] || {};
-  const { char, hasFakeCaret, isActive } = slot;
+  const inputOTPContext = React.useContext(OTPInputContext)
+  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index]
 
   return (
     <div
@@ -71,9 +61,9 @@ const InputOTPSeparator = React.forwardRef<
   React.ComponentPropsWithoutRef<"div">
 >(({ ...props }, ref) => (
   <div ref={ref} role="separator" {...props}>
-    <Circle />
+    <Dot />
   </div>
 ))
 InputOTPSeparator.displayName = "InputOTPSeparator"
 
-export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator, OTPInputContext }
+export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator }

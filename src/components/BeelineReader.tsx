@@ -121,6 +121,7 @@ export const BeelineReader = () => {
             min={0}
             max={360}
             step={1}
+            className="w-full"
           />
         </div>
       </div>

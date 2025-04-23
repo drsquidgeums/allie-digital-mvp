@@ -1,5 +1,5 @@
 
-import { BookOpen, Mic, Eye, Timer, FileText, Pencil } from "lucide-react";
+import { BookOpen, Mic, Eye, Timer, Text, Focus, SpellCheck } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { BionicReader } from "../BionicReader";
@@ -9,7 +9,6 @@ import { BeelineReader } from "../BeelineReader";
 import { FocusMode } from "../FocusMode";
 import { SpeechToText } from "../SpeechToText";
 import { Rewordify } from "../Rewordify";
-import { FocusModeButton } from "./toolbar/FocusModeButton";
 
 export const ToolbarTools = () => {
   const { t } = useTranslation();
@@ -31,7 +30,7 @@ export const ToolbarTools = () => {
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
       <ToolItem
-        icon={FileText}
+        icon={Text}
         label={t('tools.stt')}
         id="stt"
         content={<SpeechToText />}
@@ -52,14 +51,19 @@ export const ToolbarTools = () => {
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
       <ToolItem
-        icon={Pencil}
+        icon={SpellCheck}
         label={"Rewordify"}
         id="rewordify"
         content={<Rewordify />}
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
-      {/* Replace ToolItem with standalone button for better state management */}
-      <FocusModeButton />
+      <ToolItem
+        icon={Focus}
+        label={t('tools.focus')}
+        id="focus"
+        content={<FocusMode />}
+        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+      />
     </div>
   );
 };
