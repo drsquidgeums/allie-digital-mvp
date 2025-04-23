@@ -1,4 +1,3 @@
-
 import React, { useRef, lazy, Suspense, memo } from "react";
 import { Card } from "@/components/ui/card";
 import { CommunityHeader } from "./community/CommunityHeader";
@@ -21,7 +20,7 @@ const StudyGroups = lazy(() => import("./community/StudyGroups").then(module => 
   default: module.StudyGroups
 })));
 const CollaborationActivity = lazy(() => import("./community/CollaborationActivity").then(module => ({
-  default: module.default
+  default: module.CollaborationActivity
 })));
 const TutorCommunication = lazy(() => import("./community/TutorCommunication").then(module => ({
   default: module.default

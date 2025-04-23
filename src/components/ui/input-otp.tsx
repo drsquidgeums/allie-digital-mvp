@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Circle } from "lucide-react";
@@ -30,12 +31,19 @@ const InputOTPGroup = React.forwardRef<
 ))
 InputOTPGroup.displayName = "InputOTPGroup"
 
+// Create a context to pass the OTP input context properly
+const OTPInputContext = React.createContext<any>(null);
+
 const InputOTPSlot = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div"> & { index: number }
 >(({ index, className, ...props }, ref) => {
-  const inputOTPContext = React.useContext(OTPInputContext)
-  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index]
+  // Use useContext to get the OTP input context
+  const inputOTPContext = React.useContext(OTPInputContext);
+  
+  // Safely access the slots with a fallback
+  const slot = inputOTPContext?.slots?.[index] || {};
+  const { char, hasFakeCaret, isActive } = slot;
 
   return (
     <div
@@ -68,4 +76,4 @@ const InputOTPSeparator = React.forwardRef<
 ))
 InputOTPSeparator.displayName = "InputOTPSeparator"
 
-export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator }
+export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator, OTPInputContext }

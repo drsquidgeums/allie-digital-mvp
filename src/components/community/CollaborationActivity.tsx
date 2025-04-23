@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   MessageSquare, 
@@ -18,7 +19,7 @@ interface CollaborationActivityProps {
   activities: Activity[];
 }
 
-export const CollaborationActivity: React.FC<CollaborationActivityProps> = ({ activities }) => {
+export const CollaborationActivity: React.FC<CollaborationActivityProps> = ({ activities = [] }) => {
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     const now = new Date();
@@ -53,11 +54,39 @@ export const CollaborationActivity: React.FC<CollaborationActivityProps> = ({ ac
     }
   };
 
+  // Default activities for demonstration
+  const defaultActivities: Activity[] = [
+    {
+      id: '1',
+      type: 'comment',
+      user: 'Sarah J.',
+      content: 'Added notes on chapter 5',
+      timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString()
+    },
+    {
+      id: '2',
+      type: 'edit',
+      user: 'Michael T.',
+      content: 'Updated timeline for project',
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString()
+    },
+    {
+      id: '3',
+      type: 'upload',
+      user: 'Alex K.',
+      content: 'Uploaded study guide PDF',
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString()
+    }
+  ];
+
+  // Use provided activities or fallback to default ones
+  const displayActivities = activities.length > 0 ? activities : defaultActivities;
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">Recent Activity</h2>
       <ul className="space-y-4">
-        {activities.map((activity) => (
+        {displayActivities.map((activity) => (
           <li key={activity.id} className="flex items-start space-x-3">
             {getActivityIcon(activity.type)}
             <div>
@@ -71,3 +100,6 @@ export const CollaborationActivity: React.FC<CollaborationActivityProps> = ({ ac
     </div>
   );
 };
+
+// Default export for lazy loading
+export default { CollaborationActivity };
