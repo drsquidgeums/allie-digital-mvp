@@ -14,11 +14,14 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
     const originalMutedStates = new Map();
     const originalPlaybackStates = new Map();
     
-    // Special handling for the global audio player
-    if (window.globalAudioPlayer) {
-      console.log('Global audio player exists, preserving its state');
-      return; // Do nothing if globalAudioPlayer exists, preserving its current state
-    }
+    // Dispatch an event that other components can listen for
+    window.dispatchEvent(new CustomEvent('audioMutingChanged', {
+      detail: {
+        muted: true,
+        forced: true,
+        source: 'focus-mode'
+      }
+    }));
     
     // Handle dynamically added audio/video elements
     const observer = new MutationObserver((mutations) => {
@@ -43,6 +46,16 @@ export const useAudioMuteEffect = (isActive: boolean, settings: FocusSettings) =
 
     return () => {
       console.log('Focus mode audio muting cleanup');
+      
+      // Dispatch an event when muting is deactivated
+      window.dispatchEvent(new CustomEvent('audioMutingChanged', {
+        detail: {
+          muted: false,
+          forced: false,
+          source: 'focus-mode'
+        }
+      }));
+      
       observer.disconnect();
     };
   }, [isActive, settings.muteAudio]);

@@ -31,7 +31,8 @@ export const useFocusModeControl = (settings: FocusSettings) => {
   const toggleFocusMode = useCallback(async () => {
     try {
       if (!isActive) {
-        // Create a copy of settings without muteAudio
+        // Create a copy of settings with muteAudio always set to false
+        // This ensures the ambient music player is never disabled automatically
         const modifiedSettings = { ...settings, muteAudio: false };
         
         // Activate focus mode

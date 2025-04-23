@@ -35,7 +35,7 @@ export const MusicPopoverContent = ({
   if (isDisabled) {
     return (
       <div className="p-4 text-center text-sm text-muted-foreground">
-        Music player is disabled while Focus Mode is active.
+        Music player is disabled while Focus Mode is active with "Mute Audio" setting enabled.
       </div>
     );
   }
