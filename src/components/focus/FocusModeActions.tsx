@@ -17,12 +17,12 @@ export const FocusModeActions = ({
   onRequestNotifications,
 }: FocusModeActionsProps) => {
   return (
-    <div className="flex items-center space-x-2">
+    <div className="space-y-4">
       {notificationPermission === "default" && (
         <Button
           variant="outline"
           onClick={onRequestNotifications}
-          className="text-xs"
+          className="w-full text-xs"
         >
           <Bell className="w-4 h-4 mr-2" />
           Enable Notifications
@@ -32,7 +32,7 @@ export const FocusModeActions = ({
       <Button 
         onClick={onToggleFocus}
         variant={isActive ? "destructive" : "default"}
-        className={`flex items-center text-xs transition-all duration-300 ${
+        className={`w-full flex items-center text-xs transition-all duration-300 ${
           isActive ? 'shadow-md shadow-destructive/30 ring-1 ring-destructive' : 
           'shadow hover:shadow-md hover:shadow-primary/20'
         }`}
