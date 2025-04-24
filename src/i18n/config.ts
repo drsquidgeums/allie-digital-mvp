@@ -29,6 +29,8 @@ i18n
     }
   });
 
+export default i18n;
+
 // Function to change the language throughout the application
 export const changeLanguage = async (lng: string) => {
   if (lng && i18n.languages.includes(lng)) {
@@ -39,5 +41,3 @@ export const changeLanguage = async (lng: string) => {
   }
   return false;
 };
-
-export default i18n;

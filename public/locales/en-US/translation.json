@@ -1,3 +1,4 @@
+
 {
   "navigation": {
     "fileUploader": "File Uploader",
@@ -44,12 +45,14 @@
     "description": "Manage your application preferences",
     "language": "Language Settings",
     "selectLanguage": "Select Language",
+    "languageChanged": "Application language changed to {{language}}",
+    "languageChangeError": "Failed to change language. Please try again.",
     "accessibility": {
       "title": "Accessibility",
       "screenReader": "Screen Reader Support",
       "screenReaderDescription": "Enable enhanced screen reader compatibility",
-      "contrast": "High Contrast Mode",
-      "contrastDescription": "Increase contrast for better visibility"
+      "screenReaderEnabled": "Screen reader support enabled",
+      "screenReaderDisabled": "Screen reader support disabled"
     },
     "performance": {
       "title": "Performance",

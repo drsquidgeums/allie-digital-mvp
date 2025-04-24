@@ -1,3 +1,4 @@
+
 {
   "navigation": {
     "fileUploader": "Cargador de archivos",
@@ -43,12 +44,14 @@
     "description": "Administra las preferencias de la aplicación",
     "language": "Configuración de idioma",
     "selectLanguage": "Seleccionar idioma",
+    "languageChanged": "El idioma de la aplicación ha cambiado a {{language}}",
+    "languageChangeError": "Error al cambiar el idioma. Inténtalo de nuevo.",
     "accessibility": {
       "title": "Accesibilidad",
       "screenReader": "Soporte para lector de pantalla",
       "screenReaderDescription": "Habilitar compatibilidad mejorada con lector de pantalla",
-      "contrast": "Modo de alto contraste",
-      "contrastDescription": "Aumentar el contraste para mejor visibilidad"
+      "screenReaderEnabled": "Soporte de lector de pantalla activado",
+      "screenReaderDisabled": "Soporte de lector de pantalla desactivado"
     },
     "performance": {
       "title": "Rendimiento",

@@ -1,3 +1,4 @@
+
 {
   "navigation": {
     "fileUploader": "Datei-Uploader",
@@ -43,12 +44,14 @@
     "description": "Verwalte deine Anwendungseinstellungen",
     "language": "Spracheinstellungen",
     "selectLanguage": "Sprache auswählen",
+    "languageChanged": "Anwendungssprache wurde zu {{language}} geändert",
+    "languageChangeError": "Fehler beim Ändern der Sprache. Bitte versuche es erneut.",
     "accessibility": {
       "title": "Barrierefreiheit",
       "screenReader": "Bildschirmleser-Unterstützung",
       "screenReaderDescription": "Verbesserte Kompatibilität mit Bildschirmlesern aktivieren",
-      "contrast": "Hochkontrast-Modus",
-      "contrastDescription": "Kontrast für bessere Sichtbarkeit erhöhen"
+      "screenReaderEnabled": "Bildschirmleser-Unterstützung aktiviert",
+      "screenReaderDisabled": "Bildschirmleser-Unterstützung deaktiviert"
     },
     "performance": {
       "title": "Leistung",
