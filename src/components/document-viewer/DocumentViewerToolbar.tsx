@@ -3,6 +3,7 @@ import React from "react";
 import { DocumentToolbar } from "./DocumentToolbar";
 import { ToolbarTools } from "./ToolbarTools";
 import { ThemeProvider } from "../ThemeProvider";
+import { FocusButton } from "../focus/FocusButton";
 
 interface DocumentViewerToolbarProps {
   onUpload: () => void;
@@ -27,6 +28,7 @@ export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
           hasFile={hasFile}
         />
         <div className="flex items-center gap-2 ml-auto">
+          <FocusButton />
           <ToolbarTools />
           <ThemeProvider />
         </div>
