@@ -68,7 +68,7 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = ({
         <Card 
           className={`bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative border shadow-lg transition-all duration-300 ease-in-out
             ${isExpanded 
-              ? 'w-[90vw] h-[80vh] max-w-4xl' 
+              ? 'fixed inset-0 w-full h-full z-50 rounded-none' 
               : 'w-80 h-96 sm:w-96 sm:h-[28rem]'
             }
           `}
