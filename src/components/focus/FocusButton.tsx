@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Focus } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -11,7 +11,7 @@ export const FocusButton = () => {
     blockNotifications: true,
     blockPopups: true,
     blockSocialMedia: true,
-    muteAudio: false, // Set to false so ambient music isn't affected
+    muteAudio: false,
   });
   const { toast } = useToast();
 
