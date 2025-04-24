@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 
 /**
  * Custom hook to handle side effects for the document viewer
- * Manages accessibility tool activation and notifications
+ * Manages accessibility tool notifications
  */
 export const useDocumentViewerEffects = (
   selectedFile: File | null,
@@ -13,37 +13,18 @@ export const useDocumentViewerEffects = (
   const { toast } = useToast();
 
   /**
-   * Auto-activates accessibility tools when content is loaded
-   * This useEffect activates Bionic Reader and Text-to-Speech tools
-   * when a document is loaded (either via file upload or URL)
+   * Notify user about available accessibility tools when content is loaded
+   * This useEffect no longer auto-activates tools, just notifies about their availability
    */
   useEffect(() => {
     if (selectedFile || url) {
       try {
-        // Find and activate the Bionic Reader and TTS tools
-        const toolbarTools = document.querySelectorAll('[data-tool-id]');
-        const bionicTool = Array.from(toolbarTools).find(
-          tool => tool.getAttribute('data-tool-id') === 'bionic'
-        );
-        const ttsTool = Array.from(toolbarTools).find(
-          tool => tool.getAttribute('data-tool-id') === 'tts'
-        );
-
-        // Programmatically click the tools to activate them
-        if (bionicTool instanceof HTMLElement) {
-          bionicTool.click();
-        }
-        if (ttsTool instanceof HTMLElement) {
-          ttsTool.click();
-        }
-
         toast({
-          title: "Tools activated",
-          description: "Bionic Reader and Text-to-Speech are now available for this document",
+          title: "Document loaded",
+          description: "Bionic Reader and Text-to-Speech are available in the toolbar",
         });
       } catch (error) {
-        console.error("Error activating document tools:", error);
-        // Don't show error toast here to avoid overwhelming the user
+        console.error("Error in document viewer effects:", error);
       }
     }
   }, [selectedFile, url, toast]);
