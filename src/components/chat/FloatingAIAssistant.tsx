@@ -76,7 +76,7 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = ({
             <div className="p-3 border-b flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <Bot className="h-5 w-5 text-primary" />
-                <h2 className="text-lg font-semibold">Allie Ai</h2>
+                <h2 className="text-lg font-semibold">Virtual Assistant</h2>
               </div>
               <div className="flex items-center gap-1">
                 <Button 
