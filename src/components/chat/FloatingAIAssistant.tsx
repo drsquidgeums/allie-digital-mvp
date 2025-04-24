@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Bot, MessageCircle, X, Maximize2, Minimize2, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -75,7 +74,8 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = ({
         >
           <div className="flex flex-col h-full">
             <div className="p-3 border-b flex justify-between items-center">
-              <div className="flex items-center">
+              <div className="flex items-center gap-2">
+                <Bot className="h-5 w-5 text-primary" />
                 <h2 className="text-lg font-semibold">Allie Ai</h2>
               </div>
               <div className="flex items-center gap-1">
