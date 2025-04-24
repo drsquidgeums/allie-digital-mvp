@@ -1,29 +1,53 @@
-import React from "react";
+
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface UrlInputProps {
-  url: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onSubmit: (url: string) => void;
+  isLoading?: boolean;
+  placeholder?: string;
+  buttonLabel?: string;
 }
 
-export const UrlInput = ({ url, onChange, onKeyDown }: UrlInputProps) => {
+export const UrlInput: React.FC<UrlInputProps> = ({
+  onSubmit,
+  isLoading = false,
+  placeholder,
+  buttonLabel,
+}) => {
+  const [url, setUrl] = useState("");
+  const { t } = useTranslation();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (url.trim()) {
+      onSubmit(url.trim());
+    }
+  };
+
   return (
-    <div className="mb-4">
+    <form onSubmit={handleSubmit} className="flex w-full max-w-lg space-x-2">
       <Input
         type="url"
-        placeholder="Paste URL here"
-        className="w-full"
+        placeholder={placeholder || t('tools.pasteUrl')}
         value={url}
-        onChange={onChange}
-        onKeyDown={onKeyDown}
-        aria-label="Document URL input"
-        role="textbox"
-        aria-describedby="url-input-help"
+        onChange={(e) => setUrl(e.target.value)}
+        disabled={isLoading}
+        className="flex-1"
       />
-      <div id="url-input-help" className="sr-only">
-        Press Enter to load the URL or Escape to clear the input
-      </div>
-    </div>
+      <Button 
+        type="submit" 
+        disabled={!url.trim() || isLoading}
+        variant="outline"
+        size="sm"
+        className="h-9"
+      >
+        <Link className="h-4 w-4 mr-2" />
+        {buttonLabel || "Go"}
+      </Button>
+    </form>
   );
 };

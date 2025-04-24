@@ -1,6 +1,7 @@
 
 import i18n from '@/i18n/config';
 import { toast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 
 // Supported languages with their display names
 export const supportedLanguages = [
@@ -49,3 +50,11 @@ export const getCurrentLanguageName = () => {
 
 // Get all supported languages
 export const getSupportedLanguages = () => supportedLanguages;
+
+// Welcome notification with correct language
+export const showWelcomeNotification = () => {
+  toast({
+    title: i18n.t('common.success'),
+    description: i18n.t('common.welcome'),
+  });
+};

@@ -5,6 +5,12 @@ import { Focus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { useFocusModeControl } from "@/hooks/focus/useFocusModeControl";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useTranslation } from "react-i18next";
 
 export const FocusButton = () => {
   const { isActive, toggleFocusMode } = useFocusModeControl({
@@ -14,6 +20,7 @@ export const FocusButton = () => {
     muteAudio: false,
   });
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const handleToggle = async () => {
     try {
@@ -35,21 +42,31 @@ export const FocusButton = () => {
   };
 
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={handleToggle}
-      className={cn(
-        "h-9 w-9 relative",
-        isActive && "bg-red-500 text-white hover:bg-red-600",
-        !isActive && "hover:bg-accent hover:text-accent-foreground"
-      )}
-      aria-label={isActive ? "Exit focus mode" : "Enter focus mode"}
-    >
-      <Focus className="h-4 w-4" />
-      {isActive && (
-        <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
-      )}
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleToggle}
+          className={cn(
+            "h-9 w-9 relative",
+            isActive && "bg-red-500 text-white hover:bg-red-600",
+            !isActive && "hover:bg-accent hover:text-accent-foreground"
+          )}
+          aria-label={isActive ? "Exit focus mode" : "Enter focus mode"}
+        >
+          <Focus className="h-4 w-4" />
+          {isActive && (
+            <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
+          )}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent 
+        side="bottom"
+        className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+      >
+        {t('tools.focus')}
+      </TooltipContent>
+    </Tooltip>
   );
 };

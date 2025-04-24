@@ -18,7 +18,15 @@
     "color": "Farbwerkzeug",
     "focus": "Fokusmodus",
     "beeline": "Beeline Reader",
-    "rewordify": "Umformulieren"
+    "rewordify": "Umformulieren",
+    "uploadDocument": "Dokument hochladen",
+    "captureScreenshot": "Bildschirmfoto aufnehmen",
+    "pasteUrl": "URL hier einfügen"
+  },
+  "document": {
+    "emptyState": "Kein Dokument geladen",
+    "emptyStateDescription": "Datei hochladen oder URL einfügen zum Anzeigen",
+    "upload": "Dokument hochladen"
   },
   "common": {
     "logout": "Abmelden",
@@ -28,7 +36,8 @@
     "information": "Information",
     "language": "Sprache auswählen",
     "noNotifications": "Keine Benachrichtigungen",
-    "loadingText": "Wird geladen..."
+    "loadingText": "Wird geladen...",
+    "welcome": "Willkommen in der Anwendung"
   },
   "chat": {
     "title": "Allie KI",
@@ -142,5 +151,10 @@
     "uploading": "Wird hochgeladen...",
     "success": "Datei erfolgreich hochgeladen",
     "error": "Fehler beim Hochladen der Datei"
+  },
+  "pages": {
+    "myFiles": "Meine Dateien",
+    "toolbox": "Werkzeugkasten",
+    "settings": "Einstellungen"
   }
 }

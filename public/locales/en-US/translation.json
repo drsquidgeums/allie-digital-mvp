@@ -18,7 +18,15 @@
     "color": "Color Tool",
     "focus": "Focus Mode",
     "beeline": "Beeline Reader",
-    "rewordify": "Rewordify"
+    "rewordify": "Rewordify",
+    "uploadDocument": "Upload Document",
+    "captureScreenshot": "Capture Screenshot",
+    "pasteUrl": "Paste URL here"
+  },
+  "document": {
+    "emptyState": "No Document Loaded",
+    "emptyStateDescription": "Upload a file or paste a URL to view",
+    "upload": "Upload Document"
   },
   "common": {
     "logout": "Logout",
@@ -28,7 +36,8 @@
     "information": "Information",
     "language": "Select Language",
     "noNotifications": "No notifications",
-    "loadingText": "Loading..."
+    "loadingText": "Loading...",
+    "welcome": "Welcome to the application"
   },
   "chat": {
     "title": "Allie AI",
@@ -142,5 +151,10 @@
     "uploading": "Uploading...",
     "success": "File uploaded successfully",
     "error": "Error uploading file"
+  },
+  "pages": {
+    "myFiles": "My Files",
+    "toolbox": "Toolbox",
+    "settings": "Settings"
   }
 }
