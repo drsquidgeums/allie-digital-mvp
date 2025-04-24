@@ -1,12 +1,12 @@
 
-import React from "react";
+import React, { useCallback, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, XCircle } from "lucide-react";
 import { usePomodoroContext } from "@/contexts/PomodoroContext";
 import { useTasks } from "@/hooks/useTasks";
 
-export const TaskCompletionPrompt = () => {
+export const TaskCompletionPrompt = memo(() => {
   const { taskReadyForCompletion, setTaskReadyForCompletion } = usePomodoroContext();
   const { tasks, handleToggleTask } = useTasks();
   
@@ -19,7 +19,7 @@ export const TaskCompletionPrompt = () => {
     return null;
   }
   
-  const handleConfirm = () => {
+  const handleConfirm = useCallback(() => {
     handleToggleTask(taskReadyForCompletion);
     setTaskReadyForCompletion(null);
     
@@ -31,11 +31,11 @@ export const TaskCompletionPrompt = () => {
       }
     });
     window.dispatchEvent(event);
-  };
+  }, [taskReadyForCompletion, handleToggleTask, setTaskReadyForCompletion]);
   
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setTaskReadyForCompletion(null);
-  };
+  }, [setTaskReadyForCompletion]);
   
   return (
     <Card className="p-4 mb-4 border-2 border-primary/50 bg-primary/5 animate-pulse">
@@ -68,4 +68,6 @@ export const TaskCompletionPrompt = () => {
       </div>
     </Card>
   );
-};
+});
+
+TaskCompletionPrompt.displayName = "TaskCompletionPrompt";

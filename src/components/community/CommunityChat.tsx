@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+
+import React, { useState, useCallback, memo } from "react";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatMessage } from "../chat/ChatMessage";
 import { ChatInput } from "../chat/ChatInput";
 
-export const CommunityChat = () => {
+export const CommunityChat = memo(() => {
   const [messages, setMessages] = useState<Array<{ text: string; isUser: boolean }>>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = useCallback(() => {
     if (!inputValue.trim()) return;
 
     setIsLoading(true);
@@ -23,7 +24,11 @@ export const CommunityChat = () => {
       setInputValue("");
       setIsLoading(false);
     }, 1000);
-  };
+  }, [inputValue]);
+
+  const handleChangeInput = useCallback((value: string) => {
+    setInputValue(value);
+  }, []);
 
   return (
     <Card className="p-4">
@@ -38,11 +43,13 @@ export const CommunityChat = () => {
         </ScrollArea>
         <ChatInput
           value={inputValue}
-          onChange={setInputValue}
+          onChange={handleChangeInput}
           onSend={handleSendMessage}
           isLoading={isLoading}
         />
       </div>
     </Card>
   );
-};
+});
+
+CommunityChat.displayName = "CommunityChat";

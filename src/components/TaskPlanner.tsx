@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { TaskCharts } from "./dashboard/TaskCharts";
 import { TaskPoints } from "./dashboard/TaskPoints";
@@ -16,7 +16,7 @@ interface TaskPlannerProps {
   onDeleteTask: (id: string) => void;
 }
 
-export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDeleteTask }: TaskPlannerProps) => {
+export const TaskPlanner = memo(({ selectedDate, tasks, onAddTask, onToggleTask, onDeleteTask }: TaskPlannerProps) => {
   const [showStarburst, setShowStarburst] = useState(false);
   const { toast } = useToast();
 
@@ -28,7 +28,7 @@ export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDe
     pending: tasks.filter(task => !task.completed).length
   };
 
-  const handleAddTask = (text: string) => {
+  const handleAddTask = useCallback((text: string) => {
     onAddTask(text);
     setShowStarburst(true);
     setTimeout(() => setShowStarburst(false), 700);
@@ -40,9 +40,9 @@ export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDe
       title: "Task added",
       description: "New task has been created successfully",
     });
-  };
+  }, [onAddTask, selectedDate, toast]);
 
-  const handleToggleTask = (id: string) => {
+  const handleToggleTask = useCallback((id: string) => {
     onToggleTask(id);
     const task = tasks.find(t => t.id === id);
     if (task) {
@@ -59,9 +59,9 @@ export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDe
         });
       }
     }
-  };
+  }, [onToggleTask, tasks, toast]);
 
-  const handleDeleteTask = (id: string) => {
+  const handleDeleteTask = useCallback((id: string) => {
     const task = tasks.find(t => t.id === id);
     if (task) {
       emitTaskNotification(
@@ -74,7 +74,7 @@ export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDe
       title: "Task deleted",
       description: "Task has been removed from your list",
     });
-  };
+  }, [onDeleteTask, tasks, toast]);
 
   return (
     <div className="h-full flex flex-col">
@@ -115,4 +115,6 @@ export const TaskPlanner = ({ selectedDate, tasks, onAddTask, onToggleTask, onDe
       </div>
     </div>
   );
-};
+});
+
+TaskPlanner.displayName = "TaskPlanner";

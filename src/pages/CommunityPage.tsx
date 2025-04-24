@@ -1,8 +1,9 @@
-import React from "react";
+
+import React, { memo } from "react";
 import { Community } from "@/components/Community";
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 
-const CommunityPage = () => {
+const CommunityPage = memo(() => {
   return (
     <div>
       <WorkspaceLayout>
@@ -10,6 +11,8 @@ const CommunityPage = () => {
       </WorkspaceLayout>
     </div>
   );
-};
+});
+
+CommunityPage.displayName = "CommunityPage";
 
 export default CommunityPage;

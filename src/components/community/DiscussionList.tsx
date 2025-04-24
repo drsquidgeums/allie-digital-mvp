@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +18,7 @@ interface Discussion {
   tags: string[];
 }
 
-export const DiscussionList = () => {
+export const DiscussionList = memo(() => {
   const { toast } = useToast();
   const [discussions, setDiscussions] = useState<Discussion[]>([
     {
@@ -48,7 +48,7 @@ export const DiscussionList = () => {
     content: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (!newDiscussion.title || !newDiscussion.content) {
       toast({
@@ -75,7 +75,15 @@ export const DiscussionList = () => {
       title: "Discussion Created",
       description: "Your discussion has been posted successfully!"
     });
-  };
+  }, [newDiscussion, toast]);
+
+  const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewDiscussion(prev => ({ ...prev, title: e.target.value }));
+  }, []);
+
+  const handleContentChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewDiscussion(prev => ({ ...prev, content: e.target.value }));
+  }, []);
 
   return (
     <Card className="p-4">
@@ -86,13 +94,13 @@ export const DiscussionList = () => {
           <Input
             placeholder="Discussion Title"
             value={newDiscussion.title}
-            onChange={e => setNewDiscussion(prev => ({ ...prev, title: e.target.value }))}
+            onChange={handleTitleChange}
             className="mb-2"
           />
           <Input
             placeholder="What would you like to discuss?"
             value={newDiscussion.content}
-            onChange={e => setNewDiscussion(prev => ({ ...prev, content: e.target.value }))}
+            onChange={handleContentChange}
           />
           <Button type="submit" className="w-full">
             Start Discussion
@@ -146,4 +154,6 @@ export const DiscussionList = () => {
       </ScrollArea>
     </Card>
   );
-};
+});
+
+DiscussionList.displayName = "DiscussionList";
