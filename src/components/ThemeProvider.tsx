@@ -40,8 +40,8 @@ export const ThemeProvider = () => {
       <div className="flex items-center gap-2">
         <Popover>
           <Tooltip>
-            <TooltipTrigger>
-              <PopoverTrigger>
+            <TooltipTrigger asChild>
+              <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   size="sm"

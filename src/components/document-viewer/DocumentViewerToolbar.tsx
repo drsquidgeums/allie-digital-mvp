@@ -11,11 +11,6 @@ interface DocumentViewerToolbarProps {
   hasFile: boolean;
 }
 
-/**
- * DocumentViewerToolbar Component
- * 
- * Container for all toolbar-related components and actions
- */
 export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
   onUpload,
   onDownload,
@@ -31,7 +26,7 @@ export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
           onDelete={onDelete}
           hasFile={hasFile}
         />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ml-auto">
           <ToolbarTools />
           <ThemeProvider />
         </div>

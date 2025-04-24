@@ -115,12 +115,13 @@ export const BeelineReader = () => {
             <label className="text-sm font-medium">Gradient Angle</label>
             <span className="text-sm text-muted-foreground">{angle}°</span>
           </div>
-          <Slider 
-            value={[angle]} 
-            onValueChange={(value) => setAngle(value[0])} 
-            min={0} 
-            max={360} 
+          <Slider
+            value={[angle]}
+            onValueChange={(value) => setAngle(value[0])}
+            min={0}
+            max={360}
             step={1}
+            className="w-full"
           />
         </div>
       </div>

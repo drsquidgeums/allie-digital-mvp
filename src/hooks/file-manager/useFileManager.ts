@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { ManagedFile } from './types';
@@ -15,7 +14,6 @@ import {
   removeFile,
   registerListener
 } from './fileStore';
-import { handleError } from '@/utils/errorHandling';
 
 /**
  * Hook for managing file operations across the application
@@ -69,9 +67,11 @@ export function useFileManager() {
       }
       throw new Error('File upload failed');
     } catch (error) {
-      handleError(error, {
+      console.error("Error uploading file:", error);
+      toast({
         title: "Upload failed",
-        fallbackMessage: "There was a problem uploading your file"
+        description: error instanceof Error ? error.message : "There was a problem uploading your file",
+        variant: "destructive",
       });
       throw error;
     } finally {
@@ -98,9 +98,11 @@ export function useFileManager() {
         description: `${fileToDelete.name} has been removed`,
       });
     } catch (error) {
-      handleError(error, {
+      console.error("Error deleting file:", error);
+      toast({
         title: "Delete failed",
-        fallbackMessage: "There was a problem deleting your file"
+        description: error instanceof Error ? error.message : "There was a problem deleting your file",
+        variant: "destructive",
       });
     }
   };
@@ -143,9 +145,11 @@ export function useFileManager() {
         throw new Error("File URL not available");
       }
     } catch (error) {
-      handleError(error, {
+      console.error("Error downloading file:", error);
+      toast({
         title: "Download failed",
-        fallbackMessage: "There was a problem downloading your file"
+        description: error instanceof Error ? error.message : "There was a problem downloading your file",
+        variant: "destructive",
       });
     }
   };
@@ -160,14 +164,22 @@ export function useFileManager() {
       setFiles(freshFiles);
       setLocalFiles([...freshFiles]);
     } catch (error) {
-      handleError(error, {
+      toast({
         title: "Refresh failed",
-        fallbackMessage: "There was a problem refreshing your files"
+        description: "There was a problem refreshing your files",
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
     }
   };
+
+  // Initialize by loading files from Supabase storage if not already loaded
+  useEffect(() => {
+    if (getFiles().length === 0 && !loading) {
+      refreshFiles().catch(console.error);
+    }
+  }, []);
 
   return {
     files,

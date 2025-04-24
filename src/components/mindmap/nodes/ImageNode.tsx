@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useRef, useEffect, memo } from 'react';
+
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Handle, Position } from '@xyflow/react';
-import { usePerformanceMonitor } from '../hooks/usePerformanceMonitor';
 
 interface ImageNodeProps {
   data: {
@@ -9,8 +9,7 @@ interface ImageNodeProps {
   };
 }
 
-export const ImageNode = memo<ImageNodeProps>(({ data }) => {
-  usePerformanceMonitor('ImageNode');
+export const ImageNode: React.FC<ImageNodeProps> = ({ data }) => {
   const [imageUrl, setImageUrl] = useState<string | undefined>(data.imageUrl);
   const [dimensions, setDimensions] = useState({ width: 200, height: 200 });
   const [isHovering, setIsHovering] = useState(false);
@@ -117,6 +116,4 @@ export const ImageNode = memo<ImageNodeProps>(({ data }) => {
       />
     </div>
   );
-});
-
-ImageNode.displayName = 'ImageNode';
+};

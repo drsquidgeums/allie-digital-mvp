@@ -5,7 +5,6 @@ import { Moon, Sun } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useTheme } from "next-themes";
@@ -24,33 +23,31 @@ export const ThemeToggle = () => {
   }
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger>
-          <Button
-            variant="outline"
-            size="sm"
-            className={`${buttonClassName} ${
-              theme === 'light' 
-                ? 'bg-accent text-accent-foreground' 
-                : 'bg-background hover:bg-accent hover:text-accent-foreground'
-            }`}
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          >
-            {theme === 'dark' ? (
-              <Sun className="h-4 w-4" />
-            ) : (
-              <Moon className="h-4 w-4" />
-            )}
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent 
-          side="bottom" 
-          className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md"
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className={`${buttonClassName} ${
+            theme === 'light' 
+              ? 'bg-accent text-accent-foreground' 
+              : 'bg-background hover:bg-accent hover:text-accent-foreground'
+          }`}
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
         >
-          Toggle theme
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+          {theme === 'dark' ? (
+            <Sun className="h-4 w-4" />
+          ) : (
+            <Moon className="h-4 w-4" />
+          )}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent 
+        side="bottom" 
+        className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md"
+      >
+        Toggle theme
+      </TooltipContent>
+    </Tooltip>
   );
 };

@@ -67,13 +67,13 @@ export const IrlenOverlay = () => {
   return (
     <Popover>
       <Tooltip>
-        <TooltipTrigger>
-          <PopoverTrigger>
+        <TooltipTrigger asChild>
+          <PopoverTrigger asChild>
             <div className="relative">
               <Button
                 variant="outline"
                 size="sm"
-                className={`${buttonClassName} relative bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                className={`h-9 w-9 relative bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                   overlayColor ? "bg-primary text-primary-foreground ring-2 ring-primary" : ""
                 }`}
               >
