@@ -11,6 +11,26 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
   const { enterFullscreen, exitFullscreen } = useFullscreen();
   const { toast } = useToast();
 
+  // Handle Escape key to exit focus mode
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (isActive && event.key === 'Escape') {
+        event.preventDefault();
+        toggleFocusMode();
+      }
+    };
+
+    // Add event listener when focus mode is active
+    if (isActive) {
+      document.addEventListener('keydown', handleEscapeKey);
+    }
+
+    // Cleanup listener
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [isActive, toggleFocusMode]);
+
   // Sync with focus mode state
   useEffect(() => {
     const handleFocusModeChange = (event: CustomEvent) => {
@@ -74,3 +94,4 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
 
   return { isActive, toggleFocusMode };
 };
+
