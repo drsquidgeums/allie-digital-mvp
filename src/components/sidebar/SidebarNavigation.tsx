@@ -3,6 +3,7 @@ import React, { useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Monitor, CheckSquare, Brain, FileText } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
+import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
 
 interface SidebarNavigationProps {
@@ -39,6 +40,13 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       label: t('navigation.mindMap'),
       icon: Brain,
       path: "/mind-map"
+    },
+    {
+      id: "community",
+      label: "Community Hub",
+      icon: Brain,
+      path: "/community",
+      badge: "Coming Soon"
     }
   ];
 
@@ -57,15 +65,24 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
 
   return (
     <div className="space-y-2" data-sidebar-nav>
-      {navigationItems.map(({ id, label, icon, path }) => (
-        <SidebarButton
-          key={id}
-          icon={icon}
-          label={label}
-          isActive={location.pathname === path}
-          onClick={(e) => handleNavigation(e, id, path)}
-          className="sidebar-nav-link"
-        />
+      {navigationItems.map(({ id, label, icon, path, badge }) => (
+        <div key={id} className="flex items-center relative">
+          <SidebarButton
+            icon={icon}
+            label={label}
+            isActive={location.pathname === path}
+            onClick={(e) => handleNavigation(e, id, path)}
+            className="sidebar-nav-link flex-grow"
+          />
+          {badge && (
+            <Badge 
+              variant="default" 
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] px-1.5 py-0.5"
+            >
+              {badge}
+            </Badge>
+          )}
+        </div>
       ))}
     </div>
   );
