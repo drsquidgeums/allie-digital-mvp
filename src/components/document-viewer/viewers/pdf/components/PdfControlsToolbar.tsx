@@ -66,7 +66,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                 aria-label="Previous page"
                 className="dark:text-white text-black"
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="h-4 w-4 dark:text-white text-black" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Previous page (Left Arrow)</TooltipContent>
@@ -86,7 +86,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                 aria-label="Next page"
                 className="dark:text-white text-black"
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-4 w-4 dark:text-white text-black" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Next page (Right Arrow)</TooltipContent>
@@ -103,7 +103,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                 aria-label="Zoom out"
                 className="dark:text-white text-black"
               >
-                <ZoomOut className="h-4 w-4" />
+                <ZoomOut className="h-4 w-4 dark:text-white text-black" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Zoom out (Ctrl + -)</TooltipContent>
@@ -120,7 +120,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                 aria-label="Zoom in"
                 className="dark:text-white text-black"
               >
-                <ZoomIn className="h-4 w-4" />
+                <ZoomIn className="h-4 w-4 dark:text-white text-black" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Zoom in (Ctrl + +)</TooltipContent>
@@ -141,7 +141,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                   disabled={!isHighlightMode}
                   className="dark:text-white text-black"
                 >
-                  <Highlighter className="h-4 w-4" />
+                  <Highlighter className="h-4 w-4 dark:text-white text-black" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Highlight selected text</TooltipContent>
@@ -157,7 +157,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                 aria-label="Keyboard shortcuts"
                 className="dark:text-white text-black"
               >
-                <Keyboard className="h-4 w-4" />
+                <Keyboard className="h-4 w-4 dark:text-white text-black" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Keyboard shortcuts</TooltipContent>

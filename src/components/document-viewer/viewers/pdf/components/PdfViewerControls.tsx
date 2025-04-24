@@ -37,8 +37,9 @@ export const PdfViewerControls: React.FC<PdfViewerControlsProps> = ({
           size="sm"
           onClick={() => onChangePage(-1)}
           disabled={pageNumber <= 1}
+          className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft className="h-4 w-4 dark:text-white text-black" />
         </Button>
         
         <span className="text-sm">
@@ -50,20 +51,31 @@ export const PdfViewerControls: React.FC<PdfViewerControlsProps> = ({
           size="sm"
           onClick={() => onChangePage(1)}
           disabled={pageNumber >= numPages}
+          className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-4 w-4 dark:text-white text-black" />
         </Button>
       </div>
       
       <div className="flex items-center space-x-2">
-        <Button variant="outline" size="sm" onClick={() => onZoom(-0.1)}>
-          <ZoomOut className="h-4 w-4" />
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => onZoom(-0.1)}
+          className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+        >
+          <ZoomOut className="h-4 w-4 dark:text-white text-black" />
         </Button>
         
         <span className="text-sm">{Math.round(scale * 100)}%</span>
         
-        <Button variant="outline" size="sm" onClick={() => onZoom(0.1)}>
-          <ZoomIn className="h-4 w-4" />
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => onZoom(0.1)}
+          className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+        >
+          <ZoomIn className="h-4 w-4 dark:text-white text-black" />
         </Button>
         
         <Button 
@@ -74,8 +86,9 @@ export const PdfViewerControls: React.FC<PdfViewerControlsProps> = ({
             color: isHighlighter ? getContrastColor(selectedColor) : 'currentColor'
           }}
           onClick={onTextSelect}
+          className="dark:border-zinc-600 border-gray-300"
         >
-          <Highlighter className="h-4 w-4" />
+          <Highlighter className="h-4 w-4 dark:text-white text-black" />
         </Button>
         
         {selectedHighlightId && (
@@ -83,8 +96,9 @@ export const PdfViewerControls: React.FC<PdfViewerControlsProps> = ({
             variant="outline"
             size="sm"
             onClick={() => selectedHighlightId && onDeleteHighlight(selectedHighlightId)}
+            className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-4 w-4 dark:text-white text-black" />
           </Button>
         )}
       </div>

@@ -63,17 +63,19 @@ export const PDFTronToolbar: React.FC<PDFTronToolbarProps> = ({
         size="sm" 
         onClick={handleZoomOut}
         title="Zoom out"
+        className="dark:hover:bg-zinc-700 hover:bg-gray-200"
       >
-        <ZoomOut size={16} />
+        <ZoomOut size={16} className="dark:text-white text-black" />
       </Button>
-      <span className="text-xs">{Math.round((UI.getZoomLevel() || 1) * 100)}%</span>
+      <span className="text-xs dark:text-white text-black">{Math.round((UI.getZoomLevel() || 1) * 100)}%</span>
       <Button 
         variant="ghost" 
         size="sm" 
         onClick={handleZoomIn}
         title="Zoom in"
+        className="dark:hover:bg-zinc-700 hover:bg-gray-200"
       >
-        <ZoomIn size={16} />
+        <ZoomIn size={16} className="dark:text-white text-black" />
       </Button>
       
       <Button 
@@ -81,8 +83,9 @@ export const PDFTronToolbar: React.FC<PDFTronToolbarProps> = ({
         size="sm" 
         onClick={handleRotateCounterClockwise}
         title="Rotate counterclockwise"
+        className="dark:hover:bg-zinc-700 hover:bg-gray-200"
       >
-        <RotateCcw size={16} />
+        <RotateCcw size={16} className="dark:text-white text-black" />
       </Button>
       
       <Button 
@@ -90,8 +93,9 @@ export const PDFTronToolbar: React.FC<PDFTronToolbarProps> = ({
         size="sm" 
         onClick={handleRotateClockwise}
         title="Rotate clockwise"
+        className="dark:hover:bg-zinc-700 hover:bg-gray-200"
       >
-        <RotateCw size={16} />
+        <RotateCw size={16} className="dark:text-white text-black" />
       </Button>
       
       <Separator orientation="vertical" className="h-6" />
@@ -101,8 +105,9 @@ export const PDFTronToolbar: React.FC<PDFTronToolbarProps> = ({
         size="sm" 
         onClick={handlePanTool}
         title="Pan tool"
+        className="dark:hover:bg-zinc-700 hover:bg-gray-200"
       >
-        <Hand size={16} />
+        <Hand size={16} className="dark:text-white text-black" />
       </Button>
       
       <Button 
@@ -110,8 +115,9 @@ export const PDFTronToolbar: React.FC<PDFTronToolbarProps> = ({
         size="sm" 
         onClick={handleTextSelectTool}
         title="Text select tool"
+        className="dark:hover:bg-zinc-700 hover:bg-gray-200"
       >
-        <MousePointer size={16} />
+        <MousePointer size={16} className="dark:text-white text-black" />
       </Button>
       
       {isHighlighter && (
@@ -120,8 +126,9 @@ export const PDFTronToolbar: React.FC<PDFTronToolbarProps> = ({
           size="sm" 
           onClick={handleHighlighterTool}
           title="Highlighter tool"
+          className="dark:hover:bg-zinc-700 hover:bg-gray-200"
         >
-          <Highlighter size={16} />
+          <Highlighter size={16} className="dark:text-white text-black" />
         </Button>
       )}
     </div>

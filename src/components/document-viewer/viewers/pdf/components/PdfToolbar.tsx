@@ -64,8 +64,9 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                 onClick={() => onPageChange(-1)}
                 disabled={pageNumber <= 1}
                 aria-label="Previous page"
+                className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="h-4 w-4 dark:text-white text-black" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Previous page (Left Arrow)</TooltipContent>
@@ -83,8 +84,9 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                 onClick={() => onPageChange(1)}
                 disabled={pageNumber >= numPages}
                 aria-label="Next page"
+                className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-4 w-4 dark:text-white text-black" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Next page (Right Arrow)</TooltipContent>
@@ -99,8 +101,9 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                 size="sm" 
                 onClick={() => onZoomChange(-0.1)}
                 aria-label="Zoom out"
+                className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
               >
-                <ZoomOut className="h-4 w-4" />
+                <ZoomOut className="h-4 w-4 dark:text-white text-black" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Zoom out (Ctrl + -)</TooltipContent>
@@ -115,8 +118,9 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                 size="sm" 
                 onClick={() => onZoomChange(0.1)}
                 aria-label="Zoom in"
+                className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
               >
-                <ZoomIn className="h-4 w-4" />
+                <ZoomIn className="h-4 w-4 dark:text-white text-black" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Zoom in (Ctrl + +)</TooltipContent>
@@ -135,8 +139,9 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                   onClick={onHighlight}
                   aria-label="Highlight text"
                   disabled={!isTextSelected}
+                  className="dark:border-zinc-600 border-gray-300"
                 >
-                  <Highlighter className="h-4 w-4" />
+                  <Highlighter className="h-4 w-4 dark:text-white text-black" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Highlight selected text</TooltipContent>
@@ -150,8 +155,9 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                 size="sm"
                 onClick={onKeyboardHelp}
                 aria-label="Keyboard shortcuts"
+                className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
               >
-                <Keyboard className="h-4 w-4" />
+                <Keyboard className="h-4 w-4 dark:text-white text-black" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Keyboard shortcuts</TooltipContent>
