@@ -102,6 +102,16 @@ export default {
             transform: "translateY(0) translateX(0)",
             opacity: "0"
           }
+        },
+        "fade-out-right": {
+          "0%": { 
+            transform: "translateX(0)",
+            opacity: "1"
+          },
+          "100%": { 
+            transform: "translateX(100%)",
+            opacity: "0"
+          }
         }
       },
       animation: {
@@ -109,7 +119,8 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
         "starburst": "starburst 1.5s infinite",
-        "float": "float 3s ease-in-out infinite"
+        "float": "float 3s ease-in-out infinite",
+        "fade-out-right": "fade-out-right 0.5s ease-out forwards"
       },
     },
   },
