@@ -2,7 +2,6 @@
 import { useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { PomodoroState } from "@/types/pomodoro";
-import { useTasks } from "@/hooks/useTasks";
 import { emitTaskNotification } from "@/utils/notifications";
 
 export const usePomodoroEvents = (
@@ -52,12 +51,16 @@ export const usePomodoroEvents = (
     }
   }, [state.workMinutes, state.seconds, state.isWork, state.completedPomodoros, state.currentTask, state.taskPomodoros, toast, notificationSound, setTaskReadyForCompletion]);
 
-  // Task completion event handler
+  // Task completion event handler - setup only
   useEffect(() => {
     const handleTaskCompletion = (event: CustomEvent) => {
       if (event.detail?.action === 'complete' && event.detail?.taskId) {
-        const { handleToggleTask } = useTasks();
-        handleToggleTask(event.detail.taskId);
+        // Instead of calling useTasks directly, we'll emit an event that will be handled elsewhere
+        const taskCompletionEvent = new CustomEvent('pomodoroTaskCompletion', { 
+          detail: { taskId: event.detail.taskId }
+        });
+        window.dispatchEvent(taskCompletionEvent);
+        
         setTaskReadyForCompletion(null);
         toast({
           title: "Task completed!",

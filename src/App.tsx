@@ -1,5 +1,5 @@
 
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { BrowserRouter, Navigate } from "react-router-dom";
@@ -8,6 +8,33 @@ import { PasswordGate } from "@/components/PasswordGate";
 import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
 import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
+import { useTasks } from "@/hooks/useTasks";
+
+const PomodoroTaskListener = () => {
+  const { handleToggleTask } = useTasks();
+  
+  useEffect(() => {
+    const handlePomodoroTaskCompletion = (event: CustomEvent) => {
+      if (event.detail?.taskId) {
+        handleToggleTask(event.detail.taskId);
+      }
+    };
+    
+    window.addEventListener(
+      'pomodoroTaskCompletion', 
+      handlePomodoroTaskCompletion as EventListener
+    );
+    
+    return () => {
+      window.removeEventListener(
+        'pomodoroTaskCompletion', 
+        handlePomodoroTaskCompletion as EventListener
+      );
+    };
+  }, [handleToggleTask]);
+  
+  return null;
+};
 
 const App = () => {
   // Reset authentication state on initial load
@@ -39,6 +66,7 @@ const App = () => {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
           }>
+            <PomodoroTaskListener />
             <AppRoutes />
           </Suspense>
           <FloatingAIAssistant />

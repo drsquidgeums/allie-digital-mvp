@@ -8,7 +8,7 @@ import { useTasks } from "@/hooks/useTasks";
 
 export const TaskCompletionPrompt = () => {
   const { taskReadyForCompletion, setTaskReadyForCompletion } = usePomodoroContext();
-  const { handleToggleTask, tasks } = useTasks();
+  const { tasks, handleToggleTask } = useTasks();
   
   if (!taskReadyForCompletion) return null;
   
