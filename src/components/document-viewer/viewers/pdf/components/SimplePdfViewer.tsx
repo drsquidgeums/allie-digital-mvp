@@ -128,7 +128,6 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
         numPages={numPages}
         scale={scale}
         selectedHighlightId={selectedHighlightId}
-        isHighlighter={isHighlighter}
         selectedColor={selectedColor}
         onChangePage={changePage}
         onZoom={zoom}
