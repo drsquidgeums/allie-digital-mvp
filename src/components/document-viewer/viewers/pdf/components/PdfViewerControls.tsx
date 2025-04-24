@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Highlighter, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Trash2 } from 'lucide-react';
 import { getContrastColor } from '../utils/colorUtils';
 
 interface PdfViewerControlsProps {
@@ -9,7 +9,6 @@ interface PdfViewerControlsProps {
   numPages: number;
   scale: number;
   selectedHighlightId: string | null;
-  isHighlighter: boolean;
   selectedColor: string;
   onChangePage: (offset: number) => void;
   onZoom: (factor: number) => void;
@@ -22,7 +21,6 @@ export const PdfViewerControls: React.FC<PdfViewerControlsProps> = ({
   numPages,
   scale,
   selectedHighlightId,
-  isHighlighter,
   selectedColor,
   onChangePage,
   onZoom,
@@ -76,19 +74,6 @@ export const PdfViewerControls: React.FC<PdfViewerControlsProps> = ({
           className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
         >
           <ZoomIn className="h-4 w-4 dark:text-white text-black" />
-        </Button>
-        
-        <Button 
-          variant="outline" 
-          size="sm" 
-          style={{ 
-            backgroundColor: isHighlighter ? selectedColor : 'transparent',
-            color: isHighlighter ? getContrastColor(selectedColor) : 'currentColor'
-          }}
-          onClick={onTextSelect}
-          className="dark:border-zinc-600 border-gray-300"
-        >
-          <Highlighter className="h-4 w-4 dark:text-white text-black" />
         </Button>
         
         {selectedHighlightId && (
