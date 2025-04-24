@@ -56,42 +56,25 @@ export const BeelineReader = () => {
             cyclePosition === 1 ? `linear-gradient(${angle}deg, ${colors.middle}, ${colors.end})` :
             `linear-gradient(${angle}deg, ${colors.end}, ${colors.endMiddle}, ${colors.start})`;
           
-          const style: React.CSSProperties = {
-            display: "block",
-            width: "100%",
-            minHeight: "1.5em",
-            lineHeight: 1.5,
-            padding: "2px 0",
-            position: "relative",
-            zIndex: 0
-          };
-
-          const baseTextStyle: React.CSSProperties = {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            color: "#f3f3f3", // Light gray text color for visibility
-            zIndex: 1,
-            mixBlendMode: "overlay"
-          };
-
-          const gradientTextStyle: React.CSSProperties = {
-            backgroundImage: gradientStyle,
-            WebkitBackgroundClip: "text",
-            backgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            color: "transparent",
-            zIndex: 2
-          };
-
           return (
             <p 
               key={index}
-              style={style}
+              className="min-h-[1.5em] leading-[1.5] py-[2px] relative"
             >
-              <span style={baseTextStyle}>{line || "\u00A0"}</span>
-              <span style={gradientTextStyle}>{line || "\u00A0"}</span>
+              <span className="absolute inset-0 text-[#f3f3f3] mix-blend-overlay">
+                {line || "\u00A0"}
+              </span>
+              <span 
+                style={{
+                  backgroundImage: gradientStyle,
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  color: "transparent",
+                }}
+              >
+                {line || "\u00A0"}
+              </span>
             </p>
           );
         })}
