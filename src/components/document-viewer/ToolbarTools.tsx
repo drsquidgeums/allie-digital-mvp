@@ -1,5 +1,5 @@
 
-import { BookOpen, Mic, Eye, Timer, Text, Focus, SpellCheck } from "lucide-react";
+import { BookOpen, Mic, Eye, Timer, Text, SpellCheck } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { BionicReader } from "../BionicReader";
@@ -55,13 +55,6 @@ export const ToolbarTools = () => {
         label={"Rewordify"}
         id="rewordify"
         content={<Rewordify />}
-        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
-      />
-      <ToolItem
-        icon={Focus}
-        label={t('tools.focus')}
-        id="focus"
-        content={<FocusMode />}
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
     </div>
