@@ -17,10 +17,10 @@ export const LanguageSettings = () => {
     <div className="space-y-4">
       <h3 className="text-lg font-medium">{t('settings.language')}</h3>
       <div className="flex items-center gap-4">
-        <Label>{t('common.language', 'Select Language')}</Label>
+        <Label htmlFor="language-select">{t('settings.selectLanguage')}</Label>
         <Select value={i18n.language} onValueChange={handleLanguageChange}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder={t('settings.selectLanguage', 'Select language')} />
+          <SelectTrigger id="language-select" className="w-[180px]">
+            <SelectValue placeholder={t('settings.selectLanguage')} />
           </SelectTrigger>
           <SelectContent>
             {supportedLanguages.map((lang) => (

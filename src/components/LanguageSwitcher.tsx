@@ -23,7 +23,7 @@ export const LanguageSwitcher = () => {
       <Globe className="h-3 w-3 text-muted-foreground" />
       <Select value={i18n.language} onValueChange={handleLanguageChange}>
         <SelectTrigger className="w-[120px] h-8 text-sm bg-background hover:bg-accent hover:text-accent-foreground dark:border-border">
-          <SelectValue placeholder={t('common.selectLanguage', 'Select language')} />
+          <SelectValue placeholder={t('settings.selectLanguage')} />
         </SelectTrigger>
         <SelectContent className="dark:bg-workspace-dark dark:border-border">
           {supportedLanguages.map((lang) => (

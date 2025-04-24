@@ -1,7 +1,7 @@
 
 import i18n from '@/i18n/config';
 import { changeLanguage } from '@/i18n/config';
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 
 // Supported languages with their display names
 export const supportedLanguages = [
@@ -18,8 +18,9 @@ export const switchLanguage = async (languageCode: string) => {
     if (success) {
       const selectedLanguage = supportedLanguages.find(lang => lang.code === languageCode);
       
-      toast("Language Changed", {
-        description: `Application language has been changed to ${selectedLanguage?.name || languageCode}`,
+      toast({
+        title: i18n.t('settings.language'),
+        description: `${i18n.t('settings.languageChanged', 'Application language has been changed to')} ${selectedLanguage?.name || languageCode}`,
       });
       
       return true;
@@ -27,8 +28,10 @@ export const switchLanguage = async (languageCode: string) => {
     return false;
   } catch (error) {
     console.error('Error changing language:', error);
-    toast("Error", {
-      description: "Failed to change language. Please try again.",
+    toast({
+      title: i18n.t('common.error', 'Error'),
+      description: i18n.t('settings.languageChangeError', 'Failed to change language. Please try again.'),
+      variant: "destructive",
     });
     return false;
   }
