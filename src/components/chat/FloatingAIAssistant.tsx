@@ -66,8 +66,7 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = ({
     <div className={`fixed bottom-4 right-4 z-50 flex flex-col items-end transition-all duration-300 ease-in-out ${isOpen ? 'space-y-4' : ''}`}>
       {isOpen && (
         <Card 
-          className={`bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative border shadow-lg 
-            transition-all duration-300 ease-in-out origin-bottom-right
+          className={`bg-card text-card-foreground rounded-xl overflow-hidden relative border shadow-lg 
             ${isExpanded 
               ? 'fixed inset-0 w-full h-full z-50 rounded-none' 
               : 'w-80 h-96 sm:w-96 sm:h-[28rem]'
@@ -76,7 +75,9 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = ({
         >
           <div className="flex flex-col h-full">
             <div className="p-3 border-b flex justify-between items-center">
-              <ChatHeader />
+              <div className="flex items-center">
+                <h2 className="text-lg font-semibold">Allie Ai</h2>
+              </div>
               <div className="flex items-center gap-1">
                 <Button 
                   variant="ghost" 
