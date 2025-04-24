@@ -1,23 +1,15 @@
 
 import React, { Suspense, useEffect } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider as NextThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { PomodoroProvider } from "@/contexts/PomodoroContext";
-import "@/i18n/config"; // Fixed import path using alias
+import "@/i18n/config"; 
 import { useTranslation } from "react-i18next";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      retry: false,
-      staleTime: Infinity
-    },
-  },
-});
+// Create new query client using the correct import
+import { createQueryClient } from "./queryClient";
+const queryClient = createQueryClient();
 
 interface AppProvidersProps {
   children: React.ReactNode;
