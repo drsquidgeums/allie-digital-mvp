@@ -25,7 +25,7 @@ export const WelcomeContent: React.FC<WelcomeContentProps> = ({ colors }) => {
         id="welcome-heading"
         className="text-3xl font-bold mb-3 relative z-20 text-black"
       >
-        Allie.ai
+        allie.ai
       </h1>
       <p 
         className="text-black relative z-20 whitespace-nowrap text-lg"

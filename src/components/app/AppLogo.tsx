@@ -11,12 +11,11 @@ const AppLogo = React.memo(() => (
       alt="Allie Digital Logo" 
       className="w-12 h-12"
     />
-    <span className="text-sm font-medium text-foreground">Allie.ai v1.0</span>
+    <span className="text-sm font-medium text-foreground">allie.ai v1.0</span>
   </div>
 ));
 
 AppLogo.displayName = "AppLogo";
 
-// Export both as default and named export
 export default AppLogo;
 export { AppLogo };
