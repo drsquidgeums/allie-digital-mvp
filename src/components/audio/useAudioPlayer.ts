@@ -26,12 +26,28 @@ export const useAudioPlayer = () => {
       }
     };
 
+    // Dispatch event to share music state across components
+    const shareAudioState = () => {
+      window.dispatchEvent(new CustomEvent('audioPlayerStateChanged', { 
+        detail: { 
+          isPlaying,
+          selectedMusic,
+          volume,
+          isLooping,
+          isMuted
+        } 
+      }));
+    };
+
+    // Share state whenever it changes
+    shareAudioState();
+
     window.addEventListener('audioMutingChanged', handleAudioMutingChanged as EventListener);
     
     return () => {
       window.removeEventListener('audioMutingChanged', handleAudioMutingChanged as EventListener);
     };
-  }, [audioRef, isPlaying, setIsPlaying, setWasPausedByFocusMode]);
+  }, [audioRef, isPlaying, selectedMusic, volume, isLooping, isMuted, setIsPlaying, setWasPausedByFocusMode]);
 
   return {
     isPlaying,

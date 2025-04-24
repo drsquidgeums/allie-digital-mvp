@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/tooltip";
 import { MUSIC_OPTIONS } from "./audio/MusicOptions";
 import { useAudioPlayer } from "./audio/useAudioPlayer";
-import { useFocusMode } from "@/hooks/useFocusMode";
 import { MusicButton } from "./audio/MusicButton";
 import { MusicPopoverContent } from "./audio/MusicPopoverContent";
 
@@ -32,6 +31,7 @@ export const AmbientMusic = () => {
   
   // We're no longer setting isDisabled based on focus mode
   const [isDisabled, setIsDisabled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   
   const handleMusicSelection = (value: string) => {
     if (isDisabled) return;
@@ -45,7 +45,10 @@ export const AmbientMusic = () => {
   const handlePlayToggle = () => {
     if (isDisabled) return;
     
-    const currentMusic = MUSIC_OPTIONS.find(opt => opt.id === selectedMusic);
+    // Find current music selection if available
+    const currentMusic = MUSIC_OPTIONS.find(opt => opt.id === selectedMusic) || 
+                         (selectedMusic ? undefined : MUSIC_OPTIONS[0]);
+    
     togglePlay(currentMusic);
   };
 
@@ -57,7 +60,7 @@ export const AmbientMusic = () => {
 
   return (
     <TooltipProvider>
-      <Popover>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
         <Tooltip>
           <TooltipTrigger asChild>
             <div>

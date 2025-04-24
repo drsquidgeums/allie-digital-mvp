@@ -1,6 +1,6 @@
 
 import { useToast } from '@/hooks/use-toast';
-import { MusicOption } from '../MusicOptions';
+import { MusicOption, MUSIC_OPTIONS } from '../MusicOptions';
 
 export const usePlaybackControl = (
   audioRef: React.RefObject<HTMLAudioElement>,
@@ -11,15 +11,23 @@ export const usePlaybackControl = (
   const { toast } = useToast();
 
   const togglePlay = async (currentMusic: MusicOption | undefined) => {
-    if (!audioRef.current || !currentMusic) {
-      toast({
-        title: "Please select a music option",
-        description: "Choose from the available music options to play",
-      });
-      return false;
+    // If no music is provided, try to get from localStorage
+    if (!audioRef.current) return false;
+    
+    if (!currentMusic) {
+      const savedMusicId = localStorage.getItem('selectedMusicId');
+      if (savedMusicId) {
+        currentMusic = MUSIC_OPTIONS.find(m => m.id === savedMusicId);
+      }
+      
+      if (!currentMusic) {
+        toast({
+          title: "Please select a music option",
+          description: "Choose from the available music options to play",
+        });
+        return false;
+      }
     }
-
-    // Removed check for focus mode - we allow audio during focus mode
 
     try {
       if (isPlaying) {
@@ -30,8 +38,8 @@ export const usePlaybackControl = (
           description: "Background music has been stopped",
         });
       } else {
-        // Only set new source if we're starting playback
-        if (audioRef.current.paused) {
+        // Only set new source if we're starting playback or if the source is empty
+        if (!audioRef.current.src || audioRef.current.src !== currentMusic.url) {
           audioRef.current.src = currentMusic.url;
         }
         await audioRef.current.play();
