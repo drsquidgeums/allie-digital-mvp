@@ -59,26 +59,17 @@ export const BeelineReader = () => {
           return (
             <p 
               key={index}
-              className="min-h-[1.5em] leading-[1.5] py-[2px] relative"
+              className="min-h-[1.5em] leading-[1.5] py-[2px]"
+              style={{
+                backgroundImage: gradientStyle,
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                color: "transparent",
+                textShadow: "0 0 1px rgba(255,255,255,0.1)"
+              }}
             >
-              <span 
-                className="absolute inset-0 text-foreground opacity-70"
-                aria-hidden="true"
-              >
-                {line || "\u00A0"}
-              </span>
-              <span 
-                className="relative"
-                style={{
-                  backgroundImage: gradientStyle,
-                  WebkitBackgroundClip: "text",
-                  backgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  color: "transparent",
-                }}
-              >
-                {line || "\u00A0"}
-              </span>
+              {line || "\u00A0"}
             </p>
           );
         })}
