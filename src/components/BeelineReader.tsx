@@ -49,10 +49,8 @@ export const BeelineReader = () => {
     return (
       <div className="space-y-1">
         {lines.map((line, index) => {
-          // Apply one of three different gradients based on the line's position within each group of 3
           const cyclePosition = index % 3;
           
-          // Define the gradient for this line based on its cycle position
           const gradientStyle = 
             cyclePosition === 0 ? `linear-gradient(${angle}deg, ${colors.start}, ${colors.middle})` :
             cyclePosition === 1 ? `linear-gradient(${angle}deg, ${colors.middle}, ${colors.end})` :
@@ -64,11 +62,27 @@ export const BeelineReader = () => {
             minHeight: "1.5em",
             lineHeight: 1.5,
             padding: "2px 0",
+            position: "relative",
+            zIndex: 0
+          };
+
+          const baseTextStyle: React.CSSProperties = {
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            color: "#f3f3f3", // Light gray text color for visibility
+            zIndex: 1,
+            mixBlendMode: "overlay"
+          };
+
+          const gradientTextStyle: React.CSSProperties = {
             backgroundImage: gradientStyle,
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             WebkitTextFillColor: "transparent",
-            color: "transparent"
+            color: "transparent",
+            zIndex: 2
           };
 
           return (
@@ -76,7 +90,8 @@ export const BeelineReader = () => {
               key={index}
               style={style}
             >
-              {line || "\u00A0"}
+              <span style={baseTextStyle}>{line || "\u00A0"}</span>
+              <span style={gradientTextStyle}>{line || "\u00A0"}</span>
             </p>
           );
         })}
