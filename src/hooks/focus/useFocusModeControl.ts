@@ -74,6 +74,46 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
     };
   }, [isActive, toggleFocusMode]);
 
+  // Monitor fullscreen changes directly from browser events
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      // If we were in focus mode but fullscreen was exited (via Escape or other means)
+      if (isActive && !document.fullscreenElement && 
+          !(document as any).webkitFullscreenElement && 
+          !(document as any).mozFullScreenElement && 
+          !(document as any).msFullscreenElement) {
+        
+        // Update state and localStorage
+        setIsActive(false);
+        localStorage.setItem('focusModeActive', 'false');
+        
+        // Dispatch event to notify other components
+        window.dispatchEvent(new CustomEvent('focusModeChanged', { 
+          detail: { 
+            active: false,
+            settings: null
+          } 
+        }));
+        
+        console.log("Focus mode deactivated due to fullscreen exit");
+      }
+    };
+
+    // Add event listeners for all browser variants
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+    return () => {
+      // Remove event listeners on cleanup
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+    };
+  }, [isActive]);
+
   // Sync with focus mode state
   useEffect(() => {
     const handleFocusModeChange = (event: CustomEvent) => {
