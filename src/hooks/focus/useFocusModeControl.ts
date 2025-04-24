@@ -11,45 +11,7 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
   const { enterFullscreen, exitFullscreen } = useFullscreen();
   const { toast } = useToast();
 
-  // Handle Escape key to exit focus mode
-  useEffect(() => {
-    const handleEscapeKey = (event: KeyboardEvent) => {
-      if (isActive && event.key === 'Escape') {
-        event.preventDefault();
-        toggleFocusMode();
-      }
-    };
-
-    // Add event listener when focus mode is active
-    if (isActive) {
-      document.addEventListener('keydown', handleEscapeKey);
-    }
-
-    // Cleanup listener
-    return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
-    };
-  }, [isActive, toggleFocusMode]);
-
-  // Sync with focus mode state
-  useEffect(() => {
-    const handleFocusModeChange = (event: CustomEvent) => {
-      const { active } = event.detail;
-      setIsActive(active);
-    };
-
-    // Check initial state
-    const storedState = localStorage.getItem('focusModeActive');
-    if (storedState === 'true') {
-      setIsActive(true);
-    }
-
-    window.addEventListener('focusModeChanged', handleFocusModeChange as EventListener);
-    return () => {
-      window.removeEventListener('focusModeChanged', handleFocusModeChange as EventListener);
-    };
-  }, []);
-
+  // Define toggleFocusMode before it's used in useEffect
   const toggleFocusMode = useCallback(async () => {
     try {
       if (!isActive) {
@@ -92,6 +54,44 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
     }
   }, [isActive, defaultSettings, enterFullscreen, exitFullscreen, toast]);
 
+  // Handle Escape key to exit focus mode
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (isActive && event.key === 'Escape') {
+        event.preventDefault();
+        toggleFocusMode();
+      }
+    };
+
+    // Add event listener when focus mode is active
+    if (isActive) {
+      document.addEventListener('keydown', handleEscapeKey);
+    }
+
+    // Cleanup listener
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [isActive, toggleFocusMode]);
+
+  // Sync with focus mode state
+  useEffect(() => {
+    const handleFocusModeChange = (event: CustomEvent) => {
+      const { active } = event.detail;
+      setIsActive(active);
+    };
+
+    // Check initial state
+    const storedState = localStorage.getItem('focusModeActive');
+    if (storedState === 'true') {
+      setIsActive(true);
+    }
+
+    window.addEventListener('focusModeChanged', handleFocusModeChange as EventListener);
+    return () => {
+      window.removeEventListener('focusModeChanged', handleFocusModeChange as EventListener);
+    };
+  }, []);
+
   return { isActive, toggleFocusMode };
 };
-
