@@ -9,11 +9,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useTranslation } from 'react-i18next';
 
 export const ScreenshotButton = () => {
   const { toast } = useToast();
-  const { t } = useTranslation();
   const [isSelecting, setIsSelecting] = useState(false);
   const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 
@@ -195,7 +193,7 @@ export const ScreenshotButton = () => {
           onClick={startSelection}
           disabled={isSelecting}
           className={buttonClassName}
-          aria-label={t('tools.captureScreenshot')}
+          aria-label="Capture screenshot"
         >
           <Camera className="h-4 w-4" aria-hidden="true" />
         </Button>
@@ -204,7 +202,7 @@ export const ScreenshotButton = () => {
         side="bottom"
         className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
       >
-        {t('tools.captureScreenshot')}
+        Capture screenshot
       </TooltipContent>
     </Tooltip>
   );

@@ -18,13 +18,13 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
   const navigationItems = [
     {
       id: "files",
-      label: t('navigation.toolbox'),
+      label: "Toolbox",
       icon: Monitor,
       path: "/toolbox"
     },
     {
       id: "myfiles",
-      label: t('navigation.myFiles'),
+      label: "My Files",
       icon: FileText,
       path: "/my-files"
     },

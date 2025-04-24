@@ -5,7 +5,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useTranslation } from "react-i18next";
 import { Separator } from "@/components/ui/separator";
 import { supportedLanguages, switchLanguage } from '@/utils/languageUtils';
-import { SettingsSection } from "./SettingsSection";
 
 export const LanguageSettings = () => {
   const { i18n, t } = useTranslation();
@@ -15,7 +14,8 @@ export const LanguageSettings = () => {
   };
 
   return (
-    <SettingsSection title={t('settings.language')}>
+    <div className="space-y-4">
+      <h3 className="text-lg font-medium">{t('settings.language')}</h3>
       <div className="flex items-center gap-4">
         <Label htmlFor="language-select">{t('settings.selectLanguage')}</Label>
         <Select value={i18n.language} onValueChange={handleLanguageChange}>
@@ -31,6 +31,7 @@ export const LanguageSettings = () => {
           </SelectContent>
         </Select>
       </div>
-    </SettingsSection>
+      <Separator />
+    </div>
   );
 };

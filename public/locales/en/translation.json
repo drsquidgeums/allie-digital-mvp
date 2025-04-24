@@ -7,25 +7,20 @@
     "aiAssistant": "AI Assistant",
     "mindMap": "Mind Map",
     "settings": "Settings",
-    "community": "Community Hub",
-    "myFiles": "My Files"
+    "community": "Community Hub"
   },
   "tools": {
     "pomodoro": "Pomodoro Timer",
     "tts": "Text to Speech",
-    "stt": "Speech to Text",
     "bionic": "Bionic Reader",
     "color": "Color Tool",
-    "focus": "Focus Mode",
-    "beeline": "Beeline Reader",
-    "rewordify": "Rewordify"
+    "focus": "Focus Mode"
   },
   "common": {
     "logout": "Logout",
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success",
-    "information": "Information",
     "language": "Select Language",
     "noNotifications": "No notifications",
     "loadingText": "Loading..."
@@ -50,26 +45,12 @@
     "description": "Manage your application preferences",
     "language": "Language Settings",
     "selectLanguage": "Select Language",
-    "languageChanged": "Application language changed to {{language}}",
-    "languageChangeError": "Failed to change language. Please try again.",
     "accessibility": {
       "title": "Accessibility",
       "screenReader": "Screen Reader Support",
       "screenReaderDescription": "Enable enhanced screen reader compatibility",
-      "screenReaderEnabled": "Screen reader support enabled",
-      "screenReaderDisabled": "Screen reader support disabled"
-    },
-    "display": {
-      "title": "Display",
-      "compactMode": "Compact Mode",
-      "compactModeDescription": "Reduce spacing between elements"
-    },
-    "notifications": {
-      "title": "Notifications",
-      "taskReminders": "Task Reminders",
-      "taskRemindersDescription": "Receive notifications for upcoming tasks",
-      "focusTimerAlerts": "Focus Timer Alerts",
-      "focusTimerAlertsDescription": "Get notified when focus sessions end"
+      "contrast": "High Contrast Mode",
+      "contrastDescription": "Increase contrast for better visibility"
     },
     "performance": {
       "title": "Performance",
@@ -85,55 +66,7 @@
       "dataCollection": "Data Collection",
       "dataCollectionDescription": "Allow anonymous usage data collection",
       "twoFactor": "Two-Factor Authentication",
-      "twoFactorDescription": "Enable 2FA for additional security",
-      "sessionTimeout": "Session Timeout",
-      "sessionTimeoutDescription": "Automatically log out after inactivity",
-      "changePassword": "Change Password",
-      "changePasswordDescription": "Update your account password",
-      "changeEmail": "Change Email",
-      "changeEmailDescription": "Update your email address"
-    },
-    "keyboard": {
-      "title": "Keyboard Shortcuts",
-      "toggleFocusMode": "Toggle Focus Mode",
-      "openSettings": "Open Settings",
-      "saveDocument": "Save Document",
-      "toggleTheme": "Toggle Theme"
-    },
-    "storage": {
-      "title": "Data & Storage",
-      "usage": "Storage Usage (Supabase)",
-      "management": "Storage Management",
-      "clearFiles": "Clear All Files",
-      "clearLocalStorage": "Clear Local Storage",
-      "exportData": "Export Data",
-      "exportDescription": "Download all your workspace data including documents, annotations, and settings",
-      "downloadData": "Download My Data",
-      "clearedFiles": "All files have been cleared from storage",
-      "noFiles": "No files to clear",
-      "clearError": "Failed to clear storage",
-      "fetchError": "Failed to fetch storage statistics",
-      "localStorageCleared": "Local storage has been cleared"
-    },
-    "integrations": {
-      "title": "Integrations",
-      "googleCalendar": "Google Calendar",
-      "googleCalendarDesc": "Sync tasks with Google Calendar",
-      "microsoftTeams": "Microsoft Teams",
-      "teamsDesc": "Connect to Teams chat channels for collaborative discussions",
-      "teamsSuccessConnect": "Successfully initiated Teams connection. Please complete authentication in the popup window.",
-      "teamsConnectError": "Failed to connect to Microsoft Teams. Please try again.",
-      "connectionError": "Connection Error",
-      "slack": "Slack",
-      "slackDesc": "Connect with Slack workspace",
-      "canvasLMS": "Canvas LMS",
-      "canvasDesc": "Sync with your Canvas courses and assignments",
-      "googleClassroom": "Google Classroom",
-      "classroomDesc": "Connect and sync with Google Classroom",
-      "blackboard": "Blackboard",
-      "blackboardDesc": "Sync with Blackboard courses and assignments",
-      "trello": "Trello",
-      "trelloDesc": "Sync tasks with Trello boards"
+      "twoFactorDescription": "Enable 2FA for additional security"
     }
   },
   "fileUploader": {

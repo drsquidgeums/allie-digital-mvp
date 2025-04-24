@@ -1,14 +1,11 @@
-
 import React, { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { connectToTeams } from "@/utils/teamsIntegration";
 import { useToast } from "@/hooks/use-toast";
 import { IntegrationItem } from "./integration/IntegrationItem";
-import { useTranslation } from "react-i18next";
 
 export const IntegrationSettings = () => {
   const { toast } = useToast();
-  const { t } = useTranslation();
   const [isConnecting, setIsConnecting] = useState(false);
 
   const handleTeamsConnect = async () => {
@@ -16,13 +13,13 @@ export const IntegrationSettings = () => {
     try {
       await connectToTeams();
       toast({
-        title: t('settings.integrations.microsoftTeams', 'Microsoft Teams'),
-        description: t('settings.integrations.teamsSuccessConnect', 'Successfully initiated Teams connection. Please complete authentication in the popup window.'),
+        title: "Microsoft Teams",
+        description: "Successfully initiated Teams connection. Please complete authentication in the popup window.",
       });
     } catch (error) {
       toast({
-        title: t('settings.integrations.connectionError', 'Connection Error'),
-        description: t('settings.integrations.teamsConnectError', 'Failed to connect to Microsoft Teams. Please try again.'),
+        title: "Connection Error",
+        description: "Failed to connect to Microsoft Teams. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -32,40 +29,40 @@ export const IntegrationSettings = () => {
 
   const integrations = [
     {
-      title: t('settings.integrations.googleCalendar', 'Google Calendar'),
-      description: t('settings.integrations.googleCalendarDesc', 'Sync tasks with Google Calendar'),
+      title: "Google Calendar",
+      description: "Sync tasks with Google Calendar",
     },
     {
-      title: t('settings.integrations.microsoftTeams', 'Microsoft Teams'),
-      description: t('settings.integrations.teamsDesc', 'Connect to Teams chat channels for collaborative discussions'),
+      title: "Microsoft Teams",
+      description: "Connect to Teams chat channels for collaborative discussions",
       onClick: handleTeamsConnect,
       isLoading: isConnecting,
     },
     {
-      title: t('settings.integrations.slack', 'Slack'),
-      description: t('settings.integrations.slackDesc', 'Connect with Slack workspace'),
+      title: "Slack",
+      description: "Connect with Slack workspace",
     },
     {
-      title: t('settings.integrations.canvasLMS', 'Canvas LMS'),
-      description: t('settings.integrations.canvasDesc', 'Sync with your Canvas courses and assignments'),
+      title: "Canvas LMS",
+      description: "Sync with your Canvas courses and assignments",
     },
     {
-      title: t('settings.integrations.googleClassroom', 'Google Classroom'),
-      description: t('settings.integrations.classroomDesc', 'Connect and sync with Google Classroom'),
+      title: "Google Classroom",
+      description: "Connect and sync with Google Classroom",
     },
     {
-      title: t('settings.integrations.blackboard', 'Blackboard'),
-      description: t('settings.integrations.blackboardDesc', 'Sync with Blackboard courses and assignments'),
+      title: "Blackboard",
+      description: "Sync with Blackboard courses and assignments",
     },
     {
-      title: t('settings.integrations.trello', 'Trello'),
-      description: t('settings.integrations.trelloDesc', 'Sync tasks with Trello boards'),
+      title: "Trello",
+      description: "Sync tasks with Trello boards",
     },
   ];
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">{t('settings.integrations.title', 'Integrations')}</h3>
+      <h3 className="text-lg font-medium">Integrations</h3>
       <div className="space-y-6">
         {integrations.map((integration) => (
           <IntegrationItem

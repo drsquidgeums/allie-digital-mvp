@@ -45,14 +45,14 @@ export const ToolbarTools = () => {
       />
       <ToolItem
         icon={BookOpen}
-        label={t('tools.beeline')}
+        label={"Beeline Reader"}
         id="beeline"
         content={<BeelineReader />}
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
       <ToolItem
         icon={SpellCheck}
-        label={t('tools.rewordify')}
+        label={"Rewordify"}
         id="rewordify"
         content={<Rewordify />}
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
