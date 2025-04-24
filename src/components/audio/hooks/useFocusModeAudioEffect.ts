@@ -16,45 +16,20 @@ export const useFocusModeAudioEffect = (
   useEffect(() => {
     const handleFocusModeChange = (event: CustomEvent) => {
       const { active, settings } = event.detail;
-      const wasInFocusMode = isFocusModeActive;
-      const shouldMuteAudio = active && settings?.muteAudio;
       
-      console.log('Focus mode change detected in music control:', { active, settings, shouldMuteAudio });
+      console.log('Focus mode change detected in music control:', { active, settings });
       
-      setIsFocusModeActive(shouldMuteAudio);
-      
-      if (shouldMuteAudio && audioRef.current && !audioRef.current.paused) {
-        audioRef.current.pause();
-        setWasPausedByFocusMode(true);
-        setIsPlaying(false);
-        console.log('Audio paused due to focus mode activation with mute setting');
-        
-        toast({
-          title: "Music paused",
-          description: "Music playback paused due to Focus Mode",
-        });
-      }
+      // Ambient music should continue playing during focus mode
+      setIsFocusModeActive(false); // Always keep music enabled
     };
     
     // Listen for specific audio muting events
     const handleAudioMutingChanged = (event: CustomEvent) => {
-      const { muted, forced, source } = event.detail;
-      
-      console.log('Audio muting event in music control:', { muted, forced, source });
-      
-      // Always respect a forced mute from focus mode
-      if (muted && forced && audioRef.current && !audioRef.current.paused) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-        setWasPausedByFocusMode(true);
-        console.log('Audio paused due to forced audio muting event');
-        
-        if (source === 'focus-mode') {
-          toast({
-            title: "Music paused",
-            description: "Music playback paused due to Focus Mode",
-          });
-        }
+      // We're ignoring audio muting events from focus mode
+      const { source } = event.detail;
+      if (source === 'focus-mode') {
+        console.log('Ignoring audio muting from focus mode to keep ambient music playing');
+        return;
       }
     };
     
@@ -68,7 +43,7 @@ export const useFocusModeAudioEffect = (
   }, [audioRef, wasPausedByFocusMode, isFocusModeActive, setIsPlaying, setWasPausedByFocusMode, toast]);
 
   return {
-    isFocusModeActive,
+    isFocusModeActive: false, // Always return false to keep music enabled
     wasPausedByFocusMode,
     setWasPausedByFocusMode
   };

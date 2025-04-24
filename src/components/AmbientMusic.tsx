@@ -30,20 +30,9 @@ export const AmbientMusic = () => {
     toggleLoop 
   } = useAudioPlayer();
   
-  const { isFocusModeActive } = useFocusMode();
+  // We're no longer setting isDisabled based on focus mode
   const [isDisabled, setIsDisabled] = useState(false);
   
-  useEffect(() => {
-    setIsDisabled(isFocusModeActive);
-    
-    // When focus mode is activated, we'll get the disable event from useFocusModeControl
-    // But we still need to make sure the component state reflects this
-    if (isFocusModeActive && isPlaying) {
-      const currentMusic = MUSIC_OPTIONS.find(opt => opt.id === selectedMusic);
-      togglePlay(currentMusic);
-    }
-  }, [isFocusModeActive, isPlaying, selectedMusic, togglePlay]);
-
   const handleMusicSelection = (value: string) => {
     if (isDisabled) return;
     
@@ -79,7 +68,7 @@ export const AmbientMusic = () => {
             side="bottom"
             className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md"
           >
-            {isDisabled ? "Music disabled during Focus Mode" : "Ambient Music"}
+            Ambient Music
           </TooltipContent>
         </Tooltip>
         <PopoverContent 

@@ -19,15 +19,7 @@ export const usePlaybackControl = (
       return false;
     }
 
-    // Check if we're in focus mode with mute audio enabled
-    if (isFocusModeActive) {
-      toast({
-        title: "Cannot play audio",
-        description: "Audio is muted due to Focus Mode. Exit Focus Mode or disable 'Mute Audio' setting to play music.",
-        variant: "destructive",
-      });
-      return false;
-    }
+    // Removed check for focus mode - we allow audio during focus mode
 
     try {
       if (isPlaying) {

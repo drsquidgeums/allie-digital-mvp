@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { MusicOption } from "./MusicOptions";
 import { MusicSelector } from "./MusicSelector";
 import { MusicControls } from "./MusicControls";
 
@@ -32,10 +31,11 @@ export const MusicPopoverContent = ({
   toggleMute,
   toggleLoop,
 }: MusicPopoverContentProps) => {
+  // Remove focus mode message
   if (isDisabled) {
     return (
       <div className="p-4 text-center text-sm text-muted-foreground">
-        Music player is disabled while Focus Mode is active.
+        Music player is currently disabled.
       </div>
     );
   }

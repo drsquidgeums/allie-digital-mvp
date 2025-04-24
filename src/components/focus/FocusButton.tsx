@@ -11,7 +11,7 @@ export const FocusButton = () => {
     blockNotifications: true,
     blockPopups: true,
     blockSocialMedia: true,
-    muteAudio: false,
+    muteAudio: false, // Set to false so ambient music isn't affected
   });
   const { toast } = useToast();
 
