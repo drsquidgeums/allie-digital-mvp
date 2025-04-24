@@ -1,6 +1,6 @@
-
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect, memo } from 'react';
 import { Handle, Position, NodeResizer } from '@xyflow/react';
+import { usePerformanceMonitor } from '../hooks/usePerformanceMonitor';
 
 interface ShapeNodeProps {
   id: string;
@@ -13,7 +13,8 @@ interface ShapeNodeProps {
   selected: boolean;
 }
 
-export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
+export const ShapeNode = memo<ShapeNodeProps>(({ data, selected }) => {
+  usePerformanceMonitor('ShapeNode');
   const [label, setLabel] = useState(data.label);
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,7 +43,14 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
     }
   }, [isEditing]);
 
-  // Add info tooltip to let users know they can delete with delete key
+  const nodeStyle = useMemo(() => ({
+    backgroundColor: data.color,
+    color: data.textColor || getContrastColor(data.color),
+    minHeight: '100px',
+    minWidth: '100px',
+    borderRadius: data.shape === 'circle' ? '50%' : '4px',
+  }), [data.color, data.textColor, data.shape]);
+
   const deleteTooltip = selected ? "Press Delete key to remove this node" : "";
 
   return (
@@ -87,13 +95,7 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
       <div 
         className="w-full h-full flex items-center justify-center transition-all duration-200 shadow-sm hover:shadow-md"
         onDoubleClick={handleDoubleClick}
-        style={{
-          backgroundColor: data.color,
-          color: data.textColor || getContrastColor(data.color),
-          minHeight: '100px',
-          minWidth: '100px',
-          borderRadius: data.shape === 'circle' ? '50%' : '4px',
-        }}
+        style={nodeStyle}
       >
         {isEditing ? (
           <input
@@ -132,20 +134,18 @@ export const ShapeNode: React.FC<ShapeNodeProps> = ({ data, selected }) => {
       />
     </div>
   );
-};
+});
 
-// Helper function to ensure text contrast
+ShapeNode.displayName = 'ShapeNode';
+
 function getContrastColor(bgColor: string): string {
-  // Convert background color to RGB
   let color = bgColor;
   if (color.startsWith('hsl')) {
-    // Convert HSL to RGB if needed
     const hsl = color.match(/\d+/g)?.map(Number);
     if (hsl) {
       const h = hsl[0];
       const s = hsl[1] / 100;
       const l = hsl[2] / 100;
-      // HSL to RGB conversion
       const c = (1 - Math.abs(2 * l - 1)) * s;
       const x = c * (1 - Math.abs((h / 60) % 2 - 1));
       const m = l - c / 2;
@@ -160,14 +160,11 @@ function getContrastColor(bgColor: string): string {
     }
   }
   
-  // Extract RGB values
   const rgb = color.match(/\d+/g)?.map(Number);
   if (!rgb) return '#000000';
   
-  // Calculate relative luminance
   const luminance = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255;
   
-  // Return black or white based on luminance
   return luminance > 0.5 ? '#000000' : '#FFFFFF';
 }
 

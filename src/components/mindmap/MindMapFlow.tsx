@@ -1,5 +1,5 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   ReactFlow,
   Controls,
@@ -8,6 +8,7 @@ import {
   ConnectionLineType
 } from '@xyflow/react';
 import { MindMapNode } from './types';
+import { usePerformanceMonitor } from './hooks/usePerformanceMonitor';
 
 interface MindMapFlowProps {
   nodes: MindMapNode[];
@@ -19,7 +20,7 @@ interface MindMapFlowProps {
   onDeleteNode?: (nodeId: string) => void;
 }
 
-export const MindMapFlow: React.FC<MindMapFlowProps> = ({
+export const MindMapFlow = React.memo<MindMapFlowProps>(({
   nodes,
   edges,
   onNodesChange,
@@ -28,6 +29,7 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
   nodeTypes,
   onDeleteNode,
 }) => {
+  usePerformanceMonitor('MindMapFlow');
   const { fitView } = useReactFlow();
 
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
@@ -58,6 +60,23 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
     }
   }, [nodes, onNodesChange, fitView, onDeleteNode]);
 
+  const defaultEdgeOptions = useMemo(() => ({
+    style: { 
+      stroke: '#9b87f5', 
+      strokeWidth: 2,
+      strokeDasharray: 'none'
+    },
+    animated: true,
+    deletable: true,
+    type: 'step',
+  }), []);
+
+  const connectionLineStyle = useMemo(() => ({
+    stroke: '#9b87f5',
+    strokeWidth: 2,
+    strokeDasharray: '5,5',
+  }), []);
+
   return (
     <div 
       onKeyDown={handleKeyDown}
@@ -75,21 +94,8 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
         fitView
         nodeTypes={nodeTypes}
         className="bg-background"
-        defaultEdgeOptions={{
-          style: { 
-            stroke: '#9b87f5', 
-            strokeWidth: 2,
-            strokeDasharray: 'none'
-          },
-          animated: true,
-          deletable: true,
-          type: 'step',
-        }}
-        connectionLineStyle={{
-          stroke: '#9b87f5',
-          strokeWidth: 2,
-          strokeDasharray: '5,5',
-        }}
+        defaultEdgeOptions={defaultEdgeOptions}
+        connectionLineStyle={connectionLineStyle}
         connectionLineType={ConnectionLineType.Step}
         snapToGrid={true}
         snapGrid={[10, 10]}
@@ -111,4 +117,6 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
       </ReactFlow>
     </div>
   );
-};
+});
+
+MindMapFlow.displayName = 'MindMapFlow';
