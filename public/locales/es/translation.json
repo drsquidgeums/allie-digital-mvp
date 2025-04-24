@@ -6,14 +6,19 @@
     "aiAssistant": "Asistente IA",
     "mindMap": "Mapa mental",
     "settings": "Configuración",
-    "community": "Centro Comunitario"
+    "community": "Centro Comunitario",
+    "toolbox": "Caja de herramientas",
+    "myFiles": "Mis archivos"
   },
   "tools": {
     "pomodoro": "Temporizador Pomodoro",
     "tts": "Texto a voz",
+    "stt": "Voz a texto",
     "bionic": "Lector biónico",
     "color": "Herramienta de color",
-    "focus": "Modo concentración"
+    "focus": "Modo concentración",
+    "beeline": "Beeline Reader",
+    "rewordify": "Rewordificar"
   },
   "common": {
     "logout": "Cerrar sesión",

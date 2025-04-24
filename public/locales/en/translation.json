@@ -7,14 +7,18 @@
     "aiAssistant": "AI Assistant",
     "mindMap": "Mind Map",
     "settings": "Settings",
-    "community": "Community Hub"
+    "community": "Community Hub",
+    "myFiles": "My Files"
   },
   "tools": {
     "pomodoro": "Pomodoro Timer",
     "tts": "Text to Speech",
+    "stt": "Speech to Text",
     "bionic": "Bionic Reader",
     "color": "Color Tool",
-    "focus": "Focus Mode"
+    "focus": "Focus Mode",
+    "beeline": "Beeline Reader",
+    "rewordify": "Rewordify"
   },
   "common": {
     "logout": "Logout",

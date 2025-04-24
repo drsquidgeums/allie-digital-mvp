@@ -1,4 +1,3 @@
-
 {
   "navigation": {
     "fileUploader": "Datei-Uploader",
@@ -6,14 +5,19 @@
     "aiAssistant": "KI-Assistent",
     "mindMap": "Mind Map",
     "settings": "Einstellungen",
-    "community": "Community Hub"
+    "community": "Community Hub",
+    "toolbox": "Werkzeugkasten",
+    "myFiles": "Meine Dateien"
   },
   "tools": {
     "pomodoro": "Pomodoro-Timer",
     "tts": "Text-zu-Sprache",
+    "stt": "Sprache-zu-Text",
     "bionic": "Bionic Reader",
     "color": "Farbwerkzeug",
-    "focus": "Fokusmodus"
+    "focus": "Fokusmodus",
+    "beeline": "Beeline Reader",
+    "rewordify": "Umformulieren"
   },
   "common": {
     "logout": "Abmelden",

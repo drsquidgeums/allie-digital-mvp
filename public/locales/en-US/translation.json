@@ -1,4 +1,3 @@
-
 {
   "navigation": {
     "fileUploader": "File Uploader",
@@ -6,7 +5,9 @@
     "aiAssistant": "AI Assistant",
     "mindMap": "Mind Map",
     "settings": "Settings",
-    "community": "Community Hub"
+    "community": "Community Hub",
+    "toolbox": "Toolbox",
+    "myFiles": "My Files"
   },
   "tools": {
     "pomodoro": "Pomodoro Timer",
@@ -14,7 +15,9 @@
     "stt": "Speech to Text",
     "bionic": "Bionic Reader",
     "color": "Color Tool",
-    "focus": "Focus Mode"
+    "focus": "Focus Mode",
+    "beeline": "Beeline Reader",
+    "rewordify": "Rewordify"
   },
   "common": {
     "logout": "Logout",
