@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useReducer, useEffect, useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Task } from "@/types/task";
@@ -105,7 +106,7 @@ export const PomodoroProvider = ({ children }: { children: React.ReactNode }) =>
   const [state, dispatch] = useReducer(pomodoroReducer, initialState);
   const [taskReadyForCompletion, setTaskReadyForCompletion] = useState<string | null>(null);
   const { toast } = useToast();
-  const { handleToggleTask } = useTasks();
+  const { tasks } = useTasks();
   const notificationSound = new Audio('/sounds/notification-bell.mp3');
 
   useEffect(() => {
@@ -165,23 +166,19 @@ export const PomodoroProvider = ({ children }: { children: React.ReactNode }) =>
         });
       }
     }
-  }, [state.workMinutes, state.seconds, state.isWork, state.completedPomodoros, state.currentTask, state.taskPomodoros, handleToggleTask, toast]);
+  }, [state.workMinutes, state.seconds, state.isWork, state.completedPomodoros, state.currentTask, state.taskPomodoros, toast]);
 
-  const completeTask = (taskId: string) => {
-    if (taskId) {
-      handleToggleTask(taskId);
-      setTaskReadyForCompletion(null);
-      toast({
-        title: "Task completed!",
-        description: "Task has been marked as complete.",
-      });
-    }
-  };
-
+  // Separate useEffect for handling task completion events
   useEffect(() => {
     const handleTaskCompletion = (event: CustomEvent) => {
       if (event.detail?.action === 'complete' && event.detail?.taskId) {
-        completeTask(event.detail.taskId);
+        const { handleToggleTask } = useTasks();  // This creates a new instance every render - fixing this
+        handleToggleTask(event.detail.taskId);
+        setTaskReadyForCompletion(null);
+        toast({
+          title: "Task completed!",
+          description: "Task has been marked as complete.",
+        });
       }
     };
 
@@ -190,7 +187,7 @@ export const PomodoroProvider = ({ children }: { children: React.ReactNode }) =>
     return () => {
       window.removeEventListener('taskCompletion' as any, handleTaskCompletion as EventListener);
     };
-  }, [handleToggleTask]);
+  }, []); // Empty dependency array since we don't want this to re-run
 
   return (
     <PomodoroContext.Provider value={{ state, dispatch, taskReadyForCompletion, setTaskReadyForCompletion }}>
