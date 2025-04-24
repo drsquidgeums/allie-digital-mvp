@@ -2,10 +2,11 @@
 import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { FileText, Download, Trash2, ExternalLink } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { ManagedFile } from '@/hooks/file-manager/types';
 import { useFileManager } from '@/hooks/file-manager';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 import { 
   Table, 
   TableBody, 
@@ -19,6 +20,7 @@ export const FileManager: React.FC = () => {
   const { files, loading, deleteFile, downloadFile, refreshFiles } = useFileManager();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     console.log("FileManager mounted, files count:", files.length);
@@ -51,7 +53,7 @@ export const FileManager: React.FC = () => {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <FileText className="h-6 w-6" />
-          My Files
+          {t('navigation.myFiles')}
         </h1>
       </div>
 

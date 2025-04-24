@@ -1,3 +1,4 @@
+
 {
   "navigation": {
     "fileUploader": "Datei-Uploader",
@@ -24,6 +25,7 @@
     "loading": "Lädt...",
     "error": "Ein Fehler ist aufgetreten",
     "success": "Erfolgreich",
+    "information": "Information",
     "language": "Sprache auswählen",
     "noNotifications": "Keine Benachrichtigungen",
     "loadingText": "Wird geladen..."
@@ -57,6 +59,18 @@
       "screenReaderEnabled": "Bildschirmleser-Unterstützung aktiviert",
       "screenReaderDisabled": "Bildschirmleser-Unterstützung deaktiviert"
     },
+    "display": {
+      "title": "Anzeige",
+      "compactMode": "Kompakter Modus",
+      "compactModeDescription": "Reduziert den Abstand zwischen Elementen"
+    },
+    "notifications": {
+      "title": "Benachrichtigungen",
+      "taskReminders": "Aufgabenerinnerungen",
+      "taskRemindersDescription": "Erhalte Benachrichtigungen für anstehende Aufgaben",
+      "focusTimerAlerts": "Fokus-Timer-Alarme",
+      "focusTimerAlertsDescription": "Werde benachrichtigt, wenn Fokus-Sitzungen enden"
+    },
     "performance": {
       "title": "Leistung",
       "animations": "Animationen",
@@ -71,7 +85,55 @@
       "dataCollection": "Datenerfassung",
       "dataCollectionDescription": "Anonyme Nutzungsdatenerfassung zulassen",
       "twoFactor": "Zwei-Faktor-Authentifizierung",
-      "twoFactorDescription": "2FA für zusätzliche Sicherheit aktivieren"
+      "twoFactorDescription": "2FA für zusätzliche Sicherheit aktivieren",
+      "sessionTimeout": "Sitzungs-Timeout",
+      "sessionTimeoutDescription": "Automatisch abmelden nach Inaktivität",
+      "changePassword": "Passwort ändern",
+      "changePasswordDescription": "Aktualisiere dein Konto-Passwort",
+      "changeEmail": "E-Mail ändern",
+      "changeEmailDescription": "Aktualisiere deine E-Mail-Adresse"
+    },
+    "keyboard": {
+      "title": "Tastaturkürzel",
+      "toggleFocusMode": "Fokus-Modus umschalten",
+      "openSettings": "Einstellungen öffnen",
+      "saveDocument": "Dokument speichern",
+      "toggleTheme": "Design umschalten"
+    },
+    "storage": {
+      "title": "Daten & Speicher",
+      "usage": "Speicherverbrauch (Supabase)",
+      "management": "Speicherverwaltung",
+      "clearFiles": "Alle Dateien löschen",
+      "clearLocalStorage": "Lokalen Speicher löschen",
+      "exportData": "Daten exportieren",
+      "exportDescription": "Lade alle deine Workspace-Daten herunter, einschließlich Dokumente, Anmerkungen und Einstellungen",
+      "downloadData": "Meine Daten herunterladen",
+      "clearedFiles": "Alle Dateien wurden aus dem Speicher gelöscht",
+      "noFiles": "Keine Dateien zum Löschen",
+      "clearError": "Fehler beim Löschen des Speichers",
+      "fetchError": "Fehler beim Abrufen der Speicherstatistiken",
+      "localStorageCleared": "Lokaler Speicher wurde gelöscht"
+    },
+    "integrations": {
+      "title": "Integrationen",
+      "googleCalendar": "Google Kalender",
+      "googleCalendarDesc": "Synchronisiere Aufgaben mit Google Kalender",
+      "microsoftTeams": "Microsoft Teams",
+      "teamsDesc": "Verbinde dich mit Teams-Chat-Kanälen für kollaborative Diskussionen",
+      "teamsSuccessConnect": "Teams-Verbindung erfolgreich initiiert. Bitte schließe die Authentifizierung im Popup-Fenster ab.",
+      "teamsConnectError": "Verbindung zu Microsoft Teams fehlgeschlagen. Bitte versuche es erneut.",
+      "connectionError": "Verbindungsfehler",
+      "slack": "Slack",
+      "slackDesc": "Mit Slack-Workspace verbinden",
+      "canvasLMS": "Canvas LMS",
+      "canvasDesc": "Synchronisieren mit deinen Canvas-Kursen und -Aufgaben",
+      "googleClassroom": "Google Classroom",
+      "classroomDesc": "Verbinden und synchronisieren mit Google Classroom",
+      "blackboard": "Blackboard",
+      "blackboardDesc": "Synchronisieren mit Blackboard-Kursen und -Aufgaben",
+      "trello": "Trello",
+      "trelloDesc": "Aufgaben mit Trello-Boards synchronisieren"
     }
   },
   "fileUploader": {
