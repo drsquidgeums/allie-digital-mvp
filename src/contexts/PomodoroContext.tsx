@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Task } from "@/types/task";
 import { useTasks } from "@/hooks/useTasks";
@@ -93,13 +92,18 @@ const pomodoroReducer = (state: PomodoroState, action: PomodoroAction): Pomodoro
   }
 };
 
-const PomodoroContext = createContext<{
+interface PomodoroContextValue {
   state: PomodoroState;
   dispatch: React.Dispatch<PomodoroAction>;
-} | null>(null);
+  taskReadyForCompletion: string | null;
+  setTaskReadyForCompletion: (taskId: string | null) => void;
+}
+
+const PomodoroContext = createContext<PomodoroContextValue | null>(null);
 
 export const PomodoroProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(pomodoroReducer, initialState);
+  const [taskReadyForCompletion, setTaskReadyForCompletion] = useState<string | null>(null);
   const { toast } = useToast();
   const { handleToggleTask } = useTasks();
   const notificationSound = new Audio('/sounds/notification-bell.mp3');
@@ -118,27 +122,34 @@ export const PomodoroProvider = ({ children }: { children: React.ReactNode }) =>
 
   useEffect(() => {
     if (state.workMinutes === 0 && state.seconds === 0) {
-      // Play sound with error handling and volume adjustment
-      notificationSound.volume = 0.5; // Set volume to 50%
+      notificationSound.volume = 0.5;
       notificationSound.play().catch(error => {
         console.error('Error playing notification sound:', error);
-        // Still show toast even if sound fails
-        toast({
-          title: "Time's up!",
-          description: "Your Pomodoro session has ended",
-        });
       });
 
       if (state.isWork) {
         dispatch({ type: 'COMPLETE_POMODORO' });
         
-        // Check if task has completed enough pomodoros
         if (state.currentTask && (state.taskPomodoros[state.currentTask] || 0) >= 4) {
-          handleToggleTask(state.currentTask);
+          setTaskReadyForCompletion(state.currentTask);
+          
           toast({
-            title: "Task completed!",
-            description: "You've completed all pomodoros for this task!",
+            title: "Task ready for completion",
+            description: "You've completed all pomodoros for this task! Would you like to mark it as complete?",
           });
+
+          const event = new CustomEvent('taskNotification', {
+            detail: { 
+              id: Date.now().toString(),
+              title: "Pomodoro Complete",
+              message: "You've completed all pomodoros for this task! Mark it as complete?",
+              read: false,
+              timestamp: new Date(),
+              taskId: state.currentTask,
+              action: 'complete'
+            }
+          });
+          window.dispatchEvent(event);
         } else {
           toast({
             title: "Pomodoro completed!",
@@ -156,8 +167,33 @@ export const PomodoroProvider = ({ children }: { children: React.ReactNode }) =>
     }
   }, [state.workMinutes, state.seconds, state.isWork, state.completedPomodoros, state.currentTask, state.taskPomodoros, handleToggleTask, toast]);
 
+  const completeTask = (taskId: string) => {
+    if (taskId) {
+      handleToggleTask(taskId);
+      setTaskReadyForCompletion(null);
+      toast({
+        title: "Task completed!",
+        description: "Task has been marked as complete.",
+      });
+    }
+  };
+
+  useEffect(() => {
+    const handleTaskCompletion = (event: CustomEvent) => {
+      if (event.detail?.action === 'complete' && event.detail?.taskId) {
+        completeTask(event.detail.taskId);
+      }
+    };
+
+    window.addEventListener('taskCompletion' as any, handleTaskCompletion as EventListener);
+
+    return () => {
+      window.removeEventListener('taskCompletion' as any, handleTaskCompletion as EventListener);
+    };
+  }, [handleToggleTask]);
+
   return (
-    <PomodoroContext.Provider value={{ state, dispatch }}>
+    <PomodoroContext.Provider value={{ state, dispatch, taskReadyForCompletion, setTaskReadyForCompletion }}>
       {children}
     </PomodoroContext.Provider>
   );

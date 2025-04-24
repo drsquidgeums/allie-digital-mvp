@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Card,
@@ -10,8 +11,12 @@ import { PomodoroSettings } from "./pomodoro/PomodoroSettings";
 import { TaskSelector } from "./pomodoro/TaskSelector";
 import { TimerDisplay } from "./pomodoro/TimerDisplay";
 import { TimerControls } from "./pomodoro/TimerControls";
+import { TaskCompletionPrompt } from "./pomodoro/TaskCompletionPrompt";
+import { usePomodoroContext } from "@/contexts/PomodoroContext";
 
 export const PomodoroTimer = () => {
+  const { taskReadyForCompletion } = usePomodoroContext();
+  
   return (
     <div className="space-y-6 animate-fade-in">
       <Card>
@@ -22,6 +27,7 @@ export const PomodoroTimer = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {taskReadyForCompletion && <TaskCompletionPrompt />}
           <PomodoroSettings />
           <TaskSelector />
           <TimerDisplay />
