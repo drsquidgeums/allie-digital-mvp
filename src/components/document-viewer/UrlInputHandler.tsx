@@ -2,6 +2,7 @@
 import React from "react";
 import { useToast } from "@/hooks/use-toast";
 import { UrlInput } from "./UrlInput";
+import { useTranslation } from "react-i18next";
 
 interface UrlInputHandlerProps {
   url: string;
@@ -18,6 +19,7 @@ export const UrlInputHandler: React.FC<UrlInputHandlerProps> = ({
   setUrl 
 }) => {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   /**
    * Handles keyboard events for the URL input field
@@ -32,8 +34,8 @@ export const UrlInputHandler: React.FC<UrlInputHandlerProps> = ({
       e.preventDefault();
       if (url.trim()) {
         toast({
-          title: "URL loaded",
-          description: "Document URL has been loaded into the viewer",
+          title: t("notifications.urlLoaded"),
+          description: t("notifications.urlLoadedDescription"),
         });
       }
     }
@@ -46,11 +48,27 @@ export const UrlInputHandler: React.FC<UrlInputHandlerProps> = ({
     setUrl(e.target.value);
   };
 
+  /**
+   * Handles URL submission
+   */
+  const handleUrlSubmit = (submittedUrl: string) => {
+    if (submittedUrl.trim()) {
+      setUrl(submittedUrl);
+      toast({
+        title: t("notifications.urlLoaded"),
+        description: t("notifications.urlLoadedDescription"),
+      });
+    }
+  };
+
   return (
     <UrlInput
       url={url}
       onChange={handleUrlChange}
       onKeyDown={handleKeyDown}
+      onSubmit={handleUrlSubmit}
+      placeholder={t('tools.pasteUrl')}
+      buttonLabel={t('tools.go')}
     />
   );
 };

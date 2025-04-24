@@ -15,7 +15,7 @@ export const EmptyState: React.FC = () => {
     <div 
       className="flex flex-col items-center justify-center h-full text-muted-foreground p-6 space-y-4"
       role="status"
-      aria-label="No document loaded"
+      aria-label={t('document.noDocumentLoaded')}
     >
       <div className="text-center">
         <h3 className="text-lg font-medium mb-2">{t('document.emptyState')}</h3>
