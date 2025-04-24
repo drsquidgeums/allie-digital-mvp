@@ -1,10 +1,14 @@
 
 import React, { useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Monitor, CheckSquare, Brain, FileText, BadgeInfo } from "lucide-react";
+import { Monitor, CheckSquare, Brain, FileText } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 import { useTranslation } from "react-i18next";
-import { Badge } from "@/components/ui/badge";
+
+interface SidebarNavigationProps {
+  activeComponent: string | null;
+  setActiveComponent: (component: string) => void;
+}
 
 export const SidebarNavigation = React.memo(({ activeComponent, setActiveComponent }: SidebarNavigationProps) => {
   const navigate = useNavigate();
@@ -35,13 +39,6 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       label: t('navigation.mindMap'),
       icon: Brain,
       path: "/mind-map"
-    },
-    {
-      id: "community", // Add community item with badge
-      label: "Community",
-      icon: BadgeInfo,
-      path: "/community",
-      badge: true
     }
   ];
 
@@ -60,28 +57,18 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
 
   return (
     <div className="space-y-2" data-sidebar-nav>
-      {navigationItems.map(({ id, label, icon: Icon, path, badge }) => (
-        <div key={id} className="relative flex items-center">
-          <SidebarButton
-            icon={Icon}
-            label={label}
-            isActive={location.pathname === path}
-            onClick={(e) => handleNavigation(e, id, path)}
-            className="sidebar-nav-link w-full"
-          />
-          {badge && (
-            <Badge 
-              variant="secondary" 
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-blue-500 text-white px-1.5 py-0.5 text-[10px] rounded-full"
-            >
-              Coming Soon
-            </Badge>
-          )}
-        </div>
+      {navigationItems.map(({ id, label, icon, path }) => (
+        <SidebarButton
+          key={id}
+          icon={icon}
+          label={label}
+          isActive={location.pathname === path}
+          onClick={(e) => handleNavigation(e, id, path)}
+          className="sidebar-nav-link"
+        />
       ))}
     </div>
   );
 });
 
 SidebarNavigation.displayName = "SidebarNavigation";
-
