@@ -31,7 +31,7 @@ export const WelcomeContent: React.FC<WelcomeContentProps> = ({ colors }) => {
         className="text-black relative z-20 whitespace-nowrap text-lg"
         aria-describedby="welcome-heading"
       >
-        Please enter the password to access the Web Application
+        please enter the password to access the web application
       </p>
     </div>
   );
