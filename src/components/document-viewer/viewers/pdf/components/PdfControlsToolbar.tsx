@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -20,26 +19,24 @@ interface PdfToolbarProps {
   pageNumber: number;
   numPages: number;
   zoom: number;
-  isTextSelected: boolean;
-  selectedColor: string;
+  isHighlightMode: boolean;
   isHighlighter: boolean;
-  onPageChange: (offset: number) => void;
-  onZoomChange: (delta: number) => void;
-  onHighlight: () => void;
-  onKeyboardHelp?: () => void;
+  changePage: (offset: number) => void;
+  zoom: (delta: number) => void;
+  rotateDocument: () => void;
+  toggleHighlightMode: () => void;
 }
 
 export const PdfToolbar: React.FC<PdfToolbarProps> = ({
   pageNumber,
   numPages,
   zoom,
-  isTextSelected,
-  selectedColor,
+  isHighlightMode,
   isHighlighter,
-  onPageChange,
-  onZoomChange,
-  onHighlight,
-  onKeyboardHelp
+  changePage,
+  zoom: zoomFn,
+  rotateDocument,
+  toggleHighlightMode
 }) => {
   // Helper function to determine text color based on background color
   const getContrastColor = (hexColor: string): string => {
@@ -61,7 +58,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => onPageChange(-1)}
+                onClick={() => changePage(-1)}
                 disabled={pageNumber <= 1}
                 aria-label="Previous page"
                 className="dark:text-white text-black"
@@ -81,7 +78,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => onPageChange(1)}
+                onClick={() => changePage(1)}
                 disabled={pageNumber >= numPages}
                 aria-label="Next page"
                 className="dark:text-white text-black"
@@ -99,7 +96,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
               <Button 
                 variant="outline" 
                 size="sm" 
-                onClick={() => onZoomChange(-0.1)}
+                onClick={() => zoomFn(-0.1)}
                 aria-label="Zoom out"
                 className="dark:text-white text-black"
               >
@@ -116,7 +113,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
               <Button 
                 variant="outline" 
                 size="sm" 
-                onClick={() => onZoomChange(0.1)}
+                onClick={() => zoomFn(0.1)}
                 aria-label="Zoom in"
                 className="dark:text-white text-black"
               >
@@ -133,12 +130,12 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
                   variant="outline"
                   size="sm"
                   style={{
-                    backgroundColor: isTextSelected ? selectedColor : 'transparent',
-                    color: isTextSelected ? getContrastColor(selectedColor) : 'currentColor'
+                    backgroundColor: isHighlightMode ? selectedColor : 'transparent',
+                    color: isHighlightMode ? getContrastColor(selectedColor) : 'currentColor'
                   }}
-                  onClick={onHighlight}
+                  onClick={toggleHighlightMode}
                   aria-label="Highlight text"
-                  disabled={!isTextSelected}
+                  disabled={!isHighlightMode}
                   className="dark:text-white text-black"
                 >
                   <Highlighter className="h-4 w-4" />
@@ -153,7 +150,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={onKeyboardHelp}
+                onClick={rotateDocument}
                 aria-label="Keyboard shortcuts"
                 className="dark:text-white text-black"
               >

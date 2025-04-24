@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { PdfControlsToolbar } from './PdfControlsToolbar';
+import { PdfToolbar } from './PdfControlsToolbar';
 import { PdfDocumentContainer } from './PdfDocumentContainer';
 import { HighlightOverlay } from './HighlightOverlay';
 import { useHighlightManager } from '../hooks/useHighlightManager';
@@ -27,7 +26,6 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
   const [rotation, setRotation] = useState<number>(0);
   const { toast } = useToast();
 
-  // Custom hook for highlight management
   const { 
     highlights, 
     isHighlightMode, 
@@ -35,14 +33,12 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
     toggleHighlightMode 
   } = useHighlightManager(isHighlighter, selectedColor, pageNumber);
   
-  // Handle document load success
   const handleDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
     setPageNumber(1);
     onLoadSuccess({ numPages });
   };
   
-  // Page navigation
   const changePage = (offset: number) => {
     const newPage = pageNumber + offset;
     if (newPage >= 1 && newPage <= numPages) {
@@ -50,24 +46,19 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
     }
   };
   
-  // Zoom controls
   const zoom = (factor: number) => {
     const newScale = scale + factor;
-    // Limit zoom between 0.5 and 3
     if (newScale >= 0.5 && newScale <= 3) {
       setScale(newScale);
     }
   };
   
-  // Rotate document
   const rotateDocument = () => {
     setRotation((rotation + 90) % 360);
   };
 
-  // Add keyboard navigation for pages, zoom, and rotation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Only handle keyboard shortcuts if not in an input field
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
         return;
       }
@@ -107,8 +98,7 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
   
   return (
     <>
-      {/* PDF Controls */}
-      <PdfControlsToolbar
+      <PdfToolbar
         pageNumber={pageNumber}
         numPages={numPages}
         scale={scale}
@@ -120,7 +110,6 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
         toggleHighlightMode={toggleHighlightMode}
       />
       
-      {/* PDF Document with Highlights */}
       <div ref={documentRef}>
         <PdfDocumentContainer
           file={file}
