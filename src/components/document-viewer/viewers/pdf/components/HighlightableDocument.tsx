@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { PdfToolbar } from './PdfControlsToolbar';
@@ -46,7 +47,7 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
     }
   };
   
-  const zoom = (factor: number) => {
+  const handleZoom = (factor: number) => {
     const newScale = scale + factor;
     if (newScale >= 0.5 && newScale <= 3) {
       setScale(newScale);
@@ -74,13 +75,13 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
         case '=':
           if (e.ctrlKey) {
             e.preventDefault();
-            zoom(0.1);
+            handleZoom(0.1);
           }
           break;
         case '-':
           if (e.ctrlKey) {
             e.preventDefault();
-            zoom(-0.1);
+            handleZoom(-0.1);
           }
           break;
         case 'r':
@@ -104,8 +105,9 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
         scale={scale}
         isHighlightMode={isHighlightMode}
         isHighlighter={isHighlighter}
+        selectedColor={selectedColor}
         changePage={changePage}
-        zoom={zoom}
+        zoom={handleZoom}
         rotateDocument={rotateDocument}
         toggleHighlightMode={toggleHighlightMode}
       />

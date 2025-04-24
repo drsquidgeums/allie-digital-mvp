@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -18,9 +19,10 @@ import {
 interface PdfToolbarProps {
   pageNumber: number;
   numPages: number;
-  zoom: number;
+  scale: number;
   isHighlightMode: boolean;
   isHighlighter: boolean;
+  selectedColor: string;
   changePage: (offset: number) => void;
   zoom: (delta: number) => void;
   rotateDocument: () => void;
@@ -30,11 +32,12 @@ interface PdfToolbarProps {
 export const PdfToolbar: React.FC<PdfToolbarProps> = ({
   pageNumber,
   numPages,
-  zoom,
+  scale,
   isHighlightMode,
   isHighlighter,
+  selectedColor,
   changePage,
-  zoom: zoomFn,
+  zoom,
   rotateDocument,
   toggleHighlightMode
 }) => {
@@ -96,7 +99,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
               <Button 
                 variant="outline" 
                 size="sm" 
-                onClick={() => zoomFn(-0.1)}
+                onClick={() => zoom(-0.1)}
                 aria-label="Zoom out"
                 className="dark:text-white text-black"
               >
@@ -106,14 +109,14 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
             <TooltipContent>Zoom out (Ctrl + -)</TooltipContent>
           </Tooltip>
           
-          <span className="text-sm" aria-live="polite">{Math.round(zoom * 100)}%</span>
+          <span className="text-sm" aria-live="polite">{Math.round(scale * 100)}%</span>
           
           <Tooltip>
             <TooltipTrigger asChild>
               <Button 
                 variant="outline" 
                 size="sm" 
-                onClick={() => zoomFn(0.1)}
+                onClick={() => zoom(0.1)}
                 aria-label="Zoom in"
                 className="dark:text-white text-black"
               >
