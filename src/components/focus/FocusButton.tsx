@@ -55,8 +55,8 @@ export const FocusButton = () => {
           )}
         </Button>
       </TooltipTrigger>
-      <TooltipContent>
-        <p>{isActive ? "Exit focus mode" : "Enter focus mode"}</p>
+      <TooltipContent side="bottom">
+        <p>{isActive ? "Exit Focus Mode" : "Focus Mode"}</p>
       </TooltipContent>
     </Tooltip>
   );
