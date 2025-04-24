@@ -1,12 +1,13 @@
+
 {
   "navigation": {
     "fileUploader": "File Uploader",
+    "toolbox": "Toolbox",
     "tasks": "Task Planner",
     "aiAssistant": "AI Assistant",
     "mindMap": "Mind Map",
     "settings": "Settings",
     "community": "Community Hub",
-    "toolbox": "Toolbox",
     "myFiles": "My Files"
   },
   "tools": {

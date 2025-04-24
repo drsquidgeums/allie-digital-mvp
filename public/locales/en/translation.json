@@ -52,9 +52,7 @@
     "accessibility": {
       "title": "Accessibility",
       "screenReader": "Screen Reader Support",
-      "screenReaderDescription": "Enable enhanced screen reader compatibility",
-      "contrast": "High Contrast Mode",
-      "contrastDescription": "Increase contrast for better visibility"
+      "screenReaderDescription": "Enable enhanced screen reader compatibility"
     },
     "performance": {
       "title": "Performance",
