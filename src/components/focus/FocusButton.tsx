@@ -1,29 +1,56 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Focus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { useFocusModeControl } from "@/hooks/focus/useFocusModeControl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useFocusMode } from '@/hooks/useFocusMode';
 
 export const FocusButton = () => {
-  const { isActive, toggleFocusMode } = useFocusModeControl({
+  const { isActive: controlIsActive, toggleFocusMode } = useFocusModeControl({
     blockNotifications: true,
     blockPopups: true,
     blockSocialMedia: true,
     muteAudio: false,
   });
+  
+  // Use the global focus mode state to ensure consistency across the app
+  const { isFocusModeActive } = useFocusMode();
+  const [isActive, setIsActive] = useState(false);
   const { toast } = useToast();
+
+  // Sync local state with global state
+  useEffect(() => {
+    console.log('FocusButton: Syncing with global focus mode state:', isFocusModeActive);
+    setIsActive(isFocusModeActive);
+  }, [isFocusModeActive]);
+
+  // Also sync with the control state
+  useEffect(() => {
+    console.log('FocusButton: Syncing with control state:', controlIsActive);
+    setIsActive(controlIsActive);
+  }, [controlIsActive]);
+
+  // Check localStorage on component mount
+  useEffect(() => {
+    const storedState = localStorage.getItem('focusModeActive');
+    console.log('FocusButton: Initial localStorage state:', storedState);
+    if (storedState === 'true') {
+      setIsActive(true);
+    }
+  }, []);
 
   const handleToggle = async () => {
     try {
       await toggleFocusMode();
+      const newState = !isActive;
       toast({
-        title: isActive ? "Focus mode deactivated" : "Focus mode activated",
-        description: isActive 
-          ? "Returning to normal mode" 
-          : "Entering distraction-free environment",
+        title: newState ? "Focus mode activated" : "Focus mode deactivated",
+        description: newState 
+          ? "Entering distraction-free environment" 
+          : "Returning to normal mode",
       });
     } catch (error) {
       console.error('Error toggling focus mode:', error);

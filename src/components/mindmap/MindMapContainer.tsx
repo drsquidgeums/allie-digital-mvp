@@ -44,7 +44,21 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   const { isFocusModeActive } = useFocusMode();
 
   const handleExitFocusMode = () => {
+    console.log("Exiting focus mode from MindMapContainer");
+    // First update localStorage directly to ensure immediate state change
+    localStorage.setItem('focusModeActive', 'false');
+    
+    // Then dispatch the global exit event
     window.dispatchEvent(new CustomEvent('focusModeExit'));
+    
+    // Ensure the focusModeChanged event is also fired
+    window.dispatchEvent(new CustomEvent('focusModeChanged', { 
+      detail: { 
+        active: false,
+        settings: null
+      } 
+    }));
+    
     toast("Focus mode deactivated");
   };
 

@@ -64,12 +64,6 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
         
         // Dispatch global focus mode exit event to notify all components
         window.dispatchEvent(new CustomEvent('focusModeExit'));
-        window.dispatchEvent(new CustomEvent('focusModeChanged', { 
-          detail: { 
-            active: false,
-            settings: null
-          } 
-        }));
         
         toast({
           title: "Focus mode deactivated",
@@ -144,6 +138,7 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
   // Listen for global focus mode exit events
   useEffect(() => {
     const handleFocusModeExit = () => {
+      console.log("Focus mode exit event received in useFocusModeControl");
       setIsActive(false);
       localStorage.setItem('focusModeActive', 'false');
     };

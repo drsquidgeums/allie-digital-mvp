@@ -6,22 +6,30 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Focus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 export const FocusMode = () => {
-  const { toast } = useToast();
+  const { toast: uiToast } = useToast();
   
   // Add a global exit button to handle focus mode exit from any page
   const handleGlobalExit = () => {
+    console.log("Exiting focus mode from FocusMode component");
+    // First update localStorage directly to ensure immediate state change
+    localStorage.setItem('focusModeActive', 'false');
+    
+    // Then dispatch the global exit event
     window.dispatchEvent(new CustomEvent('focusModeExit'));
     
-    // Display toast for user feedback
-    toast({
-      title: "Focus mode deactivated",
-      description: "Returning to normal mode",
-    });
+    // Ensure the focusModeChanged event is also fired
+    window.dispatchEvent(new CustomEvent('focusModeChanged', { 
+      detail: { 
+        active: false,
+        settings: null
+      } 
+    }));
     
-    // Update localStorage to ensure consistency
-    localStorage.setItem('focusModeActive', 'false');
+    // Display toast for user feedback
+    toast("Focus mode deactivated");
   };
 
   return (

@@ -25,10 +25,18 @@ export const useFocusMode = () => {
     
     // Handle global exit events
     const handleFocusModeExit = () => {
-      console.log('Global focus mode exit event received');
+      console.log('Global focus mode exit event received in useFocusMode');
       setIsFocusModeActive(false);
       setFocusModeSettings(null);
       localStorage.setItem('focusModeActive', 'false');
+      
+      // Dispatch a focusModeChanged event to ensure all components update
+      window.dispatchEvent(new CustomEvent('focusModeChanged', { 
+        detail: { 
+          active: false,
+          settings: null
+        } 
+      }));
     };
     
     window.addEventListener('focusModeExit', handleFocusModeExit as EventListener);
