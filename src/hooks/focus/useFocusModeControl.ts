@@ -2,9 +2,9 @@
 import { useState, useCallback, useEffect } from "react";
 import { useToast } from "../use-toast";
 import { useFullscreen } from "../useFullscreen";
-import { FocusSettings } from "../useFocusSettings";
+import { FocusModeSettings } from "../useFocusMode";
 
-interface FocusModeControlOptions extends FocusSettings {}
+interface FocusModeControlOptions extends FocusModeSettings {}
 
 export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) => {
   const [isActive, setIsActive] = useState(false);
@@ -152,7 +152,7 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
 
   // Sync with focus mode state across application
   useEffect(() => {
-    const handleFocusModeChange = (event: CustomEvent) => {
+    const handleFocusModeChange = (event: CustomEvent<{active: boolean}>) => {
       const { active } = event.detail;
       console.log("Focus mode change detected in useFocusModeControl:", active);
       setIsActive(active);

@@ -1,9 +1,16 @@
 
 import { useEffect, useState } from 'react';
 
+export interface FocusModeSettings {
+  blockNotifications?: boolean;
+  blockPopups?: boolean;
+  blockSocialMedia?: boolean;
+  muteAudio?: boolean;
+}
+
 export const useFocusMode = () => {
   const [isFocusModeActive, setIsFocusModeActive] = useState(false);
-  const [focusModeSettings, setFocusModeSettings] = useState<any>(null);
+  const [focusModeSettings, setFocusModeSettings] = useState<FocusModeSettings | null>(null);
 
   useEffect(() => {
     // Initialize from localStorage on mount
@@ -14,7 +21,7 @@ export const useFocusMode = () => {
       setIsFocusModeActive(false);
     }
 
-    const handleFocusModeChange = (event: CustomEvent) => {
+    const handleFocusModeChange = (event: CustomEvent<{active: boolean, settings: FocusModeSettings | null}>) => {
       console.log('Focus mode state changed in useFocusMode hook:', event.detail);
       setIsFocusModeActive(event.detail.active);
       setFocusModeSettings(event.detail.settings);

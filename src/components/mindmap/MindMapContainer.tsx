@@ -117,6 +117,7 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
               variant="outline"
               className="bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 rounded-full h-8 w-8 p-0 shadow-md"
               onClick={handleExitFocusMode}
+              aria-label="Exit focus mode"
             >
               <X className="h-4 w-4" />
             </Button>
