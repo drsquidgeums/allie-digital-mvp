@@ -10,7 +10,8 @@ export const useFocusMode = () => {
     const storedState = localStorage.getItem('focusModeActive');
     if (storedState === 'true') {
       setIsFocusModeActive(true);
-      // We might not have settings saved, but we can assume focus mode is active
+    } else {
+      setIsFocusModeActive(false);
     }
 
     const handleFocusModeChange = (event: CustomEvent) => {
@@ -27,6 +28,7 @@ export const useFocusMode = () => {
       console.log('Global focus mode exit event received');
       setIsFocusModeActive(false);
       setFocusModeSettings(null);
+      localStorage.setItem('focusModeActive', 'false');
     };
     
     window.addEventListener('focusModeExit', handleFocusModeExit as EventListener);

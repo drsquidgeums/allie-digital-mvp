@@ -7,6 +7,9 @@ import { MindMapContainerProps } from './types';
 import { toast } from "sonner";
 import { ReactFlowProvider } from '@xyflow/react';
 import { getShapeStyle } from './utils/shapeUtils';
+import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useFocusMode } from '@/hooks/useFocusMode';
 
 export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   nodes,
@@ -36,6 +39,13 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   const handleDeleteNode = (nodeId: string) => {
     onNodesChange([{ type: 'remove', id: nodeId }]);
     toast(`Node deleted`);
+  };
+
+  const { isFocusModeActive } = useFocusMode();
+
+  const handleExitFocusMode = () => {
+    window.dispatchEvent(new CustomEvent('focusModeExit'));
+    toast("Focus mode deactivated");
   };
 
   const handleShapeSelect = (shape: string, label?: string) => {
@@ -84,6 +94,20 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
             onDeleteNode={handleDeleteNode}
           />
         </ReactFlowProvider>
+        
+        {/* Focus mode exit button */}
+        {isFocusModeActive && (
+          <div className="absolute top-2 right-2 z-50">
+            <Button 
+              size="sm"
+              variant="outline"
+              className="bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 rounded-full h-8 w-8 p-0 shadow-md"
+              onClick={handleExitFocusMode}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </div>
       <div className="absolute bottom-0 left-0 right-0 z-50 pointer-events-none">
         <div className="pointer-events-auto">

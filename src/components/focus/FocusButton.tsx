@@ -1,14 +1,14 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Focus, X } from "lucide-react";
+import { Focus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { useFocusModeControl } from "@/hooks/focus/useFocusModeControl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const FocusButton = () => {
-  const { isActive, toggleFocusMode, handleManualExit } = useFocusModeControl({
+  const { isActive, toggleFocusMode } = useFocusModeControl({
     blockNotifications: true,
     blockPopups: true,
     blockSocialMedia: true,
@@ -35,14 +35,9 @@ export const FocusButton = () => {
     }
   };
 
-  const handleExitClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    handleManualExit();
-  };
-
   return (
     <Tooltip>
-      <TooltipTrigger>
+      <TooltipTrigger asChild>
         <Button
           variant="ghost"
           size="sm"

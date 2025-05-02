@@ -1,5 +1,5 @@
 
-import React, { lazy, Suspense, memo } from "react";
+import React, { lazy, Suspense, memo, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { BrowserRouter, Navigate } from "react-router-dom";
@@ -9,6 +9,9 @@ import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
 import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
+import { useFocusMode } from "@/hooks/useFocusMode";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -16,6 +19,31 @@ const PomodoroTaskListener = memo(() => {
 });
 
 PomodoroTaskListener.displayName = "PomodoroTaskListener";
+
+// Global focus mode exit button component
+const FocusModeExitButton = () => {
+  const { isFocusModeActive } = useFocusMode();
+  
+  if (!isFocusModeActive) return null;
+  
+  const handleExitFocusMode = () => {
+    window.dispatchEvent(new CustomEvent('focusModeExit'));
+  };
+  
+  return (
+    <div className="fixed top-4 right-4 z-50">
+      <Button
+        size="sm"
+        variant="outline"
+        className="bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 rounded-full h-8 w-8 p-0 shadow-md"
+        onClick={handleExitFocusMode}
+        aria-label="Exit focus mode"
+      >
+        <X className="h-4 w-4" />
+      </Button>
+    </div>
+  );
+};
 
 const App = () => {
   // Reset authentication state on initial load
@@ -48,6 +76,7 @@ const App = () => {
             </div>
           }>
             <PomodoroTaskListener />
+            <FocusModeExitButton />
             <AppRoutes />
           </Suspense>
           <FloatingAIAssistant />
