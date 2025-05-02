@@ -8,9 +8,20 @@ import { useEmailBlockEffect } from "@/hooks/focus/useEmailBlockEffect";
 import { useMessagingBlockEffect } from "@/hooks/focus/useMessagingBlockEffect";
 import { useMinimizeUIEffect } from "@/hooks/focus/useMinimizeUIEffect";
 import { FocusSettings } from "@/hooks/useFocusSettings";
+import { useAnalytics } from "@/hooks/focus/useAnalytics";
+import { useScreenDimmer } from "@/hooks/focus/useScreenDimmer";
 
+/**
+ * Custom hook that applies all focus mode effects based on settings
+ * 
+ * This hook coordinates all the individual focus mode effects by activating
+ * each one based on the current focus mode state and settings.
+ * 
+ * @param isActive - Whether focus mode is currently active
+ * @param settings - The current focus mode settings
+ */
 export const useFocusModeEffects = (isActive: boolean, settings: FocusSettings) => {
-  // Apply all focus mode effects
+  // Core blocking effects
   useVisibilityEffect(isActive, settings);
   useSocialMediaBlockEffect(isActive, settings);
   useAudioMuteEffect(isActive, settings);
@@ -18,5 +29,11 @@ export const useFocusModeEffects = (isActive: boolean, settings: FocusSettings) 
   usePopupBlockEffect(isActive, settings);
   useEmailBlockEffect(isActive, settings);
   useMessagingBlockEffect(isActive, settings);
+  
+  // UI enhancement effects
   useMinimizeUIEffect(isActive, settings);
+  useScreenDimmer(isActive, settings);
+  
+  // Analytics and tracking
+  useAnalytics(isActive, settings);
 };

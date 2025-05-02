@@ -2,6 +2,12 @@
 import { useEffect } from "react";
 import { FocusSettings } from "@/hooks/useFocusSettings";
 
+/**
+ * Hook to minimize UI distractions during focus mode
+ * 
+ * Hides non-essential UI elements to create a cleaner, 
+ * more focused workspace environment
+ */
 export const useMinimizeUIEffect = (isActive: boolean, settings: FocusSettings) => {
   useEffect(() => {
     if (!isActive || !settings.minimizeDistraction) return;
@@ -16,6 +22,10 @@ export const useMinimizeUIEffect = (isActive: boolean, settings: FocusSettings) 
       '.music-controls',
       '.banner-ad',
       '.promotion-banner',
+      '.social-links',
+      '.advertisement',
+      '.recommendation-panel',
+      '.trending-section'
     ];
     
     const originalStyles = new Map();
@@ -30,8 +40,13 @@ export const useMinimizeUIEffect = (isActive: boolean, settings: FocusSettings) 
       });
     });
     
-    // Simplify UI by adding a class to the body
+    // Apply focus mode class to body for CSS targeting
     document.body.classList.add('focus-mode-active');
+    
+    // Apply reduced motion preference
+    if (settings.reduceMotion) {
+      document.documentElement.style.setProperty('--reduced-motion', 'reduce');
+    }
     
     return () => {
       console.log("UI minimization deactivated");
@@ -48,6 +63,9 @@ export const useMinimizeUIEffect = (isActive: boolean, settings: FocusSettings) 
       });
       
       document.body.classList.remove('focus-mode-active');
+      
+      // Reset reduced motion preference
+      document.documentElement.style.removeProperty('--reduced-motion');
     };
-  }, [isActive, settings.minimizeDistraction]);
+  }, [isActive, settings.minimizeDistraction, settings.reduceMotion]);
 };
