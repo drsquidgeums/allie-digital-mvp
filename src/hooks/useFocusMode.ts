@@ -49,11 +49,21 @@ export const useFocusMode = () => {
     
     window.addEventListener('focusModeExit', handleFocusModeExit as EventListener);
     
+    // Handle ESC key press to exit focus mode
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFocusModeActive) {
+        handleFocusModeExit();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    
     return () => {
       window.removeEventListener('focusModeChanged', handleFocusModeChange as EventListener);
       window.removeEventListener('focusModeExit', handleFocusModeExit as EventListener);
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [isFocusModeActive]);
 
   return { isFocusModeActive, focusModeSettings };
 };
