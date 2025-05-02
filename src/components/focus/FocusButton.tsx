@@ -34,6 +34,11 @@ export const FocusButton = () => {
     }
   };
 
+  // Debug the focus mode state when component mounts
+  useEffect(() => {
+    console.log('FocusButton mounted, isActive:', isActive);
+  }, [isActive]);
+
   return (
     <Button
       variant="ghost"

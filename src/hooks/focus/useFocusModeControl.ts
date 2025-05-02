@@ -7,6 +7,7 @@ import { FocusSettings } from "../useFocusSettings";
 interface FocusModeControlOptions extends FocusSettings {}
 
 export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) => {
+  // Initialize with false and check localStorage only after component mounts
   const [isActive, setIsActive] = useState(false);
   const { enterFullscreen, exitFullscreen } = useFullscreen();
   const { toast } = useToast();
@@ -114,17 +115,28 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
     };
   }, [isActive]);
 
-  // Sync with focus mode state
+  // Sync with focus mode state - ONLY check localStorage after component mounts
   useEffect(() => {
     const handleFocusModeChange = (event: CustomEvent) => {
       const { active } = event.detail;
       setIsActive(active);
     };
 
-    // Check initial state
+    // Check initial state - but clear if we're in an inconsistent state
+    // (localStorage says active but we're not actually in fullscreen)
     const storedState = localStorage.getItem('focusModeActive');
     if (storedState === 'true') {
-      setIsActive(true);
+      // Only set to true if we're actually in fullscreen mode
+      if (document.fullscreenElement || 
+          (document as any).webkitFullscreenElement || 
+          (document as any).mozFullScreenElement || 
+          (document as any).msFullscreenElement) {
+        setIsActive(true);
+      } else {
+        // Clear the inconsistent state
+        console.log("Clearing inconsistent focus mode state");
+        localStorage.setItem('focusModeActive', 'false');
+      }
     }
 
     window.addEventListener('focusModeChanged', handleFocusModeChange as EventListener);
