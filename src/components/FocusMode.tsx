@@ -4,13 +4,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FocusButton } from "./focus/FocusButton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Focus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { toast } from "sonner";
 
 export const FocusMode = () => {
-  const { toast: uiToast } = useToast();
-
   return (
     <Card>
       <CardContent className="p-4 space-y-4">
@@ -25,13 +20,8 @@ export const FocusMode = () => {
           <AlertDescription>
             Click the focus button in the toolbar to toggle focus mode.
             This will block distractions and enter fullscreen mode.
-            Press ESC or use the X button that appears to exit focus mode.
           </AlertDescription>
         </Alert>
-        
-        <div className="text-sm text-muted-foreground">
-          <p>Use the X button in the corner when in focus mode to exit from any page.</p>
-        </div>
       </CardContent>
     </Card>
   );

@@ -7,7 +7,6 @@ import { MindMapContainerProps } from './types';
 import { toast } from "sonner";
 import { ReactFlowProvider } from '@xyflow/react';
 import { getShapeStyle } from './utils/shapeUtils';
-import { useFocusMode } from '@/hooks/useFocusMode';
 
 export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   nodes,
@@ -38,8 +37,6 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
     onNodesChange([{ type: 'remove', id: nodeId }]);
     toast(`Node deleted`);
   };
-
-  const { isFocusModeActive } = useFocusMode();
 
   const handleShapeSelect = (shape: string, label?: string) => {
     const nodeStyle = getShapeStyle(shape, selectedColor, customColor);
@@ -87,8 +84,6 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
             onDeleteNode={handleDeleteNode}
           />
         </ReactFlowProvider>
-        
-        {/* Removed the focus mode exit button */}
       </div>
       <div className="absolute bottom-0 left-0 right-0 z-50 pointer-events-none">
         <div className="pointer-events-auto">

@@ -1,5 +1,5 @@
 
-import React, { lazy, Suspense, memo, useEffect } from "react";
+import React, { lazy, Suspense, memo } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { BrowserRouter, Navigate } from "react-router-dom";

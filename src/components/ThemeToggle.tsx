@@ -24,7 +24,7 @@ export const ThemeToggle = () => {
 
   return (
     <Tooltip>
-      <TooltipTrigger>
+      <TooltipTrigger asChild>
         <Button
           variant="outline"
           size="sm"
