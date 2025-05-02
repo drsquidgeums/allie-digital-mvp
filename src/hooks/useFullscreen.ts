@@ -1,29 +1,57 @@
 
-import { useToast } from "./use-toast";
-import React from "react";
+import { useState, useCallback, useEffect } from 'react';
 
 export const useFullscreen = () => {
-  const { toast } = useToast();
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Update state based on document's fullscreen element
+  const updateFullscreenState = useCallback(() => {
+    const fullscreenElement = 
+      document.fullscreenElement || 
+      (document as any).webkitFullscreenElement || 
+      (document as any).mozFullScreenElement || 
+      (document as any).msFullscreenElement;
+    
+    setIsFullscreen(!!fullscreenElement);
+  }, []);
+
+  // Listen for fullscreen changes
+  useEffect(() => {
+    document.addEventListener('fullscreenchange', updateFullscreenState);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenState);
+    document.addEventListener('mozfullscreenchange', updateFullscreenState);
+    document.addEventListener('MSFullscreenChange', updateFullscreenState);
+
+    // Check initial state
+    updateFullscreenState();
+
+    return () => {
+      document.removeEventListener('fullscreenchange', updateFullscreenState);
+      document.removeEventListener('webkitfullscreenchange', updateFullscreenState);
+      document.removeEventListener('mozfullscreenchange', updateFullscreenState);
+      document.removeEventListener('MSFullscreenChange', updateFullscreenState);
+    };
+  }, [updateFullscreenState]);
 
   const enterFullscreen = async () => {
     try {
-      const elem = document.documentElement;
-      if (elem.requestFullscreen) {
-        await elem.requestFullscreen();
-      } else if ((elem as any).webkitRequestFullscreen) { // Safari
-        await (elem as any).webkitRequestFullscreen();
-      } else if ((elem as any).msRequestFullscreen) { // IE11
-        await (elem as any).msRequestFullscreen();
-      } else if ((elem as any).mozRequestFullScreen) { // Firefox
-        await (elem as any).mozRequestFullScreen();
+      const docElm = document.documentElement;
+      
+      if (docElm.requestFullscreen) {
+        await docElm.requestFullscreen();
+      } else if ((docElm as any).mozRequestFullScreen) {
+        await (docElm as any).mozRequestFullScreen();
+      } else if ((docElm as any).webkitRequestFullscreen) {
+        await (docElm as any).webkitRequestFullscreen();
+      } else if ((docElm as any).msRequestFullscreen) {
+        await (docElm as any).msRequestFullscreen();
       }
+      
+      console.log('Entered fullscreen mode');
+      return true;
     } catch (error) {
       console.error('Error entering fullscreen:', error);
-      toast({
-        title: "Fullscreen mode failed",
-        description: "Could not enter fullscreen mode. Please check your browser settings.",
-        variant: "destructive",
-      });
+      throw error;
     }
   };
 
@@ -31,33 +59,21 @@ export const useFullscreen = () => {
     try {
       if (document.exitFullscreen) {
         await document.exitFullscreen();
-      } else if ((document as any).webkitExitFullscreen) { // Safari
-        await (document as any).webkitExitFullscreen();
-      } else if ((document as any).msExitFullscreen) { // IE11
-        await (document as any).msExitFullscreen();
-      } else if ((document as any).mozCancelFullScreen) { // Firefox
+      } else if ((document as any).mozCancelFullScreen) {
         await (document as any).mozCancelFullScreen();
+      } else if ((document as any).webkitExitFullscreen) {
+        await (document as any).webkitExitFullscreen();
+      } else if ((document as any).msExitFullscreen) {
+        await (document as any).msExitFullscreen();
       }
+      
+      console.log('Exited fullscreen mode');
+      return true;
     } catch (error) {
       console.error('Error exiting fullscreen:', error);
+      throw error;
     }
   };
 
-  // Handle fullscreen change events
-  React.useEffect(() => {
-    const handleFullscreenChange = (callback: (isFullscreen: boolean) => void) => {
-      if (!document.fullscreenElement && 
-          !(document as any).webkitFullscreenElement && 
-          !(document as any).mozFullScreenElement &&
-          !(document as any).msFullscreenElement) {
-        callback(false);
-      }
-    };
-
-    return () => {
-      // Cleanup is handled by the component that uses this hook
-    };
-  }, []);
-
-  return { enterFullscreen, exitFullscreen };
+  return { isFullscreen, enterFullscreen, exitFullscreen };
 };

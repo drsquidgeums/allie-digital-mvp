@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from "react";
 import { useToast } from "../use-toast";
 import { useFullscreen } from "../useFullscreen";
@@ -8,7 +7,7 @@ interface FocusModeControlOptions extends FocusSettings {}
 
 export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) => {
   const [isActive, setIsActive] = useState(false);
-  const { enterFullscreen, exitFullscreen } = useFullscreen();
+  const { enterFullscreen, exitFullscreen, isFullscreen } = useFullscreen();
   const { toast } = useToast();
 
   // Define toggleFocusMode before it's used in useEffect
@@ -114,18 +113,46 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
     };
   }, [isActive]);
 
-  // Sync with focus mode state
+  // Check initial state on component mount - much more robust now!
   useEffect(() => {
+    const checkInitialState = () => {
+      // Only consider localStorage value if we're actually in fullscreen mode
+      const storedState = localStorage.getItem('focusModeActive') === 'true';
+      const isActuallyFullscreen = Boolean(
+        document.fullscreenElement || 
+        (document as any).webkitFullscreenElement || 
+        (document as any).mozFullScreenElement || 
+        (document as any).msFullscreenElement
+      );
+      
+      // If localStorage says focus mode is active but we're not in fullscreen,
+      // that's an inconsistency we need to fix
+      if (storedState && !isActuallyFullscreen) {
+        console.log("Found inconsistent focus mode state, resetting to inactive");
+        setIsActive(false);
+        localStorage.setItem('focusModeActive', 'false');
+        
+        // Also notify any listeners that might be depending on this state
+        window.dispatchEvent(new CustomEvent('focusModeChanged', { 
+          detail: { 
+            active: false,
+            settings: null
+          } 
+        }));
+      } else {
+        // Otherwise, set state based on actual fullscreen state
+        setIsActive(isActuallyFullscreen);
+      }
+    };
+
+    // Check state immediately on mount
+    checkInitialState();
+    
+    // Also listen for focus mode change events
     const handleFocusModeChange = (event: CustomEvent) => {
       const { active } = event.detail;
       setIsActive(active);
     };
-
-    // Check initial state
-    const storedState = localStorage.getItem('focusModeActive');
-    if (storedState === 'true') {
-      setIsActive(true);
-    }
 
     window.addEventListener('focusModeChanged', handleFocusModeChange as EventListener);
     return () => {
