@@ -58,26 +58,6 @@ export const FocusButton = () => {
           {isActive && (
             <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
           )}
-          
-          {/* Exit Button (X) that appears when focus mode is active */}
-          {isActive && (
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleExitClick}
-                  className="absolute -top-3 -right-3 h-6 w-6 rounded-full bg-red-500 hover:bg-red-600 text-white p-0 flex items-center justify-center"
-                  aria-label="Exit focus mode"
-                >
-                  <X className="h-3 w-3" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="top">
-                <p>Exit Focus Mode</p>
-              </TooltipContent>
-            </Tooltip>
-          )}
         </Button>
       </TooltipTrigger>
       <TooltipContent side="bottom">
