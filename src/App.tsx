@@ -9,10 +9,6 @@ import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
 import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
-import { useFocusMode } from "@/hooks/useFocusMode";
-import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
-import { toast } from "sonner";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -20,46 +16,6 @@ const PomodoroTaskListener = memo(() => {
 });
 
 PomodoroTaskListener.displayName = "PomodoroTaskListener";
-
-// Global focus mode exit button component
-const FocusModeExitButton = () => {
-  const { isFocusModeActive } = useFocusMode();
-  
-  if (!isFocusModeActive) return null;
-  
-  const handleExitFocusMode = () => {
-    console.log("Exiting focus mode from global exit button");
-    // First update localStorage directly to ensure immediate state change
-    localStorage.setItem('focusModeActive', 'false');
-    
-    // Then dispatch the global exit event
-    window.dispatchEvent(new CustomEvent('focusModeExit'));
-    
-    // Ensure the focusModeChanged event is also fired
-    window.dispatchEvent(new CustomEvent('focusModeChanged', { 
-      detail: { 
-        active: false,
-        settings: null
-      } 
-    }));
-    
-    toast("Focus mode deactivated");
-  };
-  
-  return (
-    <div className="fixed top-4 right-4 z-50">
-      <Button
-        size="sm"
-        variant="outline"
-        className="bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 rounded-full h-8 w-8 p-0 shadow-md"
-        onClick={handleExitFocusMode}
-        aria-label="Exit focus mode"
-      >
-        <X className="h-4 w-4" />
-      </Button>
-    </div>
-  );
-};
 
 const App = () => {
   // Reset authentication state on initial load
@@ -92,7 +48,6 @@ const App = () => {
             </div>
           }>
             <PomodoroTaskListener />
-            <FocusModeExitButton />
             <AppRoutes />
           </Suspense>
           <FloatingAIAssistant />

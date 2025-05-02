@@ -21,26 +21,36 @@ export const FocusButton = () => {
   const [isActive, setIsActive] = useState(false);
   const { toast } = useToast();
 
-  // Sync local state with global state
+  // Sync with localStorage and global state
   useEffect(() => {
-    console.log('FocusButton: Syncing with global focus mode state:', isFocusModeActive);
+    const syncState = () => {
+      const storedState = localStorage.getItem('focusModeActive');
+      const newState = storedState === 'true';
+      if (isActive !== newState) {
+        setIsActive(newState);
+      }
+    };
+    
+    // Initial sync
+    syncState();
+    
+    // Set up interval to check for changes
+    const intervalId = setInterval(syncState, 500);
+    
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  // Sync with the useFocusMode hook
+  useEffect(() => {
     setIsActive(isFocusModeActive);
   }, [isFocusModeActive]);
 
   // Also sync with the control state
   useEffect(() => {
-    console.log('FocusButton: Syncing with control state:', controlIsActive);
     setIsActive(controlIsActive);
   }, [controlIsActive]);
-
-  // Check localStorage on component mount
-  useEffect(() => {
-    const storedState = localStorage.getItem('focusModeActive');
-    console.log('FocusButton: Initial localStorage state:', storedState);
-    if (storedState === 'true') {
-      setIsActive(true);
-    }
-  }, []);
 
   const handleToggle = async () => {
     try {

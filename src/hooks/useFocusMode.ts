@@ -22,9 +22,11 @@ export const useFocusMode = () => {
     }
 
     const handleFocusModeChange = (event: CustomEvent<{active: boolean, settings: FocusModeSettings | null}>) => {
-      console.log('Focus mode state changed in useFocusMode hook:', event.detail);
       setIsFocusModeActive(event.detail.active);
       setFocusModeSettings(event.detail.settings);
+      
+      // Synchronize with localStorage
+      localStorage.setItem('focusModeActive', event.detail.active.toString());
     };
 
     // Listen for focus mode changes
@@ -32,7 +34,6 @@ export const useFocusMode = () => {
     
     // Handle global exit events
     const handleFocusModeExit = () => {
-      console.log('Global focus mode exit event received in useFocusMode');
       setIsFocusModeActive(false);
       setFocusModeSettings(null);
       localStorage.setItem('focusModeActive', 'false');

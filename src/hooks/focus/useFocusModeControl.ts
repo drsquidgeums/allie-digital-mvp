@@ -11,10 +11,20 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
   const { enterFullscreen, exitFullscreen } = useFullscreen();
   const { toast } = useToast();
 
+  // Check localStorage on component mount
+  useEffect(() => {
+    const storedState = localStorage.getItem('focusModeActive');
+    if (storedState === 'true') {
+      setIsActive(true);
+    }
+  }, []);
+
   // Define toggleFocusMode before it's used in useEffect
   const toggleFocusMode = useCallback(async () => {
     try {
-      if (!isActive) {
+      const newState = !isActive;
+      
+      if (newState) {
         // Activate focus mode
         await enterFullscreen();
         setIsActive(true);
@@ -42,6 +52,8 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
           } 
         }));
       }
+      
+      return true;
     } catch (error) {
       console.error("Error toggling focus mode:", error);
       setIsActive(false);
@@ -51,49 +63,9 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
         description: "There was an error with focus mode. Please try again.",
         variant: "destructive"
       });
+      return false;
     }
   }, [isActive, defaultSettings, enterFullscreen, exitFullscreen, toast]);
-
-  // Handler for manual exit via X button
-  const handleManualExit = useCallback(async () => {
-    if (isActive) {
-      try {
-        await exitFullscreen();
-        setIsActive(false);
-        localStorage.setItem('focusModeActive', 'false');
-        
-        // Dispatch global focus mode exit event to notify all components
-        window.dispatchEvent(new CustomEvent('focusModeExit'));
-        
-        toast({
-          title: "Focus mode deactivated",
-          description: "Returning to normal mode",
-        });
-      } catch (error) {
-        console.error("Error exiting focus mode:", error);
-      }
-    }
-  }, [isActive, exitFullscreen, toast]);
-
-  // Handle Escape key to exit focus mode
-  useEffect(() => {
-    const handleEscapeKey = (event: KeyboardEvent) => {
-      if (isActive && event.key === 'Escape') {
-        event.preventDefault();
-        toggleFocusMode();
-      }
-    };
-
-    // Add event listener when focus mode is active
-    if (isActive) {
-      document.addEventListener('keydown', handleEscapeKey);
-    }
-
-    // Cleanup listener
-    return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
-    };
-  }, [isActive, toggleFocusMode]);
 
   // Monitor fullscreen changes directly from browser events
   useEffect(() => {
@@ -115,8 +87,6 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
             settings: null
           } 
         }));
-        
-        console.log("Focus mode deactivated due to fullscreen exit");
       }
     };
 
@@ -138,37 +108,22 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
   // Listen for global focus mode exit events
   useEffect(() => {
     const handleFocusModeExit = () => {
-      console.log("Focus mode exit event received in useFocusModeControl");
       setIsActive(false);
-      localStorage.setItem('focusModeActive', 'false');
+    };
+    
+    // Listen for focusModeChanged events to stay in sync
+    const handleFocusModeChange = (event: CustomEvent<{active: boolean}>) => {
+      setIsActive(event.detail.active);
     };
     
     window.addEventListener('focusModeExit', handleFocusModeExit);
+    window.addEventListener('focusModeChanged', handleFocusModeChange as EventListener);
     
     return () => {
       window.removeEventListener('focusModeExit', handleFocusModeExit);
-    };
-  }, []);
-
-  // Sync with focus mode state across application
-  useEffect(() => {
-    const handleFocusModeChange = (event: CustomEvent<{active: boolean}>) => {
-      const { active } = event.detail;
-      console.log("Focus mode change detected in useFocusModeControl:", active);
-      setIsActive(active);
-    };
-
-    // Check initial state
-    const storedState = localStorage.getItem('focusModeActive');
-    if (storedState === 'true') {
-      setIsActive(true);
-    }
-
-    window.addEventListener('focusModeChanged', handleFocusModeChange as EventListener);
-    return () => {
       window.removeEventListener('focusModeChanged', handleFocusModeChange as EventListener);
     };
   }, []);
 
-  return { isActive, toggleFocusMode, handleManualExit };
+  return { isActive, toggleFocusMode };
 };
