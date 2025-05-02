@@ -20,6 +20,7 @@ export const FocusMode = () => {
           <AlertDescription>
             Click the focus button in the toolbar to toggle focus mode.
             This will block distractions and enter fullscreen mode.
+            Press ESC or use the X button to exit focus mode.
           </AlertDescription>
         </Alert>
       </CardContent>
