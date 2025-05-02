@@ -1,15 +1,26 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Focus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { useFocusModeControl } from "@/hooks/focus/useFocusModeControl";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useTranslation } from "react-i18next";
 
 export const FocusButton = () => {
-  const { isActive, toggleFocusMode } = useFocusModeControl();
+  const { isActive, toggleFocusMode } = useFocusModeControl({
+    blockNotifications: true,
+    blockPopups: true,
+    blockSocialMedia: true,
+    muteAudio: false,
+  });
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const handleToggle = async () => {
     try {
@@ -50,8 +61,11 @@ export const FocusButton = () => {
           )}
         </Button>
       </TooltipTrigger>
-      <TooltipContent side="bottom">
-        <p>{isActive ? "Exit Focus Mode" : "Focus Mode"}</p>
+      <TooltipContent 
+        side="bottom"
+        className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+      >
+        {t('tools.focus')}
       </TooltipContent>
     </Tooltip>
   );

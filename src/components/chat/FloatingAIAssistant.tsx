@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Bot, MessageCircle, X, Maximize2, Minimize2, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -65,19 +66,16 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = ({
     <div className={`fixed bottom-4 right-4 z-50 flex flex-col items-end transition-all duration-300 ease-in-out ${isOpen ? 'space-y-4' : ''}`}>
       {isOpen && (
         <Card 
-          className={`bg-card text-card-foreground rounded-xl overflow-hidden relative border shadow-lg 
+          className={`bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative border shadow-lg transition-all duration-300 ease-in-out
             ${isExpanded 
-              ? 'fixed inset-0 w-full h-full z-50 rounded-none' 
+              ? 'w-[90vw] h-[80vh] max-w-4xl' 
               : 'w-80 h-96 sm:w-96 sm:h-[28rem]'
             }
           `}
         >
           <div className="flex flex-col h-full">
             <div className="p-3 border-b flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <Bot className="h-5 w-5 text-primary" />
-                <h2 className="text-base font-semibold">Virtual Assistant</h2>
-              </div>
+              <ChatHeader />
               <div className="flex items-center gap-1">
                 <Button 
                   variant="ghost" 

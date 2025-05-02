@@ -5,13 +5,15 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/utils/supabase";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 
 export const StorageSettings = () => {
   const [storageUsed, setStorageUsed] = useState(0);
   const [storageLimit, setStorageLimit] = useState(5 * 1024 * 1024 * 1024); // 5GB default
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchStorageStats = async () => {
@@ -42,8 +44,8 @@ export const StorageSettings = () => {
       } catch (error) {
         console.error("Error fetching storage stats:", error);
         toast({
-          title: "Error",
-          description: "Failed to fetch storage statistics",
+          title: t('common.error', 'Error'),
+          description: t('settings.storage.fetchError', 'Failed to fetch storage statistics'),
           variant: "destructive",
         });
         setIsLoading(false);
@@ -51,7 +53,7 @@ export const StorageSettings = () => {
     };
     
     fetchStorageStats();
-  }, [toast]);
+  }, [toast, t]);
 
   const clearStorage = async () => {
     try {
@@ -78,20 +80,20 @@ export const StorageSettings = () => {
         
         setStorageUsed(0);
         toast({
-          title: "Success",
-          description: "All files have been cleared from storage",
+          title: t('common.success', 'Success'),
+          description: t('settings.storage.clearedFiles', 'All files have been cleared from storage'),
         });
       } else {
         toast({
-          title: "Information",
-          description: "No files to clear",
+          title: t('common.information', 'Information'),
+          description: t('settings.storage.noFiles', 'No files to clear'),
         });
       }
     } catch (error) {
       console.error("Error clearing storage:", error);
       toast({
-        title: "Error",
-        description: "Failed to clear storage",
+        title: t('common.error', 'Error'),
+        description: t('settings.storage.clearError', 'Failed to clear storage'),
         variant: "destructive",
       });
     }
@@ -111,20 +113,20 @@ export const StorageSettings = () => {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">Data & Storage</h3>
+      <h3 className="text-lg font-medium">{t('settings.storage.title', 'Data & Storage')}</h3>
       <div className="space-y-6">
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label>Storage Usage (Supabase)</Label>
+            <Label>{t('settings.storage.usage', 'Storage Usage (Supabase)')}</Label>
             <span className="text-sm text-muted-foreground">
-              {isLoading ? 'Calculating...' : `${formatBytes(storageUsed)} / ${formatBytes(storageLimit)}`}
+              {isLoading ? t('common.loading', 'Calculating...') : `${formatBytes(storageUsed)} / ${formatBytes(storageLimit)}`}
             </span>
           </div>
           <Progress value={isLoading ? 0 : storagePercentage} />
         </div>
 
         <div className="space-y-2">
-          <Label>Storage Management</Label>
+          <Label>{t('settings.storage.management', 'Storage Management')}</Label>
           <div className="flex gap-2">
             <Button 
               variant="outline" 
@@ -132,7 +134,7 @@ export const StorageSettings = () => {
               onClick={clearStorage}
               disabled={isLoading || storageUsed === 0}
             >
-              Clear All Files
+              {t('settings.storage.clearFiles', 'Clear All Files')}
             </Button>
             <Button 
               variant="outline" 
@@ -140,20 +142,22 @@ export const StorageSettings = () => {
               onClick={() => {
                 localStorage.clear();
                 toast({
-                  title: "Success",
-                  description: "Local storage has been cleared",
+                  title: t('common.success', 'Success'),
+                  description: t('settings.storage.localStorageCleared', 'Local storage has been cleared'),
                 });
               }}
             >
-              Clear Local Storage
+              {t('settings.storage.clearLocalStorage', 'Clear Local Storage')}
             </Button>
           </div>
         </div>
 
         <div className="space-y-4">
-          <Label>Export Data</Label>
-          <p className="text-sm text-muted-foreground">Download all your workspace data including documents, annotations, and settings</p>
-          <Button variant="outline" size="sm">Download My Data</Button>
+          <Label>{t('settings.storage.exportData', 'Export Data')}</Label>
+          <p className="text-sm text-muted-foreground">
+            {t('settings.storage.exportDescription', 'Download all your workspace data including documents, annotations, and settings')}
+          </p>
+          <Button variant="outline" size="sm">{t('settings.storage.downloadData', 'Download My Data')}</Button>
         </div>
       </div>
       <Separator />

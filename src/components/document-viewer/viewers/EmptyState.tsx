@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * EmptyState Component
@@ -8,6 +9,8 @@ import React from 'react';
  * Provides a visual indicator and instructions for the user.
  */
 export const EmptyState: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <div 
       className="flex flex-col items-center justify-center h-full text-muted-foreground p-6 space-y-4"
@@ -15,8 +18,8 @@ export const EmptyState: React.FC = () => {
       aria-label="No document loaded"
     >
       <div className="text-center">
-        <h3 className="text-lg font-medium mb-2">No Document Loaded</h3>
-        <p className="text-sm">Upload a file or paste a URL to view</p>
+        <h3 className="text-lg font-medium mb-2">{t('document.emptyState')}</h3>
+        <p className="text-sm">{t('document.emptyStateDescription')}</p>
       </div>
     </div>
   );
