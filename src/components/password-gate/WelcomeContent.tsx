@@ -25,13 +25,13 @@ export const WelcomeContent: React.FC<WelcomeContentProps> = ({ colors }) => {
         id="welcome-heading"
         className="text-3xl font-bold mb-3 relative z-20 text-black"
       >
-        allie.ai
+        Allie.ai
       </h1>
       <p 
         className="text-black relative z-20 whitespace-nowrap text-lg"
         aria-describedby="welcome-heading"
       >
-        please enter the password to access the web application
+        Please enter the password to access the web application
       </p>
     </div>
   );
