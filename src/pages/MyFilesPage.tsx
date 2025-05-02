@@ -14,7 +14,6 @@ const MyFilesPage: React.FC = () => {
   return (
     <WorkspaceLayout>
       <div className="p-6 space-y-6">
-        <h1 className="text-2xl font-bold">{t('pages.myFiles')}</h1>
         <FileManager />
       </div>
     </WorkspaceLayout>
