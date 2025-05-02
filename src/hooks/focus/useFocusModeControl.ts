@@ -54,6 +54,32 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
     }
   }, [isActive, defaultSettings, enterFullscreen, exitFullscreen, toast]);
 
+  // Handler for manual exit via X button
+  const handleManualExit = useCallback(async () => {
+    if (isActive) {
+      try {
+        await exitFullscreen();
+        setIsActive(false);
+        localStorage.setItem('focusModeActive', 'false');
+        
+        // Dispatch focus mode event for deactivation
+        window.dispatchEvent(new CustomEvent('focusModeChanged', { 
+          detail: { 
+            active: false,
+            settings: null
+          } 
+        }));
+        
+        toast({
+          title: "Focus mode deactivated",
+          description: "Returning to normal mode",
+        });
+      } catch (error) {
+        console.error("Error exiting focus mode:", error);
+      }
+    }
+  }, [isActive, exitFullscreen, toast]);
+
   // Handle Escape key to exit focus mode
   useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
@@ -114,6 +140,20 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
     };
   }, [isActive]);
 
+  // Listen for global focus mode exit events
+  useEffect(() => {
+    const handleFocusModeExit = (event: Event) => {
+      setIsActive(false);
+      localStorage.setItem('focusModeActive', 'false');
+    };
+    
+    window.addEventListener('focusModeExit', handleFocusModeExit);
+    
+    return () => {
+      window.removeEventListener('focusModeExit', handleFocusModeExit);
+    };
+  }, []);
+
   // Sync with focus mode state
   useEffect(() => {
     const handleFocusModeChange = (event: CustomEvent) => {
@@ -133,5 +173,5 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
     };
   }, []);
 
-  return { isActive, toggleFocusMode };
+  return { isActive, toggleFocusMode, handleManualExit };
 };

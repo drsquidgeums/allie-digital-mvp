@@ -6,6 +6,11 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Focus } from "lucide-react";
 
 export const FocusMode = () => {
+  // Add a global exit button to handle focus mode exit from any page
+  const handleGlobalExit = () => {
+    window.dispatchEvent(new CustomEvent('focusModeExit'));
+  };
+
   return (
     <Card>
       <CardContent className="p-4 space-y-4">

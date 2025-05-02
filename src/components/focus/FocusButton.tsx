@@ -1,14 +1,14 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Focus } from "lucide-react";
+import { Focus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { useFocusModeControl } from "@/hooks/focus/useFocusModeControl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const FocusButton = () => {
-  const { isActive, toggleFocusMode } = useFocusModeControl({
+  const { isActive, toggleFocusMode, handleManualExit } = useFocusModeControl({
     blockNotifications: true,
     blockPopups: true,
     blockSocialMedia: true,
@@ -35,6 +35,11 @@ export const FocusButton = () => {
     }
   };
 
+  const handleExitClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    handleManualExit();
+  };
+
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -52,6 +57,26 @@ export const FocusButton = () => {
           <Focus className="h-4 w-4" />
           {isActive && (
             <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
+          )}
+          
+          {/* Exit Button (X) that appears when focus mode is active */}
+          {isActive && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleExitClick}
+                  className="absolute -top-3 -right-3 h-6 w-6 rounded-full bg-red-500 hover:bg-red-600 text-white p-0 flex items-center justify-center"
+                  aria-label="Exit focus mode"
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top">
+                <p>Exit Focus Mode</p>
+              </TooltipContent>
+            </Tooltip>
           )}
         </Button>
       </TooltipTrigger>
