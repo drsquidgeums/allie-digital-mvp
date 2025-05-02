@@ -12,6 +12,9 @@ export interface FocusSettings {
   minimizeDistraction: boolean;
   autoBreaks: boolean;
   focusDuration: number; // in minutes
+  // Adding missing properties
+  reduceMotion: boolean;
+  dimScreen: boolean;
 }
 
 export interface FocusSession {
@@ -48,6 +51,9 @@ export const useFocusSettings = () => {
       minimizeDistraction: true,
       autoBreaks: false,
       focusDuration: 25,
+      // Default values for new properties
+      reduceMotion: false,
+      dimScreen: false,
     };
   });
 

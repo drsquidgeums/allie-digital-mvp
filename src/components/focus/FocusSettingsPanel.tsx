@@ -6,7 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useFocusSettings } from "@/hooks/useFocusSettings";
-import { Bell, BellOff, TimerOff, Eye, EyeOff } from "lucide-react";
+import { Bell, BellOff, TimerOff, Eye, EyeOff, Moon, Monitor } from "lucide-react";
 
 export const FocusSettingsPanel: React.FC = () => {
   const { settings, updateSetting } = useFocusSettings();
@@ -118,6 +118,36 @@ export const FocusSettingsPanel: React.FC = () => {
               id="minimize-distraction"
               checked={settings.minimizeDistraction}
               onCheckedChange={(checked) => updateSetting('minimizeDistraction', checked)}
+            />
+          </div>
+          
+          {/* New setting for dim screen */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Moon className="h-4 w-4 text-muted-foreground" />
+              <Label htmlFor="dim-screen" className="flex-1">
+                Dim screen
+              </Label>
+            </div>
+            <Switch
+              id="dim-screen"
+              checked={settings.dimScreen}
+              onCheckedChange={(checked) => updateSetting('dimScreen', checked)}
+            />
+          </div>
+          
+          {/* New setting for reduce motion */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Monitor className="h-4 w-4 text-muted-foreground" />
+              <Label htmlFor="reduce-motion" className="flex-1">
+                Reduce motion
+              </Label>
+            </div>
+            <Switch
+              id="reduce-motion"
+              checked={settings.reduceMotion}
+              onCheckedChange={(checked) => updateSetting('reduceMotion', checked)}
             />
           </div>
           
