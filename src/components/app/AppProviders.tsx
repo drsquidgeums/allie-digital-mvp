@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ThemeProvider } from '../ThemeProvider';
+import { ThemeProvider as NextThemeProvider } from 'next-themes';
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 // Create a client
@@ -8,7 +8,7 @@ const queryClient = new QueryClient();
 
 export const AppProviders = ({ children }: { children: React.ReactNode }) => {
   return (
-    <ThemeProvider
+    <NextThemeProvider
       attribute="class"
       defaultTheme="system"
       enableSystem
@@ -17,6 +17,6 @@ export const AppProviders = ({ children }: { children: React.ReactNode }) => {
       <QueryClientProvider client={queryClient}>
         {children}
       </QueryClientProvider>
-    </ThemeProvider>
+    </NextThemeProvider>
   );
 };
