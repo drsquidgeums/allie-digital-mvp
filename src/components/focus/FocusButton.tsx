@@ -42,7 +42,7 @@ export const FocusButton = () => {
 
   return (
     <Tooltip>
-      <TooltipTrigger asChild>
+      <TooltipTrigger>
         <Button
           variant="ghost"
           size="sm"
@@ -62,7 +62,7 @@ export const FocusButton = () => {
           {/* Exit Button (X) that appears when focus mode is active */}
           {isActive && (
             <Tooltip>
-              <TooltipTrigger asChild>
+              <TooltipTrigger>
                 <Button
                   variant="ghost"
                   size="sm"

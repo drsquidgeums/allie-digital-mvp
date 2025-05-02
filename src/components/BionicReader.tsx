@@ -56,7 +56,7 @@ export const BionicReader = () => {
     <div 
       className="p-4 space-y-4 animate-fade-in"
       role="region"
-      aria-label="Bionic Reader Tool"
+      aria-labelledby="welcome-heading"
     >
       <div className="flex items-center gap-2">
         <Eye className="w-4 h-4" aria-hidden="true" />

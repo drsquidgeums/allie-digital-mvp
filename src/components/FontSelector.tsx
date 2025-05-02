@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Select,
@@ -18,7 +19,7 @@ export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) 
       <label className="text-sm font-medium text-foreground">Font</label>
       <div className="flex gap-2 items-start">
         <Select value={selectedFont} onValueChange={onFontChange}>
-          <SelectTrigger className="text-foreground bg-background">
+          <SelectTrigger>
             <SelectValue placeholder="Select a font" />
           </SelectTrigger>
           <FontList className="dark:bg-workspace-dark dark:border dark:border-white/20 dark:text-[#FAFAFA]" />

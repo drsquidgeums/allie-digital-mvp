@@ -35,12 +35,8 @@ export const FileList = ({ files, onFileSelect, onFileDelete }: FileListProps) =
   }
 
   return (
-    <ScrollArea 
-      className="h-[200px] w-full rounded-md border p-2"
-      role="listbox"
-      aria-label="Uploaded files list"
-    >
-      <div className="space-y-2">
+    <ScrollArea className="h-[200px] w-full rounded-md border p-2">
+      <div className="space-y-2" role="listbox" aria-label="Uploaded files list">
         {files.map((file, index) => (
           <FileItem
             key={`${file.name}-${index}`}

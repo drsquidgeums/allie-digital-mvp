@@ -1,12 +1,13 @@
 
 import React, { Suspense, useEffect } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ThemeProvider as NextThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { PomodoroProvider } from "@/contexts/PomodoroContext";
 import "@/i18n/config"; // Fixed import path using alias
 import { useTranslation } from "react-i18next";
 
+// Create a new QueryClient instance
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
