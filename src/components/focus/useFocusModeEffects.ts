@@ -4,6 +4,9 @@ import { useSocialMediaBlockEffect } from "@/hooks/focus/useSocialMediaBlockEffe
 import { useAudioMuteEffect } from "@/hooks/focus/useAudioMuteEffect";
 import { useNotificationBlockEffect } from "@/hooks/focus/useNotificationBlockEffect";
 import { usePopupBlockEffect } from "@/hooks/focus/usePopupBlockEffect";
+import { useEmailBlockEffect } from "@/hooks/focus/useEmailBlockEffect";
+import { useMessagingBlockEffect } from "@/hooks/focus/useMessagingBlockEffect";
+import { useMinimizeUIEffect } from "@/hooks/focus/useMinimizeUIEffect";
 import { FocusSettings } from "@/hooks/useFocusSettings";
 
 export const useFocusModeEffects = (isActive: boolean, settings: FocusSettings) => {
@@ -13,4 +16,7 @@ export const useFocusModeEffects = (isActive: boolean, settings: FocusSettings) 
   useAudioMuteEffect(isActive, settings);
   useNotificationBlockEffect(isActive, settings);
   usePopupBlockEffect(isActive, settings);
+  useEmailBlockEffect(isActive, settings);
+  useMessagingBlockEffect(isActive, settings);
+  useMinimizeUIEffect(isActive, settings);
 };

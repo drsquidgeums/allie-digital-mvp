@@ -8,12 +8,7 @@ import { useFocusModeControl } from "@/hooks/focus/useFocusModeControl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const FocusButton = () => {
-  const { isActive, toggleFocusMode } = useFocusModeControl({
-    blockNotifications: true,
-    blockPopups: true,
-    blockSocialMedia: true,
-    muteAudio: false,
-  });
+  const { isActive, toggleFocusMode } = useFocusModeControl();
   const { toast } = useToast();
 
   const handleToggle = async () => {

@@ -1,14 +1,14 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useToast } from "../use-toast";
 import { useFullscreen } from "../useFullscreen";
-import { FocusSettings } from "../useFocusSettings";
+import { FocusSettings, FocusSession, useFocusSettings } from "../useFocusSettings";
 
-interface FocusModeControlOptions extends FocusSettings {}
-
-export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) => {
+export const useFocusModeControl = () => {
   const [isActive, setIsActive] = useState(false);
   const { enterFullscreen, exitFullscreen, isFullscreen } = useFullscreen();
   const { toast } = useToast();
+  const { settings, addSession, updateCurrentSession } = useFocusSettings();
+  const sessionTimerRef = useRef<number | null>(null);
 
   // Define toggleFocusMode before it's used in useEffect
   const toggleFocusMode = useCallback(async () => {
@@ -19,19 +19,57 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
         setIsActive(true);
         localStorage.setItem('focusModeActive', 'true');
         
-        // Dispatch focus mode event with default settings
+        // Start a new focus session
+        const newSession: FocusSession = {
+          startTime: Date.now(),
+          endTime: null,
+          duration: 0,
+          completed: false,
+          interrupted: false
+        };
+        addSession(newSession);
+        
+        // Start session timer
+        sessionTimerRef.current = window.setInterval(() => {
+          updateCurrentSession({
+            duration: Math.floor((Date.now() - newSession.startTime) / 1000)
+          });
+        }, 1000);
+        
+        // Dispatch focus mode event with settings
         window.dispatchEvent(new CustomEvent('focusModeChanged', { 
           detail: { 
             active: true,
-            settings: defaultSettings
+            settings: settings
           } 
         }));
+        
+        // If auto breaks are enabled, set a timer to remind the user
+        if (settings.autoBreaks && settings.focusDuration > 0) {
+          setTimeout(() => {
+            toast({
+              title: "Time for a break",
+              description: `You've been focusing for ${settings.focusDuration} minutes`,
+            });
+          }, settings.focusDuration * 60 * 1000);
+        }
         
       } else {
         // Deactivate focus mode
         await exitFullscreen();
         setIsActive(false);
         localStorage.setItem('focusModeActive', 'false');
+        
+        // End the current session
+        if (sessionTimerRef.current) {
+          clearInterval(sessionTimerRef.current);
+          sessionTimerRef.current = null;
+        }
+        
+        updateCurrentSession({
+          endTime: Date.now(),
+          completed: true
+        });
         
         // Dispatch focus mode event
         window.dispatchEvent(new CustomEvent('focusModeChanged', { 
@@ -45,13 +83,25 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
       console.error("Error toggling focus mode:", error);
       setIsActive(false);
       localStorage.removeItem('focusModeActive');
+      
+      // Mark session as interrupted
+      updateCurrentSession({
+        endTime: Date.now(),
+        interrupted: true
+      });
+      
+      if (sessionTimerRef.current) {
+        clearInterval(sessionTimerRef.current);
+        sessionTimerRef.current = null;
+      }
+      
       toast({
         title: "Focus mode error",
         description: "There was an error with focus mode. Please try again.",
         variant: "destructive"
       });
     }
-  }, [isActive, defaultSettings, enterFullscreen, exitFullscreen, toast]);
+  }, [isActive, settings, enterFullscreen, exitFullscreen, toast, addSession, updateCurrentSession]);
 
   // Handle Escape key to exit focus mode
   useEffect(() => {
@@ -86,6 +136,17 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
         setIsActive(false);
         localStorage.setItem('focusModeActive', 'false');
         
+        // End the current session
+        if (sessionTimerRef.current) {
+          clearInterval(sessionTimerRef.current);
+          sessionTimerRef.current = null;
+        }
+        
+        updateCurrentSession({
+          endTime: Date.now(),
+          interrupted: true
+        });
+        
         // Dispatch event to notify other components
         window.dispatchEvent(new CustomEvent('focusModeChanged', { 
           detail: { 
@@ -111,7 +172,7 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
       document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
       document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
     };
-  }, [isActive]);
+  }, [isActive, updateCurrentSession]);
 
   // Check initial state on component mount - much more robust now!
   useEffect(() => {
@@ -157,8 +218,31 @@ export const useFocusModeControl = (defaultSettings: FocusModeControlOptions) =>
     window.addEventListener('focusModeChanged', handleFocusModeChange as EventListener);
     return () => {
       window.removeEventListener('focusModeChanged', handleFocusModeChange as EventListener);
+      
+      // Also clear any running timers on unmount
+      if (sessionTimerRef.current) {
+        clearInterval(sessionTimerRef.current);
+      }
     };
   }, []);
 
-  return { isActive, toggleFocusMode };
+  // Function to schedule a focus session for later
+  const scheduleFocusSession = (timeInMinutes: number) => {
+    toast({
+      title: "Focus session scheduled",
+      description: `A focus session will start in ${timeInMinutes} minutes`,
+    });
+    
+    setTimeout(() => {
+      if (!isActive) {
+        toggleFocusMode();
+        toast({
+          title: "Scheduled focus session started",
+          description: "Your focus session is now active",
+        });
+      }
+    }, timeInMinutes * 60 * 1000);
+  };
+
+  return { isActive, toggleFocusMode, scheduleFocusSession };
 };

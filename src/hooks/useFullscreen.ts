@@ -35,6 +35,9 @@ export const useFullscreen = () => {
 
   const enterFullscreen = async () => {
     try {
+      // If we're already in fullscreen, don't try to enter again
+      if (isFullscreen) return true;
+      
       const docElm = document.documentElement;
       
       if (docElm.requestFullscreen) {
@@ -57,6 +60,9 @@ export const useFullscreen = () => {
 
   const exitFullscreen = async () => {
     try {
+      // If we're not in fullscreen, don't try to exit
+      if (!isFullscreen) return true;
+      
       if (document.exitFullscreen) {
         await document.exitFullscreen();
       } else if ((document as any).mozCancelFullScreen) {
@@ -75,5 +81,19 @@ export const useFullscreen = () => {
     }
   };
 
-  return { isFullscreen, enterFullscreen, exitFullscreen };
+  // Wrapper for toggle functionality
+  const toggleFullscreen = async () => {
+    try {
+      if (isFullscreen) {
+        return await exitFullscreen();
+      } else {
+        return await enterFullscreen();
+      }
+    } catch (error) {
+      console.error('Error toggling fullscreen:', error);
+      throw error;
+    }
+  };
+
+  return { isFullscreen, enterFullscreen, exitFullscreen, toggleFullscreen };
 };
