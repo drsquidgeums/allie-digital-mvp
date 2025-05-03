@@ -18,7 +18,7 @@ interface Discussion {
   tags: string[];
 }
 
-export const DiscussionList = memo(() => {
+const DiscussionList = memo(() => {
   const { toast } = useToast();
   const [discussions, setDiscussions] = useState<Discussion[]>([
     {

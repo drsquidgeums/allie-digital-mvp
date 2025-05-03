@@ -19,7 +19,7 @@ interface StudyGroup {
   dateCreated: Date;
 }
 
-export const StudyGroups = () => {
+const StudyGroups = () => {
   const { toast } = useToast();
   const [groups, setGroups] = useState<StudyGroup[]>([
     {

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { ScrollArea } from "./ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileItem } from "./file-list/FileItem";
 
 interface FileListProps {
@@ -36,7 +36,7 @@ export const FileList = ({ files, onFileSelect, onFileDelete }: FileListProps) =
 
   return (
     <div className="h-[200px] w-full rounded-md border p-2">
-      <ScrollArea className="h-full w-full">
+      <ScrollArea>
         <div className="space-y-2" role="listbox" aria-label="Uploaded files list">
           {files.map((file, index) => (
             <FileItem
@@ -55,3 +55,5 @@ export const FileList = ({ files, onFileSelect, onFileDelete }: FileListProps) =
     </div>
   );
 };
+
+export default FileList;

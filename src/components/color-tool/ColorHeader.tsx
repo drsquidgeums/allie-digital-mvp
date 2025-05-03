@@ -19,10 +19,11 @@ export const ColorHeader = ({ isHighlighter, onHighlighterToggle }: ColorHeaderP
         pressed={isHighlighter}
         onPressedChange={onHighlighterToggle}
         aria-label="Toggle highlighter mode"
-        className="data-[state=on]:bg-yellow-200"
       >
         <Highlighter className="w-4 h-4" />
       </Toggle>
     </div>
   );
 };
+
+export default ColorHeader;

@@ -42,7 +42,6 @@ export const MusicControls = ({
           </Button>
         </div>
         <Slider
-          className="volume-slider"
           min={0}
           max={100}
           step={1}
@@ -60,7 +59,6 @@ export const MusicControls = ({
             checked={isLooping}
             onCheckedChange={toggleLoop}
             aria-label="Toggle loop playback"
-            aria-labelledby="loop-toggle-label"
           />
           <Repeat 
             className={`h-4 w-4 ${isLooping ? 'text-primary' : 'text-muted-foreground'}`}
@@ -71,3 +69,5 @@ export const MusicControls = ({
     </div>
   );
 };
+
+export default MusicControls;

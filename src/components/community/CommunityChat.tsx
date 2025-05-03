@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatMessage } from "../chat/ChatMessage";
 import { ChatInput } from "../chat/ChatInput";
 
-export const CommunityChat = memo(() => {
+const CommunityChat = memo(() => {
   const [messages, setMessages] = useState<Array<{ text: string; isUser: boolean }>>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
