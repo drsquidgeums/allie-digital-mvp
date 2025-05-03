@@ -23,8 +23,7 @@ export const MusicSelector = ({
       {MUSIC_OPTIONS.map((option) => (
         <div key={option.id} className="flex items-center space-x-2">
           <RadioGroupItem 
-            value={option.id} 
-            id={option.id}
+            value={option.id}
             aria-label={option.name}
           />
           <Label 

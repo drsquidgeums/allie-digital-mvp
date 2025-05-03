@@ -2,6 +2,8 @@
 #!/bin/bash
 
 echo "Installing necessary dependencies..."
+
+# Make sure vite is installed both globally and locally
 npm install -g vite  # Install vite globally
 npm install --save-dev vite @vitejs/plugin-react-swc  # Install vite as dev dependency
 npm install --save-dev @types/react @types/react-dom @types/node date-fns
@@ -53,6 +55,7 @@ EOL
 # Create a dev start script with proper npx path
 cat > start-dev.sh << EOL
 #!/bin/bash
+export PATH="./node_modules/.bin:\$PATH"
 npx vite
 EOL
 
@@ -61,9 +64,17 @@ chmod +x start-dev.sh
 # Create a simple npx wrapper script
 cat > run-vite.sh << EOL
 #!/bin/bash
+export PATH="./node_modules/.bin:\$PATH"
 npx vite "\$@"
 EOL
 
 chmod +x run-vite.sh
+
+# Update npmrc to ensure proper dependency resolution
+cat > .npmrc << EOL
+shamefully-hoist=true
+strict-peer-dependencies=false
+legacy-peer-deps=true
+EOL
 
 echo "Setup complete! You can now run ./start-dev.sh to start the development server."

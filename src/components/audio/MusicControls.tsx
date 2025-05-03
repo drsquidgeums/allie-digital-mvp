@@ -42,7 +42,7 @@ export const MusicControls = ({
           </Button>
         </div>
         <Slider
-          id="volume-control"
+          className="volume-slider"
           min={0}
           max={100}
           step={1}
@@ -57,7 +57,6 @@ export const MusicControls = ({
         <div id="loop-toggle-label">Loop Playback</div>
         <div className="flex items-center space-x-2">
           <Switch
-            id="loop-toggle"
             checked={isLooping}
             onCheckedChange={toggleLoop}
             aria-label="Toggle loop playback"
