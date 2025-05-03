@@ -38,4 +38,4 @@ export const MusicSelector = ({
   );
 };
 
-export default { MusicSelector };
+export default MusicSelector;

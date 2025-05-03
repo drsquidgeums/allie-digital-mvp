@@ -4,7 +4,6 @@
 echo "Installing necessary dependencies..."
 
 # Make sure vite is installed both globally and locally
-npm install -g vite  # Install vite globally
 npm install --save-dev vite @vitejs/plugin-react-swc  # Install vite as dev dependency
 npm install --save-dev @types/react @types/react-dom @types/node date-fns
 npm install recharts sonner @radix-ui/react-checkbox lucide-react react-router-dom
@@ -76,5 +75,8 @@ shamefully-hoist=true
 strict-peer-dependencies=false
 legacy-peer-deps=true
 EOL
+
+# Install needed dependencies
+npm install
 
 echo "Setup complete! You can now run ./start-dev.sh to start the development server."

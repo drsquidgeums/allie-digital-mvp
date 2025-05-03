@@ -83,4 +83,4 @@ export const PollBox = () => {
   );
 };
 
-export default { PollBox };
+export default PollBox;

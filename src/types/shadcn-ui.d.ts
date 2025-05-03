@@ -55,7 +55,6 @@ declare module '@radix-ui/react-select' {
 declare module '@/components/ui/slider' {
   interface SliderProps {
     className?: string;
-    id?: string;
     min?: number;
     max?: number;
     step?: number;
@@ -63,6 +62,7 @@ declare module '@/components/ui/slider' {
     onValueChange?: (value: number[]) => void;
     "aria-label"?: string;
     "aria-labelledby"?: string;
+    children?: React.ReactNode;
   }
 }
 

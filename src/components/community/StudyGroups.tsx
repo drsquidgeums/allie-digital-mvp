@@ -183,4 +183,4 @@ export const StudyGroups = () => {
   );
 };
 
-export default { StudyGroups };
+export default StudyGroups;

@@ -216,4 +216,4 @@ export const ResourceShare = () => {
   );
 };
 
-export default { ResourceShare };
+export default ResourceShare;
