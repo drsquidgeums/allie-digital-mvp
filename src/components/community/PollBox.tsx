@@ -46,10 +46,10 @@ export const PollBox = () => {
 
       {!hasVoted ? (
         <div className="space-y-4">
-          <RadioGroup value={selectedOption} onValueChange={setSelectedOption}>
+          <RadioGroup value={selectedOption} onValueChange={setSelectedOption} className="space-y-2">
             {Object.keys(votes).map((option) => (
               <div key={option} className="flex items-center space-x-2">
-                <RadioGroupItem value={option} id={option} />
+                <RadioGroupItem value={option} aria-label={option} />
                 <Label htmlFor={option}>{option}</Label>
               </div>
             ))}
@@ -82,3 +82,5 @@ export const PollBox = () => {
     </Card>
   );
 };
+
+export default { PollBox };

@@ -215,3 +215,5 @@ export const ResourceShare = () => {
     </Card>
   );
 };
+
+export default { ResourceShare };

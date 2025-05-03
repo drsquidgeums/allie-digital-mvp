@@ -53,3 +53,5 @@ export const CommunityChat = memo(() => {
 });
 
 CommunityChat.displayName = "CommunityChat";
+
+export default { CommunityChat };

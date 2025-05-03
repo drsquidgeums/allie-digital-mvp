@@ -182,3 +182,5 @@ export const StudyGroups = () => {
     </Card>
   );
 };
+
+export default { StudyGroups };

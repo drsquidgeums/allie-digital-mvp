@@ -10,14 +10,14 @@ import { useTasks } from "@/hooks/useTasks";
 // Define component types correctly
 type ComponentType = React.ComponentType<any>;
 
-// Lazy load less critical components
-const DiscussionList = lazy(() => import("./community/DiscussionList"));
-const CommunityChat = lazy(() => import("./community/CommunityChat"));
-const ResourceShare = lazy(() => import("./community/ResourceShare"));
-const StudyGroups = lazy(() => import("./community/StudyGroups"));
+// Fix lazy loading by properly importing default exports
+const DiscussionList = lazy(() => import("./community/DiscussionList").then(module => ({ default: module.DiscussionList || module.default })));
+const CommunityChat = lazy(() => import("./community/CommunityChat").then(module => ({ default: module.CommunityChat || module.default })));
+const ResourceShare = lazy(() => import("./community/ResourceShare").then(module => ({ default: module.ResourceShare || module.default })));
+const StudyGroups = lazy(() => import("./community/StudyGroups").then(module => ({ default: module.StudyGroups || module.default })));
 const CollaborationActivity = lazy(() => import("./community/CollaborationActivity"));
 const TutorCommunication = lazy(() => import("./community/TutorCommunication"));
-const PollBox = lazy(() => import("./community/PollBox"));
+const PollBox = lazy(() => import("./community/PollBox").then(module => ({ default: module.PollBox || module.default })));
 
 const LoadingComponent = memo(() => (
   <div className="flex items-center justify-center p-6 bg-muted/20 rounded-lg min-h-[200px]">

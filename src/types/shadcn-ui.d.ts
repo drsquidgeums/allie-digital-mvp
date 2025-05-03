@@ -109,7 +109,7 @@ declare module '@/components/ui/switch' {
     "aria-label"?: string;
     "aria-labelledby"?: string;
     checked?: boolean;
-    onCheckedChange?: () => void;
+    onCheckedChange?: (checked: boolean) => void;
   }
 }
 
@@ -134,6 +134,11 @@ declare module '@/components/ui/toggle' {
 
 // Fix for DropdownMenu component
 declare module '@/components/ui/dropdown-menu' {
+  interface DropdownMenuTriggerProps {
+    children?: React.ReactNode;
+    asChild?: boolean;
+  }
+  
   interface DropdownMenuItemProps {
     children?: React.ReactNode;
     onSelect?: (event: Event) => void;
@@ -185,5 +190,14 @@ declare module '@radix-ui/react-checkbox' {
     value?: string;
     id?: string;
     className?: string;
+  }
+}
+
+// Fix for Separator component
+declare module '@/components/ui/separator' {
+  interface SeparatorProps {
+    className?: string;
+    orientation?: "horizontal" | "vertical";
+    decorative?: boolean;
   }
 }

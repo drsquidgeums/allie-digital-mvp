@@ -157,3 +157,5 @@ export const DiscussionList = memo(() => {
 });
 
 DiscussionList.displayName = "DiscussionList";
+
+export default { DiscussionList };
