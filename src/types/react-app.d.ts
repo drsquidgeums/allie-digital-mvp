@@ -52,6 +52,14 @@ declare module 'lucide-react' {
   export const Volume2: LucideIcon;
   export const VolumeX: LucideIcon;
   export const Repeat: LucideIcon;
+  export const Send: LucideIcon;
+  export const Paintbrush: LucideIcon;
+  export const Highlighter: LucideIcon;
+  export const Users: LucideIcon;
+  export const HandshakeIcon: LucideIcon;
+  export const Book: LucideIcon;
+  export const Calendar: LucideIcon;
+  export const UserPlus: LucideIcon;
 }
 
 // For react-router-dom types

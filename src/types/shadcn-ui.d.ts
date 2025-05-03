@@ -55,6 +55,12 @@ declare module '@/components/ui/slider' {
   interface SliderProps {
     className?: string;
     id?: string;
+    min?: number;
+    max?: number;
+    step?: number;
+    value?: number[];
+    onValueChange?: (value: number[]) => void;
+    "aria-label"?: string;
   }
 }
 
@@ -83,11 +89,14 @@ declare module '@/components/ui/radio-group' {
     children?: React.ReactNode;
     className?: string;
     "aria-label"?: string;
+    value?: string;
+    onValueChange?: (value: string) => void;
   }
   
   interface RadioGroupItemProps {
     id?: string;
     "aria-label"?: string;
+    value: string;
   }
 }
 
@@ -96,12 +105,26 @@ declare module '@/components/ui/switch' {
   interface SwitchProps {
     id?: string;
     "aria-label"?: string;
+    checked?: boolean;
+    onCheckedChange?: () => void;
   }
 }
 
 // Fix for ChromePicker from react-color
 declare module 'react-color' {
   interface ChromePickerProps {
+    className?: string;
+    disableAlpha?: boolean;
+  }
+}
+
+// Fix for Toggle component
+declare module '@/components/ui/toggle' {
+  interface ToggleProps {
+    children?: React.ReactNode;
+    pressed?: boolean;
+    onPressedChange?: (pressed: boolean) => void;
+    "aria-label"?: string;
     className?: string;
   }
 }
