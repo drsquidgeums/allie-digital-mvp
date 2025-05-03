@@ -50,10 +50,12 @@ declare module '@radix-ui/react-select' {
   }
 
   interface SelectScrollUpButtonProps {
+    children?: React.ReactNode;
     className?: string;
   }
 
   interface SelectScrollDownButtonProps {
+    children?: React.ReactNode;
     className?: string;
   }
 }
@@ -61,6 +63,7 @@ declare module '@radix-ui/react-select' {
 // Fix for Slider component
 declare module '@/components/ui/slider' {
   interface SliderProps {
+    children?: React.ReactNode;
     className?: string;
     min?: number;
     max?: number;
@@ -69,7 +72,6 @@ declare module '@/components/ui/slider' {
     onValueChange?: (value: number[]) => void;
     "aria-label"?: string;
     "aria-labelledby"?: string;
-    children?: React.ReactNode;
   }
 }
 

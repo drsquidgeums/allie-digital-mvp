@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
-import { format, startOfWeek, endOfWeek, eachDayOfInterval, addDays } from 'date-fns';
+import { format, startOfWeek, endOfWeek, eachDayOfInterval } from 'date-fns';
 
 interface WeeklyProgressChartProps {
   completedTasks: number[];
