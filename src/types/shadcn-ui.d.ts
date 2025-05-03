@@ -47,6 +47,7 @@ declare module '@radix-ui/react-select' {
   interface SelectItemProps {
     children?: React.ReactNode;
     className?: string;
+    value: string;
   }
 }
 
@@ -136,5 +137,52 @@ declare module '@/components/ui/dropdown-menu' {
     onSelect?: (event: Event) => void;
     onClick?: () => void;
     key?: string;
+    className?: string;
   }
 }
+
+// Fix for Context Menu component
+declare module '@/components/ui/context-menu' {
+  interface ContextMenuSubTriggerProps {
+    children?: React.ReactNode;
+    className?: string;
+    inset?: boolean;
+  }
+
+  interface ContextMenuSubContentProps {
+    children?: React.ReactNode;
+    className?: string;
+  }
+
+  interface ContextMenuItemProps {
+    children?: React.ReactNode;
+    className?: string;
+    inset?: boolean;
+  }
+
+  interface ContextMenuCheckboxItemProps {
+    children?: React.ReactNode;
+    className?: string;
+    checked?: boolean;
+  }
+
+  interface ContextMenuRadioItemProps {
+    children?: React.ReactNode;
+    className?: string;
+  }
+}
+
+// Fix for radix-ui checkbox
+declare module '@radix-ui/react-checkbox' {
+  interface CheckboxProps {
+    checked?: boolean;
+    onCheckedChange?: (checked: boolean) => void;
+    disabled?: boolean;
+    required?: boolean;
+    name?: string;
+    value?: string;
+    id?: string;
+    className?: string;
+  }
+}
+

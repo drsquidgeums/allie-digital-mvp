@@ -84,6 +84,31 @@ declare module 'lucide-react' {
   export const MousePointer: LucideIcon;
   export const Plus: LucideIcon;
   export const Video: LucideIcon;
+  export const MessageCircle: LucideIcon;
+  export const FileDown: LucideIcon;
+  export const Bold: LucideIcon;
+  export const ExternalLink: LucideIcon;
+  export const CheckCircle: LucideIcon;
+  export const XCircle: LucideIcon;
+  export const Monitor: LucideIcon;
+  export const CheckSquare: LucideIcon;
+  export const Brain: LucideIcon;
+  export const Settings: LucideIcon;
+  export const LogOut: LucideIcon;
+  export const Circle: LucideIcon;
+  export const ArrowLeft: LucideIcon;
+  export const ArrowRight: LucideIcon;
+  export const Search: LucideIcon;
+  export const MoreHorizontal: LucideIcon;
+  export const CircleDot: LucideIcon;
+  export const Triangle: LucideIcon;
+  export const Diamond: LucideIcon;
+  export const Hexagon: LucideIcon;
+  export const Palette: LucideIcon;
+  export const Sticker: LucideIcon;
+  export const Image: LucideIcon;
+  export const Layout: LucideIcon;
+  export const Loader2: LucideIcon;
 }
 
 // For react-router-dom types
@@ -115,6 +140,9 @@ declare module 'react-router-dom' {
   }
   
   export const Route: React.FC<RouteProps>;
+
+  export function useNavigate(): (to: string, options?: { replace?: boolean }) => void;
+  export function useLocation(): { pathname: string, search: string, hash: string, state: any };
 }
 
 // For react-color types
@@ -183,3 +211,36 @@ declare module '@tanstack/react-query' {
     error: Error | null;
   };
 }
+
+// For sonner toast library
+declare module 'sonner' {
+  export function toast(message: string, options?: any): void;
+}
+
+// For recharts library
+declare module 'recharts' {
+  export const BarChart: React.FC<any>;
+  export const Bar: React.FC<any>;
+  export const XAxis: React.FC<any>;
+  export const YAxis: React.FC<any>;
+  export const CartesianGrid: React.FC<any>;
+  export const Tooltip: React.FC<any>;
+  export const Legend: React.FC<any>;
+  export const ResponsiveContainer: React.FC<any>;
+  export const LineChart: React.FC<any>;
+  export const Line: React.FC<any>;
+  export const PieChart: React.FC<any>;
+  export const Pie: React.FC<any>;
+  export const Cell: React.FC<any>;
+}
+
+// For date-fns library
+declare module 'date-fns' {
+  export function format(date: Date, format: string, options?: any): string;
+  export function addDays(date: Date, amount: number): Date;
+  export function addWeeks(date: Date, amount: number): Date;
+  export function startOfWeek(date: Date, options?: any): Date;
+  export function endOfWeek(date: Date, options?: any): Date;
+  export function eachDayOfInterval(interval: { start: Date; end: Date }): Date[];
+}
+

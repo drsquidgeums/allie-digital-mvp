@@ -4,6 +4,7 @@
 echo "Installing necessary dependencies..."
 npm install -g vite
 npm install --save-dev @types/react @types/react-dom @types/node date-fns
+npm install recharts sonner @radix-ui/react-checkbox
 
 echo "Creating TypeScript configuration..."
 
