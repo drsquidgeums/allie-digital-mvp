@@ -20,72 +20,54 @@ export const IframeViewer: React.FC<IframeViewerProps> = ({ url, onError }) => {
   const [isGoogleDoc, setIsGoogleDoc] = useState<boolean>(false);
   const [displayUrl, setDisplayUrl] = useState<string>(url);
   
-  // Check if the URL is a Google Docs document
+  // Check if the URL is a Google Docs document and process it for viewing
   useEffect(() => {
+    // Check if it's a Google Docs URL
     const googleDocsRegex = /docs\.google\.com\/document|docs\.google\.com\/spreadsheets|docs\.google\.com\/presentation/i;
     const isGoogleDocsUrl = googleDocsRegex.test(url);
     
     setIsGoogleDoc(isGoogleDocsUrl);
     
-    // For Google Docs, prepare a URL that exports to PDF if possible
-    if (isGoogleDocsUrl && url.includes('/edit')) {
-      // Try to convert the edit URL to an export URL for PDF
+    if (isGoogleDocsUrl) {
+      // Format the URL for embedding
       try {
-        const modifiedUrl = url
-          .replace('/edit', '/export')
-          .replace('/pub', '/export')
-          + '?format=pdf'; 
-          
-        setDisplayUrl(modifiedUrl);
-        console.log("Attempting to use export URL:", modifiedUrl);
+        // Convert the URL to an embeddable format
+        let formattedUrl = url;
+        
+        // Step 1: Remove any query parameters first
+        formattedUrl = formattedUrl.split('?')[0];
+        
+        // Step 2: Ensure we're using /preview instead of /edit or /view
+        if (formattedUrl.includes('/edit')) {
+          formattedUrl = formattedUrl.replace('/edit', '/preview');
+        } else if (formattedUrl.includes('/view')) {
+          formattedUrl = formattedUrl.replace('/view', '/preview');
+        } else if (!formattedUrl.includes('/preview')) {
+          // If neither edit nor view is in the URL, make sure it ends with /preview
+          if (formattedUrl.endsWith('/')) {
+            formattedUrl += 'preview';
+          } else {
+            formattedUrl += '/preview';
+          }
+        }
+        
+        // Step 3: Add embedding parameters
+        if (!formattedUrl.includes('?')) {
+          formattedUrl += '?embedded=true&rm=minimal';
+        } else {
+          formattedUrl += '&embedded=true&rm=minimal';
+        }
+        
+        console.log("Formatted Google Docs URL:", formattedUrl);
+        setDisplayUrl(formattedUrl);
       } catch (error) {
         console.error("Error transforming Google Docs URL:", error);
-        // Fall back to original URL
         setDisplayUrl(url);
       }
     } else {
       setDisplayUrl(url);
     }
   }, [url]);
-
-  if (isGoogleDoc) {
-    return (
-      <div className="h-full flex flex-col items-center justify-center p-6 bg-muted/10">
-        <div className="max-w-md text-center space-y-4">
-          <h3 className="text-lg font-medium">Google Docs Detected</h3>
-          <p className="text-sm text-muted-foreground">
-            Google Docs cannot be embedded directly in the document viewer due to security restrictions.
-          </p>
-          <div className="space-y-2">
-            <p className="text-sm">You have a few options:</p>
-            <ul className="text-sm text-left list-disc pl-5 space-y-1">
-              <li>View the document in a new tab</li>
-              <li>Download it as a PDF and upload to the document viewer</li>
-              <li>Use the "Share" option in Google Docs and select "Publish to the web"</li>
-            </ul>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-2 justify-center pt-2">
-            <a 
-              href={url} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="px-4 py-2 bg-primary text-primary-foreground rounded text-sm"
-            >
-              Open in New Tab
-            </a>
-            <a 
-              href={displayUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 bg-secondary text-secondary-foreground rounded text-sm"
-            >
-              Download PDF Version
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="h-full relative">
@@ -101,3 +83,4 @@ export const IframeViewer: React.FC<IframeViewerProps> = ({ url, onError }) => {
     </div>
   );
 };
+

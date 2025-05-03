@@ -1,59 +1,52 @@
 
-// Global type definitions file
+// Global type definitions
+import React from 'react';
 
-// File item props
-interface FileItemProps {
-  file: File;
-  index: number;
-  focusedIndex: number;
-  onFileSelect: (file: File) => void;
-  onFileDelete: (file: File) => void;
-  onFocus: (index: number) => void;
-  handleKeyDown: (e: React.KeyboardEvent, index: number) => void;
+declare global {
+  // Add global type definitions here if needed
+
+  namespace JSX {
+    interface IntrinsicElements {
+      [elemName: string]: any;
+    }
+  }
 }
 
-// Define missing types for other components
-interface ChatMessageProps {
-  key?: any; // Added to fix the key property error
-  text: string;
-  isUser: boolean;
-  tabIndex?: number;
-}
-
-declare module 'next-themes' {
-  export interface ThemeProviderProps {
-    attribute?: string;
-    defaultTheme?: string;
-    enableSystem?: boolean;
-    disableTransitionOnChange?: boolean;
-    forcedTheme?: string;
-    themes?: string[];
-    value?: { [x: string]: string };
-    children?: React.ReactNode;
+// Fix for React types
+declare module 'react' {
+  export type FC<P = {}> = FunctionComponent<P>;
+  export interface FunctionComponent<P = {}> {
+    (props: P, context?: any): React.ReactElement<any, any> | null;
+    displayName?: string;
   }
   
-  export function ThemeProvider(props: ThemeProviderProps): JSX.Element;
+  export type KeyboardEvent<T = Element> = React.SyntheticEvent<T> & {
+    altKey: boolean;
+    charCode: number;
+    ctrlKey: boolean;
+    key: string;
+    keyCode: number;
+    locale: string;
+    location: number;
+    metaKey: boolean;
+    repeat: boolean;
+    shiftKey: boolean;
+    which: number;
+  };
   
-  export function useTheme(): {
-    theme: string;
-    setTheme: (theme: string) => void;
-    themes: string[];
-    systemTheme?: string;
+  export type ReactNode = 
+    | React.ReactElement
+    | string
+    | number
+    | boolean
+    | null
+    | undefined
+    | React.ReactNodeArray;
+  
+  export interface ReactNodeArray extends Array<ReactNode> {}
+  
+  export type ErrorInfo = {
+    componentStack: string;
   };
 }
 
-declare module '@tanstack/react-query' {
-  export interface UseQueryOptions {
-    queryKey: any[];
-    queryFn: () => any;
-    onSuccess?: (data: any) => void;
-    onError?: (error: Error) => void;
-    enabled?: boolean;
-  }
-
-  export function useQuery(options: UseQueryOptions): {
-    data: any;
-    isLoading: boolean;
-    error: Error | null;
-  };
-}

@@ -22,7 +22,7 @@ export const UrlHandler: React.FC<UrlHandlerProps> = ({
   isHighlighter,
   onError
 }) => {
-  // Special handling for PDF URLs
+  // Handle PDF URLs specifically
   if (url.toLowerCase().endsWith('.pdf') || url.includes('format=pdf')) {
     return (
       <PdfViewerWrapper
@@ -34,7 +34,8 @@ export const UrlHandler: React.FC<UrlHandlerProps> = ({
     );
   }
 
-  // Handle all other URLs with iframe
+  // For all other URLs (including Google Docs), use the iframe viewer
+  // The IframeViewer component now handles special cases for Google Docs
   return (
     <ErrorBoundary>
       <IframeViewer url={url} onError={onError} />

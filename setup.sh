@@ -4,7 +4,7 @@
 echo "Installing necessary dependencies..."
 npm install -g vite
 npm install --save-dev @types/react @types/react-dom @types/node date-fns
-npm install recharts sonner @radix-ui/react-checkbox
+npm install recharts sonner @radix-ui/react-checkbox lucide-react react-router-dom
 
 echo "Creating TypeScript configuration..."
 
@@ -66,3 +66,4 @@ EOL
 chmod +x start-dev.sh
 
 echo "Setup complete! You can now run ./start-dev.sh to start the development server."
+
