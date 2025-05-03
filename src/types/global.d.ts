@@ -14,6 +14,7 @@ interface FileItemProps {
 
 // Define missing types for other components
 interface ChatMessageProps {
+  key?: any; // Added to fix the key property error
   text: string;
   isUser: boolean;
   tabIndex?: number;
