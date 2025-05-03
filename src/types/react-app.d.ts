@@ -48,6 +48,10 @@ declare module 'lucide-react' {
   export const Maximize2: LucideIcon;
   export const Minimize2: LucideIcon;
   export const MessageCircle: LucideIcon;
+  export const Music: LucideIcon;
+  export const Volume2: LucideIcon;
+  export const VolumeX: LucideIcon;
+  export const Repeat: LucideIcon;
 }
 
 // For react-router-dom types
@@ -90,6 +94,7 @@ declare module 'react-color' {
     onChange?: (color: any) => void;
     onChangeComplete?: (color: any) => void;
     disableAlpha?: boolean;
+    className?: string;
   }
   
   export const ChromePicker: React.FC<ChromePickerProps>;
@@ -131,4 +136,18 @@ declare module '@tanstack/react-query' {
   }
   
   export const QueryClientProvider: React.FC<QueryClientProviderProps>;
+  
+  export interface UseQueryOptions {
+    queryKey: any[];
+    queryFn: () => any;
+    onSuccess?: (data: any) => void;
+    onError?: (error: Error) => void;
+    enabled?: boolean;
+  }
+
+  export function useQuery(options: UseQueryOptions): {
+    data: any;
+    isLoading: boolean;
+    error: Error | null;
+  };
 }
