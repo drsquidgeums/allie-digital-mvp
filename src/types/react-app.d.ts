@@ -1,4 +1,3 @@
-
 /// <reference types="react" />
 /// <reference types="react-dom" />
 
@@ -18,6 +17,7 @@ declare module 'lucide-react' {
     absoluteStrokeWidth?: boolean;
     color?: string;
     strokeWidth?: string | number;
+    className?: string; // Add className support
   }
 
   export type LucideIcon = React.FC<LucideProps>;
@@ -243,4 +243,3 @@ declare module 'date-fns' {
   export function endOfWeek(date: Date, options?: any): Date;
   export function eachDayOfInterval(interval: { start: Date; end: Date }): Date[];
 }
-

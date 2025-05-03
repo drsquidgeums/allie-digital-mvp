@@ -66,4 +66,3 @@ EOL
 chmod +x start-dev.sh
 
 echo "Setup complete! You can now run ./start-dev.sh to start the development server."
-
