@@ -21,13 +21,13 @@ interface SimplePdfViewerProps {
   onContentLoaded?: (content: string, fileName: string) => void;
 }
 
-export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
+export const SimplePdfViewer = ({
   file,
   url = '',
   selectedColor = '#FFFF00',
   isHighlighter = true,
   onContentLoaded
-}) => {
+}: SimplePdfViewerProps) => {
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [scale, setScale] = useState<number>(1.0);

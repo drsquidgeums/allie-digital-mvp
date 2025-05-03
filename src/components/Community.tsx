@@ -1,5 +1,5 @@
 
-import React, { useRef, lazy, Suspense, memo, useMemo } from "react";
+import React, { useRef, Suspense, memo, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { CommunityHeader } from "./community/CommunityHeader";
 import { CommunityStats } from "./community/CommunityStats";
@@ -7,14 +7,14 @@ import { TaskPoints } from "./dashboard/TaskPoints";
 import { TaskAchievements } from "./dashboard/TaskAchievements";
 import { useTasks } from "@/hooks/useTasks";
 
-// Define lazy loaded components
-const DiscussionList = lazy(() => import("./community/DiscussionList"));
-const CommunityChat = lazy(() => import("./community/CommunityChat"));
-const ResourceShare = lazy(() => import("./community/ResourceShare"));
-const StudyGroups = lazy(() => import("./community/StudyGroups"));
-const CollaborationActivity = lazy(() => import("./community/CollaborationActivity"));
-const TutorCommunication = lazy(() => import("./community/TutorCommunication"));
-const PollBox = lazy(() => import("./community/PollBox"));
+// Use normal imports instead of lazy loading for components with issues
+import DiscussionList from "./community/DiscussionList";
+import CommunityChat from "./community/CommunityChat";
+import ResourceShare from "./community/ResourceShare";
+import StudyGroups from "./community/StudyGroups";
+import CollaborationActivity from "./community/CollaborationActivity";
+import TutorCommunication from "./community/TutorCommunication";
+import PollBox from "./community/PollBox";
 
 const LoadingComponent = memo(() => (
   <div className="flex items-center justify-center p-6 bg-muted/20 rounded-lg min-h-[200px]">

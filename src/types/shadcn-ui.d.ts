@@ -48,6 +48,14 @@ declare module '@radix-ui/react-select' {
     className?: string;
     value: string;
   }
+
+  interface SelectScrollUpButtonProps {
+    className?: string;
+  }
+
+  interface SelectScrollDownButtonProps {
+    className?: string;
+  }
 }
 
 // Fix for Slider component
@@ -68,7 +76,7 @@ declare module '@/components/ui/slider' {
 // Fix for ScrollArea component
 declare module '@/components/ui/scroll-area' {
   interface ScrollAreaProps {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     className?: string;
     role?: string;
     "aria-label"?: string;
@@ -78,7 +86,7 @@ declare module '@/components/ui/scroll-area' {
 // Fix for Label component
 declare module '@/components/ui/label' {
   interface LabelProps {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     htmlFor?: string;
     className?: string;
   }
@@ -87,7 +95,7 @@ declare module '@/components/ui/label' {
 // Fix for RadioGroup component
 declare module '@/components/ui/radio-group' {
   interface RadioGroupProps {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     className?: string;
     "aria-label"?: string;
     value?: string;
@@ -123,7 +131,7 @@ declare module 'react-color' {
 // Fix for Toggle component
 declare module '@/components/ui/toggle' {
   interface ToggleProps {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     pressed?: boolean;
     onPressedChange?: (pressed: boolean) => void;
     "aria-label"?: string;
@@ -134,12 +142,12 @@ declare module '@/components/ui/toggle' {
 // Fix for DropdownMenu component
 declare module '@/components/ui/dropdown-menu' {
   interface DropdownMenuTriggerProps {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     asChild?: boolean;
   }
   
   interface DropdownMenuItemProps {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     onSelect?: (event: Event) => void;
     onClick?: () => void;
     key?: string;
