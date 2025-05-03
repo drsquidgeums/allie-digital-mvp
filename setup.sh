@@ -3,8 +3,8 @@
 
 echo "Installing necessary dependencies..."
 
-# Make sure vite is installed both globally and locally
-npm install --save-dev vite @vitejs/plugin-react-swc  # Install vite as dev dependency
+# Install vite and other dependencies
+npm install --save-dev vite@latest @vitejs/plugin-react-swc  # Ensure latest vite is installed
 npm install --save-dev @types/react @types/react-dom @types/node date-fns
 npm install recharts sonner @radix-ui/react-checkbox lucide-react react-router-dom
 

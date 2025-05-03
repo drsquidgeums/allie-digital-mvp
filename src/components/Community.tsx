@@ -7,17 +7,14 @@ import { TaskPoints } from "./dashboard/TaskPoints";
 import { TaskAchievements } from "./dashboard/TaskAchievements";
 import { useTasks } from "@/hooks/useTasks";
 
-// Define component types correctly
-type ComponentType = React.ComponentType<any>;
-
-// Use clear dynamic import paths
-const DiscussionList = lazy(() => import("./community/DiscussionList").then(m => ({ default: m.default || m })));
-const CommunityChat = lazy(() => import("./community/CommunityChat").then(m => ({ default: m.default || m })));
-const ResourceShare = lazy(() => import("./community/ResourceShare").then(m => ({ default: m.default || m })));
-const StudyGroups = lazy(() => import("./community/StudyGroups").then(m => ({ default: m.default || m })));
+// Define lazy loaded components
+const DiscussionList = lazy(() => import("./community/DiscussionList"));
+const CommunityChat = lazy(() => import("./community/CommunityChat"));
+const ResourceShare = lazy(() => import("./community/ResourceShare"));
+const StudyGroups = lazy(() => import("./community/StudyGroups"));
 const CollaborationActivity = lazy(() => import("./community/CollaborationActivity"));
 const TutorCommunication = lazy(() => import("./community/TutorCommunication"));
-const PollBox = lazy(() => import("./community/PollBox").then(m => ({ default: m.default || m })));
+const PollBox = lazy(() => import("./community/PollBox"));
 
 const LoadingComponent = memo(() => (
   <div className="flex items-center justify-center p-6 bg-muted/20 rounded-lg min-h-[200px]">

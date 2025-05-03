@@ -1,51 +1,50 @@
 
-// Fix for children property in shadcn/ui components
 import React from 'react';
 
 declare module '@radix-ui/react-tooltip' {
   interface TooltipTriggerProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     asChild?: boolean;
   }
 }
 
 declare module '@radix-ui/react-popover' {
   interface PopoverTriggerProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     asChild?: boolean;
   }
 }
 
 declare module '@radix-ui/react-dialog' {
   interface DialogTriggerProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     asChild?: boolean;
   }
   
   interface DialogCloseProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     asChild?: boolean;
   }
   
   interface DialogTitleProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     className?: string;
   }
 }
 
 declare module '@radix-ui/react-select' {
   interface SelectTriggerProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     className?: string;
   }
   
   interface SelectContentProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     className?: string;
   }
   
   interface SelectItemProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     className?: string;
     value: string;
   }
@@ -69,7 +68,7 @@ declare module '@/components/ui/slider' {
 // Fix for ScrollArea component
 declare module '@/components/ui/scroll-area' {
   interface ScrollAreaProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     className?: string;
     role?: string;
     "aria-label"?: string;
@@ -79,7 +78,7 @@ declare module '@/components/ui/scroll-area' {
 // Fix for Label component
 declare module '@/components/ui/label' {
   interface LabelProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     htmlFor?: string;
     className?: string;
   }
@@ -88,7 +87,7 @@ declare module '@/components/ui/label' {
 // Fix for RadioGroup component
 declare module '@/components/ui/radio-group' {
   interface RadioGroupProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     className?: string;
     "aria-label"?: string;
     value?: string;
@@ -124,7 +123,7 @@ declare module 'react-color' {
 // Fix for Toggle component
 declare module '@/components/ui/toggle' {
   interface ToggleProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     pressed?: boolean;
     onPressedChange?: (pressed: boolean) => void;
     "aria-label"?: string;
@@ -135,12 +134,12 @@ declare module '@/components/ui/toggle' {
 // Fix for DropdownMenu component
 declare module '@/components/ui/dropdown-menu' {
   interface DropdownMenuTriggerProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     asChild?: boolean;
   }
   
   interface DropdownMenuItemProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     onSelect?: (event: Event) => void;
     onClick?: () => void;
     key?: string;
@@ -151,30 +150,30 @@ declare module '@/components/ui/dropdown-menu' {
 // Fix for Context Menu component
 declare module '@/components/ui/context-menu' {
   interface ContextMenuSubTriggerProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     className?: string;
     inset?: boolean;
   }
 
   interface ContextMenuSubContentProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     className?: string;
   }
 
   interface ContextMenuItemProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     className?: string;
     inset?: boolean;
   }
 
   interface ContextMenuCheckboxItemProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     className?: string;
     checked?: boolean;
   }
 
   interface ContextMenuRadioItemProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
     className?: string;
   }
 }

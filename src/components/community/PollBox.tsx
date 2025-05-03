@@ -46,7 +46,7 @@ const PollBox = () => {
 
       {!hasVoted ? (
         <div className="space-y-4">
-          <RadioGroup value={selectedOption} onValueChange={setSelectedOption} className="space-y-2">
+          <RadioGroup value={selectedOption} onValueChange={setSelectedOption}>
             {Object.keys(votes).map((option) => (
               <div key={option} className="flex items-center space-x-2">
                 <RadioGroupItem value={option} />

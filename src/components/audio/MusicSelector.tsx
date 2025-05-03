@@ -14,22 +14,23 @@ const MusicSelector = ({
   handleMusicSelection,
 }: MusicSelectorProps) => {
   return (
-    <RadioGroup
-      value={selectedMusic}
-      onValueChange={handleMusicSelection}
-      className="space-y-2"
-    >
-      {MUSIC_OPTIONS.map((option) => (
-        <div key={option.id} className="flex items-center space-x-2">
-          <RadioGroupItem 
-            value={option.id}
-          />
-          <Label>
-            {option.name}
-          </Label>
-        </div>
-      ))}
-    </RadioGroup>
+    <div className="space-y-2">
+      <RadioGroup
+        value={selectedMusic}
+        onValueChange={handleMusicSelection}
+      >
+        {MUSIC_OPTIONS.map((option) => (
+          <div key={option.id} className="flex items-center space-x-2">
+            <RadioGroupItem 
+              value={option.id}
+            />
+            <Label>
+              {option.name}
+            </Label>
+          </div>
+        ))}
+      </RadioGroup>
+    </div>
   );
 };
 

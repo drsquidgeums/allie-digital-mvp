@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { MusicSelector } from "./MusicSelector";
+import MusicSelector from "./MusicSelector";
 import { MusicControls } from "./MusicControls";
 
 interface MusicPopoverContentProps {
