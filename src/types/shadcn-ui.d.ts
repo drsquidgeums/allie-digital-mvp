@@ -128,3 +128,13 @@ declare module '@/components/ui/toggle' {
     className?: string;
   }
 }
+
+// Fix for DropdownMenu component
+declare module '@/components/ui/dropdown-menu' {
+  interface DropdownMenuItemProps {
+    children?: React.ReactNode;
+    onSelect?: (event: Event) => void;
+    onClick?: () => void;
+    key?: string;
+  }
+}

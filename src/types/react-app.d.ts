@@ -47,7 +47,7 @@ declare module 'lucide-react' {
   export const Type: LucideIcon;
   export const Maximize2: LucideIcon;
   export const Minimize2: LucideIcon;
-  export const MessageCircle: LucideIcon;
+  export const MessageSquare: LucideIcon;
   export const Music: LucideIcon;
   export const Volume2: LucideIcon;
   export const VolumeX: LucideIcon;
@@ -60,6 +60,30 @@ declare module 'lucide-react' {
   export const Book: LucideIcon;
   export const Calendar: LucideIcon;
   export const UserPlus: LucideIcon;
+  export const Link: LucideIcon;
+  export const Star: LucideIcon;
+  export const Trophy: LucideIcon;
+  export const Tag: LucideIcon;
+  export const Check: LucideIcon;
+  export const Trash2: LucideIcon;
+  export const ChevronLeft: LucideIcon;
+  export const ChevronRight: LucideIcon;
+  export const ZoomIn: LucideIcon;
+  export const ZoomOut: LucideIcon;
+  export const RotateCw: LucideIcon;
+  export const PenLine: LucideIcon;
+  export const Keyboard: LucideIcon;
+  export const Camera: LucideIcon;
+  export const Timer: LucideIcon;
+  export const Text: LucideIcon;
+  export const StickyNote: LucideIcon;
+  export const Download: LucideIcon;
+  export const Upload: LucideIcon;
+  export const RotateCcw: LucideIcon;
+  export const Hand: LucideIcon;
+  export const MousePointer: LucideIcon;
+  export const Plus: LucideIcon;
+  export const Video: LucideIcon;
 }
 
 // For react-router-dom types

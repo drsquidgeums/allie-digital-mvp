@@ -3,7 +3,7 @@
 
 echo "Installing necessary dependencies..."
 npm install -g vite
-npm install --save-dev @types/react @types/react-dom @types/node
+npm install --save-dev @types/react @types/react-dom @types/node date-fns
 
 echo "Creating TypeScript configuration..."
 
@@ -56,4 +56,12 @@ EOL
 
 chmod +x run-vite.sh
 
-echo "Setup complete! You can now run ./run-vite.sh to start the development server."
+# Create a dev start script
+cat > start-dev.sh << EOL
+#!/bin/bash
+npx vite
+EOL
+
+chmod +x start-dev.sh
+
+echo "Setup complete! You can now run ./start-dev.sh to start the development server."
