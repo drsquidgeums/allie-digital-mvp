@@ -35,21 +35,23 @@ export const FileList = ({ files, onFileSelect, onFileDelete }: FileListProps) =
   }
 
   return (
-    <ScrollArea className="h-[200px] w-full rounded-md border p-2">
-      <div className="space-y-2" role="listbox" aria-label="Uploaded files list">
-        {files.map((file, index) => (
-          <FileItem
-            key={`${file.name}-${index}`}
-            file={file}
-            index={index}
-            focusedIndex={focusedIndex}
-            onFileSelect={onFileSelect}
-            onFileDelete={onFileDelete}
-            onFocus={setFocusedIndex}
-            handleKeyDown={handleKeyDown}
-          />
-        ))}
-      </div>
-    </ScrollArea>
+    <div className="h-[200px] w-full rounded-md border p-2">
+      <ScrollArea>
+        <div className="space-y-2" role="listbox" aria-label="Uploaded files list">
+          {files.map((file, index) => (
+            <FileItem
+              key={`${file.name}-${index}`}
+              file={file}
+              index={index}
+              focusedIndex={focusedIndex}
+              onFileSelect={onFileSelect}
+              onFileDelete={onFileDelete}
+              onFocus={setFocusedIndex}
+              handleKeyDown={handleKeyDown}
+            />
+          ))}
+        </div>
+      </ScrollArea>
+    </div>
   );
 };

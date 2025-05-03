@@ -2,8 +2,8 @@
 #!/bin/bash
 
 echo "Installing necessary dependencies..."
-npm install -g vite
-npm install --save-dev vite @vitejs/plugin-react-swc
+npm install -g vite  # Install vite globally
+npm install --save-dev vite @vitejs/plugin-react-swc  # Install vite as dev dependency
 npm install --save-dev @types/react @types/react-dom @types/node date-fns
 npm install recharts sonner @radix-ui/react-checkbox lucide-react react-router-dom
 
@@ -50,6 +50,14 @@ cat > tsconfig.node.json << EOL
 }
 EOL
 
+# Create a dev start script with proper npx path
+cat > start-dev.sh << EOL
+#!/bin/bash
+npx vite
+EOL
+
+chmod +x start-dev.sh
+
 # Create a simple npx wrapper script
 cat > run-vite.sh << EOL
 #!/bin/bash
@@ -57,13 +65,5 @@ npx vite "\$@"
 EOL
 
 chmod +x run-vite.sh
-
-# Create a dev start script
-cat > start-dev.sh << EOL
-#!/bin/bash
-npx vite
-EOL
-
-chmod +x start-dev.sh
 
 echo "Setup complete! You can now run ./start-dev.sh to start the development server."

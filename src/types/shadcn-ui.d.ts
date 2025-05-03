@@ -62,6 +62,7 @@ declare module '@/components/ui/slider' {
     value?: number[];
     onValueChange?: (value: number[]) => void;
     "aria-label"?: string;
+    "aria-labelledby"?: string;
   }
 }
 
@@ -106,6 +107,7 @@ declare module '@/components/ui/switch' {
   interface SwitchProps {
     id?: string;
     "aria-label"?: string;
+    "aria-labelledby"?: string;
     checked?: boolean;
     onCheckedChange?: () => void;
   }

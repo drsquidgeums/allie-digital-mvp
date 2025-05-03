@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Volume2, VolumeX, Repeat } from "lucide-react";
@@ -27,7 +26,7 @@ export const MusicControls = ({
     <div className="space-y-2">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="volume-control">Volume</Label>
+          <div id="volume-control-label">Volume</div>
           <Button
             variant="ghost"
             size="sm"
@@ -50,17 +49,19 @@ export const MusicControls = ({
           value={[isMuted ? 0 : volume * 100]}
           onValueChange={handleVolumeChange}
           aria-label="Adjust volume"
+          aria-labelledby="volume-control-label"
         />
       </div>
 
       <div className="flex items-center justify-between space-x-2">
-        <Label htmlFor="loop-toggle">Loop Playback</Label>
+        <div id="loop-toggle-label">Loop Playback</div>
         <div className="flex items-center space-x-2">
           <Switch
             id="loop-toggle"
             checked={isLooping}
             onCheckedChange={toggleLoop}
             aria-label="Toggle loop playback"
+            aria-labelledby="loop-toggle-label"
           />
           <Repeat 
             className={`h-4 w-4 ${isLooping ? 'text-primary' : 'text-muted-foreground'}`}
