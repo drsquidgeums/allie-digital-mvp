@@ -7,28 +7,27 @@ import { TaskPoints } from "./dashboard/TaskPoints";
 import { TaskAchievements } from "./dashboard/TaskAchievements";
 import { useTasks } from "@/hooks/useTasks";
 
+// Define component types correctly
+type ComponentType = React.ComponentType<any>;
+
 // Lazy load less critical components
-const DiscussionList = lazy(() => import("./community/DiscussionList").then(module => ({
-  default: memo(module.DiscussionList)
-})));
-const CommunityChat = lazy(() => import("./community/CommunityChat").then(module => ({
-  default: memo(module.CommunityChat)
-})));
-const ResourceShare = lazy(() => import("./community/ResourceShare").then(module => ({
-  default: memo(module.ResourceShare)
-})));
-const StudyGroups = lazy(() => import("./community/StudyGroups").then(module => ({
-  default: memo(module.StudyGroups)
-})));
-const CollaborationActivity = lazy(() => import("./community/CollaborationActivity").then(module => ({
-  default: memo(module.default)
-})));
-const TutorCommunication = lazy(() => import("./community/TutorCommunication").then(module => ({
-  default: memo(module.default)
-})));
-const PollBox = lazy(() => import("./community/PollBox").then(module => ({
-  default: memo(module.PollBox)
-})));
+const DiscussionList = lazy(() => import("./community/DiscussionList") as Promise<{ DiscussionList: ComponentType }>
+  .then(module => ({ default: memo(module.DiscussionList) })));
+
+const CommunityChat = lazy(() => import("./community/CommunityChat") as Promise<{ CommunityChat: ComponentType }>
+  .then(module => ({ default: memo(module.CommunityChat) })));
+
+const ResourceShare = lazy(() => import("./community/ResourceShare") as Promise<{ ResourceShare: ComponentType }>
+  .then(module => ({ default: memo(module.ResourceShare) })));
+
+const StudyGroups = lazy(() => import("./community/StudyGroups") as Promise<{ StudyGroups: ComponentType }>
+  .then(module => ({ default: memo(module.StudyGroups) })));
+
+const CollaborationActivity = lazy(() => import("./community/CollaborationActivity") as Promise<{ default: ComponentType }>);
+const TutorCommunication = lazy(() => import("./community/TutorCommunication") as Promise<{ default: ComponentType }>);
+
+const PollBox = lazy(() => import("./community/PollBox") as Promise<{ PollBox: ComponentType }>
+  .then(module => ({ default: memo(module.PollBox) })));
 
 const LoadingComponent = memo(() => (
   <div className="flex items-center justify-center p-6 bg-muted/20 rounded-lg min-h-[200px]">
