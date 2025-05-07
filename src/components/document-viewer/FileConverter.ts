@@ -8,16 +8,9 @@ const workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.vers
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
 
 export async function convertDocxToHtml(file: File): Promise<string> {
-  console.log("Converting DOCX to HTML:", file.name);
-  try {
-    const arrayBuffer = await file.arrayBuffer();
-    const result = await mammoth.convertToHtml({ arrayBuffer });
-    console.log("DOCX conversion result:", result.value.substring(0, 100) + "...");
-    return result.value;
-  } catch (error) {
-    console.error("Error converting DOCX to HTML:", error);
-    throw new Error("Failed to convert DOCX document to HTML");
-  }
+  const arrayBuffer = await file.arrayBuffer();
+  const result = await mammoth.convertToHtml({ arrayBuffer });
+  return result.value;
 }
 
 export async function readTextFile(file: File): Promise<string> {
@@ -34,66 +27,37 @@ export async function loadPdfDocument(file: File): Promise<ArrayBuffer> {
 }
 
 export function getFileType(file: File): string {
-  const filename = file.name.toLowerCase();
-  const mimeType = file.type.toLowerCase();
-  
-  console.log("Checking file type for:", filename, "MIME type:", mimeType);
-  
-  // Check for DOCX/DOC files
-  if (
-    filename.endsWith('.docx') || 
-    filename.endsWith('.doc') || 
-    mimeType.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
-    mimeType.includes('application/msword')
-  ) {
-    console.log("Detected as DOCX file");
-    return 'docx';
+  const extension = file.name.split('.').pop()?.toLowerCase() || '';
+  switch (extension) {
+    case 'pdf':
+      return 'pdf';
+    case 'docx':
+      return 'docx';
+    case 'txt':
+      return 'txt';
+    case 'html':
+      return 'html';
+    default:
+      throw new Error('Unsupported file type');
   }
-  
-  // Check for PDF files
-  if (filename.endsWith('.pdf') || mimeType.includes('application/pdf')) {
-    console.log("Detected as PDF file");
-    return 'pdf';
-  }
-  
-  // Check for text files
-  if (filename.endsWith('.txt') || mimeType.includes('text/plain')) {
-    console.log("Detected as TXT file");
-    return 'txt';
-  }
-  
-  // Check for HTML files
-  if (filename.endsWith('.html') || filename.endsWith('.htm') || 
-      mimeType.includes('text/html')) {
-    console.log("Detected as HTML file");
-    return 'html';
-  }
-  
-  console.warn("Unsupported file type:", filename, mimeType);
-  throw new Error(`Unsupported file type: ${filename} (${mimeType})`);
 }
 
 export async function extractTextFromFile(file: File): Promise<string> {
-  try {
-    const fileType = getFileType(file);
-    
-    switch (fileType) {
-      case 'pdf':
-        return extractTextFromPdf(file);
-      case 'docx':
-        const html = await convertDocxToHtml(file);
-        return stripHtmlTags(html);
-      case 'txt':
-        return readTextFile(file);
-      case 'html':
-        const content = await readTextFile(file);
-        return stripHtmlTags(content);
-      default:
-        throw new Error('Unsupported file type for text extraction');
-    }
-  } catch (error) {
-    console.error("Error extracting text from file:", error);
-    return `Failed to extract text from ${file.name}`;
+  const fileType = getFileType(file);
+  
+  switch (fileType) {
+    case 'pdf':
+      return extractTextFromPdf(file);
+    case 'docx':
+      const html = await convertDocxToHtml(file);
+      return stripHtmlTags(html);
+    case 'txt':
+      return readTextFile(file);
+    case 'html':
+      const content = await readTextFile(file);
+      return stripHtmlTags(content);
+    default:
+      throw new Error('Unsupported file type for text extraction');
   }
 }
 

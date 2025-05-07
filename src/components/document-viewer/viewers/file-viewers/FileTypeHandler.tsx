@@ -3,7 +3,6 @@ import React from 'react';
 import { getFileType } from '../../FileConverter';
 import { PdfViewerWrapper } from './PdfViewerWrapper';
 import { TextViewerWrapper } from './TextViewerWrapper';
-import { DocxViewerWrapper } from './DocxViewerWrapper';
 import { ErrorDisplay } from '../ErrorDisplay';
 
 interface FileTypeHandlerProps {
@@ -23,67 +22,32 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
   isHighlighter
 }) => {
   try {
-    console.log("FileTypeHandler received file:", file?.name, file?.type);
+    console.log("FileTypeHandler received file:", file?.name);
     console.log("FileTypeHandler color settings:", selectedColor, isHighlighter);
+    const fileType = getFileType(file);
+    console.log("Detected file type:", fileType);
     
-    // Check for empty file
-    if (!file) {
-      console.error("No file provided to FileTypeHandler");
-      return (
-        <ErrorDisplay 
-          title="No File Selected" 
-          description="Please select a file to view." 
-        />
-      );
-    }
-    
-    // Special handling for docx files
-    if (file.name.toLowerCase().endsWith('.docx') || 
-        file.name.toLowerCase().endsWith('.doc') || 
-        file.type.includes('wordprocessingml') || 
-        file.type.includes('msword')) {
-      console.log("Detected DOCX file by extension/type:", file.name, file.type);
-      return <DocxViewerWrapper file={file} />;
-    }
-    
-    // For other file types, use the general detection
-    try {
-      const fileType = getFileType(file);
-      console.log("Detected file type:", fileType);
-      
-      switch (fileType) {
-        case 'pdf':
-          return (
-            <PdfViewerWrapper
-              file={file}
-              url=""
-              selectedColor={selectedColor || '#FFFF00'} // Default to yellow if no color specified
-              isHighlighter={isHighlighter}
-            />
-          );
-        case 'docx':
-          return <DocxViewerWrapper file={file} />;
-        case 'txt':
-        case 'html':
-          return <TextViewerWrapper file={file} />;
-        default:
-          // Handle unsupported file types
-          return (
-            <ErrorDisplay 
-              title="Unsupported File Type" 
-              description="The file type you're trying to view is not supported. Please try a PDF, DOCX, TXT, or HTML file." 
-            />
-          );
-      }
-    } catch (error) {
-      // If we get here, the file type could not be determined
-      // For DOCX specifically, we want to try the DocxViewerWrapper as a fallback
-      if (file.name.toLowerCase().includes('.doc')) {
-        console.log("Falling back to DocxViewerWrapper for:", file.name);
-        return <DocxViewerWrapper file={file} />;
-      }
-      
-      throw error;
+    switch (fileType) {
+      case 'pdf':
+        return (
+          <PdfViewerWrapper
+            file={file}
+            url=""
+            selectedColor={selectedColor || '#FFFF00'} // Default to yellow if no color specified
+            isHighlighter={isHighlighter}
+          />
+        );
+      case 'txt':
+      case 'html':
+        return <TextViewerWrapper file={file} />;
+      default:
+        // Handle unsupported file types
+        return (
+          <ErrorDisplay 
+            title="Unsupported File Type" 
+            description="The file type you're trying to view is not supported. Please try a PDF, TXT, or HTML file." 
+          />
+        );
     }
   } catch (error) {
     console.error("Error in FileTypeHandler:", error);
