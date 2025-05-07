@@ -9,8 +9,6 @@ import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
 import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
-import { AuthProvider } from "@/components/auth/AuthProvider";
-import { FeedbackButton } from "@/components/feedback/FeedbackButton";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -40,23 +38,20 @@ const App = () => {
   return (
     <BrowserRouter>
       <AppProviders>
-        <AuthProvider>
-          <div className="app-container">
-            <AppLogo />
-            <Toaster />
-            <Sonner />
-            <Suspense fallback={
-              <div className="flex items-center justify-center h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-              </div>
-            }>
-              <PomodoroTaskListener />
-              <AppRoutes />
-              <FeedbackButton />
-            </Suspense>
-            <FloatingAIAssistant />
-          </div>
-        </AuthProvider>
+        <div className="app-container">
+          <AppLogo />
+          <Toaster />
+          <Sonner />
+          <Suspense fallback={
+            <div className="flex items-center justify-center h-screen">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          }>
+            <PomodoroTaskListener />
+            <AppRoutes />
+          </Suspense>
+          <FloatingAIAssistant />
+        </div>
       </AppProviders>
     </BrowserRouter>
   );

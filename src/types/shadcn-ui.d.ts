@@ -60,6 +60,21 @@ declare module '@radix-ui/react-select' {
   }
 }
 
+// Fix for Slider component
+declare module '@/components/ui/slider' {
+  interface SliderProps {
+    children?: React.ReactNode;
+    className?: string;
+    min?: number;
+    max?: number;
+    step?: number;
+    value?: number[];
+    onValueChange?: (value: number[]) => void;
+    "aria-label"?: string;
+    "aria-labelledby"?: string;
+  }
+}
+
 // Fix for ScrollArea component
 declare module '@/components/ui/scroll-area' {
   interface ScrollAreaProps {
@@ -67,6 +82,15 @@ declare module '@/components/ui/scroll-area' {
     className?: string;
     role?: string;
     "aria-label"?: string;
+  }
+}
+
+// Fix for Label component
+declare module '@/components/ui/label' {
+  interface LabelProps {
+    children?: React.ReactNode;
+    htmlFor?: string;
+    className?: string;
   }
 }
 
@@ -98,27 +122,11 @@ declare module '@/components/ui/switch' {
   }
 }
 
-// Fix for Slider component
-declare module '@/components/ui/slider' {
-  interface SliderProps {
-    children?: React.ReactNode;
+// Fix for ChromePicker from react-color
+declare module 'react-color' {
+  interface ChromePickerProps {
     className?: string;
-    min?: number;
-    max?: number;
-    step?: number;
-    value?: number[];
-    onValueChange?: (value: number[]) => void;
-    "aria-label"?: string;
-    "aria-labelledby"?: string;
-  }
-}
-
-// Fix for Label component
-declare module '@/components/ui/label' {
-  interface LabelProps {
-    children?: React.ReactNode;
-    htmlFor?: string;
-    className?: string;
+    disableAlpha?: boolean;
   }
 }
 
@@ -130,14 +138,6 @@ declare module '@/components/ui/toggle' {
     onPressedChange?: (pressed: boolean) => void;
     "aria-label"?: string;
     className?: string;
-  }
-}
-
-// Fix for ChromePicker from react-color
-declare module 'react-color' {
-  interface ChromePickerProps {
-    className?: string;
-    disableAlpha?: boolean;
   }
 }
 
@@ -154,15 +154,6 @@ declare module '@/components/ui/dropdown-menu' {
     onClick?: () => void;
     key?: string;
     className?: string;
-  }
-}
-
-// Fix for Separator component
-declare module '@/components/ui/separator' {
-  interface SeparatorProps {
-    className?: string;
-    orientation?: "horizontal" | "vertical";
-    decorative?: boolean;
   }
 }
 
@@ -211,20 +202,11 @@ declare module '@radix-ui/react-checkbox' {
   }
 }
 
-// Fix for Progress component
-declare module '@/components/ui/progress' {
-  interface ProgressProps {
-    value?: number;
+// Fix for Separator component
+declare module '@/components/ui/separator' {
+  interface SeparatorProps {
     className?: string;
-    max?: number;
-  }
-}
-
-// Fix for Navigate component in react-router-dom
-declare module 'react-router-dom' {
-  interface NavigateProps {
-    to: string;
-    replace?: boolean;
-    state?: any;
+    orientation?: "horizontal" | "vertical";
+    decorative?: boolean;
   }
 }
