@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, Download, Trash2, FileText, FileCode, FilePdf } from "lucide-react";
+import { Upload, Download, Trash2, FileText, File } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";
 
@@ -35,7 +35,7 @@ export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-muted">
-                  <FilePdf className="h-3 w-3 mr-1" />
+                  <File className="h-3 w-3 mr-1" />
                   PDF
                 </span>
               </TooltipTrigger>
@@ -63,7 +63,7 @@ export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-muted">
-                  <FileCode className="h-3 w-3 mr-1" />
+                  <FileText className="h-3 w-3 mr-1" />
                   TXT/HTML
                 </span>
               </TooltipTrigger>

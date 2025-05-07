@@ -47,32 +47,43 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
     }
     
     // For other file types, use the general detection
-    const fileType = getFileType(file);
-    console.log("Detected file type:", fileType);
-    
-    switch (fileType) {
-      case 'pdf':
-        return (
-          <PdfViewerWrapper
-            file={file}
-            url=""
-            selectedColor={selectedColor || '#FFFF00'} // Default to yellow if no color specified
-            isHighlighter={isHighlighter}
-          />
-        );
-      case 'docx':
+    try {
+      const fileType = getFileType(file);
+      console.log("Detected file type:", fileType);
+      
+      switch (fileType) {
+        case 'pdf':
+          return (
+            <PdfViewerWrapper
+              file={file}
+              url=""
+              selectedColor={selectedColor || '#FFFF00'} // Default to yellow if no color specified
+              isHighlighter={isHighlighter}
+            />
+          );
+        case 'docx':
+          return <DocxViewerWrapper file={file} />;
+        case 'txt':
+        case 'html':
+          return <TextViewerWrapper file={file} />;
+        default:
+          // Handle unsupported file types
+          return (
+            <ErrorDisplay 
+              title="Unsupported File Type" 
+              description="The file type you're trying to view is not supported. Please try a PDF, DOCX, TXT, or HTML file." 
+            />
+          );
+      }
+    } catch (error) {
+      // If we get here, the file type could not be determined
+      // For DOCX specifically, we want to try the DocxViewerWrapper as a fallback
+      if (file.name.toLowerCase().includes('.doc')) {
+        console.log("Falling back to DocxViewerWrapper for:", file.name);
         return <DocxViewerWrapper file={file} />;
-      case 'txt':
-      case 'html':
-        return <TextViewerWrapper file={file} />;
-      default:
-        // Handle unsupported file types
-        return (
-          <ErrorDisplay 
-            title="Unsupported File Type" 
-            description="The file type you're trying to view is not supported. Please try a PDF, DOCX, TXT, or HTML file." 
-          />
-        );
+      }
+      
+      throw error;
     }
   } catch (error) {
     console.error("Error in FileTypeHandler:", error);
