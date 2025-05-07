@@ -8,8 +8,10 @@ const workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.vers
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
 
 export async function convertDocxToHtml(file: File): Promise<string> {
+  console.log("Converting DOCX to HTML:", file.name);
   const arrayBuffer = await file.arrayBuffer();
   const result = await mammoth.convertToHtml({ arrayBuffer });
+  console.log("DOCX conversion result:", result.value.substring(0, 100) + "...");
   return result.value;
 }
 
@@ -28,6 +30,8 @@ export async function loadPdfDocument(file: File): Promise<ArrayBuffer> {
 
 export function getFileType(file: File): string {
   const extension = file.name.split('.').pop()?.toLowerCase() || '';
+  console.log("Checking file extension:", extension, "for file:", file.name, "type:", file.type);
+  
   switch (extension) {
     case 'pdf':
       return 'pdf';
@@ -40,6 +44,7 @@ export function getFileType(file: File): string {
     case 'htm':
       return 'html';
     default:
+      console.warn("Unsupported file type:", extension, file.type);
       throw new Error('Unsupported file type');
   }
 }

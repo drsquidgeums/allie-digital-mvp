@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { convertDocxToHtml } from '../FileConverter';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 interface DocxViewerProps {
   file: File;
@@ -17,12 +18,23 @@ export const DocxViewer: React.FC<DocxViewerProps> = ({ file }) => {
     const loadContent = async () => {
       try {
         setLoading(true);
+        console.log("DocxViewer starting conversion of:", file.name);
         const html = await convertDocxToHtml(file);
+        console.log("DocxViewer conversion complete, HTML length:", html.length);
         setContent(html);
         setError(null);
+        toast({
+          title: "Document loaded",
+          description: `${file.name} has been loaded successfully`,
+        });
       } catch (err) {
         console.error('Error converting DOCX:', err);
         setError('Failed to load document content');
+        toast({
+          title: "Document error",
+          description: "Failed to load the document content",
+          variant: "destructive",
+        });
       } finally {
         setLoading(false);
       }
@@ -75,7 +87,7 @@ export const DocxViewer: React.FC<DocxViewerProps> = ({ file }) => {
       </div>
       
       <div 
-        className="p-4 overflow-auto flex-grow"
+        className="p-4 overflow-auto flex-grow bg-white"
         dangerouslySetInnerHTML={{ __html: content }}
         role="document"
         aria-label="Document content"

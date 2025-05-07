@@ -23,8 +23,30 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
   isHighlighter
 }) => {
   try {
-    console.log("FileTypeHandler received file:", file?.name);
+    console.log("FileTypeHandler received file:", file?.name, file?.type);
     console.log("FileTypeHandler color settings:", selectedColor, isHighlighter);
+    
+    // Check for empty file
+    if (!file) {
+      console.error("No file provided to FileTypeHandler");
+      return (
+        <ErrorDisplay 
+          title="No File Selected" 
+          description="Please select a file to view." 
+        />
+      );
+    }
+    
+    // Special handling for docx files
+    if (file.name.toLowerCase().endsWith('.docx') || 
+        file.name.toLowerCase().endsWith('.doc') || 
+        file.type.includes('wordprocessingml') || 
+        file.type.includes('msword')) {
+      console.log("Detected DOCX file by extension/type:", file.name, file.type);
+      return <DocxViewerWrapper file={file} />;
+    }
+    
+    // For other file types, use the general detection
     const fileType = getFileType(file);
     console.log("Detected file type:", fileType);
     
