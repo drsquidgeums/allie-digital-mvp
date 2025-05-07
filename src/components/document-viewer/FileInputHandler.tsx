@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useFileManager } from "@/hooks/useFileManager";
 
@@ -24,7 +24,7 @@ export const FileInputHandler: React.FC<FileInputHandlerProps> = ({
    * Handles file upload from the file input
    * Includes validation for file size (25MB limit)
    */
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const file = e.target.files?.[0];
       if (file) {
@@ -35,6 +35,19 @@ export const FileInputHandler: React.FC<FileInputHandlerProps> = ({
           toast({
             title: "File too large",
             description: "Please upload a file smaller than 25MB",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        // Validate file type
+        const fileExtension = file.name.split('.').pop()?.toLowerCase();
+        const allowedTypes = ['pdf', 'doc', 'docx', 'txt', 'html', 'htm'];
+        
+        if (fileExtension && !allowedTypes.includes(fileExtension)) {
+          toast({
+            title: "Unsupported file type",
+            description: `Supported files: ${allowedTypes.join(', ')}`,
             variant: "destructive",
           });
           return;
@@ -65,14 +78,14 @@ export const FileInputHandler: React.FC<FileInputHandlerProps> = ({
         fileInputRef.current.value = "";
       }
     }
-  };
+  }, [onFileChange, toast, uploadFile, fileInputRef]);
 
   return (
     <input
       type="file"
       ref={fileInputRef}
       className="hidden"
-      accept=".pdf,.doc,.docx,.txt,.html"
+      accept=".pdf,.doc,.docx,.txt,.html,.htm"
       onChange={handleFileChange}
       aria-hidden="true"
     />
