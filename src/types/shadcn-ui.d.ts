@@ -219,3 +219,12 @@ declare module '@/components/ui/progress' {
     max?: number;
   }
 }
+
+// Fix for Navigate component in react-router-dom
+declare module 'react-router-dom' {
+  interface NavigateProps {
+    to: string;
+    replace?: boolean;
+    state?: any;
+  }
+}

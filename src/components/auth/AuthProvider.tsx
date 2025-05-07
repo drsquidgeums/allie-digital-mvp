@@ -81,7 +81,7 @@ export const RequireAuth: React.FC<RequireAuthProps> = ({ children, redirectTo =
   }
 
   if (!user) {
-    return <Navigate to={redirectTo} state={{ from: location }} replace />;
+    return <Navigate to={redirectTo} replace state={{ from: location }} />;
   }
 
   return <>{children}</>;

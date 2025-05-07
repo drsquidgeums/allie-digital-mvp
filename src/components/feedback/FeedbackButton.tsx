@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquareHeart } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { FeedbackDialog } from "./FeedbackDialog";
 import { useAuth } from "@/components/auth/AuthProvider";
 
@@ -61,7 +61,7 @@ export function FeedbackButton() {
         className="fixed bottom-6 right-6 z-50 shadow-md bg-primary text-primary-foreground hover:bg-primary/90"
         onClick={() => setOpen(true)}
       >
-        <MessageSquareHeart className="mr-2 h-4 w-4" />
+        <MessageSquare className="mr-2 h-4 w-4" />
         Feedback
       </Button>
       <FeedbackDialog open={open} onOpenChange={setOpen} />

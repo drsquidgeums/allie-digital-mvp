@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,7 +36,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
           .from('feedback')
           .select()
           .eq('user_id', session.session.user.id)
-          .single();
+          .maybeSingle();
 
         // If user has submitted feedback before, don't show dialog
         if (data) {
@@ -111,9 +111,9 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Share Your Feedback</DialogTitle>
-          <DialogDescription>
+          <p className="text-sm text-muted-foreground">
             Please take a moment to rate your experience with our application.
-          </DialogDescription>
+          </p>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
