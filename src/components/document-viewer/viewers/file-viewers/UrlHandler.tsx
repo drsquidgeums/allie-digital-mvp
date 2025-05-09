@@ -23,7 +23,7 @@ export const UrlHandler: React.FC<UrlHandlerProps> = ({
   onError
 }) => {
   // Special handling for PDF URLs
-  if (url.toLowerCase().endsWith('.pdf') || url.includes('format=pdf')) {
+  if (url.toLowerCase().endsWith('.pdf')) {
     return (
       <PdfViewerWrapper
         file={null}
