@@ -25,7 +25,7 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
         file={file}
         url={url}
         selectedColor={selectedColor}
-        isHighlighter={isHighlighter}
+        isHighlighter={true}
       />
     );
   }

@@ -1,12 +1,12 @@
 
 import { useState, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { IHighlight } from 'react-pdf-highlighter';
+import { IHighlight, Comment as PdfHighlighterComment } from 'react-pdf-highlighter';
 
 // Define a Comment type that's compatible with react-pdf-highlighter
 export interface PdfComment {
   text: string;
-  emoji?: string;
+  emoji: string; // Made required to match the react-pdf-highlighter Comment type
 }
 
 // Custom type for PDF highlights
@@ -59,9 +59,14 @@ export const usePdfHighlights = (initialColor: string = '#FFFF00') => {
       id: highlightData.id || uuidv4(),
       content: highlightData.content || { text: '' },
       position: highlightData.position,
-      comment: typeof highlightData.comment === 'string' 
-        ? { text: highlightData.comment } 
-        : highlightData.comment || { text: '', emoji: '💬' },
+      comment: {
+        text: typeof highlightData.comment === 'string' 
+          ? highlightData.comment 
+          : (highlightData.comment?.text || ''),
+        emoji: typeof highlightData.comment === 'string' 
+          ? '💬' 
+          : (highlightData.comment?.emoji || '💬')
+      },
       color: activeColor
     };
     
@@ -105,6 +110,19 @@ export const usePdfHighlights = (initialColor: string = '#FFFF00') => {
     [addHighlight]
   );
   
+  // Add a new function to convert our PdfHighlight objects to format expected by react-pdf-highlighter
+  const getHighlightsForReactPdfHighlighter = useCallback((): IHighlight[] => {
+    return highlights.map(highlight => ({
+      id: highlight.id,
+      content: highlight.content,
+      position: highlight.position,
+      comment: {
+        text: highlight.comment.text,
+        emoji: highlight.comment.emoji
+      } as PdfHighlighterComment
+    }));
+  }, [highlights]);
+  
   return {
     highlights,
     selectedHighlight,
@@ -113,6 +131,6 @@ export const usePdfHighlights = (initialColor: string = '#FFFF00') => {
     removeHighlight,
     updateHighlightColor,
     handleSelectionFinished,
+    getHighlightsForReactPdfHighlighter
   };
 };
-
