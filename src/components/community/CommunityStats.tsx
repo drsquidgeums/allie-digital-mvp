@@ -36,10 +36,7 @@ export const CommunityStats = () => {
               <span className="text-lg font-semibold">{value}</span>
             </div>
           </TooltipTrigger>
-          <TooltipContent 
-            side="bottom" 
-            className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
-          >
+          <TooltipContent side="bottom">
             {label}
           </TooltipContent>
         </Tooltip>

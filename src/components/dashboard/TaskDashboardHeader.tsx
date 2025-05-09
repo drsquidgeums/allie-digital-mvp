@@ -46,20 +46,18 @@ export const TaskDashboardHeader: React.FC<TaskDashboardHeaderProps> = ({
         
         <div className="flex items-center gap-2">
           <Switch 
-            id="show-completed" 
             checked={showCompleted} 
             onCheckedChange={onToggleShowCompleted}
           />
-          <Label htmlFor="show-completed">Show Completed</Label>
+          <Label>Show Completed</Label>
         </div>
 
         <div className="flex items-center gap-2">
           <Switch 
-            id="filter-by-date" 
             checked={filterByDate} 
             onCheckedChange={onToggleFilterByDate}
           />
-          <Label htmlFor="filter-by-date">Filter by Date</Label>
+          <Label>Filter by Date</Label>
         </div>
       </div>
     </div>

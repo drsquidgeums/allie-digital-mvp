@@ -43,10 +43,7 @@ export const DocumentToolbar = ({
               <Upload className="h-4 w-4" aria-hidden="true" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent 
-            side="bottom"
-            className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
-          >
+          <TooltipContent side="bottom">
             Upload document
           </TooltipContent>
         </Tooltip>
@@ -64,10 +61,7 @@ export const DocumentToolbar = ({
               <Download className="h-4 w-4" aria-hidden="true" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent 
-            side="bottom"
-            className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
-          >
+          <TooltipContent side="bottom">
             Download document
           </TooltipContent>
         </Tooltip>
@@ -85,10 +79,7 @@ export const DocumentToolbar = ({
               <Trash2 className="h-4 w-4" aria-hidden="true" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent 
-            side="bottom"
-            className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
-          >
+          <TooltipContent side="bottom">
             Delete document
           </TooltipContent>
         </Tooltip>

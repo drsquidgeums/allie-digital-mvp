@@ -16,17 +16,16 @@ const MusicSelector = ({
   return (
     <div className="space-y-2">
       <RadioGroup
-        value={selectedMusic}
+        defaultValue={selectedMusic}
         onValueChange={handleMusicSelection}
       >
         {MUSIC_OPTIONS.map((option) => (
           <div key={option.id} className="flex items-center space-x-2">
             <RadioGroupItem 
               value={option.id}
+              id={option.id}
             />
-            <Label>
-              {option.name}
-            </Label>
+            <Label htmlFor={option.id}>{option.name}</Label>
           </div>
         ))}
       </RadioGroup>

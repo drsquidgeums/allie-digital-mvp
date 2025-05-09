@@ -51,10 +51,7 @@ export const ThemeProvider = () => {
                 </Button>
               </PopoverTrigger>
             </TooltipTrigger>
-            <TooltipContent 
-              side="bottom" 
-              className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md"
-            >
+            <TooltipContent side="bottom">
               Customise Font
             </TooltipContent>
           </Tooltip>

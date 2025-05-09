@@ -6,12 +6,24 @@ declare module '@radix-ui/react-tooltip' {
     children: React.ReactNode;
     asChild?: boolean;
   }
+  
+  interface TooltipContentProps {
+    children?: React.ReactNode;
+    side?: "top" | "right" | "bottom" | "left";
+    className?: string;
+  }
 }
 
 declare module '@radix-ui/react-popover' {
   interface PopoverTriggerProps {
     children: React.ReactNode;
     asChild?: boolean;
+  }
+  
+  interface PopoverContentProps {
+    children?: React.ReactNode;
+    className?: string;
+    align?: "start" | "center" | "end";
   }
 }
 
@@ -101,6 +113,7 @@ declare module '@/components/ui/radio-group' {
     className?: string;
     "aria-label"?: string;
     value?: string;
+    defaultValue?: string;
     onValueChange?: (value: string) => void;
   }
   
@@ -118,6 +131,7 @@ declare module '@/components/ui/switch' {
     "aria-label"?: string;
     "aria-labelledby"?: string;
     checked?: boolean;
+    defaultChecked?: boolean;
     onCheckedChange?: (checked: boolean) => void;
   }
 }
@@ -135,6 +149,7 @@ declare module '@/components/ui/toggle' {
   interface ToggleProps {
     children?: React.ReactNode;
     pressed?: boolean;
+    defaultPressed?: boolean;
     onPressedChange?: (pressed: boolean) => void;
     "aria-label"?: string;
     className?: string;

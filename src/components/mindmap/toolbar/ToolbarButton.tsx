@@ -28,7 +28,7 @@ export const ToolbarButton = ({ icon, label, onClick, isActive }: ToolbarButtonP
           {icon}
         </Button>
       </TooltipTrigger>
-      <TooltipContent className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md">
+      <TooltipContent>
         <p>{label}</p>
       </TooltipContent>
     </Tooltip>

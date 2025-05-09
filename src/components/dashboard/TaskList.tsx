@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Check, Trash2, Tag } from "lucide-react";
 import {
@@ -96,7 +97,7 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor,
           </span>
           
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger>
               <Button
                 size="sm"
                 variant="ghost"

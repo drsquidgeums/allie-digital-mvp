@@ -16,7 +16,7 @@ export const ColorHeader = ({ isHighlighter, onHighlighterToggle }: ColorHeaderP
         <h3 className="font-medium">Colour Tool</h3>
       </div>
       <Toggle
-        pressed={isHighlighter}
+        defaultPressed={isHighlighter}
         onPressedChange={onHighlighterToggle}
         aria-label="Toggle highlighter mode"
       >
