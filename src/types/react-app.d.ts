@@ -245,3 +245,11 @@ declare module 'date-fns' {
   export function endOfWeek(date: Date, options?: any): Date;
   export function eachDayOfInterval(interval: { start: Date; end: Date }): Date[];
 }
+
+// This helps prevent errors with ForwardRefExoticComponent not matching ElementType constraint
+declare module 'react' {
+  interface ForwardRefExoticComponent<P> {
+    // Extend the component to be compatible with ElementType constraints
+    $$typeof: symbol;
+  }
+}

@@ -77,7 +77,14 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   const handleDocumentLoadSuccess = useCallback(({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
     console.log("Document loaded with", numPages, "pages");
-  }, []);
+    
+    // If onContentLoaded is provided, extract content from the PDF
+    if (onContentLoaded && file) {
+      // In a real implementation, this would extract the text content from the PDF
+      const fileName = file.name || 'document.pdf';
+      onContentLoaded('PDF content would be extracted here', fileName);
+    }
+  }, [onContentLoaded, file]);
 
   // Handle text selection for highlighting
   const handleTextSelection = useCallback(() => {
@@ -104,7 +111,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
         
         toast({
           title: "Highlight Added",
-          description: "Text has been highlighted in the document",
+          description: "Selection has been highlighted in the document",
         });
         
         selection.removeAllRanges();
