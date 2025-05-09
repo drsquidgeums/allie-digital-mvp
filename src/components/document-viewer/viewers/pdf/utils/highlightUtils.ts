@@ -38,9 +38,20 @@ export function convertPosition(position: any): any {
 }
 
 // Ensure comment is in the proper format for react-pdf-highlighter
-export function formatComment(comment: string | { text: string; emoji?: string }): { text: string; emoji?: string } {
+export function formatComment(comment: string | { text: string; emoji?: string }): { text: string; emoji: string } {
   if (typeof comment === 'string') {
-    return { text: comment };
+    return { text: comment, emoji: '💬' };
   }
-  return comment;
+  return { text: comment.text, emoji: comment.emoji || '💬' };
+}
+
+// Check if a highlight is valid
+export function isValidHighlight(highlight: any): boolean {
+  return (
+    highlight &&
+    highlight.id &&
+    highlight.position &&
+    highlight.position.boundingRect &&
+    Array.isArray(highlight.position.rects)
+  );
 }

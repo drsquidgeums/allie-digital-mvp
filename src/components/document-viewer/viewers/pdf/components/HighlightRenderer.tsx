@@ -1,21 +1,8 @@
 
 import React from 'react';
 import { Highlight } from 'react-pdf-highlighter';
+import { PdfHighlight } from '../hooks/usePdfHighlights';
 import { convertPosition } from '../utils/highlightUtils';
-
-interface PdfHighlight {
-  id: string;
-  position: any;
-  content: {
-    text?: string;
-    image?: string;
-  };
-  comment?: {
-    text: string;
-    emoji?: string;
-  } | string;
-  color?: string;
-}
 
 interface HighlightRendererProps {
   highlight: PdfHighlight;
@@ -23,7 +10,7 @@ interface HighlightRendererProps {
   isScrolledTo: boolean;
   selectedColor: string;
   selectedHighlightId: string | null;
-  setTip: any;
+  setTip: (highlight: PdfHighlight, renderTip: () => JSX.Element) => void;
   hideTip: () => void;
   onHighlightClick: (highlight: PdfHighlight) => void;
 }
@@ -67,10 +54,11 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
   
   const adaptedPosition = convertPosition(highlight.position);
   
-  // Format comment to ensure compatibility
-  const formattedComment = typeof highlight.comment === 'string' 
-    ? { text: highlight.comment } 
-    : highlight.comment || { text: '' };
+  // Format comment to ensure compatibility with react-pdf-highlighter
+  const formattedComment = {
+    text: typeof highlight.comment === 'string' ? highlight.comment : highlight.comment.text,
+    emoji: typeof highlight.comment === 'string' ? '💬' : (highlight.comment.emoji || '💬')
+  };
   
   return (
     <div 
