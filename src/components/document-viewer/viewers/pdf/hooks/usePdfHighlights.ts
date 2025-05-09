@@ -4,12 +4,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { IHighlight } from 'react-pdf-highlighter';
 
 // Define a Comment type that's compatible with react-pdf-highlighter
-export type Comment = {
+export interface PdfComment {
   text: string;
-  emoji: string;
-};
+  emoji?: string;
+}
 
-// Custom type for PDF highlights that's compatible with IHighlight
+// Custom type for PDF highlights
 export interface PdfHighlight {
   id: string;
   content: {
@@ -18,10 +18,7 @@ export interface PdfHighlight {
   };
   position: any;
   color?: string;
-  comment: {
-    text: string;
-    emoji: string;
-  };
+  comment: PdfComment;
 }
 
 interface Position {
@@ -30,8 +27,8 @@ interface Position {
     y1: number;
     x2: number;
     y2: number;
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
     [key: string]: any;
   };
   rects: {
@@ -39,8 +36,8 @@ interface Position {
     y1: number;
     x2: number;
     y2: number;
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
     [key: string]: any;
   }[];
   pageNumber: number;
@@ -59,10 +56,12 @@ export const usePdfHighlights = (initialColor: string = '#FFFF00') => {
   // Add a highlight
   const addHighlight = useCallback((highlightData: Partial<PdfHighlight>): PdfHighlight => {
     const newHighlight: PdfHighlight = {
-      id: uuidv4(),
+      id: highlightData.id || uuidv4(),
       content: highlightData.content || { text: '' },
       position: highlightData.position,
-      comment: highlightData.comment || { text: '', emoji: '💬' },
+      comment: typeof highlightData.comment === 'string' 
+        ? { text: highlightData.comment } 
+        : highlightData.comment || { text: '', emoji: '💬' },
       color: activeColor
     };
     
@@ -73,7 +72,10 @@ export const usePdfHighlights = (initialColor: string = '#FFFF00') => {
   // Remove a highlight
   const removeHighlight = useCallback((id: string) => {
     setHighlights(prev => prev.filter(h => h.id !== id));
-  }, []);
+    if (selectedHighlight?.id === id) {
+      setSelectedHighlight(null);
+    }
+  }, [selectedHighlight]);
   
   // Update highlight color
   const updateHighlightColor = useCallback((id: string, color: string) => {
@@ -82,14 +84,14 @@ export const usePdfHighlights = (initialColor: string = '#FFFF00') => {
     ));
   }, []);
   
-  // Handle text selection finished
+  // Handle text selection finished - this function now returns PdfHighlight
   const handleSelectionFinished = useCallback(
     (
       position: Position,
       content: Content,
       hideTip: () => void,
       transformSelection: () => void
-    ): null => {
+    ): PdfHighlight => {
       const newHighlight = addHighlight({
         position,
         content,
@@ -98,19 +100,10 @@ export const usePdfHighlights = (initialColor: string = '#FFFF00') => {
       hideTip();
       transformSelection();
       
-      return null;
+      return newHighlight;
     }, 
     [addHighlight]
   );
-  
-  // Convert highlights to IHighlight format for the react-pdf-highlighter
-  const getHighlightsForReactPdfHighlighter = useCallback((): IHighlight[] => {
-    return highlights.map(highlight => ({
-      ...highlight,
-      position: highlight.position,
-      comment: highlight.comment
-    })) as IHighlight[];
-  }, [highlights]);
   
   return {
     highlights,
@@ -120,6 +113,6 @@ export const usePdfHighlights = (initialColor: string = '#FFFF00') => {
     removeHighlight,
     updateHighlightColor,
     handleSelectionFinished,
-    getHighlightsForReactPdfHighlighter
   };
 };
+

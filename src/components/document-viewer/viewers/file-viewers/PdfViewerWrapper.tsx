@@ -1,56 +1,44 @@
 
-import React, { useState } from 'react';
-import { SimplePdfViewer } from '../pdf/SimplePdfViewer';
-import { useToast } from '@/hooks/use-toast';
-import { AlertCircle } from 'lucide-react';
+import React from 'react';
+import { SimplePdfHighlighter } from '../../viewers/pdf/SimplePdfHighlighter';
+import { SimplePdfViewer } from '../../viewers/pdf/SimplePdfViewer';
 
 interface PdfViewerWrapperProps {
-  file: File;
+  file: File | null;
   url: string;
   selectedColor: string;
   isHighlighter?: boolean;
+  onContentLoaded?: (content: string, fileName: string) => void;
 }
 
 export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({ 
   file, 
   url, 
   selectedColor,
-  isHighlighter = true
+  isHighlighter = true,
+  onContentLoaded
 }) => {
-  const [error, setError] = useState<string | null>(null);
-  const { toast } = useToast();
-  
-  // Handle PDF loading errors
-  const handleError = (error: Error) => {
-    console.error('PDF loading error:', error);
-    setError(error.message || 'Failed to load PDF document');
-    
-    toast({
-      title: 'Error loading PDF',
-      description: 'There was a problem loading the document',
-      variant: 'destructive',
-    });
-  };
-  
-  // Show error state if there was a problem loading the PDF
-  if (error) {
+  // Use either SimplePdfHighlighter or SimplePdfViewer based on isHighlighter flag
+  if (isHighlighter) {
     return (
-      <div className="flex items-center justify-center h-full p-4 text-destructive">
-        <div className="flex flex-col items-center gap-2 max-w-md text-center">
-          <AlertCircle className="h-8 w-8" />
-          <h3 className="font-semibold">PDF Viewer Error</h3>
-          <p className="text-sm text-muted-foreground">{error}</p>
-        </div>
-      </div>
+      <SimplePdfHighlighter
+        file={file}
+        url={url}
+        selectedColor={selectedColor}
+        isHighlighter={isHighlighter}
+      />
     );
   }
-  
+
   return (
     <SimplePdfViewer
       file={file}
       url={url}
       selectedColor={selectedColor}
-      isHighlighter={isHighlighter}
+      isHighlighter={false}
+      onContentLoaded={onContentLoaded}
     />
   );
 };
+
+export default PdfViewerWrapper;

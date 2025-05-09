@@ -22,7 +22,7 @@ export interface SimplePdfViewerProps {
 }
 
 export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
-  file,
+  file = null,
   url = '',
   selectedColor = '#FFFF00',
   isHighlighter = true,

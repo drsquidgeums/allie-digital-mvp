@@ -61,7 +61,7 @@ export const HighlightsOverlay: React.FC<HighlightsOverlayProps> = ({
                   backgroundColor: hexToRgba(highlight.color || '#FFFF00', 0.4)
                 }}
                 onClick={() => onSelectHighlight(highlight.id)}
-                title={highlight.content.text || ''}
+                title={highlight.content?.text || ''}
                 role="button"
                 aria-pressed={selectedHighlightId === highlight.id}
                 tabIndex={0}
