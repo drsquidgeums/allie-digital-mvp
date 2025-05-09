@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Document, Page } from 'react-pdf';
+import { ErrorDisplay } from '../../ErrorDisplay';
 
 interface PdfDocumentViewerProps {
   pdfUrl: string;
@@ -17,32 +18,38 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
   onLoadSuccess,
   children
 }) => {
-  if (!pdfUrl) return null;
-  
+  const LoadingComponent = () => (
+    <div className="flex items-center justify-center h-[500px]">
+      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+    </div>
+  );
+
+  const ErrorComponent = () => (
+    <ErrorDisplay 
+      title="PDF Error" 
+      description="There was a problem loading this PDF. The file may be corrupted or password protected." 
+    />
+  );
+
   return (
-    <div 
-      className="flex-1 overflow-auto flex justify-center bg-zinc-800"
-      style={{ 
-        transformOrigin: 'center top'
-      }}
-    >
-      <div className="pdf-container relative" style={{ transform: `scale(${scale})` }}>
-        <Document
-          file={pdfUrl}
-          onLoadSuccess={onLoadSuccess}
-          loading={<div className="loading">Loading document...</div>}
-          error={<div className="error">Failed to load document</div>}
-        >
-          <Page 
-            pageNumber={pageNumber} 
+    <div className="flex-1 overflow-auto pdf-container" id="document-viewer-content">
+      <Document
+        file={pdfUrl}
+        onLoadSuccess={onLoadSuccess}
+        loading={<LoadingComponent />}
+        error={<ErrorComponent />}
+        externalLinkTarget="_blank"
+      >
+        <div className="pdf-page-container" style={{ transform: `scale(${scale})` }}>
+          <Page
+            pageNumber={pageNumber}
             renderTextLayer={true}
             renderAnnotationLayer={true}
+            loading={<LoadingComponent />}
           />
-          
-          {/* Child components (like highlight overlays) will be rendered here */}
           {children}
-        </Document>
-      </div>
+        </div>
+      </Document>
     </div>
   );
 };

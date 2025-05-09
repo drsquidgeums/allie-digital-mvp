@@ -1,48 +1,89 @@
 
-/* Base styles for PDF viewers */
-.pdf-page {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin-bottom: 1rem;
+/* Base styling for PDF viewer */
+.pdf-container {
+  position: relative;
+  background-color: #f5f5f5;
+  min-height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pdf-page-container {
+  margin: 10px auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
   background-color: white;
 }
 
-/* Loading indicator */
-.loading-indicator {
+.react-pdf__Document {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 200px;
-  width: 100%;
-  color: white;
-  font-size: 1rem;
 }
 
-/* Error message */
-.error-message {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-  width: 100%;
-  color: #f87171;
-  font-size: 1rem;
+.react-pdf__Page {
+  max-width: 100%;
+  margin-bottom: 10px;
 }
 
-/* Highlight styles */
-.highlight-area {
+/* Canvas container styles */
+.react-pdf__Page__canvas {
+  margin: 0 auto;
+  display: block;
+  max-width: 100%;
+  height: auto !important;
+}
+
+/* Skip link for accessibility */
+.skip-link {
   position: absolute;
-  border-radius: 2px;
-  transition: opacity 0.2s;
-  cursor: pointer;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
-.highlight-area:hover {
-  opacity: 0.8 !important;
+.skip-link:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 8px;
+  padding: 6px 12px;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+  z-index: 100;
 }
 
-/* Make PDF viewer responsive */
-@media (max-width: 768px) {
-  .pdf-page {
-    padding: 0.5rem;
-  }
+/* Loading and error states */
+.pdf-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: 100%;
+}
+
+.pdf-error {
+  color: #d32f2f;
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #d32f2f;
+  border-radius: 4px;
+  margin: 20px;
+  background-color: #ffebee;
+}
+
+/* Page number display */
+.page-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
 }

@@ -1,7 +1,9 @@
 
-import React from "react";
+import React, { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { UrlInput } from "./UrlInput";
 
 interface UrlInputHandlerProps {
   url: string;
@@ -11,46 +13,66 @@ interface UrlInputHandlerProps {
 /**
  * UrlInputHandler Component
  * 
- * Manages URL input field and associated handlers
+ * Handles URL input for loading external documents
  */
-export const UrlInputHandler: React.FC<UrlInputHandlerProps> = ({ 
-  url, 
-  setUrl 
-}) => {
+export const UrlInputHandler: React.FC<UrlInputHandlerProps> = ({ url, setUrl }) => {
+  const [inputValue, setInputValue] = useState(url);
   const { toast } = useToast();
-
-  /**
-   * Handles keyboard events for the URL input field
-   * - Escape key clears the URL and removes focus
-   * - Enter key confirms the URL and shows a toast notification
-   */
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Escape') {
-      setUrl('');
-      e.currentTarget.blur();
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      if (url.trim()) {
-        toast({
-          title: "URL loaded",
-          description: "Document URL has been loaded into the viewer",
-        });
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Basic URL validation
+    if (!inputValue) {
+      return;
+    }
+    
+    try {
+      // Ensure URL has http/https protocol
+      let processedUrl = inputValue;
+      if (!/^https?:\/\//i.test(inputValue)) {
+        processedUrl = `https://${inputValue}`;
       }
+      
+      // Check URL validity
+      new URL(processedUrl);
+      
+      // Update the URL state
+      setUrl(processedUrl);
+      toast({
+        title: "URL loaded",
+        description: "Loading document from URL",
+      });
+    } catch (error) {
+      toast({
+        title: "Invalid URL",
+        description: "Please enter a valid URL",
+        variant: "destructive",
+      });
     }
   };
 
-  /**
-   * Updates the URL state when the input field changes
-   */
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUrl(e.target.value);
-  };
-
   return (
-    <UrlInput
-      url={url}
-      onChange={handleUrlChange}
-      onKeyDown={handleKeyDown}
-    />
+    <form onSubmit={handleSubmit} className="mb-4">
+      <div className="flex items-center gap-2">
+        <Input
+          type="text"
+          placeholder="Enter document URL (https://example.com/document.pdf)"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          className="flex-1"
+          aria-label="Document URL"
+        />
+        <Button 
+          type="submit"
+          variant="outline"
+          size="icon"
+          aria-label="Load URL"
+        >
+          <Search className="h-4 w-4" />
+        </Button>
+      </div>
+    </form>
   );
 };
+

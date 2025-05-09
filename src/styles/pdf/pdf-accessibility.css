@@ -1,21 +1,31 @@
 
-/* PDF Accessibility Styles */
+/* Accessibility styles for PDF viewer */
 
 /* Focus indicators */
-.pdf-page:focus,
-.highlight-area:focus {
-  outline: 2px solid #4c9aff;
+:focus {
+  outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
 }
 
-/* Make sure interactive elements have proper focus states */
-.pdf-toolbar button:focus-visible {
-  outline: 2px solid #4c9aff;
-  outline-offset: 2px;
-  box-shadow: 0 0 0 3px rgba(76, 154, 255, 0.3);
+/* High contrast mode adjustments */
+@media (forced-colors: active) {
+  .highlight-element {
+    forced-color-adjust: none;
+    outline: 2px solid CanvasText;
+  }
+  
+  .highlight-element:hover,
+  .highlight-element.selected {
+    outline: 3px solid Highlight;
+  }
+  
+  .pdf-toolbar-button.active {
+    background-color: Highlight;
+    color: HighlightText;
+  }
 }
 
-/* Screen reader only content */
+/* Screen reader only text */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -28,60 +38,48 @@
   border-width: 0;
 }
 
-/* Selected highlight indication */
-.highlight-area[aria-selected="true"] {
-  outline: 2px solid #000;
-  z-index: 1;
+/* Keyboard navigation */
+.keyboard-user :focus {
+  outline: 3px solid hsl(var(--ring));
+  outline-offset: 3px;
 }
 
-/* Add keyboard focus to highlight color options */
-.highlight-options-popup button:focus-visible {
-  transform: scale(1.2);
-  box-shadow: 0 0 0 3px rgba(76, 154, 255, 0.5);
-  outline: 2px solid #4c9aff;
-}
-
-/* High contrast mode support */
-@media (forced-colors: active) {
-  .highlight-area {
-    border: 1px solid CanvasText;
-  }
-  
-  .highlight-area[aria-selected="true"] {
-    outline: 2px solid CanvasText;
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-/* Skip link for keyboard navigation */
-.skip-link {
-  position: absolute;
-  top: -40px;
-  left: 0;
-  background: #ffffff;
-  color: #000000;
-  padding: 8px;
-  z-index: 100;
-  transition: top 0.3s;
+/* Large text mode for readability */
+.large-text-mode {
+  font-size: 120%;
 }
 
+/* Color blindness friendly highlight colors */
+.highlight-colorblind-1 {
+  background-color: rgba(230, 159, 0, 0.4); /* Orange */
+}
+
+.highlight-colorblind-2 {
+  background-color: rgba(0, 158, 115, 0.4); /* Bluish green */
+}
+
+.highlight-colorblind-3 {
+  background-color: rgba(0, 114, 178, 0.4); /* Blue */
+}
+
+.highlight-colorblind-4 {
+  background-color: rgba(213, 94, 0, 0.4); /* Vermillion */
+}
+
+/* Skip links */
 .skip-link:focus {
+  position: fixed;
   top: 0;
-}
-
-/* Additional global focus style resets to ensure consistency */
-*:focus {
-  outline-offset: 2px;
-}
-
-/* Ensure text has enough contrast */
-.pdf-toolbar {
-  color: #ffffff;
-}
-
-.pdf-toolbar button {
-  color: #ffffff;
-}
-
-.pdf-toolbar .text-sm {
-  font-weight: 500;
+  left: 0;
+  z-index: 9999;
 }
