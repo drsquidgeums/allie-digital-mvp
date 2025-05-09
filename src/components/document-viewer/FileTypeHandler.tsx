@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { getFileType } from '../../FileConverter';
-import { PdfViewerWrapper } from './PdfViewerWrapper';
-import { TextViewerWrapper } from './TextViewerWrapper';
-import { ErrorDisplay } from '../ErrorDisplay';
+import { getFileType } from './FileConverter';
+import { PdfViewerWrapper } from './viewers/file-viewers/PdfViewerWrapper';
+import { TextViewerWrapper } from './viewers/file-viewers/TextViewerWrapper';
+import { ErrorDisplay } from './viewers/ErrorDisplay';
 
 interface FileTypeHandlerProps {
   file: File;

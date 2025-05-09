@@ -1,4 +1,6 @@
+
 import { Edge, Node as FlowNode, NodeChange, EdgeChange, Connection } from '@xyflow/react';
+import { LucideIcon } from 'lucide-react';
 
 export interface NodeStyle {
   background?: string;

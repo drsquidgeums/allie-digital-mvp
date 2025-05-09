@@ -17,7 +17,7 @@ declare module 'lucide-react' {
     absoluteStrokeWidth?: boolean;
     color?: string;
     strokeWidth?: string | number;
-    className?: string; // Add className support
+    className?: string;
   }
 
   export type LucideIcon = React.FC<LucideProps>;
@@ -109,6 +109,8 @@ declare module 'lucide-react' {
   export const Image: LucideIcon;
   export const Layout: LucideIcon;
   export const Loader2: LucideIcon;
+  export const Move: LucideIcon; // Add missing Move icon
+  export const Pencil: LucideIcon; // Add missing Pencil icon
 }
 
 // For react-router-dom types

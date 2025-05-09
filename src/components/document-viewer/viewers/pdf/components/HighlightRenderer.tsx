@@ -1,8 +1,21 @@
 
 import React from 'react';
 import { Highlight } from 'react-pdf-highlighter';
-import { PdfHighlight } from '../hooks/usePdfHighlights';
 import { convertPosition } from '../utils/highlightUtils';
+
+interface PdfHighlight {
+  id: string;
+  position: any;
+  content: {
+    text?: string;
+    image?: string;
+  };
+  comment?: {
+    text: string;
+    emoji?: string;
+  } | string;
+  color?: string;
+}
 
 interface HighlightRendererProps {
   highlight: PdfHighlight;
@@ -54,6 +67,11 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
   
   const adaptedPosition = convertPosition(highlight.position);
   
+  // Format comment to ensure compatibility
+  const formattedComment = typeof highlight.comment === 'string' 
+    ? { text: highlight.comment } 
+    : highlight.comment || { text: '' };
+  
   return (
     <div 
       className={highlightClass}
@@ -63,7 +81,7 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
       <Highlight
         isScrolledTo={isScrolledTo}
         position={adaptedPosition}
-        comment={highlight.comment}
+        comment={formattedComment}
         onClick={() => onHighlightClick(highlight)}
         onMouseOver={() => {
           if (highlight.content && highlight.content.text) {
