@@ -10,7 +10,7 @@ interface HighlightRendererProps {
   isScrolledTo: boolean;
   selectedColor: string;
   selectedHighlightId: string | null;
-  setTip: (highlight: PdfHighlight, renderTip: () => JSX.Element) => void;
+  setTip: any;
   hideTip: () => void;
   onHighlightClick: (highlight: PdfHighlight) => void;
 }
@@ -54,12 +54,6 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
   
   const adaptedPosition = convertPosition(highlight.position);
   
-  // Format comment to ensure compatibility with react-pdf-highlighter
-  const formattedComment = {
-    text: typeof highlight.comment === 'string' ? highlight.comment : highlight.comment.text,
-    emoji: typeof highlight.comment === 'string' ? '💬' : (highlight.comment.emoji || '💬')
-  };
-  
   return (
     <div 
       className={highlightClass}
@@ -69,7 +63,7 @@ export const HighlightRenderer: React.FC<HighlightRendererProps> = ({
       <Highlight
         isScrolledTo={isScrolledTo}
         position={adaptedPosition}
-        comment={formattedComment}
+        comment={highlight.comment}
         onClick={() => onHighlightClick(highlight)}
         onMouseOver={() => {
           if (highlight.content && highlight.content.text) {

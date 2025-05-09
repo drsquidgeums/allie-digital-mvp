@@ -2,8 +2,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { 
   PdfLoader, 
-  PdfHighlighter as ReactPdfHighlighter,
-  IHighlight
+  PdfHighlighter as ReactPdfHighlighter
 } from 'react-pdf-highlighter';
 import { useToast } from '@/hooks/use-toast';
 import '@/styles/pdf/pdf-highlights.css';
@@ -41,8 +40,7 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
     setSelectedHighlight,
     removeHighlight,
     updateHighlightColor,
-    handleSelectionFinished,
-    getHighlightsForReactPdfHighlighter
+    handleSelectionFinished
   } = usePdfHighlights(selectedColor);
   
   // Determine the PDF source
@@ -84,36 +82,23 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
     });
   }, [toast]);
   
-  // Custom render function for highlights
+  // Render the highlight
   const renderHighlight = useCallback(
-    (highlight: IHighlight, index: number, setTip: any, hideTip: any) => {
-      // Convert the highlight to our internal format if needed
-      const pdfHighlight: PdfHighlight = {
-        ...highlight,
-        id: highlight.id,
-        content: highlight.content,
-        position: highlight.position,
-        color: (highlight as any).color || selectedColor,
-        comment: {
-          text: highlight.comment.text,
-          emoji: highlight.comment.emoji
-        }
-      };
-
+    (highlight: PdfHighlight, index: number, setTip: any, hideTip: () => void, viewportToScaled: any, screenshot: any, isScrolledTo: boolean) => {
       return (
         <HighlightRenderer
-          highlight={pdfHighlight}
+          highlight={highlight}
           index={index}
-          isScrolledTo={highlight.position.pageNumber === pageNumber}
+          isScrolledTo={isScrolledTo}
           selectedColor={selectedColor}
-          selectedHighlightId={selectedHighlight?.id || null}
+          selectedHighlightId={selectedHighlight?.id ?? null}
           setTip={setTip}
           hideTip={hideTip}
-          onHighlightClick={(highlightItem: PdfHighlight) => setSelectedHighlight(highlightItem)}
+          onHighlightClick={setSelectedHighlight}
         />
       );
     },
-    [selectedColor, selectedHighlight, setSelectedHighlight, pageNumber]
+    [selectedColor, selectedHighlight, setSelectedHighlight]
   );
   
   // If no PDF source is available, show a message
@@ -157,20 +142,11 @@ export const SimplePdfHighlighter: React.FC<SimplePdfHighlighterProps> = ({
                   enableAreaSelection={isHighlighter ? () => true : () => false}
                   onScrollChange={() => setSelectedHighlight(null)}
                   scrollRef={scrollTo => { scrollViewerRef.current = scrollTo; }}
-                  onSelectionFinished={(position, content, hideTip, transformSelection) => {
-                    if (isHighlighter) {
-                      handleSelectionFinished(position, content, hideTip, transformSelection);
-                    }
-                    return null;
-                  }}
+                  onSelectionFinished={handleSelectionFinished}
                   highlightTransform={renderHighlight}
                   highlights={highlights.map(h => ({
                     ...h,
-                    position: convertPosition(h.position),
-                    comment: {
-                      text: h.comment.text, 
-                      emoji: h.comment.emoji
-                    }
+                    position: convertPosition(h.position)
                   }))}
                 />
               );

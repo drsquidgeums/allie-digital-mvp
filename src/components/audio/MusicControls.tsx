@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Volume2, VolumeX, Repeat } from "lucide-react";
@@ -26,7 +27,9 @@ export const MusicControls = ({
     <div className="space-y-2">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <div id="volume-control-label">Volume</div>
+          <Label htmlFor="volume-control" className="text-sm">
+            Volume
+          </Label>
           <Button
             variant="ghost"
             size="sm"
@@ -42,20 +45,24 @@ export const MusicControls = ({
           </Button>
         </div>
         <Slider
+          id="volume-control"
           min={0}
           max={100}
           step={1}
           value={[isMuted ? 0 : volume * 100]}
           onValueChange={handleVolumeChange}
+          className="cursor-pointer"
           aria-label="Adjust volume"
-          aria-labelledby="volume-control-label"
         />
       </div>
 
       <div className="flex items-center justify-between space-x-2">
-        <div id="loop-toggle-label">Loop Playback</div>
+        <Label htmlFor="loop-toggle" className="text-sm cursor-pointer">
+          Loop Playback
+        </Label>
         <div className="flex items-center space-x-2">
           <Switch
+            id="loop-toggle"
             checked={isLooping}
             onCheckedChange={toggleLoop}
             aria-label="Toggle loop playback"
@@ -69,5 +76,3 @@ export const MusicControls = ({
     </div>
   );
 };
-
-export default MusicControls;

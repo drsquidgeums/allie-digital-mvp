@@ -18,7 +18,7 @@ interface Discussion {
   tags: string[];
 }
 
-const DiscussionList = memo(() => {
+export const DiscussionList = memo(() => {
   const { toast } = useToast();
   const [discussions, setDiscussions] = useState<Discussion[]>([
     {
@@ -157,5 +157,3 @@ const DiscussionList = memo(() => {
 });
 
 DiscussionList.displayName = "DiscussionList";
-
-export default DiscussionList;

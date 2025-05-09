@@ -32,7 +32,6 @@ export function getFileType(file: File): string {
     case 'pdf':
       return 'pdf';
     case 'docx':
-    case 'doc':
       return 'docx';
     case 'txt':
       return 'txt';

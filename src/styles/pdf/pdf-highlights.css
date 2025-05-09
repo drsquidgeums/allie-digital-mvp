@@ -1,91 +1,116 @@
 
-/* Highlight styles for PDF viewer */
+/* PDF Highlight Styles */
+.pdf-highlight {
+  background-color: transparent;
+  position: relative;
+  cursor: pointer;
+}
 
-.highlight-layer {
+.pdf-highlight::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background-color: var(--highlight-color, #ffeb3b);
+  opacity: 0.5;
+}
+
+.pdf-highlight:hover::after {
+  height: 100%;
+}
+
+/* Highlight container in PDF */
+.highlight-container {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   pointer-events: none;
+  z-index: 3;
+}
+
+/* Additional styles for react-pdf-highlighter */
+.PdfHighlighter {
+  position: relative;
+  height: 100%;
+}
+
+.Highlight {
+  position: absolute;
+}
+
+.Highlight__parts {
+  opacity: 0.5;
+  pointer-events: auto;
   z-index: 2;
 }
 
-.highlight-element {
-  position: absolute;
+.Highlight.Highlight--selected .Highlight__parts {
+  opacity: 0.8;
+}
+
+.Highlight__part {
   cursor: pointer;
-  pointer-events: all;
-}
-
-.highlight-element:hover {
-  outline: 2px solid rgba(0, 0, 0, 0.3);
-}
-
-.highlight-element.selected {
-  outline: 2px dashed #000;
-}
-
-/* Highlighter styles */
-.highlight-yellow {
-  background-color: rgba(255, 255, 0, 0.4);
-}
-
-.highlight-green {
-  background-color: rgba(0, 255, 0, 0.4);
-}
-
-.highlight-blue {
-  background-color: rgba(0, 0, 255, 0.4);
-}
-
-.highlight-pink {
-  background-color: rgba(255, 0, 255, 0.4);
-}
-
-/* Pen tool styles */
-.annotation-pen {
-  pointer-events: all;
   position: absolute;
-  stroke-width: 3;
-  fill: none;
+  background: var(--highlight-color, #ffeb3b);
+  transition: background 0.3s;
 }
 
-/* Color selection */
-.color-popup {
+/* Fix highlighting display */
+[class^="highlight-"] .Highlight__parts {
+  pointer-events: auto !important;
+}
+
+[class^="highlight-"] .Highlight__part {
+  background-color: inherit;
+}
+
+/* Highlight tooltip */
+.highlight-tooltip {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background-color: white;
+  background: white;
   border-radius: 4px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  padding: 8px 12px;
+  font-size: 14px;
+  max-width: 300px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Styling for the highlight options popup */
+.highlight-options-popup {
+  position: absolute;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 16px;
   z-index: 100;
 }
 
-.color-swatch {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  margin: 0 4px;
-  cursor: pointer;
-  border: 2px solid transparent;
+/* Loading indicator */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #666;
+  font-size: 16px;
 }
 
-.color-swatch:hover,
-.color-swatch.selected {
-  border-color: black;
-  transform: scale(1.1);
-}
-
-/* Highlight text content */
-.highlight-tooltip {
-  position: absolute;
-  background-color: white;
-  padding: 8px 12px;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  z-index: 101;
-  max-width: 300px;
-  word-break: break-word;
-  font-size: 14px;
+/* Error display */
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+  background-color: rgba(255, 0, 0, 0.05);
+  color: #d32f2f;
+  font-size: 16px;
 }

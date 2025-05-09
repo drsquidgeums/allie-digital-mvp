@@ -9,28 +9,32 @@ interface MusicSelectorProps {
   handleMusicSelection: (value: string) => void;
 }
 
-const MusicSelector = ({
+export const MusicSelector = ({
   selectedMusic,
   handleMusicSelection,
 }: MusicSelectorProps) => {
   return (
-    <div className="space-y-2">
-      <RadioGroup
-        defaultValue={selectedMusic}
-        onValueChange={handleMusicSelection}
-      >
-        {MUSIC_OPTIONS.map((option) => (
-          <div key={option.id} className="flex items-center space-x-2">
-            <RadioGroupItem 
-              value={option.id}
-              id={option.id}
-            />
-            <Label htmlFor={option.id}>{option.name}</Label>
-          </div>
-        ))}
-      </RadioGroup>
-    </div>
+    <RadioGroup
+      value={selectedMusic}
+      onValueChange={handleMusicSelection}
+      className="space-y-2"
+      aria-label="Select background music"
+    >
+      {MUSIC_OPTIONS.map((option) => (
+        <div key={option.id} className="flex items-center space-x-2">
+          <RadioGroupItem 
+            value={option.id} 
+            id={option.id}
+            aria-label={option.name}
+          />
+          <Label 
+            htmlFor={option.id}
+            className="flex-1 text-left cursor-pointer"
+          >
+            {option.name}
+          </Label>
+        </div>
+      ))}
+    </RadioGroup>
   );
 };
-
-export default MusicSelector;

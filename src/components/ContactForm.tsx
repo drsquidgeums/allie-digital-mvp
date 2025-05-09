@@ -1,100 +1,94 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
 
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
+interface ContactFormData {
+  name: string;
+  email: string;
+  message: string;
+}
 
 export const ContactForm = () => {
-  const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactFormData>();
   const { toast } = useToast();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: ContactFormData) => {
     try {
-      // Simulating form submission
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      toast({
-        title: "Message sent!",
-        description: "We'll get back to you as soon as possible.",
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: 'b93eb15c-7998-4b84-8351-a37c8f85ae1a',
+          ...data,
+        }),
       });
-      
-      reset();
+
+      if (response.ok) {
+        toast({
+          title: "Success!",
+          description: "Your message has been sent successfully.",
+        });
+        reset();
+      } else {
+        throw new Error('Failed to send message');
+      }
     } catch (error) {
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again.",
+        description: "Failed to send message. Please try again.",
         variant: "destructive",
       });
     }
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 bg-card rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-center">Contact Us</h2>
-      
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-2">
-          <label htmlFor="name" className="block text-sm font-medium">
-            Name
-          </label>
-          <Input
-            id="name"
-            {...register('name', { required: 'Name is required' })}
-            placeholder="Your name"
-          />
-          {errors.name && (
-            <p className="text-destructive text-sm">{errors.name.message as string}</p>
-          )}
-        </div>
-        
-        <div className="space-y-2">
-          <label htmlFor="email" className="block text-sm font-medium">
-            Email
-          </label>
-          <Input
-            id="email"
-            type="email"
-            {...register('email', { 
-              required: 'Email is required',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Invalid email address'
-              }
-            })}
-            placeholder="your.email@example.com"
-          />
-          {errors.email && (
-            <p className="text-destructive text-sm">{errors.email.message as string}</p>
-          )}
-        </div>
-        
-        <div className="space-y-2">
-          <label htmlFor="message" className="block text-sm font-medium">
-            Message
-          </label>
-          <Textarea
-            id="message"
-            {...register('message', { required: 'Message is required' })}
-            placeholder="Your message..."
-            rows={5}
-          />
-          {errors.message && (
-            <p className="text-destructive text-sm">{errors.message.message as string}</p>
-          )}
-        </div>
-        
-        <Button 
-          type="submit" 
-          className="w-full"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Sending...' : 'Send Message'}
-        </Button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full max-w-md mx-auto p-4">
+      <div>
+        <Input
+          placeholder="Your Name"
+          {...register("name", { required: "Name is required" })}
+        />
+        {errors.name && (
+          <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
+        )}
+      </div>
+
+      <div>
+        <Input
+          type="email"
+          placeholder="Your Email"
+          {...register("email", { 
+            required: "Email is required",
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: "Invalid email address"
+            }
+          })}
+        />
+        {errors.email && (
+          <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+        )}
+      </div>
+
+      <div>
+        <Textarea
+          placeholder="Your Message"
+          {...register("message", { required: "Message is required" })}
+          className="min-h-[150px]"
+        />
+        {errors.message && (
+          <p className="text-sm text-red-500 mt-1">{errors.message.message}</p>
+        )}
+      </div>
+
+      <Button type="submit" className="w-full">
+        Send Message
+      </Button>
+    </form>
   );
 };
-
-export default ContactForm;

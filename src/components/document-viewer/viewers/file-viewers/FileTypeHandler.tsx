@@ -3,7 +3,6 @@ import React from 'react';
 import { getFileType } from '../../FileConverter';
 import { PdfViewerWrapper } from './PdfViewerWrapper';
 import { TextViewerWrapper } from './TextViewerWrapper';
-import { DocxViewerWrapper } from './DocxViewerWrapper';
 import { ErrorDisplay } from '../ErrorDisplay';
 
 interface FileTypeHandlerProps {
@@ -38,8 +37,6 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
             isHighlighter={isHighlighter}
           />
         );
-      case 'docx':
-        return <DocxViewerWrapper file={file} />;
       case 'txt':
       case 'html':
         return <TextViewerWrapper file={file} />;
@@ -48,7 +45,7 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
         return (
           <ErrorDisplay 
             title="Unsupported File Type" 
-            description="The file type you're trying to view is not supported. Please try a PDF, DOCX, TXT, or HTML file." 
+            description="The file type you're trying to view is not supported. Please try a PDF, TXT, or HTML file." 
           />
         );
     }
@@ -62,4 +59,3 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
     );
   }
 };
-

@@ -6,7 +6,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
-const PollBox = () => {
+export const PollBox = () => {
   const { toast } = useToast();
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [hasVoted, setHasVoted] = useState(false);
@@ -49,8 +49,8 @@ const PollBox = () => {
           <RadioGroup value={selectedOption} onValueChange={setSelectedOption}>
             {Object.keys(votes).map((option) => (
               <div key={option} className="flex items-center space-x-2">
-                <RadioGroupItem value={option} />
-                <Label>{option}</Label>
+                <RadioGroupItem value={option} id={option} />
+                <Label htmlFor={option}>{option}</Label>
               </div>
             ))}
           </RadioGroup>
@@ -82,5 +82,3 @@ const PollBox = () => {
     </Card>
   );
 };
-
-export default PollBox;

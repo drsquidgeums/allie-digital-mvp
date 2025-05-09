@@ -1,19 +1,18 @@
-
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { pdfjs } from 'react-pdf';
 import { useToast } from '@/hooks/use-toast';
 import { PdfViewerControls } from './components/PdfViewerControls';
-import { PdfDocumentViewer } from './components/PdfDocumentViewer';
-import { HighlightsOverlay } from './components/HighlightsOverlay';
+import { PdfDocument } from './components/PdfDocument';
 import { ColorSelectionPopup } from './components/ColorSelectionPopup';
 import { usePdfHighlights } from './hooks/usePdfHighlights';
+import { useTextSelection } from './hooks/useTextSelection';
 import '@/styles/pdf/pdf-highlighter.css';
 import '@/styles/pdf/pdf-highlights.css';
 
 // Set PDF.js worker path
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-export interface SimplePdfViewerProps {
+interface SimplePdfViewerProps {
   file?: File | null;
   url?: string;
   selectedColor: string;
@@ -22,7 +21,7 @@ export interface SimplePdfViewerProps {
 }
 
 export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
-  file = null,
+  file,
   url = '',
   selectedColor = '#FFFF00',
   isHighlighter = true,
@@ -31,8 +30,8 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [scale, setScale] = useState<number>(1.0);
-  const { toast } = useToast();
   const [selectedHighlightId, setSelectedHighlightId] = useState<string | null>(null);
+  const { toast } = useToast();
 
   // Use our custom hook for managing highlights
   const {
@@ -44,6 +43,13 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
     updateHighlightColor,
     handleSelectionFinished
   } = usePdfHighlights(selectedColor);
+
+  // Use the text selection hook
+  const { handleTextSelection } = useTextSelection(
+    pageNumber,
+    isHighlighter,
+    handleSelectionFinished
+  );
 
   // File source determination
   const pdfUrl = file ? URL.createObjectURL(file) : url;
@@ -58,75 +64,26 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   }, [file, pdfUrl]);
 
   // Handle page change
-  const changePage = useCallback((offset: number) => {
+  const changePage = (offset: number) => {
     const newPage = pageNumber + offset;
     if (newPage >= 1 && newPage <= numPages) {
       setPageNumber(newPage);
     }
-  }, [pageNumber, numPages]);
+  };
 
   // Handle zoom
-  const zoom = useCallback((factor: number) => {
+  const zoom = (factor: number) => {
     const newScale = scale + factor;
     if (newScale >= 0.5 && newScale <= 3) {
       setScale(newScale);
     }
-  }, [scale]);
+  };
 
   // Handle document load success
-  const handleDocumentLoadSuccess = useCallback(({ numPages }: { numPages: number }) => {
+  const handleDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
     console.log("Document loaded with", numPages, "pages");
-    
-    // If onContentLoaded is provided, extract content from the PDF
-    if (onContentLoaded && file) {
-      // In a real implementation, this would extract the text content from the PDF
-      const fileName = file.name || 'document.pdf';
-      onContentLoaded('PDF content would be extracted here', fileName);
-    }
-  }, [onContentLoaded, file]);
-
-  // Handle text selection for highlighting
-  const handleTextSelection = useCallback(() => {
-    if (isHighlighter) {
-      const selection = window.getSelection();
-      if (selection && selection.toString().trim() !== '') {
-        const range = selection.getRangeAt(0);
-        const position = {
-          boundingRect: range.getBoundingClientRect(),
-          rects: Array.from(range.getClientRects()),
-          pageNumber
-        };
-        
-        const content = {
-          text: selection.toString()
-        };
-        
-        handleSelectionFinished(
-          position as any,
-          content,
-          () => {/* hide tip function */},
-          () => {/* transform selection function */}
-        );
-        
-        toast({
-          title: "Highlight Added",
-          description: "Selection has been highlighted in the document",
-        });
-        
-        selection.removeAllRanges();
-      }
-    }
-  }, [isHighlighter, pageNumber, handleSelectionFinished, toast]);
-
-  // Handle selecting a highlight
-  const handleSelectHighlight = useCallback((id: string) => {
-    setSelectedHighlightId(id);
-    const highlight = highlights.find(h => h.id === id);
-    if (highlight) {
-      setSelectedHighlight(highlight);
-    }
-  }, [highlights, setSelectedHighlight]);
+  };
 
   if (!pdfUrl) {
     return (
@@ -155,19 +112,15 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
       />
       
       {/* PDF Document with Highlights */}
-      <PdfDocumentViewer
-        pdfUrl={pdfUrl}
+      <PdfDocument
+        file={pdfUrl}
         pageNumber={pageNumber}
-        scale={scale}
+        zoom={scale}
+        highlights={highlights}
+        selectedHighlightId={selectedHighlightId}
         onLoadSuccess={handleDocumentLoadSuccess}
-      >
-        <HighlightsOverlay
-          highlights={highlights}
-          pageNumber={pageNumber}
-          onSelectHighlight={handleSelectHighlight}
-          selectedHighlightId={selectedHighlightId}
-        />
-      </PdfDocumentViewer>
+        onHighlightClick={setSelectedHighlightId}
+      />
       
       {/* Color selection popup for selected highlight */}
       {selectedHighlightId && (

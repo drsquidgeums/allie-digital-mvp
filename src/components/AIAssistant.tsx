@@ -124,7 +124,7 @@ export const AIAssistant = React.memo(({ documentContent, documentName }: AIAssi
         >
           {messages.map((msg, idx) => (
             <ChatMessage 
-              key={idx}
+              key={idx} 
               text={msg.text} 
               isUser={msg.isUser}
               tabIndex={0}

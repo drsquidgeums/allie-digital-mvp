@@ -1,10 +1,12 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { PdfHighlight } from '../hooks/usePdfHighlights';
 
 interface HighlightOptionsPopupProps {
-  selectedHighlight: PdfHighlight;
+  selectedHighlight: {
+    id: string;
+    color?: string;
+  } | null;
   onColorUpdate: (id: string, color: string) => void;
   onDelete: (id: string) => void;
   onClose: () => void;
@@ -27,7 +29,6 @@ export const HighlightOptionsPopup: React.FC<HighlightOptionsPopupProps> = ({
         {colorOptions.map(color => (
           <button 
             key={color} 
-            type="button"
             style={{
               backgroundColor: color,
               width: "24px",
@@ -36,7 +37,6 @@ export const HighlightOptionsPopup: React.FC<HighlightOptionsPopupProps> = ({
               border: color === selectedHighlight.color ? "2px solid black" : "1px solid #ccc"
             }}
             onClick={() => onColorUpdate(selectedHighlight.id, color)}
-            aria-label={`Change highlight color to ${color}`}
           />
         ))}
       </div>

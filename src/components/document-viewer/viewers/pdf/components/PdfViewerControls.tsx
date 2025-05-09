@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Trash2 } from 'lucide-react';
+import { getContrastColor } from '../utils/colorUtils';
 
 interface PdfViewerControlsProps {
   pageNumber: number;
@@ -20,82 +21,69 @@ export const PdfViewerControls: React.FC<PdfViewerControlsProps> = ({
   numPages,
   scale,
   selectedHighlightId,
+  selectedColor,
   onChangePage,
   onZoom,
   onTextSelect,
   onDeleteHighlight
 }) => {
   return (
-    <div className="pdf-toolbar">
-      <div className="pdf-toolbar-group">
+    <div className="flex items-center justify-between p-2 bg-zinc-800 text-white border-b">
+      <div className="flex items-center space-x-2">
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
           onClick={() => onChangePage(-1)}
           disabled={pageNumber <= 1}
-          aria-label="Previous page"
+          className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft className="h-4 w-4 dark:text-white text-black" />
         </Button>
         
-        <span className="pdf-page-info">
-          <span className="pdf-page-number">{pageNumber}</span>
-          <span className="pdf-page-label">of {numPages}</span>
+        <span className="text-sm">
+          {pageNumber} / {numPages}
         </span>
         
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
           onClick={() => onChangePage(1)}
           disabled={pageNumber >= numPages}
-          aria-label="Next page"
+          className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-4 w-4 dark:text-white text-black" />
         </Button>
       </div>
       
-      <div className="pdf-toolbar-group">
-        <Button
-          variant="ghost"
-          size="sm"
+      <div className="flex items-center space-x-2">
+        <Button 
+          variant="outline" 
+          size="sm" 
           onClick={() => onZoom(-0.1)}
-          aria-label="Zoom out"
+          className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
         >
-          <ZoomOut className="h-4 w-4" />
+          <ZoomOut className="h-4 w-4 dark:text-white text-black" />
         </Button>
         
-        <span className="pdf-zoom-value">{Math.round(scale * 100)}%</span>
+        <span className="text-sm">{Math.round(scale * 100)}%</span>
         
-        <Button
-          variant="ghost"
-          size="sm"
+        <Button 
+          variant="outline" 
+          size="sm" 
           onClick={() => onZoom(0.1)}
-          aria-label="Zoom in"
+          className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
         >
-          <ZoomIn className="h-4 w-4" />
-        </Button>
-      </div>
-      
-      <div className="pdf-toolbar-group">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onTextSelect}
-          aria-label="Highlight text"
-        >
-          Highlight Text
+          <ZoomIn className="h-4 w-4 dark:text-white text-black" />
         </Button>
         
         {selectedHighlightId && (
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
-            onClick={() => onDeleteHighlight(selectedHighlightId)}
-            className="text-destructive"
-            aria-label="Delete highlight"
+            onClick={() => selectedHighlightId && onDeleteHighlight(selectedHighlightId)}
+            className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
           >
-            <Trash2 className="h-4 w-4 mr-2" />
-            Delete Highlight
+            <Trash2 className="h-4 w-4 dark:text-white text-black" />
           </Button>
         )}
       </div>

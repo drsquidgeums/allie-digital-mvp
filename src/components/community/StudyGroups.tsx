@@ -19,7 +19,7 @@ interface StudyGroup {
   dateCreated: Date;
 }
 
-const StudyGroups = () => {
+export const StudyGroups = () => {
   const { toast } = useToast();
   const [groups, setGroups] = useState<StudyGroup[]>([
     {
@@ -182,5 +182,3 @@ const StudyGroups = () => {
     </Card>
   );
 };
-
-export default StudyGroups;

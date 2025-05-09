@@ -30,7 +30,7 @@ interface Event {
   link?: string;
 }
 
-const ResourceShare = () => {
+export const ResourceShare = () => {
   const { toast } = useToast();
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [events, setEvents] = useState<Event[]>([]);
@@ -215,5 +215,3 @@ const ResourceShare = () => {
     </Card>
   );
 };
-
-export default ResourceShare;

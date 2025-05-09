@@ -1,6 +1,5 @@
 
 import { Edge, Node as FlowNode, NodeChange, EdgeChange, Connection } from '@xyflow/react';
-import { LucideIcon } from 'lucide-react';
 
 export interface NodeStyle {
   background?: string;
@@ -31,18 +30,6 @@ export interface MindMapNode extends FlowNode {
 export interface ColorOption {
   value: string;
   label: string;
-}
-
-export interface ShapeConfig {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  description?: string;
-}
-
-export interface ShapeConfigGroups {
-  shapes: ShapeConfig[];
-  tools: ShapeConfig[];
 }
 
 export interface MindMapContainerProps {

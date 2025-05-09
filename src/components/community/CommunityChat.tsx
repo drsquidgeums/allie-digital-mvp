@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatMessage } from "../chat/ChatMessage";
 import { ChatInput } from "../chat/ChatInput";
 
-const CommunityChat = memo(() => {
+export const CommunityChat = memo(() => {
   const [messages, setMessages] = useState<Array<{ text: string; isUser: boolean }>>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +34,7 @@ const CommunityChat = memo(() => {
     <Card className="p-4">
       <h2 className="text-xl font-semibold mb-4">Chat with Us</h2>
       <div className="space-y-4">
-        <ScrollArea className="h-[300px]">
+        <ScrollArea className="h-[300px] pr-4">
           <div className="space-y-4">
             {messages.map((message, index) => (
               <ChatMessage key={index} {...message} />
@@ -53,5 +53,3 @@ const CommunityChat = memo(() => {
 });
 
 CommunityChat.displayName = "CommunityChat";
-
-export default CommunityChat;

@@ -1,43 +1,38 @@
 
 import React from 'react';
-import { SimplePdfHighlighter } from '../../viewers/pdf/SimplePdfHighlighter';
-import { SimplePdfViewer } from '../../viewers/pdf/SimplePdfViewer';
+import SimplePdfViewer from '../../viewers/pdf/SimplePdfViewer';
+import '@/styles/pdf/pdf-base.css';
+import '@/styles/pdf/pdf-highlights.css';
+import '@/styles/pdf/pdf-toolbar.css';
+import '@/styles/pdf/pdf-accessibility.css';
 
 interface PdfViewerWrapperProps {
   file: File | null;
   url: string;
-  selectedColor: string;
+  selectedColor?: string;
   isHighlighter?: boolean;
-  onContentLoaded?: (content: string, fileName: string) => void;
 }
 
 export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({ 
   file, 
-  url, 
-  selectedColor,
-  isHighlighter = true,
-  onContentLoaded
+  url,
+  selectedColor = '#ffeb3b',
+  isHighlighter = true 
 }) => {
-  // Use either SimplePdfHighlighter or SimplePdfViewer based on isHighlighter flag
-  if (isHighlighter) {
-    return (
-      <SimplePdfHighlighter
+  return (
+    <div className="h-full w-full flex flex-col relative">
+      {/* Skip link for keyboard users */}
+      <a href="#pdf-content" className="skip-link">
+        Skip to PDF content
+      </a>
+      
+      <SimplePdfViewer
         file={file}
         url={url}
         selectedColor={selectedColor}
-        isHighlighter={true}
+        isHighlighter={isHighlighter}
       />
-    );
-  }
-
-  return (
-    <SimplePdfViewer
-      file={file}
-      url={url}
-      selectedColor={selectedColor}
-      isHighlighter={false}
-      onContentLoaded={onContentLoaded}
-    />
+    </div>
   );
 };
 

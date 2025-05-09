@@ -1,5 +1,6 @@
+
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { Bot, MessageSquare, X, Maximize2, Minimize2, Sparkles } from "lucide-react";
+import { Bot, MessageCircle, X, Maximize2, Minimize2, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";

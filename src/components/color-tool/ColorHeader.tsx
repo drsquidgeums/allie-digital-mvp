@@ -16,14 +16,13 @@ export const ColorHeader = ({ isHighlighter, onHighlighterToggle }: ColorHeaderP
         <h3 className="font-medium">Colour Tool</h3>
       </div>
       <Toggle
-        defaultPressed={isHighlighter}
+        pressed={isHighlighter}
         onPressedChange={onHighlighterToggle}
         aria-label="Toggle highlighter mode"
+        className="data-[state=on]:bg-yellow-200"
       >
         <Highlighter className="w-4 h-4" />
       </Toggle>
     </div>
   );
 };
-
-export default ColorHeader;

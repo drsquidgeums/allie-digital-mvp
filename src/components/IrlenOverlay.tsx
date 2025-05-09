@@ -89,7 +89,10 @@ export const IrlenOverlay = () => {
             </div>
           </PopoverTrigger>
         </TooltipTrigger>
-        <TooltipContent side="bottom">
+        <TooltipContent 
+          side="bottom"
+          className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md"
+        >
           Irlen Overlay
         </TooltipContent>
       </Tooltip>

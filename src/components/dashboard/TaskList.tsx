@@ -97,7 +97,7 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor,
           </span>
           
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
               <Button
                 size="sm"
                 variant="ghost"
