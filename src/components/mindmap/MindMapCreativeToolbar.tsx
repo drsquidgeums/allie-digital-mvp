@@ -35,7 +35,7 @@ export const MindMapCreativeToolbar = ({
         className="p-3 border-t border-border/30 bg-background/95 backdrop-blur-sm flex items-center justify-between shadow-md"
         role="toolbar"
         aria-label="Shape selection toolbar"
-        style={{ zIndex: 10 }} // Ensure proper z-index
+        style={{ zIndex: 10 }}
       >
         <div className="flex items-center space-x-4">
           <ShapeGroup shapes={SHAPE_CONFIGS.shapes} onShapeSelect={onShapeSelect} />

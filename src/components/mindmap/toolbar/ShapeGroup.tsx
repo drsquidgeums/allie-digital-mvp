@@ -3,20 +3,20 @@ import React from 'react';
 import { ShapeButton } from './ShapeButton';
 import { LucideIcon } from 'lucide-react';
 import { Card } from "@/components/ui/card";
-
-interface ShapeProps {
-  id: string;
-  icon: LucideIcon;
-  label: string;
-  description: string;
-}
+import { ShapeConfig } from '../types';
 
 interface ShapeGroupProps {
-  shapes: ShapeProps[];
+  shapes: ShapeConfig[];
   onShapeSelect: (shape: string, label?: string) => void;
 }
 
 export const ShapeGroup = ({ shapes, onShapeSelect }: ShapeGroupProps) => {
+  // Add safety check to prevent error when shapes is undefined
+  if (!shapes || !Array.isArray(shapes)) {
+    console.warn('ShapeGroup received invalid shapes prop', shapes);
+    return null;
+  }
+
   return (
     <Card className="flex items-center space-x-1 p-1 rounded-lg border border-border/40 bg-background/50 shadow-sm">
       {shapes.map((shape) => (
@@ -25,7 +25,7 @@ export const ShapeGroup = ({ shapes, onShapeSelect }: ShapeGroupProps) => {
           id={shape.id}
           icon={shape.icon}
           label={shape.label}
-          description={shape.description}
+          description={shape.description || shape.label}
           onClick={() => onShapeSelect(shape.id, '')}
         />
       ))}
