@@ -11,13 +11,15 @@ interface PdfViewerWrapperProps {
   url: string;
   selectedColor?: string;
   isHighlighter?: boolean;
+  onContentLoaded?: (content: string, fileName: string) => void;
 }
 
 export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({ 
   file, 
   url,
   selectedColor = '#ffeb3b',
-  isHighlighter = true 
+  isHighlighter = true,
+  onContentLoaded
 }) => {
   return (
     <div className="h-full w-full flex flex-col relative">
@@ -31,6 +33,7 @@ export const PdfViewerWrapper: React.FC<PdfViewerWrapperProps> = ({
         url={url}
         selectedColor={selectedColor}
         isHighlighter={isHighlighter}
+        onContentLoaded={onContentLoaded}
       />
     </div>
   );
