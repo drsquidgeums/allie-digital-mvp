@@ -22,11 +22,11 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
         name: dayName,
         completed: tasks.filter(task => 
           task.completed && 
-          format(new Date(task.createdAt as string), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
+          format(new Date(task.createdAt), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
         ).length,
         pending: tasks.filter(task =>
           !task.completed &&
-          format(new Date(task.createdAt as string), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
+          format(new Date(task.createdAt), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
         ).length
       };
     });

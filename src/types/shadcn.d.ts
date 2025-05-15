@@ -87,37 +87,88 @@ declare module '@radix-ui/react-checkbox' {
   const Indicator: React.FC<React.ComponentProps<'span'>>;
 }
 
+declare module '@radix-ui/react-dialog' {
+  export interface DialogProps {
+    children?: React.ReactNode;
+    [key: string]: any;
+  }
+  
+  export interface DialogContentProps {
+    children?: React.ReactNode;
+    [key: string]: any;
+  }
+  
+  export interface DialogHeaderProps {
+    children?: React.ReactNode;
+    [key: string]: any;
+  }
+  
+  export interface DialogFooterProps {
+    children?: React.ReactNode;
+    [key: string]: any;
+  }
+  
+  export interface DialogTitleProps {
+    children?: React.ReactNode;
+    [key: string]: any;
+  }
+  
+  export interface DialogDescriptionProps {
+    children?: React.ReactNode;
+    [key: string]: any;
+  }
+
+  const Root: React.FC<DialogProps>;
+  const Trigger: React.FC<React.ComponentProps<'button'>>;
+  const Portal: React.FC<React.ComponentProps<'div'>>;
+  const Overlay: React.FC<React.ComponentProps<'div'>>;
+  const Content: React.FC<DialogContentProps>;
+  const Header: React.FC<DialogHeaderProps>;
+  const Footer: React.FC<DialogFooterProps>;
+  const Title: React.FC<DialogTitleProps>;
+  const Description: React.FC<DialogDescriptionProps>;
+  const Close: React.FC<React.ComponentProps<'button'>>;
+}
+
 declare module '@radix-ui/react-command' {
   interface CommandProps {
     [key: string]: any;
+    children?: React.ReactNode;
   }
   
   interface CommandInputProps {
     [key: string]: any;
+    children?: React.ReactNode;
   }
   
   interface CommandListProps {
     [key: string]: any;
+    children?: React.ReactNode;
   }
   
   interface CommandEmptyProps {
     [key: string]: any;
+    children?: React.ReactNode;
   }
   
   interface CommandGroupProps {
     [key: string]: any;
+    children?: React.ReactNode;
   }
   
   interface CommandItemProps {
     [key: string]: any;
+    children?: React.ReactNode;
   }
   
   interface CommandShortcutProps {
     [key: string]: any;
+    children?: React.ReactNode;
   }
   
   interface CommandSeparatorProps {
     [key: string]: any;
+    children?: React.ReactNode;
   }
 }
 
@@ -136,13 +187,8 @@ declare module '@radix-ui/react-context-menu' {
   const RadioGroup: React.FC;
 }
 
-declare module '@radix-ui/react-dialog' {
-  const Root: React.FC;
-  const Trigger: React.FC;
-  const Portal: React.FC;
-  const Overlay: React.FC;
-  const Content: React.FC;
-  const Title: React.FC;
+declare module '@radix-ui/react-aspect-ratio' {
+  const Root: React.FC<React.ComponentProps<'div'>>;
 }
 
 declare module 'recharts' {
@@ -160,6 +206,3 @@ declare module 'recharts' {
   const Legend: React.FC<any>;
 }
 
-declare module '@radix-ui/react-aspect-ratio' {
-  const Root: React.FC<React.ComponentProps<'div'>>;
-}

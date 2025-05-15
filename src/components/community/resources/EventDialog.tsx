@@ -9,7 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+  DialogClose
+} from "@/components/ui/dialog/dialog-root";
 import { Plus, X, Video } from "lucide-react";
 
 interface EventDialogProps {
@@ -51,7 +52,7 @@ export const EventDialog = ({ newEvent, onChange, onSubmit }: EventDialogProps) 
           <DialogHeader>
             <DialogTitle className="text-popover-foreground dark:text-[#FAFAFA]">Schedule Study Group Event</DialogTitle>
           </DialogHeader>
-          <DialogTrigger asChild>
+          <DialogClose asChild>
             <Button 
               variant="ghost" 
               size="icon" 
@@ -59,7 +60,7 @@ export const EventDialog = ({ newEvent, onChange, onSubmit }: EventDialogProps) 
             >
               <X className="h-4 w-4 dark:group-hover:text-white" />
             </Button>
-          </DialogTrigger>
+          </DialogClose>
         </div>
         <div className="space-y-4 mt-4">
           <Input
