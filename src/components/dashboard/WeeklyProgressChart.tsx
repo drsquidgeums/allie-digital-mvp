@@ -1,19 +1,10 @@
 
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { format, startOfWeek, addDays, addWeeks, subWeeks } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Task } from '@/types/task';
-import {
-  BarChart as RechartsBarChart,
-  Bar as RechartsBar,
-  XAxis as RechartsXAxis,
-  YAxis as RechartsYAxis,
-  CartesianGrid as RechartsCartesianGrid,
-  Tooltip as RechartsTooltip,
-  ResponsiveContainer as RechartsResponsiveContainer,
-  Legend as RechartsLegend
-} from 'recharts';
 
 interface WeeklyProgressChartProps {
   tasks: Task[];
@@ -74,17 +65,17 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
         </div>
       </div>
       <div className="flex-1 min-h-0">
-        <RechartsResponsiveContainer width="100%" height="100%">
-          <RechartsBarChart data={getBarChartData()}>
-            <RechartsCartesianGrid strokeDasharray="3 3" />
-            <RechartsXAxis 
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={getBarChartData()}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis 
               dataKey="name" 
               height={30}
               interval={0}
             />
-            <RechartsYAxis />
-            <RechartsTooltip />
-            <RechartsLegend 
+            <YAxis />
+            <Tooltip />
+            <Legend 
               formatter={(value) => {
                 if (value === "Completed") {
                   return <span className="text-[#222222] dark:text-[#F1F1F1]">{value}</span>;
@@ -96,19 +87,19 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
                 paddingTop: "10px"
               }}
             />
-            <RechartsBar 
+            <Bar 
               dataKey="completed" 
               fill="#222222" 
               name="Completed" 
               className="dark:fill-[#F1F1F1]" 
             />
-            <RechartsBar 
+            <Bar 
               dataKey="pending" 
               fill="#7E69AB" 
               name="Pending" 
             />
-          </RechartsBarChart>
-        </RechartsResponsiveContainer>
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
