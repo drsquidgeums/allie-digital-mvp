@@ -41,7 +41,7 @@ export const EventDialog = ({ newEvent, onChange, onSubmit }: EventDialogProps) 
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Button variant="outline" size="sm">
           <Plus className="h-4 w-4 mr-2" />
           Add Event
@@ -52,7 +52,7 @@ export const EventDialog = ({ newEvent, onChange, onSubmit }: EventDialogProps) 
           <DialogHeader>
             <DialogTitle className="text-popover-foreground dark:text-[#FAFAFA]">Schedule Study Group Event</DialogTitle>
           </DialogHeader>
-          <DialogClose asChild>
+          <DialogClose>
             <Button 
               variant="ghost" 
               size="icon" 

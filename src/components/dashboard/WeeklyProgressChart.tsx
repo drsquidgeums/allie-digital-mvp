@@ -17,16 +17,17 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
     return Array.from({ length: 7 }, (_, i) => {
       const date = addDays(currentWeekStart, i);
       const dayName = format(date, 'EEE');
+      const dateStr = format(date, 'yyyy-MM-dd');
       
       return {
         name: dayName,
         completed: tasks.filter(task => 
           task.completed && 
-          format(new Date(task.createdAt), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
+          format(new Date(task.createdAt || ''), 'yyyy-MM-dd') === dateStr
         ).length,
         pending: tasks.filter(task =>
           !task.completed &&
-          format(new Date(task.createdAt), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
+          format(new Date(task.createdAt || ''), 'yyyy-MM-dd') === dateStr
         ).length
       };
     });
