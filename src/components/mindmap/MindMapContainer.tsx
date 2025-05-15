@@ -1,12 +1,42 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { MindMapToolbar } from './MindMapToolbar';
 import { MindMapFlow } from './MindMapFlow';
 import { MindMapCreativeToolbar } from './MindMapCreativeToolbar';
 import { MindMapContainerProps } from './types';
 import { toast } from "sonner";
-import { ReactFlowProvider } from '@xyflow/react';
+import { ReactFlowProvider, useReactFlow } from '@xyflow/react';
 import { getShapeStyle } from './utils/shapeUtils';
+
+// Create a component that will be wrapped by ReactFlowProvider
+const MindMapFlowWithProvider = ({
+  nodes,
+  edges,
+  onNodesChange,
+  onEdgesChange,
+  onConnect,
+  nodeTypes,
+}) => {
+  const reactFlowInstance = useReactFlow();
+  
+  // Now we can safely use the reactFlowInstance here
+  const handleDeleteNode = (nodeId: string) => {
+    onNodesChange([{ type: 'remove', id: nodeId }]);
+    toast(`Node deleted`);
+  };
+
+  return (
+    <MindMapFlow
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      onConnect={onConnect}
+      nodeTypes={nodeTypes}
+      onDeleteNode={handleDeleteNode}
+    />
+  );
+};
 
 export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   nodes,
@@ -32,12 +62,6 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   textColorOptions,
   nodeTypes,
 }) => {
-  // Add deleteNode prop to hook up to useMindMapState's deleteNode function
-  const handleDeleteNode = (nodeId: string) => {
-    onNodesChange([{ type: 'remove', id: nodeId }]);
-    toast(`Node deleted`);
-  };
-
   const handleShapeSelect = (shape: string, label?: string) => {
     const nodeStyle = getShapeStyle(shape, selectedColor, customColor);
 
@@ -74,14 +98,13 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
       />
       <div className="flex-1 min-h-0 relative">
         <ReactFlowProvider>
-          <MindMapFlow
+          <MindMapFlowWithProvider
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
-            onDeleteNode={handleDeleteNode}
           />
         </ReactFlowProvider>
       </div>

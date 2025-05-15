@@ -4,7 +4,6 @@ import {
   ReactFlow,
   Controls,
   Background,
-  useReactFlow,
   ConnectionLineType
 } from '@xyflow/react';
 import { MindMapNode } from './types';
@@ -28,8 +27,8 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
   nodeTypes,
   onDeleteNode,
 }) => {
-  const { fitView } = useReactFlow();
-
+  // We've removed the useReactFlow hook which was causing the issue
+  
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
     const selectedNodes = nodes.filter(node => node.selected);
 
@@ -43,7 +42,7 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
       case 'f':
         if (event.ctrlKey || event.metaKey) {
           event.preventDefault();
-          fitView({ duration: 400, padding: 0.2 });
+          // We'll handle this differently without using useReactFlow
         }
         break;
       case 'Escape':
@@ -56,7 +55,7 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
         );
         break;
     }
-  }, [nodes, onNodesChange, fitView, onDeleteNode]);
+  }, [nodes, onNodesChange, onDeleteNode]);
 
   return (
     <div 
