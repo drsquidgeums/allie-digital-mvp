@@ -5,10 +5,9 @@ import { MindMapFlow } from './MindMapFlow';
 import { MindMapCreativeToolbar } from './MindMapCreativeToolbar';
 import { MindMapContainerProps } from './types';
 import { toast } from "sonner";
-import { ReactFlowProvider, useReactFlow } from '@xyflow/react';
+import { ReactFlowProvider } from '@xyflow/react';
 import { getShapeStyle } from './utils/shapeUtils';
 
-// The main issue is here - we need to restructure this component to follow React rules of hooks
 export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   nodes,
   edges,
@@ -53,6 +52,12 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
     toast(`Added ${shape} node`);
   };
 
+  // Function to handle node deletion
+  const handleDeleteNode = (nodeId: string) => {
+    onNodesChange([{ type: 'remove', id: nodeId }]);
+    toast(`Node deleted`);
+  };
+
   return (
     <div 
       className="w-full h-[calc(100vh-12rem)] bg-background rounded-xl overflow-hidden flex flex-col shadow-lg animate-fade-in relative"
@@ -69,14 +74,14 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
       />
       <div className="flex-1 min-h-0 relative">
         <ReactFlowProvider>
-          {/* We need to separate this component and provide proper hook context */}
-          <MindMapFlowContent
+          <MindMapFlow
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
+            onDeleteNode={handleDeleteNode}
           />
         </ReactFlowProvider>
       </div>
@@ -96,36 +101,5 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
         </div>
       </div>
     </div>
-  );
-};
-
-// Create a proper function component that can safely use hooks
-const MindMapFlowContent = ({
-  nodes,
-  edges,
-  onNodesChange,
-  onEdgesChange,
-  onConnect,
-  nodeTypes,
-}) => {
-  // Now useReactFlow is called inside a function component
-  const reactFlowInstance = useReactFlow();
-  
-  // The delete node handler that requires the hook
-  const handleDeleteNode = (nodeId: string) => {
-    onNodesChange([{ type: 'remove', id: nodeId }]);
-    toast(`Node deleted`);
-  };
-
-  return (
-    <MindMapFlow
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      nodeTypes={nodeTypes}
-      onDeleteNode={handleDeleteNode}
-    />
   );
 };
