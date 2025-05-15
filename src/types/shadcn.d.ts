@@ -16,6 +16,13 @@ declare module '@radix-ui/react-accordion' {
   interface AccordionContentProps {
     [key: string]: any;
   }
+
+  // Add missing exports
+  export const Root: any;
+  export const Item: any;
+  export const Header: any;
+  export const Trigger: any;
+  export const Content: any;
 }
 
 declare module '@radix-ui/react-alert-dialog' {
@@ -42,6 +49,17 @@ declare module '@radix-ui/react-alert-dialog' {
   interface AlertDialogCancelProps {
     [key: string]: any;
   }
+
+  // Add missing exports
+  export const Root: any;
+  export const Trigger: any;
+  export const Portal: any;
+  export const Overlay: any;
+  export const Content: any;
+  export const Title: any;
+  export const Description: any;
+  export const Action: any;
+  export const Cancel: any;
 }
 
 declare module '@radix-ui/react-avatar' {
@@ -56,12 +74,11 @@ declare module '@radix-ui/react-avatar' {
   interface AvatarFallbackProps {
     [key: string]: any;
   }
-}
 
-declare module '@radix-ui/react-checkbox' {
-  interface CheckboxProps {
-    [key: string]: any;
-  }
+  // Add missing exports
+  export const Root: any;
+  export const Image: any;
+  export const Fallback: any;
 }
 
 declare module 'recharts' {
@@ -78,6 +95,16 @@ declare module 'recharts' {
   export const Tooltip: any;
   export const ResponsiveContainer: any;
   export const Legend: any;
+}
+
+declare module '@radix-ui/react-checkbox' {
+  interface CheckboxProps {
+    [key: string]: any;
+  }
+
+  // Add missing exports
+  export const Root: any;
+  export const Indicator: any;
 }
 
 declare module '@radix-ui/react-command' {
@@ -113,3 +140,4 @@ declare module '@radix-ui/react-command' {
     [key: string]: any;
   }
 }
+
