@@ -1,6 +1,6 @@
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { format, startOfWeek, addDays, addWeeks, subWeeks } from 'date-fns';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
@@ -22,11 +22,11 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
         name: dayName,
         completed: tasks.filter(task => 
           task.completed && 
-          format(task.createdAt, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
+          format(new Date(task.createdAt as string), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
         ).length,
         pending: tasks.filter(task =>
           !task.completed &&
-          format(task.createdAt, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
+          format(new Date(task.createdAt as string), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
         ).length
       };
     });
@@ -76,11 +76,11 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
             <YAxis />
             <Tooltip />
             <Legend 
-              formatter={(value) => {
-                if (value === "Completed") {
-                  return <span className="text-[#222222] dark:text-[#F1F1F1]">{value}</span>;
+              formatter={(value: string) => {
+                if (value === "completed") {
+                  return <span className="text-[#222222] dark:text-[#F1F1F1]">Completed</span>;
                 }
-                return <span className="text-[#7E69AB]">{value}</span>;
+                return <span className="text-[#7E69AB]">Pending</span>;
               }}
               iconType="square"
               wrapperStyle={{
@@ -90,13 +90,13 @@ export const WeeklyProgressChart = ({ tasks }: WeeklyProgressChartProps) => {
             <Bar 
               dataKey="completed" 
               fill="#222222" 
-              name="Completed" 
+              name="completed" 
               className="dark:fill-[#F1F1F1]" 
             />
             <Bar 
               dataKey="pending" 
               fill="#7E69AB" 
-              name="Pending" 
+              name="pending" 
             />
           </BarChart>
         </ResponsiveContainer>
