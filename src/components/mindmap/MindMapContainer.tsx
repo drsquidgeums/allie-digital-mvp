@@ -8,36 +8,7 @@ import { toast } from "sonner";
 import { ReactFlowProvider, useReactFlow } from '@xyflow/react';
 import { getShapeStyle } from './utils/shapeUtils';
 
-// Create a component that will be wrapped by ReactFlowProvider
-const MindMapFlowWithProvider = ({
-  nodes,
-  edges,
-  onNodesChange,
-  onEdgesChange,
-  onConnect,
-  nodeTypes,
-}) => {
-  const reactFlowInstance = useReactFlow();
-  
-  // Now we can safely use the reactFlowInstance here
-  const handleDeleteNode = (nodeId: string) => {
-    onNodesChange([{ type: 'remove', id: nodeId }]);
-    toast(`Node deleted`);
-  };
-
-  return (
-    <MindMapFlow
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      nodeTypes={nodeTypes}
-      onDeleteNode={handleDeleteNode}
-    />
-  );
-};
-
+// The main issue is here - we need to restructure this component to follow React rules of hooks
 export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   nodes,
   edges,
@@ -98,7 +69,8 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
       />
       <div className="flex-1 min-h-0 relative">
         <ReactFlowProvider>
-          <MindMapFlowWithProvider
+          {/* We need to separate this component and provide proper hook context */}
+          <MindMapFlowContent
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -124,5 +96,36 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
         </div>
       </div>
     </div>
+  );
+};
+
+// Create a proper function component that can safely use hooks
+const MindMapFlowContent = ({
+  nodes,
+  edges,
+  onNodesChange,
+  onEdgesChange,
+  onConnect,
+  nodeTypes,
+}) => {
+  // Now useReactFlow is called inside a function component
+  const reactFlowInstance = useReactFlow();
+  
+  // The delete node handler that requires the hook
+  const handleDeleteNode = (nodeId: string) => {
+    onNodesChange([{ type: 'remove', id: nodeId }]);
+    toast(`Node deleted`);
+  };
+
+  return (
+    <MindMapFlow
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      onConnect={onConnect}
+      nodeTypes={nodeTypes}
+      onDeleteNode={handleDeleteNode}
+    />
   );
 };
