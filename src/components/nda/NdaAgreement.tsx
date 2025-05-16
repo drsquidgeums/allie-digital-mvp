@@ -145,6 +145,7 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
                 <Label htmlFor="name">Full Name:</Label>
                 <Input
                   id="name"
+                  type="text"
                   value={name}
                   onChange={handleNameChange}
                   placeholder="Enter your full name"
