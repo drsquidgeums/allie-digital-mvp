@@ -5,9 +5,16 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useTranslation } from "react-i18next";
+import { useSecurityContext } from "@/components/security/SecurityProvider";
 
 export const PrivacySettings = () => {
   const { t } = useTranslation();
+  const { 
+    enableWatermark, 
+    enableAntiScreenCapture,
+    toggleWatermark,
+    toggleAntiScreenCapture 
+  } = useSecurityContext();
   
   return (
     <div className="space-y-4">
@@ -27,6 +34,22 @@ export const PrivacySettings = () => {
             <p className="text-sm text-muted-foreground">{t('settings.privacy.twoFactorDescription', 'Enable 2FA for additional security')}</p>
           </div>
           <Switch />
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <Label>Anti-Screenshot Protection</Label>
+            <p className="text-sm text-muted-foreground">Block attempts to capture screen content</p>
+          </div>
+          <Switch checked={enableAntiScreenCapture} onCheckedChange={toggleAntiScreenCapture} />
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <Label>Content Watermarking</Label>
+            <p className="text-sm text-muted-foreground">Apply confidentiality watermark to all screens</p>
+          </div>
+          <Switch checked={enableWatermark} onCheckedChange={toggleWatermark} />
         </div>
 
         <div className="flex items-center justify-between">

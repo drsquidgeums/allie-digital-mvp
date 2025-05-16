@@ -9,6 +9,8 @@ import { NdaText } from "./NdaText";
 import { VoiceReader } from "./VoiceReader";
 import { NdaForm } from "./NdaForm";
 import { getNdaPlainText } from "./utils/textUtils";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Shield } from "lucide-react";
 
 interface NdaAgreementProps {
   isOpen: boolean;
@@ -32,6 +34,13 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
           </DialogDescription>
         </DialogHeader>
 
+        <Alert className="mb-4 bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800">
+          <Shield className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+          <AlertDescription className="text-amber-800 dark:text-amber-300">
+            This application employs security measures to prevent screenshots and screen recordings in compliance with the NDA. Attempts to capture content will be detected and logged.
+          </AlertDescription>
+        </Alert>
+        
         <div 
           className="my-4 max-h-[40vh] overflow-y-auto border rounded-md p-4 bg-background/50" 
           aria-label="NDA agreement text" 

@@ -12,6 +12,7 @@ import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
 import { NdaAgreement } from "@/components/nda/NdaAgreement";
 import { FeedbackPrompt } from "@/components/community/FeedbackPrompt";
 import { useFeedbackPrompt } from "@/hooks/useFeedbackPrompt";
+import { SecurityProvider } from "@/components/security/SecurityProvider";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -85,28 +86,30 @@ const App = () => {
   return (
     <BrowserRouter>
       <AppProviders>
-        <div className="app-container">
-          <AppLogo />
-          <Toaster />
-          <Sonner />
-          <Suspense fallback={
-            <div className="flex items-center justify-center h-screen">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            </div>
-          }>
-            <PomodoroTaskListener />
-            <AppRoutes />
-          </Suspense>
-          <FloatingAIAssistant />
-          
-          {/* Feedback Prompt */}
-          <FeedbackPrompt
-            isOpen={showFeedbackPrompt}
-            onClose={handleCloseFeedbackPrompt}
-            onPostpone={handlePostponeFeedback}
-            userInfo={userInfo}
-          />
-        </div>
+        <SecurityProvider>
+          <div className="app-container">
+            <AppLogo />
+            <Toaster />
+            <Sonner />
+            <Suspense fallback={
+              <div className="flex items-center justify-center h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              </div>
+            }>
+              <PomodoroTaskListener />
+              <AppRoutes />
+            </Suspense>
+            <FloatingAIAssistant />
+            
+            {/* Feedback Prompt */}
+            <FeedbackPrompt
+              isOpen={showFeedbackPrompt}
+              onClose={handleCloseFeedbackPrompt}
+              onPostpone={handlePostponeFeedback}
+              userInfo={userInfo}
+            />
+          </div>
+        </SecurityProvider>
       </AppProviders>
     </BrowserRouter>
   );

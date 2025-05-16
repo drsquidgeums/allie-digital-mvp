@@ -9,13 +9,25 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useSecurityContext } from '@/components/security/SecurityProvider';
 
 export const ScreenshotButton = () => {
   const { toast } = useToast();
   const [isSelecting, setIsSelecting] = useState(false);
+  const { enableAntiScreenCapture } = useSecurityContext();
   const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 
   const startSelection = () => {
+    // If anti-screen capture is enabled, don't allow screenshots
+    if (enableAntiScreenCapture) {
+      toast({
+        title: "Screenshot Disabled",
+        description: "Screenshots are disabled due to security settings.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsSelecting(true);
     toast({
       title: "Selection mode active",
@@ -191,9 +203,9 @@ export const ScreenshotButton = () => {
           variant="outline"
           size="sm"
           onClick={startSelection}
-          disabled={isSelecting}
-          className={buttonClassName}
-          aria-label="Capture screenshot"
+          disabled={isSelecting || enableAntiScreenCapture}
+          className={`${buttonClassName} ${enableAntiScreenCapture ? "opacity-50" : ""}`}
+          aria-label={enableAntiScreenCapture ? "Screenshots disabled" : "Capture screenshot"}
         >
           <Camera className="h-4 w-4" aria-hidden="true" />
         </Button>
@@ -202,7 +214,7 @@ export const ScreenshotButton = () => {
         side="bottom"
         className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
       >
-        Capture screenshot
+        {enableAntiScreenCapture ? "Screenshots disabled by security policy" : "Capture screenshot"}
       </TooltipContent>
     </Tooltip>
   );
