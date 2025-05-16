@@ -31,6 +31,8 @@ const App = () => {
   const [showNda, setShowNda] = useState(false);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
   
+  // Only initialize feedback prompt hook after NDA has been agreed to
+  const [ndaCompleted, setNdaCompleted] = useState<boolean>(false);
   const { 
     showFeedbackPrompt, 
     handleCloseFeedbackPrompt, 
@@ -47,6 +49,7 @@ const App = () => {
           name: parsedAgreement.name,
           email: parsedAgreement.email
         });
+        setNdaCompleted(true);
       } catch (error) {
         console.error("Error parsing NDA agreement:", error);
         localStorage.removeItem("nda_agreement");
@@ -57,6 +60,7 @@ const App = () => {
   const handleNdaAgreementComplete = (name: string, email: string) => {
     setShowNda(false);
     setUserInfo({ name, email });
+    setNdaCompleted(true);
   };
 
   const handleAuthentication = () => {
@@ -92,19 +96,21 @@ const App = () => {
             </Suspense>
             <FloatingAIAssistant />
             
-            {/* NDA Agreement */}
+            {/* NDA Agreement - Show this first */}
             <NdaAgreement 
               isOpen={showNda} 
               onAgreementComplete={handleNdaAgreementComplete} 
             />
             
-            {/* Feedback Prompt */}
-            <FeedbackPrompt
-              isOpen={showFeedbackPrompt}
-              onClose={handleCloseFeedbackPrompt}
-              onPostpone={handlePostponeFeedback}
-              userInfo={userInfo}
-            />
+            {/* Feedback Prompt - Only show after NDA is completed */}
+            {ndaCompleted && (
+              <FeedbackPrompt
+                isOpen={showFeedbackPrompt}
+                onClose={handleCloseFeedbackPrompt}
+                onPostpone={handlePostponeFeedback}
+                userInfo={userInfo}
+              />
+            )}
           </div>
         </SecurityProvider>
       </AppProviders>

@@ -16,15 +16,20 @@ export const useFeedbackPrompt = () => {
   useEffect(() => {
     // Get current user info from localStorage
     const ndaAgreement = localStorage.getItem("nda_agreement");
+    
+    // Don't show feedback prompt if NDA hasn't been completed yet
+    if (!ndaAgreement) {
+      return;
+    }
+    
     let userEmail = '';
     
-    if (ndaAgreement) {
-      try {
-        const parsedAgreement = JSON.parse(ndaAgreement);
-        userEmail = parsedAgreement.email;
-      } catch (error) {
-        console.error("Error parsing NDA agreement:", error);
-      }
+    try {
+      const parsedAgreement = JSON.parse(ndaAgreement);
+      userEmail = parsedAgreement.email;
+    } catch (error) {
+      console.error("Error parsing NDA agreement:", error);
+      return; // Exit if we can't parse the agreement
     }
     
     // Check if feedback was already submitted (skip for special user)
@@ -52,15 +57,15 @@ export const useFeedbackPrompt = () => {
       // Postpone period expired, continue with normal flow
     }
     
-    // Set timer to show feedback prompt after delay
-    const timer = setTimeout(() => {
-      setShowFeedbackPrompt(true);
-    }, FEEDBACK_PROMPT_DELAY);
-    
     // Record session start time if not already set
     if (!localStorage.getItem("session_start_time")) {
       localStorage.setItem("session_start_time", Date.now().toString());
     }
+    
+    // Set timer to show feedback prompt after delay
+    const timer = setTimeout(() => {
+      setShowFeedbackPrompt(true);
+    }, FEEDBACK_PROMPT_DELAY);
     
     return () => clearTimeout(timer);
   }, []);
@@ -91,3 +96,4 @@ export const useFeedbackPrompt = () => {
     handleManualFeedbackOpen,
   };
 };
+

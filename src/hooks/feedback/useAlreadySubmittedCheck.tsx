@@ -6,6 +6,10 @@ import { supabase } from "@/integrations/supabase/client";
 // Special user email that's allowed to submit feedback multiple times
 const SPECIAL_USER_EMAIL = "antoinettecelinemarshall@gmail.com";
 
+interface FeedbackData {
+  id: string;
+}
+
 export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) => {
   const [alreadySubmitted, setAlreadySubmitted] = useState<boolean>(false);
   const { toast } = useToast();
@@ -48,3 +52,4 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
 
   return { alreadySubmitted };
 };
+
