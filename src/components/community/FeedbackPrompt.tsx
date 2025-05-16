@@ -180,7 +180,7 @@ export const FeedbackPrompt: React.FC<FeedbackPromptProps> = ({
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
                 placeholder="Please share any additional thoughts or suggestions..."
-                className="min-h-[100px]"
+                className="min-h-[100px] text-black"
               />
             </div>
           </div>
@@ -192,6 +192,7 @@ export const FeedbackPrompt: React.FC<FeedbackPromptProps> = ({
                 variant="outline" 
                 onClick={onPostpone}
                 disabled={isSubmitting}
+                className="bg-black text-white hover:bg-black/80"
               >
                 Ask Me Later
               </Button>
@@ -200,6 +201,7 @@ export const FeedbackPrompt: React.FC<FeedbackPromptProps> = ({
                 variant="ghost" 
                 onClick={onClose}
                 disabled={isSubmitting}
+                className="bg-black text-white hover:bg-black/80"
               >
                 No Thanks
               </Button>
@@ -207,6 +209,7 @@ export const FeedbackPrompt: React.FC<FeedbackPromptProps> = ({
             <Button 
               type="submit"
               disabled={isSubmitting || !rating || !usability || !visualAppeal || wouldRecommend === null}
+              className="bg-black text-white hover:bg-black/80"
             >
               {isSubmitting ? "Submitting..." : "Submit Feedback"}
             </Button>
