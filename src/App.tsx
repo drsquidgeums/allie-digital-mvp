@@ -10,6 +10,8 @@ import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
 import { NdaAgreement } from "@/components/nda/NdaAgreement";
+import { FeedbackPrompt } from "@/components/community/FeedbackPrompt";
+import { useFeedbackPrompt } from "@/hooks/useFeedbackPrompt";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -27,6 +29,12 @@ const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasAgreedToNda, setHasAgreedToNda] = useState(false);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
+  
+  const { 
+    showFeedbackPrompt, 
+    handleCloseFeedbackPrompt, 
+    handlePostponeFeedback 
+  } = useFeedbackPrompt();
 
   // Check if user has previously agreed to NDA
   useEffect(() => {
@@ -90,6 +98,14 @@ const App = () => {
             <AppRoutes />
           </Suspense>
           <FloatingAIAssistant />
+          
+          {/* Feedback Prompt */}
+          <FeedbackPrompt
+            isOpen={showFeedbackPrompt}
+            onClose={handleCloseFeedbackPrompt}
+            onPostpone={handlePostponeFeedback}
+            userInfo={userInfo}
+          />
         </div>
       </AppProviders>
     </BrowserRouter>
