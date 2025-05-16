@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { isGoogleDocsUrl } from '../urlUtils';
 
 interface IframeViewerProps {
   url: string;
@@ -24,24 +25,26 @@ export const IframeViewer: React.FC<IframeViewerProps> = ({ url, onError }) => {
       try {
         // Handle Google Docs URLs
         if (inputUrl.includes('docs.google.com/document')) {
-          // Make sure the URL includes /preview or /pub for embedding
-          if (!inputUrl.includes('/preview') && !inputUrl.includes('/pub')) {
-            // Convert edit URLs to preview URLs for embedding
-            return inputUrl.replace(/\/edit(?:[^\/]*)?(?=#|$)/, '/preview');
+          // For Google Docs, ensure it's in edit mode for editing capabilities
+          if (!inputUrl.includes('/edit')) {
+            return inputUrl.replace(/\/preview(?:[^\/]*)?(?=#|$)/, '/edit')
+                          .replace(/\/pub(?:[^\/]*)?(?=#|$)/, '/edit');
           }
         }
         
         // Handle Google Sheets URLs
         if (inputUrl.includes('docs.google.com/spreadsheets')) {
-          if (!inputUrl.includes('/preview') && !inputUrl.includes('/pubhtml')) {
-            return inputUrl.replace(/\/edit(?:[^\/]*)?(?=#|$)/, '/preview');
+          if (!inputUrl.includes('/edit')) {
+            return inputUrl.replace(/\/preview(?:[^\/]*)?(?=#|$)/, '/edit')
+                          .replace(/\/pubhtml(?:[^\/]*)?(?=#|$)/, '/edit');
           }
         }
         
         // Handle Google Slides URLs
         if (inputUrl.includes('docs.google.com/presentation')) {
-          if (!inputUrl.includes('/preview') && !inputUrl.includes('/pub')) {
-            return inputUrl.replace(/\/edit(?:[^\/]*)?(?=#|$)/, '/preview');
+          if (!inputUrl.includes('/edit')) {
+            return inputUrl.replace(/\/preview(?:[^\/]*)?(?=#|$)/, '/edit')
+                          .replace(/\/pub(?:[^\/]*)?(?=#|$)/, '/edit');
           }
         }
         
@@ -55,13 +58,18 @@ export const IframeViewer: React.FC<IframeViewerProps> = ({ url, onError }) => {
     setProcessedUrl(processUrl(url));
   }, [url]);
 
+  // Determine if we need additional sandbox permissions for Google Docs
+  const isGoogleDoc = isGoogleDocsUrl(url);
+  
   return (
     <div className="h-full relative">
       <iframe
         src={processedUrl}
         className="w-full h-full border-0"
         title="Document preview"
-        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+        sandbox={isGoogleDoc 
+          ? "allow-same-origin allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox allow-downloads allow-modals allow-top-navigation"
+          : "allow-same-origin allow-scripts allow-popups allow-forms"}
         referrerPolicy="no-referrer"
         loading="lazy"
         onError={onError}

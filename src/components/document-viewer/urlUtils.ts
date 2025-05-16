@@ -1,4 +1,3 @@
-
 export const getUrlType = (url: string): string => {
   const extension = url.split('.').pop()?.toLowerCase() || '';
   if (extension === 'pdf') return 'pdf';
@@ -72,19 +71,36 @@ export const isGoogleDocsUrl = (url: string): boolean => {
 export const convertToEmbeddableGoogleUrl = (url: string): string => {
   const lowercaseUrl = url.toLowerCase();
   
-  // Google Docs
+  // Google Docs - use embeddedfolderview for editing
   if (lowercaseUrl.includes('docs.google.com/document')) {
-    return url.replace(/\/edit(?:[^\/]*)?(?=#|$)/, '/preview');
+    // If it's already in edit mode, keep it that way
+    if (url.includes('/edit')) {
+      return url;
+    } else {
+      // Otherwise convert to edit mode
+      return url.replace(/\/preview(?:[^\/]*)?(?=#|$)/, '/edit')
+                .replace(/\/pub(?:[^\/]*)?(?=#|$)/, '/edit');
+    }
   }
   
   // Google Sheets
   if (lowercaseUrl.includes('docs.google.com/spreadsheets')) {
-    return url.replace(/\/edit(?:[^\/]*)?(?=#|$)/, '/preview');
+    if (url.includes('/edit')) {
+      return url;
+    } else {
+      return url.replace(/\/preview(?:[^\/]*)?(?=#|$)/, '/edit')
+                .replace(/\/pubhtml(?:[^\/]*)?(?=#|$)/, '/edit');
+    }
   }
   
   // Google Slides
   if (lowercaseUrl.includes('docs.google.com/presentation')) {
-    return url.replace(/\/edit(?:[^\/]*)?(?=#|$)/, '/preview');
+    if (url.includes('/edit')) {
+      return url;
+    } else {
+      return url.replace(/\/preview(?:[^\/]*)?(?=#|$)/, '/edit')
+                .replace(/\/pub(?:[^\/]*)?(?=#|$)/, '/edit');
+    }
   }
   
   return url;
