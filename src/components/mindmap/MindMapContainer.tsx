@@ -5,7 +5,6 @@ import { MindMapFlow } from './MindMapFlow';
 import { MindMapCreativeToolbar } from './MindMapCreativeToolbar';
 import { MindMapContainerProps } from './types';
 import { toast } from "sonner";
-import { ReactFlowProvider } from '@xyflow/react';
 import { getShapeStyle } from './utils/shapeUtils';
 
 export const MindMapContainer: React.FC<MindMapContainerProps> = ({
@@ -73,17 +72,15 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
         onClear={onClear}
       />
       <div className="flex-1 min-h-0 relative">
-        <ReactFlowProvider>
-          <MindMapFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            nodeTypes={nodeTypes}
-            onDeleteNode={handleDeleteNode}
-          />
-        </ReactFlowProvider>
+        <MindMapFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+          onDeleteNode={handleDeleteNode}
+        />
       </div>
       <div className="absolute bottom-0 left-0 right-0 z-50 pointer-events-none">
         <div className="pointer-events-auto">
