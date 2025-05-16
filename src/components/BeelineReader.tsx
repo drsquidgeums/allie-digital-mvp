@@ -43,12 +43,20 @@ export const BeelineReader = () => {
     return (
       <div className="space-y-1">
         {lines.map((line, index) => {
+          // Apply different gradient to each line in a rotating pattern
           const cyclePosition = index % 3;
           
-          const gradientStyle = 
-            cyclePosition === 0 ? `linear-gradient(${angle}deg, ${colors.start}, ${colors.middle})` :
-            cyclePosition === 1 ? `linear-gradient(${angle}deg, ${colors.middle}, ${colors.end})` :
-            `linear-gradient(${angle}deg, ${colors.end}, ${colors.endMiddle}, ${colors.start})`;
+          let gradientStyle = "";
+          if (cyclePosition === 0) {
+            // First line: start to middle gradient
+            gradientStyle = `linear-gradient(${angle}deg, ${colors.start}, ${colors.middle})`;
+          } else if (cyclePosition === 1) {
+            // Second line: middle to end gradient
+            gradientStyle = `linear-gradient(${angle}deg, ${colors.middle}, ${colors.end})`;
+          } else {
+            // Third line: end back to start for continuous flow
+            gradientStyle = `linear-gradient(${angle}deg, ${colors.end}, ${colors.endMiddle}, ${colors.start})`;
+          }
           
           return (
             <p 
