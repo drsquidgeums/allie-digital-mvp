@@ -50,13 +50,10 @@ export const useFeedbackSubmission = (
       
       // For non-special users, check if they've already submitted feedback based on email
       if (userEmail !== SPECIAL_USER_EMAIL) {
-        // Explicitly define the return type to avoid type inference issues
-        type FeedbackQueryResult = { id: string }[];
-        
         const { data: existingFeedback, error } = await supabase
           .from('feedback')
           .select('id')
-          .eq('email', userEmail) as { data: FeedbackQueryResult | null, error: any };
+          .eq('email', userEmail);
           
         if (error) {
           console.error("Error checking existing feedback:", error);
