@@ -1,21 +1,20 @@
 
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Camera } from 'lucide-react';
-import { useToast } from "@/hooks/use-toast";
+import { useState } from 'react';
 import { toPng } from 'html-to-image';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { useToast } from '@/hooks/use-toast';
 import { useSecurityContext } from '@/components/security/SecurityProvider';
 
-export const ScreenshotButton = () => {
+interface CaptureArea {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export const useScreenshot = () => {
   const { toast } = useToast();
   const [isSelecting, setIsSelecting] = useState(false);
   const { enableAntiScreenCapture } = useSecurityContext();
-  const buttonClassName = "h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 
   const startSelection = () => {
     // If anti-screen capture is enabled, don't allow screenshots
@@ -118,7 +117,7 @@ export const ScreenshotButton = () => {
     };
   };
 
-  const captureScreenshot = async (area: { x: number; y: number; width: number; height: number }) => {
+  const captureScreenshot = async (area: CaptureArea) => {
     try {
       toast({
         title: "Capturing screenshot",
@@ -196,26 +195,9 @@ export const ScreenshotButton = () => {
     }
   };
 
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={startSelection}
-          disabled={isSelecting || enableAntiScreenCapture}
-          className={`${buttonClassName} ${enableAntiScreenCapture ? "opacity-50" : ""}`}
-          aria-label={enableAntiScreenCapture ? "Screenshots disabled" : "Capture screenshot"}
-        >
-          <Camera className="h-4 w-4" aria-hidden="true" />
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent 
-        side="bottom"
-        className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
-      >
-        {enableAntiScreenCapture ? "Screenshots disabled by security policy" : "Capture screenshot"}
-      </TooltipContent>
-    </Tooltip>
-  );
+  return {
+    isSelecting,
+    enableAntiScreenCapture,
+    startSelection
+  };
 };

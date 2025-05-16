@@ -7,7 +7,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ScreenshotButton } from './toolbar/ScreenshotButton';
+import { ScreenshotButton } from './toolbar/screenshot/ScreenshotButton';
 
 interface DocumentToolbarProps {
   onUpload: () => void;
