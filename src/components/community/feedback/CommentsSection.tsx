@@ -22,7 +22,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
     <div className="space-y-2">
       <div className="flex justify-between items-center">
         <Label htmlFor="comments">Your Feedback</Label>
-        <span className={`text-xs ${isOverLimit ? "text-red-500 font-bold" : "text-gray-500"}`}>
+        <span className={`text-xs ${isOverLimit ? "text-red-500 font-bold" : "text-muted-foreground"}`}>
           {currentWordCount}/{maxWords} words
         </span>
       </div>
@@ -31,7 +31,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Please share your thoughts or suggestions..."
-        className={`min-h-[150px] text-black ${isOverLimit ? "border-red-500" : ""}`}
+        className={`min-h-[150px] ${isOverLimit ? "border-red-500" : ""}`}
       />
     </div>
   );

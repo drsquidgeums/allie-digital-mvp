@@ -18,7 +18,7 @@ export const FeedbackPrompt: React.FC<FeedbackPromptProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} modal>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md dark:bg-background dark:text-foreground">
         <DialogHeader>
           <DialogTitle className="text-center text-xl">Feedback</DialogTitle>
         </DialogHeader>
