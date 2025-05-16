@@ -7,13 +7,29 @@ const FEEDBACK_PROMPT_DELAY = 15 * 60 * 1000;
 // Time before showing feedback prompt again if postponed
 const POSTPONE_DELAY = 15 * 60 * 1000;
 
+// Special user email that can submit multiple times
+const SPECIAL_USER_EMAIL = "antoinettecelinemarshall@gmail.com";
+
 export const useFeedbackPrompt = () => {
   const [showFeedbackPrompt, setShowFeedbackPrompt] = useState<boolean>(false);
   
   useEffect(() => {
-    // Check if feedback was already submitted
+    // Get current user info from localStorage
+    const ndaAgreement = localStorage.getItem("nda_agreement");
+    let userEmail = '';
+    
+    if (ndaAgreement) {
+      try {
+        const parsedAgreement = JSON.parse(ndaAgreement);
+        userEmail = parsedAgreement.email;
+      } catch (error) {
+        console.error("Error parsing NDA agreement:", error);
+      }
+    }
+    
+    // Check if feedback was already submitted (skip for special user)
     const feedbackSubmitted = localStorage.getItem("feedback_submitted");
-    if (feedbackSubmitted) {
+    if (feedbackSubmitted && userEmail !== SPECIAL_USER_EMAIL) {
       // User already submitted feedback, don't show prompt
       return;
     }

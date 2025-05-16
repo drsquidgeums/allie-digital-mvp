@@ -13,6 +13,9 @@ interface FeedbackFormProps {
   userInfo: { name: string; email: string } | null;
 }
 
+// Special user email that's allowed to submit feedback multiple times
+const SPECIAL_USER_EMAIL = "antoinettecelinemarshall@gmail.com";
+
 export const FeedbackForm: React.FC<FeedbackFormProps> = ({
   onClose,
   onPostpone,
@@ -31,6 +34,11 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
   useEffect(() => {
     const checkPreviousSubmission = async () => {
       if (!userInfo?.email) return;
+
+      // If this is the special user, don't restrict submissions
+      if (userInfo.email === SPECIAL_USER_EMAIL) {
+        return;
+      }
 
       try {
         const { data, error } = await supabase
@@ -84,20 +92,41 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
     try {
       // Use email as unique user ID
       const user_id = userInfo.email;
+      let error = null;
       
-      // Store feedback in Supabase
-      const { error } = await supabase
-        .from('feedback')
-        .insert([
-          { 
-            user_id,
-            rating,
-            usability,
-            visual_appeal: visualAppeal,
-            would_recommend: wouldRecommend,
-            comments: comments || null
-          }
-        ]);
+      // For special users, use upsert to overwrite previous submissions
+      if (user_id === SPECIAL_USER_EMAIL) {
+        const { error: upsertError } = await supabase
+          .from('feedback')
+          .upsert([
+            { 
+              user_id,
+              rating,
+              usability,
+              visual_appeal: visualAppeal,
+              would_recommend: wouldRecommend,
+              comments: comments || null
+            }
+          ], {
+            onConflict: 'user_id'
+          });
+        error = upsertError;
+      } else {
+        // For regular users, use standard insert (with unique constraint)
+        const { error: insertError } = await supabase
+          .from('feedback')
+          .insert([
+            { 
+              user_id,
+              rating,
+              usability,
+              visual_appeal: visualAppeal,
+              would_recommend: wouldRecommend,
+              comments: comments || null
+            }
+          ]);
+        error = insertError;
+      }
         
       if (error) {
         if (error.code === '23505') { // Unique constraint violation
