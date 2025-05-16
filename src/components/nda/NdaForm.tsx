@@ -116,7 +116,7 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
               placeholder="Enter your full name"
               required
               aria-required="true"
-              aria-invalid={!name && "true"}
+              aria-invalid={name ? undefined : "true"}
               className="w-full"
             />
           </div>
