@@ -29,12 +29,10 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
   const { toast } = useToast();
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("Name changed:", e.target.value);
     setName(e.target.value);
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("Email changed:", e.target.value);
     setEmail(e.target.value);
   };
 
@@ -152,7 +150,7 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
                   onChange={handleNameChange}
                   placeholder="Enter your full name"
                   required
-                  className="border border-gray-300"
+                  className="border border-gray-300 focus:border-primary"
                 />
               </div>
 
@@ -165,7 +163,7 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
                   onChange={handleEmailChange}
                   placeholder="Enter your email"
                   required
-                  className="border border-gray-300"
+                  className="border border-gray-300 focus:border-primary"
                 />
               </div>
             </div>
