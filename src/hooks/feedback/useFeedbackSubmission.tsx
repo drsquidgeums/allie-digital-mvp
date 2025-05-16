@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { v4 as uuidv4 } from 'uuid';
 
 // Special user email that's allowed to submit feedback multiple times
 const SPECIAL_USER_EMAIL = "antoinettecelinemarshall@gmail.com";
@@ -44,51 +45,44 @@ export const useFeedbackSubmission = (
     setIsSubmitting(true);
     
     try {
-      // Use email as unique user ID
-      const user_id = userEmail;
-      let error = null;
+      // Generate a UUID for user_id instead of using the email directly
+      const user_id = uuidv4();
       
-      // For special users, use upsert to overwrite previous submissions
-      if (user_id === SPECIAL_USER_EMAIL) {
-        const { error: upsertError } = await supabase
+      // For non-special users, check if they've already submitted feedback
+      if (userEmail !== SPECIAL_USER_EMAIL) {
+        const { data: existingFeedback } = await supabase
           .from('feedback')
-          .upsert({
-            user_id,
-            comments: comments || null,
-            // Required fields per database schema
-            rating: 0,
-            usability: 0,
-            visual_appeal: 0,
-            would_recommend: false
-          }, {
-            onConflict: 'user_id'
-          });
-        error = upsertError;
-      } else {
-        // For regular users, use standard insert (with unique constraint)
-        const { error: insertError } = await supabase
-          .from('feedback')
-          .insert({
-            user_id,
-            comments: comments || null,
-            // Required fields per database schema
-            rating: 0,
-            usability: 0,
-            visual_appeal: 0,
-            would_recommend: false
-          });
-        error = insertError;
-      }
-        
-      if (error) {
-        if (error.code === '23505') { // Unique constraint violation
+          .select('id')
+          .eq('user_id', userEmail)
+          .maybeSingle();
+          
+        if (existingFeedback) {
           toast({
             title: "Feedback already submitted",
             description: "You have already provided feedback. Thank you!"
           });
-        } else {
-          throw error;
+          onClose();
+          return false;
         }
+      }
+      
+      // Insert feedback with the generated UUID
+      const { error } = await supabase
+        .from('feedback')
+        .insert({
+          user_id,
+          email: userEmail, // Store email separately for reference
+          comments: comments || null,
+          // Required fields per database schema
+          rating: 0,
+          usability: 0,
+          visual_appeal: 0,
+          would_recommend: false
+        });
+        
+      if (error) {
+        console.error("Error submitting feedback:", error);
+        throw error;
       } else {
         toast({
           title: "Thank you for your feedback!",
