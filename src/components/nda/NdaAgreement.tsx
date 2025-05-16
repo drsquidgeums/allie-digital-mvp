@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog/dialog-root";
 import { DialogContent } from "@/components/ui/dialog/dialog-content";
 import { DialogHeader } from "@/components/ui/dialog/dialog-header";
 import { DialogTitle } from "@/components/ui/dialog/dialog-title";
@@ -28,6 +28,7 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { toast } = useToast();
 
+  // Direct state updates for input fields
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
@@ -150,7 +151,6 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
                   onChange={handleNameChange}
                   placeholder="Enter your full name"
                   required
-                  className="border border-gray-300 focus:border-primary"
                 />
               </div>
 
@@ -163,7 +163,6 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
                   onChange={handleEmailChange}
                   placeholder="Enter your email"
                   required
-                  className="border border-gray-300 focus:border-primary"
                 />
               </div>
             </div>
