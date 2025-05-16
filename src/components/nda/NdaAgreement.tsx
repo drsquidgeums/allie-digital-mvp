@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { NdaText } from "./NdaText";
 import { supabase } from "@/integrations/supabase/client";
+import { DialogDescription } from "@/components/ui/dialog/dialog-description";
 
 interface NdaAgreementProps {
   isOpen: boolean;
@@ -130,6 +131,9 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
           <DialogTitle className="text-xl font-bold">
             Non-Disclosure Agreement
           </DialogTitle>
+          <DialogDescription>
+            Please review and agree to our NDA before proceeding
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -145,7 +149,6 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
                   onChange={handleNameChange}
                   placeholder="Enter your full name"
                   required
-                  className="w-full"
                 />
               </div>
 
@@ -158,7 +161,6 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
                   onChange={handleEmailChange}
                   placeholder="Enter your email"
                   required
-                  className="w-full"
                 />
               </div>
             </div>
