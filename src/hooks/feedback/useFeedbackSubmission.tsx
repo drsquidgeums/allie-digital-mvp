@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { v4 as uuidv4 } from 'uuid';
 
 // Special user email that's allowed to submit feedback multiple times
 const SPECIAL_USER_EMAIL = "antoinettecelinemarshall@gmail.com";
@@ -45,15 +44,15 @@ export const useFeedbackSubmission = (
     setIsSubmitting(true);
     
     try {
-      // Generate a UUID for user_id instead of using the email directly
-      const user_id = uuidv4();
+      // Use email as user_id since that's what the database expects
+      const user_id = userEmail;
       
       // For non-special users, check if they've already submitted feedback
       if (userEmail !== SPECIAL_USER_EMAIL) {
         const { data: existingFeedback } = await supabase
           .from('feedback')
           .select('id')
-          .eq('user_id', userEmail)
+          .eq('user_id', user_id)
           .maybeSingle();
           
         if (existingFeedback) {
@@ -66,12 +65,11 @@ export const useFeedbackSubmission = (
         }
       }
       
-      // Insert feedback with the generated UUID
+      // Insert feedback with the email as user_id
       const { error } = await supabase
         .from('feedback')
         .insert({
           user_id,
-          email: userEmail, // Store email separately for reference
           comments: comments || null,
           // Required fields per database schema
           rating: 0,
