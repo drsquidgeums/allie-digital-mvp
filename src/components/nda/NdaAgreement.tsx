@@ -32,7 +32,9 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
           </DialogDescription>
         </DialogHeader>
 
-        <NdaText />
+        <div className="my-4 max-h-[40vh] overflow-y-auto border rounded-md p-4 bg-background/50">
+          <NdaText />
+        </div>
         
         <NdaForm onSubmitSuccess={onAgreementComplete} />
       </DialogContent>

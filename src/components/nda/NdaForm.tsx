@@ -1,6 +1,8 @@
 
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog/dialog-footer";
 import { useToast } from "@/components/ui/use-toast";
@@ -100,46 +102,46 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 pt-4">
       <div className="space-y-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="name">Full Name:</Label>
-            <input
+            <Label htmlFor="name">Full Name</Label>
+            <Input
               id="name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your full name"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+              aria-required="true"
+              className="w-full"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email Address:</Label>
-            <input
+            <Label htmlFor="email">Email Address</Label>
+            <Input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+              aria-required="true"
+              className="w-full"
             />
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
+        <div className="flex items-center space-x-2 pt-2">
+          <Checkbox
             id="agree"
             checked={isAgreeChecked}
-            onChange={(e) => setIsAgreeChecked(e.target.checked)}
-            className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-            required
+            onCheckedChange={(checked) => setIsAgreeChecked(checked === true)}
+            aria-required="true"
           />
-          <Label htmlFor="agree" className="text-sm">
+          <Label htmlFor="agree" className="text-sm font-normal cursor-pointer">
             I have read and agree to the terms of this Non-Disclosure Agreement
           </Label>
         </div>

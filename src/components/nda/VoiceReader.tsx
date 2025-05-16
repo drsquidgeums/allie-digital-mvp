@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Volume2, Pause, Play } from "lucide-react";
+import { Volume2, Pause } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface VoiceReaderProps {
@@ -63,10 +63,11 @@ export const VoiceReader: React.FC<VoiceReaderProps> = ({ text }) => {
     <Button
       type="button"
       size="icon"
-      variant="outline"
+      variant="ghost"
       onClick={handleToggleAudio}
       className="absolute right-0 top-0"
       aria-label={isPlaying ? "Stop reading" : "Read agreement aloud"}
+      title={isPlaying ? "Stop reading" : "Read agreement aloud"}
     >
       {isPlaying ? (
         <Pause className="h-4 w-4" />
