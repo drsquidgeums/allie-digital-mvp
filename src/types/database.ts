@@ -42,6 +42,7 @@ export interface ExtendedDatabase extends SupabaseDatabase {
       teams_config: SupabaseDatabase['public']['Tables']['teams_config'];
       saved_urls: SupabaseDatabase['public']['Tables']['saved_urls'];
       feedback: SupabaseDatabase['public']['Tables']['feedback'];
+      nda_agreements: SupabaseDatabase['public']['Tables']['nda_agreements'];
     };
     Views: SupabaseDatabase['public']['Views'];
     Functions: SupabaseDatabase['public']['Functions'];
