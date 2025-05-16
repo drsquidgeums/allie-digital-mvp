@@ -67,12 +67,14 @@ export const VoiceReader: React.FC<VoiceReaderProps> = ({ text }) => {
       onClick={handleToggleAudio}
       className="absolute right-0 top-0"
       aria-label={isPlaying ? "Stop reading" : "Read agreement aloud"}
+      aria-pressed={isPlaying}
       title={isPlaying ? "Stop reading" : "Read agreement aloud"}
     >
+      <span className="sr-only">{isPlaying ? "Stop reading" : "Read agreement aloud"}</span>
       {isPlaying ? (
-        <Pause className="h-4 w-4" />
+        <Pause className="h-4 w-4" aria-hidden="true" />
       ) : (
-        <Volume2 className="h-4 w-4" />
+        <Volume2 className="h-4 w-4" aria-hidden="true" />
       )}
     </Button>
   );

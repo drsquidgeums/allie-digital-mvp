@@ -20,19 +20,23 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
   onAgreementComplete
 }) => {
   return (
-    <Dialog open={isOpen} modal>
+    <Dialog open={isOpen} modal aria-labelledby="nda-dialog-title" aria-describedby="nda-dialog-description">
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader className="relative">
           <VoiceReader text={getNdaPlainText()} />
-          <DialogTitle className="text-xl font-bold">
+          <DialogTitle className="text-xl font-bold" id="nda-dialog-title">
             Non-Disclosure Agreement
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription id="nda-dialog-description">
             Please review and agree to our NDA before proceeding
           </DialogDescription>
         </DialogHeader>
 
-        <div className="my-4 max-h-[40vh] overflow-y-auto border rounded-md p-4 bg-background/50">
+        <div 
+          className="my-4 max-h-[40vh] overflow-y-auto border rounded-md p-4 bg-background/50" 
+          aria-label="NDA agreement text" 
+          role="region"
+        >
           <NdaText />
         </div>
         

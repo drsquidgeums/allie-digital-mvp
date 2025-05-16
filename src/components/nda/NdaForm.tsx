@@ -102,7 +102,8 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 pt-4">
+    <form onSubmit={handleSubmit} className="space-y-6 pt-4" aria-labelledby="nda-form-title">
+      <h3 className="sr-only" id="nda-form-title">NDA Agreement Form</h3>
       <div className="space-y-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-2">
@@ -115,6 +116,7 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
               placeholder="Enter your full name"
               required
               aria-required="true"
+              aria-invalid={!name && "true"}
               className="w-full"
             />
           </div>
@@ -129,6 +131,7 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
               placeholder="Enter your email"
               required
               aria-required="true"
+              aria-invalid={email && !isValidEmail(email) ? "true" : undefined}
               className="w-full"
             />
           </div>
@@ -140,8 +143,9 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
             checked={isAgreeChecked}
             onCheckedChange={(checked) => setIsAgreeChecked(checked === true)}
             aria-required="true"
+            aria-describedby="agree-description"
           />
-          <Label htmlFor="agree" className="text-sm font-normal cursor-pointer">
+          <Label htmlFor="agree" className="text-sm font-normal cursor-pointer" id="agree-description">
             I have read and agree to the terms of this Non-Disclosure Agreement
           </Label>
         </div>
@@ -152,6 +156,7 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
           type="submit" 
           disabled={isSubmitting || !isAgreeChecked || !name || !email}
           className="w-full sm:w-auto"
+          aria-busy={isSubmitting}
         >
           {isSubmitting ? "Processing..." : "I Agree"}
         </Button>
