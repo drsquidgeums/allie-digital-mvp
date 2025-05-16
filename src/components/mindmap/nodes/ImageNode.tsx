@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Handle, Position } from '@xyflow/react';
 
 interface ImageNodeProps {
@@ -37,7 +37,7 @@ export const ImageNode: React.FC<ImageNodeProps> = ({ data }) => {
     setDimensions({ width: newWidth, height: newHeight });
   };
 
-  const handleContextMenu = useCallback((event: React.MouseEvent) => {
+  const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
     const input = document.createElement('input');
     input.type = 'file';
@@ -53,7 +53,7 @@ export const ImageNode: React.FC<ImageNodeProps> = ({ data }) => {
       }
     };
     input.click();
-  }, []);
+  };
 
   return (
     <div 

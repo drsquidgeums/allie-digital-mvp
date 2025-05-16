@@ -38,12 +38,6 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
           selectedNodes.forEach(node => onDeleteNode(node.id));
         }
         break;
-      case 'f':
-        if (event.ctrlKey || event.metaKey) {
-          event.preventDefault();
-          // We'll handle fit view via the Controls component instead
-        }
-        break;
       case 'Escape':
         onNodesChange(
           nodes.filter(node => node.selected).map(node => ({
