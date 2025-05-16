@@ -152,6 +152,7 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
                   onChange={handleNameChange}
                   placeholder="Enter your full name"
                   required
+                  className="border border-gray-300"
                 />
               </div>
 
@@ -164,6 +165,7 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
                   onChange={handleEmailChange}
                   placeholder="Enter your email"
                   required
+                  className="border border-gray-300"
                 />
               </div>
             </div>
