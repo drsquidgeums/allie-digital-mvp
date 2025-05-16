@@ -109,7 +109,8 @@ export const TextToSpeech = () => {
         <Button
           onClick={handlePlay}
           size="sm"
-          className="flex-1 bg-workspace-dark text-white hover:bg-workspace-dark/90 h-8 text-xs"
+          variant="outline"
+          className="flex-1 h-8 text-xs"
         >
           {isPlaying ? <Pause className="w-3 h-3 mr-1" /> : <Play className="w-3 h-3 mr-1" />}
           {isPlaying ? "Pause" : "Play"}
