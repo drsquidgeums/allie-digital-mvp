@@ -64,9 +64,14 @@ export const useFeedbackPrompt = () => {
     localStorage.setItem("feedback_postponed_until", postponeUntil.toString());
   };
   
+  const handleManualFeedbackOpen = () => {
+    setShowFeedbackPrompt(true);
+  };
+  
   return {
     showFeedbackPrompt,
     handleCloseFeedbackPrompt,
     handlePostponeFeedback,
+    handleManualFeedbackOpen,
   };
 };

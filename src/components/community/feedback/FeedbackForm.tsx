@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RatingSelect } from "../ratings/RatingSelect";
 import { RecommendSelect } from "./RecommendSelect";
 import { CommentsSection } from "./CommentsSection";
@@ -24,7 +24,39 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
   const [wouldRecommend, setWouldRecommend] = useState<boolean | null>(null);
   const [comments, setComments] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [alreadySubmitted, setAlreadySubmitted] = useState<boolean>(false);
   const { toast } = useToast();
+
+  // Check if the user has already submitted feedback
+  useEffect(() => {
+    const checkPreviousSubmission = async () => {
+      if (!userInfo?.email) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('feedback')
+          .select('id')
+          .eq('user_id', userInfo.email)
+          .maybeSingle();
+          
+        if (error) throw error;
+        
+        if (data) {
+          setAlreadySubmitted(true);
+          toast({
+            title: "Feedback already submitted",
+            description: "You have already provided feedback. Thank you!",
+          });
+          // Close the form after a short delay
+          setTimeout(onClose, 2000);
+        }
+      } catch (error) {
+        console.error("Error checking previous feedback:", error);
+      }
+    };
+    
+    checkPreviousSubmission();
+  }, [userInfo, toast, onClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,11 +70,20 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
       return;
     }
     
+    if (!userInfo?.email) {
+      toast({
+        title: "User information missing",
+        description: "Unable to identify user. Please try again later.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setIsSubmitting(true);
     
     try {
-      // Get user ID if available, otherwise use a placeholder
-      const user_id = userInfo?.email || "anonymous";
+      // Use email as unique user ID
+      const user_id = userInfo.email;
       
       // Store feedback in Supabase
       const { error } = await supabase
@@ -58,15 +99,24 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
           }
         ]);
         
-      if (error) throw error;
-      
-      toast({
-        title: "Thank you for your feedback!",
-        description: "Your input helps us improve the application."
-      });
-      
-      // Store in localStorage that feedback was submitted
-      localStorage.setItem("feedback_submitted", new Date().toISOString());
+      if (error) {
+        if (error.code === '23505') { // Unique constraint violation
+          toast({
+            title: "Feedback already submitted",
+            description: "You have already provided feedback. Thank you!"
+          });
+        } else {
+          throw error;
+        }
+      } else {
+        toast({
+          title: "Thank you for your feedback!",
+          description: "Your input helps us improve the application."
+        });
+        
+        // Store in localStorage that feedback was submitted
+        localStorage.setItem("feedback_submitted", new Date().toISOString());
+      }
       
       onClose();
     } catch (error) {
@@ -82,6 +132,22 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
   };
 
   const isFormIncomplete = !rating || !usability || !visualAppeal || wouldRecommend === null;
+
+  if (alreadySubmitted) {
+    return (
+      <div className="p-4 text-center">
+        <p className="mb-4">You have already submitted feedback. Thank you!</p>
+        <FeedbackButtons 
+          onPostpone={() => {}}
+          onClose={onClose}
+          onSubmit={() => {}}
+          isSubmitting={false}
+          isDisabled={true}
+          hideButtons={['postpone', 'submit']}
+        />
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 pt-2">

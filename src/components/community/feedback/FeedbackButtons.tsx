@@ -9,43 +9,53 @@ interface FeedbackButtonsProps {
   onSubmit: (e: React.FormEvent) => void;
   isSubmitting: boolean;
   isDisabled: boolean;
+  hideButtons?: Array<'postpone' | 'close' | 'submit'>;
 }
 
 export const FeedbackButtons: React.FC<FeedbackButtonsProps> = ({
   onPostpone,
   onClose,
   isSubmitting,
-  isDisabled
+  isDisabled,
+  hideButtons = []
 }) => {
   return (
     <DialogFooter className="sm:justify-between gap-2">
       <div className="flex gap-2">
-        <Button 
-          type="button"
-          variant="outline" 
-          onClick={onPostpone}
-          disabled={isSubmitting}
-          className="bg-black text-white hover:bg-black/80"
-        >
-          Ask Me Later
-        </Button>
-        <Button 
-          type="button"
-          variant="ghost" 
-          onClick={onClose}
-          disabled={isSubmitting}
-          className="bg-black text-white hover:bg-black/80"
-        >
-          No Thanks
-        </Button>
+        {!hideButtons.includes('postpone') && (
+          <Button 
+            type="button"
+            variant="outline" 
+            onClick={onPostpone}
+            disabled={isSubmitting}
+            className="bg-black text-white hover:bg-black/80"
+          >
+            Ask Me Later
+          </Button>
+        )}
+        
+        {!hideButtons.includes('close') && (
+          <Button 
+            type="button"
+            variant="ghost" 
+            onClick={onClose}
+            disabled={isSubmitting}
+            className="bg-black text-white hover:bg-black/80"
+          >
+            No Thanks
+          </Button>
+        )}
       </div>
-      <Button 
-        type="submit"
-        disabled={isSubmitting || isDisabled}
-        className="bg-black text-white hover:bg-black/80"
-      >
-        {isSubmitting ? "Submitting..." : "Submit Feedback"}
-      </Button>
+      
+      {!hideButtons.includes('submit') && (
+        <Button 
+          type="submit"
+          disabled={isSubmitting || isDisabled}
+          className="bg-black text-white hover:bg-black/80"
+        >
+          {isSubmitting ? "Submitting..." : "Submit Feedback"}
+        </Button>
+      )}
     </DialogFooter>
   );
 };

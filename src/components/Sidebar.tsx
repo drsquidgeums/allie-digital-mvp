@@ -1,10 +1,13 @@
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { SidebarLogo } from "./sidebar/SidebarLogo";
 import { SidebarNavigation } from "./sidebar/SidebarNavigation";
 import { SidebarTools } from "./sidebar/SidebarTools";
 import { SidebarContent } from "./sidebar/SidebarContent";
 import { ThemeToggle } from "./ThemeToggle";
+import { FeedbackButton } from "./community/FeedbackButton";
+import { FeedbackPrompt } from "./community/FeedbackPrompt";
+import { useFeedbackPrompt } from "@/hooks/useFeedbackPrompt";
 
 interface SidebarProps {
   onColorChange: (color: string) => void;
@@ -15,6 +18,29 @@ export const Sidebar = React.memo(({
 }: SidebarProps) => {
   const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const { 
+    showFeedbackPrompt, 
+    handleCloseFeedbackPrompt, 
+    handlePostponeFeedback,
+    handleManualFeedbackOpen
+  } = useFeedbackPrompt();
+  const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
+  
+  // Get user info from localStorage
+  React.useEffect(() => {
+    const ndaAgreement = localStorage.getItem("nda_agreement");
+    if (ndaAgreement) {
+      try {
+        const parsedAgreement = JSON.parse(ndaAgreement);
+        setUserInfo({
+          name: parsedAgreement.name,
+          email: parsedAgreement.email
+        });
+      } catch (error) {
+        console.error("Error parsing NDA agreement:", error);
+      }
+    }
+  }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -50,9 +76,17 @@ export const Sidebar = React.memo(({
         onColorChange={onColorChange}
       />
 
-      <div className="absolute bottom-4 left-4">
+      <div className="absolute bottom-4 left-4 flex items-center gap-2">
         <ThemeToggle />
+        <FeedbackButton onClick={handleManualFeedbackOpen} />
       </div>
+      
+      <FeedbackPrompt
+        isOpen={showFeedbackPrompt}
+        onClose={handleCloseFeedbackPrompt}
+        onPostpone={handlePostponeFeedback}
+        userInfo={userInfo}
+      />
     </div>
   );
 });
