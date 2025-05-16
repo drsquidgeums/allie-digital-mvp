@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -18,6 +18,20 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
   const [isAgreeChecked, setIsAgreeChecked] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { toast } = useToast();
+
+  // Prefill form with existing data from localStorage if available
+  useEffect(() => {
+    const ndaAgreement = localStorage.getItem("nda_agreement");
+    if (ndaAgreement) {
+      try {
+        const parsedAgreement = JSON.parse(ndaAgreement);
+        setName(parsedAgreement.name || "");
+        setEmail(parsedAgreement.email || "");
+      } catch (error) {
+        console.error("Error parsing NDA agreement:", error);
+      }
+    }
+  }, []);
 
   const isValidEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -70,7 +84,7 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
         }]);
 
       if (error) {
-        throw error;
+        console.error("Supabase error:", error);
       }
 
       // Save to localStorage
@@ -147,7 +161,7 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
             className="mt-1"
           />
           <Label htmlFor="agree" className="text-sm font-normal cursor-pointer" id="agree-description">
-            I agree to the terms and conditions of this Non-Disclosure Agreement by ticking here
+            I agree to the terms and conditions of this Non-Disclosure Agreement for this session
           </Label>
         </div>
       </div>

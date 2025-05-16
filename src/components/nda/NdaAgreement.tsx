@@ -30,7 +30,7 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
             Non-Disclosure Agreement
           </DialogTitle>
           <DialogDescription id="nda-dialog-description">
-            Please review and agree to our NDA before proceeding
+            Please review and agree to our NDA before proceeding with this session
           </DialogDescription>
         </DialogHeader>
 

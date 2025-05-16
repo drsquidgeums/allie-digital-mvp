@@ -28,7 +28,7 @@ const App = () => {
   }, []);
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [hasAgreedToNda, setHasAgreedToNda] = useState(false);
+  const [showNda, setShowNda] = useState(false);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
   
   const { 
@@ -37,13 +37,12 @@ const App = () => {
     handlePostponeFeedback 
   } = useFeedbackPrompt();
 
-  // Check if user has previously agreed to NDA
+  // Load any existing user info from localStorage
   useEffect(() => {
     const ndaAgreement = localStorage.getItem("nda_agreement");
     if (ndaAgreement) {
       try {
         const parsedAgreement = JSON.parse(ndaAgreement);
-        setHasAgreedToNda(true);
         setUserInfo({
           name: parsedAgreement.name,
           email: parsedAgreement.email
@@ -56,8 +55,13 @@ const App = () => {
   }, []);
 
   const handleNdaAgreementComplete = (name: string, email: string) => {
-    setHasAgreedToNda(true);
+    setShowNda(false);
     setUserInfo({ name, email });
+  };
+
+  const handleAuthentication = () => {
+    setIsAuthenticated(true);
+    setShowNda(true); // Always show NDA after authentication
   };
 
   if (!isAuthenticated) {
@@ -65,20 +69,7 @@ const App = () => {
       <AppProviders>
         <Toaster />
         <Sonner />
-        <PasswordGate onAuthenticated={() => setIsAuthenticated(true)} />
-      </AppProviders>
-    );
-  }
-
-  if (!hasAgreedToNda) {
-    return (
-      <AppProviders>
-        <Toaster />
-        <Sonner />
-        <NdaAgreement 
-          isOpen={true} 
-          onAgreementComplete={handleNdaAgreementComplete} 
-        />
+        <PasswordGate onAuthenticated={handleAuthentication} />
       </AppProviders>
     );
   }
@@ -100,6 +91,12 @@ const App = () => {
               <AppRoutes />
             </Suspense>
             <FloatingAIAssistant />
+            
+            {/* NDA Agreement */}
+            <NdaAgreement 
+              isOpen={showNda} 
+              onAgreementComplete={handleNdaAgreementComplete} 
+            />
             
             {/* Feedback Prompt */}
             <FeedbackPrompt
