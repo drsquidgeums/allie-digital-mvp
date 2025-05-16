@@ -1,5 +1,5 @@
 
-import React, { lazy, Suspense, memo } from "react";
+import React, { lazy, Suspense, memo, useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { BrowserRouter, Navigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
 import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
+import { NdaAgreement } from "@/components/nda/NdaAgreement";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -23,7 +24,32 @@ const App = () => {
     localStorage.removeItem("isAuthenticated");
   }, []);
 
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [hasAgreedToNda, setHasAgreedToNda] = useState(false);
+  const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
+
+  // Check if user has previously agreed to NDA
+  useEffect(() => {
+    const ndaAgreement = localStorage.getItem("nda_agreement");
+    if (ndaAgreement) {
+      try {
+        const parsedAgreement = JSON.parse(ndaAgreement);
+        setHasAgreedToNda(true);
+        setUserInfo({
+          name: parsedAgreement.name,
+          email: parsedAgreement.email
+        });
+      } catch (error) {
+        console.error("Error parsing NDA agreement:", error);
+        localStorage.removeItem("nda_agreement");
+      }
+    }
+  }, []);
+
+  const handleNdaAgreementComplete = (name: string, email: string) => {
+    setHasAgreedToNda(true);
+    setUserInfo({ name, email });
+  };
 
   if (!isAuthenticated) {
     return (
@@ -31,6 +57,19 @@ const App = () => {
         <Toaster />
         <Sonner />
         <PasswordGate onAuthenticated={() => setIsAuthenticated(true)} />
+      </AppProviders>
+    );
+  }
+
+  if (!hasAgreedToNda) {
+    return (
+      <AppProviders>
+        <Toaster />
+        <Sonner />
+        <NdaAgreement 
+          isOpen={true} 
+          onAgreementComplete={handleNdaAgreementComplete} 
+        />
       </AppProviders>
     );
   }
