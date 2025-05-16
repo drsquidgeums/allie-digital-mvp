@@ -50,14 +50,13 @@ export const useFeedbackSubmission = (
       
       // For non-special users, check if they've already submitted feedback based on email
       if (userEmail !== SPECIAL_USER_EMAIL) {
-        // Explicitly type the query result to avoid infinite type instantiation
+        // Use a more explicit approach to avoid TypeScript errors
         const { data: existingFeedback } = await supabase
           .from('feedback')
           .select('id')
-          .eq('email', userEmail)
-          .single();
+          .eq('email', userEmail);
           
-        if (existingFeedback) {
+        if (existingFeedback && existingFeedback.length > 0) {
           toast({
             title: "Feedback already submitted",
             description: "You have already provided feedback. Thank you!"

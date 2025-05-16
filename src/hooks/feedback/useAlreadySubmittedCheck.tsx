@@ -21,19 +21,18 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
       }
 
       try {
+        // Use a more explicit approach to avoid TypeScript errors
         const { data, error } = await supabase
           .from('feedback')
           .select('id')
-          .eq('email', userEmail)
-          .single();
+          .eq('email', userEmail);
           
         if (error) {
-          if (error.code !== 'PGRST116') { // PGRST116 is "no rows returned" error
-            throw error;
-          }
+          console.error("Error checking previous feedback:", error);
+          return;
         }
         
-        if (data) {
+        if (data && data.length > 0) {
           setAlreadySubmitted(true);
           toast({
             title: "Feedback already submitted",
