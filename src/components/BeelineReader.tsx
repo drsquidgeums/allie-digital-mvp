@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from "react";
 import { BookOpen, ChevronDown } from "lucide-react";
 import { Input } from "./ui/input";
@@ -6,10 +7,10 @@ import { usePersistedText } from "@/hooks/usePersistedText";
 
 const COLOR_GRADIENTS = {
   "Dark Green to Dark Purple": {
-    start: "#0E6E0E",
+    start: "#006400", // Dark Green
     middle: "#1F564F",
-    end: "#4B0082",
-    endMiddle: "#2D004D"
+    end: "#301934", // Dark Purple
+    endMiddle: "#23142A"
   },
   "Brown to Blue": {
     start: "#8B4513",
@@ -124,7 +125,7 @@ export const BeelineReader = () => {
 
       <div 
         ref={outputRef}
-        className="bg-background/50 p-3 rounded-lg min-h-[100px] text-left focus:outline-none focus:ring-2 focus:ring-primary overflow-auto"
+        className="bg-white dark:bg-white p-3 rounded-lg min-h-[100px] text-left focus:outline-none focus:ring-2 focus:ring-primary overflow-auto"
         tabIndex={text ? 0 : -1}
         role="region"
         aria-label="Processed beeline text"
