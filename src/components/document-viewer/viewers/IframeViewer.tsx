@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { isGoogleDocsUrl } from '../urlUtils';
 
 interface IframeViewerProps {
@@ -18,8 +18,13 @@ interface IframeViewerProps {
  */
 export const IframeViewer: React.FC<IframeViewerProps> = ({ url, onError }) => {
   const [processedUrl, setProcessedUrl] = useState<string>(url);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [key, setKey] = useState<number>(0); // Key for forcing iframe reload
 
   useEffect(() => {
+    // Force iframe reload when URL changes
+    setKey(prev => prev + 1);
+    
     // Process the URL to handle special cases like Google Docs
     const processUrl = (inputUrl: string): string => {
       try {
@@ -60,19 +65,28 @@ export const IframeViewer: React.FC<IframeViewerProps> = ({ url, onError }) => {
 
   // Determine if we need additional sandbox permissions for Google Docs
   const isGoogleDoc = isGoogleDocsUrl(url);
+
+  // Function to handle iframe loading errors
+  const handleIframeError = () => {
+    console.error("Failed to load iframe content");
+    onError();
+  };
   
   return (
     <div className="h-full relative">
       <iframe
+        key={key} // Force reload when key changes
+        ref={iframeRef}
         src={processedUrl}
         className="w-full h-full border-0"
         title="Document preview"
         sandbox={isGoogleDoc 
-          ? "allow-same-origin allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox allow-downloads allow-modals allow-top-navigation"
+          ? "allow-same-origin allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox allow-downloads allow-modals allow-top-navigation allow-presentation"
           : "allow-same-origin allow-scripts allow-popups allow-forms"}
         referrerPolicy="no-referrer"
         loading="lazy"
-        onError={onError}
+        onError={handleIframeError}
+        allow="fullscreen"
       />
     </div>
   );

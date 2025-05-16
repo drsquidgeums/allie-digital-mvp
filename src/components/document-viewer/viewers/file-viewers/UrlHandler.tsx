@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { IframeViewer } from '../IframeViewer';
@@ -38,6 +37,11 @@ export const UrlHandler: React.FC<UrlHandlerProps> = ({
     // Ensure authuser parameter is present for better cross-origin auth handling
     if (!processedUrl.includes('authuser=')) {
       processedUrl += '&authuser=0';
+    }
+
+    // Add parameter to keep user authenticated
+    if (!processedUrl.includes('usp=sharing')) {
+      processedUrl += '&usp=sharing';
     }
   }
 
