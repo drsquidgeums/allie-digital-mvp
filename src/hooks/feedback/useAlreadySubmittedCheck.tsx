@@ -24,10 +24,14 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
         const { data, error } = await supabase
           .from('feedback')
           .select('id')
-          .eq('user_id', userEmail)
-          .maybeSingle();
+          .eq('email', userEmail)
+          .single();
           
-        if (error) throw error;
+        if (error) {
+          if (error.code !== 'PGRST116') { // PGRST116 is "no rows returned" error
+            throw error;
+          }
+        }
         
         if (data) {
           setAlreadySubmitted(true);
