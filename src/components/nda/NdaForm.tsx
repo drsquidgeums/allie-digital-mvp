@@ -116,7 +116,7 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
               placeholder="Enter your full name"
               required
               aria-required="true"
-              aria-invalid={name === "" ? "true" : undefined}
+              aria-invalid={name === "" && document.activeElement?.id !== "name" ? "true" : undefined}
               className="w-full"
             />
           </div>
@@ -131,22 +131,23 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
               placeholder="Enter your email"
               required
               aria-required="true"
-              aria-invalid={email !== "" && !isValidEmail(email) ? "true" : undefined}
+              aria-invalid={(email !== "" && !isValidEmail(email) && document.activeElement?.id !== "email") ? "true" : undefined}
               className="w-full"
             />
           </div>
         </div>
 
-        <div className="flex items-center space-x-2 pt-2">
+        <div className="flex items-start space-x-2 pt-2">
           <Checkbox
             id="agree"
             checked={isAgreeChecked}
             onCheckedChange={(checked) => setIsAgreeChecked(checked === true)}
             aria-required="true"
             aria-describedby="agree-description"
+            className="mt-1"
           />
           <Label htmlFor="agree" className="text-sm font-normal cursor-pointer" id="agree-description">
-            I have read and agree to the terms of this Non-Disclosure Agreement
+            I agree to the terms and conditions of this Non-Disclosure Agreement by ticking here
           </Label>
         </div>
       </div>
