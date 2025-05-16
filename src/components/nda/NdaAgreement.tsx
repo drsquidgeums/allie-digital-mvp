@@ -29,10 +29,12 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
   const { toast } = useToast();
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("Name changed:", e.target.value);
     setName(e.target.value);
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("Email changed:", e.target.value);
     setEmail(e.target.value);
   };
 
