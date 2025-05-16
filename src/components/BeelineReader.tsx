@@ -12,11 +12,17 @@ const COLOR_GRADIENTS = {
     end: "#666666",
     endMiddle: "#888888"
   },
-  "Green to Dark Green": {
-    start: "#22A022",
-    middle: "#1A801A",
-    end: "#146014",
-    endMiddle: "#0E400E"
+  "Dark Green to Darker Green": {
+    start: "#0E6E0E",
+    middle: "#0A520A",
+    end: "#073B07",
+    endMiddle: "#042504"
+  },
+  "Dark Green to Dark Purple": {
+    start: "#0E6E0E",
+    middle: "#0A520A",
+    end: "#4B0082",
+    endMiddle: "#2D004D"
   },
   "Brown to Blue": {
     start: "#8B4513",
