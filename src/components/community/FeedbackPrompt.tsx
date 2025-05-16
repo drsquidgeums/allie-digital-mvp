@@ -20,7 +20,7 @@ export const FeedbackPrompt: React.FC<FeedbackPromptProps> = ({
     <Dialog open={isOpen} modal>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-center text-xl">We Value Your Feedback</DialogTitle>
+          <DialogTitle className="text-center text-xl">Feedback</DialogTitle>
         </DialogHeader>
         
         <FeedbackForm

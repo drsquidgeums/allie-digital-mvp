@@ -1,7 +1,5 @@
 
 import React, { useState, useEffect } from "react";
-import { RatingSelect } from "../ratings/RatingSelect";
-import { RecommendSelect } from "./RecommendSelect";
 import { CommentsSection } from "./CommentsSection";
 import { FeedbackButtons } from "./FeedbackButtons";
 import { useToast } from "@/components/ui/use-toast";
@@ -21,14 +19,13 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
   onPostpone,
   userInfo
 }) => {
-  const [rating, setRating] = useState<number>(0);
-  const [usability, setUsability] = useState<number>(0);
-  const [visualAppeal, setVisualAppeal] = useState<number>(0);
-  const [wouldRecommend, setWouldRecommend] = useState<boolean | null>(null);
   const [comments, setComments] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [alreadySubmitted, setAlreadySubmitted] = useState<boolean>(false);
+  const [wordCount, setWordCount] = useState<number>(0);
   const { toast } = useToast();
+  
+  const MAX_WORDS = 500;
 
   // Check if the user has already submitted feedback
   useEffect(() => {
@@ -66,13 +63,28 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
     checkPreviousSubmission();
   }, [userInfo, toast, onClose]);
 
+  // Update word count when comments change
+  useEffect(() => {
+    const words = comments.trim() ? comments.trim().split(/\s+/).length : 0;
+    setWordCount(words);
+  }, [comments]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!rating || !usability || !visualAppeal || wouldRecommend === null) {
+    if (!comments.trim()) {
       toast({
         title: "Missing information",
-        description: "Please complete all required fields before submitting.",
+        description: "Please provide some feedback before submitting.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (wordCount > MAX_WORDS) {
+      toast({
+        title: "Too many words",
+        description: `Please limit your feedback to ${MAX_WORDS} words.`,
         variant: "destructive"
       });
       return;
@@ -101,10 +113,6 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
           .upsert([
             { 
               user_id,
-              rating,
-              usability,
-              visual_appeal: visualAppeal,
-              would_recommend: wouldRecommend,
               comments: comments || null
             }
           ], {
@@ -118,10 +126,6 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
           .insert([
             { 
               user_id,
-              rating,
-              usability,
-              visual_appeal: visualAppeal,
-              would_recommend: wouldRecommend,
               comments: comments || null
             }
           ]);
@@ -160,8 +164,6 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
     }
   };
 
-  const isFormIncomplete = !rating || !usability || !visualAppeal || wouldRecommend === null;
-
   if (alreadySubmitted) {
     return (
       <div className="p-4 text-center">
@@ -181,32 +183,11 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-4 pt-2">
       <div className="space-y-4">
-        <RatingSelect 
-          label="Overall Experience" 
-          value={rating} 
-          onChange={setRating} 
-        />
-        
-        <RatingSelect 
-          label="Ease of Use" 
-          value={usability} 
-          onChange={setUsability} 
-        />
-        
-        <RatingSelect 
-          label="Visual Design" 
-          value={visualAppeal} 
-          onChange={setVisualAppeal} 
-        />
-        
-        <RecommendSelect 
-          value={wouldRecommend} 
-          onChange={setWouldRecommend} 
-        />
-        
         <CommentsSection 
           value={comments} 
-          onChange={setComments} 
+          onChange={setComments}
+          maxWords={MAX_WORDS}
+          currentWordCount={wordCount}
         />
       </div>
       
@@ -215,7 +196,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
         onClose={onClose}
         onSubmit={handleSubmit}
         isSubmitting={isSubmitting}
-        isDisabled={isFormIncomplete}
+        isDisabled={!comments.trim()}
       />
     </form>
   );

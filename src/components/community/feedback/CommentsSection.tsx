@@ -6,21 +6,32 @@ import { Textarea } from "@/components/ui/textarea";
 interface CommentsSectionProps {
   value: string;
   onChange: (value: string) => void;
+  maxWords?: number;
+  currentWordCount?: number;
 }
 
 export const CommentsSection: React.FC<CommentsSectionProps> = ({
   value,
-  onChange
+  onChange,
+  maxWords = 500,
+  currentWordCount = 0
 }) => {
+  const isOverLimit = maxWords && currentWordCount > maxWords;
+  
   return (
     <div className="space-y-2">
-      <Label htmlFor="comments">Additional Comments</Label>
+      <div className="flex justify-between items-center">
+        <Label htmlFor="comments">Your Feedback</Label>
+        <span className={`text-xs ${isOverLimit ? "text-red-500 font-bold" : "text-gray-500"}`}>
+          {currentWordCount}/{maxWords} words
+        </span>
+      </div>
       <Textarea
         id="comments"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Please share any additional thoughts or suggestions..."
-        className="min-h-[100px] text-black"
+        placeholder="Please share your thoughts or suggestions..."
+        className={`min-h-[150px] text-black ${isOverLimit ? "border-red-500" : ""}`}
       />
     </div>
   );
