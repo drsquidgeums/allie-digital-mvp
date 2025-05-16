@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Handle, Position } from '@xyflow/react';
 
 interface ImageNodeProps {
