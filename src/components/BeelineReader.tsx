@@ -8,15 +8,11 @@ import { usePersistedText } from "@/hooks/usePersistedText";
 const COLOR_GRADIENTS = {
   "Dark Green to Dark Purple": {
     start: "#006400", // Dark Green
-    middle: "#1F564F",
     end: "#301934", // Dark Purple
-    endMiddle: "#23142A"
   },
   "Brown to Blue": {
     start: "#8B4513",
-    middle: "#4169E1",
     end: "#000080",
-    endMiddle: "#0000CD"
   }
 };
 
@@ -43,20 +39,9 @@ export const BeelineReader = () => {
     return (
       <div className="space-y-1">
         {lines.map((line, index) => {
-          // Apply different gradient to each line in a rotating pattern
-          const cyclePosition = index % 3;
-          
-          let gradientStyle = "";
-          if (cyclePosition === 0) {
-            // First line: start to middle gradient
-            gradientStyle = `linear-gradient(${angle}deg, ${colors.start}, ${colors.middle})`;
-          } else if (cyclePosition === 1) {
-            // Second line: middle to end gradient
-            gradientStyle = `linear-gradient(${angle}deg, ${colors.middle}, ${colors.end})`;
-          } else {
-            // Third line: end back to start for continuous flow
-            gradientStyle = `linear-gradient(${angle}deg, ${colors.end}, ${colors.endMiddle}, ${colors.start})`;
-          }
+          // For each line, apply a direct gradient from start to end color
+          // This ensures the gradient is clearly visible across the text
+          const gradientStyle = `linear-gradient(${angle}deg, ${colors.start}, ${colors.end})`;
           
           return (
             <p 
