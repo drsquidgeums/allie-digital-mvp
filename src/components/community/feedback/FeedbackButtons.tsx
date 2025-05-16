@@ -34,17 +34,7 @@ export const FeedbackButtons: React.FC<FeedbackButtonsProps> = ({
           </Button>
         )}
         
-        {!hideButtons.includes('close') && (
-          <Button 
-            type="button"
-            variant="ghost" 
-            onClick={onClose}
-            disabled={isSubmitting}
-            className="bg-black text-white hover:bg-gray-700 hover:text-white dark:bg-black dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
-          >
-            No Thanks
-          </Button>
-        )}
+        {/* No Thanks button removed as requested */}
       </div>
       
       {!hideButtons.includes('submit') && (
