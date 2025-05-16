@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 
 // Time before showing feedback prompt in milliseconds (15 minutes)
@@ -59,13 +58,33 @@ export const useFeedbackPrompt = () => {
     
     // Record session start time if not already set
     if (!localStorage.getItem("session_start_time")) {
-      localStorage.setItem("session_start_time", Date.now().toString());
+      const currentTime = Date.now();
+      localStorage.setItem("session_start_time", currentTime.toString());
+      console.log("Session start time set:", new Date(currentTime).toISOString());
     }
+    
+    const sessionStartTime = parseInt(localStorage.getItem("session_start_time") || Date.now().toString(), 10);
+    const now = Date.now();
+    const timeElapsed = now - sessionStartTime;
+    
+    console.log("Time elapsed since session start:", Math.floor(timeElapsed / 1000 / 60), "minutes");
+    
+    // If 15 minutes have already passed, show feedback prompt immediately
+    if (timeElapsed >= FEEDBACK_PROMPT_DELAY) {
+      console.log("15+ minutes elapsed, showing feedback prompt immediately");
+      setShowFeedbackPrompt(true);
+      return;
+    }
+    
+    // Otherwise, set timer for remaining time
+    const remainingTime = FEEDBACK_PROMPT_DELAY - timeElapsed;
+    console.log("Showing feedback prompt in:", Math.floor(remainingTime / 1000 / 60), "minutes");
     
     // Set timer to show feedback prompt after delay
     const timer = setTimeout(() => {
+      console.log("Feedback prompt timer triggered, showing prompt now");
       setShowFeedbackPrompt(true);
-    }, FEEDBACK_PROMPT_DELAY);
+    }, remainingTime);
     
     return () => clearTimeout(timer);
   }, []);
@@ -96,4 +115,3 @@ export const useFeedbackPrompt = () => {
     handleManualFeedbackOpen,
   };
 };
-

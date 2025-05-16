@@ -68,6 +68,9 @@ export const useFeedbackSubmission = (
         }
       }
       
+      const currentTime = new Date().toISOString();
+      console.log(`Submitting feedback at: ${currentTime}`);
+      
       // Insert feedback with proper UUID and store the email separately
       const { error } = await supabase
         .from('feedback')
@@ -75,6 +78,7 @@ export const useFeedbackSubmission = (
           user_id,
           email: userEmail, // Store email in a separate column
           comments: comments || null,
+          created_at: currentTime, // Explicitly set the timestamp
           // Required fields per database schema
           rating: 0,
           usability: 0,
@@ -92,7 +96,8 @@ export const useFeedbackSubmission = (
         });
         
         // Store in localStorage that feedback was submitted
-        localStorage.setItem("feedback_submitted", new Date().toISOString());
+        localStorage.setItem("feedback_submitted", currentTime);
+        console.log(`Feedback submission recorded in localStorage at: ${currentTime}`);
       }
       
       onClose();
