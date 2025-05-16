@@ -3,6 +3,7 @@ import React from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { IframeViewer } from '../IframeViewer';
 import { PdfViewerWrapper } from './PdfViewerWrapper';
+import { isGoogleDocsUrl } from '../../urlUtils';
 
 interface UrlHandlerProps {
   url: string;
@@ -34,7 +35,7 @@ export const UrlHandler: React.FC<UrlHandlerProps> = ({
     );
   }
 
-  // Handle all other URLs with iframe
+  // Google Docs and other document URLs are handled by IframeViewer
   return (
     <ErrorBoundary>
       <IframeViewer url={url} onError={onError} />

@@ -5,6 +5,7 @@ export const getUrlType = (url: string): string => {
   if (extension === 'txt') return 'txt';
   if (extension === 'html' || extension === 'htm') return 'html';
   if (isVideoUrl(url)) return 'video';
+  if (isGoogleDocsUrl(url)) return 'google-docs';
   return 'webpage';
 };
 
@@ -51,6 +52,41 @@ export const getEmbedUrl = (url: string): string => {
     }
   }
 
+  // Google Docs
+  if (isGoogleDocsUrl(url)) {
+    return convertToEmbeddableGoogleUrl(url);
+  }
+
+  return url;
+};
+
+export const isGoogleDocsUrl = (url: string): boolean => {
+  const lowercaseUrl = url.toLowerCase();
+  return (
+    lowercaseUrl.includes('docs.google.com/document') ||
+    lowercaseUrl.includes('docs.google.com/spreadsheets') ||
+    lowercaseUrl.includes('docs.google.com/presentation')
+  );
+};
+
+export const convertToEmbeddableGoogleUrl = (url: string): string => {
+  const lowercaseUrl = url.toLowerCase();
+  
+  // Google Docs
+  if (lowercaseUrl.includes('docs.google.com/document')) {
+    return url.replace(/\/edit(?:[^\/]*)?(?=#|$)/, '/preview');
+  }
+  
+  // Google Sheets
+  if (lowercaseUrl.includes('docs.google.com/spreadsheets')) {
+    return url.replace(/\/edit(?:[^\/]*)?(?=#|$)/, '/preview');
+  }
+  
+  // Google Slides
+  if (lowercaseUrl.includes('docs.google.com/presentation')) {
+    return url.replace(/\/edit(?:[^\/]*)?(?=#|$)/, '/preview');
+  }
+  
   return url;
 };
 
