@@ -3,7 +3,7 @@ import React from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { IframeViewer } from '../IframeViewer';
 import { PdfViewerWrapper } from './PdfViewerWrapper';
-import { isGoogleDocsUrl } from '../../urlUtils';
+import { isGoogleDocsUrl, convertToEmbeddableGoogleUrl } from '../../urlUtils';
 
 interface UrlHandlerProps {
   url: string;
@@ -23,6 +23,24 @@ export const UrlHandler: React.FC<UrlHandlerProps> = ({
   isHighlighter,
   onError
 }) => {
+  // Process the URL for proper handling
+  let processedUrl = url;
+  
+  // Special handling for Google Docs URLs to ensure they work across different contexts
+  if (isGoogleDocsUrl(url)) {
+    processedUrl = convertToEmbeddableGoogleUrl(url);
+    
+    // Add additional parameters to force Google auth to work in new tabs
+    if (!processedUrl.includes('embedded=true')) {
+      processedUrl += (processedUrl.includes('?') ? '&' : '?') + 'embedded=true';
+    }
+    
+    // Ensure authuser parameter is present for better cross-origin auth handling
+    if (!processedUrl.includes('authuser=')) {
+      processedUrl += '&authuser=0';
+    }
+  }
+
   // Special handling for PDF URLs
   if (url.toLowerCase().endsWith('.pdf')) {
     return (
@@ -38,7 +56,7 @@ export const UrlHandler: React.FC<UrlHandlerProps> = ({
   // Google Docs and other document URLs are handled by IframeViewer
   return (
     <ErrorBoundary>
-      <IframeViewer url={url} onError={onError} />
+      <IframeViewer url={processedUrl} onError={onError} />
     </ErrorBoundary>
   );
 };
