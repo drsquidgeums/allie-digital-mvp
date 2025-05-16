@@ -5,7 +5,6 @@ import {
   Controls,
   Background,
   ConnectionLineType,
-  Panel
 } from '@xyflow/react';
 import { MindMapNode } from './types';
 
