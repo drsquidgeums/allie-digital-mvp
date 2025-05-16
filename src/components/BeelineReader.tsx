@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from "react";
 import { BookOpen, ChevronDown } from "lucide-react";
 import { Input } from "./ui/input";
@@ -6,21 +5,9 @@ import { Slider } from "./ui/slider";
 import { usePersistedText } from "@/hooks/usePersistedText";
 
 const COLOR_GRADIENTS = {
-  "Dark Gray to Gray": {
-    start: "#222222",
-    middle: "#444444",
-    end: "#666666",
-    endMiddle: "#888888"
-  },
-  "Dark Green to Darker Green": {
-    start: "#0E6E0E",
-    middle: "#0A520A",
-    end: "#073B07",
-    endMiddle: "#042504"
-  },
   "Dark Green to Dark Purple": {
     start: "#0E6E0E",
-    middle: "#0A520A",
+    middle: "#1F564F",
     end: "#4B0082",
     endMiddle: "#2D004D"
   },
@@ -34,7 +21,7 @@ const COLOR_GRADIENTS = {
 
 export const BeelineReader = () => {
   const [text, setText] = usePersistedText("beeline");
-  const [selectedGradient, setSelectedGradient] = useState("Dark Gray to Gray");
+  const [selectedGradient, setSelectedGradient] = useState("Dark Green to Dark Purple");
   const [angle, setAngle] = useState(45);
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
