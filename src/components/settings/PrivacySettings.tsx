@@ -10,9 +10,7 @@ import { useSecurityContext } from "@/components/security/SecurityProvider";
 export const PrivacySettings = () => {
   const { t } = useTranslation();
   const { 
-    enableWatermark, 
     enableAntiScreenCapture,
-    toggleWatermark,
     toggleAntiScreenCapture 
   } = useSecurityContext();
   
@@ -42,14 +40,6 @@ export const PrivacySettings = () => {
             <p className="text-sm text-muted-foreground">Block attempts to capture screen content</p>
           </div>
           <Switch checked={enableAntiScreenCapture} onCheckedChange={toggleAntiScreenCapture} />
-        </div>
-
-        <div className="flex items-center justify-between">
-          <div className="space-y-0.5">
-            <Label>Content Watermarking</Label>
-            <p className="text-sm text-muted-foreground">Apply confidentiality watermark to all screens</p>
-          </div>
-          <Switch checked={enableWatermark} onCheckedChange={toggleWatermark} />
         </div>
 
         <div className="flex items-center justify-between">
