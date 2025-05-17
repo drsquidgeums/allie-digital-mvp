@@ -2,12 +2,12 @@
 import React from 'react';
 import '@xyflow/react/dist/style.css';
 import '../styles/mindmap.css';
+import { ReactFlowProvider } from '@xyflow/react';
 import { MindMapContainer } from './mindmap/MindMapContainer';
 import { useMindMapState } from './mindmap/hooks/useMindMapState';
 import { downloadMindMapAsJpg, downloadMindMapAsJson } from './mindmap/utils/mindMapUtils';
 import { nodeTypes } from './mindmap/constants/nodeTypes';
 import { colorOptions, textColorOptions } from './mindmap/constants/colors';
-import { ReactFlowProvider } from '@xyflow/react';
 
 export const MindMap = () => {
   const {
