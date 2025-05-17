@@ -21,7 +21,7 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
       }
 
       try {
-        // Use explicit type for the query result to avoid deep inference issues
+        // Fix: Use a simpler type inference to avoid deep recursion
         const { data, error } = await supabase
           .from('feedback')
           .select('id')
