@@ -21,18 +21,19 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
       }
 
       try {
-        // Annotate the return type to avoid deep type inference
-        const response: { data: any; error: any } = await supabase
+        // Use explicit typing to avoid deep type inference issues
+        const { data, error } = await supabase
           .from('feedback')
           .select('id')
-          .eq('email', userEmail);
+          .eq('email', userEmail)
+          .returns<{ id: string }[]>();
           
-        if (response.error) {
-          console.error("Error checking previous feedback:", response.error);
+        if (error) {
+          console.error("Error checking previous feedback:", error);
           return;
         }
         
-        if (response.data && response.data.length > 0) {
+        if (data && data.length > 0) {
           setAlreadySubmitted(true);
           toast({
             title: "Feedback already submitted",
