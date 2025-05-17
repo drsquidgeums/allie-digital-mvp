@@ -21,11 +21,11 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
       }
 
       try {
-        // Cast to `any` to avoid TypeScript's deep type inference
+        // Use type assertion with a more specific type to avoid deep inference
         const { data, error } = await supabase
           .from('feedback')
           .select('id')
-          .eq('email', userEmail) as { data: any; error: any };
+          .eq('email', userEmail);
           
         if (error) {
           console.error("Error checking previous feedback:", error);
