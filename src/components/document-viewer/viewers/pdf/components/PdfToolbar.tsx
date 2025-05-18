@@ -11,7 +11,8 @@ import {
   ChevronLeft, 
   ChevronRight, 
   ZoomIn, 
-  ZoomOut, 
+  ZoomOut,
+  Maximize, 
   Keyboard
 } from 'lucide-react';
 
@@ -21,6 +22,7 @@ interface PdfToolbarProps {
   zoom: number;
   onPageChange: (offset: number) => void;
   onZoomChange: (delta: number) => void;
+  onFitToScreen: () => void;
   onKeyboardHelp?: () => void;
 }
 
@@ -30,6 +32,7 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
   zoom,
   onPageChange,
   onZoomChange,
+  onFitToScreen,
   onKeyboardHelp
 }) => {
   return (
@@ -104,6 +107,21 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent>Zoom in (Ctrl + +)</TooltipContent>
+          </Tooltip>
+          
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={onFitToScreen}
+                aria-label="Fit to screen"
+                className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+              >
+                <Maximize className="h-4 w-4 dark:text-white text-black" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Fit to screen</TooltipContent>
           </Tooltip>
           
           <Tooltip>

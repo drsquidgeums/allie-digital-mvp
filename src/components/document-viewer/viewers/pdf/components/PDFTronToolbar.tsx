@@ -5,7 +5,8 @@ import {
   ZoomIn, 
   ZoomOut, 
   RotateCw, 
-  RotateCcw, 
+  RotateCcw,
+  Maximize, 
   Hand, 
   MousePointer 
 } from 'lucide-react';
@@ -32,6 +33,11 @@ export const PDFTronToolbar: React.FC<PDFTronToolbarProps> = ({
   
   const handleZoomIn = () => {
     UI.setZoomLevel(UI.getZoomLevel() + 0.25);
+  };
+  
+  // Handle fit to screen
+  const handleFitToScreen = () => {
+    UI.setFitMode(instance.FitMode.FIT_PAGE);
   };
   
   // Handle rotation
@@ -76,6 +82,16 @@ export const PDFTronToolbar: React.FC<PDFTronToolbarProps> = ({
         className="dark:hover:bg-zinc-700 hover:bg-gray-200"
       >
         <ZoomIn size={16} className="dark:text-white text-black" />
+      </Button>
+      
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        onClick={handleFitToScreen}
+        title="Fit to screen"
+        className="dark:hover:bg-zinc-700 hover:bg-gray-200"
+      >
+        <Maximize size={16} className="dark:text-white text-black" />
       </Button>
       
       <Button 

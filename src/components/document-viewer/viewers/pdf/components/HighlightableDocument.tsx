@@ -54,6 +54,14 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
     }
   };
   
+  const fitToScreen = () => {
+    setScale(1.0);
+    toast({
+      title: "Fit to Screen",
+      description: "Document adjusted to fit screen",
+    });
+  };
+  
   const rotateDocument = () => {
     setRotation((rotation + 90) % 360);
   };
@@ -90,6 +98,12 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
             rotateDocument();
           }
           break;
+        case '0':
+          if (e.ctrlKey) {
+            e.preventDefault();
+            fitToScreen();
+          }
+          break;
       }
     };
 
@@ -108,6 +122,7 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
         selectedColor={selectedColor}
         changePage={changePage}
         zoom={handleZoom}
+        fitToScreen={fitToScreen}
         rotateDocument={rotateDocument}
         toggleHighlightMode={toggleHighlightMode}
       />

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Highlighter, ZoomIn, ZoomOut, RotateCw, RotateCcw, ChevronLeft, ChevronRight, Hand, MousePointer } from 'lucide-react';
+import { Highlighter, ZoomIn, ZoomOut, RotateCw, RotateCcw, ChevronLeft, ChevronRight, Hand, MousePointer, Maximize } from 'lucide-react';
 
 interface PdfJsToolbarProps {
   instance: any;
@@ -31,6 +31,13 @@ export const PdfJsToolbar: React.FC<PdfJsToolbarProps> = ({ instance, isHighligh
           title="Zoom in"
         >
           <ZoomIn size={16} />
+        </button>
+        <button 
+          onClick={() => UI.setFitMode(instance.FitMode.FIT_PAGE)}
+          className="p-2 rounded hover:bg-accent text-sm font-medium"
+          title="Fit to screen"
+        >
+          <Maximize size={16} />
         </button>
         <button 
           onClick={() => Core.documentViewer.rotateCounterClockwise()}
