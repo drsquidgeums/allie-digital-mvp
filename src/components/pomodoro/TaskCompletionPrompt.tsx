@@ -8,7 +8,7 @@ import { useTasks } from "@/hooks/useTasks";
 
 export const TaskCompletionPrompt = memo(() => {
   const { taskReadyForCompletion, setTaskReadyForCompletion } = usePomodoroContext();
-  const { tasks, handleToggleTask } = useTasks();
+  const { tasks } = useTasks();
   
   if (!taskReadyForCompletion) return null;
   
@@ -20,18 +20,17 @@ export const TaskCompletionPrompt = memo(() => {
   }
   
   const handleConfirm = useCallback(() => {
-    handleToggleTask(taskReadyForCompletion);
-    setTaskReadyForCompletion(null);
-    
-    // Emit task completion event
-    const event = new CustomEvent('taskCompletion', {
+    // Emit task completion event directly
+    const event = new CustomEvent('pomodoroTaskCompletion', {
       detail: { 
-        taskId: taskReadyForCompletion, 
-        action: 'complete' 
+        taskId: taskReadyForCompletion
       }
     });
     window.dispatchEvent(event);
-  }, [taskReadyForCompletion, handleToggleTask, setTaskReadyForCompletion]);
+    
+    console.log('Task completion event dispatched:', taskReadyForCompletion);
+    setTaskReadyForCompletion(null);
+  }, [taskReadyForCompletion, setTaskReadyForCompletion]);
   
   const handleCancel = useCallback(() => {
     setTaskReadyForCompletion(null);
