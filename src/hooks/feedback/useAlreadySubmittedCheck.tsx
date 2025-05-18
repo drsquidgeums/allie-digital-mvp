@@ -21,6 +21,8 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
       }
 
       try {
+        console.log(`Checking for previous feedback with email: ${userEmail}`);
+        
         // Check for previous feedback with this email in comments
         const { data, error } = await supabase
           .from('feedback')
@@ -31,6 +33,8 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
           console.error("Error checking previous feedback:", error);
           return;
         }
+        
+        console.log(`Previous feedback check result:`, data);
         
         // Check if we have any feedback entries
         if (data && data.length > 0) {

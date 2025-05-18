@@ -4,7 +4,8 @@ import {
   Users,
   Settings,
   LogOut,
-  Star
+  Star,
+  MessageSquare
 } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -14,9 +15,14 @@ import { useTranslation } from "react-i18next";
 interface SidebarToolsProps {
   activeComponent: string | null;
   setActiveComponent: (component: string) => void;
+  onFeedbackClick?: () => void;
 }
 
-export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToolsProps) => {
+export const SidebarTools = ({ 
+  activeComponent, 
+  setActiveComponent, 
+  onFeedbackClick 
+}: SidebarToolsProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
@@ -42,6 +48,13 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
     // Disabled - do nothing
   };
 
+  const handleFeedbackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (onFeedbackClick) {
+      onFeedbackClick();
+    }
+  };
+
   return (
     <div className="space-y-2">
       <div className="pt-4 border-t border-border space-y-2">
@@ -61,6 +74,14 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
           className="text-gray-600 cursor-not-allowed"
           disabled={true}
         />
+        {onFeedbackClick && (
+          <SidebarButton
+            icon={MessageSquare}
+            label="Feedback"
+            isActive={false}
+            onClick={handleFeedbackClick}
+          />
+        )}
         <SidebarButton
           icon={LogOut}
           label={t('common.logout')}

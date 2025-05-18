@@ -78,6 +78,12 @@ export const useFeedbackSubmission = (
       // Append the email to the comments for reference
       const enhancedComments = `${comments}\n\n[Email: ${userEmail}]`;
       
+      console.log("Submitting feedback with data:", {
+        user_id,
+        comments: enhancedComments,
+        created_at: currentTime
+      });
+      
       // Insert feedback with all required fields and a proper UUID
       const { error } = await supabase
         .from('feedback')
