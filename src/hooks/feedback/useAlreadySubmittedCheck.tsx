@@ -21,7 +21,6 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
       }
 
       try {
-        // Fix for excessive type inference
         const { data, error } = await supabase
           .from('feedback')
           .select('id')
