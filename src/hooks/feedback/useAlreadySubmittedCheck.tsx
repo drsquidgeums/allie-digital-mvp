@@ -21,11 +21,11 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
       }
 
       try {
-        // Use email as user_id for consistency with submission function
+        // Check for previous feedback with this email in comments
         const { data, error } = await supabase
           .from('feedback')
           .select('id')
-          .eq('user_id', userEmail);
+          .contains('comments', `[Email: ${userEmail}]`);
           
         if (error) {
           console.error("Error checking previous feedback:", error);
