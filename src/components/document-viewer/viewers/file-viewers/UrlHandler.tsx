@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { IframeViewer } from '../IframeViewer';
@@ -26,25 +25,20 @@ export const UrlHandler: React.FC<UrlHandlerProps> = ({
   // Process the URL for proper handling
   let processedUrl = url;
   
-  // Special handling for Google Docs URLs - now just showing the link instead of embedding
+  // Special handling for Google Docs URLs
   if (isGoogleDocsUrl(url)) {
+    // Convert Google Docs URL to an embeddable format
+    processedUrl = convertToEmbeddableGoogleUrl(url);
+    
+    // Add parameters required for proper embedding
+    if (!processedUrl.includes('embedded=true')) {
+      processedUrl += (processedUrl.includes('?') ? '&' : '?') + 'embedded=true';
+    }
+    
     return (
-      <div className="h-full flex items-center justify-center p-6 bg-background">
-        <div className="max-w-2xl w-full text-center p-6 border border-border rounded-lg shadow-sm">
-          <h3 className="text-lg font-medium mb-2">Google Document Link</h3>
-          <p className="mb-4 text-muted-foreground text-sm">
-            This is a link to a Google document. Click below to open it in a new tab.
-          </p>
-          <a 
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-          >
-            Open Google Document
-          </a>
-        </div>
-      </div>
+      <ErrorBoundary>
+        <IframeViewer url={processedUrl} onError={onError} />
+      </ErrorBoundary>
     );
   }
 
@@ -60,7 +54,7 @@ export const UrlHandler: React.FC<UrlHandlerProps> = ({
     );
   }
 
-  // Google Docs and other document URLs are handled by IframeViewer
+  // Other URLs are handled by IframeViewer
   return (
     <ErrorBoundary>
       <IframeViewer url={processedUrl} onError={onError} />
