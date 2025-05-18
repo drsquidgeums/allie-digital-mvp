@@ -21,6 +21,7 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
       }
 
       try {
+        // Explicitly type the query result to fix the infinite type instantiation
         const { data, error } = await supabase
           .from('feedback')
           .select('id')
