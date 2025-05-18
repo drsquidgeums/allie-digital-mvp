@@ -21,25 +21,26 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
       }
 
       try {
-        // Define explicit type for the data to avoid deep recursion issue
-        interface FeedbackRecord {
-          id: string;
+        // Define the exact structure we expect to receive
+        type FeedbackResponse = {
+          data: { id: string }[] | null;
+          error: any;
         }
 
-        const { data, error } = await supabase
+        // Explicitly type the query response
+        const response = await supabase
           .from('feedback')
           .select('id')
-          .eq('email', userEmail);
+          .eq('email', userEmail) as unknown as FeedbackResponse;
           
+        const { data, error } = response;
+        
         if (error) {
           console.error("Error checking previous feedback:", error);
           return;
         }
         
-        // Type assertion after checking the structure
-        const feedbackData = data as FeedbackRecord[] | null;
-        
-        if (feedbackData && feedbackData.length > 0) {
+        if (data && data.length > 0) {
           setAlreadySubmitted(true);
           toast({
             title: "Feedback already submitted",
