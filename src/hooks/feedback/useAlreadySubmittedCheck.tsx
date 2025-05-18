@@ -24,7 +24,7 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
         const { data, error } = await supabase
           .from('feedback')
           .select('id')
-          .eq('email', userEmail);
+          .eq('email', userEmail) as { data: any[] | null; error: any };
           
         if (error) {
           console.error("Error checking previous feedback:", error);

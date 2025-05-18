@@ -18,7 +18,7 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
   const navigationItems = [
     {
       id: "files",
-      label: t('navigation.workspace'),
+      label: "Workspace", // Changed from t('navigation.workspace') to hardcoded string
       icon: Monitor,
       path: "/toolbox"
     },
