@@ -50,7 +50,7 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
           label={`${t('navigation.settings')} ★`}
           isActive={false}
           onClick={handleSettingsClick}
-          className="text-gray-400 cursor-not-allowed"
+          className="text-gray-500 cursor-not-allowed"
           disabled={true}
         />
         <SidebarButton
@@ -58,7 +58,7 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
           label={`${t('navigation.community')} ★`}
           isActive={false}
           onClick={handleCommunityClick}
-          className="text-gray-400 cursor-not-allowed"
+          className="text-gray-500 cursor-not-allowed"
           disabled={true}
         />
         <SidebarButton

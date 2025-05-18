@@ -32,7 +32,7 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
         }
         
         // Check if we have any feedback entries
-        if (Array.isArray(data) && data.length > 0) {
+        if (data && data.length > 0) {
           setAlreadySubmitted(true);
           toast({
             title: "Feedback already submitted",

@@ -18,7 +18,7 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
   const navigationItems = [
     {
       id: "files",
-      label: t('navigation.toolbox'),
+      label: "Workspace",
       icon: Monitor,
       path: "/toolbox",
       disabled: false
@@ -70,7 +70,7 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
           label={label}
           isActive={location.pathname === path}
           onClick={(e) => handleNavigation(e, id, path, disabled)}
-          className={disabled ? "text-gray-400 cursor-not-allowed" : ""}
+          className={disabled ? "text-gray-500 cursor-not-allowed" : ""}
           disabled={disabled}
         />
       ))}
