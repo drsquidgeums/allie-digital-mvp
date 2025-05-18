@@ -50,13 +50,13 @@ export const useFeedbackSubmission = (
       
       // For non-special users, check if they've already submitted feedback based on email
       if (userEmail !== SPECIAL_USER_EMAIL) {
-        const { data: existingFeedback, error } = await supabase
+        const { data: existingFeedback, error: checkError } = await supabase
           .from('feedback')
           .select('id')
-          .eq('email', userEmail);
+          .eq('user_id', user_id); // Check by user_id instead of email
           
-        if (error) {
-          console.error("Error checking existing feedback:", error);
+        if (checkError) {
+          console.error("Error checking existing feedback:", checkError);
           // Continue with submission attempt even if check fails
         } else if (existingFeedback && existingFeedback.length > 0) {
           toast({
@@ -71,12 +71,14 @@ export const useFeedbackSubmission = (
       const currentTime = new Date().toISOString();
       console.log(`Submitting feedback at: ${currentTime}`);
       
-      // Insert feedback with proper UUID and store the email separately
+      // Store the email in a console log for reference but don't include it in DB insert
+      console.log(`User email submitting feedback: ${userEmail}`);
+      
+      // Insert feedback without email field, matching existing database schema
       const { error } = await supabase
         .from('feedback')
         .insert({
           user_id,
-          email: userEmail, // Store email in a separate column
           comments: comments || null,
           created_at: currentTime, // Explicitly set the timestamp
           // Required fields per database schema
