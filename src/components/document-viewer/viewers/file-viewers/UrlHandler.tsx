@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { IframeViewer } from '../IframeViewer';
@@ -25,24 +26,26 @@ export const UrlHandler: React.FC<UrlHandlerProps> = ({
   // Process the URL for proper handling
   let processedUrl = url;
   
-  // Special handling for Google Docs URLs to ensure they work across different contexts
+  // Special handling for Google Docs URLs - now just showing the link instead of embedding
   if (isGoogleDocsUrl(url)) {
-    processedUrl = convertToEmbeddableGoogleUrl(url);
-    
-    // Add additional parameters to force Google auth to work in new tabs
-    if (!processedUrl.includes('embedded=true')) {
-      processedUrl += (processedUrl.includes('?') ? '&' : '?') + 'embedded=true';
-    }
-    
-    // Ensure authuser parameter is present for better cross-origin auth handling
-    if (!processedUrl.includes('authuser=')) {
-      processedUrl += '&authuser=0';
-    }
-
-    // Add parameter to keep user authenticated
-    if (!processedUrl.includes('usp=sharing')) {
-      processedUrl += '&usp=sharing';
-    }
+    return (
+      <div className="h-full flex items-center justify-center p-6 bg-background">
+        <div className="max-w-2xl w-full text-center p-6 border border-border rounded-lg shadow-sm">
+          <h3 className="text-lg font-medium mb-2">Google Document Link</h3>
+          <p className="mb-4 text-muted-foreground text-sm">
+            This is a link to a Google document. Click below to open it in a new tab.
+          </p>
+          <a 
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+          >
+            Open Google Document
+          </a>
+        </div>
+      </div>
+    );
   }
 
   // Special handling for PDF URLs
