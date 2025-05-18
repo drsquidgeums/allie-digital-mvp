@@ -1,7 +1,7 @@
 
 import React, { useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Monitor, CheckSquare, Brain, FileText } from "lucide-react";
+import { Monitor, CheckSquare, Brain, FileText, Star } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 import { useTranslation } from "react-i18next";
 
@@ -20,25 +20,29 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       id: "files",
       label: t('navigation.toolbox'),
       icon: Monitor,
-      path: "/toolbox"
+      path: "/toolbox",
+      disabled: false
     },
     {
       id: "myfiles",
       label: t('navigation.myFiles'),
       icon: FileText,
-      path: "/my-files"
+      path: "/my-files",
+      disabled: false
     },
     {
       id: "tasks",
       label: t('navigation.tasks'),
       icon: CheckSquare,
-      path: "/tasks"
+      path: "/tasks",
+      disabled: false
     },
     {
       id: "mind-map",
-      label: t('navigation.mindMap'),
+      label: `${t('navigation.mindMap')} ★`,
       icon: Brain,
-      path: "/mind-map"
+      path: "/mind-map",
+      disabled: true
     }
   ];
 
@@ -49,22 +53,25 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
     return location.pathname === path;
   }, [location.pathname]);
 
-  const handleNavigation = useCallback((e: React.MouseEvent<HTMLButtonElement>, id: string, path: string) => {
+  const handleNavigation = useCallback((e: React.MouseEvent<HTMLButtonElement>, id: string, path: string, disabled: boolean) => {
     e.preventDefault();
+    if (disabled) return;
+    
     setActiveComponent(id);
     navigate(path);
   }, [navigate, setActiveComponent]);
 
   return (
     <div className="space-y-2" data-sidebar-nav>
-      {navigationItems.map(({ id, label, icon, path }) => (
+      {navigationItems.map(({ id, label, icon, path, disabled }) => (
         <SidebarButton
           key={id}
           icon={icon}
           label={label}
           isActive={location.pathname === path}
-          onClick={(e) => handleNavigation(e, id, path)}
-          className="sidebar-nav-link"
+          onClick={(e) => handleNavigation(e, id, path, disabled)}
+          className={disabled ? "text-gray-400 cursor-not-allowed" : ""}
+          disabled={disabled}
         />
       ))}
     </div>

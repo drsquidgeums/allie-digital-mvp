@@ -6,11 +6,6 @@ import { supabase } from "@/integrations/supabase/client";
 // Special user email that's allowed to submit feedback multiple times
 const SPECIAL_USER_EMAIL = "antoinettecelinemarshall@gmail.com";
 
-// Define a more explicit type for the feedback response
-type FeedbackQueryResult = {
-  id: string;
-}[];
-
 export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) => {
   const [alreadySubmitted, setAlreadySubmitted] = useState<boolean>(false);
   const { toast } = useToast();

@@ -3,7 +3,8 @@ import React from "react";
 import { 
   Users,
   Settings,
-  LogOut
+  LogOut,
+  Star
 } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -31,28 +32,34 @@ export const SidebarTools = ({ activeComponent, setActiveComponent }: SidebarToo
     window.location.reload();
   };
 
-  const handleSettingsClick = () => {
-    navigate('/settings');
+  const handleSettingsClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    // Disabled - do nothing
   };
 
-  const handleCommunityClick = () => {
-    navigate('/community');
+  const handleCommunityClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    // Disabled - do nothing
   };
 
   return (
     <div className="space-y-2">
-      <div className="pt-4 border-t border-border space-y-2"> {/* Added space-y-2 here */}
+      <div className="pt-4 border-t border-border space-y-2">
         <SidebarButton
           icon={Settings}
-          label={t('navigation.settings')}
-          isActive={location.pathname === '/settings'}
+          label={`${t('navigation.settings')} ★`}
+          isActive={false}
           onClick={handleSettingsClick}
+          className="text-gray-400 cursor-not-allowed"
+          disabled={true}
         />
         <SidebarButton
           icon={Users}
-          label={t('navigation.community')}
-          isActive={location.pathname === '/community'}
+          label={`${t('navigation.community')} ★`}
+          isActive={false}
           onClick={handleCommunityClick}
+          className="text-gray-400 cursor-not-allowed"
+          disabled={true}
         />
         <SidebarButton
           icon={LogOut}
