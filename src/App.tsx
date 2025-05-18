@@ -31,7 +31,7 @@ const App = () => {
   const [showNda, setShowNda] = useState(false);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
   
-  // Only initialize feedback prompt hook after NDA has been agreed to
+  // Track whether NDA has been completed
   const [ndaCompleted, setNdaCompleted] = useState<boolean>(false);
   const { 
     showFeedbackPrompt, 
@@ -50,6 +50,7 @@ const App = () => {
           email: parsedAgreement.email
         });
         setNdaCompleted(true);
+        setShowNda(false); // Hide NDA if already completed
       } catch (error) {
         console.error("Error parsing NDA agreement:", error);
         localStorage.removeItem("nda_agreement");
@@ -58,14 +59,30 @@ const App = () => {
   }, []);
 
   const handleNdaAgreementComplete = (name: string, email: string) => {
+    // Store NDA completion time when user agrees
+    const now = new Date();
+    localStorage.setItem("nda_agreement", JSON.stringify({
+      name,
+      email,
+      agreed_at: now.toISOString(),
+      agreement_version: '1.0'
+    }));
+    
     setShowNda(false);
     setUserInfo({ name, email });
     setNdaCompleted(true);
+    
+    // Reset session start time after NDA completion
+    localStorage.setItem("session_start_time", now.getTime().toString());
   };
 
   const handleAuthentication = () => {
     setIsAuthenticated(true);
-    setShowNda(true); // Always show NDA after authentication
+    setShowNda(true); // Always show NDA after authentication if not completed yet
+    
+    // Record the authentication time
+    const currentTime = Date.now();
+    localStorage.setItem("authentication_time", currentTime.toString());
   };
 
   if (!isAuthenticated) {
