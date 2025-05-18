@@ -18,33 +18,21 @@ export const useFeedbackPrompt = () => {
     
     // Don't show feedback prompt if NDA hasn't been completed yet
     if (!ndaAgreement) {
-      console.log("NDA not completed yet, not showing feedback prompt");
       return;
     }
-
-    // Check if the NDA has completed timestamp
-    let ndaCompletedTime: number;
+    
+    let userEmail = '';
+    
     try {
       const parsedAgreement = JSON.parse(ndaAgreement);
-      const agreedAtStr = parsedAgreement.agreed_at;
-      if (!agreedAtStr) {
-        console.log("No agreed_at timestamp in NDA agreement");
-        return;
-      }
-      ndaCompletedTime = new Date(agreedAtStr).getTime();
-      
-      if (isNaN(ndaCompletedTime)) {
-        console.log("Invalid agreed_at timestamp in NDA agreement");
-        return;
-      }
+      userEmail = parsedAgreement.email;
     } catch (error) {
       console.error("Error parsing NDA agreement:", error);
       return; // Exit if we can't parse the agreement
     }
     
-    // Check if feedback was already submitted
+    // Check if feedback was already submitted (skip for special user)
     const feedbackSubmitted = localStorage.getItem("feedback_submitted");
-    const userEmail = JSON.parse(ndaAgreement).email;
     if (feedbackSubmitted && userEmail !== SPECIAL_USER_EMAIL) {
       // User already submitted feedback, don't show prompt
       return;
@@ -68,32 +56,28 @@ export const useFeedbackPrompt = () => {
       // Postpone period expired, continue with normal flow
     }
     
-    // Calculate delay from NDA completion time
+    // Record session start time if not already set
+    if (!localStorage.getItem("session_start_time")) {
+      const currentTime = Date.now();
+      localStorage.setItem("session_start_time", currentTime.toString());
+      console.log("Session start time set:", new Date(currentTime).toISOString());
+    }
+    
+    const sessionStartTime = parseInt(localStorage.getItem("session_start_time") || Date.now().toString(), 10);
     const now = Date.now();
-    const timeElapsedSinceNDA = now - ndaCompletedTime;
+    const timeElapsed = now - sessionStartTime;
     
-    // If user just agreed to NDA, start the timer from now
-    if (timeElapsedSinceNDA < 60000) { // Less than a minute since NDA completion
-      console.log("NDA just completed, setting feedback prompt timer for 15 minutes from now");
-      const timer = setTimeout(() => {
-        setShowFeedbackPrompt(true);
-      }, FEEDBACK_PROMPT_DELAY);
-      
-      return () => clearTimeout(timer);
+    console.log("Time elapsed since session start:", Math.floor(timeElapsed / 1000 / 60), "minutes");
+    
+    // If 15 minutes have already passed, show feedback prompt immediately
+    if (timeElapsed >= FEEDBACK_PROMPT_DELAY) {
+      console.log("15+ minutes elapsed, showing feedback prompt immediately");
+      setShowFeedbackPrompt(true);
+      return;
     }
     
-    // If 15 minutes have already passed since NDA completion, show feedback prompt after a short delay
-    if (timeElapsedSinceNDA >= FEEDBACK_PROMPT_DELAY) {
-      console.log("15+ minutes already passed since NDA completion, showing feedback prompt soon");
-      const timer = setTimeout(() => {
-        setShowFeedbackPrompt(true);
-      }, 5000); // Show after 5 seconds to give the app time to settle
-      
-      return () => clearTimeout(timer);
-    }
-    
-    // Otherwise, set timer for remaining time from NDA completion
-    const remainingTime = FEEDBACK_PROMPT_DELAY - timeElapsedSinceNDA;
+    // Otherwise, set timer for remaining time
+    const remainingTime = FEEDBACK_PROMPT_DELAY - timeElapsed;
     console.log("Showing feedback prompt in:", Math.floor(remainingTime / 1000 / 60), "minutes");
     
     // Set timer to show feedback prompt after delay

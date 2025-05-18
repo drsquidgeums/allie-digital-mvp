@@ -16,11 +16,6 @@ export const FeedbackPrompt: React.FC<FeedbackPromptProps> = ({
   onPostpone,
   userInfo
 }) => {
-  // Don't render anything if there's no user info (NDA not completed)
-  if (!userInfo) {
-    return null;
-  }
-
   return (
     <Dialog open={isOpen} modal>
       <DialogContent className="sm:max-w-md dark:bg-background dark:text-foreground">

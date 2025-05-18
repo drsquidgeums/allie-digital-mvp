@@ -21,7 +21,6 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
       }
 
       try {
-        // Use a more direct approach to avoid type recursion
         const { data, error } = await supabase
           .from('feedback')
           .select('id')
@@ -32,8 +31,7 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
           return;
         }
         
-        // Simple check if the array has items
-        if (data && Array.isArray(data) && data.length > 0) {
+        if (data && data.length > 0) {
           setAlreadySubmitted(true);
           toast({
             title: "Feedback already submitted",
