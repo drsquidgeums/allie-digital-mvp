@@ -5,6 +5,7 @@ import { EmptyState } from './viewers/EmptyState';
 import { ErrorDisplay } from './viewers/ErrorDisplay';
 import { FileTypeHandler } from './viewers/file-viewers/FileTypeHandler';
 import { UrlHandler } from './viewers/file-viewers/UrlHandler';
+import { DocumentEditor } from './DocumentEditor';
 
 interface DocumentPreviewProps {
   file: File | null;
@@ -57,7 +58,21 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     return <EmptyState />;
   }
 
-  // Handle file preview
+  // Use the Document Editor for URLs
+  if (url) {
+    return (
+      <DocumentEditor
+        url={url}
+        selectedColor={selectedColor || '#FFFF00'}
+        isHighlighter={isHighlighter}
+        onContentLoaded={(content, fileName) => {
+          console.log("Document content loaded:", fileName);
+        }}
+      />
+    );
+  }
+  
+  // Handle file preview with existing components
   if (file) {
     console.log("DocumentPreview handling file:", file.name);
     console.log("DocumentPreview color settings:", selectedColor, isHighlighter);
@@ -78,18 +93,6 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         />
       );
     }
-  }
-
-  // Handle URL preview
-  if (url) {
-    return (
-      <UrlHandler
-        url={url}
-        selectedColor={selectedColor || '#FFFF00'} // Default yellow if no color specified
-        isHighlighter={isHighlighter}
-        onError={() => setLoadError("Failed to load URL content")}
-      />
-    );
   }
 
   return null;

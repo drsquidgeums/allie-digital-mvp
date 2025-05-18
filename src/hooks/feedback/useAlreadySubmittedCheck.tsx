@@ -21,10 +21,11 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
       }
 
       try {
+        // Use explicit type annotation to prevent infinite type recursion
         const { data, error } = await supabase
           .from('feedback')
           .select('id')
-          .eq('email', userEmail) as { data: any[] | null; error: any };
+          .eq('email', userEmail) as { data: Array<{ id: string }> | null; error: any };
           
         if (error) {
           console.error("Error checking previous feedback:", error);
