@@ -21,11 +21,11 @@ export const useAlreadySubmittedCheck = (userEmail: string | undefined | null) =
       }
 
       try {
-        // Use type assertion to avoid excessive type instantiation
+        // Use email as user_id for consistency with submission function
         const { data, error } = await supabase
           .from('feedback')
           .select('id')
-          .eq('user_id', userEmail) as { data: any[], error: any };
+          .eq('user_id', userEmail);
           
         if (error) {
           console.error("Error checking previous feedback:", error);
