@@ -4,7 +4,7 @@ import { isGoogleDocsUrl } from '../urlUtils';
 
 interface IframeViewerProps {
   url: string;
-  onError: () => void;
+  onError?: () => void;
 }
 
 /**
@@ -16,7 +16,10 @@ interface IframeViewerProps {
  * @param url - The URL to be displayed in the iframe
  * @param onError - Callback function triggered when iframe fails to load
  */
-export const IframeViewer: React.FC<IframeViewerProps> = ({ url, onError }) => {
+export const IframeViewer: React.FC<IframeViewerProps> = ({ 
+  url, 
+  onError = () => {} 
+}) => {
   const [processedUrl, setProcessedUrl] = useState<string>(url);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [key, setKey] = useState<number>(0); // Key for forcing iframe reload
@@ -69,7 +72,7 @@ export const IframeViewer: React.FC<IframeViewerProps> = ({ url, onError }) => {
   // Function to handle iframe loading errors
   const handleIframeError = () => {
     console.error("Failed to load iframe content");
-    onError();
+    if (onError) onError();
   };
   
   return (

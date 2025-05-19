@@ -47,6 +47,10 @@ export const UrlHandler: React.FC<UrlHandlerProps> = ({
     setUseRichEditor(!useRichEditor);
   };
 
+  const handleIframeError = () => {
+    onError(new Error('Failed to load iframe content'));
+  };
+
   // If URL type is not yet determined
   if (!urlType) {
     return (
@@ -61,6 +65,7 @@ export const UrlHandler: React.FC<UrlHandlerProps> = ({
     case 'pdf':
       return (
         <PdfViewerWrapper
+          file={null}
           url={url}
           selectedColor={selectedColor}
           isHighlighter={isHighlighter}
@@ -83,11 +88,11 @@ export const UrlHandler: React.FC<UrlHandlerProps> = ({
               Open in Editor
             </button>
           </div>
-          <IframeViewer url={url} />
+          <IframeViewer url={url} onError={handleIframeError} />
         </div>
       );
     case 'iframe':
-      return <IframeViewer url={url} />;
+      return <IframeViewer url={url} onError={handleIframeError} />;
     default:
       return (
         <ErrorDisplay 

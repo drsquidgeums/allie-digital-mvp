@@ -1,3 +1,4 @@
+
 export const getUrlType = (url: string): string => {
   const extension = url.split('.').pop()?.toLowerCase() || '';
   if (extension === 'pdf') return 'pdf';
@@ -6,6 +7,15 @@ export const getUrlType = (url: string): string => {
   if (isVideoUrl(url)) return 'video';
   if (isGoogleDocsUrl(url)) return 'google-docs';
   return 'webpage';
+};
+
+export const isValidUrl = (url: string): boolean => {
+  try {
+    new URL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
 };
 
 export const isVideoUrl = (url: string): boolean => {

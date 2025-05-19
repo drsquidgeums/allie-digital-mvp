@@ -57,3 +57,35 @@ export const sanitizeHtml = (html: string): string => {
     .replace(/on\w+='[^']*'/g, '')
     .replace(/on\w+=\w+/g, '');
 };
+
+/**
+ * Processes content for the TipTap editor
+ */
+export const prepareTiptapContent = (content: string): string => {
+  if (!content) return '';
+  
+  // If the content doesn't have a root element, wrap it in a div
+  if (!content.trim().startsWith('<')) {
+    return `<div>${content}</div>`;
+  }
+  
+  return content;
+};
+
+/**
+ * Formats file content for the editor
+ */
+export const formatFileContent = (content: string, fileType: string): string => {
+  switch (fileType.toLowerCase()) {
+    case 'txt':
+      return plainTextToHtml(content);
+    case 'html':
+      return sanitizeHtml(content);
+    case 'docx':
+    case 'pdf':
+      // For DOCX and PDF, we've already extracted text content
+      return plainTextToHtml(content);
+    default:
+      return plainTextToHtml(content);
+  }
+};
