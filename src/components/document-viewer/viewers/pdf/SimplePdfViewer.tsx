@@ -9,6 +9,7 @@ import { usePdfHighlights } from './hooks/usePdfHighlights';
 import { useTextSelection } from './hooks/useTextSelection';
 import '@/styles/pdf/pdf-highlighter.css';
 import '@/styles/pdf/pdf-highlights.css';
+import '@/styles/pdf/pdf-text-layer.css';
 
 // Set PDF.js worker path
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -37,8 +38,6 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   // Use our custom hook for managing highlights
   const {
     highlights,
-    selectedHighlight,
-    setSelectedHighlight,
     addHighlight,
     removeHighlight,
     updateHighlightColor,
@@ -79,6 +78,15 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
       setScale(newScale);
     }
   };
+  
+  // Fit to screen
+  const fitToScreen = () => {
+    setScale(1.0);
+    toast({
+      title: "Fit to Screen",
+      description: "Document adjusted to fit screen",
+    });
+  };
 
   // Handle document load success
   const handleDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
@@ -105,6 +113,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
         selectedColor={selectedColor}
         onChangePage={changePage}
         onZoom={zoom}
+        onFitToScreen={fitToScreen}
         onTextSelect={handleTextSelection}
         onDeleteHighlight={(id) => {
           removeHighlight(id);
