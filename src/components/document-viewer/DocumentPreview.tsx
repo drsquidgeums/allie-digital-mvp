@@ -5,12 +5,14 @@ import { EmptyState } from './viewers/EmptyState';
 import { ErrorDisplay } from './viewers/ErrorDisplay';
 import { FileTypeHandler } from './viewers/file-viewers/FileTypeHandler';
 import { UrlHandler } from './viewers/file-viewers/UrlHandler';
+import { RichTextEditorWrapper } from './viewers/file-viewers/RichTextEditorWrapper';
 
 interface DocumentPreviewProps {
   file: File | null;
   url: string;
   selectedColor: string;
   isHighlighter?: boolean;
+  onContentLoaded?: (content: string, fileName: string) => void;
 }
 
 /**
@@ -23,10 +25,12 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   file,
   url,
   selectedColor,
-  isHighlighter
+  isHighlighter,
+  onContentLoaded
 }) => {
   const { toast } = useToast();
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [editMode, setEditMode] = useState<boolean>(!file && !url); // Start in edit mode if no file/URL
 
   /**
    * Handles errors from document loading and displays appropriate messages
@@ -52,9 +56,15 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     );
   }
 
-  // Display empty state when no document is loaded
+  // If no file/URL, show the rich text editor
   if (!file && !url) {
-    return <EmptyState />;
+    return (
+      <RichTextEditorWrapper
+        selectedColor={selectedColor || '#FFFF00'}
+        isHighlighter={isHighlighter}
+        onContentLoaded={onContentLoaded}
+      />
+    );
   }
 
   // Handle file preview
@@ -67,6 +77,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           file={file}
           selectedColor={selectedColor || '#FFFF00'} // Default yellow if no color specified
           isHighlighter={isHighlighter}
+          onContentLoaded={onContentLoaded}
         />
       );
     } catch (error) {

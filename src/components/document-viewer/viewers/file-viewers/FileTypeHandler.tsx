@@ -1,14 +1,16 @@
-
 import React from 'react';
 import { getFileType } from '../../FileConverter';
 import { PdfViewerWrapper } from './PdfViewerWrapper';
 import { TextViewerWrapper } from './TextViewerWrapper';
+import { RichTextEditorWrapper } from './RichTextEditorWrapper';
 import { ErrorDisplay } from '../ErrorDisplay';
 
 interface FileTypeHandlerProps {
   file: File;
   selectedColor: string;
   isHighlighter?: boolean;
+  useRichTextEditor?: boolean;
+  onContentLoaded?: (content: string, fileName: string) => void;
 }
 
 /**
@@ -19,7 +21,9 @@ interface FileTypeHandlerProps {
 export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
   file,
   selectedColor,
-  isHighlighter
+  isHighlighter,
+  useRichTextEditor = true, // Default to using rich text editor for editable files
+  onContentLoaded
 }) => {
   try {
     console.log("FileTypeHandler received file:", file?.name);
@@ -27,6 +31,19 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
     const fileType = getFileType(file);
     console.log("Detected file type:", fileType);
     
+    // For editable text-based file types, use the rich text editor if enabled
+    if (useRichTextEditor && (fileType === 'txt' || fileType === 'html' || fileType === 'docx')) {
+      return (
+        <RichTextEditorWrapper
+          file={file}
+          selectedColor={selectedColor || '#FFFF00'}
+          isHighlighter={isHighlighter}
+          onContentLoaded={onContentLoaded}
+        />
+      );
+    }
+    
+    // Otherwise use the original viewers
     switch (fileType) {
       case 'pdf':
         return (

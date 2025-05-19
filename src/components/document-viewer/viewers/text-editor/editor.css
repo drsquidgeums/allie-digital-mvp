@@ -1,0 +1,115 @@
+
+/* Editor styling */
+.ProseMirror {
+  min-height: 200px;
+  outline: none;
+}
+
+.ProseMirror > * + * {
+  margin-top: 0.75em;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding: 0 1.5rem;
+}
+
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3,
+.ProseMirror h4,
+.ProseMirror h5,
+.ProseMirror h6 {
+  line-height: 1.1;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.ProseMirror code {
+  background-color: rgba(97, 97, 97, 0.1);
+  color: #616161;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+.ProseMirror pre {
+  background: #0d0d0d;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+.ProseMirror pre code {
+  color: inherit;
+  padding: 0;
+  background: none;
+  font-size: 0.8rem;
+}
+
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1em auto;
+}
+
+.ProseMirror blockquote {
+  padding-left: 1rem;
+  border-left: 3px solid #e9e9e9;
+  color: #737373;
+  font-style: italic;
+}
+
+.ProseMirror hr {
+  border: none;
+  border-top: 2px solid #e9e9e9;
+  margin: 2rem 0;
+}
+
+.ProseMirror mark {
+  background-color: #fef3c7;
+  border-radius: 0.2em;
+  padding: 0 0.1em;
+}
+
+/* Highlight colors */
+.ProseMirror .highlight-yellow {
+  background-color: rgba(255, 235, 59, 0.5);
+}
+
+.ProseMirror .highlight-blue {
+  background-color: rgba(33, 150, 243, 0.3);
+}
+
+.ProseMirror .highlight-green {
+  background-color: rgba(76, 175, 80, 0.3);
+}
+
+.ProseMirror .highlight-pink {
+  background-color: rgba(233, 30, 99, 0.3);
+}
+
+.ProseMirror .highlight-red {
+  background-color: rgba(244, 67, 54, 0.3);
+}
+
+/* Dark mode overrides */
+.dark .ProseMirror {
+  color: #e2e2e2;
+}
+
+.dark .ProseMirror code {
+  background-color: rgba(200, 200, 200, 0.1);
+  color: #c9c9c9;
+}
+
+.dark .ProseMirror blockquote {
+  border-left-color: #444;
+  color: #a0a0a0;
+}
+
+.dark .ProseMirror hr {
+  border-top-color: #444;
+}
