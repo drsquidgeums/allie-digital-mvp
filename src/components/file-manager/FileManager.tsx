@@ -1,12 +1,5 @@
 
-import React, { useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { FileText, Download, Trash2, ExternalLink } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { ManagedFile } from '@/hooks/file-manager/types';
-import { useFileManager } from '@/hooks/file-manager';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from "react-i18next";
+import React, { useState, useEffect } from 'react';
 import { 
   Table, 
   TableBody, 
@@ -14,96 +7,114 @@ import {
   TableHead, 
   TableHeader, 
   TableRow 
-} from "@/components/ui/table";
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Download, FileText, RefreshCw, Trash2, Upload } from 'lucide-react';
+import { useFileManager } from '@/hooks/file-manager';
+import { ManagedFile } from '@/hooks/file-manager/types';
+import { formatBytes } from '@/utils/fileUtils';
 
+/**
+ * Component that displays and manages files
+ */
 export const FileManager: React.FC = () => {
-  const { files, loading, deleteFile, downloadFile, refreshFiles } = useFileManager();
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { files, loading, uploadFile, deleteFile, downloadFile, refreshFiles } = useFileManager();
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
+  // Log files when component mounts or files change
   useEffect(() => {
-    console.log("FileManager mounted, files count:", files.length);
-    // Auto-refresh files when component mounts
-    refreshFiles();
-  }, []);
-
-  useEffect(() => {
-    console.log("FileManager files updated:", files.length);
+    console.log('FileManager files updated:', files.length);
   }, [files]);
 
-  const openInToolbox = (file: ManagedFile) => {
-    // Store both file ID and URL in sessionStorage
-    sessionStorage.setItem('selectedFileId', file.id);
-    if (file.url) {
-      sessionStorage.setItem('selectedFileUrl', file.url);
+  // Effect for initial load
+  useEffect(() => {
+    console.log('FileManager mounted, files count:', files.length);
+  }, []);
+
+  // Handle file selection
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      await uploadFile(selectedFile);
+      // Reset input to allow selecting the same file again
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
-    
-    // Navigate to the document viewer (root route)
-    navigate('/');
-    
-    toast({
-      title: "Opening in Document Viewer",
-      description: `${file.name} will open in the document viewer`,
-    });
+  };
+
+  // Format date for display
+  const formatDate = (timestamp: number) => {
+    return new Date(timestamp).toLocaleString();
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <FileText className="h-6 w-6" />
-          {t('navigation.myFiles')}
-        </h1>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">My Files</h1>
+        <div className="flex space-x-2">
+          <Button 
+            variant="outline" 
+            onClick={() => refreshFiles()}
+            disabled={loading}
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+          <Button 
+            onClick={() => fileInputRef.current?.click()}
+            disabled={loading}
+          >
+            <Upload className="h-4 w-4 mr-2" />
+            Upload
+          </Button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+          />
+        </div>
       </div>
 
-      <div className="border rounded-md p-4 bg-card">
-        {loading && (
-          <div className="flex justify-center p-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          </div>
-        )}
-        
-        {!loading && files.length > 0 && (
+      {loading && (
+        <div className="flex justify-center my-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      )}
+
+      {!loading && files.length === 0 ? (
+        <div className="text-center py-8 border rounded-lg">
+          <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
+          <h3 className="mt-2 text-lg font-medium">No files found</h3>
+          <p className="text-muted-foreground">Upload files to see them here.</p>
+        </div>
+      ) : (
+        <div className="border rounded-lg overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Size</TableHead>
+                <TableHead>Last Modified</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {files.map((file) => (
+              {files.map(file => (
                 <TableRow key={file.id}>
-                  <TableCell>
-                    <div className="text-left font-normal">
-                      {file.name}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {file.type || "Unknown"}
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {formatBytes(file.size)}
-                  </TableCell>
+                  <TableCell className="font-medium">{file.displayName || file.name}</TableCell>
+                  <TableCell>{file.type}</TableCell>
+                  <TableCell>{formatBytes(file.size)}</TableCell>
+                  <TableCell>{formatDate(file.lastModified)}</TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => openInToolbox(file)}
-                        aria-label={`Open ${file.name} in Document Viewer`}
-                        title="Open in Document Viewer"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </Button>
+                    <div className="flex justify-end space-x-2">
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => downloadFile(file)}
-                        aria-label={`Download ${file.name}`}
+                        aria-label="Download file"
                       >
                         <Download className="h-4 w-4" />
                       </Button>
@@ -111,7 +122,7 @@ export const FileManager: React.FC = () => {
                         variant="ghost"
                         size="icon"
                         onClick={() => deleteFile(file)}
-                        aria-label={`Delete ${file.name}`}
+                        aria-label="Delete file"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -121,27 +132,8 @@ export const FileManager: React.FC = () => {
               ))}
             </TableBody>
           </Table>
-        )}
-        
-        {!loading && files.length === 0 && (
-          <div className="text-sm text-muted-foreground p-4 text-center border border-dashed rounded-md">
-            No files uploaded yet. Use the Toolbox to upload files.
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
-
-// Utility function to format bytes to human-readable format
-function formatBytes(bytes: number, decimals = 2) {
-  if (bytes === 0) return '0 Bytes';
-  
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-}

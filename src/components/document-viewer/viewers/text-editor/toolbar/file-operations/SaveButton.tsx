@@ -21,18 +21,28 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle })
       // Get the document content
       const content = editor.getHTML();
       
-      // Create filename with .html extension
+      // Create display name (without extension)
+      const displayName = documentTitle.replace(/\.(html|doc|docx|txt)$/i, '');
+      
+      // Create filename with .html extension for storage
       const fileName = generateFileName(documentTitle, 'html');
       
       // Create a file object from the HTML content
-      const file = new File([content], fileName, { type: 'text/html' });
+      const file = new File([content], fileName, { 
+        type: 'text/html' 
+      });
       
-      // Upload to file manager
-      await uploadFile(file);
+      // Add metadata for the original display name
+      const metadata = {
+        originalName: displayName
+      };
+      
+      // Upload to file manager with metadata
+      await uploadFile(file, metadata);
       
       toast({
         title: "Document Saved",
-        description: `"${fileName.replace('.html', '')}" saved to My Files`,
+        description: `"${displayName}" saved to My Files`,
       });
     } catch (error) {
       console.error('Error saving document to My Files:', error);

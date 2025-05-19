@@ -26,9 +26,21 @@ export const fetchFiles = async (): Promise<ManagedFile[]> => {
           .from('files')
           .createSignedUrl(item.name, 60 * 60 * 24); // 24 hours expiry
         
+        // Try to extract original name from metadata if it exists
+        let displayName = item.name;
+        try {
+          // Remove timestamp prefix from filename if no metadata is available
+          if (item.name.includes('_') && /^\d+_/.test(item.name)) {
+            displayName = item.name.replace(/^\d+_/, '');
+          }
+        } catch (error) {
+          console.warn('Could not parse metadata:', error);
+        }
+        
         return {
           id: item.id,
           name: item.name,
+          displayName: displayName.replace(/_/g, ' '), // Replace underscores with spaces
           size: item.metadata?.size || 0,
           type: item.metadata?.mimetype || 'application/octet-stream',
           lastModified: new Date(item.created_at).getTime(),
@@ -49,7 +61,7 @@ export const fetchFiles = async (): Promise<ManagedFile[]> => {
 /**
  * Uploads a file to Supabase storage
  */
-export const uploadFileToStorage = async (file: File): Promise<ManagedFile | null> => {
+export const uploadFileToStorage = async (file: File, metadata?: Record<string, any>): Promise<ManagedFile | null> => {
   try {
     console.log('Uploading file to Supabase:', file.name);
     
@@ -76,10 +88,20 @@ export const uploadFileToStorage = async (file: File): Promise<ManagedFile | nul
       throw new Error('Failed to generate signed URL');
     }
     
+    // Get display name from metadata or filename
+    let displayName = file.name;
+    if (metadata?.originalName) {
+      displayName = metadata.originalName;
+    } else if (file.name.includes('_') && /^\d+_/.test(file.name)) {
+      // Remove timestamp prefix from filename if no metadata is available
+      displayName = file.name.replace(/^\d+_/, '');
+    }
+    
     // Create a file object with metadata
     const fileObject: ManagedFile = {
       id: uploadData.path || `file_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
       name: file.name,
+      displayName: displayName.replace(/_/g, ' '), // Replace underscores with spaces
       size: file.size,
       type: file.type,
       lastModified: file.lastModified,

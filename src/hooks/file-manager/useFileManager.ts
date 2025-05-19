@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { ManagedFile } from './types';
@@ -47,11 +48,11 @@ export function useFileManager() {
   /**
    * Uploads a file to storage and adds it to global state
    */
-  const handleFileUpload = async (newFile: File) => {
+  const handleFileUpload = async (newFile: File, metadata?: Record<string, any>) => {
     setLoading(true);
     try {
       // Upload to Supabase storage
-      const fileObject = await uploadFileToStorage(newFile);
+      const fileObject = await uploadFileToStorage(newFile, metadata);
       
       if (fileObject) {
         // Add to global files state
@@ -60,7 +61,7 @@ export function useFileManager() {
         
         toast({
           title: "File uploaded",
-          description: `${newFile.name} has been uploaded to Supabase storage`,
+          description: `${metadata?.originalName || newFile.name} has been uploaded to Supabase storage`,
         });
         
         return fileObject;
@@ -95,7 +96,7 @@ export function useFileManager() {
       
       toast({
         title: "File deleted",
-        description: `${fileToDelete.name} has been removed`,
+        description: `${fileToDelete.displayName || fileToDelete.name} has been removed`,
       });
     } catch (error) {
       console.error("Error deleting file:", error);
@@ -116,14 +117,14 @@ export function useFileManager() {
       if (file.url) {
         const a = document.createElement("a");
         a.href = file.url;
-        a.download = file.name;
+        a.download = file.displayName || file.name;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         
         toast({
           title: "File downloaded",
-          description: `${file.name} has been downloaded`,
+          description: `${file.displayName || file.name} has been downloaded`,
         });
       } 
       // If the URL has expired, generate a new one
@@ -132,14 +133,14 @@ export function useFileManager() {
         
         const a = document.createElement("a");
         a.href = signedUrl;
-        a.download = file.name;
+        a.download = file.displayName || file.name;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         
         toast({
           title: "File downloaded",
-          description: `${file.name} has been downloaded`,
+          description: `${file.displayName || file.name} has been downloaded`,
         });
       } else {
         throw new Error("File URL not available");
