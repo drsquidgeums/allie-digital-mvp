@@ -13,6 +13,7 @@ interface DocumentViewerProps {
   selectedColor: string;
   isHighlighter?: boolean;
   onContentLoaded?: (content: string, fileName: string) => void;
+  initialDocumentName?: string;
 }
 
 /**
@@ -24,13 +25,16 @@ interface DocumentViewerProps {
  * @param file - The file to display in the viewer
  * @param selectedColor - The currently selected annotation color
  * @param isHighlighter - Boolean flag to determine if highlighter mode is active
+ * @param onContentLoaded - Callback function when document content is loaded
+ * @param initialDocumentName - Initial document name to display
  * @returns A fully functional document viewer UI component
  */
 export const DocumentViewer = ({ 
   file,
   selectedColor, 
   isHighlighter,
-  onContentLoaded
+  onContentLoaded,
+  initialDocumentName
 }: DocumentViewerProps) => {
   // Custom hook that manages document state and actions
   const {
@@ -62,7 +66,9 @@ export const DocumentViewer = ({
           const text = await extractTextFromFile(displayFile);
           setDocumentContent(text);
           if (onContentLoaded) {
-            onContentLoaded(text, displayFile.name);
+            // If we have an initial document name, use that instead of the file name
+            const displayName = initialDocumentName || displayFile.name;
+            onContentLoaded(text, displayName);
           }
         } catch (error) {
           console.error("Error extracting text from file:", error);
@@ -73,10 +79,13 @@ export const DocumentViewer = ({
     };
     
     extractContent();
-  }, [displayFile, onContentLoaded]);
+  }, [displayFile, onContentLoaded, initialDocumentName]);
 
   // Log the current file being displayed
   console.log("DocumentViewer rendering with file:", displayFile?.name);
+  if (initialDocumentName) {
+    console.log("Using initial document name:", initialDocumentName);
+  }
 
   return (
     <div 

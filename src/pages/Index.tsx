@@ -1,6 +1,3 @@
-<think>
-
-</think>
 
 import React, { useState, lazy, Suspense, useEffect } from "react";
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
@@ -142,7 +139,6 @@ const Index = () => {
                 selectedColor={selectedColor}
                 isHighlighter={isHighlighter}
                 onContentLoaded={handleContentLoaded}
-                initialDocumentName={documentName}
               />
             </Suspense>
           </ErrorBoundary>
