@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -43,6 +43,7 @@ export const useFeedbackSubmission = (
     }
     
     setIsSubmitting(true);
+    console.log("Starting feedback submission process");
     
     try {
       // Generate a valid UUID for the user_id field
@@ -65,15 +66,13 @@ export const useFeedbackSubmission = (
             description: "You have already provided feedback. Thank you!"
           });
           onClose();
+          setIsSubmitting(false);
           return false;
         }
       }
       
       const currentTime = new Date().toISOString();
       console.log(`Submitting feedback at: ${currentTime}`);
-      
-      // Store the email in a console log for reference
-      console.log(`User email submitting feedback: ${userEmail}`);
       
       // Append the email to the comments for reference
       const enhancedComments = `${comments}\n\n[Email: ${userEmail}]`;

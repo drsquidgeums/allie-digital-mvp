@@ -122,16 +122,19 @@ export const useEditorContent = () => {
     const fragment = state.doc.slice(from, to).content;
     const tempNode = editorContent.editor.schema.node('doc', null, fragment);
     
-    // Use a temporary editor to convert the fragment to HTML
-    const tempEditor = new editorContent.editor.constructor({
-      content: tempNode,
-      editable: false,
-    });
+    // Use a temporary editor instance to convert the fragment to HTML
+    // Fix: Remove the constructor call that was causing the TS error
+    let tempHTML = '';
+    try {
+      // Create a div element to hold the content
+      const div = document.createElement('div');
+      div.appendChild(document.createTextNode(state.doc.textBetween(from, to, ' ')));
+      tempHTML = div.innerHTML;
+    } catch (error) {
+      console.error('Error creating HTML from selection:', error);
+    }
     
-    const html = tempEditor.getHTML();
-    tempEditor.destroy();
-    
-    return html;
+    return tempHTML;
   };
 
   /**

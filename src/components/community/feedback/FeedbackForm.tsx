@@ -29,7 +29,8 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleSubmit(comments, MAX_WORDS, wordCount);
+    const submitResult = handleSubmit(comments, MAX_WORDS, wordCount);
+    console.log("Feedback submission attempt result:", submitResult);
   };
 
   if (alreadySubmitted) {
@@ -64,7 +65,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
         onClose={onClose}
         onSubmit={onSubmit}
         isSubmitting={isSubmitting}
-        isDisabled={!comments.trim()}
+        isDisabled={!comments.trim() || isOverLimit}
       />
     </form>
   );

@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import RichTextEditor from '../text-editor/RichTextEditor';
 import { extractTextFromFile } from '../../FileConverter';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
 
 interface RichTextEditorWrapperProps {
   file?: File | null;
@@ -21,6 +23,8 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
   const [content, setContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [documentTitle, setDocumentTitle] = useState<string>('Untitled Document');
+  const [isEditingTitle, setIsEditingTitle] = useState<boolean>(false);
+  const { toast } = useToast();
   
   // Load content from file or URL
   useEffect(() => {
@@ -101,8 +105,28 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
   // Handle content change
   const handleContentChange = (newContent: string) => {
     if (onContentLoaded && !isLoading) {
-      const fileName = file?.name || (url ? new URL(url).pathname.split('/').pop() : documentTitle);
-      onContentLoaded(newContent, fileName || documentTitle);
+      onContentLoaded(newContent, documentTitle);
+    }
+  };
+
+  // Handle title change
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDocumentTitle(e.target.value);
+  };
+
+  // Save title when pressing Enter
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      setIsEditingTitle(false);
+      toast({
+        title: "Document Title Updated",
+        description: `Title changed to "${documentTitle}"`,
+      });
+      
+      // Notify parent component of title change
+      if (onContentLoaded && !isLoading && content) {
+        onContentLoaded(content, documentTitle);
+      }
     }
   };
   
@@ -115,9 +139,25 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
       ) : (
         <div className="h-full flex flex-col">
           <div className="px-4 py-2 border-b">
-            <h2 className="text-sm font-medium truncate" title={documentTitle}>
-              {documentTitle}
-            </h2>
+            {isEditingTitle ? (
+              <Input 
+                value={documentTitle}
+                onChange={handleTitleChange}
+                onBlur={() => setIsEditingTitle(false)}
+                onKeyDown={handleKeyDown}
+                className="font-medium h-8 text-sm"
+                autoFocus
+                aria-label="Document title"
+              />
+            ) : (
+              <h2 
+                className="text-sm font-medium truncate cursor-pointer hover:text-primary transition-colors" 
+                title="Click to edit document title"
+                onClick={() => setIsEditingTitle(true)}
+              >
+                {documentTitle}
+              </h2>
+            )}
           </div>
           <div className="flex-1">
             <RichTextEditor
