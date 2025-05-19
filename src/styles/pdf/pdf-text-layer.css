@@ -8,12 +8,64 @@
   bottom: 0;
   line-height: 1.0;
   pointer-events: none;
+  opacity: 0.8;
 }
 
 .text-layer > span {
   pointer-events: all;
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
 }
 
+/* Prevent text selection flickering */
 .PdfHighlighter {
   user-select: text;
+}
+
+/* Fix for duplicate text rendering */
+.react-pdf__Page {
+  position: relative;
+  margin: 0 auto;
+}
+
+.react-pdf__Page__textContent {
+  opacity: 0.4;
+  user-select: none;
+}
+
+.react-pdf__Page__textContent.custom-highlight {
+  pointer-events: all;
+  user-select: text;
+  opacity: 1;
+}
+
+.react-pdf__Page__annotations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* Prevent text selection flickering */
+.pdf-container {
+  position: relative;
+  display: inline-block;
+}
+
+.pdf-container canvas {
+  display: block;
+}
+
+/* Fix for z-index issues causing flickering */
+.react-pdf__Document {
+  line-height: 1.0;
+}
+
+/* Prevent text flicker */
+::selection {
+  background-color: rgba(255, 235, 59, 0.4);
 }

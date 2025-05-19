@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { pdfjs } from 'react-pdf';
 import { useToast } from '@/hooks/use-toast';
 import { PdfViewerControls } from './PdfViewerControls';
-import { PdfDocumentViewer } from './PdfDocumentViewer';
-import { HighlightsOverlay } from './HighlightsOverlay';
+import { PdfDocument } from './PdfDocument';
 import { ColorSelectionPopup } from './ColorSelectionPopup';
 import { usePdfHighlights } from '../hooks/usePdfHighlights';
+import { useTextSelection } from '../hooks/useTextSelection';
 import '@/styles/pdf/pdf-highlighter.css';
 import '@/styles/pdf/pdf-highlights.css';
 
@@ -31,19 +31,24 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [scale, setScale] = useState<number>(1.0);
-  const { toast } = useToast();
   const [selectedHighlightId, setSelectedHighlightId] = useState<string | null>(null);
+  const { toast } = useToast();
 
   // Use our custom hook for managing highlights
   const {
     highlights,
-    selectedHighlight,
-    setSelectedHighlight,
     addHighlight,
     removeHighlight,
     updateHighlightColor,
     handleSelectionFinished
   } = usePdfHighlights(selectedColor);
+
+  // Use the text selection hook
+  const { handleTextSelection } = useTextSelection(
+    pageNumber,
+    isHighlighter,
+    handleSelectionFinished
+  );
 
   // File source determination
   const pdfUrl = file ? URL.createObjectURL(file) : url;
@@ -72,44 +77,20 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
       setScale(newScale);
     }
   };
+  
+  // Fit to screen
+  const fitToScreen = () => {
+    setScale(1.0);
+    toast({
+      title: "Fit to Screen",
+      description: "Document adjusted to fit screen",
+    });
+  };
 
   // Handle document load success
   const handleDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
     console.log("Document loaded with", numPages, "pages");
-  };
-
-  // Handle text selection for highlighting
-  const handleTextSelection = () => {
-    if (isHighlighter) {
-      const selection = window.getSelection();
-      if (selection && selection.toString().trim() !== '') {
-        const range = selection.getRangeAt(0);
-        const position = {
-          boundingRect: range.getBoundingClientRect(),
-          rects: Array.from(range.getClientRects()),
-          pageNumber
-        };
-        
-        const content = {
-          text: selection.toString()
-        };
-        
-        handleSelectionFinished(
-          position as any,
-          content,
-          () => {/* hide tip function */},
-          () => {/* transform selection function */}
-        );
-        
-        toast({
-          title: "Highlight Added",
-          description: "Text has been highlighted in the document",
-        });
-        
-        selection.removeAllRanges();
-      }
-    }
   };
 
   if (!pdfUrl) {
@@ -131,6 +112,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
         selectedColor={selectedColor}
         onChangePage={changePage}
         onZoom={zoom}
+        onFitToScreen={fitToScreen}
         onTextSelect={handleTextSelection}
         onDeleteHighlight={(id) => {
           removeHighlight(id);
@@ -139,19 +121,15 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
       />
       
       {/* PDF Document with Highlights */}
-      <PdfDocumentViewer
-        pdfUrl={pdfUrl}
+      <PdfDocument
+        file={pdfUrl}
         pageNumber={pageNumber}
-        scale={scale}
+        zoom={scale}
+        highlights={highlights}
+        selectedHighlightId={selectedHighlightId}
         onLoadSuccess={handleDocumentLoadSuccess}
-      >
-        <HighlightsOverlay
-          highlights={highlights}
-          pageNumber={pageNumber}
-          onSelectHighlight={setSelectedHighlightId}
-          selectedHighlightId={selectedHighlightId}
-        />
-      </PdfDocumentViewer>
+        onHighlightClick={setSelectedHighlightId}
+      />
       
       {/* Color selection popup for selected highlight */}
       {selectedHighlightId && (

@@ -22,6 +22,9 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
   onLoadSuccess,
   onHighlightClick
 }) => {
+  // Get the current page's highlights
+  const pageHighlights = highlights.filter(h => h.position.pageNumber === pageNumber);
+  
   return (
     <div 
       className="flex-1 overflow-auto bg-zinc-800 flex justify-center"
@@ -34,10 +37,16 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
           transformOrigin: 'center top',
           position: 'relative'
         }}
+        className="pdf-container"
       >
         <Document
           file={file}
           onLoadSuccess={onLoadSuccess}
+          options={{
+            cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/cmaps/',
+            cMapPacked: true,
+            standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/standard_fonts/',
+          }}
           loading={
             <div 
               className="loading-indicator"
@@ -60,6 +69,7 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
               ref.setAttribute('aria-label', 'PDF Document');
             }
           }}
+          className="pdf-document"
         >
           <Page 
             pageNumber={pageNumber} 
@@ -71,14 +81,18 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
                 ref.setAttribute('aria-label', `Page ${pageNumber}`);
               }
             }}
+            canvasBackground="transparent"
+            renderMode="canvas"
           />
 
-          {/* Render highlights for current page */}
-          <HighlightLayer 
-            highlights={highlights.filter(h => h.position.pageNumber === pageNumber)}
-            selectedHighlightId={selectedHighlightId}
-            onHighlightClick={onHighlightClick}
-          />
+          {/* Render highlights only when they exist */}
+          {pageHighlights.length > 0 && (
+            <HighlightLayer 
+              highlights={pageHighlights}
+              selectedHighlightId={selectedHighlightId}
+              onHighlightClick={onHighlightClick}
+            />
+          )}
         </Document>
       </div>
     </div>

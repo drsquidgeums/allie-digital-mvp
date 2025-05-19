@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Document, Page } from 'react-pdf';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -34,8 +34,15 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   const [rotation, setRotation] = useState<number>(0);
   const { toast } = useToast();
   
-  // File source determination
+  // File source determination - only create one source
   const pdfSource = file ? { data: file } : url ? { url } : null;
+  
+  // Clean up URL object if needed
+  useEffect(() => {
+    // No cleanup needed here as we're using the structured pdfSource object
+    // that handles File objects properly
+    return () => {};
+  }, [file, url]);
   
   // PDF load success handler
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
@@ -110,6 +117,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
             size="sm"
             onClick={() => changePage(-1)}
             disabled={pageNumber <= 1}
+            aria-label="Previous page"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -123,27 +131,49 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
             size="sm"
             onClick={() => changePage(1)}
             disabled={pageNumber >= numPages}
+            aria-label="Next page"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
         
         <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm" onClick={() => zoom(-0.1)}>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => zoom(-0.1)}
+            aria-label="Zoom out"
+          >
             <ZoomOut className="h-4 w-4" />
           </Button>
           
           <span className="text-sm">{Math.round(scale * 100)}%</span>
           
-          <Button variant="outline" size="sm" onClick={() => zoom(0.1)}>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => zoom(0.1)}
+            aria-label="Zoom in"
+          >
             <ZoomIn className="h-4 w-4" />
           </Button>
           
-          <Button variant="outline" size="sm" onClick={fitToScreen} title="Fit to screen">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={fitToScreen} 
+            title="Fit to screen"
+            aria-label="Fit to screen"
+          >
             <Maximize className="h-4 w-4" />
           </Button>
           
-          <Button variant="outline" size="sm" onClick={rotateDocument}>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={rotateDocument}
+            aria-label="Rotate document"
+          >
             <RotateCw className="h-4 w-4" />
           </Button>
         </div>
@@ -160,6 +190,9 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
           }
+          className="pdf-container"
+          role="document"
+          aria-label="PDF document"
         >
           <Page
             pageNumber={pageNumber}
@@ -168,6 +201,8 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
             renderTextLayer={true}
             renderAnnotationLayer={true}
             className="shadow-lg"
+            role="region"
+            aria-label={`Page ${pageNumber} of ${numPages}`}
           />
         </Document>
       </div>

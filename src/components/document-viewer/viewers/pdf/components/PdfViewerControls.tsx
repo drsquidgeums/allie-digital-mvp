@@ -1,8 +1,15 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Trash2 } from 'lucide-react';
-import { getContrastColor } from '../utils/colorUtils';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  ZoomIn, 
+  ZoomOut,
+  Maximize, 
+  Highlighter, 
+  Trash2 
+} from 'lucide-react';
 
 interface PdfViewerControlsProps {
   pageNumber: number;
@@ -12,6 +19,7 @@ interface PdfViewerControlsProps {
   selectedColor: string;
   onChangePage: (offset: number) => void;
   onZoom: (factor: number) => void;
+  onFitToScreen: () => void;
   onTextSelect: () => void;
   onDeleteHighlight: (id: string) => void;
 }
@@ -24,20 +32,21 @@ export const PdfViewerControls: React.FC<PdfViewerControlsProps> = ({
   selectedColor,
   onChangePage,
   onZoom,
+  onFitToScreen,
   onTextSelect,
   onDeleteHighlight
 }) => {
   return (
-    <div className="flex items-center justify-between p-2 bg-zinc-800 text-white border-b">
+    <div className="flex items-center justify-between p-2 bg-card border-b">
       <div className="flex items-center space-x-2">
         <Button
           variant="outline"
           size="sm"
           onClick={() => onChangePage(-1)}
           disabled={pageNumber <= 1}
-          className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+          aria-label="Previous page"
         >
-          <ChevronLeft className="h-4 w-4 dark:text-white text-black" />
+          <ChevronLeft className="h-4 w-4" />
         </Button>
         
         <span className="text-sm">
@@ -49,41 +58,60 @@ export const PdfViewerControls: React.FC<PdfViewerControlsProps> = ({
           size="sm"
           onClick={() => onChangePage(1)}
           disabled={pageNumber >= numPages}
-          className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+          aria-label="Next page"
         >
-          <ChevronRight className="h-4 w-4 dark:text-white text-black" />
+          <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
       
       <div className="flex items-center space-x-2">
-        <Button 
-          variant="outline" 
-          size="sm" 
+        <Button
+          variant="outline"
+          size="sm"
           onClick={() => onZoom(-0.1)}
-          className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+          aria-label="Zoom out"
         >
-          <ZoomOut className="h-4 w-4 dark:text-white text-black" />
+          <ZoomOut className="h-4 w-4" />
         </Button>
         
         <span className="text-sm">{Math.round(scale * 100)}%</span>
         
-        <Button 
-          variant="outline" 
-          size="sm" 
+        <Button
+          variant="outline"
+          size="sm"
           onClick={() => onZoom(0.1)}
-          className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+          aria-label="Zoom in"
         >
-          <ZoomIn className="h-4 w-4 dark:text-white text-black" />
+          <ZoomIn className="h-4 w-4" />
+        </Button>
+        
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onFitToScreen}
+          aria-label="Fit to screen"
+        >
+          <Maximize className="h-4 w-4" />
+        </Button>
+        
+        <Button
+          variant="outline"
+          size="sm"
+          style={{ backgroundColor: selectedColor }}
+          onClick={onTextSelect}
+          aria-label="Highlight text"
+        >
+          <Highlighter className="h-4 w-4" />
         </Button>
         
         {selectedHighlightId && (
           <Button
             variant="outline"
             size="sm"
-            onClick={() => selectedHighlightId && onDeleteHighlight(selectedHighlightId)}
-            className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+            onClick={() => onDeleteHighlight(selectedHighlightId)}
+            aria-label="Delete highlight"
           >
-            <Trash2 className="h-4 w-4 dark:text-white text-black" />
+            <Trash2 className="h-4 w-4" />
           </Button>
         )}
       </div>
