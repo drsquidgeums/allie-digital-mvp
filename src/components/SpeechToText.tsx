@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Mic, MicOff, Copy, ArrowUpFromLine } from "lucide-react";
+import { Mic, MicOff, Copy, ArrowUpFromLine, Pencil, Eraser } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { usePersistedText } from "@/hooks/usePersistedText";
 import { useEditorContent } from "@/hooks/useEditorContent";
@@ -10,9 +10,10 @@ import { useEditorContent } from "@/hooks/useEditorContent";
 export const SpeechToText = () => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = usePersistedText("stt");
+  const [appendMode, setAppendMode] = useState<'replace' | 'append'>('replace');
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const { toast } = useToast();
-  const { setEditorText } = useEditorContent();
+  const { setEditorText, getTextContent } = useEditorContent();
 
   const startListening = () => {
     if (!('webkitSpeechRecognition' in window)) {
@@ -83,19 +84,59 @@ export const SpeechToText = () => {
 
   // Send transcript to editor
   const sendToEditor = () => {
-    if (transcript) {
-      setEditorText(transcript);
-      toast({
-        title: "Text sent",
-        description: "Speech transcript has been sent to the editor"
-      });
-    } else {
+    if (!transcript) {
       toast({
         title: "No text",
         description: "There is no transcript to send to the editor",
         variant: "destructive"
       });
+      return;
     }
+    
+    try {
+      if (appendMode === 'append') {
+        // Get current content and append transcript
+        const currentText = getTextContent();
+        const combinedText = currentText ? `${currentText}\n\n${transcript}` : transcript;
+        setEditorText(combinedText);
+        toast({
+          title: "Text appended",
+          description: "Speech transcript has been appended to the editor"
+        });
+      } else {
+        // Replace editor content
+        setEditorText(transcript);
+        toast({
+          title: "Text replaced",
+          description: "Speech transcript has replaced the editor content"
+        });
+      }
+    } catch (error) {
+      console.error('Error sending text to editor:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send text to editor",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Clear transcript
+  const clearTranscript = () => {
+    setTranscript('');
+    toast({
+      title: "Cleared",
+      description: "Speech transcript has been cleared"
+    });
+  };
+
+  // Toggle append mode
+  const toggleAppendMode = () => {
+    setAppendMode(prev => prev === 'replace' ? 'append' : 'replace');
+    toast({
+      title: "Mode changed",
+      description: `Editor will now ${appendMode === 'replace' ? 'append to' : 'replace'} existing content`
+    });
   };
 
   return (
@@ -136,16 +177,44 @@ export const SpeechToText = () => {
         placeholder="Your speech will appear here..."
         className="min-h-[200px]"
       />
-      <Button
-        onClick={sendToEditor}
-        size="sm"
-        variant="outline"
-        className="w-full h-8 text-xs"
-        disabled={!transcript}
-      >
-        <ArrowUpFromLine className="w-3 h-3 mr-1" />
-        Send to Editor
-      </Button>
+      <div className="flex gap-2">
+        <Button
+          onClick={sendToEditor}
+          size="sm"
+          variant="outline"
+          className="flex-1 h-8 text-xs"
+          disabled={!transcript}
+          title={appendMode === 'append' ? "Append to editor content" : "Replace editor content"}
+        >
+          <ArrowUpFromLine className="w-3 h-3 mr-1" />
+          Send to Editor
+        </Button>
+        <Button
+          onClick={toggleAppendMode}
+          size="sm"
+          variant="outline"
+          className="h-8 text-xs px-2"
+          title="Toggle between replace and append mode"
+        >
+          {appendMode === 'append' ? <Pencil className="w-3 h-3" /> : <Eraser className="w-3 h-3" />}
+        </Button>
+        <Button
+          onClick={clearTranscript}
+          size="sm"
+          variant="outline"
+          className="h-8 text-xs px-3"
+          disabled={!transcript}
+          title="Clear transcript"
+        >
+          <Eraser className="w-3 h-3" />
+        </Button>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Mode: {appendMode === 'append' ? 'Append' : 'Replace'} - 
+        {appendMode === 'append' 
+          ? " Text will be added to existing editor content" 
+          : " Text will replace existing editor content"}
+      </p>
     </div>
   );
 };

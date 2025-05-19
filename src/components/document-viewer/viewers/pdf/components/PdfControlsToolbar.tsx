@@ -8,6 +8,7 @@ import {
   ZoomOut, 
   Maximize,
   RotateCw,
+  RotateCcw,
   Highlighter 
 } from 'lucide-react';
 
@@ -21,7 +22,8 @@ interface PdfControlsToolbarProps {
   changePage: (offset: number) => void;
   zoom: (factor: number) => void;
   fitToScreen: () => void;
-  rotateDocument?: () => void; // Added rotateDocument as an optional prop
+  rotateDocument?: () => void;
+  rotateCounterClockwise?: () => void;
   toggleHighlightMode: () => void;
 }
 
@@ -36,6 +38,7 @@ export const PdfToolbar: React.FC<PdfControlsToolbarProps> = ({
   zoom,
   fitToScreen,
   rotateDocument,
+  rotateCounterClockwise,
   toggleHighlightMode
 }) => {
   return (
@@ -47,11 +50,12 @@ export const PdfToolbar: React.FC<PdfControlsToolbarProps> = ({
           onClick={() => changePage(-1)}
           disabled={pageNumber <= 1}
           className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+          aria-label="Previous page"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
         
-        <span className="text-sm">
+        <span className="text-sm" aria-live="polite">
           {pageNumber} / {numPages}
         </span>
         
@@ -61,6 +65,7 @@ export const PdfToolbar: React.FC<PdfControlsToolbarProps> = ({
           onClick={() => changePage(1)}
           disabled={pageNumber >= numPages}
           className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+          aria-label="Next page"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
@@ -72,17 +77,23 @@ export const PdfToolbar: React.FC<PdfControlsToolbarProps> = ({
           size="sm" 
           onClick={() => zoom(-0.1)}
           className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+          aria-label="Zoom out"
+          title="Zoom out"
         >
           <ZoomOut className="h-4 w-4" />
         </Button>
         
-        <span className="text-sm">{Math.round(scale * 100)}%</span>
+        <span className="text-sm" aria-live="polite">
+          {Math.round(scale * 100)}%
+        </span>
         
         <Button 
           variant="outline" 
           size="sm" 
           onClick={() => zoom(0.1)}
           className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+          aria-label="Zoom in"
+          title="Zoom in"
         >
           <ZoomIn className="h-4 w-4" />
         </Button>
@@ -93,6 +104,7 @@ export const PdfToolbar: React.FC<PdfControlsToolbarProps> = ({
           onClick={fitToScreen}
           title="Fit to screen"
           className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+          aria-label="Fit to screen"
         >
           <Maximize className="h-4 w-4" />
         </Button>
@@ -102,10 +114,24 @@ export const PdfToolbar: React.FC<PdfControlsToolbarProps> = ({
             variant="outline" 
             size="sm" 
             onClick={rotateDocument}
-            title="Rotate document"
+            title="Rotate clockwise"
             className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+            aria-label="Rotate document clockwise"
           >
             <RotateCw className="h-4 w-4" />
+          </Button>
+        )}
+        
+        {rotateCounterClockwise && (
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={rotateCounterClockwise}
+            title="Rotate counter-clockwise"
+            className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+            aria-label="Rotate document counter-clockwise"
+          >
+            <RotateCcw className="h-4 w-4" />
           </Button>
         )}
         
@@ -116,6 +142,9 @@ export const PdfToolbar: React.FC<PdfControlsToolbarProps> = ({
             onClick={toggleHighlightMode}
             className={`dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300 ${isHighlightMode ? 'ring-2 ring-primary' : ''}`}
             style={{ backgroundColor: isHighlightMode ? selectedColor : undefined }}
+            aria-pressed={isHighlightMode}
+            aria-label={`Toggle highlight mode ${isHighlightMode ? '(active)' : ''}`}
+            title="Toggle highlight mode"
           >
             <Highlighter className="h-4 w-4" />
           </Button>

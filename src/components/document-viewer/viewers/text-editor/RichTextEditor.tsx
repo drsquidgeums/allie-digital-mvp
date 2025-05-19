@@ -54,6 +54,15 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         onContentChange(html);
       }
     },
+    editorProps: {
+      attributes: {
+        class: 'prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-xl max-w-none focus:outline-none',
+        'aria-label': 'Rich text editor',
+        'role': 'textbox',
+        'aria-multiline': 'true',
+        'spellcheck': 'true',
+      },
+    },
   });
 
   // Initialize the editor content for global access
@@ -86,10 +95,37 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }
   };
 
+  // Add keyboard shortcut handler for better accessibility
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Skip if editor not defined or if focus is not in editor
+      if (!editor || !editor.isFocused) return;
+
+      // Prevent default browser behavior for our custom shortcuts
+      if (e.key === 'b' && e.ctrlKey) {
+        e.preventDefault();
+        editor.chain().focus().toggleBold().run();
+      }
+      if (e.key === 'i' && e.ctrlKey) {
+        e.preventDefault();
+        editor.chain().focus().toggleItalic().run();
+      }
+      if (e.key === 'u' && e.ctrlKey) {
+        e.preventDefault();
+        editor.chain().focus().toggleMark('underline').run();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [editor]);
+
   return (
     <div 
       className="flex flex-col h-full overflow-hidden bg-card"
       data-testid="rich-text-editor"
+      role="application"
+      aria-label="Rich text editor application"
     >
       {!isReadOnly && (
         <EditorToolbar 
@@ -105,6 +141,11 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             className="prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-xl max-w-none EditorContent"
           />
         </div>
+      </div>
+      
+      {/* Accessibility information */}
+      <div className="sr-only" aria-live="polite">
+        {editor?.isFocused ? 'Editor is focused. Use keyboard shortcuts like Ctrl+B for bold, Ctrl+I for italic, and Ctrl+U for underline.' : ''}
       </div>
     </div>
   );

@@ -71,6 +71,7 @@ const ErrorFallback: React.FC<{ onClear: () => void }> = ({ onClear }) => {
         <button 
           onClick={onClear}
           className="text-xs underline hover:text-muted-foreground"
+          aria-label="Clear document and try again"
         >
           Clear document and try again
         </button>
