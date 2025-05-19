@@ -96,7 +96,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 min-h-[calc(100vh-200px)] shadow-sm rounded-lg p-6">
           <EditorContent 
             editor={editor} 
-            className="prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-xl max-w-none"
+            className="prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-xl max-w-none EditorContent"
           />
         </div>
       </div>

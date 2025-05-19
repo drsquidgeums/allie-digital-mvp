@@ -139,3 +139,17 @@
 .dark .ProseMirror hr {
   border-top-color: #444;
 }
+
+/* Remove focus outline and any bounding box */
+.ProseMirror:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Ensure the editor container doesn't show a bounding box either */
+.EditorContent {
+  outline: none;
+  border: none;
+}
+
