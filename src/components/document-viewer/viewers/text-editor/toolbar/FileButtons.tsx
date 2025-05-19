@@ -118,13 +118,10 @@ export const FileButtons: React.FC<FileButtonsProps> = ({
       // Get the document content
       const content = editor.getHTML();
       
-      // Use document title or generate one with timestamp
-      const safeTitle = documentTitle === 'Untitled Document' 
-        ? `document_${new Date().toISOString().slice(0, 10)}`
-        : documentTitle.replace(/\.(html|doc|docx|txt)$/i, '');
-      
-      // Create filename with .html extension
-      const fileName = `${safeTitle}.html`;
+      // Use document title for the file name
+      const fileName = documentTitle === 'Untitled Document'
+        ? `document_${new Date().toISOString().slice(0, 10)}.html`
+        : `${documentTitle.replace(/\.(html|doc|docx|txt)$/i, '')}.html`;
       
       // Create a file object from the HTML content
       const file = new File([content], fileName, { type: 'text/html' });
@@ -134,7 +131,7 @@ export const FileButtons: React.FC<FileButtonsProps> = ({
       
       toast({
         title: "Document Saved",
-        description: `"${safeTitle}" saved to My Files`,
+        description: `"${fileName.replace('.html', '')}" saved to My Files`,
       });
     } catch (error) {
       console.error('Error saving document to My Files:', error);
