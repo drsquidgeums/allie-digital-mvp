@@ -46,70 +46,44 @@ export const useFeedbackSubmission = (
     console.log("Starting feedback submission process");
     
     try {
-      // Generate a valid UUID for the user_id field
-      const user_id = uuidv4();
+      const currentTime = new Date().toISOString();
+      console.log(`Submitting feedback at: ${currentTime}`);
       
-      // For non-special users, check if they've already submitted feedback based on email
-      if (userEmail !== SPECIAL_USER_EMAIL) {
-        // Check for existing feedback with matching email which we store in comments for reference
-        const { data: existingFeedback, error: checkError } = await supabase
-          .from('feedback')
-          .select('id')
-          .contains('comments', `[Email: ${userEmail}]`);
-          
-        if (checkError) {
-          console.error("Error checking existing feedback:", checkError);
-          // Continue with submission attempt even if check fails
-        } else if (existingFeedback && existingFeedback.length > 0) {
+      // Call the Supabase Edge Function to submit feedback
+      const { data, error } = await supabase.functions.invoke('submit-feedback', {
+        body: {
+          comments,
+          userEmail
+        }
+      });
+      
+      if (error) {
+        console.error("Error calling submit-feedback function:", error);
+        throw new Error(`Function error: ${error.message}`);
+      }
+      
+      if (!data.success) {
+        console.error("Submit feedback function returned error:", data.error);
+        // Check if the error is about already submitted feedback
+        if (data.error?.includes("already provided feedback")) {
           toast({
             title: "Feedback already submitted",
             description: "You have already provided feedback. Thank you!"
           });
           onClose();
-          setIsSubmitting(false);
           return false;
         }
+        throw new Error(data.error || "Error submitting feedback");
       }
       
-      const currentTime = new Date().toISOString();
-      console.log(`Submitting feedback at: ${currentTime}`);
-      
-      // Append the email to the comments for reference
-      const enhancedComments = `${comments}\n\n[Email: ${userEmail}]`;
-      
-      console.log("Submitting feedback with data:", {
-        user_id,
-        comments: enhancedComments,
-        created_at: currentTime
+      toast({
+        title: "Thank you for your feedback!",
+        description: "Your input helps us improve the application."
       });
       
-      // Insert feedback with all required fields and a proper UUID
-      const { error } = await supabase
-        .from('feedback')
-        .insert({
-          user_id, // This is now a proper UUID
-          comments: enhancedComments, // Include email in comments for reference
-          created_at: currentTime,
-          // Required fields per database schema
-          rating: 0,
-          usability: 0,
-          visual_appeal: 0,
-          would_recommend: false
-        });
-        
-      if (error) {
-        console.error("Error submitting feedback:", error);
-        throw error;
-      } else {
-        toast({
-          title: "Thank you for your feedback!",
-          description: "Your input helps us improve the application."
-        });
-        
-        // Store in localStorage that feedback was submitted
-        localStorage.setItem("feedback_submitted", currentTime);
-        console.log(`Feedback submission recorded in localStorage at: ${currentTime}`);
-      }
+      // Store in localStorage that feedback was submitted
+      localStorage.setItem("feedback_submitted", currentTime);
+      console.log(`Feedback submission recorded in localStorage at: ${currentTime}`);
       
       onClose();
       return true;
