@@ -141,11 +141,11 @@ export const FileButtons: React.FC<FileButtonsProps> = ({
             <FileDown className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56">
-          <DropdownMenuItem onClick={downloadAsDoc}>
+        <DropdownMenuContent align="end" className="w-56 dark:bg-[#333333] dark:border dark:border-white/20 dark:text-[#FAFAFA]">
+          <DropdownMenuItem onClick={downloadAsDoc} className="dark:hover:bg-[#444444] dark:focus:bg-[#444444] cursor-pointer">
             Download as Word (.doc)
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={downloadAsHtml}>
+          <DropdownMenuItem onClick={downloadAsHtml} className="dark:hover:bg-[#444444] dark:focus:bg-[#444444] cursor-pointer">
             Download as HTML
           </DropdownMenuItem>
         </DropdownMenuContent>
