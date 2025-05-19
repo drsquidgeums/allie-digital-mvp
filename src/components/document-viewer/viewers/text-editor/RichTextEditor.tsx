@@ -7,6 +7,7 @@ import Image from '@tiptap/extension-image';
 import TextStyle from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
 import Underline from '@tiptap/extension-underline';
+import Link from '@tiptap/extension-link';
 import { useToast } from '@/hooks/use-toast';
 import { EditorToolbar } from './EditorToolbar';
 import './editor.css';
@@ -36,6 +37,10 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       TextStyle,
       Color,
       Underline,
+      Link.configure({
+        openOnClick: true,
+        linkOnPaste: true,
+      }),
     ],
     content: initialContent,
     editable: !isReadOnly,

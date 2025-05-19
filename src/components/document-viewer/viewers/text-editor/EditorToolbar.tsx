@@ -94,7 +94,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
       <Button
         variant={editor.isActive('underline') ? 'secondary' : 'ghost'}
         size="sm"
-        onClick={() => editor.chain().focus().toggleUnderline().run()}
+        onClick={() => editor.chain().focus().toggleMark('underline').run()}
         className="h-8 w-8 p-0"
         aria-label="Underline"
       >
@@ -146,7 +146,12 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         onClick={() => {
           const url = window.prompt('Enter URL:');
           if (url) {
-            editor.chain().focus().setLink({ href: url }).run();
+            // Check if text is selected
+            if (editor.state.selection.empty) {
+              editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+            } else {
+              editor.chain().focus().setLink({ href: url }).run();
+            }
           }
         }}
         className="h-8 w-8 p-0"
@@ -161,7 +166,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         variant="ghost"
         size="sm"
         style={{ color: selectedColor }}
-        onClick={() => editor.chain().focus().toggleHighlight({ color: selectedColor }).run()}
+        onClick={() => editor.chain().focus().setHighlight({ color: selectedColor }).run()}
         className="h-8 w-8 p-0"
         aria-label="Highlight Text"
       >
