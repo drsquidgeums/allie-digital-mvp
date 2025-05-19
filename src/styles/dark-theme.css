@@ -42,3 +42,18 @@
 html.dark .recharts-legend-item:first-child .recharts-legend-item-symbol {
   fill: #F1F1F1 !important;
 }
+
+/* Make input text white in dark mode for the feedback form */
+.dark .CommentsSection textarea,
+.dark .form textarea,
+.dark .form input,
+.dark input,
+.dark textarea {
+  color: #FFFFFF;
+}
+
+/* Ensure feedback form text inputs and textareas are visible when focused in dark mode */
+.dark textarea:focus,
+.dark input:focus {
+  border-color: hsl(var(--primary));
+}
