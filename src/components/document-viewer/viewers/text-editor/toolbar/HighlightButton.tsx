@@ -50,26 +50,32 @@ export const HighlightButton: React.FC<HighlightButtonProps> = ({
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        {IRLEN_COLORS.map((color) => (
-          <DropdownMenuItem 
-            key={color.name}
-            onClick={() => setHighlight(color.value)}
-            className="flex items-center gap-2"
-          >
-            <div 
-              className="w-4 h-4 rounded" 
-              style={{ backgroundColor: color.value }} 
-            />
-            <span>{color.name}</span>
-          </DropdownMenuItem>
-        ))}
-        <DropdownMenuItem 
-          onClick={() => editor.chain().focus().unsetHighlight().run()}
-          className="border-t mt-1 pt-1"
-        >
-          Remove Highlight
-        </DropdownMenuItem>
+      <DropdownMenuContent align="end" className="dark:bg-[#333333] dark:border dark:border-white/20 dark:text-[#FAFAFA]">
+        <div className="space-y-2 p-2">
+          <div className="font-medium text-sm mb-2">Highlight Colors</div>
+          <div className="grid grid-cols-1 gap-2">
+            {IRLEN_COLORS.map((color) => (
+              <DropdownMenuItem 
+                key={color.name}
+                onClick={() => setHighlight(color.value)}
+                className="flex items-center gap-2 dark:hover:bg-[#444444] dark:focus:bg-[#444444] cursor-pointer"
+              >
+                <div 
+                  className="w-4 h-4 rounded border border-border"
+                  style={{ backgroundColor: color.value }} 
+                  role="presentation"
+                />
+                <span>{color.name}</span>
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuItem 
+              onClick={() => editor.chain().focus().unsetHighlight().run()}
+              className="border-t mt-1 pt-1 dark:hover:bg-[#444444] dark:focus:bg-[#444444] cursor-pointer"
+            >
+              Remove Highlight
+            </DropdownMenuItem>
+          </div>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
