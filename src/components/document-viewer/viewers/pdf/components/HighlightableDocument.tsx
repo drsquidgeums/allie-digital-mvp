@@ -56,10 +56,14 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
   
   const fitToScreen = () => {
     setScale(1.0);
+    setRotation(0); // Reset rotation for better fit
+    
     toast({
       title: "Fit to Screen",
       description: "Document adjusted to fit screen",
     });
+    
+    console.log("Document fitted to screen at scale:", 1.0);
   };
   
   useEffect(() => {

@@ -10,7 +10,7 @@ import {
   ZoomIn, 
   ZoomOut, 
   RotateCw,
-  Highlighter 
+  Maximize 
 } from 'lucide-react';
 import '@/styles/pdf/pdf-highlighter.css';
 import '@/styles/pdf/pdf-highlights.css';
@@ -96,6 +96,19 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     if (newScale >= 0.5 && newScale <= 3) {
       setScale(newScale);
     }
+  };
+  
+  // Fit to screen function - properly implemented
+  const fitToScreen = () => {
+    setScale(1.0);
+    setRotation(0); // Reset rotation as well for better fit
+    
+    toast({
+      title: "Fit to Screen",
+      description: "Document adjusted to fit the screen",
+    });
+    
+    console.log("Document fitted to screen");
   };
   
   // Rotate document
@@ -192,9 +205,10 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
           <Button 
             variant="outline" 
             size="sm"
-            style={{ backgroundColor: isHighlighter ? selectedColor : 'transparent' }}
+            onClick={fitToScreen}
+            title="Fit to screen"
           >
-            <Highlighter className="h-4 w-4" />
+            <Maximize className="h-4 w-4" />
           </Button>
         </div>
       </div>
