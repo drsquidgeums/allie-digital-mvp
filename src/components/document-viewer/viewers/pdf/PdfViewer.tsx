@@ -8,7 +8,6 @@ import {
   ChevronRight, 
   ZoomIn, 
   ZoomOut, 
-  RotateCw,
   Maximize 
 } from 'lucide-react';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
@@ -94,11 +93,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     });
   };
   
-  // Rotate document
-  const rotateDocument = () => {
-    setRotation((rotation + 90) % 360);
-  };
-  
   if (!pdfSource) {
     return (
       <div className="flex items-center justify-center h-full bg-muted/20">
@@ -166,15 +160,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
             aria-label="Fit to screen"
           >
             <Maximize className="h-4 w-4" />
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={rotateDocument}
-            aria-label="Rotate document"
-          >
-            <RotateCw className="h-4 w-4" />
           </Button>
         </div>
       </div>

@@ -124,20 +124,22 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
             <TooltipContent>Fit to screen</TooltipContent>
           </Tooltip>
           
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onKeyboardHelp}
-                aria-label="Keyboard shortcuts"
-                className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
-              >
-                <Keyboard className="h-4 w-4 dark:text-white text-black" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Keyboard shortcuts</TooltipContent>
-          </Tooltip>
+          {onKeyboardHelp && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onKeyboardHelp}
+                  aria-label="Keyboard shortcuts"
+                  className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+                >
+                  <Keyboard className="h-4 w-4 dark:text-white text-black" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Keyboard shortcuts</TooltipContent>
+            </Tooltip>
+          )}
         </div>
       </div>
     </TooltipProvider>

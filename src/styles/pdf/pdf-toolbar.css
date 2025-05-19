@@ -30,6 +30,13 @@
   cursor: not-allowed;
 }
 
+/* Button interactions */
+.pdf-toolbar-btn.active {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
 /* Ensure the PDF content has proper coloring */
 .pdf-content {
   background-color: var(--muted);
