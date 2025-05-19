@@ -145,7 +145,7 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
                 onChange={handleTitleChange}
                 onBlur={() => setIsEditingTitle(false)}
                 onKeyDown={handleKeyDown}
-                className="font-medium h-8 text-sm"
+                className="font-medium h-8 text-sm border-0 focus:border-0 px-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                 autoFocus
                 aria-label="Document title"
               />
