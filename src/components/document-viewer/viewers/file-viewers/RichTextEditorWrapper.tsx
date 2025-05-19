@@ -114,9 +114,9 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
     setDocumentTitle(e.target.value);
   };
 
-  // Save title when pressing Enter
+  // Save title when pressing Enter (removed the space key trigger)
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (e.key === 'Enter') {
       setIsEditingTitle(false);
       toast({
         title: "Document Title Updated",
