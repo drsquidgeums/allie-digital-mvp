@@ -104,7 +104,8 @@ export const SpeechToText = () => {
         <Button
           onClick={isListening ? stopListening : startListening}
           size="sm"
-          className="flex-1 bg-workspace-dark text-white hover:bg-workspace-dark/90 h-8 text-xs"
+          variant="outline" 
+          className="flex-1 h-8 text-xs"
         >
           {isListening ? (
             <>

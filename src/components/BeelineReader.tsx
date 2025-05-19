@@ -148,25 +148,29 @@ export const BeelineReader = () => {
         </div>
       </div>
 
-      <div className="flex gap-2">
+      {/* Optimized editor interaction buttons */}
+      <div className="grid grid-cols-2 gap-2">
         <Button 
           size="sm" 
           variant="outline" 
-          className="text-xs flex-1"
+          className="text-xs flex items-center justify-center"
           onClick={handleGetFromEditor}
+          title="Import text from editor"
         >
           <ArrowDownToLine className="w-3 h-3 mr-1" />
-          Get from Editor
+          From Editor
         </Button>
         
         <Button 
           size="sm" 
           variant="outline" 
-          className="text-xs flex-1"
+          className="text-xs flex items-center justify-center"
           onClick={handleSendToEditor}
+          title="Send text to editor"
+          disabled={!text}
         >
           <ArrowUpFromLine className="w-3 h-3 mr-1" />
-          Send to Editor
+          To Editor
         </Button>
       </div>
 
