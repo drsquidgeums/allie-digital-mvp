@@ -62,10 +62,6 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
     });
   };
   
-  const rotateDocument = () => {
-    setRotation((rotation + 90) % 360);
-  };
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
@@ -90,12 +86,6 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
           if (e.ctrlKey) {
             e.preventDefault();
             handleZoom(-0.1);
-          }
-          break;
-        case 'r':
-        case 'R':
-          if (!e.ctrlKey && !e.altKey && !e.metaKey) {
-            rotateDocument();
           }
           break;
         case '0':
@@ -123,7 +113,6 @@ export const HighlightableDocument: React.FC<HighlightableDocumentProps> = ({
         changePage={changePage}
         zoom={handleZoom}
         fitToScreen={fitToScreen}
-        rotateDocument={rotateDocument}
         toggleHighlightMode={toggleHighlightMode}
       />
       

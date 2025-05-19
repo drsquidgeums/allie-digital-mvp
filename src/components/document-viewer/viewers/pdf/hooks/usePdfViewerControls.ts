@@ -27,7 +27,11 @@ export const usePdfViewerControls = () => {
 
   const rotateClockwise = useCallback(() => {
     setRotation((prevRotation) => (prevRotation + 90) % 360);
-  }, []);
+    toast({
+      title: "Document Rotated",
+      description: "Document rotated clockwise by 90°",
+    });
+  }, [toast]);
 
   const rotateCounterClockwise = useCallback(() => {
     setRotation((prevRotation) => (prevRotation - 90 + 360) % 360);

@@ -7,6 +7,7 @@ import {
   ZoomIn, 
   ZoomOut, 
   Maximize,
+  RotateCw,
   Highlighter 
 } from 'lucide-react';
 
@@ -20,6 +21,7 @@ interface PdfControlsToolbarProps {
   changePage: (offset: number) => void;
   zoom: (factor: number) => void;
   fitToScreen: () => void;
+  rotateDocument?: () => void; // Added rotateDocument as an optional prop
   toggleHighlightMode: () => void;
 }
 
@@ -33,6 +35,7 @@ export const PdfToolbar: React.FC<PdfControlsToolbarProps> = ({
   changePage,
   zoom,
   fitToScreen,
+  rotateDocument,
   toggleHighlightMode
 }) => {
   return (
@@ -93,6 +96,18 @@ export const PdfToolbar: React.FC<PdfControlsToolbarProps> = ({
         >
           <Maximize className="h-4 w-4" />
         </Button>
+        
+        {rotateDocument && (
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={rotateDocument}
+            title="Rotate document"
+            className="dark:bg-zinc-700 dark:text-white bg-white text-black border-gray-300"
+          >
+            <RotateCw className="h-4 w-4" />
+          </Button>
+        )}
         
         {isHighlighter && (
           <Button 
