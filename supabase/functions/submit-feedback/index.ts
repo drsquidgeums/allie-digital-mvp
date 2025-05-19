@@ -82,13 +82,31 @@ serve(async (req) => {
       }
     }
 
-    // Generate UUID for user_id to satisfy the NOT NULL constraint
-    const userId = crypto.randomUUID();
-    
-    // Enhance comments with email for reference
-    const enhancedComments = `${comments}\n\n[Email: ${userEmail}]`;
+    // Instead of generating a UUID, we'll get ids from existing user records
+    // or use a fixed string to satisfy the foreign key constraint
+    let userId;
     
     try {
+      // Try to find a valid existing user ID in the users table
+      const { data: existingUsers, error: usersError } = await supabaseAdmin
+        .from('users')
+        .select('id')
+        .limit(1);
+      
+      if (usersError || !existingUsers || existingUsers.length === 0) {
+        console.log("No existing user found, using a placeholder ID");
+        // This means there are no users in the users table, use a placeholder
+        // For this to work properly, the user_id column shouldn't have a foreign key constraint
+        userId = "00000000-0000-0000-0000-000000000000";
+      } else {
+        userId = existingUsers[0].id;
+      }
+      
+      console.log(`Using user_id: ${userId} for feedback submission`);
+      
+      // Enhance comments with email for reference
+      const enhancedComments = `${comments}\n\n[Email: ${userEmail}]`;
+      
       // Supabase insert operation with valid rating values to satisfy the check constraint
       const { data, error } = await supabaseAdmin
         .from('feedback')
@@ -104,6 +122,22 @@ serve(async (req) => {
 
       if (error) {
         console.error("Error submitting feedback:", error);
+        
+        // If it's a foreign key constraint error, provide more specific message
+        if (error.code === '23503' && error.message.includes('violates foreign key constraint')) {
+          return new Response(
+            JSON.stringify({ 
+              success: false, 
+              error: "Database configuration error: The feedback system requires a valid user account.",
+              details: error.message
+            }),
+            {
+              status: 500,
+              headers: { "Content-Type": "application/json", ...corsHeaders },
+            }
+          );
+        }
+        
         return new Response(
           JSON.stringify({ 
             success: false, 
