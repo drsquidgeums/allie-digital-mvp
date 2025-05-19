@@ -88,26 +88,53 @@ serve(async (req) => {
     // Enhance comments with email for reference
     const enhancedComments = `${comments}\n\n[Email: ${userEmail}]`;
     
-    // Supabase insert operation
-    const { data, error } = await supabaseAdmin
-      .from('feedback')
-      .insert({
-        user_id: userId,
-        comments: enhancedComments,
-        created_at: new Date().toISOString(),
-        rating: 0,
-        usability: 0,
-        visual_appeal: 0,
-        would_recommend: false
-      });
+    try {
+      // Supabase insert operation with valid rating values to satisfy the check constraint
+      const { data, error } = await supabaseAdmin
+        .from('feedback')
+        .insert({
+          user_id: userId,
+          comments: enhancedComments,
+          created_at: new Date().toISOString(),
+          rating: 1, // Changed from 0 to 1 to satisfy check constraint
+          usability: 1, // Changed from 0 to 1
+          visual_appeal: 1, // Changed from 0 to 1
+          would_recommend: false
+        });
 
-    if (error) {
-      console.error("Error submitting feedback:", error);
+      if (error) {
+        console.error("Error submitting feedback:", error);
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            error: "Database error while submitting feedback",
+            details: error.message
+          }),
+          {
+            status: 500,
+            headers: { "Content-Type": "application/json", ...corsHeaders },
+          }
+        );
+      }
+
+      console.log("Feedback successfully submitted");
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          message: "Feedback submitted successfully" 
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    } catch (dbError) {
+      console.error("Error submitting feedback:", dbError);
       return new Response(
         JSON.stringify({ 
           success: false, 
           error: "Database error while submitting feedback",
-          details: error.message
+          details: dbError instanceof Error ? dbError.message : String(dbError)
         }),
         {
           status: 500,
@@ -115,19 +142,6 @@ serve(async (req) => {
         }
       );
     }
-
-    console.log("Feedback successfully submitted");
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: "Feedback submitted successfully" 
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      }
-    );
-
   } catch (err) {
     console.error("Unexpected error in submit-feedback function:", err);
     return new Response(
