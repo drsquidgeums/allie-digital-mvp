@@ -32,6 +32,9 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       StarterKit,
       Highlight.configure({
         multicolor: true,
+        HTMLAttributes: {
+          class: 'highlight',
+        },
       }),
       Image,
       TextStyle,

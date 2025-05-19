@@ -74,25 +74,51 @@
   padding: 0 0.1em;
 }
 
-/* Highlight colors */
-.ProseMirror .highlight-yellow {
-  background-color: rgba(255, 235, 59, 0.5);
+/* Highlight colors - matching Irlen overlay colors */
+.ProseMirror .highlight {
+  border-radius: 0.2em;
+  padding: 0.1em 0.2em;
+  margin: 0 -0.1em;
 }
 
-.ProseMirror .highlight-blue {
-  background-color: rgba(33, 150, 243, 0.3);
+/* Yellow */
+.ProseMirror mark[style*="rgba(255, 255, 0, 0.2)"] {
+  background-color: rgba(255, 255, 0, 0.2);
 }
 
-.ProseMirror .highlight-green {
-  background-color: rgba(76, 175, 80, 0.3);
+/* Blue */
+.ProseMirror mark[style*="rgba(0, 71, 187, 0.2)"] {
+  background-color: rgba(0, 71, 187, 0.2);
 }
 
-.ProseMirror .highlight-pink {
-  background-color: rgba(233, 30, 99, 0.3);
+/* Pink */
+.ProseMirror mark[style*="rgba(255, 105, 180, 0.2)"] {
+  background-color: rgba(255, 105, 180, 0.2);
 }
 
-.ProseMirror .highlight-red {
-  background-color: rgba(244, 67, 54, 0.3);
+/* Purple */
+.ProseMirror mark[style*="rgba(128, 0, 128, 0.2)"] {
+  background-color: rgba(128, 0, 128, 0.2);
+}
+
+/* Grey */
+.ProseMirror mark[style*="rgba(128, 128, 128, 0.2)"] {
+  background-color: rgba(128, 128, 128, 0.2);
+}
+
+/* Aqua */
+.ProseMirror mark[style*="rgba(0, 150, 255, 0.2)"] {
+  background-color: rgba(0, 150, 255, 0.2);
+}
+
+/* Orange */
+.ProseMirror mark[style*="rgba(255, 165, 0, 0.2)"] {
+  background-color: rgba(255, 165, 0, 0.2);
+}
+
+/* Green */
+.ProseMirror mark[style*="rgba(34, 139, 34, 0.2)"] {
+  background-color: rgba(34, 139, 34, 0.2);
 }
 
 /* Dark mode overrides */
