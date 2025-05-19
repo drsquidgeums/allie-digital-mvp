@@ -37,7 +37,7 @@ export const PdfViewerControls: React.FC<PdfViewerControlsProps> = ({
   onDeleteHighlight
 }) => {
   return (
-    <div className="flex items-center justify-between p-2 bg-card border-b">
+    <div className="flex items-center justify-between p-2 bg-zinc-800 border-b">
       <div className="flex items-center space-x-2">
         <Button
           variant="outline"
@@ -49,7 +49,7 @@ export const PdfViewerControls: React.FC<PdfViewerControlsProps> = ({
           <ChevronLeft className="h-4 w-4" />
         </Button>
         
-        <span className="text-sm">
+        <span className="text-sm text-white">
           {pageNumber} / {numPages}
         </span>
         
@@ -74,7 +74,7 @@ export const PdfViewerControls: React.FC<PdfViewerControlsProps> = ({
           <ZoomOut className="h-4 w-4" />
         </Button>
         
-        <span className="text-sm">{Math.round(scale * 100)}%</span>
+        <span className="text-sm text-white">{Math.round(scale * 100)}%</span>
         
         <Button
           variant="outline"

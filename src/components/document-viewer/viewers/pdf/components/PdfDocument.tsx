@@ -74,7 +74,7 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
           <Page 
             pageNumber={pageNumber} 
             renderTextLayer={true}
-            renderAnnotationLayer={true}
+            renderAnnotationLayer={false}
             className="pdf-page"
             inputRef={(ref) => {
               if (ref) {
@@ -82,7 +82,6 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
               }
             }}
             canvasBackground="transparent"
-            renderMode="canvas"
           />
 
           {/* Render highlights only when they exist */}
