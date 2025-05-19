@@ -18,6 +18,16 @@ export const AIAssistant = React.memo(({ documentContent, documentName }: AIAssi
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [analyzing, setAnalyzing] = useState(false);
+  
+  // Add initial welcome message
+  useEffect(() => {
+    if (messages.length === 0) {
+      setMessages([{
+        text: "Hi! I'm Allie, your virtual AI learning assistant. What can I help you with today?",
+        isUser: false
+      }]);
+    }
+  }, [setMessages, messages.length]);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

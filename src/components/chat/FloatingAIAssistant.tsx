@@ -24,6 +24,16 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [analyzing, setAnalyzing] = useState(false);
 
+  // Add initial welcome message when chat is opened
+  useEffect(() => {
+    if (isOpen && messages.length === 0) {
+      setMessages([{
+        text: "Hi! I'm Allie, your virtual AI learning assistant. What can I help you with today?",
+        isUser: false
+      }]);
+    }
+  }, [isOpen, messages.length, setMessages]);
+
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);

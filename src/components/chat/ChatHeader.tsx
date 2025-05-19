@@ -12,7 +12,7 @@ export const ChatHeader = () => {
       aria-label={t('chat.title', 'Chat header')}
     >
       <Bot className="w-5 h-5 text-primary" aria-hidden="true" />
-      <h3 className="text-lg font-semibold">{t('chat.title', 'Allie.ai')}</h3>
+      <h3 className="text-lg font-semibold">Virtual Assistant</h3>
       <span className="sr-only">{t('chat.assistantLabel', 'Virtual learning assistant chat interface')}</span>
     </div>
   );
