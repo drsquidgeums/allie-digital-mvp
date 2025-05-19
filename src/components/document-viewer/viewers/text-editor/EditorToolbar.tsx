@@ -13,12 +13,14 @@ interface EditorToolbarProps {
   editor: Editor | null;
   selectedColor: string;
   onFileImport: (content: string) => void;
+  documentTitle?: string;
 }
 
 export const EditorToolbar: React.FC<EditorToolbarProps> = ({ 
   editor, 
   selectedColor,
-  onFileImport
+  onFileImport,
+  documentTitle = 'Untitled Document'
 }) => {
   if (!editor) {
     return null;
@@ -46,7 +48,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
       
       <ToolbarDivider />
       
-      <FileButtons editor={editor} onFileImport={onFileImport} />
+      <FileButtons editor={editor} onFileImport={onFileImport} documentTitle={documentTitle} />
     </div>
   );
 };

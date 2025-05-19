@@ -165,6 +165,7 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
               onContentChange={handleContentChange}
               selectedColor={selectedColor}
               isReadOnly={false}
+              documentTitle={documentTitle}
             />
           </div>
         </div>

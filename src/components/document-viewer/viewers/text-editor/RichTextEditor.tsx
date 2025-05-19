@@ -18,6 +18,7 @@ interface RichTextEditorProps {
   onContentChange?: (content: string) => void;
   selectedColor: string;
   isReadOnly?: boolean;
+  documentTitle?: string;
 }
 
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
@@ -25,6 +26,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   onContentChange,
   selectedColor,
   isReadOnly = false,
+  documentTitle = 'Untitled Document',
 }) => {
   const { toast } = useToast();
   
@@ -132,6 +134,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
           editor={editor} 
           selectedColor={selectedColor} 
           onFileImport={handleFileImport}
+          documentTitle={documentTitle}
         />
       )}
       <div className="flex-1 overflow-auto p-4">

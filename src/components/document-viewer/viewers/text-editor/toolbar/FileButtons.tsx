@@ -2,7 +2,7 @@
 import React from 'react';
 import { Editor } from '@tiptap/react';
 import { Button } from '@/components/ui/button';
-import { FileUp, FileDown } from 'lucide-react';
+import { FileUp, FileDown, Save } from 'lucide-react';
 import { extractTextFromFile } from '../../../FileConverter';
 import { 
   DropdownMenu,
@@ -12,17 +12,21 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { htmlToPlainText } from '../textFormatUtils';
 import { useToast } from '@/hooks/use-toast';
+import { useFileManager } from '@/hooks/file-manager';
 
 interface FileButtonsProps {
   editor: Editor;
   onFileImport: (content: string) => void;
+  documentTitle?: string;
 }
 
 export const FileButtons: React.FC<FileButtonsProps> = ({ 
   editor,
-  onFileImport
+  onFileImport,
+  documentTitle = 'Untitled Document'
 }) => {
   const { toast } = useToast();
+  const { uploadFile } = useFileManager();
   
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -42,7 +46,7 @@ export const FileButtons: React.FC<FileButtonsProps> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'document.html';
+    a.download = `${documentTitle.replace(/\.(html|doc|docx|txt)$/i, '')}.html`;
     a.click();
     URL.revokeObjectURL(url);
     
@@ -62,7 +66,7 @@ export const FileButtons: React.FC<FileButtonsProps> = ({
             xmlns='http://www.w3.org/TR/REC-html40'>
       <head>
         <meta charset="utf-8">
-        <title>Document</title>
+        <title>${documentTitle}</title>
         <!--[if gte mso 9]>
         <xml>
           <w:WordDocument>
@@ -99,7 +103,7 @@ export const FileButtons: React.FC<FileButtonsProps> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'document.doc';
+    a.download = `${documentTitle.replace(/\.(html|doc|docx|txt)$/i, '')}.doc`;
     a.click();
     URL.revokeObjectURL(url);
     
@@ -107,6 +111,39 @@ export const FileButtons: React.FC<FileButtonsProps> = ({
       title: "Document Downloaded",
       description: "Document saved as Word (.doc) file",
     });
+  };
+  
+  const saveToMyFiles = async () => {
+    try {
+      // Get the document content
+      const content = editor.getHTML();
+      
+      // Use document title or generate one with timestamp
+      const safeTitle = documentTitle === 'Untitled Document' 
+        ? `document_${new Date().toISOString().slice(0, 10)}`
+        : documentTitle.replace(/\.(html|doc|docx|txt)$/i, '');
+      
+      // Create filename with .html extension
+      const fileName = `${safeTitle}.html`;
+      
+      // Create a file object from the HTML content
+      const file = new File([content], fileName, { type: 'text/html' });
+      
+      // Upload to file manager
+      await uploadFile(file);
+      
+      toast({
+        title: "Document Saved",
+        description: `"${safeTitle}" saved to My Files`,
+      });
+    } catch (error) {
+      console.error('Error saving document to My Files:', error);
+      toast({
+        title: "Save Failed",
+        description: "There was a problem saving your document",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -129,6 +166,17 @@ export const FileButtons: React.FC<FileButtonsProps> = ({
           <FileUp className="h-4 w-4" />
         </Button>
       </div>
+      
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={saveToMyFiles}
+        className="h-8 w-8 p-0"
+        aria-label="Save to My Files"
+        title="Save to My Files"
+      >
+        <Save className="h-4 w-4" />
+      </Button>
       
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
