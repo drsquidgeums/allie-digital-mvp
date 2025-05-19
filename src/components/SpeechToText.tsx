@@ -1,16 +1,18 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Mic, MicOff, Copy } from "lucide-react";
+import { Mic, MicOff, Copy, ArrowUpFromLine } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { usePersistedText } from "@/hooks/usePersistedText";
+import { useEditorContent } from "@/hooks/useEditorContent";
 
 export const SpeechToText = () => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = usePersistedText("stt");
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const { toast } = useToast();
+  const { setEditorText } = useEditorContent();
 
   const startListening = () => {
     if (!('webkitSpeechRecognition' in window)) {
@@ -79,6 +81,23 @@ export const SpeechToText = () => {
     }
   };
 
+  // Send transcript to editor
+  const sendToEditor = () => {
+    if (transcript) {
+      setEditorText(transcript);
+      toast({
+        title: "Text sent",
+        description: "Speech transcript has been sent to the editor"
+      });
+    } else {
+      toast({
+        title: "No text",
+        description: "There is no transcript to send to the editor",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <div className="p-4 space-y-4 animate-fade-in">
       <div className="flex gap-2">
@@ -116,6 +135,16 @@ export const SpeechToText = () => {
         placeholder="Your speech will appear here..."
         className="min-h-[200px]"
       />
+      <Button
+        onClick={sendToEditor}
+        size="sm"
+        variant="outline"
+        className="w-full h-8 text-xs"
+        disabled={!transcript}
+      >
+        <ArrowUpFromLine className="w-3 h-3 mr-1" />
+        Send to Editor
+      </Button>
     </div>
   );
 };

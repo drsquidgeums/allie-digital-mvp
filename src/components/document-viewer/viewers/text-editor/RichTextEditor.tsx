@@ -11,6 +11,7 @@ import Link from '@tiptap/extension-link';
 import { useToast } from '@/hooks/use-toast';
 import { EditorToolbar } from './EditorToolbar';
 import './editor.css';
+import { initializeEditor } from '@/hooks/useEditorContent';
 
 interface RichTextEditorProps {
   initialContent?: string;
@@ -54,6 +55,11 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       }
     },
   });
+
+  // Initialize the editor content for global access
+  useEffect(() => {
+    initializeEditor(editor);
+  }, [editor]);
 
   // Update editor content when initialContent changes
   useEffect(() => {

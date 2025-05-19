@@ -1,10 +1,12 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Play, Pause, Square } from "lucide-react";
+import { Play, Pause, Square, ArrowDownToLine } from "lucide-react";
 import { usePersistedText } from "@/hooks/usePersistedText";
+import { useToast } from "@/hooks/use-toast";
+import { useEditorContent } from "@/hooks/useEditorContent";
 
 export const TextToSpeech = () => {
   const [text, setText] = usePersistedText("tts");
@@ -13,6 +15,8 @@ export const TextToSpeech = () => {
   const [isPlaying, setIsPlaying] = React.useState(false);
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = React.useRef<SpeechSynthesisUtterance | null>(null);
+  const { toast } = useToast();
+  const { content, getSelectedText } = useEditorContent();
 
   React.useEffect(() => {
     const loadVoices = () => {
@@ -38,6 +42,13 @@ export const TextToSpeech = () => {
       speechSynthesis.onvoiceschanged = null;
     };
   }, [selectedVoice]);
+
+  // Get text from editor when content changes
+  useEffect(() => {
+    if (content.text && !text) {
+      setText(content.text);
+    }
+  }, [content.text]);
 
   const getVoiceLabel = (voice: SpeechSynthesisVoice) => {
     const lang = voice.lang.toLowerCase();
@@ -83,6 +94,25 @@ export const TextToSpeech = () => {
     utteranceRef.current = null;
   };
 
+  // Get text from editor
+  const handleGetFromEditor = () => {
+    const selectedText = getSelectedText();
+    
+    if (selectedText) {
+      setText(selectedText);
+      toast({
+        title: "Text selected",
+        description: "Selected text imported from editor"
+      });
+    } else if (content.text) {
+      setText(content.text);
+      toast({
+        title: "Text imported",
+        description: "Full document text imported from editor"
+      });
+    }
+  };
+
   return (
     <div className="p-4 space-y-4 animate-fade-in">
       <div className="space-y-2">
@@ -99,6 +129,17 @@ export const TextToSpeech = () => {
           </SelectContent>
         </Select>
       </div>
+      
+      <Button 
+        size="sm" 
+        variant="outline" 
+        className="w-full text-xs"
+        onClick={handleGetFromEditor}
+      >
+        <ArrowDownToLine className="w-3 h-3 mr-1" />
+        Get Text from Editor
+      </Button>
+      
       <Textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
