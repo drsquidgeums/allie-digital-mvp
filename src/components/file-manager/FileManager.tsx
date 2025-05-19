@@ -9,7 +9,7 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Download, FileText, RefreshCw, Trash2, Upload, FolderOpen } from 'lucide-react';
+import { Download, FileText, Trash2, Upload, FolderOpen } from 'lucide-react';
 import { useFileManager } from '@/hooks/file-manager';
 import { ManagedFile } from '@/hooks/file-manager/types';
 import { formatBytes } from '@/utils/fileUtils';
@@ -31,6 +31,8 @@ export const FileManager: React.FC = () => {
   // Effect for initial load
   useEffect(() => {
     console.log('FileManager mounted, files count:', files.length);
+    // Auto-refresh files when component mounts
+    refreshFiles();
   }, []);
 
   // Handle file selection
@@ -60,6 +62,9 @@ export const FileManager: React.FC = () => {
       sessionStorage.setItem('selectedFileUrl', file.url);
     }
     
+    // Also store the original display name to use as title
+    sessionStorage.setItem('selectedFileName', file.displayName || file.name);
+    
     // Navigate to the home page (workspace)
     navigate('/');
   };
@@ -68,15 +73,7 @@ export const FileManager: React.FC = () => {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">My Files</h1>
-        <div className="flex space-x-2">
-          <Button 
-            variant="outline" 
-            onClick={() => refreshFiles()}
-            disabled={loading}
-          >
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-            Refresh
-          </Button>
+        <div>
           <Button 
             onClick={() => fileInputRef.current?.click()}
             disabled={loading}

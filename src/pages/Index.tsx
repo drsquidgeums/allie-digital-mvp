@@ -1,3 +1,6 @@
+<think>
+
+</think>
 
 import React, { useState, lazy, Suspense, useEffect } from "react";
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
@@ -34,6 +37,7 @@ const Index = () => {
     // Check if there's a selected file ID in sessionStorage
     const selectedFileId = sessionStorage.getItem('selectedFileId');
     const selectedFileUrl = sessionStorage.getItem('selectedFileUrl');
+    const selectedFileName = sessionStorage.getItem('selectedFileName');
     
     if (selectedFileId && files.length > 0) {
       const fileToOpen = files.find(file => file.id === selectedFileId);
@@ -42,9 +46,15 @@ const Index = () => {
         console.log("Opening file from MyFiles:", fileToOpen.name);
         setSelectedFile(fileToOpen.file);
         
+        // Set document name from sessionStorage if available
+        if (selectedFileName) {
+          setDocumentName(selectedFileName);
+        }
+        
         // Clear the selection after it's been used
         sessionStorage.removeItem('selectedFileId');
         sessionStorage.removeItem('selectedFileUrl');
+        sessionStorage.removeItem('selectedFileName');
       } else if (selectedFileUrl && fileToOpen) {
         // If we don't have the File object but have URL, need to fetch it
         console.log("Fetching file from URL:", selectedFileUrl);
@@ -53,6 +63,11 @@ const Index = () => {
           .then(blob => {
             const file = new File([blob], fileToOpen.name, { type: fileToOpen.type || 'application/octet-stream' });
             setSelectedFile(file);
+            
+            // Set document name from sessionStorage if available
+            if (selectedFileName) {
+              setDocumentName(selectedFileName);
+            }
           })
           .catch(error => {
             console.error("Error loading file from URL:", error);
@@ -61,6 +76,7 @@ const Index = () => {
             // Clear the selection after it's been used
             sessionStorage.removeItem('selectedFileId');
             sessionStorage.removeItem('selectedFileUrl');
+            sessionStorage.removeItem('selectedFileName');
           });
       }
     }
@@ -75,7 +91,10 @@ const Index = () => {
   // Function to handle document content loaded
   const handleContentLoaded = (content: string, name: string) => {
     setDocumentContent(content);
-    setDocumentName(name);
+    // Only set the document name if it's not already set from sessionStorage
+    if (!documentName) {
+      setDocumentName(name);
+    }
   };
 
   /**
@@ -123,6 +142,7 @@ const Index = () => {
                 selectedColor={selectedColor}
                 isHighlighter={isHighlighter}
                 onContentLoaded={handleContentLoaded}
+                initialDocumentName={documentName}
               />
             </Suspense>
           </ErrorBoundary>
