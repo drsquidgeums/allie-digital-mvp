@@ -9,10 +9,11 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Download, FileText, RefreshCw, Trash2, Upload } from 'lucide-react';
+import { Download, FileText, RefreshCw, Trash2, Upload, FolderOpen } from 'lucide-react';
 import { useFileManager } from '@/hooks/file-manager';
 import { ManagedFile } from '@/hooks/file-manager/types';
 import { formatBytes } from '@/utils/fileUtils';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Component that displays and manages files
@@ -20,6 +21,7 @@ import { formatBytes } from '@/utils/fileUtils';
 export const FileManager: React.FC = () => {
   const { files, loading, uploadFile, deleteFile, downloadFile, refreshFiles } = useFileManager();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   // Log files when component mounts or files change
   useEffect(() => {
@@ -46,6 +48,20 @@ export const FileManager: React.FC = () => {
   // Format date for display
   const formatDate = (timestamp: number) => {
     return new Date(timestamp).toLocaleString();
+  };
+
+  // Handle opening a file in the workspace
+  const openInWorkspace = (file: ManagedFile) => {
+    console.log('Opening file in workspace:', file.displayName || file.name);
+    
+    // Store the file ID and URL in sessionStorage to be picked up by the main workspace
+    sessionStorage.setItem('selectedFileId', file.id);
+    if (file.url) {
+      sessionStorage.setItem('selectedFileUrl', file.url);
+    }
+    
+    // Navigate to the home page (workspace)
+    navigate('/');
   };
 
   return (
@@ -113,8 +129,18 @@ export const FileManager: React.FC = () => {
                       <Button
                         variant="ghost"
                         size="icon"
+                        onClick={() => openInWorkspace(file)}
+                        aria-label="Open in workspace"
+                        title="Open in workspace"
+                      >
+                        <FolderOpen className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => downloadFile(file)}
                         aria-label="Download file"
+                        title="Download file"
                       >
                         <Download className="h-4 w-4" />
                       </Button>
@@ -123,6 +149,7 @@ export const FileManager: React.FC = () => {
                         size="icon"
                         onClick={() => deleteFile(file)}
                         aria-label="Delete file"
+                        title="Delete file"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
