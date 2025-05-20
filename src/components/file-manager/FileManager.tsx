@@ -12,14 +12,14 @@ import { Button } from '@/components/ui/button';
 import { Download, FileText, Trash2, Upload, FolderOpen } from 'lucide-react';
 import { useFileManager } from '@/hooks/file-manager';
 import { ManagedFile } from '@/hooks/file-manager/types';
-import { formatBytes } from '@/utils/fileUtils';
+import { formatBytes, getDisplayName } from '@/utils/fileUtils';
 import { useNavigate } from 'react-router-dom';
 
 /**
  * Component that displays and manages files
  */
 export const FileManager: React.FC = () => {
-  const { files, loading, uploadFile, deleteFile, downloadFile, refreshFiles } = useFileManager();
+  const { files, loading, uploadFile, deleteFile, downloadFile } = useFileManager();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -27,13 +27,6 @@ export const FileManager: React.FC = () => {
   useEffect(() => {
     console.log('FileManager files updated:', files.length);
   }, [files]);
-
-  // Effect for initial load
-  useEffect(() => {
-    console.log('FileManager mounted, files count:', files.length);
-    // Auto-refresh files when component mounts
-    refreshFiles();
-  }, []);
 
   // Handle file selection
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +47,9 @@ export const FileManager: React.FC = () => {
 
   // Handle opening a file in the workspace
   const openInWorkspace = (file: ManagedFile) => {
-    console.log('Opening file in workspace:', file.displayName || file.name);
+    // Get the clean display name without timestamp
+    const cleanName = file.displayName || getDisplayName(file.name);
+    console.log('Opening file in workspace:', cleanName);
     
     // Store the file ID and URL in sessionStorage to be picked up by the main workspace
     sessionStorage.setItem('selectedFileId', file.id);
@@ -62,8 +57,8 @@ export const FileManager: React.FC = () => {
       sessionStorage.setItem('selectedFileUrl', file.url);
     }
     
-    // Also store the original display name to use as title
-    sessionStorage.setItem('selectedFileName', file.displayName || file.name);
+    // Store the clean display name without timestamp prefix
+    sessionStorage.setItem('selectedFileName', cleanName);
     
     // Navigate to the home page (workspace)
     navigate('/');
@@ -117,7 +112,7 @@ export const FileManager: React.FC = () => {
             <TableBody>
               {files.map(file => (
                 <TableRow key={file.id}>
-                  <TableCell className="font-medium">{file.displayName || file.name}</TableCell>
+                  <TableCell className="font-medium">{file.displayName || getDisplayName(file.name)}</TableCell>
                   <TableCell>{file.type}</TableCell>
                   <TableCell>{formatBytes(file.size)}</TableCell>
                   <TableCell>{formatDate(file.lastModified)}</TableCell>

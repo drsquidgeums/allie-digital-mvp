@@ -1,4 +1,3 @@
-
 import React, { useState, lazy, Suspense, useEffect } from "react";
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -139,6 +138,7 @@ const Index = () => {
                 selectedColor={selectedColor}
                 isHighlighter={isHighlighter}
                 onContentLoaded={handleContentLoaded}
+                initialDocumentName={documentName}
               />
             </Suspense>
           </ErrorBoundary>
