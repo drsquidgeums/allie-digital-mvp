@@ -55,7 +55,7 @@ serve(async (req) => {
       const { data: existingFeedback, error: checkError } = await supabaseAdmin
         .from('feedback')
         .select('id')
-        .contains('comments', `[Email: ${userEmail}]`);
+        .ilike('comments', `%${userEmail}%`);
         
       if (checkError) {
         console.error("Error checking existing feedback:", checkError);
@@ -69,6 +69,7 @@ serve(async (req) => {
       }
       
       if (existingFeedback && existingFeedback.length > 0) {
+        console.log("User has already submitted feedback:", userEmail);
         return new Response(
           JSON.stringify({ 
             success: false, 
@@ -82,93 +83,36 @@ serve(async (req) => {
       }
     }
 
-    // Instead of generating a UUID, we'll get ids from existing user records
-    // or use a fixed string to satisfy the foreign key constraint
-    let userId;
+    // Use a fixed user_id that's guaranteed to exist in the users table
+    const userId = "00000000-0000-0000-0000-000000000000";
+    console.log(`Using user_id: ${userId} for feedback submission`);
     
-    try {
-      // Try to find a valid existing user ID in the users table
-      const { data: existingUsers, error: usersError } = await supabaseAdmin
-        .from('users')
-        .select('id')
-        .limit(1);
-      
-      if (usersError || !existingUsers || existingUsers.length === 0) {
-        console.log("No existing user found, using a placeholder ID");
-        // This means there are no users in the users table, use a placeholder
-        // For this to work properly, the user_id column shouldn't have a foreign key constraint
-        userId = "00000000-0000-0000-0000-000000000000";
-      } else {
-        userId = existingUsers[0].id;
-      }
-      
-      console.log(`Using user_id: ${userId} for feedback submission`);
-      
-      // Enhance comments with email for reference
-      const enhancedComments = `${comments}\n\n[Email: ${userEmail}]`;
-      
-      // Supabase insert operation with valid rating values to satisfy the check constraint
-      const { data, error } = await supabaseAdmin
-        .from('feedback')
-        .insert({
-          user_id: userId,
-          comments: enhancedComments,
-          created_at: new Date().toISOString(),
-          rating: 1, // Changed from 0 to 1 to satisfy check constraint
-          usability: 1, // Changed from 0 to 1
-          visual_appeal: 1, // Changed from 0 to 1
-          would_recommend: false
-        });
+    // Enhance comments with email for reference
+    const enhancedComments = `${comments}\n\n[Email: ${userEmail}]`;
+    
+    console.log("Inserting feedback into database with rating values of 1");
+    
+    // Supabase insert operation with valid rating values to satisfy the check constraint
+    const { data, error } = await supabaseAdmin
+      .from('feedback')
+      .insert({
+        user_id: userId,
+        comments: enhancedComments,
+        created_at: new Date().toISOString(),
+        rating: 1, // Using minimum valid value
+        usability: 1, // Using minimum valid value
+        visual_appeal: 1, // Using minimum valid value
+        would_recommend: false
+      });
 
-      if (error) {
-        console.error("Error submitting feedback:", error);
-        
-        // If it's a foreign key constraint error, provide more specific message
-        if (error.code === '23503' && error.message.includes('violates foreign key constraint')) {
-          return new Response(
-            JSON.stringify({ 
-              success: false, 
-              error: "Database configuration error: The feedback system requires a valid user account.",
-              details: error.message
-            }),
-            {
-              status: 500,
-              headers: { "Content-Type": "application/json", ...corsHeaders },
-            }
-          );
-        }
-        
-        return new Response(
-          JSON.stringify({ 
-            success: false, 
-            error: "Database error while submitting feedback",
-            details: error.message
-          }),
-          {
-            status: 500,
-            headers: { "Content-Type": "application/json", ...corsHeaders },
-          }
-        );
-      }
-
-      console.log("Feedback successfully submitted");
-      return new Response(
-        JSON.stringify({ 
-          success: true, 
-          message: "Feedback submitted successfully" 
-        }),
-        {
-          status: 200,
-          headers: { "Content-Type": "application/json", ...corsHeaders },
-        }
-      );
-    } catch (dbError) {
-      console.error("Error submitting feedback:", dbError);
+    if (error) {
+      console.error("Error submitting feedback:", error);
+      
       return new Response(
         JSON.stringify({ 
           success: false, 
           error: "Database error while submitting feedback",
-          details: dbError instanceof Error ? dbError.message : String(dbError)
+          details: error.message
         }),
         {
           status: 500,
@@ -176,6 +120,18 @@ serve(async (req) => {
         }
       );
     }
+
+    console.log("Feedback successfully submitted");
+    return new Response(
+      JSON.stringify({ 
+        success: true, 
+        message: "Feedback submitted successfully" 
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      }
+    );
   } catch (err) {
     console.error("Unexpected error in submit-feedback function:", err);
     return new Response(

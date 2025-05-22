@@ -48,6 +48,8 @@ export const useFeedbackSubmission = (
     try {
       const currentTime = new Date().toISOString();
       console.log(`Submitting feedback at: ${currentTime}`);
+      console.log(`User email: ${userEmail}`);
+      console.log(`Comments: ${comments.substring(0, 50)}...`);
       
       // Call the Supabase Edge Function to submit feedback
       const { data, error } = await supabase.functions.invoke('submit-feedback', {
@@ -87,11 +89,11 @@ export const useFeedbackSubmission = (
       
       onClose();
       return true;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting feedback:", error);
       toast({
         title: "Error",
-        description: "There was a problem submitting your feedback. Please try again later.",
+        description: error.message || "There was a problem submitting your feedback. Please try again later.",
         variant: "destructive"
       });
       return false;
