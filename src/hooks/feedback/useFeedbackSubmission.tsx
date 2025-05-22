@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { v4 as uuidv4 } from 'uuid';
 
 // Special user email that's allowed to submit feedback multiple times
 const SPECIAL_USER_EMAIL = "antoinettecelinemarshall@gmail.com";
@@ -15,6 +14,7 @@ export const useFeedbackSubmission = (
   const { toast } = useToast();
 
   const handleSubmit = async (comments: string, maxWords: number, wordCount: number) => {
+    // Basic validations
     if (!comments.trim()) {
       toast({
         title: "Missing information",
@@ -43,13 +43,9 @@ export const useFeedbackSubmission = (
     }
     
     setIsSubmitting(true);
-    console.log("Starting feedback submission process");
     
     try {
       const currentTime = new Date().toISOString();
-      console.log(`Submitting feedback at: ${currentTime}`);
-      console.log(`User email: ${userEmail}`);
-      console.log(`Comments: ${comments.substring(0, 50)}...`);
       
       // Call the Supabase Edge Function to submit feedback
       const { data, error } = await supabase.functions.invoke('submit-feedback', {
@@ -85,7 +81,6 @@ export const useFeedbackSubmission = (
       
       // Store in localStorage that feedback was submitted
       localStorage.setItem("feedback_submitted", currentTime);
-      console.log(`Feedback submission recorded in localStorage at: ${currentTime}`);
       
       onClose();
       return true;

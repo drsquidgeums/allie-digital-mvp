@@ -50,10 +50,12 @@ html.dark .recharts-legend-item:first-child .recharts-legend-item-symbol {
 input,
 textarea {
   color: #000000 !important;
+  background-color: white !important;
 }
 
 /* Ensure feedback form text inputs and textareas are visible when focused */
 textarea:focus,
 input:focus {
   border-color: hsl(var(--primary));
+  background-color: white !important;
 }

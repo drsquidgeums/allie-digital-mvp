@@ -31,7 +31,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Please share your thoughts or suggestions..."
-        className={`min-h-[150px] ${isOverLimit ? "border-red-500" : ""}`}
+        className={`min-h-[150px] bg-white ${isOverLimit ? "border-red-500" : ""}`}
         style={{ color: "#000000" }}
       />
     </div>

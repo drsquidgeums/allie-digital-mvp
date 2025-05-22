@@ -46,19 +46,19 @@ serve(async (req) => {
       );
     }
 
-    console.log(`Processing feedback submission for email: ${userEmail}`);
-
-    // Check if user has already submitted feedback (except for special users)
+    // Special user email can submit multiple times
     const SPECIAL_USER_EMAIL = "antoinettecelinemarshall@gmail.com";
     
+    // Only check for existing feedback if not a special user
     if (userEmail !== SPECIAL_USER_EMAIL) {
+      // More efficient query with limit 1
       const { data: existingFeedback, error: checkError } = await supabaseAdmin
         .from('feedback')
         .select('id')
-        .ilike('comments', `%${userEmail}%`);
+        .eq('user_id', '00000000-0000-0000-0000-000000000000')
+        .limit(1);
         
       if (checkError) {
-        console.error("Error checking existing feedback:", checkError);
         return new Response(
           JSON.stringify({ success: false, error: "Error checking existing feedback" }),
           {
@@ -69,7 +69,6 @@ serve(async (req) => {
       }
       
       if (existingFeedback && existingFeedback.length > 0) {
-        console.log("User has already submitted feedback:", userEmail);
         return new Response(
           JSON.stringify({ 
             success: false, 
@@ -83,36 +82,30 @@ serve(async (req) => {
       }
     }
 
-    // Use a fixed user_id that's guaranteed to exist in the users table
+    // Use a fixed user_id for all feedback
     const userId = "00000000-0000-0000-0000-000000000000";
-    console.log(`Using user_id: ${userId} for feedback submission`);
     
     // Enhance comments with email for reference
     const enhancedComments = `${comments}\n\n[Email: ${userEmail}]`;
     
-    console.log("Inserting feedback into database with rating values of 1");
-    
-    // Supabase insert operation with valid rating values to satisfy the check constraint
-    const { data, error } = await supabaseAdmin
+    // Simplified insert with minimal required fields
+    const { error } = await supabaseAdmin
       .from('feedback')
       .insert({
         user_id: userId,
         comments: enhancedComments,
         created_at: new Date().toISOString(),
-        rating: 1, // Using minimum valid value
-        usability: 1, // Using minimum valid value
-        visual_appeal: 1, // Using minimum valid value
+        rating: 1,
+        usability: 1,
+        visual_appeal: 1,
         would_recommend: false
       });
 
     if (error) {
-      console.error("Error submitting feedback:", error);
-      
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: "Database error while submitting feedback",
-          details: error.message
+          error: "Database error while submitting feedback"
         }),
         {
           status: 500,
@@ -121,7 +114,6 @@ serve(async (req) => {
       );
     }
 
-    console.log("Feedback successfully submitted");
     return new Response(
       JSON.stringify({ 
         success: true, 
@@ -133,7 +125,6 @@ serve(async (req) => {
       }
     );
   } catch (err) {
-    console.error("Unexpected error in submit-feedback function:", err);
     return new Response(
       JSON.stringify({ 
         success: false, 
