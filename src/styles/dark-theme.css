@@ -97,3 +97,21 @@ input:focus {
 .dark #email::placeholder {
   color: #888888 !important;
 }
+
+/* Chat input styling for virtual assistant in dark mode */
+.dark input[aria-label="Chat input"] {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+  border-color: hsl(var(--border));
+}
+
+.dark input[aria-label="Chat input"]:focus {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+  border-color: hsl(var(--primary));
+}
+
+.dark input[aria-label="Chat input"]::placeholder {
+  color: #888888 !important;
+}
+
