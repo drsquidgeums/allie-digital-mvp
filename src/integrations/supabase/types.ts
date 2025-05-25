@@ -16,7 +16,7 @@ export type Database = {
           id: string
           rating: number
           usability: number
-          user_id: string
+          user_id: string | null
           visual_appeal: number
           would_recommend: boolean
         }
@@ -26,7 +26,7 @@ export type Database = {
           id?: string
           rating: number
           usability: number
-          user_id: string
+          user_id?: string | null
           visual_appeal: number
           would_recommend?: boolean
         }
@@ -36,7 +36,7 @@ export type Database = {
           id?: string
           rating?: number
           usability?: number
-          user_id?: string
+          user_id?: string | null
           visual_appeal?: number
           would_recommend?: boolean
         }

@@ -1,5 +1,4 @@
 
-
 @layer base {
   .dark {
     /* Enhanced Dark Mode Colors */
@@ -81,15 +80,15 @@ input:focus {
 /* NDA form styling to match feedback form */
 .dark #name,
 .dark #email {
-  background-color: #000000 !important;
-  color: #ffffff !important;
+  background-color: white !important;
+  color: #000000 !important;
   border-color: hsl(var(--border));
 }
 
 .dark #name:focus,
 .dark #email:focus {
-  background-color: #000000 !important;
-  color: #ffffff !important;
+  background-color: white !important;
+  color: #000000 !important;
   border-color: hsl(var(--primary));
 }
 
@@ -114,4 +113,3 @@ input:focus {
 .dark input[aria-label="Chat input"]::placeholder {
   color: #888888 !important;
 }
-
