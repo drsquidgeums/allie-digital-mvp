@@ -25,6 +25,8 @@ interface FeedbackData {
 }
 
 serve(async (req) => {
+  console.log(`${req.method} request received`);
+  
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, {
@@ -34,9 +36,13 @@ serve(async (req) => {
   }
 
   try {
-    const { comments, userEmail } = await req.json() as FeedbackData;
+    const requestBody = await req.json();
+    console.log("Request body:", requestBody);
+    
+    const { comments, userEmail } = requestBody as FeedbackData;
 
     if (!comments) {
+      console.log("Missing comments in request");
       return new Response(
         JSON.stringify({ success: false, error: "Comments are required" }),
         {
@@ -46,19 +52,35 @@ serve(async (req) => {
       );
     }
 
+    if (!userEmail) {
+      console.log("Missing userEmail in request");
+      return new Response(
+        JSON.stringify({ success: false, error: "User email is required" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    console.log(`Processing feedback from: ${userEmail}`);
+
     // Special user email can submit multiple times
     const SPECIAL_USER_EMAIL = "antoinettecelinemarshall@gmail.com";
     
     // Only check for existing feedback if not a special user
     if (userEmail !== SPECIAL_USER_EMAIL) {
-      // More efficient query with limit 1
+      console.log("Checking for existing feedback...");
+      
+      // Check for existing feedback by looking for the email in comments
       const { data: existingFeedback, error: checkError } = await supabaseAdmin
         .from('feedback')
-        .select('id')
-        .eq('user_id', '00000000-0000-0000-0000-000000000000')
+        .select('id, comments')
+        .ilike('comments', `%${userEmail}%`)
         .limit(1);
         
       if (checkError) {
+        console.error("Error checking existing feedback:", checkError);
         return new Response(
           JSON.stringify({ success: false, error: "Error checking existing feedback" }),
           {
@@ -68,7 +90,10 @@ serve(async (req) => {
         );
       }
       
+      console.log("Existing feedback check result:", existingFeedback);
+      
       if (existingFeedback && existingFeedback.length > 0) {
+        console.log("User has already provided feedback");
         return new Response(
           JSON.stringify({ 
             success: false, 
@@ -88,24 +113,29 @@ serve(async (req) => {
     // Enhance comments with email for reference
     const enhancedComments = `${comments}\n\n[Email: ${userEmail}]`;
     
-    // Simplified insert with minimal required fields
-    const { error } = await supabaseAdmin
+    console.log("Inserting feedback into database...");
+    
+    // Insert feedback with all required fields
+    const { data: insertData, error: insertError } = await supabaseAdmin
       .from('feedback')
       .insert({
         user_id: userId,
         comments: enhancedComments,
         created_at: new Date().toISOString(),
-        rating: 1,
-        usability: 1,
-        visual_appeal: 1,
-        would_recommend: false
-      });
+        rating: 5,
+        usability: 5,
+        visual_appeal: 5,
+        would_recommend: true
+      })
+      .select();
 
-    if (error) {
+    if (insertError) {
+      console.error("Database insert error:", insertError);
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: "Database error while submitting feedback"
+          error: "Database error while submitting feedback",
+          details: insertError.message
         }),
         {
           status: 500,
@@ -114,10 +144,13 @@ serve(async (req) => {
       );
     }
 
+    console.log("Feedback inserted successfully:", insertData);
+
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: "Feedback submitted successfully" 
+        message: "Feedback submitted successfully",
+        data: insertData
       }),
       {
         status: 200,
@@ -125,6 +158,7 @@ serve(async (req) => {
       }
     );
   } catch (err) {
+    console.error("Function error:", err);
     return new Response(
       JSON.stringify({ 
         success: false, 

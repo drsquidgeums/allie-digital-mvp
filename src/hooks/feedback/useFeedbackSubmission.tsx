@@ -13,7 +13,9 @@ export const useFeedbackSubmission = (
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { toast } = useToast();
 
-  const handleSubmit = async (comments: string, maxWords: number, wordCount: number) => {
+  const handleSubmit = async (comments: string, maxWords: number, wordCount: number): Promise<boolean> => {
+    console.log("handleSubmit called with:", { comments, userEmail, wordCount });
+    
     // Basic validations
     if (!comments.trim()) {
       toast({
@@ -47,6 +49,8 @@ export const useFeedbackSubmission = (
     try {
       const currentTime = new Date().toISOString();
       
+      console.log("Calling submit-feedback function with:", { comments, userEmail });
+      
       // Call the Supabase Edge Function to submit feedback
       const { data, error } = await supabase.functions.invoke('submit-feedback', {
         body: {
@@ -55,15 +59,17 @@ export const useFeedbackSubmission = (
         }
       });
       
+      console.log("Function response:", { data, error });
+      
       if (error) {
         console.error("Error calling submit-feedback function:", error);
         throw new Error(`Function error: ${error.message}`);
       }
       
-      if (!data.success) {
-        console.error("Submit feedback function returned error:", data.error);
+      if (!data?.success) {
+        console.error("Submit feedback function returned error:", data?.error);
         // Check if the error is about already submitted feedback
-        if (data.error?.includes("already provided feedback")) {
+        if (data?.error?.includes("already provided feedback")) {
           toast({
             title: "Feedback already submitted",
             description: "You have already provided feedback. Thank you!"
@@ -71,8 +77,10 @@ export const useFeedbackSubmission = (
           onClose();
           return false;
         }
-        throw new Error(data.error || "Error submitting feedback");
+        throw new Error(data?.error || "Error submitting feedback");
       }
+      
+      console.log("Feedback submitted successfully!");
       
       toast({
         title: "Thank you for your feedback!",

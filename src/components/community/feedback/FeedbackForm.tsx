@@ -27,10 +27,18 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
   const { wordCount, isOverLimit } = useWordCount(comments, MAX_WORDS);
   const { isSubmitting, handleSubmit } = useFeedbackSubmission(userEmail, onClose);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const submitResult = handleSubmit(comments, MAX_WORDS, wordCount);
-    console.log("Feedback submission attempt result:", submitResult);
+    console.log("Form submitted with comments:", comments);
+    console.log("User email:", userEmail);
+    console.log("Word count:", wordCount);
+    
+    try {
+      const success = await handleSubmit(comments, MAX_WORDS, wordCount);
+      console.log("Feedback submission result:", success);
+    } catch (error) {
+      console.error("Error during feedback submission:", error);
+    }
   };
 
   if (alreadySubmitted) {
