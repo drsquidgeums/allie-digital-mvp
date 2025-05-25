@@ -131,7 +131,8 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
               required
               aria-required="true"
               aria-invalid={name === "" && document.activeElement?.id !== "name" ? "true" : undefined}
-              className="w-full text-black"
+              className="w-full"
+              style={{ color: "#000000", backgroundColor: "white" }}
             />
           </div>
 
@@ -146,7 +147,8 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
               required
               aria-required="true"
               aria-invalid={(email !== "" && !isValidEmail(email) && document.activeElement?.id !== "email") ? "true" : undefined}
-              className="w-full text-black"
+              className="w-full"
+              style={{ color: "#000000", backgroundColor: "white" }}
             />
           </div>
         </div>

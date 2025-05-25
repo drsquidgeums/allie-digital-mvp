@@ -1,4 +1,5 @@
 
+
 @layer base {
   .dark {
     /* Enhanced Dark Mode Colors */
@@ -74,5 +75,25 @@ input:focus {
 }
 
 .dark input[type="url"]::placeholder {
+  color: #888888 !important;
+}
+
+/* NDA form styling to match feedback form */
+.dark #name,
+.dark #email {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: hsl(var(--border));
+}
+
+.dark #name:focus,
+.dark #email:focus {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: hsl(var(--primary));
+}
+
+.dark #name::placeholder,
+.dark #email::placeholder {
   color: #888888 !important;
 }
