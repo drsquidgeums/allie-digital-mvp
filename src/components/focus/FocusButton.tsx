@@ -60,7 +60,7 @@ export const FocusButton = () => {
           )}
         </Button>
       </TooltipTrigger>
-      <TooltipContent>
+      <TooltipContent side="bottom">
         {isActive ? "Exit focus mode" : "Enter focus mode"}
       </TooltipContent>
     </Tooltip>
