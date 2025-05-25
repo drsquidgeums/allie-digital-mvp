@@ -107,19 +107,15 @@ serve(async (req) => {
       }
     }
 
-    // Use a fixed user_id for all feedback
-    const userId = "00000000-0000-0000-0000-000000000000";
-    
     // Enhance comments with email for reference
     const enhancedComments = `${comments}\n\n[Email: ${userEmail}]`;
     
     console.log("Inserting feedback into database...");
     
-    // Insert feedback with all required fields
+    // Insert feedback without user_id since the foreign key constraint is causing issues
     const { data: insertData, error: insertError } = await supabaseAdmin
       .from('feedback')
       .insert({
-        user_id: userId,
         comments: enhancedComments,
         created_at: new Date().toISOString(),
         rating: 5,
@@ -167,7 +163,7 @@ serve(async (req) => {
       }),
       {
         status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
   }
