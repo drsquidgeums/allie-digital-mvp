@@ -23,9 +23,16 @@ export const formatBytes = (bytes: number): string => {
  * @returns Clean display name without timestamps or underscores
  */
 export const getDisplayName = (path: string): string => {
-  // Remove timestamp prefix if it exists
+  // Remove timestamp prefix if it exists (matches patterns like "1234567890_")
   const withoutTimestamp = path.replace(/^\d+_/, '');
   
   // Replace underscores with spaces for better display
-  return withoutTimestamp.replace(/_/g, ' ');
+  const withSpaces = withoutTimestamp.replace(/_/g, ' ');
+  
+  // If the result still starts with numbers, return "My File"
+  if (withSpaces.match(/^\d/)) {
+    return 'My File';
+  }
+  
+  return withSpaces;
 };

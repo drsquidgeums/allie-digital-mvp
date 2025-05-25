@@ -57,8 +57,9 @@ export const FileManager: React.FC = () => {
       sessionStorage.setItem('selectedFileUrl', file.url);
     }
     
-    // Store the clean display name without timestamp prefix
-    sessionStorage.setItem('selectedFileName', cleanName);
+    // Use a generic display name if the clean name still has numbers
+    const displayName = cleanName.match(/^\d/) ? 'My File' : cleanName;
+    sessionStorage.setItem('selectedFileName', displayName);
     
     // Navigate to the home page (workspace)
     navigate('/');
@@ -110,45 +111,50 @@ export const FileManager: React.FC = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {files.map(file => (
-                <TableRow key={file.id}>
-                  <TableCell className="font-medium">{file.displayName || getDisplayName(file.name)}</TableCell>
-                  <TableCell>{file.type}</TableCell>
-                  <TableCell>{formatBytes(file.size)}</TableCell>
-                  <TableCell>{formatDate(file.lastModified)}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end space-x-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => openInWorkspace(file)}
-                        aria-label="Open in workspace"
-                        title="Open in workspace"
-                      >
-                        <FolderOpen className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => downloadFile(file)}
-                        aria-label="Download file"
-                        title="Download file"
-                      >
-                        <Download className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => deleteFile(file)}
-                        aria-label="Delete file"
-                        title="Delete file"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {files.map(file => {
+                const displayName = file.displayName || getDisplayName(file.name);
+                const cleanDisplayName = displayName.match(/^\d/) ? 'My File' : displayName;
+                
+                return (
+                  <TableRow key={file.id}>
+                    <TableCell className="font-medium">{cleanDisplayName}</TableCell>
+                    <TableCell>{file.type}</TableCell>
+                    <TableCell>{formatBytes(file.size)}</TableCell>
+                    <TableCell>{formatDate(file.lastModified)}</TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openInWorkspace(file)}
+                          aria-label="Open in workspace"
+                          title="Open in workspace"
+                        >
+                          <FolderOpen className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => downloadFile(file)}
+                          aria-label="Download file"
+                          title="Download file"
+                        >
+                          <Download className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => deleteFile(file)}
+                          aria-label="Delete file"
+                          title="Delete file"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>

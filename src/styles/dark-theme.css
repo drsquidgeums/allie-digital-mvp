@@ -59,3 +59,20 @@ input:focus {
   border-color: hsl(var(--primary));
   background-color: white !important;
 }
+
+/* Dark mode URL input styling */
+.dark input[type="url"] {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: hsl(var(--border));
+}
+
+.dark input[type="url"]:focus {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: hsl(var(--primary));
+}
+
+.dark input[type="url"]::placeholder {
+  color: #888888 !important;
+}
