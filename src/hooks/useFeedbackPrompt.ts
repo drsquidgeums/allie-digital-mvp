@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 
 // Time before showing feedback prompt in milliseconds (15 minutes)
@@ -9,10 +10,16 @@ const POSTPONE_DELAY = 15 * 60 * 1000;
 // Special user email that can submit multiple times
 const SPECIAL_USER_EMAIL = "antoinettecelinemarshall@gmail.com";
 
-export const useFeedbackPrompt = () => {
+export const useFeedbackPrompt = (isNdaFlowActive: boolean = false) => {
   const [showFeedbackPrompt, setShowFeedbackPrompt] = useState<boolean>(false);
   
   useEffect(() => {
+    // Don't show feedback prompt if NDA flow is currently active
+    if (isNdaFlowActive) {
+      console.log("NDA flow is active, not showing feedback prompt");
+      return;
+    }
+
     // Get current user info from localStorage
     const ndaAgreement = localStorage.getItem("nda_agreement");
     
@@ -91,7 +98,7 @@ export const useFeedbackPrompt = () => {
     }, remainingTime);
     
     return () => clearTimeout(timer);
-  }, []);
+  }, [isNdaFlowActive]);
   
   const handleCloseFeedbackPrompt = () => {
     setShowFeedbackPrompt(false);
