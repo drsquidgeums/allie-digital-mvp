@@ -95,6 +95,11 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
         agreement_version: '1.0'
       }));
 
+      // Reset session start time to now (when NDA is completed)
+      const currentTime = Date.now();
+      localStorage.setItem("session_start_time", currentTime.toString());
+      console.log("Session start time reset after NDA completion:", new Date(currentTime).toISOString());
+
       toast({
         title: "Agreement Recorded",
         description: "Thank you for agreeing to the NDA.",
