@@ -30,16 +30,15 @@ const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showNda, setShowNda] = useState(false);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
-  
-  // Only initialize feedback prompt hook after NDA has been agreed to
   const [ndaCompleted, setNdaCompleted] = useState<boolean>(false);
   
-  // Pass showNda state to feedback prompt hook to prevent showing during NDA flow
+  // Only initialize feedback prompt hook AFTER NDA is completely finished
+  const shouldInitializeFeedback = ndaCompleted && !showNda;
   const { 
-    showFeedbackPrompt, 
-    handleCloseFeedbackPrompt, 
-    handlePostponeFeedback 
-  } = useFeedbackPrompt(showNda);
+    showFeedbackPrompt = false, 
+    handleCloseFeedbackPrompt = () => {}, 
+    handlePostponeFeedback = () => {} 
+  } = shouldInitializeFeedback ? useFeedbackPrompt() : {};
 
   // Load any existing user info from localStorage
   useEffect(() => {
@@ -104,8 +103,8 @@ const App = () => {
               onAgreementComplete={handleNdaAgreementComplete} 
             />
             
-            {/* Feedback Prompt - Only show after NDA is completed and not during NDA flow */}
-            {ndaCompleted && !showNda && (
+            {/* Feedback Prompt - Only show after NDA is completely finished */}
+            {shouldInitializeFeedback && (
               <FeedbackPrompt
                 isOpen={showFeedbackPrompt}
                 onClose={handleCloseFeedbackPrompt}
