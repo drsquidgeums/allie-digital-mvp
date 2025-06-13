@@ -1,4 +1,3 @@
-
 import React, { lazy, Suspense, memo, useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -32,13 +31,13 @@ const App = () => {
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
   const [ndaCompleted, setNdaCompleted] = useState<boolean>(false);
   
-  // Only initialize feedback prompt hook AFTER NDA is completely finished
+  // Always call the hook but pass parameters to control its behavior
   const shouldInitializeFeedback = ndaCompleted && !showNda;
   const { 
-    showFeedbackPrompt = false, 
-    handleCloseFeedbackPrompt = () => {}, 
-    handlePostponeFeedback = () => {} 
-  } = shouldInitializeFeedback ? useFeedbackPrompt() : {};
+    showFeedbackPrompt, 
+    handleCloseFeedbackPrompt, 
+    handlePostponeFeedback 
+  } = useFeedbackPrompt(!shouldInitializeFeedback);
 
   // Load any existing user info from localStorage
   useEffect(() => {
