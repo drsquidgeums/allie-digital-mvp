@@ -28,7 +28,7 @@ export const FeedbackButtons: React.FC<FeedbackButtonsProps> = ({
             variant="outline" 
             onClick={onPostpone}
             disabled={isSubmitting}
-            className="bg-black text-white hover:bg-gray-700 hover:text-white dark:bg-black dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
+            className="bg-black text-white hover:bg-gray-700 hover:text-white dark:bg-black dark:text-white dark:hover:bg-gray-700 dark:hover:text-white border border-white dark:border-white"
           >
             Ask Me Later
           </Button>
@@ -41,7 +41,7 @@ export const FeedbackButtons: React.FC<FeedbackButtonsProps> = ({
         <Button 
           type="submit"
           disabled={isSubmitting || isDisabled}
-          className="bg-black text-white hover:bg-gray-700 hover:text-white dark:bg-black dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
+          className="bg-black text-white hover:bg-gray-700 hover:text-white dark:bg-black dark:text-white dark:hover:bg-gray-700 dark:hover:text-white border border-white dark:border-white"
         >
           {isSubmitting ? "Submitting..." : "Submit Feedback"}
         </Button>
