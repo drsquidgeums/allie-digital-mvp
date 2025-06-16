@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -146,17 +145,17 @@ export const SpeechToText = () => {
           onClick={isListening ? stopListening : startListening}
           size="sm"
           variant="outline" 
-          className="flex-1 h-8 text-xs"
+          className="flex-1 h-9 text-xs px-2 min-w-0"
         >
           {isListening ? (
             <>
-              <MicOff className="w-3 h-3 mr-1" />
-              Stop Recording
+              <MicOff className="w-3 h-3 mr-1 flex-shrink-0" />
+              <span className="truncate">Stop Recording</span>
             </>
           ) : (
             <>
-              <Mic className="w-3 h-3 mr-1" />
-              Start Recording
+              <Mic className="w-3 h-3 mr-1 flex-shrink-0" />
+              <span className="truncate">Start Recording</span>
             </>
           )}
         </Button>
@@ -164,11 +163,11 @@ export const SpeechToText = () => {
           onClick={copyToClipboard}
           size="sm"
           variant="outline"
-          className="flex-1 h-8 text-xs"
+          className="flex-1 h-9 text-xs px-2 min-w-0"
           disabled={!transcript}
         >
-          <Copy className="w-3 h-3 mr-1" />
-          Copy Text
+          <Copy className="w-3 h-3 mr-1 flex-shrink-0" />
+          <span className="truncate">Copy Text</span>
         </Button>
       </div>
       <Textarea
@@ -182,18 +181,18 @@ export const SpeechToText = () => {
           onClick={sendToEditor}
           size="sm"
           variant="outline"
-          className="flex-1 h-8 text-xs"
+          className="flex-1 h-9 text-xs px-2 min-w-0"
           disabled={!transcript}
           title={appendMode === 'append' ? "Append to editor content" : "Replace editor content"}
         >
-          <ArrowUpFromLine className="w-3 h-3 mr-1" />
-          Send to Editor
+          <ArrowUpFromLine className="w-3 h-3 mr-1 flex-shrink-0" />
+          <span className="truncate">Send to Editor</span>
         </Button>
         <Button
           onClick={toggleAppendMode}
           size="sm"
           variant="outline"
-          className="h-8 text-xs px-2"
+          className="h-9 text-xs px-2"
           title="Toggle between replace and append mode"
         >
           {appendMode === 'append' ? <Pencil className="w-3 h-3" /> : <Eraser className="w-3 h-3" />}
@@ -202,7 +201,7 @@ export const SpeechToText = () => {
           onClick={clearTranscript}
           size="sm"
           variant="outline"
-          className="h-8 text-xs px-3"
+          className="h-9 text-xs px-3"
           disabled={!transcript}
           title="Clear transcript"
         >
