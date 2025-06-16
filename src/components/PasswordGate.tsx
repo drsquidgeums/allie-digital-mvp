@@ -57,6 +57,58 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     logoImage.src = '/lovable-uploads/3a3ef3bc-dbfb-441c-88cd-8b91d4891d61.png';
   }, []);
 
+  // Inject CSS styles to override theme styles
+  useEffect(() => {
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+      .password-gate,
+      .password-gate *,
+      .password-gate *:before,
+      .password-gate *:after {
+        color: #000000 !important;
+        background-color: transparent !important;
+        border-color: #d1d5db !important;
+      }
+      
+      .password-gate {
+        background-color: #ffffff !important;
+      }
+      
+      .password-gate input {
+        background-color: white !important;
+        color: #000000 !important;
+        border-color: #d1d5db !important;
+      }
+      
+      .password-gate button {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border-color: #000000 !important;
+      }
+      
+      .password-gate button:hover {
+        background-color: #1f1f1f !important;
+        color: #ffffff !important;
+      }
+      
+      .password-gate h1,
+      .password-gate h2,
+      .password-gate h3,
+      .password-gate p,
+      .password-gate span,
+      .password-gate div,
+      .password-gate label {
+        color: #000000 !important;
+        text-shadow: none !important;
+      }
+    `;
+    document.head.appendChild(styleElement);
+
+    return () => {
+      document.head.removeChild(styleElement);
+    };
+  }, []);
+
   return (
     <div 
       className="password-gate min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
@@ -69,50 +121,6 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         filter: 'none',
       }}
     >
-      {/* Completely override any theme styles */}
-      <style jsx>{`
-        .password-gate,
-        .password-gate *,
-        .password-gate *:before,
-        .password-gate *:after {
-          color: #000000 !important;
-          background-color: transparent !important;
-          border-color: #d1d5db !important;
-        }
-        
-        .password-gate {
-          background-color: #ffffff !important;
-        }
-        
-        .password-gate input {
-          background-color: white !important;
-          color: #000000 !important;
-          border-color: #d1d5db !important;
-        }
-        
-        .password-gate button {
-          background-color: #000000 !important;
-          color: #ffffff !important;
-          border-color: #000000 !important;
-        }
-        
-        .password-gate button:hover {
-          background-color: #1f1f1f !important;
-          color: #ffffff !important;
-        }
-        
-        .password-gate h1,
-        .password-gate h2,
-        .password-gate h3,
-        .password-gate p,
-        .password-gate span,
-        .password-gate div,
-        .password-gate label {
-          color: #000000 !important;
-          text-shadow: none !important;
-        }
-      `}</style>
-      
       <div 
         className="w-full max-w-xl space-y-8 p-8 relative z-10"
         style={{
