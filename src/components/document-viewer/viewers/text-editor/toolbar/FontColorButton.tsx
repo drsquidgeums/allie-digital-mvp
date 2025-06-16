@@ -8,8 +8,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { ColorPicker } from "@/components/ColorPicker";
 
 interface FontColorButtonProps {
   editor: Editor;
@@ -28,10 +30,16 @@ const colorOptions = [
 ];
 
 export const FontColorButton: React.FC<FontColorButtonProps> = ({ editor }) => {
+  const [customColor, setCustomColor] = React.useState('#000000');
   const currentColor = editor.getAttributes('textStyle').color || '#000000';
 
   const handleColorChange = (color: string) => {
     editor.chain().focus().setColor(color).run();
+  };
+
+  const handleCustomColorChange = (color: string) => {
+    setCustomColor(color);
+    handleColorChange(color);
   };
 
   return (
@@ -57,7 +65,7 @@ export const FontColorButton: React.FC<FontColorButtonProps> = ({ editor }) => {
           </Tooltip>
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="w-64">
         {colorOptions.map((color) => (
           <DropdownMenuItem
             key={color.value}
@@ -71,6 +79,14 @@ export const FontColorButton: React.FC<FontColorButtonProps> = ({ editor }) => {
             {color.name}
           </DropdownMenuItem>
         ))}
+        <DropdownMenuSeparator />
+        <div className="p-2">
+          <ColorPicker
+            label="Custom Color"
+            value={customColor}
+            onChange={handleCustomColorChange}
+          />
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
