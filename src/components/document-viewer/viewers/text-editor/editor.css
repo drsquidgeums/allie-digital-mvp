@@ -12,6 +12,24 @@
 .ProseMirror ul,
 .ProseMirror ol {
   padding: 0 1.5rem;
+  margin: 1rem 0;
+}
+
+.ProseMirror ul li,
+.ProseMirror ol li {
+  margin: 0.25rem 0;
+}
+
+.ProseMirror ul {
+  list-style-type: disc;
+}
+
+.ProseMirror ol {
+  list-style-type: decimal;
+}
+
+.ProseMirror li p {
+  margin: 0;
 }
 
 .ProseMirror h1,
@@ -152,4 +170,3 @@
   outline: none;
   border: none;
 }
-

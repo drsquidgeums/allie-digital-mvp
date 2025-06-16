@@ -126,7 +126,7 @@ export type Database = {
           id: string
           points: number | null
           text: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           category?: string | null
@@ -136,7 +136,7 @@ export type Database = {
           id?: string
           points?: number | null
           text: string
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           category?: string | null
@@ -146,7 +146,7 @@ export type Database = {
           id?: string
           points?: number | null
           text?: string
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }

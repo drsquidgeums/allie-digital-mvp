@@ -8,6 +8,10 @@ import TextStyle from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
+import ListItem from '@tiptap/extension-list-item';
+import BulletList from '@tiptap/extension-bullet-list';
+import OrderedList from '@tiptap/extension-ordered-list';
+import FontFamily from '@tiptap/extension-font-family';
 import { useToast } from '@/hooks/use-toast';
 import { EditorToolbar } from './EditorToolbar';
 import './editor.css';
@@ -32,7 +36,24 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        // Disable the default list extensions from StarterKit to avoid conflicts
+        bulletList: false,
+        orderedList: false,
+        listItem: false,
+      }),
+      // Configure list extensions explicitly
+      ListItem,
+      BulletList.configure({
+        HTMLAttributes: {
+          class: 'prose-bullet-list',
+        },
+      }),
+      OrderedList.configure({
+        HTMLAttributes: {
+          class: 'prose-ordered-list',
+        },
+      }),
       Highlight.configure({
         multicolor: true,
         HTMLAttributes: {
@@ -41,6 +62,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       }),
       Image,
       TextStyle,
+      FontFamily,
       Color,
       Underline,
       Link.configure({
