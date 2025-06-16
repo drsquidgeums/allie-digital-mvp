@@ -29,6 +29,12 @@ export const MindMap = () => {
     addNode,
     deleteNode,
     clearCanvas,
+    handleUndo,
+    handleRedo,
+    canUndo,
+    canRedo,
+    applyAutoLayout,
+    loadTemplate,
   } = useMindMapState();
 
   return (
@@ -58,6 +64,12 @@ export const MindMap = () => {
             colorOptions={colorOptions}
             textColorOptions={textColorOptions}
             nodeTypes={nodeTypes}
+            onUndo={handleUndo}
+            onRedo={handleRedo}
+            canUndo={canUndo}
+            canRedo={canRedo}
+            onApplyLayout={applyAutoLayout}
+            onLoadTemplate={loadTemplate}
           />
         </ReactFlowProvider>
       </div>

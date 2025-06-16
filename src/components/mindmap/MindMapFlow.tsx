@@ -5,6 +5,7 @@ import {
   Controls,
   Background,
   ConnectionLineType,
+  useReactFlow,
 } from '@xyflow/react';
 import { MindMapNode } from './types';
 
@@ -16,6 +17,11 @@ interface MindMapFlowProps {
   onConnect: (connection: any) => void;
   nodeTypes: any;
   onDeleteNode?: (nodeId: string) => void;
+  onUndo?: () => void;
+  onRedo?: () => void;
+  onZoomIn?: () => void;
+  onZoomOut?: () => void;
+  onFitView?: () => void;
 }
 
 export const MindMapFlow: React.FC<MindMapFlowProps> = ({
@@ -26,10 +32,53 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
   onConnect,
   nodeTypes,
   onDeleteNode,
+  onUndo,
+  onRedo,
+  onZoomIn,
+  onZoomOut,
+  onFitView,
 }) => {
+  const { zoomIn, zoomOut, fitView } = useReactFlow();
+
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
     const selectedNodes = nodes.filter(node => node.selected);
 
+    // Handle keyboard shortcuts
+    if (event.ctrlKey || event.metaKey) {
+      switch (event.key.toLowerCase()) {
+        case 'z':
+          event.preventDefault();
+          if (event.shiftKey) {
+            onRedo?.();
+          } else {
+            onUndo?.();
+          }
+          break;
+        case 'y':
+          event.preventDefault();
+          onRedo?.();
+          break;
+        case '=':
+        case '+':
+          event.preventDefault();
+          zoomIn();
+          onZoomIn?.();
+          break;
+        case '-':
+          event.preventDefault();
+          zoomOut();
+          onZoomOut?.();
+          break;
+        case '0':
+          event.preventDefault();
+          fitView();
+          onFitView?.();
+          break;
+      }
+      return;
+    }
+
+    // Handle other keys
     switch (event.key) {
       case 'Delete':
       case 'Backspace':
@@ -47,14 +96,14 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
         );
         break;
     }
-  }, [nodes, onNodesChange, onDeleteNode]);
+  }, [nodes, onNodesChange, onDeleteNode, onUndo, onRedo, onZoomIn, onZoomOut, onFitView, zoomIn, zoomOut, fitView]);
 
   return (
     <div 
       onKeyDown={handleKeyDown}
       tabIndex={0}
       role="application"
-      aria-label="Mind map canvas"
+      aria-label="Mind map canvas - Use Ctrl+Z to undo, Ctrl+Y to redo, Ctrl+Plus to zoom in, Ctrl+Minus to zoom out"
       className="focus:outline-none focus:ring-1 focus:ring-primary/30 h-full"
     >
       <ReactFlow
@@ -89,7 +138,7 @@ export const MindMapFlow: React.FC<MindMapFlowProps> = ({
       >
         <Controls 
           className="bg-background/80 shadow-md backdrop-blur-sm border-none rounded-lg m-4 z-50" 
-          aria-label="Mind map controls" 
+          aria-label="Mind map zoom and pan controls" 
           showInteractive={false}
           position="top-right"
         />

@@ -6,8 +6,18 @@ import { MindMapCreativeToolbar } from './MindMapCreativeToolbar';
 import { MindMapContainerProps } from './types';
 import { toast } from "sonner";
 import { getShapeStyle } from './utils/shapeUtils';
+import { useReactFlow } from '@xyflow/react';
 
-export const MindMapContainer: React.FC<MindMapContainerProps> = ({
+interface ExtendedMindMapContainerProps extends MindMapContainerProps {
+  onUndo: () => void;
+  onRedo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
+  onApplyLayout: (layoutType: any) => void;
+  onLoadTemplate: (templateNodes: any) => void;
+}
+
+export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
   nodes,
   edges,
   onNodesChange,
@@ -30,7 +40,15 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
   colorOptions,
   textColorOptions,
   nodeTypes,
+  onUndo,
+  onRedo,
+  canUndo,
+  canRedo,
+  onApplyLayout,
+  onLoadTemplate,
 }) => {
+  const { zoomIn, zoomOut, fitView } = useReactFlow();
+
   const handleShapeSelect = (shape: string, label?: string) => {
     const nodeStyle = getShapeStyle(shape, selectedColor, customColor);
 
@@ -51,17 +69,31 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
     toast(`Added ${shape} node`);
   };
 
-  // Function to handle node deletion
   const handleDeleteNode = (nodeId: string) => {
     onNodesChange([{ type: 'remove', id: nodeId }]);
     toast(`Node deleted`);
+  };
+
+  const handleZoomIn = () => {
+    zoomIn();
+    toast("Zoomed in");
+  };
+
+  const handleZoomOut = () => {
+    zoomOut();
+    toast("Zoomed out");
+  };
+
+  const handleFitView = () => {
+    fitView();
+    toast("Fit to view");
   };
 
   return (
     <div 
       className="w-full h-[calc(100vh-12rem)] bg-background rounded-xl overflow-hidden flex flex-col shadow-lg animate-fade-in relative"
       role="application"
-      aria-label="Mind map editor"
+      aria-label="Enhanced mind map editor with templates and auto-layout"
     >
       <MindMapToolbar
         newNodeText={newNodeText}
@@ -70,6 +102,15 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
         onExportJpg={onExportJpg}
         onExportJson={onExportJson}
         onClear={onClear}
+        onUndo={onUndo}
+        onRedo={onRedo}
+        canUndo={canUndo}
+        canRedo={canRedo}
+        onApplyLayout={onApplyLayout}
+        onLoadTemplate={onLoadTemplate}
+        onZoomIn={handleZoomIn}
+        onZoomOut={handleZoomOut}
+        onFitView={handleFitView}
       />
       <div className="flex-1 min-h-0 relative">
         <MindMapFlow
@@ -80,6 +121,11 @@ export const MindMapContainer: React.FC<MindMapContainerProps> = ({
           onConnect={onConnect}
           nodeTypes={nodeTypes}
           onDeleteNode={handleDeleteNode}
+          onUndo={onUndo}
+          onRedo={onRedo}
+          onZoomIn={handleZoomIn}
+          onZoomOut={handleZoomOut}
+          onFitView={handleFitView}
         />
       </div>
       <div className="absolute bottom-0 left-0 right-0 z-50 pointer-events-none">

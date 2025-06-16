@@ -6,21 +6,58 @@ import {
   Download, 
   Image, 
   Trash2, 
-  Layout
+  FileDown
 } from "lucide-react";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Separator } from "@/components/ui/separator";
+import { HistoryControls } from './toolbar/HistoryControls';
+import { LayoutControls } from './toolbar/LayoutControls';
+import { TemplateSelector } from './toolbar/TemplateSelector';
+import { LayoutType } from './hooks/useAutoLayout';
+import { MindMapNode } from './types';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-export const MindMapToolbar = ({ 
+interface MindMapToolbarProps {
+  newNodeText: string;
+  setNewNodeText: (text: string) => void;
+  onAddNode: () => void;
+  onExportJpg: () => void;
+  onExportJson: () => void;
+  onClear: () => void;
+  onUndo: () => void;
+  onRedo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
+  onApplyLayout: (layoutType: LayoutType) => void;
+  onLoadTemplate: (templateNodes: Omit<MindMapNode, 'id'>[]) => void;
+  onZoomIn?: () => void;
+  onZoomOut?: () => void;
+  onFitView?: () => void;
+}
+
+export const MindMapToolbar: React.FC<MindMapToolbarProps> = ({ 
   newNodeText,
   setNewNodeText,
   onAddNode,
   onExportJpg,
   onExportJson,
   onClear,
+  onUndo,
+  onRedo,
+  canUndo,
+  canRedo,
+  onApplyLayout,
+  onLoadTemplate,
+  onZoomIn,
+  onZoomOut,
+  onFitView,
 }) => {
-  const [showExportOptions, setShowExportOptions] = useState(false);
-  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (newNodeText.trim()) {
@@ -38,49 +75,102 @@ export const MindMapToolbar = ({
     }
   };
 
+  const exportToPDF = async () => {
+    try {
+      // Import jsPDF dynamically
+      const { jsPDF } = await import('jspdf');
+      const element = document.querySelector('.react-flow') as HTMLElement;
+      
+      if (!element) {
+        toast("Could not find the mind map element");
+        return;
+      }
+
+      // Create PDF
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'px',
+        format: [element.offsetWidth, element.offsetHeight]
+      });
+
+      // Convert to canvas first
+      const { toPng } = await import('html-to-image');
+      const dataUrl = await toPng(element, {
+        backgroundColor: '#ffffff',
+        width: element.offsetWidth,
+        height: element.offsetHeight,
+      });
+
+      pdf.addImage(dataUrl, 'PNG', 0, 0, element.offsetWidth, element.offsetHeight);
+      pdf.save('mindmap.pdf');
+      toast("Mind map exported as PDF");
+    } catch (error) {
+      console.error('PDF export error:', error);
+      toast("Failed to export as PDF");
+    }
+  };
+
   return (
     <div 
       className="p-3 border-b border-border/30 bg-background/95 backdrop-blur-sm flex flex-wrap items-center gap-3"
       aria-label="Mind map toolbar"
     >
-      <form onSubmit={handleSubmit} className="flex items-center gap-2 flex-1 min-w-[280px]">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <Input
           type="text"
           placeholder="Add a node..."
           value={newNodeText}
           onChange={(e) => setNewNodeText(e.target.value)}
-          className="min-w-[200px]"
+          className="min-w-[200px] h-9"
         />
-        <Button type="submit" size="sm">Add</Button>
+        <Button type="submit" size="sm" className="h-9">Add</Button>
       </form>
       
+      <Separator orientation="vertical" className="h-6" />
+      
+      <HistoryControls
+        onUndo={onUndo}
+        onRedo={onRedo}
+        canUndo={canUndo}
+        canRedo={canRedo}
+      />
+      
+      <Separator orientation="vertical" className="h-6" />
+      
+      <TemplateSelector onLoadTemplate={onLoadTemplate} />
+      
+      <Separator orientation="vertical" className="h-6" />
+      
+      <LayoutControls
+        onApplyLayout={onApplyLayout}
+        onZoomIn={onZoomIn}
+        onZoomOut={onZoomOut}
+        onFitView={onFitView}
+      />
+      
       <div className="flex items-center gap-2 ml-auto">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button 
-              variant="outline"
-              size="sm"
-              onClick={() => setShowExportOptions(!showExportOptions)}
-            >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="h-9 px-3">
               <Download className="h-4 w-4 mr-1" />
               Export
             </Button>
-          </TooltipTrigger>
-          <TooltipContent>Export your mind map</TooltipContent>
-        </Tooltip>
-        
-        {showExportOptions && (
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={onExportJpg}>
-              <Image className="h-4 w-4 mr-1" />
-              JPG
-            </Button>
-            <Button variant="ghost" size="sm" onClick={onExportJson}>
-              <Layout className="h-4 w-4 mr-1" />
-              JSON
-            </Button>
-          </div>
-        )}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={onExportJpg}>
+              <Image className="h-4 w-4 mr-2" />
+              Export as JPG
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={exportToPDF}>
+              <FileDown className="h-4 w-4 mr-2" />
+              Export as PDF
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onExportJson}>
+              <FileDown className="h-4 w-4 mr-2" />
+              Export as JSON
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         
         <Tooltip>
           <TooltipTrigger asChild>
@@ -88,7 +178,7 @@ export const MindMapToolbar = ({
               variant="outline" 
               size="sm"
               onClick={handleClear}
-              className="text-destructive hover:bg-destructive/10"
+              className="text-destructive hover:bg-destructive/10 h-9 px-3"
             >
               <Trash2 className="h-4 w-4 mr-1" />
               Clear

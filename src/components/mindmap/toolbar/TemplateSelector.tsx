@@ -1,0 +1,87 @@
+
+import React from 'react';
+import { Button } from "@/components/ui/button";
+import { 
+  FileTemplate,
+  Target,
+  Calendar,
+  Lightbulb
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
+import { NODE_TEMPLATES, NodeTemplate } from '../constants/nodeTemplates';
+import { MindMapNode } from '../types';
+
+interface TemplateSelectorProps {
+  onLoadTemplate: (templateNodes: Omit<MindMapNode, 'id'>[]) => void;
+}
+
+const getCategoryIcon = (category: string) => {
+  switch (category) {
+    case 'analysis':
+      return Target;
+    case 'planning':
+      return Calendar;
+    case 'creative':
+      return Lightbulb;
+    default:
+      return FileTemplate;
+  }
+};
+
+export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
+  onLoadTemplate,
+}) => {
+  const groupedTemplates = NODE_TEMPLATES.reduce((acc, template) => {
+    if (!acc[template.category]) {
+      acc[template.category] = [];
+    }
+    acc[template.category].push(template);
+    return acc;
+  }, {} as Record<string, NodeTemplate[]>);
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm" className="h-9 px-3">
+          <FileTemplate className="h-4 w-4 mr-1" />
+          Templates
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        {Object.entries(groupedTemplates).map(([category, templates]) => (
+          <div key={category}>
+            <DropdownMenuLabel className="capitalize">
+              {category}
+            </DropdownMenuLabel>
+            {templates.map((template) => {
+              const Icon = getCategoryIcon(template.category);
+              return (
+                <DropdownMenuItem
+                  key={template.id}
+                  onClick={() => onLoadTemplate(template.nodes)}
+                  className="cursor-pointer"
+                >
+                  <Icon className="h-4 w-4 mr-2" />
+                  <div>
+                    <div className="font-medium">{template.name}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {template.description}
+                    </div>
+                  </div>
+                </DropdownMenuItem>
+              );
+            })}
+            <DropdownMenuSeparator />
+          </div>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
