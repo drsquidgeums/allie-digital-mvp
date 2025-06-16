@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { WelcomeHeader } from "./password-gate/WelcomeHeader";
@@ -75,7 +76,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
       <div 
         className="absolute inset-0"
         style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.10) !important',
+          backgroundColor: 'rgba(255, 255, 255, 0.90) !important',
         }}
       />
       <div 
