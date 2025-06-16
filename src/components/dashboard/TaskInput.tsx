@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { SecureInput } from "@/components/security/SecureInput";
 
 interface TaskInputProps {
   selectedDate?: Date;
@@ -22,11 +22,12 @@ export const TaskInput = ({ selectedDate, onAddTask, showStarburst }: TaskInputP
 
   return (
     <form onSubmit={handleSubmit} className="flex gap-2 relative">
-      <Input
+      <SecureInput
         value={newTask}
-        onChange={(e) => setNewTask(e.target.value)}
+        onSecureChange={setNewTask}
         placeholder={`Add a new task${selectedDate ? ` for ${selectedDate.toLocaleDateString()}` : ''}...`}
         className="flex-1 text-foreground placeholder:text-muted-foreground dark:text-gray-200 dark:placeholder:text-gray-400"
+        maxLength={500}
       />
       <div className="relative">
         <Button type="submit">Add</Button>
