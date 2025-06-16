@@ -64,22 +64,12 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
       style={{
         opacity: imagesLoaded ? 1 : 0,
         transition: 'opacity 0.3s ease-in-out',
-        backgroundColor: '#ffffff !important',
+        backgroundColor: '#ffffff',
         color: '#000000 !important',
         // Force light mode styling regardless of theme
         filter: 'none !important',
       }}
     >
-      <div 
-        className="absolute inset-0"
-        style={{
-          backgroundImage: "url('/lovable-uploads/c6d002da-1686-4204-97e5-213169f7c0b5.png')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          opacity: 0.1,
-        }}
-      />
       <div 
         className="w-full max-w-xl space-y-8 p-8 relative z-10 text-black"
         style={{
