@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { Toaster } from "@/components/ui/toaster"
 import { SecurityProvider } from "../security/SecurityProvider";
 import { EnhancedSecurityProvider } from "../security/EnhancedSecurityProvider";
+import { PomodoroProvider } from "@/contexts/PomodoroContext";
 
 export const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const queryClient = new QueryClient();
@@ -21,7 +22,9 @@ export const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children
         <TooltipProvider>
           <SecurityProvider>
             <EnhancedSecurityProvider>
-              {children}
+              <PomodoroProvider>
+                {children}
+              </PomodoroProvider>
             </EnhancedSecurityProvider>
           </SecurityProvider>
           <Toaster />
