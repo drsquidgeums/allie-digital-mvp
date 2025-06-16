@@ -1,0 +1,60 @@
+
+/* Focus styles for accessibility */
+.react-flow__node:focus-within {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* High contrast mode helpers */
+.high-contrast .react-flow__node {
+  border-width: 2px;
+}
+
+.high-contrast .react-flow__edge-path {
+  stroke-width: 3;
+}
+
+.high-contrast .react-flow__handle {
+  width: 12px;
+  height: 12px;
+}
+
+/* Special styling for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .react-flow__node,
+  .react-flow__handle,
+  .mindmap-toolbar-button,
+  .shape-button {
+    transition: none !important;
+  }
+}
+
+/* Fix tooltip positioning */
+.react-flow__tooltip {
+  z-index: 1000;
+}
+
+/* Ensure tooltips are visible */
+.ui-tooltip, 
+.tippy-box {
+  z-index: 9999;
+}
+
+/* Make sure node deletion tooltip is visible */
+.tippy-content {
+  z-index: 9999;
+  position: relative;
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Improve color selector styles */
+.color-selector-shape {
+  border: 2px solid hsl(var(--primary/30));
+}
+
+.color-selector-text {
+  border: 2px solid hsl(var(--secondary/30));
+}
