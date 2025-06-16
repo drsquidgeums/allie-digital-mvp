@@ -6,9 +6,7 @@ import { Palette } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ColorPicker } from "@/components/ColorPicker";
@@ -17,29 +15,13 @@ interface FontColorButtonProps {
   editor: Editor;
 }
 
-const colorOptions = [
-  { name: 'Black', value: '#000000' },
-  { name: 'Red', value: '#ef4444' },
-  { name: 'Blue', value: '#3b82f6' },
-  { name: 'Green', value: '#22c55e' },
-  { name: 'Purple', value: '#a855f7' },
-  { name: 'Orange', value: '#f97316' },
-  { name: 'Pink', value: '#ec4899' },
-  { name: 'Gray', value: '#6b7280' },
-  { name: 'White', value: '#ffffff' },
-];
-
 export const FontColorButton: React.FC<FontColorButtonProps> = ({ editor }) => {
   const [customColor, setCustomColor] = React.useState('#000000');
   const currentColor = editor.getAttributes('textStyle').color || '#000000';
 
-  const handleColorChange = (color: string) => {
-    editor.chain().focus().setColor(color).run();
-  };
-
   const handleCustomColorChange = (color: string) => {
     setCustomColor(color);
-    handleColorChange(color);
+    editor.chain().focus().setColor(color).run();
   };
 
   return (
@@ -66,23 +48,9 @@ export const FontColorButton: React.FC<FontColorButtonProps> = ({ editor }) => {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-64">
-        {colorOptions.map((color) => (
-          <DropdownMenuItem
-            key={color.value}
-            onClick={() => handleColorChange(color.value)}
-            className="flex items-center gap-2"
-          >
-            <div 
-              className="w-4 h-4 rounded border border-gray-300"
-              style={{ backgroundColor: color.value }}
-            />
-            {color.name}
-          </DropdownMenuItem>
-        ))}
-        <DropdownMenuSeparator />
         <div className="p-2">
           <ColorPicker
-            label="Custom Color"
+            label="Select Font Color"
             value={customColor}
             onChange={handleCustomColorChange}
           />
