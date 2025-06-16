@@ -155,7 +155,7 @@ export const SpeechToText = () => {
           ) : (
             <>
               <Mic className="w-3 h-3 mr-1 flex-shrink-0" />
-              <span className="truncate">Start Recording</span>
+              <span className="truncate">Record</span>
             </>
           )}
         </Button>
