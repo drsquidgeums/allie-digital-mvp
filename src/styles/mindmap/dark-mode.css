@@ -60,9 +60,9 @@
   border-color: hsl(var(--border));
 }
 
-/* Fix background dots visibility in dark mode */
+/* Fix background dots visibility in dark mode - make them more visible */
 .dark .react-flow .react-flow__background {
-  fill: rgba(255, 255, 255, 0.1) !important;
+  fill: rgba(255, 255, 255, 0.25) !important;
 }
 
 /* Minimap styling for dark mode */

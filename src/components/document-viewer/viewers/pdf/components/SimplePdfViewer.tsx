@@ -128,6 +128,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
         highlights={highlights}
         selectedHighlightId={selectedHighlightId}
         onLoadSuccess={handleDocumentLoadSuccess}
+        onLoadError={handleDocumentLoadError}
         onHighlightClick={setSelectedHighlightId}
       />
       

@@ -46,11 +46,10 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
           onLoadSuccess={onLoadSuccess}
           onLoadError={onLoadError}
           options={{
-            // Disable worker to avoid CORS issues
+            // Completely disable worker to avoid external script loading
             disableWorker: true,
-            cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/cmaps/',
-            cMapPacked: true,
-            standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/standard_fonts/',
+            // Use inline worker instead
+            workerSrc: null,
           }}
           loading={
             <div 
