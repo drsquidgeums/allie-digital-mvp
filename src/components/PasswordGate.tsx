@@ -57,11 +57,22 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     logoImage.src = '/lovable-uploads/3a3ef3bc-dbfb-441c-88cd-8b91d4891d61.png';
   }, []);
 
-  // Inject CSS styles to override theme styles
+  // Inject CSS styles to override theme styles with maximum specificity
   useEffect(() => {
     const styleElement = document.createElement('style');
     styleElement.textContent = `
-      .password-gate,
+      html.dark .password-gate,
+      html .password-gate,
+      .dark .password-gate,
+      .password-gate {
+        background-color: #ffffff !important;
+        opacity: 1 !important;
+        color: #000000 !important;
+      }
+      
+      html.dark .password-gate *,
+      html .password-gate *,
+      .dark .password-gate *,
       .password-gate *,
       .password-gate *:before,
       .password-gate *:after {
@@ -70,28 +81,53 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         border-color: #d1d5db !important;
       }
       
-      .password-gate {
-        background-color: #ffffff !important;
-        opacity: 1 !important;
-      }
-      
+      html.dark .password-gate input,
+      html .password-gate input,
+      .dark .password-gate input,
       .password-gate input {
         background-color: white !important;
         color: #000000 !important;
         border-color: #d1d5db !important;
       }
       
+      html.dark .password-gate button,
+      html .password-gate button,
+      .dark .password-gate button,
       .password-gate button {
         background-color: #000000 !important;
         color: #ffffff !important;
         border-color: #000000 !important;
       }
       
+      html.dark .password-gate button:hover,
+      html .password-gate button:hover,
+      .dark .password-gate button:hover,
       .password-gate button:hover {
         background-color: #1f1f1f !important;
         color: #ffffff !important;
       }
       
+      html.dark .password-gate h1,
+      html.dark .password-gate h2,
+      html.dark .password-gate h3,
+      html.dark .password-gate p,
+      html.dark .password-gate span,
+      html.dark .password-gate div,
+      html.dark .password-gate label,
+      html .password-gate h1,
+      html .password-gate h2,
+      html .password-gate h3,
+      html .password-gate p,
+      html .password-gate span,
+      html .password-gate div,
+      html .password-gate label,
+      .dark .password-gate h1,
+      .dark .password-gate h2,
+      .dark .password-gate h3,
+      .dark .password-gate p,
+      .dark .password-gate span,
+      .dark .password-gate div,
+      .dark .password-gate label,
       .password-gate h1,
       .password-gate h2,
       .password-gate h3,
@@ -116,7 +152,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
       style={{
         opacity: imagesLoaded ? 1 : 0,
         transition: 'opacity 0.3s ease-in-out',
-        backgroundColor: '#ffffff',
+        backgroundColor: '#ffffff !important',
         color: '#000000',
         // Force complete isolation from theme system
         filter: 'none',

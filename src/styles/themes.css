@@ -2,13 +2,19 @@
 @import './base-theme.css';
 @import './dark-theme.css';
 
-/* Force password gate to always use light mode styling with white background */
-.password-gate,
-.dark .password-gate {
+/* Force password gate to always use light mode styling with white background - maximum specificity */
+html.dark .password-gate,
+html .password-gate,
+.dark .password-gate,
+.password-gate {
   background-color: #ffffff !important;
   opacity: 1 !important;
 }
 
+html.dark .password-gate,
+html.dark .password-gate *,
+html .password-gate,
+html .password-gate *,
 .dark .password-gate,
 .dark .password-gate *,
 .password-gate,
@@ -17,24 +23,48 @@
   background-color: transparent !important;
 }
 
+html.dark .password-gate h1,
+html.dark .password-gate h2,
+html.dark .password-gate h3,
+html.dark .password-gate p,
+html.dark .password-gate span,
+html.dark .password-gate div,
+html .password-gate h1,
+html .password-gate h2,
+html .password-gate h3,
+html .password-gate p,
+html .password-gate span,
+html .password-gate div,
 .dark .password-gate h1,
 .dark .password-gate h2,
 .dark .password-gate h3,
 .dark .password-gate p,
 .dark .password-gate span,
-.dark .password-gate div {
+.dark .password-gate div,
+.password-gate h1,
+.password-gate h2,
+.password-gate h3,
+.password-gate p,
+.password-gate span,
+.password-gate div {
   color: #000000 !important;
   text-shadow: none !important;
 }
 
 /* Ensure input fields in password gate stay light */
-.dark .password-gate input {
+html.dark .password-gate input,
+html .password-gate input,
+.dark .password-gate input,
+.password-gate input {
   background-color: white !important;
   color: #000000 !important;
   border-color: #d1d5db !important;
 }
 
-.dark .password-gate button {
+html.dark .password-gate button,
+html .password-gate button,
+.dark .password-gate button,
+.password-gate button {
   background-color: #000000 !important;
   color: #ffffff !important;
 }
