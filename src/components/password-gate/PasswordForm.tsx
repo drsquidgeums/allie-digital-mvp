@@ -49,13 +49,23 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
           placeholder="Enter password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full bg-white text-black placeholder:text-black/60 focus:ring-2 focus:ring-black focus:border-black transition-colors"
+          className="w-full transition-colors"
+          style={{
+            backgroundColor: 'white !important',
+            color: '#000000 !important',
+            borderColor: '#d1d5db !important',
+          }}
           disabled={isLoading}
         />
       </div>
       <Button 
         type="submit" 
-        className="w-[70%] bg-black hover:bg-neutral-800 text-white transition-colors" 
+        className="w-[70%] transition-colors" 
+        style={{
+          backgroundColor: '#000000 !important',
+          color: '#ffffff !important',
+          borderColor: '#000000 !important',
+        }}
         disabled={isLoading}
       >
         {isLoading ? "Loading..." : "Enter"}

@@ -67,17 +67,25 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        backgroundColor: '#ffffff',
-        color: '#000000',
+        backgroundColor: '#ffffff !important',
+        color: '#000000 !important',
+        // Force light mode styling regardless of theme
+        filter: 'none !important',
       }}
     >
       <div 
         className="absolute inset-0"
         style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.94)',
+          backgroundColor: 'rgba(255, 255, 255, 0.94) !important',
         }}
       />
-      <div className="w-full max-w-xl space-y-8 p-8 relative z-10">
+      <div 
+        className="w-full max-w-xl space-y-8 p-8 relative z-10"
+        style={{
+          backgroundColor: 'transparent !important',
+          color: '#000000 !important',
+        }}
+      >
         <WelcomeHeader colors={colors} />
         <PasswordForm 
           password={password}
@@ -85,7 +93,12 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
           onSubmit={handleSubmit}
         />
       </div>
-      <footer className="absolute bottom-4 text-sm z-10" style={{ color: '#666666' }}>
+      <footer 
+        className="absolute bottom-4 text-sm z-10" 
+        style={{ 
+          color: '#666666 !important',
+        }}
+      >
         © Allie Digital Ltd. All Rights Reserved 2025
       </footer>
     </div>
