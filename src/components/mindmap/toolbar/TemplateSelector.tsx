@@ -54,7 +54,10 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
           Templates
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
+      <DropdownMenuContent 
+        align="end" 
+        className="w-56 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+      >
         {Object.entries(groupedTemplates).map(([category, templates]) => (
           <div key={category}>
             <DropdownMenuLabel className="capitalize">
