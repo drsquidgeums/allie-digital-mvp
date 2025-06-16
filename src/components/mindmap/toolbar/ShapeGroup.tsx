@@ -3,6 +3,7 @@ import React from 'react';
 import { ShapeButton } from './ShapeButton';
 import { LucideIcon } from 'lucide-react';
 import { Card } from "@/components/ui/card";
+import { getDarkModeCardClasses } from '@/utils/darkModeUtils';
 
 interface ShapeProps {
   id: string;
@@ -18,7 +19,7 @@ interface ShapeGroupProps {
 
 export const ShapeGroup = ({ shapes, onShapeSelect }: ShapeGroupProps) => {
   return (
-    <Card className="flex items-center space-x-1 p-1 rounded-lg border border-border/40 bg-background/50 shadow-sm dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20">
+    <Card className={`flex items-center space-x-1 p-1 rounded-lg border border-border/40 bg-background/50 shadow-sm ${getDarkModeCardClasses()}`}>
       {shapes.map((shape) => (
         <ShapeButton
           key={shape.id}

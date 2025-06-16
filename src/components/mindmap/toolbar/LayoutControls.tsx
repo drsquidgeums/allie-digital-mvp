@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { LayoutType } from '../hooks/useAutoLayout';
+import { getDarkModeDropdownClasses } from '@/utils/darkModeUtils';
 
 interface LayoutControlsProps {
   onApplyLayout: (layoutType: LayoutType) => void;
@@ -42,7 +43,7 @@ export const LayoutControls: React.FC<LayoutControlsProps> = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent 
           align="end"
-          className="dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+          className={getDarkModeDropdownClasses()}
         >
           <DropdownMenuItem onClick={() => onApplyLayout('radial')}>
             <GitBranch className="h-4 w-4 mr-2" />

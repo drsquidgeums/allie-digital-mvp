@@ -53,9 +53,23 @@ export const useEncryption = () => {
   const decryptData = useCallback(async (encryptedData: string) => {
     try {
       const key = await getEncryptionKey();
-      const combined = new Uint8Array(
-        atob(encryptedData).split('').map(char => char.charCodeAt(0))
-      );
+      
+      // Safe base64 decoding with error handling
+      let combined: Uint8Array;
+      try {
+        combined = new Uint8Array(
+          atob(encryptedData).split('').map(char => char.charCodeAt(0))
+        );
+      } catch (decodeError) {
+        // If base64 decode fails, assume it's unencrypted data
+        console.warn('Base64 decode failed, treating as unencrypted:', decodeError);
+        return encryptedData;
+      }
+
+      if (combined.length < 12) {
+        // Data too short to contain IV, assume unencrypted
+        return encryptedData;
+      }
 
       const iv = combined.slice(0, 12);
       const encrypted = combined.slice(12);

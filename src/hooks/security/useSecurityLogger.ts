@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { useEncryption } from './useEncryption';
 
 interface SecurityEvent {
@@ -14,6 +14,8 @@ interface SecurityEvent {
 
 export const useSecurityLogger = () => {
   const { encryptStorageItem, decryptStorageItem } = useEncryption();
+  const logQueueRef = useRef<SecurityEvent[]>([]);
+  const flushTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const getSessionId = useCallback(() => {
     let sessionId = sessionStorage.getItem('security_session_id');
@@ -25,20 +27,69 @@ export const useSecurityLogger = () => {
   }, []);
 
   const getFingerprint = useCallback(() => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    ctx?.fillText('fingerprint', 10, 10);
-    const canvasFingerprint = canvas.toDataURL();
-    
-    return btoa(
-      navigator.userAgent + 
-      navigator.language + 
-      screen.width + 
-      screen.height + 
-      new Date().getTimezoneOffset() +
-      canvasFingerprint.slice(-50)
-    ).slice(0, 16);
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillText('fingerprint', 10, 10);
+      }
+      const canvasFingerprint = canvas.toDataURL();
+      
+      return btoa(
+        navigator.userAgent + 
+        navigator.language + 
+        screen.width + 
+        screen.height + 
+        new Date().getTimezoneOffset() +
+        canvasFingerprint.slice(-50)
+      ).slice(0, 16);
+    } catch (error) {
+      // Fallback fingerprint if canvas fails
+      return btoa(
+        navigator.userAgent + 
+        navigator.language + 
+        Date.now().toString()
+      ).slice(0, 16);
+    }
   }, []);
+
+  const flushLogQueue = useCallback(async () => {
+    if (logQueueRef.current.length === 0) return;
+
+    const logsToFlush = [...logQueueRef.current];
+    logQueueRef.current = [];
+
+    try {
+      // Get existing logs with fallback
+      let existingLogs: SecurityEvent[] = [];
+      try {
+        existingLogs = await decryptStorageItem('security_activity_logs') || 
+                      JSON.parse(localStorage.getItem('security_activity_logs') || '[]');
+      } catch (error) {
+        console.warn('Failed to load existing logs, starting fresh:', error);
+        existingLogs = [];
+      }
+
+      existingLogs.push(...logsToFlush);
+      
+      // Keep only last 1000 entries to prevent storage bloat
+      if (existingLogs.length > 1000) {
+        existingLogs.splice(0, existingLogs.length - 1000);
+      }
+      
+      // Store encrypted with error handling
+      try {
+        await encryptStorageItem('security_activity_logs', existingLogs);
+      } catch (error) {
+        console.warn('Encryption failed, storing unencrypted:', error);
+        localStorage.setItem('security_activity_logs', JSON.stringify(existingLogs));
+      }
+    } catch (error) {
+      console.error('Failed to flush security logs:', error);
+      // Re-add failed logs to queue for retry
+      logQueueRef.current.unshift(...logsToFlush);
+    }
+  }, [encryptStorageItem, decryptStorageItem]);
 
   const logActivity = useCallback(async (event: string, details?: any) => {
     const logEntry: SecurityEvent = {
@@ -52,22 +103,15 @@ export const useSecurityLogger = () => {
       ipFingerprint: getFingerprint()
     };
 
-    // Get existing logs and encrypt storage
-    const existingLogs = await decryptStorageItem('security_activity_logs') || 
-                        JSON.parse(localStorage.getItem('security_activity_logs') || '[]');
-    existingLogs.push(logEntry);
-    
-    // Keep only last 1000 entries to prevent storage bloat
-    if (existingLogs.length > 1000) {
-      existingLogs.splice(0, existingLogs.length - 1000);
+    // Add to queue instead of immediate processing
+    logQueueRef.current.push(logEntry);
+
+    // Debounce the flush operation
+    if (flushTimeoutRef.current) {
+      clearTimeout(flushTimeoutRef.current);
     }
-    
-    // Store encrypted
-    await encryptStorageItem('security_activity_logs', existingLogs);
-    
-    // Keep unencrypted version for backward compatibility (will be gradually phased out)
-    localStorage.setItem('security_activity_logs', JSON.stringify(existingLogs));
-  }, [getSessionId, getFingerprint, encryptStorageItem, decryptStorageItem]);
+    flushTimeoutRef.current = setTimeout(flushLogQueue, 1000); // Flush every 1 second
+  }, [getSessionId, getFingerprint, flushLogQueue]);
 
   const logSecurityEvent = useCallback(async (event: string, details?: any) => {
     const logEntry: SecurityEvent = {
@@ -81,65 +125,92 @@ export const useSecurityLogger = () => {
       ipFingerprint: getFingerprint()
     };
 
-    // Store security events separately with encryption
-    const existingLogs = await decryptStorageItem('security_events') || 
-                        JSON.parse(localStorage.getItem('security_events') || '[]');
-    existingLogs.push(logEntry);
-    
-    if (existingLogs.length > 500) {
-      existingLogs.splice(0, existingLogs.length - 500);
-    }
-    
-    // Store encrypted
-    await encryptStorageItem('security_events', existingLogs);
-    
-    // Keep unencrypted version for backward compatibility
-    localStorage.setItem('security_events', JSON.stringify(existingLogs));
+    try {
+      // Store security events separately with encryption
+      let existingLogs: SecurityEvent[] = [];
+      try {
+        existingLogs = await decryptStorageItem('security_events') || 
+                      JSON.parse(localStorage.getItem('security_events') || '[]');
+      } catch (error) {
+        console.warn('Failed to load existing security events, starting fresh:', error);
+        existingLogs = [];
+      }
 
-    // Log critical security events to console
-    if (['suspicious_activity', 'failed_access', 'session_hijack'].includes(event)) {
-      console.warn('Security Alert:', logEntry);
+      existingLogs.push(logEntry);
+      
+      if (existingLogs.length > 500) {
+        existingLogs.splice(0, existingLogs.length - 500);
+      }
+      
+      // Store encrypted with fallback
+      try {
+        await encryptStorageItem('security_events', existingLogs);
+      } catch (error) {
+        console.warn('Encryption failed, storing unencrypted:', error);
+        localStorage.setItem('security_events', JSON.stringify(existingLogs));
+      }
+
+      // Log critical security events to console
+      if (['suspicious_activity', 'failed_access', 'session_hijack'].includes(event)) {
+        console.warn('Security Alert:', logEntry);
+      }
+    } catch (error) {
+      console.error('Failed to log security event:', error);
     }
   }, [getSessionId, getFingerprint, encryptStorageItem, decryptStorageItem]);
 
   const getActivityLogs = useCallback(async () => {
-    // Try encrypted first, fallback to unencrypted
-    const encrypted = await decryptStorageItem('security_activity_logs');
-    return encrypted || JSON.parse(localStorage.getItem('security_activity_logs') || '[]');
+    try {
+      // Try encrypted first, fallback to unencrypted
+      const encrypted = await decryptStorageItem('security_activity_logs');
+      return encrypted || JSON.parse(localStorage.getItem('security_activity_logs') || '[]');
+    } catch (error) {
+      console.warn('Failed to retrieve activity logs:', error);
+      return [];
+    }
   }, [decryptStorageItem]);
 
   const getSecurityEvents = useCallback(async () => {
-    // Try encrypted first, fallback to unencrypted
-    const encrypted = await decryptStorageItem('security_events');
-    return encrypted || JSON.parse(localStorage.getItem('security_events') || '[]');
+    try {
+      // Try encrypted first, fallback to unencrypted
+      const encrypted = await decryptStorageItem('security_events');
+      return encrypted || JSON.parse(localStorage.getItem('security_events') || '[]');
+    } catch (error) {
+      console.warn('Failed to retrieve security events:', error);
+      return [];
+    }
   }, [decryptStorageItem]);
 
   const exportAuditLogs = useCallback(async () => {
-    const activities = await getActivityLogs();
-    const events = await getSecurityEvents();
-    
-    const auditData = {
-      exportDate: new Date().toISOString(),
-      sessionId: getSessionId(),
-      activities,
-      events,
-      summary: {
-        totalActivities: activities.length,
-        totalSecurityEvents: events.length,
-        dateRange: {
-          from: activities[0]?.timestamp,
-          to: activities[activities.length - 1]?.timestamp
+    try {
+      const activities = await getActivityLogs();
+      const events = await getSecurityEvents();
+      
+      const auditData = {
+        exportDate: new Date().toISOString(),
+        sessionId: getSessionId(),
+        activities,
+        events,
+        summary: {
+          totalActivities: activities.length,
+          totalSecurityEvents: events.length,
+          dateRange: {
+            from: activities[0]?.timestamp,
+            to: activities[activities.length - 1]?.timestamp
+          }
         }
-      }
-    };
+      };
 
-    const blob = new Blob([JSON.stringify(auditData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `security_audit_${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+      const blob = new Blob([JSON.stringify(auditData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `security_audit_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to export audit logs:', error);
+    }
   }, [getActivityLogs, getSecurityEvents, getSessionId]);
 
   return {

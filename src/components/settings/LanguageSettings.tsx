@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Separator } from "@/components/ui/separator";
 import { supportedLanguages, switchLanguage } from '@/utils/languageUtils';
 import { SettingsSection } from "./SettingsSection";
+import { getDarkModeDropdownClasses } from '@/utils/darkModeUtils';
 
 export const LanguageSettings = () => {
   const { i18n, t } = useTranslation();
@@ -22,7 +23,7 @@ export const LanguageSettings = () => {
           <SelectTrigger id="language-select" className="w-[180px]">
             <SelectValue placeholder={t('settings.selectLanguage')} />
           </SelectTrigger>
-          <SelectContent className="dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]">
+          <SelectContent className={getDarkModeDropdownClasses()}>
             {supportedLanguages.map((lang) => (
               <SelectItem key={lang.code} value={lang.code}>
                 {lang.name}

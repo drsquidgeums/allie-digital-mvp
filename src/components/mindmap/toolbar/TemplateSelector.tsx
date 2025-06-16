@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { NODE_TEMPLATES, NodeTemplate } from '../constants/nodeTemplates';
 import { MindMapNode } from '../types';
+import { getDarkModeDropdownClasses } from '@/utils/darkModeUtils';
 
 interface TemplateSelectorProps {
   onLoadTemplate: (templateNodes: Omit<MindMapNode, 'id'>[]) => void;
@@ -56,7 +57,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="end" 
-        className="w-56 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+        className={`w-56 ${getDarkModeDropdownClasses()}`}
       >
         {Object.entries(groupedTemplates).map(([category, templates]) => (
           <div key={category}>
