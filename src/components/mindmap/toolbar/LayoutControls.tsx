@@ -40,7 +40,10 @@ export const LayoutControls: React.FC<LayoutControlsProps> = ({
             Auto Layout
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent 
+          align="end"
+          className="dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+        >
           <DropdownMenuItem onClick={() => onApplyLayout('radial')}>
             <GitBranch className="h-4 w-4 mr-2" />
             Radial Layout
