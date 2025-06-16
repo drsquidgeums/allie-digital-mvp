@@ -9,10 +9,11 @@ import { usePdfHighlights } from '../hooks/usePdfHighlights';
 import { useTextSelection } from '../hooks/useTextSelection';
 import '@/styles/pdf/pdf-highlighter.css';
 import '@/styles/pdf/pdf-highlights.css';
+import '@/styles/pdf/pdf-text-layer.css';
 
-// Configure PDF.js worker with consistent CDN
+// Configure PDF.js worker with unpkg CDN for better reliability
 const PDFJS_VERSION = '3.4.120';
-const WORKER_URL = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.worker.min.js`;
+const WORKER_URL = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.js`;
 
 if (!pdfjs.GlobalWorkerOptions.workerSrc) {
   pdfjs.GlobalWorkerOptions.workerSrc = WORKER_URL;

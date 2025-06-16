@@ -3,9 +3,9 @@ import mammoth from 'mammoth';
 import { PDFDocument } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Configure PDF.js worker with a more reliable CDN
+// Configure PDF.js worker with unpkg CDN (more reliable for workers)
 const PDFJS_VERSION = '3.4.120';
-const WORKER_URL = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.worker.min.js`;
+const WORKER_URL = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.js`;
 
 // Only set worker source if it hasn't been set already
 if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
@@ -70,7 +70,7 @@ async function extractTextFromPdf(file: File): Promise<string> {
   try {
     const arrayBuffer = await file.arrayBuffer();
     
-    // Use the more reliable CDN for worker
+    // Ensure worker is configured
     if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
       pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER_URL;
     }
@@ -78,8 +78,8 @@ async function extractTextFromPdf(file: File): Promise<string> {
     const loadingTask = pdfjsLib.getDocument({ 
       data: arrayBuffer,
       useSystemFonts: true,
-      standardFontDataUrl: `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/standard_fonts/`,
-      cMapUrl: `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/cmaps/`,
+      standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/standard_fonts/`,
+      cMapUrl: `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/cmaps/`,
       cMapPacked: true,
     });
     

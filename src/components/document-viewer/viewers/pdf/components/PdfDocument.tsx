@@ -49,12 +49,12 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
           onLoadError={onLoadError}
           onItemClick={onLoadingStart}
           options={{
-            // Use a more stable worker configuration
+            // Use unpkg for better worker reliability
             standardFontDataUrl: `https://unpkg.com/pdfjs-dist@3.4.120/standard_fonts/`,
             cMapUrl: `https://unpkg.com/pdfjs-dist@3.4.120/cmaps/`,
             cMapPacked: true,
-            // Don't disable the worker, but use it more carefully
-            workerPort: null,
+            // Configure worker properly
+            workerSrc: `https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js`,
           }}
           loading={
             <div 
