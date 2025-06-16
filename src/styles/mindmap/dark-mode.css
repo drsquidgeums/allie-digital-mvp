@@ -26,19 +26,33 @@
 
 .dark .react-flow__node.selected {
   box-shadow: 0 0 0 2px hsl(var(--primary)), 0 4px 12px rgba(0, 0, 0, 0.4);
+  border-color: hsl(var(--primary));
 }
 
 .dark .react-flow__handle {
   background-color: hsl(var(--primary));
   border-color: hsl(var(--card));
+  opacity: 1 !important;
+}
+
+.dark .react-flow__handle:hover {
+  background-color: hsl(var(--primary));
+  transform: scale(1.2);
 }
 
 .dark .react-flow__edge path {
-  stroke: hsl(var(--muted-foreground));
+  stroke: hsl(var(--primary)) !important;
+  stroke-width: 2;
+}
+
+.dark .react-flow__edge.selected path {
+  stroke: hsl(var(--accent)) !important;
+  stroke-width: 3;
 }
 
 .dark .react-flow__connection-path {
   stroke: hsl(var(--primary));
+  stroke-width: 2;
 }
 
 .dark .creative-toolbar {
@@ -63,4 +77,15 @@
 .dark .react-flow__minimap-node {
   fill: hsl(var(--primary/70));
   stroke: hsl(var(--border));
+}
+
+/* Ensure shape nodes are visible in dark mode */
+.dark .react-flow__node[data-type="shapeNode"] {
+  color: hsl(var(--card-foreground));
+}
+
+/* Fix connection line visibility */
+.dark .react-flow__connectionline {
+  stroke: hsl(var(--primary)) !important;
+  stroke-width: 2;
 }
