@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { 
-  FileTemplate,
+  FileText,
   Target,
   Calendar,
   Lightbulb
@@ -31,7 +31,7 @@ const getCategoryIcon = (category: string) => {
     case 'creative':
       return Lightbulb;
     default:
-      return FileTemplate;
+      return FileText;
   }
 };
 
@@ -50,7 +50,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="h-9 px-3">
-          <FileTemplate className="h-4 w-4 mr-1" />
+          <FileText className="h-4 w-4 mr-1" />
           Templates
         </Button>
       </DropdownMenuTrigger>
