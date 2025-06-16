@@ -121,68 +121,100 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 pt-4" aria-labelledby="nda-form-title">
-      <h3 className="sr-only" id="nda-form-title">NDA Agreement Form</h3>
-      <div className="space-y-4">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
-            <Input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your full name"
-              required
-              aria-required="true"
-              aria-invalid={name === "" && document.activeElement?.id !== "name" ? "true" : undefined}
-              className="w-full"
-              style={{ color: "#000000", backgroundColor: "white" }}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-              aria-required="true"
-              aria-invalid={(email !== "" && !isValidEmail(email) && document.activeElement?.id !== "email") ? "true" : undefined}
-              className="w-full"
-              style={{ color: "#000000", backgroundColor: "white" }}
-            />
-          </div>
-        </div>
-
-        <div className="flex items-start space-x-2 pt-2">
-          <Checkbox
-            id="agree"
-            checked={isAgreeChecked}
-            onCheckedChange={(checked) => setIsAgreeChecked(checked === true)}
-            aria-required="true"
-            aria-describedby="agree-description"
-            className="mt-1"
-          />
-          <Label htmlFor="agree" className="text-sm font-normal cursor-pointer" id="agree-description">
-            I agree to the terms and conditions of this Non-Disclosure Agreement for this session
-          </Label>
-        </div>
-      </div>
-
-      <DialogFooter>
-        <Button 
-          type="submit" 
-          disabled={isSubmitting || !isAgreeChecked || !name || !email}
-          className="w-full sm:w-auto"
-          aria-busy={isSubmitting}
+    <div className="bg-white dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+      <form onSubmit={handleSubmit} className="space-y-6 pt-4" aria-labelledby="nda-form-title">
+        <h3 
+          className="text-xl font-semibold text-gray-900 dark:text-white mb-6" 
+          id="nda-form-title"
         >
-          {isSubmitting ? "Processing..." : "I Agree"}
-        </Button>
-      </DialogFooter>
-    </form>
+          Agreement Details
+        </h3>
+        
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div className="space-y-3">
+              <Label 
+                htmlFor="name" 
+                className="text-sm font-medium text-gray-900 dark:text-gray-100 block"
+              >
+                Full Name *
+              </Label>
+              <Input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter your full name"
+                required
+                aria-required="true"
+                aria-invalid={name === "" && document.activeElement?.id !== "name" ? "true" : undefined}
+                className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 placeholder:text-gray-500 dark:placeholder:text-gray-400"
+              />
+            </div>
+
+            <div className="space-y-3">
+              <Label 
+                htmlFor="email" 
+                className="text-sm font-medium text-gray-900 dark:text-gray-100 block"
+              >
+                Email Address *
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+                aria-required="true"
+                aria-invalid={(email !== "" && !isValidEmail(email) && document.activeElement?.id !== "email") ? "true" : undefined}
+                className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 placeholder:text-gray-500 dark:placeholder:text-gray-400"
+              />
+            </div>
+          </div>
+
+          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+            <div className="flex items-start space-x-3">
+              <Checkbox
+                id="agree"
+                checked={isAgreeChecked}
+                onCheckedChange={(checked) => setIsAgreeChecked(checked === true)}
+                aria-required="true"
+                aria-describedby="agree-description"
+                className="mt-1 border-gray-400 dark:border-gray-500 data-[state=checked]:bg-blue-600 dark:data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-600 dark:data-[state=checked]:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20"
+              />
+              <Label 
+                htmlFor="agree" 
+                className="text-sm font-medium text-gray-900 dark:text-gray-100 cursor-pointer leading-relaxed" 
+                id="agree-description"
+              >
+                I agree to the terms and conditions of this Non-Disclosure Agreement for this session and acknowledge that I have read and understood all terms outlined above. *
+              </Label>
+            </div>
+          </div>
+        </div>
+
+        <DialogFooter className="pt-6">
+          <Button 
+            type="submit" 
+            disabled={isSubmitting || !isAgreeChecked || !name || !email}
+            className="w-full sm:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-medium focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors duration-200"
+            aria-busy={isSubmitting}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center space-x-2">
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                <span>Processing...</span>
+              </span>
+            ) : (
+              "I Agree"
+            )}
+          </Button>
+        </DialogFooter>
+      </form>
+    </div>
   );
 };
