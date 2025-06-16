@@ -15,6 +15,13 @@ interface State {
   error: Error | null;
 }
 
+// Extend the Window interface to include gtag
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+  }
+}
+
 /**
  * FeatureErrorBoundary Component
  * 
