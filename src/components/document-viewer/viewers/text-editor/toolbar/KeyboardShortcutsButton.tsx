@@ -24,6 +24,13 @@ export const KeyboardShortcutsButton: React.FC = () => {
     { keys: 'Ctrl + C', action: 'Copy' },
     { keys: 'Ctrl + V', action: 'Paste' },
     { keys: 'Ctrl + X', action: 'Cut' },
+    { keys: 'Ctrl + 1', action: 'Heading 1' },
+    { keys: 'Ctrl + 2', action: 'Heading 2' },
+    { keys: 'Ctrl + 3', action: 'Heading 3' },
+    { keys: 'Ctrl + Shift + L', action: 'Align Left' },
+    { keys: 'Ctrl + Shift + E', action: 'Align Center' },
+    { keys: 'Ctrl + Shift + R', action: 'Align Right' },
+    { keys: 'Ctrl + Shift + J', action: 'Justify' },
   ];
 
   return (
@@ -38,15 +45,15 @@ export const KeyboardShortcutsButton: React.FC = () => {
           <Keyboard className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md bg-background text-foreground border border-border">
         <DialogHeader>
-          <DialogTitle>Keyboard Shortcuts</DialogTitle>
+          <DialogTitle className="text-foreground">Keyboard Shortcuts</DialogTitle>
         </DialogHeader>
-        <div className="space-y-2">
+        <div className="space-y-3 max-h-80 overflow-y-auto bg-background">
           {shortcuts.map((shortcut) => (
-            <div key={shortcut.keys} className="flex justify-between items-center py-1">
-              <span className="text-sm">{shortcut.action}</span>
-              <kbd className="px-2 py-1 text-xs bg-muted rounded border">
+            <div key={shortcut.keys} className="flex justify-between items-center py-2 px-1">
+              <span className="text-sm text-foreground">{shortcut.action}</span>
+              <kbd className="px-2 py-1 text-xs bg-muted text-muted-foreground rounded border border-border font-mono">
                 {shortcut.keys}
               </kbd>
             </div>
