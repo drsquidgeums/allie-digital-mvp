@@ -10,8 +10,10 @@ import { useTextSelection } from '../hooks/useTextSelection';
 import '@/styles/pdf/pdf-highlighter.css';
 import '@/styles/pdf/pdf-highlights.css';
 
-// Set PDF.js worker path
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+// Configure PDF.js worker with a more stable approach
+if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+}
 
 interface SimplePdfViewerProps {
   file?: File | null;
@@ -32,6 +34,8 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [scale, setScale] = useState<number>(1.0);
   const [selectedHighlightId, setSelectedHighlightId] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
 
   // Use our custom hook for managing highlights
@@ -90,12 +94,21 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   // Handle document load success
   const handleDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
+    setLoadError(null);
+    setIsLoading(false);
     console.log("Document loaded with", numPages, "pages");
+    
+    toast({
+      title: "PDF Loaded Successfully",
+      description: `Document has ${numPages} pages`,
+    });
   };
 
   // Handle document load error
   const handleDocumentLoadError = (error: Error) => {
     console.error("PDF loading error:", error);
+    setLoadError(error.message);
+    setIsLoading(false);
     toast({
       title: "PDF Loading Failed",
       description: "There was a problem loading the PDF. Please try a different file.",
@@ -103,10 +116,36 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
     });
   };
 
+  // Handle loading start
+  const handleLoadingStart = () => {
+    setIsLoading(true);
+    setLoadError(null);
+  };
+
   if (!pdfUrl) {
     return (
       <div className="flex items-center justify-center h-full bg-muted/20">
         <p className="text-muted-foreground">No document loaded. Please select a PDF file.</p>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="flex items-center justify-center h-full bg-muted/20">
+        <div className="text-center">
+          <p className="text-destructive mb-2">Failed to load PDF</p>
+          <p className="text-sm text-muted-foreground mb-4">{loadError}</p>
+          <button 
+            onClick={() => {
+              setLoadError(null);
+              setIsLoading(false);
+            }}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
+          >
+            Try again
+          </button>
+        </div>
       </div>
     );
   }
@@ -139,6 +178,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
         selectedHighlightId={selectedHighlightId}
         onLoadSuccess={handleDocumentLoadSuccess}
         onLoadError={handleDocumentLoadError}
+        onLoadingStart={handleLoadingStart}
         onHighlightClick={setSelectedHighlightId}
       />
       

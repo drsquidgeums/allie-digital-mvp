@@ -11,25 +11,10 @@ import '@/styles/pdf/pdf-highlighter.css';
 import '@/styles/pdf/pdf-highlights.css';
 import '@/styles/pdf/pdf-text-layer.css';
 
-// Configure PDF.js worker with local fallback for better reliability
-const configureWorker = () => {
-  if (!pdfjs.GlobalWorkerOptions.workerSrc) {
-    try {
-      // Try to use the local worker from node_modules first
-      pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-        'pdfjs-dist/build/pdf.worker.min.js',
-        import.meta.url
-      ).toString();
-    } catch (error) {
-      console.warn('Local PDF.js worker not available, using CDN fallback');
-      // Fallback to a reliable CDN
-      pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-    }
-  }
-};
-
-// Initialize worker
-configureWorker();
+// Configure PDF.js worker with a single, stable configuration
+if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+}
 
 interface SimplePdfViewerProps {
   file?: File | null;
@@ -109,7 +94,7 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   // Handle document load success
   const handleDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
-    setLoadError(null); // Clear any previous errors
+    setLoadError(null);
     console.log("Document loaded with", numPages, "pages");
     
     toast({
@@ -142,10 +127,10 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
       <div className="flex items-center justify-center h-full bg-muted/20">
         <div className="text-center">
           <p className="text-destructive mb-2">Failed to load PDF</p>
-          <p className="text-sm text-muted-foreground">{loadError}</p>
+          <p className="text-sm text-muted-foreground mb-4">{loadError}</p>
           <button 
             onClick={() => setLoadError(null)}
-            className="mt-2 text-xs underline hover:text-muted-foreground"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
           >
             Try again
           </button>

@@ -1,26 +1,12 @@
+
 import mammoth from 'mammoth';
 import { PDFDocument } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Configure PDF.js worker with local fallback
-const configureWorker = () => {
-  if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-    // Use the bundled worker from node_modules instead of external CDNs
-    try {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-        'pdfjs-dist/build/pdf.worker.min.js',
-        import.meta.url
-      ).toString();
-    } catch (error) {
-      console.warn('Failed to set up PDF worker from node_modules, falling back to CDN');
-      // Fallback to CDN if local doesn't work
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
-    }
-  }
-};
-
-// Initialize worker configuration
-configureWorker();
+// Configure PDF.js worker with a single, stable configuration
+if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
+}
 
 export async function convertDocxToHtml(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
@@ -78,16 +64,14 @@ export async function extractTextFromFile(file: File): Promise<string> {
 
 async function extractTextFromPdf(file: File): Promise<string> {
   try {
-    // Ensure worker is configured
-    configureWorker();
-    
     const arrayBuffer = await file.arrayBuffer();
     const loadingTask = pdfjsLib.getDocument({ 
       data: arrayBuffer,
-      // Add these options to help with loading
-      useWorkerFetch: false,
-      isEvalSupported: false,
-      useSystemFonts: true
+      // Use stable options that don't conflict with react-pdf
+      useSystemFonts: true,
+      standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/standard_fonts/`,
+      cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/cmaps/`,
+      cMapPacked: true,
     });
     
     const pdf = await loadingTask.promise;

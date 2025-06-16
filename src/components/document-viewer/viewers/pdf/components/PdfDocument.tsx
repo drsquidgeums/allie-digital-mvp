@@ -11,6 +11,7 @@ interface PdfDocumentProps {
   selectedHighlightId: string | null;
   onLoadSuccess: ({ numPages }: { numPages: number }) => void;
   onLoadError: (error: Error) => void;
+  onLoadingStart?: () => void;
   onHighlightClick: (id: string) => void;
 }
 
@@ -22,6 +23,7 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
   selectedHighlightId,
   onLoadSuccess,
   onLoadError,
+  onLoadingStart,
   onHighlightClick
 }) => {
   // Get the current page's highlights
@@ -45,11 +47,14 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
           file={file}
           onLoadSuccess={onLoadSuccess}
           onLoadError={onLoadError}
+          onItemClick={onLoadingStart}
           options={{
-            // Completely disable worker to avoid external script loading
-            disableWorker: true,
-            // Use inline worker instead
-            workerSrc: null,
+            // Use a more stable worker configuration
+            standardFontDataUrl: `https://unpkg.com/pdfjs-dist@3.4.120/standard_fonts/`,
+            cMapUrl: `https://unpkg.com/pdfjs-dist@3.4.120/cmaps/`,
+            cMapPacked: true,
+            // Don't disable the worker, but use it more carefully
+            workerPort: null,
           }}
           loading={
             <div 
@@ -78,6 +83,7 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
             renderAnnotationLayer={false}
             className="pdf-page"
             canvasBackground="transparent"
+            scale={1} // Let the container handle scaling
           />
 
           {/* Render highlights only when they exist */}
