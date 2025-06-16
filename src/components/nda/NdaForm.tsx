@@ -1,13 +1,12 @@
 
 import React, { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog/dialog-footer";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { SecureInput } from "@/components/security/SecureInput";
-import { emailSchema, nameSchema, checkRateLimit } from "@/utils/inputValidation";
 
 interface NdaFormProps {
   onSubmitSuccess: (name: string, email: string) => void;
@@ -34,32 +33,9 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
     }
   }, []);
 
-  const validateInputs = (): boolean => {
-    // Validate name
-    try {
-      nameSchema.parse(name);
-    } catch {
-      toast({
-        title: "Error",
-        description: "Please enter a valid name (letters, spaces, hyphens, apostrophes, and periods only).",
-        variant: "destructive"
-      });
-      return false;
-    }
-
-    // Validate email
-    try {
-      emailSchema.parse(email);
-    } catch {
-      toast({
-        title: "Error",
-        description: "Please enter a valid email address.",
-        variant: "destructive"
-      });
-      return false;
-    }
-
-    return true;
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -74,15 +50,10 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
       return;
     }
 
-    if (!validateInputs()) {
-      return;
-    }
-
-    // Rate limiting check
-    if (!checkRateLimit(`nda_${email}`, 3, 300000)) { // 3 attempts per 5 minutes
+    if (!isValidEmail(email)) {
       toast({
         title: "Error",
-        description: "Too many attempts. Please try again later.",
+        description: "Please enter a valid email address.",
         variant: "destructive"
       });
       return;
@@ -156,14 +127,13 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="name">Full Name</Label>
-            <SecureInput
+            <Input
               id="name"
               type="text"
               value={name}
-              onSecureChange={setName}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Enter your full name"
               required
-              maxLength={100}
               aria-required="true"
               aria-invalid={name === "" && document.activeElement?.id !== "name" ? "true" : undefined}
               className="w-full"
@@ -173,16 +143,15 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
 
           <div className="space-y-2">
             <Label htmlFor="email">Email Address</Label>
-            <SecureInput
+            <Input
               id="email"
               type="email"
               value={email}
-              onSecureChange={setEmail}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               required
-              maxLength={254}
               aria-required="true"
-              aria-invalid={(email !== "" && !emailSchema.safeParse(email).success && document.activeElement?.id !== "email") ? "true" : undefined}
+              aria-invalid={(email !== "" && !isValidEmail(email) && document.activeElement?.id !== "email") ? "true" : undefined}
               className="w-full"
               style={{ color: "#000000", backgroundColor: "white" }}
             />

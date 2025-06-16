@@ -8,7 +8,7 @@ export interface ExtendedDatabase extends SupabaseDatabase {
       tasks: {
         Row: {
           id: string;
-          user_id: string; // Made required to match NOT NULL constraint
+          user_id: string | null;
           text: string;
           completed: boolean | null;
           created_at: string | null;
@@ -18,7 +18,7 @@ export interface ExtendedDatabase extends SupabaseDatabase {
         };
         Insert: {
           id?: string;
-          user_id: string; // Made required to match NOT NULL constraint
+          user_id?: string | null;
           text: string;
           completed?: boolean | null;
           created_at?: string | null;
@@ -28,7 +28,7 @@ export interface ExtendedDatabase extends SupabaseDatabase {
         };
         Update: {
           id?: string;
-          user_id?: string; // Keep optional for updates
+          user_id?: string | null;
           text?: string;
           completed?: boolean | null;
           created_at?: string | null;
