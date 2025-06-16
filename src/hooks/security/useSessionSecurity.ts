@@ -1,3 +1,4 @@
+
 import { useCallback, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -92,13 +93,22 @@ export const useSessionSecurity = () => {
   }, [toast]);
 
   const generateDeviceFingerprint = useCallback(() => {
+    // Safely access navigator properties that might not exist
+    const getDeviceMemory = () => {
+      try {
+        return (navigator as any).deviceMemory || 0;
+      } catch {
+        return 0;
+      }
+    };
+
     const components = [
       navigator.userAgent,
       navigator.language,
       screen.width + 'x' + screen.height,
       new Date().getTimezoneOffset(),
       navigator.hardwareConcurrency || 0,
-      navigator.deviceMemory || 0
+      getDeviceMemory()
     ];
     
     return btoa(components.join('|')).slice(0, 32);
