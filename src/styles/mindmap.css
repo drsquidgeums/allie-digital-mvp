@@ -25,6 +25,9 @@
   border-radius: 8px;
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--card-foreground));
 }
 
 /* Focus styles for accessibility */
@@ -43,7 +46,8 @@
   width: var(--flow-handle-width);
   height: var(--flow-handle-height);
   border-radius: 50%;
-  background-color: var(--flow-handle-color);
+  background-color: hsl(var(--primary));
+  border: 2px solid hsl(var(--background));
   opacity: 1;
   z-index: 10;
 }
@@ -51,11 +55,12 @@
 .react-flow__handle:hover {
   transform: scale(1.2);
   opacity: 1 !important;
+  background-color: hsl(var(--primary));
 }
 
 /* Connection line styling */
 .react-flow__connection-path {
-  stroke: #9b87f5;
+  stroke: hsl(var(--primary));
   stroke-width: 2;
 }
 
@@ -69,6 +74,7 @@
 }
 
 .react-flow__edge path {
+  stroke: hsl(var(--muted-foreground));
   stroke-width: 2;
 }
 
@@ -82,11 +88,12 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 6px !important;
   overflow: hidden;
-  border: none !important;
+  border: 1px solid hsl(var(--border)) !important;
   position: absolute;
   top: 20px;
   right: 20px;
   z-index: 50 !important;
+  background: hsl(var(--card));
 }
 
 .react-flow__controls-button {
@@ -96,8 +103,9 @@
   align-items: center !important;
   justify-content: center !important;
   transition: all 0.2s !important;
-  background: transparent !important;
+  background: hsl(var(--card)) !important;
   border: none !important;
+  color: hsl(var(--card-foreground)) !important;
 }
 
 .react-flow__controls-button:hover {
@@ -147,20 +155,46 @@
   }
 }
 
-/* Dark mode styles */
+/* Dark mode specific improvements */
 .dark .react-flow__controls {
-  background-color: hsl(var(--background));
-  border-color: transparent;
+  background-color: hsl(var(--card));
+  border-color: hsl(var(--border));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .dark .react-flow__controls-button {
-  background-color: transparent;
+  background-color: hsl(var(--card));
   border-color: transparent;
-  color: hsl(var(--foreground));
+  color: hsl(var(--card-foreground));
+}
+
+.dark .react-flow__controls-button:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
 }
 
 .dark .react-flow__node {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  background: hsl(var(--card));
+  border-color: hsl(var(--border));
+  color: hsl(var(--card-foreground));
+}
+
+.dark .react-flow__node.selected {
+  box-shadow: 0 0 0 2px hsl(var(--primary)), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.dark .react-flow__handle {
+  background-color: hsl(var(--primary));
+  border-color: hsl(var(--card));
+}
+
+.dark .react-flow__edge path {
+  stroke: hsl(var(--muted-foreground));
+}
+
+.dark .react-flow__connection-path {
+  stroke: hsl(var(--primary));
 }
 
 /* High contrast mode helpers */
@@ -182,11 +216,16 @@
   display: flex;
   padding: 12px;
   gap: 8px;
-  background-color: hsla(var(--card)/0.8);
+  background-color: hsla(var(--card)/0.9);
   backdrop-filter: blur(8px);
   border-top: 1px solid hsl(var(--border));
   border-radius: 8px 8px 0 0;
   margin: 0 16px;
+}
+
+.dark .creative-toolbar {
+  background-color: hsla(var(--card)/0.95);
+  border-color: hsl(var(--border));
 }
 
 /* Fix tooltip positioning */
@@ -222,4 +261,28 @@
 /* Connection line improvements */
 .react-flow__connectionline {
   z-index: 1000;
+}
+
+/* Background styling for better contrast */
+.react-flow .react-flow__background {
+  fill: hsl(var(--muted/20));
+}
+
+.dark .react-flow .react-flow__background {
+  fill: hsl(var(--muted/10));
+}
+
+/* Minimap styling for dark mode */
+.dark .react-flow__minimap {
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+}
+
+.dark .react-flow__minimap-mask {
+  fill: hsl(var(--muted/50));
+}
+
+.dark .react-flow__minimap-node {
+  fill: hsl(var(--primary/70));
+  stroke: hsl(var(--border));
 }
