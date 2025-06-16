@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { WelcomeHeader } from "./password-gate/WelcomeHeader";
@@ -63,10 +64,6 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
       style={{
         opacity: imagesLoaded ? 1 : 0,
         transition: 'opacity 0.3s ease-in-out',
-        backgroundImage: "url('/lovable-uploads/c6d002da-1686-4204-97e5-213169f7c0b5.png')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
         backgroundColor: '#ffffff !important',
         color: '#000000 !important',
         // Force light mode styling regardless of theme
@@ -76,7 +73,11 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
       <div 
         className="absolute inset-0"
         style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.90) !important',
+          backgroundImage: "url('/lovable-uploads/c6d002da-1686-4204-97e5-213169f7c0b5.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          opacity: 0.1,
         }}
       />
       <div 
@@ -104,3 +105,4 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     </div>
   );
 };
+
