@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Input } from "@/components/ui/input";
 
@@ -16,11 +17,14 @@ export const ColorPicker = ({ label, value, onChange }: ColorPickerProps) => {
           type="color"
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          className="w-12 h-10 p-1 border rounded cursor-pointer"
         />
         <Input
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          placeholder="#000000"
+          className="flex-1"
         />
       </div>
     </div>
