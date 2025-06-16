@@ -5,6 +5,8 @@ import { FeedbackButtons } from "./FeedbackButtons";
 import { useAlreadySubmittedCheck } from "@/hooks/feedback/useAlreadySubmittedCheck";
 import { useWordCount } from "@/hooks/feedback/useWordCount";
 import { useFeedbackSubmission } from "@/hooks/feedback/useFeedbackSubmission";
+import { checkRateLimit } from "@/utils/inputValidation";
+import { toast } from "sonner";
 
 interface FeedbackFormProps {
   onClose: () => void;
@@ -29,6 +31,13 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Rate limiting check
+    if (userEmail && !checkRateLimit(`feedback_${userEmail}`, 2, 3600000)) { // 2 attempts per hour
+      toast.error("Too many feedback submissions. Please try again later.");
+      return;
+    }
+    
     console.log("Form submitted with comments:", comments);
     console.log("User email:", userEmail);
     console.log("Word count:", wordCount);
