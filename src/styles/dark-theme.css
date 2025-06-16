@@ -113,3 +113,36 @@ input:focus {
 .dark input[aria-label="Chat input"]::placeholder {
   color: #888888 !important;
 }
+
+/* Enhanced NDA text styling for better dark mode readability */
+.dark .prose {
+  color: #f1f1f1 !important;
+}
+
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4,
+.dark .prose h5,
+.dark .prose h6 {
+  color: #ffffff !important;
+}
+
+.dark .prose p {
+  color: #e5e5e5 !important;
+}
+
+.dark .prose ul,
+.dark .prose ol {
+  color: #e5e5e5 !important;
+}
+
+.dark .prose li {
+  color: #e5e5e5 !important;
+}
+
+/* Force NDA text visibility in dark mode */
+.dark [role="region"] {
+  background-color: #1a1a1a !important;
+  border-color: #404040 !important;
+}
