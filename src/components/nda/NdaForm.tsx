@@ -17,6 +17,8 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
   const [email, setEmail] = useState<string>("");
   const [isAgreeChecked, setIsAgreeChecked] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [nameError, setNameError] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
   const { toast } = useToast();
 
   // Prefill form with existing data from localStorage if available
@@ -38,24 +40,40 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
     return emailRegex.test(email);
   };
 
+  const validateForm = (): boolean => {
+    let hasErrors = false;
+    
+    // Reset errors
+    setNameError("");
+    setEmailError("");
+
+    if (!name.trim()) {
+      setNameError("Full name is required");
+      hasErrors = true;
+    }
+
+    if (!email.trim()) {
+      setEmailError("Email address is required");
+      hasErrors = true;
+    } else if (!isValidEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      hasErrors = true;
+    }
+
+    return !hasErrors;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!name || !email || !isAgreeChecked) {
-      toast({
-        title: "Error",
-        description: "Please fill all fields and agree to the terms.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (!isValidEmail(email)) {
-      toast({
-        title: "Error",
-        description: "Please enter a valid email address.",
-        variant: "destructive"
-      });
+    if (!validateForm() || !isAgreeChecked) {
+      if (!isAgreeChecked) {
+        toast({
+          title: "Error",
+          description: "Please agree to the terms and conditions.",
+          variant: "destructive"
+        });
+      }
       return;
     }
 
@@ -122,7 +140,7 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
 
   return (
     <div className="bg-white dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-      <form onSubmit={handleSubmit} className="space-y-6 pt-4" aria-labelledby="nda-form-title">
+      <form onSubmit={handleSubmit} className="space-y-6 pt-4" aria-labelledby="nda-form-title" noValidate>
         <h3 
           className="text-xl font-semibold text-gray-900 dark:text-white mb-6" 
           id="nda-form-title"
@@ -130,26 +148,35 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
           Agreement Details
         </h3>
         
-        <div className="space-y-6">
+        <div className="space-y-6" role="group" aria-labelledby="nda-form-title">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div className="space-y-3">
               <Label 
                 htmlFor="name" 
                 className="text-sm font-medium text-gray-900 dark:text-gray-100 block"
               >
-                Full Name *
+                Full Name <span className="text-red-500" aria-label="required">*</span>
               </Label>
               <Input
                 id="name"
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (nameError) setNameError("");
+                }}
                 placeholder="Enter your full name"
                 required
                 aria-required="true"
-                aria-invalid={name === "" && document.activeElement?.id !== "name" ? "true" : undefined}
+                aria-invalid={nameError ? "true" : "false"}
+                aria-describedby={nameError ? "name-error" : undefined}
                 className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
+              {nameError && (
+                <div id="name-error" className="text-sm text-red-600 dark:text-red-400" role="alert">
+                  {nameError}
+                </div>
+              )}
             </div>
 
             <div className="space-y-3">
@@ -157,19 +184,28 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
                 htmlFor="email" 
                 className="text-sm font-medium text-gray-900 dark:text-gray-100 block"
               >
-                Email Address *
+                Email Address <span className="text-red-500" aria-label="required">*</span>
               </Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (emailError) setEmailError("");
+                }}
                 placeholder="Enter your email"
                 required
                 aria-required="true"
-                aria-invalid={(email !== "" && !isValidEmail(email) && document.activeElement?.id !== "email") ? "true" : undefined}
+                aria-invalid={emailError ? "true" : "false"}
+                aria-describedby={emailError ? "email-error" : undefined}
                 className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
+              {emailError && (
+                <div id="email-error" className="text-sm text-red-600 dark:text-red-400" role="alert">
+                  {emailError}
+                </div>
+              )}
             </div>
           </div>
 
@@ -188,7 +224,7 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
                 className="text-sm font-medium text-gray-900 dark:text-gray-100 cursor-pointer leading-relaxed" 
                 id="agree-description"
               >
-                I agree to the terms and conditions of this Non-Disclosure Agreement for this session and acknowledge that I have read and understood all terms outlined above. *
+                I agree to the terms and conditions of this Non-Disclosure Agreement for this session and acknowledge that I have read and understood all terms outlined above. <span className="text-red-500" aria-label="required">*</span>
               </Label>
             </div>
           </div>
@@ -198,12 +234,13 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
           <Button 
             type="submit" 
             disabled={isSubmitting || !isAgreeChecked || !name || !email}
-            className="w-full sm:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-medium focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors duration-200"
+            className="w-full sm:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-medium focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors duration-200 min-h-[44px]"
             aria-busy={isSubmitting}
+            aria-describedby="submit-button-description"
           >
             {isSubmitting ? (
               <span className="flex items-center space-x-2">
-                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
@@ -213,6 +250,9 @@ export const NdaForm: React.FC<NdaFormProps> = ({ onSubmitSuccess }) => {
               "I Agree"
             )}
           </Button>
+          <div id="submit-button-description" className="sr-only">
+            Click to submit your agreement to the Non-Disclosure Agreement
+          </div>
         </DialogFooter>
       </form>
     </div>

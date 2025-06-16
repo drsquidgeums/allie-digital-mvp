@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog/dialog-root";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog/dialog-root";
 import { FeedbackForm } from "./feedback/FeedbackForm";
 
 interface FeedbackPromptProps {
@@ -18,9 +18,12 @@ export const FeedbackPrompt: React.FC<FeedbackPromptProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} modal>
-      <DialogContent className="sm:max-w-md dark:bg-background dark:text-foreground">
+      <DialogContent className="sm:max-w-md dark:bg-background dark:text-foreground" role="dialog" aria-labelledby="feedback-title" aria-describedby="feedback-description">
         <DialogHeader>
-          <DialogTitle className="text-center text-xl">Feedback</DialogTitle>
+          <DialogTitle id="feedback-title" className="text-center text-xl">Feedback</DialogTitle>
+          <DialogDescription id="feedback-description" className="text-center text-sm text-muted-foreground">
+            Share your thoughts and help us improve your experience with the application.
+          </DialogDescription>
         </DialogHeader>
         
         <FeedbackForm

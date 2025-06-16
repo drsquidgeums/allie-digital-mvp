@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@/components/ui/dialog/dialog-root';
 import { Keyboard } from 'lucide-react';
 
 export const KeyboardShortcutsButton: React.FC = () => {
@@ -40,20 +41,23 @@ export const KeyboardShortcutsButton: React.FC = () => {
           variant="ghost"
           size="sm"
           className="h-8 w-8 p-0"
-          aria-label="Keyboard Shortcuts"
+          aria-label="View keyboard shortcuts"
         >
           <Keyboard className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700">
+      <DialogContent className="max-w-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700" role="dialog" aria-labelledby="shortcuts-title" aria-describedby="shortcuts-description">
         <DialogHeader>
-          <DialogTitle className="text-gray-900 dark:text-gray-100 text-lg font-semibold">
+          <DialogTitle id="shortcuts-title" className="text-gray-900 dark:text-gray-100 text-lg font-semibold">
             Keyboard Shortcuts
           </DialogTitle>
+          <DialogDescription id="shortcuts-description" className="text-gray-600 dark:text-gray-400">
+            Use these keyboard shortcuts to work more efficiently with the text editor.
+          </DialogDescription>
         </DialogHeader>
-        <div className="space-y-3 max-h-80 overflow-y-auto">
+        <div className="space-y-3 max-h-80 overflow-y-auto" role="list" aria-label="Available keyboard shortcuts">
           {shortcuts.map((shortcut) => (
-            <div key={shortcut.keys} className="flex justify-between items-center py-2 px-1 hover:bg-gray-50 dark:hover:bg-gray-800 rounded">
+            <div key={shortcut.keys} className="flex justify-between items-center py-2 px-1 hover:bg-gray-50 dark:hover:bg-gray-800 rounded" role="listitem">
               <span className="text-sm text-gray-800 dark:text-gray-200 font-medium">
                 {shortcut.action}
               </span>
