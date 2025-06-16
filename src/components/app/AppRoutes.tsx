@@ -18,12 +18,9 @@ export const AppRoutes = React.memo(() => (
     <Route path="/file-uploader" element={<Navigate to="/toolbox" replace />} />
     <Route path="/tasks" element={<TaskDashboard />} />
     <Route path="/ai-assistant" element={<AIAssistant />} />
-    
-    {/* Disabled routes - redirect to toolbox */}
-    <Route path="/mind-map" element={<Navigate to="/toolbox" replace />} />
-    <Route path="/settings" element={<Navigate to="/toolbox" replace />} />
-    <Route path="/community" element={<Navigate to="/toolbox" replace />} />
-    
+    <Route path="/mind-map" element={<MindMapDashboard />} />
+    <Route path="/settings" element={<SettingsPage />} />
+    <Route path="/community" element={<CommunityPage />} />
     <Route path="/nda-admin" element={<NdaAdminPage />} />
     {/* Add a catch-all route to redirect to toolbox */}
     <Route path="*" element={<Navigate to="/toolbox" replace />} />

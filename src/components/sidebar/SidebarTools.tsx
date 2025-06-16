@@ -4,7 +4,6 @@ import {
   Users,
   Settings,
   LogOut,
-  Star,
   MessageSquare
 } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
@@ -40,12 +39,14 @@ export const SidebarTools = ({
 
   const handleSettingsClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    // Disabled - do nothing
+    setActiveComponent("settings");
+    navigate("/settings");
   };
 
   const handleCommunityClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    // Disabled - do nothing
+    setActiveComponent("community");
+    navigate("/community");
   };
 
   const handleFeedbackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -60,19 +61,15 @@ export const SidebarTools = ({
       <div className="pt-4 border-t border-border space-y-2">
         <SidebarButton
           icon={Settings}
-          label={`${t('navigation.settings')} ★`}
-          isActive={false}
+          label={t('navigation.settings')}
+          isActive={location.pathname === "/settings"}
           onClick={handleSettingsClick}
-          className="text-gray-600 cursor-not-allowed"
-          disabled={true}
         />
         <SidebarButton
           icon={Users}
-          label={`${t('navigation.community')} ★`}
-          isActive={false}
+          label={t('navigation.community')}
+          isActive={location.pathname === "/community"}
           onClick={handleCommunityClick}
-          className="text-gray-600 cursor-not-allowed"
-          disabled={true}
         />
         {onFeedbackClick && (
           <SidebarButton
