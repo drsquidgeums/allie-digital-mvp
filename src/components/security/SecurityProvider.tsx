@@ -1,6 +1,6 @@
-
 import React, { createContext, useContext, useState } from 'react';
 import { useAntiScreenCapture } from '@/hooks/useAntiScreenCapture';
+import { useSecurityHeaders } from '@/hooks/security/useSecurityHeaders';
 
 interface SecurityContextType {
   enableAntiScreenCapture: boolean;
@@ -19,6 +19,9 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // Use the anti-screen capture hook
   useAntiScreenCapture(enableAntiScreenCapture);
+  
+  // Apply security headers
+  useSecurityHeaders();
 
   const toggleAntiScreenCapture = () => setEnableAntiScreenCapture(prev => !prev);
 

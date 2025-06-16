@@ -1,5 +1,5 @@
-
 import { useCallback, useEffect } from 'react';
+import { useEnhancedRateLimit } from './useEnhancedRateLimit';
 
 interface AccessPolicy {
   allowedIPs?: string[];
@@ -18,6 +18,8 @@ interface AccessPolicy {
 }
 
 export const useAccessControl = () => {
+  const { checkEnhancedRateLimit } = useEnhancedRateLimit();
+
   const getAccessPolicy = useCallback((): AccessPolicy => {
     const stored = localStorage.getItem('access_control_policy');
     return stored ? JSON.parse(stored) : {
@@ -62,24 +64,18 @@ export const useAccessControl = () => {
     const policy = getAccessPolicy();
     if (!policy.rateLimit?.enabled) return true;
 
-    const now = Date.now();
-    const windowStart = now - policy.rateLimit.windowMs;
+    // Use enhanced rate limiting
+    const result = checkEnhancedRateLimit(policy.rateLimit.maxRequests, policy.rateLimit.windowMs);
     
-    // Get recent requests
-    const requests = JSON.parse(sessionStorage.getItem('rate_limit_requests') || '[]');
-    const recentRequests = requests.filter((timestamp: number) => timestamp > windowStart);
-    
-    if (recentRequests.length >= policy.rateLimit.maxRequests) {
-      console.log('Rate limit exceeded');
-      return false;
+    if (!result.allowed && result.delay > 0) {
+      console.log(`Rate limit exceeded. Next attempt allowed in ${result.delay}ms`);
+      
+      // Optional: Could implement actual delay here if needed
+      // await new Promise(resolve => setTimeout(resolve, result.delay));
     }
 
-    // Add current request
-    recentRequests.push(now);
-    sessionStorage.setItem('rate_limit_requests', JSON.stringify(recentRequests));
-    
-    return true;
-  }, [getAccessPolicy]);
+    return result.allowed;
+  }, [getAccessPolicy, checkEnhancedRateLimit]);
 
   const logAccessAttempt = useCallback((success: boolean, reason?: string) => {
     const accessLog = {

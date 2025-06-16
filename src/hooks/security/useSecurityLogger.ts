@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useEncryption } from './useEncryption';
 
 interface SecurityEvent {
   id: string;
@@ -12,6 +13,8 @@ interface SecurityEvent {
 }
 
 export const useSecurityLogger = () => {
+  const { encryptStorageItem, decryptStorageItem } = useEncryption();
+
   const getSessionId = useCallback(() => {
     let sessionId = sessionStorage.getItem('security_session_id');
     if (!sessionId) {
@@ -37,7 +40,7 @@ export const useSecurityLogger = () => {
     ).slice(0, 16);
   }, []);
 
-  const logActivity = useCallback((event: string, details?: any) => {
+  const logActivity = useCallback(async (event: string, details?: any) => {
     const logEntry: SecurityEvent = {
       id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       type: 'activity',
@@ -49,8 +52,9 @@ export const useSecurityLogger = () => {
       ipFingerprint: getFingerprint()
     };
 
-    // Store in localStorage for persistence
-    const existingLogs = JSON.parse(localStorage.getItem('security_activity_logs') || '[]');
+    // Get existing logs and encrypt storage
+    const existingLogs = await decryptStorageItem('security_activity_logs') || 
+                        JSON.parse(localStorage.getItem('security_activity_logs') || '[]');
     existingLogs.push(logEntry);
     
     // Keep only last 1000 entries to prevent storage bloat
@@ -58,10 +62,14 @@ export const useSecurityLogger = () => {
       existingLogs.splice(0, existingLogs.length - 1000);
     }
     
+    // Store encrypted
+    await encryptStorageItem('security_activity_logs', existingLogs);
+    
+    // Keep unencrypted version for backward compatibility (will be gradually phased out)
     localStorage.setItem('security_activity_logs', JSON.stringify(existingLogs));
-  }, [getSessionId, getFingerprint]);
+  }, [getSessionId, getFingerprint, encryptStorageItem, decryptStorageItem]);
 
-  const logSecurityEvent = useCallback((event: string, details?: any) => {
+  const logSecurityEvent = useCallback(async (event: string, details?: any) => {
     const logEntry: SecurityEvent = {
       id: `sec_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       type: 'security',
@@ -73,33 +81,42 @@ export const useSecurityLogger = () => {
       ipFingerprint: getFingerprint()
     };
 
-    // Store security events separately
-    const existingLogs = JSON.parse(localStorage.getItem('security_events') || '[]');
+    // Store security events separately with encryption
+    const existingLogs = await decryptStorageItem('security_events') || 
+                        JSON.parse(localStorage.getItem('security_events') || '[]');
     existingLogs.push(logEntry);
     
     if (existingLogs.length > 500) {
       existingLogs.splice(0, existingLogs.length - 500);
     }
     
+    // Store encrypted
+    await encryptStorageItem('security_events', existingLogs);
+    
+    // Keep unencrypted version for backward compatibility
     localStorage.setItem('security_events', JSON.stringify(existingLogs));
 
     // Log critical security events to console
     if (['suspicious_activity', 'failed_access', 'session_hijack'].includes(event)) {
       console.warn('Security Alert:', logEntry);
     }
-  }, [getSessionId, getFingerprint]);
+  }, [getSessionId, getFingerprint, encryptStorageItem, decryptStorageItem]);
 
-  const getActivityLogs = useCallback(() => {
-    return JSON.parse(localStorage.getItem('security_activity_logs') || '[]');
-  }, []);
+  const getActivityLogs = useCallback(async () => {
+    // Try encrypted first, fallback to unencrypted
+    const encrypted = await decryptStorageItem('security_activity_logs');
+    return encrypted || JSON.parse(localStorage.getItem('security_activity_logs') || '[]');
+  }, [decryptStorageItem]);
 
-  const getSecurityEvents = useCallback(() => {
-    return JSON.parse(localStorage.getItem('security_events') || '[]');
-  }, []);
+  const getSecurityEvents = useCallback(async () => {
+    // Try encrypted first, fallback to unencrypted
+    const encrypted = await decryptStorageItem('security_events');
+    return encrypted || JSON.parse(localStorage.getItem('security_events') || '[]');
+  }, [decryptStorageItem]);
 
-  const exportAuditLogs = useCallback(() => {
-    const activities = getActivityLogs();
-    const events = getSecurityEvents();
+  const exportAuditLogs = useCallback(async () => {
+    const activities = await getActivityLogs();
+    const events = await getSecurityEvents();
     
     const auditData = {
       exportDate: new Date().toISOString(),
