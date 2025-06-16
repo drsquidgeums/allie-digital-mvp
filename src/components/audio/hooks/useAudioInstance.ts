@@ -11,38 +11,64 @@ export const useAudioInstance = () => {
     if (!window.globalAudioPlayer) {
       window.globalAudioPlayer = new Audio();
       window.globalAudioPlayer.loop = true;
-      window.globalAudioPlayer.volume = 0.2; // Set volume to 20% (reduced by 30% from original 0.3)
-      window.globalAudioPlayer.crossOrigin = "anonymous"; // Add CORS support
-      window.globalAudioPlayer.preload = "none"; // Don't preload until needed
+      window.globalAudioPlayer.volume = 0.2;
+      window.globalAudioPlayer.crossOrigin = "anonymous";
+      window.globalAudioPlayer.preload = "none";
     }
     
     audioRef.current = window.globalAudioPlayer;
 
     const handleError = (e: Event) => {
-      console.error('Audio error:', e);
-      // Reset the audio element on error
-      if (audioRef.current) {
-        audioRef.current.src = '';
-        audioRef.current.load();
-      }
-      toast({
-        title: "Playback error",
-        description: "There was an error loading the audio file. Please try another option.",
-        variant: "destructive",
+      const target = e.target as HTMLAudioElement;
+      const error = target.error;
+      
+      console.error('Audio error details:', {
+        code: error?.code,
+        message: error?.message,
+        src: target.src,
+        networkState: target.networkState,
+        readyState: target.readyState
       });
+
+      // Only show error toast if there was actually a source set
+      if (target.src && target.src !== window.location.href) {
+        // Reset the audio element on error
+        target.src = '';
+        target.load();
+        
+        toast({
+          title: "Playback error",
+          description: "There was an error loading the audio stream. This may be due to network restrictions or the stream being unavailable.",
+          variant: "destructive",
+        });
+      }
     };
 
     const handleCanPlay = () => {
       console.log('Audio can play - source loaded successfully');
     };
 
-    audioRef.current.addEventListener('error', handleError);
-    audioRef.current.addEventListener('canplay', handleCanPlay);
+    const handleLoadStart = () => {
+      console.log('Audio load started');
+    };
+
+    const handleLoadedData = () => {
+      console.log('Audio data loaded');
+    };
+
+    if (audioRef.current) {
+      audioRef.current.addEventListener('error', handleError);
+      audioRef.current.addEventListener('canplay', handleCanPlay);
+      audioRef.current.addEventListener('loadstart', handleLoadStart);
+      audioRef.current.addEventListener('loadeddata', handleLoadedData);
+    }
 
     return () => {
       if (audioRef.current) {
         audioRef.current.removeEventListener('error', handleError);
         audioRef.current.removeEventListener('canplay', handleCanPlay);
+        audioRef.current.removeEventListener('loadstart', handleLoadStart);
+        audioRef.current.removeEventListener('loadeddata', handleLoadedData);
       }
     };
   }, [toast]);

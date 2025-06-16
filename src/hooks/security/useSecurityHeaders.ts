@@ -8,7 +8,7 @@ export const useSecurityHeaders = () => {
       return;
     }
 
-    // Content Security Policy - Updated to allow audio sources
+    // Content Security Policy - More permissive for audio streaming
     const csp = document.createElement('meta');
     csp.setAttribute('http-equiv', 'Content-Security-Policy');
     csp.setAttribute('content', 
@@ -17,8 +17,8 @@ export const useSecurityHeaders = () => {
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.cdnfonts.com; " +
       "font-src 'self' https://fonts.gstatic.com https://fonts.cdnfonts.com; " +
       "img-src 'self' data: blob: https:; " +
-      "media-src 'self' https: data: blob:; " + // Allow audio/video from various sources
-      "connect-src 'self' https: wss:; " +
+      "media-src 'self' https: http: data: blob: *; " + // More permissive for streaming audio
+      "connect-src 'self' https: http: wss: ws: *; " + // Allow connections for streaming
       "frame-ancestors 'none';"
     );
     document.head.appendChild(csp);
