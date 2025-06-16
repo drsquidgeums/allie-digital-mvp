@@ -10,6 +10,15 @@ export const useTaskCreation = (tasks: Task[], updateTasks: (tasks: Task[]) => v
   const handleAddTask = useCallback(async (text: string, taskDate: Date) => {
     if (!text.trim()) return;
     
+    // Get the current user
+    const { data: { user }, error: userError } = await extendedSupabase.auth.getUser();
+    
+    if (userError || !user) {
+      console.error('Error getting user:', userError);
+      toast.error("You must be logged in to create tasks");
+      return;
+    }
+    
     const randomCategory = categories[Math.floor(Math.random() * categories.length)];
     
     const newTask = {
@@ -29,10 +38,11 @@ export const useTaskCreation = (tasks: Task[], updateTasks: (tasks: Task[]) => v
     };
 
     try {
-      // Insert task into Supabase
+      // Insert task into Supabase with user_id
       const { data, error } = await extendedSupabase
         .from('tasks')
         .insert({
+          user_id: user.id, // Add the required user_id
           text: newTask.text,
           completed: newTask.completed,
           created_at: newTask.createdAt.toISOString(),
