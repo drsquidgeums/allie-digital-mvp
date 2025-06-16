@@ -10,7 +10,7 @@ interface WelcomeContentProps {
 export const WelcomeContent: React.FC<WelcomeContentProps> = ({ colors }) => {
   return (
     <div 
-      className="text-center relative p-6"
+      className="text-center relative p-6 text-black"
       role="region"
       aria-labelledby="welcome-heading"
       style={{
@@ -27,19 +27,23 @@ export const WelcomeContent: React.FC<WelcomeContentProps> = ({ colors }) => {
       </div>
       <h1 
         id="welcome-heading"
-        className="text-3xl font-bold mb-3 relative z-20"
+        className="text-3xl font-bold mb-3 relative z-20 text-black"
         style={{ 
           color: '#000000 !important',
           textShadow: 'none !important',
+          // Override any theme-based text color
+          '--tw-text-opacity': '1 !important',
         }}
       >
         Allie.ai
       </h1>
       <p 
-        className="relative z-20 whitespace-nowrap text-lg"
+        className="relative z-20 whitespace-nowrap text-lg text-black"
         style={{ 
           color: '#000000 !important',
           textShadow: 'none !important',
+          // Override any theme-based text color
+          '--tw-text-opacity': '1 !important',
         }}
         aria-describedby="welcome-heading"
       >

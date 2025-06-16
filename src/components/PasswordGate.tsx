@@ -59,7 +59,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
 
   return (
     <div 
-      className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
+      className="password-gate min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
       style={{
         opacity: imagesLoaded ? 1 : 0,
         transition: 'opacity 0.3s ease-in-out',
@@ -76,11 +76,11 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
       <div 
         className="absolute inset-0"
         style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.94) !important',
+          backgroundColor: 'rgba(255, 255, 255, 0.90) !important',
         }}
       />
       <div 
-        className="w-full max-w-xl space-y-8 p-8 relative z-10"
+        className="w-full max-w-xl space-y-8 p-8 relative z-10 text-black"
         style={{
           backgroundColor: 'transparent !important',
           color: '#000000 !important',
@@ -94,7 +94,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         />
       </div>
       <footer 
-        className="absolute bottom-4 text-sm z-10" 
+        className="absolute bottom-4 text-sm z-10 text-gray-600" 
         style={{ 
           color: '#666666 !important',
         }}

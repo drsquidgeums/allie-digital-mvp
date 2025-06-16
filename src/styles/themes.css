@@ -1,3 +1,34 @@
 
 @import './base-theme.css';
 @import './dark-theme.css';
+
+/* Force password gate to always use light mode styling */
+.dark .password-gate,
+.dark .password-gate *,
+.password-gate,
+.password-gate * {
+  color: #000000 !important;
+  background-color: transparent !important;
+}
+
+.dark .password-gate h1,
+.dark .password-gate h2,
+.dark .password-gate h3,
+.dark .password-gate p,
+.dark .password-gate span,
+.dark .password-gate div {
+  color: #000000 !important;
+  text-shadow: none !important;
+}
+
+/* Ensure input fields in password gate stay light */
+.dark .password-gate input {
+  background-color: white !important;
+  color: #000000 !important;
+  border-color: #d1d5db !important;
+}
+
+.dark .password-gate button {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
