@@ -22,7 +22,7 @@ export const LanguageSettings = () => {
           <SelectTrigger id="language-select" className="w-[180px]">
             <SelectValue placeholder={t('settings.selectLanguage')} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]">
             {supportedLanguages.map((lang) => (
               <SelectItem key={lang.code} value={lang.code}>
                 {lang.name}
