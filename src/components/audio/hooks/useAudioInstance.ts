@@ -12,7 +12,7 @@ export const useAudioInstance = () => {
       window.globalAudioPlayer = new Audio();
       window.globalAudioPlayer.loop = true;
       window.globalAudioPlayer.volume = 0.2;
-      window.globalAudioPlayer.crossOrigin = "anonymous";
+      // Remove crossOrigin restriction that was blocking streams
       window.globalAudioPlayer.preload = "none";
     }
     
@@ -30,15 +30,15 @@ export const useAudioInstance = () => {
         readyState: target.readyState
       });
 
-      // Only show error toast if there was actually a source set
-      if (target.src && target.src !== window.location.href) {
+      // Only show error toast if there was actually a source set and it's not the base URL
+      if (target.src && target.src !== window.location.href && !target.src.includes('/toolbox')) {
         // Reset the audio element on error
         target.src = '';
         target.load();
         
         toast({
           title: "Playback error",
-          description: "There was an error loading the audio stream. This may be due to network restrictions or the stream being unavailable.",
+          description: "Unable to play the selected music. This may be due to network restrictions or the stream being unavailable. Please try another option.",
           variant: "destructive",
         });
       }

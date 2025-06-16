@@ -8,7 +8,7 @@ export const useSecurityHeaders = () => {
       return;
     }
 
-    // Content Security Policy - More permissive for audio streaming
+    // Content Security Policy - Much more permissive for audio streaming
     const csp = document.createElement('meta');
     csp.setAttribute('http-equiv', 'Content-Security-Policy');
     csp.setAttribute('content', 
@@ -16,9 +16,9 @@ export const useSecurityHeaders = () => {
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.gpteng.co https://fonts.googleapis.com; " +
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.cdnfonts.com; " +
       "font-src 'self' https://fonts.gstatic.com https://fonts.cdnfonts.com; " +
-      "img-src 'self' data: blob: https:; " +
-      "media-src 'self' https: http: data: blob: *; " + // More permissive for streaming audio
-      "connect-src 'self' https: http: wss: ws: *; " + // Allow connections for streaming
+      "img-src 'self' data: blob: https: http:; " +
+      "media-src *; " + // Allow all media sources for streaming
+      "connect-src *; " + // Allow all connections for streaming APIs
       "frame-ancestors 'none';"
     );
     document.head.appendChild(csp);
@@ -49,7 +49,7 @@ export const useSecurityHeaders = () => {
     );
     document.head.appendChild(permissionsPolicy);
 
-    console.log('Security headers applied via meta tags');
+    console.log('Security headers applied with permissive media sources');
 
     return () => {
       // Cleanup function - remove security headers if component unmounts
