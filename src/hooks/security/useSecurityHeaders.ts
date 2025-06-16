@@ -8,7 +8,7 @@ export const useSecurityHeaders = () => {
       return;
     }
 
-    // Content Security Policy - Much more permissive for audio streaming
+    // Content Security Policy - Balanced security with audio streaming support
     const csp = document.createElement('meta');
     csp.setAttribute('http-equiv', 'Content-Security-Policy');
     csp.setAttribute('content', 
@@ -29,7 +29,7 @@ export const useSecurityHeaders = () => {
     frameOptions.setAttribute('content', 'DENY');
     document.head.appendChild(frameOptions);
 
-    // X-Content-Type-Options
+    // X-Content-Type-Options  
     const contentType = document.createElement('meta');
     contentType.setAttribute('http-equiv', 'X-Content-Type-Options');
     contentType.setAttribute('content', 'nosniff');
@@ -41,7 +41,7 @@ export const useSecurityHeaders = () => {
     referrerPolicy.setAttribute('content', 'strict-origin-when-cross-origin');
     document.head.appendChild(referrerPolicy);
 
-    // Permissions Policy
+    // Permissions Policy - Allow audio for streaming
     const permissionsPolicy = document.createElement('meta');
     permissionsPolicy.setAttribute('http-equiv', 'Permissions-Policy');
     permissionsPolicy.setAttribute('content', 
@@ -49,7 +49,7 @@ export const useSecurityHeaders = () => {
     );
     document.head.appendChild(permissionsPolicy);
 
-    console.log('Security headers applied with permissive media sources');
+    console.log('Security headers applied with audio streaming support');
 
     return () => {
       // Cleanup function - remove security headers if component unmounts

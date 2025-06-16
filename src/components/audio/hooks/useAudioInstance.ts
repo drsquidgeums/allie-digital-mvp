@@ -1,19 +1,30 @@
 
 import { useRef, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useAudioFallback } from './useAudioFallback';
 
 export const useAudioInstance = () => {
   // Use window object to store the audio instance globally
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
+  const { handleStreamingFailure, audioMode } = useAudioFallback();
 
   useEffect(() => {
+    // Don't create audio if in disabled mode
+    if (audioMode === 'disabled') {
+      return;
+    }
+
     if (!window.globalAudioPlayer) {
-      window.globalAudioPlayer = new Audio();
-      window.globalAudioPlayer.loop = true;
-      window.globalAudioPlayer.volume = 0.2;
-      // Remove crossOrigin restriction that was blocking streams
-      window.globalAudioPlayer.preload = "none";
+      try {
+        window.globalAudioPlayer = new Audio();
+        window.globalAudioPlayer.loop = true;
+        window.globalAudioPlayer.volume = 0.2;
+        window.globalAudioPlayer.preload = "none";
+      } catch (error) {
+        console.log('Audio creation failed, environment may not support audio:', error);
+        return;
+      }
     }
     
     audioRef.current = window.globalAudioPlayer;
@@ -36,11 +47,8 @@ export const useAudioInstance = () => {
         target.src = '';
         target.load();
         
-        toast({
-          title: "Playback error",
-          description: "Unable to play the selected music. This may be due to network restrictions or the stream being unavailable. Please try another option.",
-          variant: "destructive",
-        });
+        // Handle streaming failure through fallback system
+        handleStreamingFailure({ id: 'unknown', name: 'Current track', url: target.src });
       }
     };
 
@@ -71,7 +79,7 @@ export const useAudioInstance = () => {
         audioRef.current.removeEventListener('loadeddata', handleLoadedData);
       }
     };
-  }, [toast]);
+  }, [toast, handleStreamingFailure, audioMode]);
 
   return audioRef;
 };

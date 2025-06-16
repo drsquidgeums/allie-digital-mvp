@@ -1,6 +1,7 @@
 
 import { useToast } from '@/hooks/use-toast';
 import { MusicOption, MUSIC_OPTIONS } from '../MusicOptions';
+import { useAudioFallback } from './useAudioFallback';
 
 export const usePlaybackControl = (
   audioRef: React.RefObject<HTMLAudioElement>,
@@ -9,8 +10,19 @@ export const usePlaybackControl = (
   isFocusModeActive: boolean
 ) => {
   const { toast } = useToast();
+  const { testStreamingCapability, handleStreamingFailure, audioMode } = useAudioFallback();
 
   const togglePlay = async (currentMusic: MusicOption | undefined) => {
+    // If audio is disabled, show info message
+    if (audioMode === 'disabled') {
+      toast({
+        title: "Audio disabled",
+        description: "Background music is disabled in this environment. All other features work normally.",
+        variant: "default",
+      });
+      return false;
+    }
+
     if (!audioRef.current) return false;
     
     if (!currentMusic) {
@@ -41,16 +53,11 @@ export const usePlaybackControl = (
       } else {
         console.log('Attempting to play:', currentMusic.name, currentMusic.url);
         
-        // Test if URL is accessible before setting
-        try {
-          const response = await fetch(currentMusic.url, { 
-            method: 'HEAD',
-            mode: 'no-cors'
-          });
-          console.log('URL test response:', response.status);
-        } catch (urlError) {
-          console.log('URL test failed (expected for streaming):', urlError);
-          // This is expected for streaming URLs due to CORS
+        // Test streaming capability first
+        const canStream = await testStreamingCapability(currentMusic.url);
+        if (!canStream) {
+          handleStreamingFailure(currentMusic);
+          return false;
         }
 
         // Set source and load
@@ -70,7 +77,6 @@ export const usePlaybackControl = (
           };
           
           const handleCanPlayThrough = () => {
-            // Also accept canplaythrough as ready
             clearTimeout(timeoutId);
             audioRef.current?.removeEventListener('canplay', handleCanPlay);
             audioRef.current?.removeEventListener('error', handleError);
@@ -90,13 +96,13 @@ export const usePlaybackControl = (
           audioRef.current?.addEventListener('canplaythrough', handleCanPlayThrough);
           audioRef.current?.addEventListener('error', handleError);
           
-          // Reduced timeout to 3 seconds for faster feedback
+          // Reduced timeout to 2 seconds for faster feedback
           timeoutId = setTimeout(() => {
             audioRef.current?.removeEventListener('canplay', handleCanPlay);
             audioRef.current?.removeEventListener('error', handleError);
             audioRef.current?.removeEventListener('canplaythrough', handleCanPlayThrough);
             reject(new Error('Audio loading timeout'));
-          }, 3000);
+          }, 2000);
         });
         
         await audioRef.current.play();
@@ -110,21 +116,8 @@ export const usePlaybackControl = (
     } catch (error) {
       console.error('Playback error:', error);
       
-      // More specific error messages
-      let errorMessage = "Unable to play the selected music.";
-      if (error instanceof Error) {
-        if (error.message.includes('timeout')) {
-          errorMessage = "The audio stream is taking too long to load. Please try another option.";
-        } else if (error.message.includes('network')) {
-          errorMessage = "Network error - please check your connection and try again.";
-        }
-      }
-      
-      toast({
-        title: "Playback failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      // Handle streaming failure through fallback system
+      handleStreamingFailure(currentMusic);
       setIsPlaying(false);
       return false;
     }
