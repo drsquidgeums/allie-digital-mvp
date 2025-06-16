@@ -10,6 +10,7 @@ interface PdfDocumentProps {
   highlights: any[];
   selectedHighlightId: string | null;
   onLoadSuccess: ({ numPages }: { numPages: number }) => void;
+  onLoadError: (error: Error) => void;
   onHighlightClick: (id: string) => void;
 }
 
@@ -20,6 +21,7 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
   highlights,
   selectedHighlightId,
   onLoadSuccess,
+  onLoadError,
   onHighlightClick
 }) => {
   // Get the current page's highlights
@@ -42,33 +44,33 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
         <Document
           file={file}
           onLoadSuccess={onLoadSuccess}
+          onLoadError={onLoadError}
           options={{
+            // Disable worker to avoid CORS issues
+            disableWorker: true,
             cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/cmaps/',
             cMapPacked: true,
             standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/standard_fonts/',
           }}
           loading={
             <div 
-              className="loading-indicator"
+              className="loading-indicator flex items-center justify-center p-8"
               role="status"
               aria-live="polite"
             >
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mr-2"></div>
               Loading PDF...
             </div>
           }
           error={
             <div 
-              className="error-message"
+              className="error-message text-center p-8"
               role="alert"
             >
-              Failed to load PDF
+              <p className="text-destructive">Failed to load PDF</p>
+              <p className="text-sm text-muted-foreground mt-2">Please try a different file or check your internet connection.</p>
             </div>
           }
-          inputRef={(ref) => {
-            if (ref) {
-              ref.setAttribute('aria-label', 'PDF Document');
-            }
-          }}
           className="pdf-document"
         >
           <Page 
@@ -76,11 +78,6 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
             renderTextLayer={true}
             renderAnnotationLayer={false}
             className="pdf-page"
-            inputRef={(ref) => {
-              if (ref) {
-                ref.setAttribute('aria-label', `Page ${pageNumber}`);
-              }
-            }}
             canvasBackground="transparent"
           />
 

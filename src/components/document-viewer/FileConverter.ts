@@ -3,17 +3,20 @@ import mammoth from 'mammoth';
 import { PDFDocument } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Configure PDF.js worker with fallback options
+// Configure PDF.js worker with local fallback
 const configureWorker = () => {
   if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-    // Try multiple CDN sources for better reliability
-    const workerSources = [
-      `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`,
-      `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`,
-      `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
-    ];
-    
-    pdfjsLib.GlobalWorkerOptions.workerSrc = workerSources[0];
+    // Use the bundled worker from node_modules instead of external CDNs
+    try {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+        'pdfjs-dist/build/pdf.worker.min.js',
+        import.meta.url
+      ).toString();
+    } catch (error) {
+      console.warn('Failed to set up PDF worker from node_modules, falling back to CDN');
+      // Fallback to CDN if local doesn't work
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
+    }
   }
 };
 
@@ -82,7 +85,9 @@ async function extractTextFromPdf(file: File): Promise<string> {
     const arrayBuffer = await file.arrayBuffer();
     const loadingTask = pdfjsLib.getDocument({ 
       data: arrayBuffer,
-      // Add these options to help with worker loading
+      // Disable worker to avoid CORS issues in development
+      disableWorker: true,
+      // Add these options to help with loading
       useWorkerFetch: false,
       isEvalSupported: false,
       useSystemFonts: true
