@@ -31,8 +31,6 @@ export const WelcomeContent: React.FC<WelcomeContentProps> = ({ colors }) => {
         style={{ 
           color: '#000000 !important',
           textShadow: 'none !important',
-          // Override any theme-based text color
-          '--tw-text-opacity': '1 !important',
         }}
       >
         Allie.ai
@@ -42,8 +40,6 @@ export const WelcomeContent: React.FC<WelcomeContentProps> = ({ colors }) => {
         style={{ 
           color: '#000000 !important',
           textShadow: 'none !important',
-          // Override any theme-based text color
-          '--tw-text-opacity': '1 !important',
         }}
         aria-describedby="welcome-heading"
       >
