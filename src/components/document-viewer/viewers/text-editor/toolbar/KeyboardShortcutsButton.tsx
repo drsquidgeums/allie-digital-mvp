@@ -45,15 +45,19 @@ export const KeyboardShortcutsButton: React.FC = () => {
           <Keyboard className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md bg-background text-foreground border border-border">
+      <DialogContent className="max-w-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700">
         <DialogHeader>
-          <DialogTitle className="text-foreground">Keyboard Shortcuts</DialogTitle>
+          <DialogTitle className="text-gray-900 dark:text-gray-100 text-lg font-semibold">
+            Keyboard Shortcuts
+          </DialogTitle>
         </DialogHeader>
-        <div className="space-y-3 max-h-80 overflow-y-auto bg-background">
+        <div className="space-y-3 max-h-80 overflow-y-auto">
           {shortcuts.map((shortcut) => (
-            <div key={shortcut.keys} className="flex justify-between items-center py-2 px-1">
-              <span className="text-sm text-foreground">{shortcut.action}</span>
-              <kbd className="px-2 py-1 text-xs bg-muted text-muted-foreground rounded border border-border font-mono">
+            <div key={shortcut.keys} className="flex justify-between items-center py-2 px-1 hover:bg-gray-50 dark:hover:bg-gray-800 rounded">
+              <span className="text-sm text-gray-800 dark:text-gray-200 font-medium">
+                {shortcut.action}
+              </span>
+              <kbd className="px-3 py-1.5 text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded border border-gray-300 dark:border-gray-600 font-mono shadow-sm">
                 {shortcut.keys}
               </kbd>
             </div>
