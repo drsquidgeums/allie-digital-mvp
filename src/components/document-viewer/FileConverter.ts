@@ -1,4 +1,3 @@
-
 import mammoth from 'mammoth';
 import { PDFDocument } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist';
@@ -85,8 +84,6 @@ async function extractTextFromPdf(file: File): Promise<string> {
     const arrayBuffer = await file.arrayBuffer();
     const loadingTask = pdfjsLib.getDocument({ 
       data: arrayBuffer,
-      // Disable worker to avoid CORS issues in development
-      disableWorker: true,
       // Add these options to help with loading
       useWorkerFetch: false,
       isEvalSupported: false,
