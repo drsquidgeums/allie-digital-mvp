@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { WelcomeHeader } from "./password-gate/WelcomeHeader";
@@ -65,16 +64,60 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         opacity: imagesLoaded ? 1 : 0,
         transition: 'opacity 0.3s ease-in-out',
         backgroundColor: '#ffffff',
-        color: '#000000 !important',
-        // Force light mode styling regardless of theme
-        filter: 'none !important',
+        color: '#000000',
+        // Force complete isolation from theme system
+        filter: 'none',
       }}
     >
+      {/* Completely override any theme styles */}
+      <style jsx>{`
+        .password-gate,
+        .password-gate *,
+        .password-gate *:before,
+        .password-gate *:after {
+          color: #000000 !important;
+          background-color: transparent !important;
+          border-color: #d1d5db !important;
+        }
+        
+        .password-gate {
+          background-color: #ffffff !important;
+        }
+        
+        .password-gate input {
+          background-color: white !important;
+          color: #000000 !important;
+          border-color: #d1d5db !important;
+        }
+        
+        .password-gate button {
+          background-color: #000000 !important;
+          color: #ffffff !important;
+          border-color: #000000 !important;
+        }
+        
+        .password-gate button:hover {
+          background-color: #1f1f1f !important;
+          color: #ffffff !important;
+        }
+        
+        .password-gate h1,
+        .password-gate h2,
+        .password-gate h3,
+        .password-gate p,
+        .password-gate span,
+        .password-gate div,
+        .password-gate label {
+          color: #000000 !important;
+          text-shadow: none !important;
+        }
+      `}</style>
+      
       <div 
-        className="w-full max-w-xl space-y-8 p-8 relative z-10 text-black"
+        className="w-full max-w-xl space-y-8 p-8 relative z-10"
         style={{
-          backgroundColor: 'transparent !important',
-          color: '#000000 !important',
+          backgroundColor: 'transparent',
+          color: '#000000',
         }}
       >
         <WelcomeHeader colors={colors} />
@@ -85,9 +128,9 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         />
       </div>
       <footer 
-        className="absolute bottom-4 text-sm z-10 text-gray-600" 
+        className="absolute bottom-4 text-sm z-10" 
         style={{ 
-          color: '#666666 !important',
+          color: '#666666',
         }}
       >
         © Allie Digital Ltd. All Rights Reserved 2025
@@ -95,4 +138,3 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     </div>
   );
 };
-

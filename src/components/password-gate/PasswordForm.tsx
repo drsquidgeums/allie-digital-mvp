@@ -51,9 +51,9 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
           onChange={(e) => setPassword(e.target.value)}
           className="w-full transition-colors"
           style={{
-            backgroundColor: 'white !important',
-            color: '#000000 !important',
-            borderColor: '#d1d5db !important',
+            backgroundColor: 'white',
+            color: '#000000',
+            borderColor: '#d1d5db',
           }}
           disabled={isLoading}
         />
@@ -62,11 +62,21 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
         type="submit" 
         className="w-[70%] transition-colors" 
         style={{
-          backgroundColor: '#000000 !important',
-          color: '#ffffff !important',
-          borderColor: '#000000 !important',
+          backgroundColor: '#000000',
+          color: '#ffffff',
+          borderColor: '#000000',
         }}
         disabled={isLoading}
+        onMouseEnter={(e) => {
+          if (!isLoading) {
+            e.currentTarget.style.backgroundColor = '#1f1f1f';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isLoading) {
+            e.currentTarget.style.backgroundColor = '#000000';
+          }
+        }}
       >
         {isLoading ? "Loading..." : "Enter"}
       </Button>
