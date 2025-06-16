@@ -2,7 +2,13 @@
 @import './base-theme.css';
 @import './dark-theme.css';
 
-/* Force password gate to always use light mode styling */
+/* Force password gate to always use light mode styling with white background */
+.password-gate,
+.dark .password-gate {
+  background-color: #ffffff !important;
+  opacity: 1 !important;
+}
+
 .dark .password-gate,
 .dark .password-gate *,
 .password-gate,

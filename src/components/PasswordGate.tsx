@@ -72,6 +72,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
       
       .password-gate {
         background-color: #ffffff !important;
+        opacity: 1 !important;
       }
       
       .password-gate input {
