@@ -1,3 +1,4 @@
+
 import { useCallback, useEffect } from 'react';
 
 interface AccessPolicy {
@@ -23,7 +24,7 @@ export const useAccessControl = () => {
       timeRestrictions: {
         enabled: false,
         allowedDays: [1, 2, 3, 4, 5], // Monday-Friday
-        allowedHours: { start: number; end: number },
+        allowedHours: { start: 9, end: 17 }, // 9 AM to 5 PM
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
       },
       rateLimit: {
