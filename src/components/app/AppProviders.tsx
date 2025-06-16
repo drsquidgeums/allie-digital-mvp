@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { Toaster } from "@/components/ui/toaster"
 import { SecurityProvider } from "../security/SecurityProvider";
@@ -11,14 +12,21 @@ export const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <SecurityProvider>
-          <EnhancedSecurityProvider>
-            {children}
-          </EnhancedSecurityProvider>
-        </SecurityProvider>
-        <Toaster />
-      </TooltipProvider>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <TooltipProvider>
+          <SecurityProvider>
+            <EnhancedSecurityProvider>
+              {children}
+            </EnhancedSecurityProvider>
+          </SecurityProvider>
+          <Toaster />
+        </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };

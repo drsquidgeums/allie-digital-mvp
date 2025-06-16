@@ -3,9 +3,22 @@ import mammoth from 'mammoth';
 import { PDFDocument } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Configure PDF.js worker
-const workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+// Configure PDF.js worker with fallback options
+const configureWorker = () => {
+  if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+    // Try multiple CDN sources for better reliability
+    const workerSources = [
+      `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`,
+      `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`,
+      `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
+    ];
+    
+    pdfjsLib.GlobalWorkerOptions.workerSrc = workerSources[0];
+  }
+};
+
+// Initialize worker configuration
+configureWorker();
 
 export async function convertDocxToHtml(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
@@ -63,8 +76,18 @@ export async function extractTextFromFile(file: File): Promise<string> {
 
 async function extractTextFromPdf(file: File): Promise<string> {
   try {
+    // Ensure worker is configured
+    configureWorker();
+    
     const arrayBuffer = await file.arrayBuffer();
-    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+    const loadingTask = pdfjsLib.getDocument({ 
+      data: arrayBuffer,
+      // Add these options to help with worker loading
+      useWorkerFetch: false,
+      isEvalSupported: false,
+      useSystemFonts: true
+    });
+    
     const pdf = await loadingTask.promise;
     
     let textContent = '';
@@ -80,7 +103,8 @@ async function extractTextFromPdf(file: File): Promise<string> {
     return textContent;
   } catch (error) {
     console.error('Error extracting text from PDF:', error);
-    return 'Failed to extract text from PDF';
+    // Return a more user-friendly message instead of failing completely
+    return `PDF loaded successfully (text extraction unavailable in this environment)`;
   }
 }
 

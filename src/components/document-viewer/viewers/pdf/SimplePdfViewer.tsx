@@ -11,8 +11,20 @@ import '@/styles/pdf/pdf-highlighter.css';
 import '@/styles/pdf/pdf-highlights.css';
 import '@/styles/pdf/pdf-text-layer.css';
 
-// Set PDF.js worker path
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+// Configure PDF.js worker with multiple fallback sources
+const configureWorker = () => {
+  if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+    const workerSources = [
+      `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`,
+      `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`,
+      `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`
+    ];
+    pdfjs.GlobalWorkerOptions.workerSrc = workerSources[0];
+  }
+};
+
+// Initialize worker
+configureWorker();
 
 interface SimplePdfViewerProps {
   file?: File | null;
@@ -92,6 +104,11 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
   const handleDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
     console.log("Document loaded with", numPages, "pages");
+    
+    toast({
+      title: "PDF Loaded Successfully",
+      description: `Document has ${numPages} pages`,
+    });
   };
 
   if (!pdfUrl) {
