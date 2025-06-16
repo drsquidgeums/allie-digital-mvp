@@ -3,14 +3,14 @@ import React from "react";
 
 export const NdaText: React.FC = () => {
   return (
-    <div className="prose prose-sm max-w-none text-sm bg-white dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-      <p className="font-semibold text-lg text-gray-900 dark:text-white mb-4">
+    <div className="prose prose-sm max-w-none text-sm bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-600 transition-colors duration-300">
+      <p className="font-semibold text-lg text-gray-900 dark:text-gray-100 mb-4">
         Effective Date: May 16, 2025
       </p>
       
       <div className="space-y-6">
         <section>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 border-b border-gray-200 dark:border-gray-600 pb-2" id="section-1">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 border-b border-gray-200 dark:border-gray-600 pb-2" id="section-1">
             1. CONFIDENTIALITY AGREEMENT
           </h3>
           
@@ -21,7 +21,7 @@ export const NdaText: React.FC = () => {
         </section>
         
         <section>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 border-b border-gray-200 dark:border-gray-600 pb-2" id="section-2">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 border-b border-gray-200 dark:border-gray-600 pb-2" id="section-2">
             2. CONFIDENTIAL INFORMATION
           </h3>
           
@@ -41,7 +41,7 @@ export const NdaText: React.FC = () => {
         </section>
         
         <section>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 border-b border-gray-200 dark:border-gray-600 pb-2" id="section-3">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 border-b border-gray-200 dark:border-gray-600 pb-2" id="section-3">
             3. RECIPIENT'S OBLIGATIONS
           </h3>
           
@@ -57,7 +57,7 @@ export const NdaText: React.FC = () => {
         </section>
         
         <section>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 border-b border-gray-200 dark:border-gray-600 pb-2" id="section-4">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 border-b border-gray-200 dark:border-gray-600 pb-2" id="section-4">
             4. TERM
           </h3>
           
@@ -68,7 +68,7 @@ export const NdaText: React.FC = () => {
         </section>
         
         <section>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 border-b border-gray-200 dark:border-gray-600 pb-2" id="section-5">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 border-b border-gray-200 dark:border-gray-600 pb-2" id="section-5">
             5. DIGITAL SIGNATURE
           </h3>
           
@@ -79,7 +79,7 @@ export const NdaText: React.FC = () => {
         </section>
         
         <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-lg p-4 mt-6">
-          <p className="font-bold text-gray-900 dark:text-white text-center text-base">
+          <p className="font-bold text-gray-900 dark:text-amber-100 text-center text-base">
             BY ACCESSING THIS APPLICATION, YOU ARE LEGALLY BOUND BY THE TERMS OF THIS AGREEMENT.
           </p>
         </div>

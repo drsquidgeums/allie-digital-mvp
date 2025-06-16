@@ -23,26 +23,26 @@ export const NdaAgreement: React.FC<NdaAgreementProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} modal aria-labelledby="nda-dialog-title" aria-describedby="nda-dialog-description">
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border-gray-200 dark:border-gray-700">
         <DialogHeader className="relative">
           <VoiceReader text={getNdaPlainText()} />
-          <DialogTitle className="text-xl font-bold" id="nda-dialog-title">
+          <DialogTitle className="text-xl font-bold text-gray-900 dark:text-gray-100" id="nda-dialog-title">
             Non-Disclosure Agreement
           </DialogTitle>
-          <DialogDescription id="nda-dialog-description">
+          <DialogDescription className="text-gray-700 dark:text-gray-300" id="nda-dialog-description">
             Please review and agree to our NDA before proceeding with this session
           </DialogDescription>
         </DialogHeader>
 
-        <Alert className="mb-4 bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800">
+        <Alert className="mb-4 bg-amber-50 dark:bg-amber-950/50 border-amber-200 dark:border-amber-800">
           <Shield className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-          <AlertDescription className="text-amber-800 dark:text-amber-300">
+          <AlertDescription className="text-amber-800 dark:text-amber-200">
             This application employs security measures to prevent screenshots and screen recordings in compliance with the NDA. Attempts to capture content will be detected and logged.
           </AlertDescription>
         </Alert>
         
         <div 
-          className="my-4 max-h-[40vh] overflow-y-auto border rounded-md p-4 bg-background/50" 
+          className="my-4 max-h-[40vh] overflow-y-auto border rounded-md p-4 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-600" 
           aria-label="NDA agreement text" 
           role="region"
         >
