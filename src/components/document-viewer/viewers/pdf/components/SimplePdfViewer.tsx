@@ -93,6 +93,16 @@ export const SimplePdfViewer: React.FC<SimplePdfViewerProps> = ({
     console.log("Document loaded with", numPages, "pages");
   };
 
+  // Handle document load error
+  const handleDocumentLoadError = (error: Error) => {
+    console.error("PDF loading error:", error);
+    toast({
+      title: "PDF Loading Failed",
+      description: "There was a problem loading the PDF. Please try a different file.",
+      variant: "destructive",
+    });
+  };
+
   if (!pdfUrl) {
     return (
       <div className="flex items-center justify-center h-full bg-muted/20">
