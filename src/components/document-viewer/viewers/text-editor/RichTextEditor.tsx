@@ -12,6 +12,7 @@ import ListItem from '@tiptap/extension-list-item';
 import BulletList from '@tiptap/extension-bullet-list';
 import OrderedList from '@tiptap/extension-ordered-list';
 import FontFamily from '@tiptap/extension-font-family';
+import TextAlign from '@tiptap/extension-text-align';
 import { useToast } from '@/hooks/use-toast';
 import { EditorToolbar } from './EditorToolbar';
 import './editor.css';
@@ -65,6 +66,9 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       FontFamily,
       Color,
       Underline,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
       Link.configure({
         openOnClick: true,
         linkOnPaste: true,
