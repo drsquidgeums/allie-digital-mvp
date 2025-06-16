@@ -3,9 +3,13 @@ import mammoth from 'mammoth';
 import { PDFDocument } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Configure PDF.js worker with a single, stable configuration
+// Configure PDF.js worker with a more reliable CDN
+const PDFJS_VERSION = '3.4.120';
+const WORKER_URL = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.worker.min.js`;
+
+// Only set worker source if it hasn't been set already
 if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
+  pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER_URL;
 }
 
 export async function convertDocxToHtml(file: File): Promise<string> {
@@ -65,12 +69,17 @@ export async function extractTextFromFile(file: File): Promise<string> {
 async function extractTextFromPdf(file: File): Promise<string> {
   try {
     const arrayBuffer = await file.arrayBuffer();
+    
+    // Use the more reliable CDN for worker
+    if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER_URL;
+    }
+    
     const loadingTask = pdfjsLib.getDocument({ 
       data: arrayBuffer,
-      // Use stable options that don't conflict with react-pdf
       useSystemFonts: true,
-      standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/standard_fonts/`,
-      cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/cmaps/`,
+      standardFontDataUrl: `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/standard_fonts/`,
+      cMapUrl: `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/cmaps/`,
       cMapPacked: true,
     });
     

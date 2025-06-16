@@ -4,9 +4,14 @@ import { useToast } from "@/hooks/use-toast";
 import * as pdfjsLib from 'pdfjs-dist';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 
-// Configure PDF.js worker using a reliable CDN
-const workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+// Configure PDF.js worker using the same reliable CDN as FileConverter
+const PDFJS_VERSION = '3.4.120';
+const WORKER_URL = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.worker.min.js`;
+
+// Only set if not already configured
+if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER_URL;
+}
 
 interface PdfRendererResult {
   page: any;
@@ -55,7 +60,7 @@ export const usePdfRenderer = () => {
 
       // Initialize PDF.js with the worker if needed
       if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+        pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER_URL;
       }
 
       if (!pdfData) {
