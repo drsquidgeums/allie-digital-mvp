@@ -37,19 +37,46 @@ export const usePlaybackControl = (
           title: "Music stopped",
           description: "Background music has been stopped",
         });
+        setIsPlaying(false);
+        return false;
       } else {
-        // Only set new source if we're starting playback or if the source is empty
-        if (!audioRef.current.src || audioRef.current.src !== currentMusic.url) {
-          audioRef.current.src = currentMusic.url;
-        }
+        // Always set the source and load before playing
+        audioRef.current.src = currentMusic.url;
+        audioRef.current.load(); // Explicitly load the new source
+        
+        // Wait for the audio to be ready
+        await new Promise((resolve, reject) => {
+          const handleCanPlay = () => {
+            audioRef.current?.removeEventListener('canplay', handleCanPlay);
+            audioRef.current?.removeEventListener('error', handleError);
+            resolve(void 0);
+          };
+          
+          const handleError = (e: Event) => {
+            audioRef.current?.removeEventListener('canplay', handleCanPlay);
+            audioRef.current?.removeEventListener('error', handleError);
+            reject(e);
+          };
+          
+          audioRef.current?.addEventListener('canplay', handleCanPlay);
+          audioRef.current?.addEventListener('error', handleError);
+          
+          // Timeout after 5 seconds
+          setTimeout(() => {
+            audioRef.current?.removeEventListener('canplay', handleCanPlay);
+            audioRef.current?.removeEventListener('error', handleError);
+            reject(new Error('Audio loading timeout'));
+          }, 5000);
+        });
+        
         await audioRef.current.play();
         toast({
           title: "Music playing",
           description: `Now playing: ${currentMusic.name}`,
         });
+        setIsPlaying(true);
+        return true;
       }
-      setIsPlaying(!isPlaying);
-      return !isPlaying;
     } catch (error) {
       console.error('Playback error:', error);
       toast({
