@@ -23,12 +23,14 @@ export const WelcomeContent: React.FC<WelcomeContentProps> = ({ colors }) => {
       </div>
       <h1 
         id="welcome-heading"
-        className="text-3xl font-bold mb-3 relative z-20 text-black"
+        className="text-3xl font-bold mb-3 relative z-20"
+        style={{ color: '#000000' }}
       >
         Allie.ai
       </h1>
       <p 
-        className="text-black relative z-20 whitespace-nowrap text-lg"
+        className="relative z-20 whitespace-nowrap text-lg"
+        style={{ color: '#000000' }}
         aria-describedby="welcome-heading"
       >
         Please enter the password to access the Web Application
