@@ -21,7 +21,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
   }
 
   return (
-    <div className="flex items-center gap-1 p-2 border-b overflow-x-auto">
+    <div className="flex items-center gap-1 p-2 overflow-x-auto">
       <EditorToolbarContent 
         editor={editor}
         selectedColor={selectedColor}
