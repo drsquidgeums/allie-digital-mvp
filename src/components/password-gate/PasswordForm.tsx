@@ -23,6 +23,7 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
     setIsLoading(true);
     setProgress(0);
 
+    // Simulate loading progress
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
@@ -33,6 +34,7 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
       });
     }, 100);
 
+    // Complete loading after 1.2 seconds
     setTimeout(() => {
       clearInterval(interval);
       setIsLoading(false);
