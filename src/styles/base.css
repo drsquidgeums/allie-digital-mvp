@@ -1,7 +1,8 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import './button-animations.css';
 
 @layer base {
   :root {

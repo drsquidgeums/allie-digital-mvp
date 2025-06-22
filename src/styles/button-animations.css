@@ -1,0 +1,184 @@
+
+@layer components {
+  /* Enhanced button animations and interactions */
+  .button-enhanced {
+    @apply transition-all duration-200 ease-out;
+    transform-origin: center;
+  }
+
+  /* Hover animations */
+  .button-enhanced:hover:not(:disabled) {
+    @apply scale-[1.02] shadow-md;
+    transform: translateY(-1px) scale(1.02);
+  }
+
+  /* Active/click animations */
+  .button-enhanced:active:not(:disabled) {
+    @apply scale-95 shadow-sm;
+    transform: translateY(0) scale(0.95);
+    transition-duration: 100ms;
+  }
+
+  /* Focus animations */
+  .button-enhanced:focus-visible {
+    @apply ring-2 ring-primary ring-offset-2;
+    animation: pulse-ring 0.6s ease-out;
+  }
+
+  /* Disabled state enhancements */
+  .button-enhanced:disabled {
+    @apply opacity-60 cursor-not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+    filter: grayscale(20%);
+  }
+
+  /* Loading state */
+  .button-loading {
+    @apply relative overflow-hidden;
+  }
+
+  .button-loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    animation: loading-shimmer 1.5s infinite;
+  }
+
+  /* Icon button enhancements */
+  .icon-button-enhanced {
+    @apply transition-all duration-200 ease-out hover:rotate-6 active:rotate-3;
+  }
+
+  /* Ripple effect for click feedback */
+  .button-ripple {
+    @apply relative overflow-hidden;
+  }
+
+  .button-ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+  }
+
+  .button-ripple:active::after {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Gradient hover effects */
+  .button-gradient-hover {
+    background-size: 200% 200%;
+    transition: all 0.3s ease;
+  }
+
+  .button-gradient-hover:hover:not(:disabled) {
+    background-position: right center;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Bounce animation for success states */
+  .button-success {
+    animation: success-bounce 0.6s ease-out;
+  }
+
+  /* Shake animation for error states */
+  .button-error {
+    animation: error-shake 0.5s ease-out;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--primary), 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(var(--primary), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--primary), 0);
+  }
+}
+
+@keyframes loading-shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes success-bounce {
+  0%, 20%, 60%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(-4px) scale(1.05);
+  }
+  80% {
+    transform: translateY(-2px) scale(1.02);
+  }
+}
+
+@keyframes error-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-4px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(4px);
+  }
+}
+
+/* Variant-specific hover effects */
+.button-primary-enhanced:hover:not(:disabled) {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary))/90% 100%);
+  box-shadow: 0 4px 15px hsl(var(--primary))/25%;
+}
+
+.button-destructive-enhanced:hover:not(:disabled) {
+  background: linear-gradient(135deg, hsl(var(--destructive)) 0%, hsl(var(--destructive))/90% 100%);
+  box-shadow: 0 4px 15px hsl(var(--destructive))/25%;
+}
+
+.button-outline-enhanced:hover:not(:disabled) {
+  border-color: hsl(var(--primary));
+  background: hsl(var(--primary))/5%;
+  box-shadow: 0 2px 8px hsl(var(--primary))/10%;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .button-enhanced,
+  .button-enhanced:hover,
+  .button-enhanced:active,
+  .icon-button-enhanced {
+    transform: none !important;
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .button-ripple::after {
+    display: none;
+  }
+}
