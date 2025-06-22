@@ -81,12 +81,6 @@ export const DocumentViewer = ({
     extractContent();
   }, [displayFile, onContentLoaded, initialDocumentName]);
 
-  // Log the current file being displayed
-  console.log("DocumentViewer rendering with file:", displayFile?.name);
-  if (initialDocumentName) {
-    console.log("Using initial document name:", initialDocumentName);
-  }
-
   return (
     <div 
       className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative"

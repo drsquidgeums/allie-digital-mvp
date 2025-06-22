@@ -12,12 +12,9 @@ export const useAudioPersistence = (
     const handleFocusModeChange = (event: CustomEvent) => {
       const { active, settings } = event.detail;
       
-      console.log('Audio persistence detected focus mode change:', { active, settings });
-      
       // Just track focus mode state for other components to use
       if (!active && wasPausedByFocusMode) {
         setWasPausedByFocusMode(false);
-        console.log('Focus mode deactivated, audio can be played again');
       }
     };
 

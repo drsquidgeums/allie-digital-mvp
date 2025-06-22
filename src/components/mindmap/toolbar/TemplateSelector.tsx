@@ -36,7 +36,7 @@ const getCategoryIcon = (category: string) => {
   }
 };
 
-export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
+export const TemplateSelector: React.FC<TemplateSelectorProps> = React.memo(({
   onLoadTemplate,
 }) => {
   const groupedTemplates = NODE_TEMPLATES.reduce((acc, template) => {
@@ -50,14 +50,19 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="h-9 px-3">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="h-9 px-3 transition-all duration-200 hover:scale-105"
+          aria-label="Select template"
+        >
           <FileText className="h-4 w-4 mr-1" />
           Templates
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="end" 
-        className={`w-56 ${getDarkModeDropdownClasses()}`}
+        className={`w-56 ${getDarkModeDropdownClasses()} animate-fade-in`}
       >
         {Object.entries(groupedTemplates).map(([category, templates]) => (
           <div key={category}>
@@ -70,7 +75,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                 <DropdownMenuItem
                   key={template.id}
                   onClick={() => onLoadTemplate(template.nodes)}
-                  className="cursor-pointer"
+                  className="cursor-pointer transition-colors duration-200"
                 >
                   <Icon className="h-4 w-4 mr-2" />
                   <div>
@@ -88,4 +93,6 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
+});
+
+TemplateSelector.displayName = 'TemplateSelector';

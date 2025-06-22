@@ -26,7 +26,7 @@ interface LayoutControlsProps {
   onFitView?: () => void;
 }
 
-export const LayoutControls: React.FC<LayoutControlsProps> = ({
+export const LayoutControls: React.FC<LayoutControlsProps> = React.memo(({
   onApplyLayout,
   onZoomIn,
   onZoomOut,
@@ -36,24 +36,38 @@ export const LayoutControls: React.FC<LayoutControlsProps> = ({
     <div className="flex items-center gap-2">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="h-9 px-3">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="h-9 px-3 transition-all duration-200 hover:scale-105"
+            aria-label="Auto layout options"
+          >
             <LayoutGrid className="h-4 w-4 mr-1" />
             Auto Layout
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent 
           align="end"
-          className={getDarkModeDropdownClasses()}
+          className={`${getDarkModeDropdownClasses()} animate-fade-in`}
         >
-          <DropdownMenuItem onClick={() => onApplyLayout('radial')}>
+          <DropdownMenuItem 
+            onClick={() => onApplyLayout('radial')}
+            className="transition-colors duration-200"
+          >
             <GitBranch className="h-4 w-4 mr-2" />
             Radial Layout
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onApplyLayout('hierarchical')}>
+          <DropdownMenuItem 
+            onClick={() => onApplyLayout('hierarchical')}
+            className="transition-colors duration-200"
+          >
             <LayoutGrid className="h-4 w-4 mr-2" />
             Hierarchical Layout
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onApplyLayout('force')}>
+          <DropdownMenuItem 
+            onClick={() => onApplyLayout('force')}
+            className="transition-colors duration-200"
+          >
             <Zap className="h-4 w-4 mr-2" />
             Force Layout
           </DropdownMenuItem>
@@ -64,36 +78,56 @@ export const LayoutControls: React.FC<LayoutControlsProps> = ({
         {onZoomOut && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="sm" onClick={onZoomOut} className="h-9 w-9 p-0">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={onZoomOut} 
+                className="h-9 w-9 p-0 transition-all duration-200 hover:scale-105 active:scale-95"
+                aria-label="Zoom out"
+              >
                 <ZoomOut className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Zoom Out</TooltipContent>
+            <TooltipContent className="animate-fade-in">Zoom Out</TooltipContent>
           </Tooltip>
         )}
         
         {onZoomIn && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="sm" onClick={onZoomIn} className="h-9 w-9 p-0">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={onZoomIn} 
+                className="h-9 w-9 p-0 transition-all duration-200 hover:scale-105 active:scale-95"
+                aria-label="Zoom in"
+              >
                 <ZoomIn className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Zoom In</TooltipContent>
+            <TooltipContent className="animate-fade-in">Zoom In</TooltipContent>
           </Tooltip>
         )}
         
         {onFitView && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="sm" onClick={onFitView} className="h-9 w-9 p-0">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={onFitView} 
+                className="h-9 w-9 p-0 transition-all duration-200 hover:scale-105 active:scale-95"
+                aria-label="Fit to view"
+              >
                 <Maximize className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Fit to View</TooltipContent>
+            <TooltipContent className="animate-fade-in">Fit to View</TooltipContent>
           </Tooltip>
         )}
       </div>
     </div>
   );
-};
+});
+
+LayoutControls.displayName = 'LayoutControls';

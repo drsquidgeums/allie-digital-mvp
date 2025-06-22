@@ -40,7 +40,6 @@ const Index = () => {
       const fileToOpen = files.find(file => file.id === selectedFileId);
       
       if (fileToOpen?.file) {
-        console.log("Opening file from MyFiles:", fileToOpen.name);
         setSelectedFile(fileToOpen.file);
         
         // Set document name from sessionStorage if available
@@ -54,7 +53,6 @@ const Index = () => {
         sessionStorage.removeItem('selectedFileName');
       } else if (selectedFileUrl && fileToOpen) {
         // If we don't have the File object but have URL, need to fetch it
-        console.log("Fetching file from URL:", selectedFileUrl);
         fetch(selectedFileUrl)
           .then(response => response.blob())
           .then(blob => {
@@ -81,7 +79,6 @@ const Index = () => {
 
   // Function to handle file selection
   const handleFileSelected = (file: File) => {
-    console.log("File selected in Index:", file.name);
     setSelectedFile(file);
   };
 

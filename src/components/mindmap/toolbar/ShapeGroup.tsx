@@ -17,9 +17,9 @@ interface ShapeGroupProps {
   onShapeSelect: (shape: string, label?: string) => void;
 }
 
-export const ShapeGroup = ({ shapes, onShapeSelect }: ShapeGroupProps) => {
+export const ShapeGroup = React.memo(({ shapes, onShapeSelect }: ShapeGroupProps) => {
   return (
-    <Card className={`flex items-center space-x-1 p-1 rounded-lg border border-border/40 bg-background/50 shadow-sm ${getDarkModeCardClasses()}`}>
+    <Card className={`flex items-center space-x-1 p-1 rounded-lg border border-border/40 bg-background/50 shadow-sm transition-all duration-200 hover:shadow-md ${getDarkModeCardClasses()}`}>
       {shapes.map((shape) => (
         <ShapeButton
           key={shape.id}
@@ -32,4 +32,6 @@ export const ShapeGroup = ({ shapes, onShapeSelect }: ShapeGroupProps) => {
       ))}
     </Card>
   );
-};
+});
+
+ShapeGroup.displayName = 'ShapeGroup';
