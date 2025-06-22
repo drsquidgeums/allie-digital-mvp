@@ -56,13 +56,15 @@
   }
 
   /* High contrast mode support */
-  @media (prefers-contrast: high) {
+  @media (prefers-contrast: high), [data-high-contrast="true"] {
     :root {
       --background: 0 0% 100%;
       --foreground: 0 0% 0%;
       --border: 0 0% 0%;
       --ring: 0 0% 0%;
       --muted-foreground: 0 0% 20%;
+      --primary: 0 0% 0%;
+      --primary-foreground: 0 0% 100%;
     }
 
     .dark {
@@ -71,6 +73,20 @@
       --border: 0 0% 100%;
       --ring: 0 0% 100%;
       --muted-foreground: 0 0% 80%;
+      --primary: 0 0% 100%;
+      --primary-foreground: 0 0% 0%;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce), [data-reduced-motion="true"] {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
   }
 
@@ -93,10 +109,11 @@
   }
 
   /* Ensure focus is visible in high contrast mode */
-  @media (prefers-contrast: high) {
-    :focus-visible {
-      outline: 3px solid;
-      outline-offset: 2px;
+  @media (prefers-contrast: high), [data-high-contrast="true"] {
+    :focus-visible,
+    :focus {
+      outline: 3px solid !important;
+      outline-offset: 2px !important;
     }
   }
 
@@ -114,7 +131,7 @@
   input[type="checkbox"],
   input[type="radio"],
   select,
-  a {
+  a[href] {
     min-height: 44px;
     min-width: 44px;
   }
@@ -175,6 +192,29 @@
     clip: auto;
     white-space: normal;
   }
+
+  /* Live region for announcements */
+  .live-region,
+  [aria-live] {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* Ensure proper focus order */
+  [tabindex="-1"] {
+    outline: none;
+  }
+
+  /* Enhanced focus indicators for interactive elements */
+  [role="button"]:focus-visible,
+  [role="tab"]:focus-visible,
+  [role="menuitem"]:focus-visible,
+  [role="option"]:focus-visible {
+    @apply ring-2 ring-primary ring-offset-2;
+  }
 }
 
 @layer components {
@@ -191,22 +231,29 @@
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
   }
 
-  /* Live region for announcements */
-  .live-region {
-    position: absolute;
-    left: -10000px;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-  }
-
   /* Error message styling */
   .error-message {
     @apply text-sm text-destructive font-medium;
   }
 
   /* Required field indicator */
-  .required-indicator {
+  .required-indicator::after {
+    content: " *";
     @apply text-destructive;
+  }
+
+  /* Loading state announcements */
+  .loading-announcement {
+    @apply sr-only;
+  }
+
+  /* Status announcements */
+  .status-announcement {
+    @apply sr-only;
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
   }
 }

@@ -23,15 +23,29 @@ export const FileList = ({
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        setFocusedIndex(prev => Math.min(prev + 1, files.length - 1));
+        const nextIndex = Math.min(index + 1, files.length - 1);
+        setFocusedIndex(nextIndex);
+        // Focus the next file item
+        const nextElement = document.querySelector(`[data-file-index="${nextIndex}"]`) as HTMLElement;
+        nextElement?.focus();
         break;
       case 'ArrowUp':
         e.preventDefault();
-        setFocusedIndex(prev => Math.max(prev - 1, 0));
+        const prevIndex = Math.max(index - 1, 0);
+        setFocusedIndex(prevIndex);
+        // Focus the previous file item
+        const prevElement = document.querySelector(`[data-file-index="${prevIndex}"]`) as HTMLElement;
+        prevElement?.focus();
         break;
       case 'Enter':
+      case ' ':
         e.preventDefault();
         onFileSelect(files[index]);
+        break;
+      case 'Delete':
+      case 'Backspace':
+        e.preventDefault();
+        onFileDelete(files[index]);
         break;
     }
   };
@@ -57,14 +71,22 @@ export const FileList = ({
   return (
     <ScrollArea 
       className="h-[200px] w-full rounded-md border p-2 transition-all duration-300 ease-in-out"
-      role="listbox"
+      role="region"
       aria-label="Uploaded files list"
     >
-      <div className="space-y-2">
+      <div 
+        className="space-y-2"
+        role="listbox"
+        aria-label={`${files.length} uploaded files`}
+        aria-describedby="file-list-instructions"
+      >
+        <div id="file-list-instructions" className="sr-only">
+          Use arrow keys to navigate, Enter or Space to select, Delete or Backspace to remove files
+        </div>
         {files.map((file, index) => (
           <div
             key={`${file.name}-${index}`}
-            className="transition-all duration-200 ease-in-out hover:scale-[1.02]"
+            className="transition-all duration-200 ease-in-out hover:scale-[1.02] focus-within:scale-[1.02]"
           >
             <FileItem
               file={file}
