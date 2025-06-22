@@ -11,6 +11,7 @@ interface FileTypeHandlerProps {
   isHighlighter?: boolean;
   useRichTextEditor?: boolean;
   onContentLoaded?: (content: string, fileName: string) => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 /**
@@ -23,7 +24,8 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
   selectedColor,
   isHighlighter,
   useRichTextEditor = true, // Default to using rich text editor for editable files
-  onContentLoaded
+  onContentLoaded,
+  onLoadingChange
 }) => {
   try {
     console.log("FileTypeHandler received file:", file?.name);

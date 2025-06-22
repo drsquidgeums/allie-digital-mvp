@@ -11,13 +11,15 @@ interface UrlHandlerProps {
   selectedColor: string;
   isHighlighter?: boolean;
   onError: (error: Error) => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 export const UrlHandler: React.FC<UrlHandlerProps> = ({
   url,
   selectedColor,
   isHighlighter,
-  onError
+  onError,
+  onLoadingChange
 }) => {
   const [urlType, setUrlType] = useState<'pdf' | 'text' | 'iframe' | null>(null);
   const [useRichEditor, setUseRichEditor] = useState<boolean>(false);
