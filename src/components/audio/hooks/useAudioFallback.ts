@@ -56,14 +56,11 @@ export const useAudioFallback = () => {
         testAudio.load();
       });
     } catch (error) {
-      console.log('Audio capability test failed:', error);
       return false;
     }
   }, []);
 
   const handleStreamingFailure = useCallback((music: MusicOption) => {
-    console.log('Streaming failed for:', music.name);
-    
     if (!isStreamingBlocked) {
       setIsStreamingBlocked(true);
       setAudioMode('disabled');

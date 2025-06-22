@@ -11,9 +11,6 @@ export const useSecurityMonitor = () => {
   const lastActivityRef = useRef<number>(Date.now());
 
   useEffect(() => {
-    // Initialize security monitoring
-    console.log('Security monitoring initialized');
-
     // Track user activity
     const trackActivity = (event: string, details?: any) => {
       lastActivityRef.current = Date.now();

@@ -72,7 +72,6 @@ export const useMusicSelection = (
         } 
       }));
     } catch (error) {
-      console.error('Error changing music:', error);
       toast({
         title: "Error changing music",
         description: "Unable to load the selected music",

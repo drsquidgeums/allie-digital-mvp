@@ -14,8 +14,6 @@ export const useFeedbackSubmission = (
   const { toast } = useToast();
 
   const handleSubmit = async (comments: string, maxWords: number, wordCount: number): Promise<boolean> => {
-    console.log("handleSubmit called with:", { comments, userEmail, wordCount });
-    
     // Basic validations
     if (!comments.trim()) {
       toast({
@@ -49,8 +47,6 @@ export const useFeedbackSubmission = (
     try {
       const currentTime = new Date().toISOString();
       
-      console.log("Calling submit-feedback function with:", { comments, userEmail });
-      
       // Call the Supabase Edge Function to submit feedback
       const { data, error } = await supabase.functions.invoke('submit-feedback', {
         body: {
@@ -58,8 +54,6 @@ export const useFeedbackSubmission = (
           userEmail
         }
       });
-      
-      console.log("Function response:", { data, error });
       
       if (error) {
         console.error("Error calling submit-feedback function:", error);
@@ -79,8 +73,6 @@ export const useFeedbackSubmission = (
         }
         throw new Error(data?.error || "Error submitting feedback");
       }
-      
-      console.log("Feedback submitted successfully!");
       
       toast({
         title: "Thank you for your feedback!",

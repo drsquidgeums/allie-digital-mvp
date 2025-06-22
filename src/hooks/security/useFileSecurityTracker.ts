@@ -25,8 +25,6 @@ export const useFileSecurityTracker = () => {
     
     localStorage.setItem('security_uploads', JSON.stringify(uploads));
     
-    console.log('File upload tracked:', uploadEvent);
-    
     // Dispatch security activity event
     const event = new CustomEvent('securityActivity', {
       detail: uploadEvent
@@ -51,8 +49,6 @@ export const useFileSecurityTracker = () => {
     }
     
     localStorage.setItem('security_file_views', JSON.stringify(views));
-    
-    console.log('File view tracked:', viewEvent);
   }, []);
 
   const secureFileDownload = useCallback((filename: string, content: string, fileType: string) => {

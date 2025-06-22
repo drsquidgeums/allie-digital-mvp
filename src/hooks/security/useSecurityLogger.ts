@@ -66,7 +66,6 @@ export const useSecurityLogger = () => {
         existingLogs = await decryptStorageItem('security_activity_logs') || 
                       JSON.parse(localStorage.getItem('security_activity_logs') || '[]');
       } catch (error) {
-        console.warn('Failed to load existing logs, starting fresh:', error);
         existingLogs = [];
       }
 
@@ -81,11 +80,9 @@ export const useSecurityLogger = () => {
       try {
         await encryptStorageItem('security_activity_logs', existingLogs);
       } catch (error) {
-        console.warn('Encryption failed, storing unencrypted:', error);
         localStorage.setItem('security_activity_logs', JSON.stringify(existingLogs));
       }
     } catch (error) {
-      console.error('Failed to flush security logs:', error);
       // Re-add failed logs to queue for retry
       logQueueRef.current.unshift(...logsToFlush);
     }
@@ -132,7 +129,6 @@ export const useSecurityLogger = () => {
         existingLogs = await decryptStorageItem('security_events') || 
                       JSON.parse(localStorage.getItem('security_events') || '[]');
       } catch (error) {
-        console.warn('Failed to load existing security events, starting fresh:', error);
         existingLogs = [];
       }
 
@@ -146,11 +142,10 @@ export const useSecurityLogger = () => {
       try {
         await encryptStorageItem('security_events', existingLogs);
       } catch (error) {
-        console.warn('Encryption failed, storing unencrypted:', error);
         localStorage.setItem('security_events', JSON.stringify(existingLogs));
       }
 
-      // Log critical security events to console
+      // Log critical security events to console for debugging
       if (['suspicious_activity', 'failed_access', 'session_hijack'].includes(event)) {
         console.warn('Security Alert:', logEntry);
       }
@@ -165,7 +160,6 @@ export const useSecurityLogger = () => {
       const encrypted = await decryptStorageItem('security_activity_logs');
       return encrypted || JSON.parse(localStorage.getItem('security_activity_logs') || '[]');
     } catch (error) {
-      console.warn('Failed to retrieve activity logs:', error);
       return [];
     }
   }, [decryptStorageItem]);
@@ -176,7 +170,6 @@ export const useSecurityLogger = () => {
       const encrypted = await decryptStorageItem('security_events');
       return encrypted || JSON.parse(localStorage.getItem('security_events') || '[]');
     } catch (error) {
-      console.warn('Failed to retrieve security events:', error);
       return [];
     }
   }, [decryptStorageItem]);

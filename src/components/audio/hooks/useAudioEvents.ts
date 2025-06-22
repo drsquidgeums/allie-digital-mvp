@@ -15,7 +15,6 @@ export const useAudioEvents = (
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.onerror = (e) => {
-        console.error('Audio error:', e);
         setIsPlaying(false);
         toast({
           title: "Playback error",
@@ -41,12 +40,10 @@ export const useAudioEvents = (
   useEffect(() => {
     const handlePlay = () => {
       setIsPlaying(true);
-      console.log('Audio play detected, updating state');
     };
 
     const handlePause = () => {
       setIsPlaying(false);
-      console.log('Audio pause detected, updating state');
     };
 
     if (audioRef.current) {

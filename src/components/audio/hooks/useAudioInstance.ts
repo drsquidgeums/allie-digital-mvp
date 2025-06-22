@@ -22,7 +22,6 @@ export const useAudioInstance = () => {
         window.globalAudioPlayer.volume = 0.2;
         window.globalAudioPlayer.preload = "none";
       } catch (error) {
-        console.log('Audio creation failed, environment may not support audio:', error);
         return;
       }
     }
@@ -32,14 +31,6 @@ export const useAudioInstance = () => {
     const handleError = (e: Event) => {
       const target = e.target as HTMLAudioElement;
       const error = target.error;
-      
-      console.error('Audio error details:', {
-        code: error?.code,
-        message: error?.message,
-        src: target.src,
-        networkState: target.networkState,
-        readyState: target.readyState
-      });
 
       // Only show error toast if there was actually a source set and it's not the base URL
       if (target.src && target.src !== window.location.href && !target.src.includes('/toolbox')) {
@@ -53,15 +44,15 @@ export const useAudioInstance = () => {
     };
 
     const handleCanPlay = () => {
-      console.log('Audio can play - source loaded successfully');
+      // Audio ready to play
     };
 
     const handleLoadStart = () => {
-      console.log('Audio load started');
+      // Audio loading started
     };
 
     const handleLoadedData = () => {
-      console.log('Audio data loaded');
+      // Audio data loaded
     };
 
     if (audioRef.current) {
