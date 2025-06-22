@@ -6,6 +6,7 @@ import { ErrorDisplay } from './viewers/ErrorDisplay';
 import { FileTypeHandler } from './viewers/file-viewers/FileTypeHandler';
 import { UrlHandler } from './viewers/file-viewers/UrlHandler';
 import { RichTextEditorWrapper } from './viewers/file-viewers/RichTextEditorWrapper';
+import { LoadingFallback } from './viewers/LoadingFallback';
 
 interface DocumentPreviewProps {
   file: File | null;
@@ -19,7 +20,7 @@ interface DocumentPreviewProps {
  * DocumentPreview Component
  * 
  * Main container component that orchestrates the different document viewers
- * based on input type (file or URL) and handles error states.
+ * based on input type (file or URL) and handles error states with enhanced loading.
  */
 export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   file,
@@ -30,13 +31,13 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
 }) => {
   const { toast } = useToast();
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [editMode, setEditMode] = useState<boolean>(!file && !url); // Start in edit mode if no file/URL
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   /**
    * Handles errors from document loading and displays appropriate messages
    */
   const handleError = (error: Error) => {
-    console.error("Document preview error:", error);
+    setIsLoading(false);
     setLoadError(error.message || "Failed to load document");
     toast({
       title: "Document Error",
@@ -45,48 +46,80 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     });
   };
 
+  /**
+   * Handles loading state changes
+   */
+  const handleLoadingChange = (loading: boolean) => {
+    setIsLoading(loading);
+    if (loading) {
+      setLoadError(null);
+    }
+  };
+
+  // Display loading state
+  if (isLoading) {
+    const loadingType = file?.name?.endsWith('.pdf') ? 'pdf-page' : 'document';
+    return (
+      <LoadingFallback 
+        type={loadingType}
+        message={file ? `Loading ${file.name}...` : 'Loading document...'}
+      />
+    );
+  }
+
   // Display error state if there was a problem loading the document
   if (loadError) {
     return (
-      <ErrorDisplay 
-        title="Document Error" 
-        description={loadError}
-        onRetry={() => setLoadError(null)} 
-      />
+      <div className="transition-opacity duration-300 ease-in-out">
+        <ErrorDisplay 
+          title="Document Error" 
+          description={loadError}
+          onRetry={() => {
+            setLoadError(null);
+            setIsLoading(true);
+            setTimeout(() => setIsLoading(false), 1000); // Simulate retry
+          }} 
+        />
+      </div>
     );
   }
 
   // If no file/URL, show the rich text editor
   if (!file && !url) {
     return (
-      <RichTextEditorWrapper
-        selectedColor={selectedColor || '#FFFF00'}
-        isHighlighter={isHighlighter}
-        onContentLoaded={onContentLoaded}
-      />
+      <div className="transition-opacity duration-300 ease-in-out">
+        <RichTextEditorWrapper
+          selectedColor={selectedColor || '#FFFF00'}
+          isHighlighter={isHighlighter}
+          onContentLoaded={onContentLoaded}
+        />
+      </div>
     );
   }
 
   // Handle file preview
   if (file) {
-    console.log("DocumentPreview handling file:", file.name);
-    console.log("DocumentPreview color settings:", selectedColor, isHighlighter);
     try {
       return (
-        <FileTypeHandler
-          file={file}
-          selectedColor={selectedColor || '#FFFF00'} // Default yellow if no color specified
-          isHighlighter={isHighlighter}
-          onContentLoaded={onContentLoaded}
-        />
+        <div className="transition-opacity duration-300 ease-in-out">
+          <FileTypeHandler
+            file={file}
+            selectedColor={selectedColor || '#FFFF00'}
+            isHighlighter={isHighlighter}
+            onContentLoaded={onContentLoaded}
+            onLoadingChange={handleLoadingChange}
+          />
+        </div>
       );
     } catch (error) {
       handleError(error as Error);
       return (
-        <ErrorDisplay 
-          title="Error Loading File" 
-          description="There was a problem loading this file. Please try again or use a different file." 
-        />
+        <div className="transition-opacity duration-300 ease-in-out">
+          <ErrorDisplay 
+            title="Error Loading File" 
+            description="There was a problem loading this file. Please try again or use a different file." 
+          />
+        </div>
       );
     }
   }
@@ -94,12 +127,15 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   // Handle URL preview
   if (url) {
     return (
-      <UrlHandler
-        url={url}
-        selectedColor={selectedColor || '#FFFF00'} // Default yellow if no color specified
-        isHighlighter={isHighlighter}
-        onError={() => setLoadError("Failed to load URL content")}
-      />
+      <div className="transition-opacity duration-300 ease-in-out">
+        <UrlHandler
+          url={url}
+          selectedColor={selectedColor || '#FFFF00'}
+          isHighlighter={isHighlighter}
+          onError={() => setLoadError("Failed to load URL content")}
+          onLoadingChange={handleLoadingChange}
+        />
+      </div>
     );
   }
 
