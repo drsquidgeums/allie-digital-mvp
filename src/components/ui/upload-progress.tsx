@@ -48,16 +48,7 @@ export const UploadProgress: React.FC<UploadProgressProps> = ({
     }
   };
 
-  const getProgressColor = () => {
-    switch (status) {
-      case 'completed':
-        return 'bg-green-500';
-      case 'error':
-        return 'bg-red-500';
-      default:
-        return 'bg-blue-500';
-    }
-  };
+  const sanitizedId = fileName.replace(/[^a-zA-Z0-9]/g, '-');
 
   return (
     <div 
@@ -70,7 +61,8 @@ export const UploadProgress: React.FC<UploadProgressProps> = ({
       )}
       role="status"
       aria-live="polite"
-      aria-describedby={`upload-status-${fileName.replace(/[^a-zA-Z0-9]/g, '')}`}
+      aria-describedby={`upload-status-${sanitizedId}`}
+      aria-labelledby={`upload-file-${sanitizedId}`}
     >
       <div className="flex items-start space-x-3">
         <div className="flex-shrink-0 mt-0.5" aria-hidden="true">
@@ -79,7 +71,11 @@ export const UploadProgress: React.FC<UploadProgressProps> = ({
         
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-sm font-medium text-gray-900 truncate" title={fileName}>
+            <p 
+              id={`upload-file-${sanitizedId}`}
+              className="text-sm font-medium text-gray-900 truncate" 
+              title={fileName}
+            >
               {fileName}
             </p>
             {onCancel && status === 'uploading' && (
@@ -104,7 +100,7 @@ export const UploadProgress: React.FC<UploadProgressProps> = ({
           <div className="space-y-1">
             <div className="flex items-center justify-between text-xs">
               <span 
-                id={`upload-status-${fileName.replace(/[^a-zA-Z0-9]/g, '')}`}
+                id={`upload-status-${sanitizedId}`}
                 className={cn(
                   "transition-colors duration-200",
                   status === 'completed' && "text-green-600",
@@ -124,6 +120,7 @@ export const UploadProgress: React.FC<UploadProgressProps> = ({
                 status === 'error' && "opacity-50"
               )}
               aria-label={`Upload progress: ${progress}%`}
+              aria-describedby={`upload-status-${sanitizedId}`}
             />
           </div>
         </div>

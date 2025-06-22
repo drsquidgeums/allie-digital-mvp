@@ -1,4 +1,3 @@
-
 import { useCallback } from 'react';
 import { useEncryption } from './useEncryption';
 import { useSessionManager } from './useSessionManager';
@@ -21,29 +20,40 @@ export const useSecurityEventLogger = () => {
     };
 
     try {
-      // Store security events separately with encryption
       let existingLogs: SecurityEvent[] = [];
+      
+      // Try to get existing logs with proper error handling
       try {
-        existingLogs = await decryptStorageItem('security_events') || 
-                      JSON.parse(localStorage.getItem('security_events') || '[]');
+        const encrypted = await decryptStorageItem('security_events');
+        if (encrypted) {
+          existingLogs = Array.isArray(encrypted) ? encrypted : [];
+        } else {
+          const unencrypted = localStorage.getItem('security_events');
+          if (unencrypted) {
+            existingLogs = JSON.parse(unencrypted);
+          }
+        }
       } catch (error) {
+        console.warn('Failed to retrieve existing security logs, starting fresh:', error);
         existingLogs = [];
       }
 
       existingLogs.push(logEntry);
       
+      // Keep only last 500 entries
       if (existingLogs.length > 500) {
-        existingLogs.splice(0, existingLogs.length - 500);
+        existingLogs = existingLogs.slice(-500);
       }
       
-      // Store encrypted with fallback
+      // Store with fallback
       try {
         await encryptStorageItem('security_events', existingLogs);
       } catch (error) {
+        console.warn('Encryption failed, storing unencrypted:', error);
         localStorage.setItem('security_events', JSON.stringify(existingLogs));
       }
 
-      // Log critical security events for debugging
+      // Log critical security events
       if (['suspicious_activity', 'failed_access', 'session_hijack'].includes(event)) {
         console.warn('Security Alert:', logEntry);
       }
@@ -52,12 +62,17 @@ export const useSecurityEventLogger = () => {
     }
   }, [getSessionId, getFingerprint, encryptStorageItem, decryptStorageItem]);
 
-  const getSecurityEvents = useCallback(async () => {
+  const getSecurityEvents = useCallback(async (): Promise<SecurityEvent[]> => {
     try {
-      // Try encrypted first, fallback to unencrypted
       const encrypted = await decryptStorageItem('security_events');
-      return encrypted || JSON.parse(localStorage.getItem('security_events') || '[]');
+      if (encrypted && Array.isArray(encrypted)) {
+        return encrypted;
+      }
+      
+      const unencrypted = localStorage.getItem('security_events');
+      return unencrypted ? JSON.parse(unencrypted) : [];
     } catch (error) {
+      console.warn('Failed to retrieve security events:', error);
       return [];
     }
   }, [decryptStorageItem]);

@@ -3,32 +3,39 @@ import { useCallback } from 'react';
 
 export const useEncryption = () => {
   const getEncryptionKey = useCallback(async () => {
-    const sessionId = sessionStorage.getItem('security_session_id') || 'default';
-    const keyMaterial = await crypto.subtle.importKey(
-      'raw',
-      new TextEncoder().encode(sessionId.padEnd(32, '0').slice(0, 32)),
-      { name: 'PBKDF2' },
-      false,
-      ['deriveBits', 'deriveKey']
-    );
+    try {
+      const sessionId = sessionStorage.getItem('security_session_id') || 'default';
+      const keyMaterial = await crypto.subtle.importKey(
+        'raw',
+        new TextEncoder().encode(sessionId.padEnd(32, '0').slice(0, 32)),
+        { name: 'PBKDF2' },
+        false,
+        ['deriveBits', 'deriveKey']
+      );
 
-    return await crypto.subtle.deriveKey(
-      {
-        name: 'PBKDF2',
-        salt: new TextEncoder().encode('security-salt'),
-        iterations: 100000,
-        hash: 'SHA-256'
-      },
-      keyMaterial,
-      { name: 'AES-GCM', length: 256 },
-      true,
-      ['encrypt', 'decrypt']
-    );
+      return await crypto.subtle.deriveKey(
+        {
+          name: 'PBKDF2',
+          salt: new TextEncoder().encode('security-salt'),
+          iterations: 100000,
+          hash: 'SHA-256'
+        },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        true,
+        ['encrypt', 'decrypt']
+      );
+    } catch (error) {
+      console.warn('Failed to generate encryption key:', error);
+      return null;
+    }
   }, []);
 
-  const encryptData = useCallback(async (data: string) => {
+  const encryptData = useCallback(async (data: string): Promise<string> => {
     try {
       const key = await getEncryptionKey();
+      if (!key) return data;
+
       const iv = crypto.getRandomValues(new Uint8Array(12));
       const encodedData = new TextEncoder().encode(data);
 
@@ -38,36 +45,30 @@ export const useEncryption = () => {
         encodedData
       );
 
-      // Combine IV and encrypted data
       const combined = new Uint8Array(iv.length + encrypted.byteLength);
       combined.set(iv);
       combined.set(new Uint8Array(encrypted), iv.length);
 
       return btoa(String.fromCharCode(...combined));
     } catch (error) {
-      console.warn('Encryption failed, storing unencrypted:', error);
-      return data; // Fallback to unencrypted
+      console.warn('Encryption failed:', error);
+      return data;
     }
   }, [getEncryptionKey]);
 
-  const decryptData = useCallback(async (encryptedData: string) => {
+  const decryptData = useCallback(async (encryptedData: string): Promise<string> => {
     try {
       const key = await getEncryptionKey();
-      
-      // Safe base64 decoding with error handling
-      let combined: Uint8Array;
-      try {
-        combined = new Uint8Array(
-          atob(encryptedData).split('').map(char => char.charCodeAt(0))
-        );
-      } catch (decodeError) {
-        // If base64 decode fails, assume it's unencrypted data
-        console.warn('Base64 decode failed, treating as unencrypted:', decodeError);
-        return encryptedData;
+      if (!key) return encryptedData;
+
+      // Safe base64 decoding
+      const binaryString = atob(encryptedData);
+      const combined = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        combined[i] = binaryString.charCodeAt(i);
       }
 
       if (combined.length < 12) {
-        // Data too short to contain IV, assume unencrypted
         return encryptedData;
       }
 
@@ -82,8 +83,8 @@ export const useEncryption = () => {
 
       return new TextDecoder().decode(decrypted);
     } catch (error) {
-      console.warn('Decryption failed, treating as unencrypted:', error);
-      return encryptedData; // Fallback - assume it's unencrypted
+      console.warn('Decryption failed:', error);
+      return encryptedData;
     }
   }, [getEncryptionKey]);
 
@@ -101,7 +102,7 @@ export const useEncryption = () => {
     try {
       return JSON.parse(decrypted);
     } catch {
-      return decrypted; // Return as string if not JSON
+      return decrypted;
     }
   }, [decryptData]);
 
