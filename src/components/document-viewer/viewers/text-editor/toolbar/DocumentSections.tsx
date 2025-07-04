@@ -145,7 +145,7 @@ export const DocumentSections: React.FC<DocumentSectionsProps> = ({ editor }) =>
                   {sections.map(section => (
                     <Collapsible
                       key={section.id}
-                      open={!section.isCollapsed}
+                      defaultOpen={!section.isCollapsed}
                       onOpenChange={() => toggleSection(section.id)}
                     >
                       <CollapsibleTrigger asChild>
