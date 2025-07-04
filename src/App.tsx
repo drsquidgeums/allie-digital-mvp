@@ -10,7 +10,6 @@ import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
 import { NdaAgreement } from "@/components/nda/NdaAgreement";
-import { FeedbackButton } from "@/components/community/FeedbackButton";
 import { FeedbackPrompt } from "@/components/community/FeedbackPrompt";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
 
@@ -62,10 +61,6 @@ const App = () => {
     setShowNda(true); // Always show NDA after authentication
   };
 
-  const handleFeedbackClick = () => {
-    setShowFeedbackPrompt(true);
-  };
-
   const handleCloseFeedbackPrompt = () => {
     setShowFeedbackPrompt(false);
   };
@@ -101,13 +96,6 @@ const App = () => {
               <AppRoutes />
             </Suspense>
             <FloatingAIAssistant />
-            
-            {/* Feedback Button - Always visible when authenticated */}
-            {ndaCompleted && (
-              <div className="fixed bottom-4 left-4 z-50">
-                <FeedbackButton onClick={handleFeedbackClick} />
-              </div>
-            )}
             
             {/* NDA Agreement - Show this first */}
             <NdaAgreement 
