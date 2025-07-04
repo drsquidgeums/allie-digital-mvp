@@ -87,28 +87,38 @@ export function useFileManager() {
   const handleFileUpdate = async (existingFile: ManagedFile, newContent: File, metadata?: Record<string, any>) => {
     setLoading(true);
     try {
+      console.log('Updating file:', existingFile.name, 'with new content');
+      
       // Delete the old file first
       if (existingFile.path) {
         await deleteFileFromStorage(existingFile.path);
       }
       
-      // Upload the new content with the same display name
+      // Upload the new content, preserving the display name
+      const displayName = metadata?.originalName || existingFile.displayName || existingFile.name;
       const updatedFileObject = await uploadFileToStorage(newContent, {
         ...metadata,
-        originalName: existingFile.displayName || existingFile.name
+        originalName: displayName
       });
       
       if (updatedFileObject) {
-        // Update the file in global state
-        updateFile(existingFile.id, updatedFileObject);
+        console.log('File updated successfully, new file object:', updatedFileObject);
+        
+        // Update the file in global state with the same ID but new content
+        const updatedFile = {
+          ...updatedFileObject,
+          id: existingFile.id, // Keep the same ID to maintain references
+        };
+        
+        updateFile(existingFile.id, updatedFile);
         setLocalFiles([...getFiles()]);
         
         toast({
           title: "File updated",
-          description: `${existingFile.displayName || existingFile.name} has been updated`,
+          description: `${displayName} has been updated`,
         });
         
-        return updatedFileObject;
+        return updatedFile;
       }
       throw new Error('File update failed');
     } catch (error) {

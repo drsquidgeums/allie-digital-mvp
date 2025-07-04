@@ -27,10 +27,19 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle })
       // Create filename with .html extension for storage
       const fileName = generateFileName(documentTitle, 'html');
       
-      // Check if a file with the same display name already exists
+      // Check if we're updating an existing file based on the current document title
+      // Look for exact matches first, then partial matches
       const existingFile = files.find(file => {
+        // First check if the display names match exactly
         const fileDisplayName = (file.displayName || file.name).replace(/\.(html|doc|docx|txt)$/i, '');
-        return fileDisplayName === displayName;
+        if (fileDisplayName === displayName) {
+          return true;
+        }
+        
+        // Also check if this might be the same file with a different naming pattern
+        const cleanFileName = file.name.replace(/^\d+_/, '').replace(/\.(html|doc|docx|txt)$/i, '');
+        const cleanDisplayName = displayName.replace(/^\d+_/, '');
+        return cleanFileName === cleanDisplayName;
       });
 
       // Create the file object
@@ -39,23 +48,45 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle })
       });
 
       if (existingFile) {
+        console.log('Updating existing file:', existingFile.name);
+        
         // Update existing file
-        await updateFile(existingFile, file, {
+        const updatedFile = await updateFile(existingFile, file, {
           originalName: displayName,
           isUpdate: true
         });
+        
+        // Update sessionStorage with the new file information
+        if (updatedFile) {
+          sessionStorage.setItem('selectedFileId', updatedFile.id);
+          if (updatedFile.url) {
+            sessionStorage.setItem('selectedFileUrl', updatedFile.url);
+          }
+          sessionStorage.setItem('selectedFileName', displayName);
+        }
         
         toast({
           title: "Document Updated",
           description: `"${displayName}" has been updated in My Files`,
         });
       } else {
+        console.log('Creating new file:', fileName);
+        
         // Create new file
         const metadata = {
           originalName: displayName
         };
         
-        await uploadFile(file, metadata);
+        const newFile = await uploadFile(file, metadata);
+        
+        // Update sessionStorage with the new file information
+        if (newFile) {
+          sessionStorage.setItem('selectedFileId', newFile.id);
+          if (newFile.url) {
+            sessionStorage.setItem('selectedFileUrl', newFile.url);
+          }
+          sessionStorage.setItem('selectedFileName', displayName);
+        }
         
         toast({
           title: "Document Saved",

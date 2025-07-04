@@ -7,6 +7,7 @@ import { DocumentViewerContent } from "./document-viewer/DocumentViewerContent";
 import { FileInputHandler } from "./document-viewer/FileInputHandler";
 import { useDocumentViewerEffects } from "./document-viewer/hooks/useDocumentViewerEffects";
 import { extractTextFromFile } from "./document-viewer/FileConverter";
+import { useFileManager } from "@/hooks/file-manager";
 
 interface DocumentViewerProps {
   file: File | null;
@@ -56,6 +57,9 @@ export const DocumentViewer = ({
   const [documentContent, setDocumentContent] = useState<string>("");
   const [documentName, setDocumentName] = useState<string>("");
   
+  // File manager for detecting file updates
+  const { files } = useFileManager();
+  
   // Custom hook to handle document viewer side effects
   useDocumentViewerEffects(displayFile, url);
 
@@ -82,6 +86,19 @@ export const DocumentViewer = ({
     
     extractContent();
   }, [displayFile, onContentLoaded, initialDocumentName]);
+
+  // Listen for file updates and reload the document if needed
+  useEffect(() => {
+    const selectedFileId = sessionStorage.getItem('selectedFileId');
+    if (selectedFileId && files.length > 0) {
+      const updatedFile = files.find(f => f.id === selectedFileId);
+      if (updatedFile && updatedFile.url) {
+        console.log('File updated, reloading document:', updatedFile.name);
+        // Update the URL to trigger a reload of the document content
+        setUrl(updatedFile.url);
+      }
+    }
+  }, [files, setUrl]);
 
   return (
     <div 
