@@ -1,7 +1,7 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
-import { FileManager } from "@/components/file-manager/FileManager";
+import { EnhancedFileManager } from "@/components/file-manager/EnhancedFileManager";
 import { useTranslation } from "react-i18next";
 
 const MyFilesPage: React.FC = () => {
@@ -10,7 +10,7 @@ const MyFilesPage: React.FC = () => {
   return (
     <WorkspaceLayout>
       <div className="p-6 space-y-6">
-        <FileManager />
+        <EnhancedFileManager />
       </div>
     </WorkspaceLayout>
   );
