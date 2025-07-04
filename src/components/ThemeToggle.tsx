@@ -27,7 +27,7 @@ export const ThemeToggle = () => {
         <Button
           variant="outline"
           size="sm"
-          className="h-9 w-9 card-interactive focus-enhanced"
+          className="h-9 w-9 card-interactive focus-enhanced border-2 hover:border-primary/50 dark:border-white/20 dark:hover:border-primary/60"
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           aria-label="Toggle theme"
         >
@@ -40,7 +40,7 @@ export const ThemeToggle = () => {
       </TooltipTrigger>
       <TooltipContent 
         side="bottom" 
-        className="dialog-elevated z-50 overflow-hidden rounded-md px-3 py-1.5 text-sm shadow-md"
+        className="dialog-elevated z-50 overflow-hidden rounded-md px-3 py-1.5 text-sm shadow-md border bg-popover text-popover-foreground"
       >
         Toggle theme
       </TooltipContent>
