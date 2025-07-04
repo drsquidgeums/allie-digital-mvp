@@ -1,14 +1,17 @@
-
 import { ManagedFile } from './types';
 
 // Global state for files shared across components
 let globalFiles: ManagedFile[] = [];
 let listeners: (() => void)[] = [];
+let isNotifying = false; // Prevent cascading notifications
 
 /**
  * Notifies all listeners of state changes
  */
 export const notifyListeners = (): void => {
+  if (isNotifying) return; // Prevent re-entrant calls
+  
+  isNotifying = true;
   try {
     listeners.forEach(listener => {
       try {
@@ -19,6 +22,8 @@ export const notifyListeners = (): void => {
     });
   } catch (error) {
     console.error('Error notifying file store listeners:', error);
+  } finally {
+    isNotifying = false;
   }
 };
 
@@ -29,6 +34,13 @@ export const registerListener = (listener: () => void): (() => void) => {
   if (typeof listener !== 'function') {
     console.error('Invalid listener provided to registerListener');
     return () => {};
+  }
+  
+  // Check if listener already exists to prevent duplicates
+  if (listeners.includes(listener)) {
+    return () => {
+      listeners = listeners.filter(l => l !== listener);
+    };
   }
   
   listeners.push(listener);
@@ -53,8 +65,11 @@ export const setFiles = (files: ManagedFile[]): void => {
     return;
   }
   
-  globalFiles = [...files];
-  notifyListeners();
+  // Only update if files actually changed
+  if (JSON.stringify(globalFiles) !== JSON.stringify(files)) {
+    globalFiles = [...files];
+    notifyListeners();
+  }
 };
 
 /**

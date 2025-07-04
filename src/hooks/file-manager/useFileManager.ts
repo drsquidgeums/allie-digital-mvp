@@ -1,5 +1,5 @@
 
-import { useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { getFiles } from './fileStore';
 import { useFileState } from './core/useFileState';
 import { useFileUpload } from './operations/useFileUpload';
@@ -22,22 +22,29 @@ export function useFileManager() {
   // Combined loading state
   const loading = uploadLoading || updateLoading || refreshLoading;
 
-  // Memoized initialization function
+  // Initialize files only once if needed
   const initializeFiles = useCallback(async () => {
-    try {
-      if (getFiles().length === 0 && !loading) {
-        console.log('Initializing files from storage...');
-        await refreshFiles();
-      }
-    } catch (error) {
-      console.error('Failed to initialize files:', error);
+    if (getFiles().length === 0 && !loading) {
+      await refreshFiles();
     }
-  }, [loading, refreshFiles]);
+  }, [refreshFiles, loading]);
 
-  // Initialize by loading files from Supabase storage if not already loaded
-  useEffect(() => {
-    initializeFiles();
-  }, [initializeFiles]);
+  // Only initialize once when component mounts
+  React.useEffect(() => {
+    let mounted = true;
+    
+    const init = async () => {
+      if (mounted) {
+        await initializeFiles();
+      }
+    };
+    
+    init();
+    
+    return () => {
+      mounted = false;
+    };
+  }, []); // Remove dependencies to prevent re-initialization
 
   return {
     files,

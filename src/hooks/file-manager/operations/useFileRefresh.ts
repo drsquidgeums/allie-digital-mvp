@@ -12,12 +12,12 @@ export function useFileRefresh() {
   const { toast } = useToast();
 
   const refreshFiles = useCallback(async (): Promise<void> => {
+    if (loading) return; // Prevent concurrent refreshes
+    
     setLoading(true);
     try {
-      console.log('Refreshing files from storage...');
       const freshFiles = await fetchFiles();
       setFiles(freshFiles);
-      console.log('Files refreshed successfully, count:', freshFiles.length);
     } catch (error) {
       console.error('Error refreshing files:', error);
       toast({
@@ -28,7 +28,7 @@ export function useFileRefresh() {
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  }, [loading, toast]);
 
   return { refreshFiles, loading };
 }
