@@ -2,7 +2,7 @@
 import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { ManagedFile } from '../types';
-import { uploadFileToStorage, deleteFileFromStorage } from '../fileService';
+import { updateFileInStorage } from '../fileService';
 import { updateFile } from '../fileStore';
 
 /**
@@ -20,44 +20,27 @@ export function useFileUpdate() {
 
     setLoading(true);
     try {
-      const displayName = metadata?.originalName || existingFile.displayName || existingFile.name;
-      console.log('Updating file:', displayName, 'with new content');
+      const displayName = existingFile.displayName || metadata?.originalName || existingFile.name;
+      console.log('Updating file:', displayName, 'preserving filename structure');
       
-      // Delete the old file first if it has a path
-      if (existingFile.path) {
-        try {
-          await deleteFileFromStorage(existingFile.path);
-        } catch (deleteError) {
-          console.warn('Failed to delete old file, continuing with update:', deleteError);
-        }
-      }
-      
-      // Upload the new content with proper metadata
-      const updatedFileObject = await uploadFileToStorage(newContent, {
+      // Use the new updateFileInStorage function that preserves filenames
+      const updatedFileObject = await updateFileInStorage(existingFile, newContent, {
         ...metadata,
         originalName: displayName
       });
       
       if (updatedFileObject) {
-        console.log('File updated successfully, new file object:', updatedFileObject);
+        console.log('File updated successfully, filename preserved:', updatedFileObject.displayName);
         
-        // Update the file in global state keeping the same ID for consistency
-        const updatedFile: ManagedFile = {
-          ...updatedFileObject,
-          id: existingFile.id, // Keep the original ID
-          displayName: displayName // Ensure display name is preserved
-        };
-        
-        updateFile(existingFile.id, updatedFile);
-        
-        console.log('Updated file in global state with ID:', existingFile.id);
+        // Update the file in global state with preserved metadata
+        updateFile(existingFile.id, updatedFileObject);
         
         toast({
           title: "File updated",
           description: `${displayName} has been updated successfully`,
         });
         
-        return updatedFile;
+        return updatedFileObject;
       }
       throw new Error('File update failed - no updated file object returned');
     } catch (error) {

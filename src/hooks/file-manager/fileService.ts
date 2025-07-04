@@ -3,13 +3,33 @@ import { supabase } from '@/integrations/supabase/client';
 import { ManagedFile } from './types';
 
 /**
- * Generates a unique file path to avoid collisions
+ * Generates a unique file path to avoid collisions (only for new files)
  */
 const generateUniqueFilePath = (originalName: string): string => {
   const timestamp = Date.now();
   const randomSuffix = Math.random().toString(36).substring(2, 8);
   const cleanName = originalName.replace(/[^a-zA-Z0-9.-]/g, '_');
   return `${timestamp}_${randomSuffix}_${cleanName}`;
+};
+
+/**
+ * Extracts display name from file path or uses original name
+ */
+const extractDisplayName = (filePath: string, originalName?: string): string => {
+  if (originalName) {
+    return originalName.replace(/\.(html|txt|doc|docx)$/i, '');
+  }
+  
+  // Try to extract original name from the file path format: timestamp_random_originalname
+  const parts = filePath.split('_');
+  if (parts.length >= 3) {
+    // Join everything after the first two parts (timestamp and random)
+    const originalNameWithExt = parts.slice(2).join('_');
+    // Remove file extension for display
+    return originalNameWithExt.replace(/\.(html|txt|doc|docx)$/i, '');
+  }
+  
+  return filePath.replace(/\.(html|txt|doc|docx)$/i, '');
 };
 
 /**
@@ -48,17 +68,7 @@ export const fetchFiles = async (): Promise<ManagedFile[]> => {
               .from('files')
               .createSignedUrl(item.name, 60 * 60 * 24); // 24 hours expiry
             
-            // Extract original name from metadata or use a cleaned version
-            let displayName = item.name;
-            
-            // Try to extract original name from the file path format: timestamp_random_originalname
-            const parts = item.name.split('_');
-            if (parts.length >= 3) {
-              // Join everything after the first two parts (timestamp and random)
-              const originalNameWithExt = parts.slice(2).join('_');
-              // Remove file extension for display
-              displayName = originalNameWithExt.replace(/\.(html|txt|doc|docx)$/i, '');
-            }
+            const displayName = extractDisplayName(item.name);
             
             return {
               id: item.id || `file_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
@@ -73,13 +83,7 @@ export const fetchFiles = async (): Promise<ManagedFile[]> => {
           } catch (urlError) {
             console.warn(`Failed to create signed URL for ${item.name}:`, urlError);
             
-            // Extract display name even without URL
-            let displayName = item.name;
-            const parts = item.name.split('_');
-            if (parts.length >= 3) {
-              const originalNameWithExt = parts.slice(2).join('_');
-              displayName = originalNameWithExt.replace(/\.(html|txt|doc|docx)$/i, '');
-            }
+            const displayName = extractDisplayName(item.name);
             
             return {
               id: item.id || `file_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
@@ -115,6 +119,9 @@ export const uploadFileToStorage = async (file: File, metadata?: Record<string, 
     
     // Use the original filename or metadata name for the storage path
     const originalName = metadata?.originalName || file.name;
+    
+    // For new files, generate unique path to avoid collisions
+    // For existing files being updated, this should be handled in updateFile
     const filePath = generateUniqueFilePath(originalName);
     
     // Upload to Supabase storage
@@ -159,6 +166,62 @@ export const uploadFileToStorage = async (file: File, metadata?: Record<string, 
     return fileObject;
   } catch (error) {
     console.error("Error uploading file:", error);
+    throw error;
+  }
+};
+
+/**
+ * Updates an existing file in storage while preserving the filename
+ */
+export const updateFileInStorage = async (existingFile: ManagedFile, newContent: File, metadata?: Record<string, any>): Promise<ManagedFile | null> => {
+  if (!existingFile?.path || !newContent) {
+    throw new Error('Missing required parameters for file update');
+  }
+
+  try {
+    console.log('Updating existing file in storage:', existingFile.displayName || existingFile.name);
+    
+    // Use the existing file path to maintain consistency
+    const filePath = existingFile.path;
+    
+    // Update the file content using upsert to overwrite
+    const { data: uploadData, error: uploadError } = await supabase
+      .storage
+      .from('files')
+      .upload(filePath, newContent, {
+        cacheControl: '3600',
+        upsert: true // This will overwrite the existing file
+      });
+      
+    if (uploadError) {
+      throw new Error(`Update failed: ${uploadError.message}`);
+    }
+    
+    // Get the URL for the updated file
+    const { data: urlData } = await supabase
+      .storage
+      .from('files')
+      .createSignedUrl(filePath, 60 * 60 * 24); // 24 hour expiry
+      
+    // Preserve the original display name and other metadata
+    const displayName = existingFile.displayName || metadata?.originalName || extractDisplayName(filePath);
+    
+    const updatedFileObject: ManagedFile = {
+      id: existingFile.id, // Keep the same ID
+      name: filePath, // Keep the same storage path
+      displayName: displayName, // Preserve display name
+      size: newContent.size,
+      type: newContent.type || existingFile.type,
+      lastModified: Date.now(),
+      url: urlData?.signedUrl,
+      path: filePath,
+      file: newContent
+    };
+    
+    console.log('File updated successfully, preserved filename:', displayName);
+    return updatedFileObject;
+  } catch (error) {
+    console.error("Error updating file in storage:", error);
     throw error;
   }
 };

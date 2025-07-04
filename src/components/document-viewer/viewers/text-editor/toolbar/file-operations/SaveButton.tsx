@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useFileManager } from '@/hooks/file-manager';
-import { generateFileName } from '../utils/fileUtils';
 
 interface SaveButtonProps {
   editor: Editor;
@@ -62,7 +61,7 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle })
       if (existingFile) {
         console.log('Updating existing file:', existingFile.displayName || existingFile.name, 'with ID:', existingFile.id);
         
-        // Update existing file with proper metadata
+        // Update existing file - this will now preserve the filename structure
         const updatedFile = await updateFile(existingFile, file, {
           originalName: displayName
         });
@@ -78,7 +77,7 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle })
         
         toast({
           title: "Document Updated",
-          description: `"${displayName}" has been updated in My Files`,
+          description: `"${displayName}" has been updated successfully`,
         });
       } else {
         console.log('Creating new file:', displayName);
