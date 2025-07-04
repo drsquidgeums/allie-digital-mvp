@@ -71,20 +71,37 @@ export const OutlineGenerator: React.FC<OutlineGeneratorProps> = ({ editor }) =>
   }, [editor, isOpen]);
 
   const scrollToHeading = (position: number) => {
+    // Use TipTap's proper selection API
+    const { tr, doc } = editor.state;
+    const resolvedPos = doc.resolve(position);
+    
     // Create a text selection at the heading position
-    const { tr } = editor.state;
-    const selection = tr.setSelection(
-      editor.state.selection.constructor.near(editor.state.doc.resolve(position))
-    );
+    editor.chain().focus().setTextSelection(position).run();
     
-    editor.view.dispatch(selection);
-    editor.view.focus();
-    
-    // Scroll the heading into view
+    // Scroll the heading into view using DOM methods
     setTimeout(() => {
-      const headingElement = editor.view.domAtPos(position).node as Element;
-      if (headingElement) {
-        headingElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      try {
+        // Get the DOM node at the position
+        const domAtPos = editor.view.domAtPos(position);
+        const element = domAtPos.node;
+        
+        // Find the heading element by traversing up
+        let headingElement = element as Element;
+        if (element.nodeType === Node.TEXT_NODE) {
+          headingElement = element.parentElement as Element;
+        }
+        
+        // Look for the actual heading element
+        while (headingElement && !headingElement.tagName?.match(/^H[1-6]$/)) {
+          headingElement = headingElement.parentElement as Element;
+          if (!headingElement) break;
+        }
+        
+        if (headingElement) {
+          headingElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } catch (error) {
+        console.warn('Could not scroll to heading:', error);
       }
     }, 100);
     
