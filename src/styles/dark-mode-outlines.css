@@ -1,0 +1,98 @@
+
+/* Dark Mode Component Outlines - Subtle white borders for better visual distinction */
+
+/* Subtle white outlines for all components in dark mode */
+.dark div,
+.dark section,
+.dark article,
+.dark aside,
+.dark nav,
+.dark header,
+.dark footer,
+.dark main,
+.dark [role="region"],
+.dark [role="banner"],
+.dark [role="main"],
+.dark [role="complementary"],
+.dark [role="contentinfo"],
+.dark [role="navigation"] {
+  border: 1px solid hsla(0, 0%, 100%, 0.08);
+}
+
+/* Enhanced outlines for interactive elements */
+.dark a,
+.dark button,
+.dark [role="button"],
+.dark [role="link"],
+.dark [tabindex]:not([tabindex="-1"]) {
+  border: 1px solid hsla(0, 0%, 100%, 0.12);
+}
+
+/* Form elements with subtle white outlines */
+.dark input,
+.dark textarea,
+.dark select,
+.dark [role="textbox"],
+.dark [role="combobox"],
+.dark [role="listbox"] {
+  border: 1px solid hsla(0, 0%, 100%, 0.15);
+}
+
+/* Cards and panels with more prominent outlines */
+.dark .card,
+.dark [data-radix-aspect-ratio-wrapper] > div,
+.dark .bg-card,
+.dark [role="dialog"],
+.dark [role="alertdialog"],
+.dark [role="tooltip"] {
+  border: 1px solid hsla(0, 0%, 100%, 0.15);
+  box-shadow: 0 0 0 1px hsla(0, 0%, 100%, 0.05);
+}
+
+/* Menu and dropdown elements */
+.dark [role="menu"],
+.dark [role="menubar"],
+.dark [role="menuitem"],
+.dark .dropdown-content,
+.dark .popover-content {
+  border: 1px solid hsla(0, 0%, 100%, 0.2);
+}
+
+/* Tabs and navigation elements */
+.dark [role="tab"],
+.dark [role="tabpanel"],
+.dark .tab-content,
+.dark .nav-item {
+  border: 1px solid hsla(0, 0%, 100%, 0.1);
+}
+
+/* Focus and hover enhancements */
+.dark *:focus-visible {
+  border-color: hsla(0, 0%, 100%, 0.4) !important;
+  box-shadow: 0 0 0 2px hsl(var(--primary)), 0 0 0 1px hsla(0, 0%, 100%, 0.2);
+}
+
+.dark *:hover:not(:focus-visible) {
+  border-color: hsla(0, 0%, 100%, 0.2) !important;
+}
+
+/* Exclude certain elements that shouldn't have borders */
+.dark span:not([role]):not([tabindex]):not(.border),
+.dark p:not([role]):not([tabindex]):not(.border),
+.dark h1:not([role]):not([tabindex]):not(.border),
+.dark h2:not([role]):not([tabindex]):not(.border),
+.dark h3:not([role]):not([tabindex]):not(.border),
+.dark h4:not([role]):not([tabindex]):not(.border),
+.dark h5:not([role]):not([tabindex]):not(.border),
+.dark h6:not([role]):not([tabindex]):not(.border),
+.dark ul:not([role]):not([tabindex]):not(.border),
+.dark ol:not([role]):not([tabindex]):not(.border),
+.dark li:not([role]):not([tabindex]):not(.border) {
+  border: none !important;
+}
+
+/* Icons and small elements */
+.dark svg,
+.dark img:not(.border) {
+  border: none !important;
+}
