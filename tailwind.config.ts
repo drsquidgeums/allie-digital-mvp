@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -20,7 +21,7 @@ export default {
     extend: {
       colors: {
         workspace: "#FFFFFF",
-        "workspace-dark": "#222222",
+        "workspace-dark": "#1A1F2C",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
