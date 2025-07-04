@@ -42,7 +42,12 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
       
       {/* Main formatting toolbar */}
       <div className="px-4 pb-2">
-        <EditorToolbarContent editor={editor} selectedColor={selectedColor} />
+        <EditorToolbarContent 
+          editor={editor} 
+          selectedColor={selectedColor}
+          onFileImport={onFileImport}
+          documentTitle={documentTitle}
+        />
       </div>
     </div>
   );
