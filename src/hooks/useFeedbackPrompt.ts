@@ -10,13 +10,13 @@ const POSTPONE_DELAY = 15 * 60 * 1000;
 // Special user email that can submit multiple times
 const SPECIAL_USER_EMAIL = "antoinettecelinemarshall@gmail.com";
 
-export const useFeedbackPrompt = (isNdaFlowActive: boolean = false) => {
+export const useFeedbackPrompt = (disableAutoPrompt: boolean = false) => {
   const [showFeedbackPrompt, setShowFeedbackPrompt] = useState<boolean>(false);
   
   useEffect(() => {
-    // Don't show feedback prompt if NDA flow is currently active
-    if (isNdaFlowActive) {
-      console.log("NDA flow is active, not showing feedback prompt");
+    // Don't show feedback prompt if auto prompt is disabled
+    if (disableAutoPrompt) {
+      console.log("Auto feedback prompt is disabled");
       return;
     }
 
@@ -98,7 +98,7 @@ export const useFeedbackPrompt = (isNdaFlowActive: boolean = false) => {
     }, remainingTime);
     
     return () => clearTimeout(timer);
-  }, [isNdaFlowActive]);
+  }, [disableAutoPrompt]);
   
   const handleCloseFeedbackPrompt = () => {
     setShowFeedbackPrompt(false);

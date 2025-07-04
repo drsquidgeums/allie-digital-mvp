@@ -1,3 +1,4 @@
+
 import React, { lazy, Suspense, memo, useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -31,13 +32,12 @@ const App = () => {
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
   const [ndaCompleted, setNdaCompleted] = useState<boolean>(false);
   
-  // Always call the hook but pass parameters to control its behavior
-  const shouldInitializeFeedback = ndaCompleted && !showNda;
+  // Disable automatic feedback prompt by always passing true to disable it
   const { 
     showFeedbackPrompt, 
     handleCloseFeedbackPrompt, 
     handlePostponeFeedback 
-  } = useFeedbackPrompt(!shouldInitializeFeedback);
+  } = useFeedbackPrompt(true); // Always disable automatic prompts
 
   // Load any existing user info from localStorage
   useEffect(() => {
@@ -102,15 +102,13 @@ const App = () => {
               onAgreementComplete={handleNdaAgreementComplete} 
             />
             
-            {/* Feedback Prompt - Only show after NDA is completely finished */}
-            {shouldInitializeFeedback && (
-              <FeedbackPrompt
-                isOpen={showFeedbackPrompt}
-                onClose={handleCloseFeedbackPrompt}
-                onPostpone={handlePostponeFeedback}
-                userInfo={userInfo}
-              />
-            )}
+            {/* Feedback Prompt - Only show when manually triggered (never automatically) */}
+            <FeedbackPrompt
+              isOpen={showFeedbackPrompt}
+              onClose={handleCloseFeedbackPrompt}
+              onPostpone={handlePostponeFeedback}
+              userInfo={userInfo}
+            />
           </div>
         </SecurityProvider>
       </AppProviders>
