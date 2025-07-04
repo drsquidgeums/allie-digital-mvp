@@ -1,0 +1,315 @@
+
+@layer components {
+  /* Tool switching animations */
+  .tool-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .tool-fade-in {
+    animation: tool-fade-in 0.4s ease-out forwards;
+  }
+
+  .tool-fade-out {
+    animation: tool-fade-out 0.2s ease-in forwards;
+  }
+
+  /* File upload animations */
+  .upload-zone {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .upload-zone-active {
+    @apply scale-105 border-primary bg-primary/5;
+    animation: upload-pulse 1s ease-in-out infinite;
+  }
+
+  .upload-progress {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .upload-success {
+    animation: upload-success 0.6s ease-out;
+  }
+
+  .upload-error {
+    animation: upload-error 0.4s ease-out;
+  }
+
+  /* Document switching animations */
+  .document-transition {
+    @apply transition-all duration-400 ease-in-out;
+  }
+
+  .document-slide-in {
+    animation: document-slide-in 0.5s ease-out;
+  }
+
+  .document-slide-out {
+    animation: document-slide-out 0.3s ease-in;
+  }
+
+  /* Action completion feedback */
+  .action-success {
+    animation: action-success 0.5s ease-out;
+  }
+
+  .action-processing {
+    animation: action-processing 1.5s ease-in-out infinite;
+  }
+
+  /* Button micro-interactions */
+  .button-micro {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .button-micro:hover {
+    @apply transform -translate-y-0.5 shadow-lg;
+  }
+
+  .button-micro:active {
+    @apply transform translate-y-0 shadow-md;
+    transition-duration: 100ms;
+  }
+
+  /* Tab switching animations */
+  .tab-transition {
+    @apply transition-all duration-250 ease-out;
+  }
+
+  .tab-content-enter {
+    animation: tab-content-enter 0.3s ease-out;
+  }
+
+  .tab-indicator {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  /* Modal and dialog micro-interactions */
+  .modal-backdrop {
+    animation: modal-backdrop-fade 0.2s ease-out;
+  }
+
+  .modal-content {
+    animation: modal-scale-in 0.3s ease-out;
+  }
+
+  /* Loading micro-interactions */
+  .loading-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: loading-shimmer 1.5s infinite;
+  }
+
+  .loading-dots::after {
+    content: '';
+    animation: loading-dots 1.5s infinite;
+  }
+
+  /* Hover micro-interactions */
+  .hover-lift {
+    @apply transition-transform duration-200 ease-out;
+  }
+
+  .hover-lift:hover {
+    @apply transform -translate-y-1;
+  }
+
+  .hover-glow {
+    @apply transition-shadow duration-300 ease-out;
+  }
+
+  .hover-glow:hover {
+    @apply shadow-lg shadow-primary/25;
+  }
+}
+
+/* Keyframe animations */
+@keyframes tool-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes tool-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-5px) scale(0.98);
+  }
+}
+
+@keyframes upload-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(var(--primary), 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 10px rgba(var(--primary), 0);
+  }
+}
+
+@keyframes upload-success {
+  0% {
+    transform: scale(1);
+    background-color: transparent;
+  }
+  50% {
+    transform: scale(1.05);
+    background-color: rgba(34, 197, 94, 0.1);
+  }
+  100% {
+    transform: scale(1);
+    background-color: transparent;
+  }
+}
+
+@keyframes upload-error {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes document-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes document-slide-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+@keyframes action-success {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes action-processing {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes tab-content-enter {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modal-backdrop-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes loading-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes loading-dots {
+  0%, 20% {
+    content: '';
+  }
+  40% {
+    content: '.';
+  }
+  60% {
+    content: '..';
+  }
+  80%, 100% {
+    content: '...';
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .tool-transition,
+  .upload-zone,
+  .upload-progress,
+  .document-transition,
+  .button-micro,
+  .tab-transition,
+  .hover-lift,
+  .hover-glow {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+  
+  .tool-fade-in,
+  .tool-fade-out,
+  .upload-zone-active,
+  .upload-success,
+  .upload-error,
+  .document-slide-in,
+  .document-slide-out,
+  .action-success,
+  .action-processing,
+  .tab-content-enter,
+  .modal-backdrop,
+  .modal-content,
+  .loading-shimmer {
+    animation: none !important;
+  }
+}
