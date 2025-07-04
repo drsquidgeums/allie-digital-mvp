@@ -6,6 +6,7 @@ import { EnhancedMindMapContainer } from './mindmap/EnhancedMindMapContainer';
 import { useMindMapState } from './mindmap/hooks/useMindMapState';
 import { downloadMindMapAsJpg, downloadMindMapAsJson } from './mindmap/utils/mindMapUtils';
 import { colorOptions, textColorOptions } from './mindmap/constants/colors';
+import { enhancedNodeTypes } from './mindmap/constants/enhancedNodeTypes';
 import { ReactFlowProvider } from '@xyflow/react';
 
 export const MindMap = () => {
@@ -46,6 +47,7 @@ export const MindMap = () => {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
+            nodeTypes={enhancedNodeTypes}
             selectedColor={selectedColor}
             setSelectedColor={setSelectedColor}
             customColor={customColor}

@@ -7,9 +7,9 @@ import { MindMapContainerProps } from './types';
 import { toast } from "sonner";
 import { getShapeStyle } from './utils/shapeUtils';
 import { useReactFlow } from '@xyflow/react';
-import { enhancedNodeTypes } from './constants/enhancedNodeTypes';
 
 interface EnhancedMindMapContainerProps extends MindMapContainerProps {
+  nodeTypes: any;
   onUndo: () => void;
   onRedo: () => void;
   canUndo: boolean;
@@ -24,6 +24,7 @@ export const EnhancedMindMapContainer: React.FC<EnhancedMindMapContainerProps> =
   onNodesChange,
   onEdgesChange,
   onConnect,
+  nodeTypes,
   selectedColor,
   setSelectedColor,
   customColor,
@@ -144,7 +145,7 @@ export const EnhancedMindMapContainer: React.FC<EnhancedMindMapContainerProps> =
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
-          nodeTypes={enhancedNodeTypes}
+          nodeTypes={nodeTypes}
           onDeleteNode={handleDeleteNode}
           onDuplicateNode={handleDuplicateNode}
           onUndo={onUndo}

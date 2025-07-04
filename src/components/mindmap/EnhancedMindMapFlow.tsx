@@ -6,6 +6,8 @@ import {
   Background,
   ConnectionLineType,
   useReactFlow,
+  SelectionMode,
+  BackgroundVariant,
 } from '@xyflow/react';
 import { MindMapNode } from './types';
 import { toast } from 'sonner';
@@ -241,7 +243,7 @@ export const EnhancedMindMapFlow: React.FC<EnhancedMindMapFlowProps> = ({
         panOnScroll={true}
         selectionOnDrag={true}
         panOnDrag={[1, 2]}
-        selectionMode="partial"
+        selectionMode={SelectionMode.Partial}
       >
         <Controls 
           className="bg-background/90 shadow-lg backdrop-blur-sm border border-border rounded-lg m-4 z-50" 
@@ -254,7 +256,7 @@ export const EnhancedMindMapFlow: React.FC<EnhancedMindMapFlowProps> = ({
           size={1} 
           color="hsl(var(--border))" 
           className="bg-background opacity-50"
-          variant="dots"
+          variant={BackgroundVariant.Dots}
         />
       </ReactFlow>
     </div>
