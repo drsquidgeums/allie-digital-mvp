@@ -2,7 +2,7 @@
 import React from "react";
 import { DocumentToolbar } from "./DocumentToolbar";
 import { ToolbarTools } from "./ToolbarTools";
-import { ThemeProvider } from "../ThemeProvider";
+import { ThemeToggle } from "../ThemeToggle";
 import { FocusButton } from "../focus/FocusButton";
 
 interface DocumentViewerToolbarProps {
@@ -30,7 +30,7 @@ export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
         <div className="flex items-center gap-2 ml-auto">
           <FocusButton />
           <ToolbarTools />
-          <ThemeProvider />
+          <ThemeToggle />
         </div>
       </div>
     </div>

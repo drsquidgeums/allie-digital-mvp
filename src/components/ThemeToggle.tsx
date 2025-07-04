@@ -12,7 +12,6 @@ import { useTheme } from "next-themes";
 export const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
-  const buttonClassName = "h-9 w-9";
 
   React.useEffect(() => {
     setMounted(true);
@@ -28,12 +27,9 @@ export const ThemeToggle = () => {
         <Button
           variant="outline"
           size="sm"
-          className={`${buttonClassName} card-interactive focus-enhanced ${
-            theme === 'light' 
-              ? 'bg-accent text-accent-foreground' 
-              : 'bg-background hover:bg-accent hover:text-accent-foreground'
-          }`}
+          className="h-9 w-9 card-interactive focus-enhanced"
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          aria-label="Toggle theme"
         >
           {theme === 'dark' ? (
             <Sun className="h-4 w-4" />

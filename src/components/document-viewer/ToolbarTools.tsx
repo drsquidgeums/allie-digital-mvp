@@ -1,14 +1,15 @@
 
-import { BookOpen, Mic, Eye, Timer, Text, SpellCheck } from "lucide-react";
+import { BookOpen, Mic, Eye, Timer, Text, SpellCheck, Clock, Focus } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { BionicReader } from "../BionicReader";
 import { TextToSpeech } from "../TextToSpeech";
 import { PomodoroTimer } from "../PomodoroTimer";
 import { BeelineReader } from "../BeelineReader";
-import { FocusMode } from "../FocusMode";
 import { SpeechToText } from "../SpeechToText";
 import { Rewordify } from "../Rewordify";
+import { StudySessionTracker } from "../study/StudySessionTracker";
+import { EnhancedFocusMode } from "../focus/EnhancedFocusMode";
 
 export const ToolbarTools = () => {
   const { t } = useTranslation();
@@ -41,6 +42,20 @@ export const ToolbarTools = () => {
         label={t('tools.pomodoro')}
         id="pomodoro"
         content={<PomodoroTimer />}
+        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+      />
+      <ToolItem
+        icon={Clock}
+        label="Study Tracker"
+        id="study-tracker"
+        content={<StudySessionTracker />}
+        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+      />
+      <ToolItem
+        icon={Focus}
+        label="Enhanced Focus"
+        id="enhanced-focus"
+        content={<EnhancedFocusMode />}
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
       <ToolItem

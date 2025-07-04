@@ -13,9 +13,13 @@ import { TimerDisplay } from "./pomodoro/TimerDisplay";
 import { TimerControls } from "./pomodoro/TimerControls";
 import { TaskCompletionPrompt } from "./pomodoro/TaskCompletionPrompt";
 import { usePomodoroContext } from "@/contexts/PomodoroContext";
+import { useBreakReminders } from "@/hooks/useBreakReminders";
 
 export const PomodoroTimer = () => {
   const { taskReadyForCompletion } = usePomodoroContext();
+  
+  // Enable break reminders
+  useBreakReminders();
   
   return (
     <div className="space-y-6 animate-fade-in">
@@ -23,7 +27,7 @@ export const PomodoroTimer = () => {
         <CardHeader>
           <CardTitle>Pomodoro Timer</CardTitle>
           <CardDescription>
-            Focus on your tasks with timed work sessions
+            Focus on your tasks with timed work sessions and smart break reminders
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
