@@ -27,20 +27,32 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle })
       // Create filename with .html extension for storage
       const fileName = generateFileName(documentTitle, 'html');
       
-      // Check if we're updating an existing file based on the current document title
-      // Look for exact matches first, then partial matches
-      const existingFile = files.find(file => {
-        // First check if the display names match exactly
-        const fileDisplayName = (file.displayName || file.name).replace(/\.(html|doc|docx|txt)$/i, '');
-        if (fileDisplayName === displayName) {
-          return true;
-        }
-        
-        // Also check if this might be the same file with a different naming pattern
-        const cleanFileName = file.name.replace(/^\d+_/, '').replace(/\.(html|doc|docx|txt)$/i, '');
-        const cleanDisplayName = displayName.replace(/^\d+_/, '');
-        return cleanFileName === cleanDisplayName;
-      });
+      // Check if we're updating an existing file based on sessionStorage
+      const selectedFileId = sessionStorage.getItem('selectedFileId');
+      const selectedFileName = sessionStorage.getItem('selectedFileName');
+      
+      let existingFile = null;
+      
+      // First check if we have a file ID in session storage
+      if (selectedFileId) {
+        existingFile = files.find(file => file.id === selectedFileId);
+      }
+      
+      // If no file found by ID, try to match by display name
+      if (!existingFile && selectedFileName) {
+        existingFile = files.find(file => {
+          const fileDisplayName = (file.displayName || file.name).replace(/\.(html|doc|docx|txt)$/i, '');
+          return fileDisplayName === selectedFileName.replace(/\.(html|doc|docx|txt)$/i, '');
+        });
+      }
+      
+      // If still no file found, try to match by current document title
+      if (!existingFile) {
+        existingFile = files.find(file => {
+          const fileDisplayName = (file.displayName || file.name).replace(/\.(html|doc|docx|txt)$/i, '');
+          return fileDisplayName === displayName;
+        });
+      }
 
       // Create the file object
       const file = new File([content], fileName, { 
@@ -48,7 +60,7 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle })
       });
 
       if (existingFile) {
-        console.log('Updating existing file:', existingFile.name);
+        console.log('Updating existing file:', existingFile.name, 'with ID:', existingFile.id);
         
         // Update existing file
         const updatedFile = await updateFile(existingFile, file, {
@@ -56,13 +68,15 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle })
           isUpdate: true
         });
         
-        // Update sessionStorage with the new file information
+        // Force a reload by updating sessionStorage
         if (updatedFile) {
           sessionStorage.setItem('selectedFileId', updatedFile.id);
+          sessionStorage.setItem('selectedFileName', displayName);
           if (updatedFile.url) {
             sessionStorage.setItem('selectedFileUrl', updatedFile.url);
+            // Trigger a page reload to refresh the document content
+            window.location.reload();
           }
-          sessionStorage.setItem('selectedFileName', displayName);
         }
         
         toast({
@@ -82,10 +96,10 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle })
         // Update sessionStorage with the new file information
         if (newFile) {
           sessionStorage.setItem('selectedFileId', newFile.id);
+          sessionStorage.setItem('selectedFileName', displayName);
           if (newFile.url) {
             sessionStorage.setItem('selectedFileUrl', newFile.url);
           }
-          sessionStorage.setItem('selectedFileName', displayName);
         }
         
         toast({

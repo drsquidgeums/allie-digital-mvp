@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { ManagedFile } from './types';
@@ -94,7 +93,7 @@ export function useFileManager() {
         await deleteFileFromStorage(existingFile.path);
       }
       
-      // Upload the new content, preserving the display name
+      // Upload the new content with a new timestamp to ensure fresh URL
       const displayName = metadata?.originalName || existingFile.displayName || existingFile.name;
       const updatedFileObject = await uploadFileToStorage(newContent, {
         ...metadata,
@@ -104,19 +103,17 @@ export function useFileManager() {
       if (updatedFileObject) {
         console.log('File updated successfully, new file object:', updatedFileObject);
         
-        // Update the file in global state with the same ID but new content
+        // Update the file in global state keeping the same ID for consistency
         const updatedFile = {
           ...updatedFileObject,
-          id: existingFile.id, // Keep the same ID to maintain references
+          id: existingFile.id,
+          displayName: displayName
         };
         
         updateFile(existingFile.id, updatedFile);
         setLocalFiles([...getFiles()]);
         
-        toast({
-          title: "File updated",
-          description: `${displayName} has been updated`,
-        });
+        console.log('Updated file in global state with ID:', existingFile.id);
         
         return updatedFile;
       }

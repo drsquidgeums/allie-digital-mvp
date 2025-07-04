@@ -56,6 +56,7 @@ export const DocumentViewer = ({
   // State to track extracted text content
   const [documentContent, setDocumentContent] = useState<string>("");
   const [documentName, setDocumentName] = useState<string>("");
+  const [fileUpdateTrigger, setFileUpdateTrigger] = useState(0);
   
   // File manager for detecting file updates
   const { files } = useFileManager();
@@ -85,7 +86,7 @@ export const DocumentViewer = ({
     };
     
     extractContent();
-  }, [displayFile, onContentLoaded, initialDocumentName]);
+  }, [displayFile, onContentLoaded, initialDocumentName, fileUpdateTrigger]);
 
   // Listen for file updates and reload the document if needed
   useEffect(() => {
@@ -96,6 +97,8 @@ export const DocumentViewer = ({
         console.log('File updated, reloading document:', updatedFile.name);
         // Update the URL to trigger a reload of the document content
         setUrl(updatedFile.url);
+        // Trigger a re-extraction of content
+        setFileUpdateTrigger(prev => prev + 1);
       }
     }
   }, [files, setUrl]);
