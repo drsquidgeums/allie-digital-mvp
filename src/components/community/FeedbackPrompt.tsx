@@ -25,7 +25,7 @@ export const FeedbackPrompt: React.FC<FeedbackPromptProps> = ({
         aria-describedby="feedback-description"
       >
         <DialogHeader>
-          <DialogTitle id="feedback-title" className="text-center text-xl">
+          <DialogTitle id="feedback-title" className="text-center text-xl text-black dark:text-white">
             Share Your Feedback
           </DialogTitle>
           <DialogDescription id="feedback-description" className="text-center text-sm text-muted-foreground">
