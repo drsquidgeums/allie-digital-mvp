@@ -13,6 +13,7 @@ import {
   setFiles,
   addFile,
   removeFile,
+  updateFile,
   registerListener
 } from './fileStore';
 
@@ -72,6 +73,49 @@ export function useFileManager() {
       toast({
         title: "Upload failed",
         description: error instanceof Error ? error.message : "There was a problem uploading your file",
+        variant: "destructive",
+      });
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /**
+   * Updates an existing file in storage
+   */
+  const handleFileUpdate = async (existingFile: ManagedFile, newContent: File, metadata?: Record<string, any>) => {
+    setLoading(true);
+    try {
+      // Delete the old file first
+      if (existingFile.path) {
+        await deleteFileFromStorage(existingFile.path);
+      }
+      
+      // Upload the new content with the same display name
+      const updatedFileObject = await uploadFileToStorage(newContent, {
+        ...metadata,
+        originalName: existingFile.displayName || existingFile.name
+      });
+      
+      if (updatedFileObject) {
+        // Update the file in global state
+        updateFile(existingFile.id, updatedFileObject);
+        setLocalFiles([...getFiles()]);
+        
+        toast({
+          title: "File updated",
+          description: `${existingFile.displayName || existingFile.name} has been updated`,
+        });
+        
+        return updatedFileObject;
+      }
+      throw new Error('File update failed');
+    } catch (error) {
+      console.error("Error updating file:", error);
+      toast({
+        title: "Update failed",
+        description: error instanceof Error ? error.message : "There was a problem updating your file",
         variant: "destructive",
       });
       throw error;
@@ -186,6 +230,7 @@ export function useFileManager() {
     files,
     loading,
     uploadFile: handleFileUpload,
+    updateFile: handleFileUpdate,
     deleteFile: handleFileDelete,
     downloadFile: handleFileDownload,
     refreshFiles

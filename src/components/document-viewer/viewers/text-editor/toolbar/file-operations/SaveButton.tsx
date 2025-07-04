@@ -14,7 +14,7 @@ interface SaveButtonProps {
 
 export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle }) => {
   const { toast } = useToast();
-  const { uploadFile, files } = useFileManager();
+  const { uploadFile, updateFile, files } = useFileManager();
 
   const saveToMyFiles = async () => {
     try {
@@ -28,25 +28,22 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle })
       const fileName = generateFileName(documentTitle, 'html');
       
       // Check if a file with the same display name already exists
-      const existingFile = files.find(file => 
-        (file.displayName || file.name) === displayName ||
-        file.name === fileName
-      );
+      const existingFile = files.find(file => {
+        const fileDisplayName = (file.displayName || file.name).replace(/\.(html|doc|docx|txt)$/i, '');
+        return fileDisplayName === displayName;
+      });
+
+      // Create the file object
+      const file = new File([content], fileName, { 
+        type: 'text/html' 
+      });
 
       if (existingFile) {
-        // Update existing file by creating a new version with the same display name
-        const file = new File([content], fileName, { 
-          type: 'text/html' 
-        });
-        
-        // Add metadata to preserve the original display name
-        const metadata = {
+        // Update existing file
+        await updateFile(existingFile, file, {
           originalName: displayName,
           isUpdate: true
-        };
-        
-        // Upload as new version (this will replace the existing file in practice)
-        await uploadFile(file, metadata);
+        });
         
         toast({
           title: "Document Updated",
@@ -54,16 +51,10 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle })
         });
       } else {
         // Create new file
-        const file = new File([content], fileName, { 
-          type: 'text/html' 
-        });
-        
-        // Add metadata for the original display name
         const metadata = {
           originalName: displayName
         };
         
-        // Upload to file manager with metadata
         await uploadFile(file, metadata);
         
         toast({

@@ -46,6 +46,16 @@ export const addFile = (file: ManagedFile): void => {
 };
 
 /**
+ * Updates an existing file in global state
+ */
+export const updateFile = (fileId: string, updatedFile: ManagedFile): void => {
+  globalFiles = globalFiles.map(file => 
+    file.id === fileId ? updatedFile : file
+  );
+  notifyListeners();
+};
+
+/**
  * Removes a file from global state
  */
 export const removeFile = (fileId: string): void => {
