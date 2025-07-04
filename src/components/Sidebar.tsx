@@ -7,7 +7,6 @@ import { SidebarContent } from "./sidebar/SidebarContent";
 import { ThemeToggle } from "./ThemeToggle";
 import { FeedbackButton } from "./community/FeedbackButton";
 import { FeedbackPrompt } from "./community/FeedbackPrompt";
-import { useFeedbackPrompt } from "@/hooks/useFeedbackPrompt";
 
 interface SidebarProps {
   onColorChange: (color: string) => void;
@@ -17,13 +16,8 @@ export const Sidebar = React.memo(({
   onColorChange
 }: SidebarProps) => {
   const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
+  const [showFeedbackPrompt, setShowFeedbackPrompt] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const { 
-    showFeedbackPrompt, 
-    handleCloseFeedbackPrompt, 
-    handlePostponeFeedback,
-    handleManualFeedbackOpen
-  } = useFeedbackPrompt();
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
   
   // Get user info from localStorage
@@ -41,6 +35,18 @@ export const Sidebar = React.memo(({
       }
     }
   }, []);
+
+  const handleManualFeedbackOpen = () => {
+    setShowFeedbackPrompt(true);
+  };
+
+  const handleCloseFeedbackPrompt = () => {
+    setShowFeedbackPrompt(false);
+  };
+
+  const handlePostponeFeedback = () => {
+    setShowFeedbackPrompt(false);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
