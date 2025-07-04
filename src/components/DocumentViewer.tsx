@@ -54,6 +54,7 @@ export const DocumentViewer = ({
   
   // State to track extracted text content
   const [documentContent, setDocumentContent] = useState<string>("");
+  const [documentName, setDocumentName] = useState<string>("");
   
   // Custom hook to handle document viewer side effects
   useDocumentViewerEffects(displayFile, url);
@@ -65,9 +66,9 @@ export const DocumentViewer = ({
         try {
           const text = await extractTextFromFile(displayFile);
           setDocumentContent(text);
+          const displayName = initialDocumentName || displayFile.name;
+          setDocumentName(displayName);
           if (onContentLoaded) {
-            // If we have an initial document name, use that instead of the file name
-            const displayName = initialDocumentName || displayFile.name;
             onContentLoaded(text, displayName);
           }
         } catch (error) {
@@ -75,6 +76,7 @@ export const DocumentViewer = ({
         }
       } else {
         setDocumentContent("");
+        setDocumentName("");
       }
     };
     
@@ -94,6 +96,7 @@ export const DocumentViewer = ({
           onDownload={() => handleDownload(displayFile)}
           onDelete={handleDelete}
           hasFile={!!displayFile}
+          documentName={documentName}
         />
         
         {/* Document Content Area */}
