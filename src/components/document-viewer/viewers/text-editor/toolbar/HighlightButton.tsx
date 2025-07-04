@@ -41,11 +41,10 @@ export const HighlightButton: React.FC<HighlightButtonProps> = ({
           aria-label="Highlight Text"
           style={{
             backgroundColor: isHighlightActive() ? 'transparent' : undefined,
-            color: isHighlightActive() ? undefined : undefined,
             border: isHighlightActive() ? `2px solid ${highlightColor}` : undefined
           }}
         >
-          <Highlighter className="h-4 w-4" />
+          <Highlighter className="h-4 w-4 text-foreground" />
           {isHighlightActive() && (
             <div 
               className="absolute bottom-0 left-0 right-0 h-1"
