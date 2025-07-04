@@ -48,9 +48,22 @@ export const fetchFiles = async (): Promise<ManagedFile[]> => {
               .from('files')
               .createSignedUrl(item.name, 60 * 60 * 24); // 24 hours expiry
             
+            // Extract original name from metadata or use a cleaned version
+            let displayName = item.name;
+            
+            // Try to extract original name from the file path format: timestamp_random_originalname
+            const parts = item.name.split('_');
+            if (parts.length >= 3) {
+              // Join everything after the first two parts (timestamp and random)
+              const originalNameWithExt = parts.slice(2).join('_');
+              // Remove file extension for display
+              displayName = originalNameWithExt.replace(/\.(html|txt|doc|docx)$/i, '');
+            }
+            
             return {
               id: item.id || `file_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-              name: item.name,
+              name: item.name, // Keep the storage path as name
+              displayName: displayName, // User-friendly display name
               size: item.metadata?.size || 0,
               type: item.metadata?.mimetype || 'application/octet-stream',
               lastModified: new Date(item.created_at || Date.now()).getTime(),
@@ -59,9 +72,19 @@ export const fetchFiles = async (): Promise<ManagedFile[]> => {
             } as ManagedFile;
           } catch (urlError) {
             console.warn(`Failed to create signed URL for ${item.name}:`, urlError);
+            
+            // Extract display name even without URL
+            let displayName = item.name;
+            const parts = item.name.split('_');
+            if (parts.length >= 3) {
+              const originalNameWithExt = parts.slice(2).join('_');
+              displayName = originalNameWithExt.replace(/\.(html|txt|doc|docx)$/i, '');
+            }
+            
             return {
               id: item.id || `file_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
               name: item.name,
+              displayName: displayName,
               size: item.metadata?.size || 0,
               type: item.metadata?.mimetype || 'application/octet-stream',
               lastModified: new Date(item.created_at || Date.now()).getTime(),
@@ -90,8 +113,9 @@ export const uploadFileToStorage = async (file: File, metadata?: Record<string, 
   try {
     console.log('Uploading file to Supabase:', file.name);
     
-    // Create a unique file path to avoid collisions
-    const filePath = generateUniqueFilePath(file.name);
+    // Use the original filename or metadata name for the storage path
+    const originalName = metadata?.originalName || file.name;
+    const filePath = generateUniqueFilePath(originalName);
     
     // Upload to Supabase storage
     const { data: uploadData, error: uploadError } = await supabase
@@ -116,11 +140,13 @@ export const uploadFileToStorage = async (file: File, metadata?: Record<string, 
       .from('files')
       .createSignedUrl(uploadData.path, 60 * 60 * 24); // 24 hour expiry
       
-    // Create a file object with metadata
+    // Create a file object with proper display name
+    const displayName = metadata?.originalName || originalName.replace(/\.(html|txt|doc|docx)$/i, '');
+    
     const fileObject: ManagedFile = {
       id: uploadData.path || `file_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-      name: metadata?.originalName || file.name,
-      displayName: metadata?.originalName || file.name,
+      name: uploadData.path, // Storage path
+      displayName: displayName, // Clean display name
       size: file.size,
       type: file.type || 'application/octet-stream',
       lastModified: Date.now(),
@@ -129,7 +155,7 @@ export const uploadFileToStorage = async (file: File, metadata?: Record<string, 
       file: file
     };
     
-    console.log('File uploaded successfully:', fileObject.name);
+    console.log('File uploaded successfully:', displayName);
     return fileObject;
   } catch (error) {
     console.error("Error uploading file:", error);

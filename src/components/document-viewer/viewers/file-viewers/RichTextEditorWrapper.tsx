@@ -33,31 +33,58 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
       
       try {
         if (file) {
-          // Extract text from the file
-          const extractedText = await extractTextFromFile(file);
-          // Process content to preserve structure
-          const processedContent = processDocumentContent(extractedText, file.name);
-          setContent(processedContent);
-          setDocumentTitle(file.name);
+          // For HTML files, try to preserve formatting
+          if (file.type === 'text/html' || file.name.toLowerCase().endsWith('.html')) {
+            const text = await file.text();
+            // Check if it's already HTML content
+            if (text.trim().startsWith('<') && text.includes('</')) {
+              setContent(text);
+            } else {
+              // Convert plain text to HTML paragraphs
+              setContent(processTextContent(text, file.name));
+            }
+          } else {
+            // Extract text from other file types and convert to HTML
+            const extractedText = await extractTextFromFile(file);
+            const processedContent = processTextContent(extractedText, file.name);
+            setContent(processedContent);
+          }
+          
+          // Set document title from display name or clean filename
+          const cleanName = file.name.replace(/\.(html|doc|docx|txt)$/i, '');
+          // If the filename has the timestamp_random_ format, extract the original name
+          const parts = cleanName.split('_');
+          const displayTitle = parts.length >= 3 ? parts.slice(2).join('_') : cleanName;
+          setDocumentTitle(displayTitle);
           
           // Notify parent component that content is loaded
           if (onContentLoaded) {
-            onContentLoaded(processedContent, file.name);
+            onContentLoaded(content, displayTitle);
           }
         } else if (url) {
           // Fetch content from URL
           const response = await fetch(url);
           const text = await response.text();
-          const fileName = new URL(url).pathname.split('/').pop() || 'document';
           
-          // Process content to preserve structure
-          const processedContent = processDocumentContent(text, fileName);
-          setContent(processedContent);
-          setDocumentTitle(fileName);
+          // Check if it's HTML content
+          if (text.trim().startsWith('<') && text.includes('</')) {
+            setContent(text);
+          } else {
+            // Process as plain text
+            const fileName = new URL(url).pathname.split('/').pop() || 'document';
+            const processedContent = processTextContent(text, fileName);
+            setContent(processedContent);
+          }
+          
+          const fileName = new URL(url).pathname.split('/').pop() || 'document';
+          const cleanName = fileName.replace(/\.(html|doc|docx|txt)$/i, '');
+          const parts = cleanName.split('_');
+          const displayTitle = parts.length >= 3 ? parts.slice(2).join('_') : cleanName;
+          setDocumentTitle(displayTitle);
           
           // Notify parent component that content is loaded
           if (onContentLoaded) {
-            onContentLoaded(processedContent, fileName);
+            onContentLoaded(content, displayTitle);
           }
         }
       } catch (error) {
@@ -72,19 +99,8 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
   }, [file, url, onContentLoaded]);
   
   // Process document content to better preserve structure
-  const processDocumentContent = (text: string, fileName: string): string => {
+  const processTextContent = (text: string, fileName: string): string => {
     if (!text) return '<p>No content available</p>';
-    
-    // Determine file type
-    const fileExtension = fileName.split('.').pop()?.toLowerCase();
-    
-    // For HTML content, return as-is if it seems to be valid HTML
-    if (text.trim().startsWith('<') && text.includes('</')) {
-      // Basic check if it looks like HTML
-      if (text.includes('<p') || text.includes('<div') || text.includes('<html')) {
-        return text;
-      }
-    }
     
     // For plain text, format properly with paragraphs
     let processedContent = text
@@ -114,7 +130,7 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
     setDocumentTitle(e.target.value);
   };
 
-  // Save title when pressing Enter (removed the space key trigger)
+  // Save title when pressing Enter
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       setIsEditingTitle(false);
@@ -122,6 +138,9 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
         title: "Document Title Updated",
         description: `Title changed to "${documentTitle}"`,
       });
+      
+      // Update session storage with new title
+      sessionStorage.setItem('selectedFileName', documentTitle);
       
       // Notify parent component of title change
       if (onContentLoaded && !isLoading && content) {

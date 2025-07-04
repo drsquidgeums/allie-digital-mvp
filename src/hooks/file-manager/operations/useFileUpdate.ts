@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { ManagedFile } from '../types';
@@ -19,7 +20,8 @@ export function useFileUpdate() {
 
     setLoading(true);
     try {
-      console.log('Updating file:', existingFile.name, 'with new content');
+      const displayName = metadata?.originalName || existingFile.displayName || existingFile.name;
+      console.log('Updating file:', displayName, 'with new content');
       
       // Delete the old file first if it has a path
       if (existingFile.path) {
@@ -30,8 +32,7 @@ export function useFileUpdate() {
         }
       }
       
-      // Upload the new content
-      const displayName = metadata?.originalName || existingFile.displayName || existingFile.name;
+      // Upload the new content with proper metadata
       const updatedFileObject = await uploadFileToStorage(newContent, {
         ...metadata,
         originalName: displayName
@@ -43,8 +44,8 @@ export function useFileUpdate() {
         // Update the file in global state keeping the same ID for consistency
         const updatedFile: ManagedFile = {
           ...updatedFileObject,
-          id: existingFile.id,
-          displayName: displayName
+          id: existingFile.id, // Keep the original ID
+          displayName: displayName // Ensure display name is preserved
         };
         
         updateFile(existingFile.id, updatedFile);
