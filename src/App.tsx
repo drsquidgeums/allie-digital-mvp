@@ -10,8 +10,8 @@ import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
 import { NdaAgreement } from "@/components/nda/NdaAgreement";
+import { FeedbackButton } from "@/components/community/FeedbackButton";
 import { FeedbackPrompt } from "@/components/community/FeedbackPrompt";
-import { useFeedbackPrompt } from "@/hooks/useFeedbackPrompt";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
 
 const PomodoroTaskListener = memo(() => {
@@ -31,13 +31,7 @@ const App = () => {
   const [showNda, setShowNda] = useState(false);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
   const [ndaCompleted, setNdaCompleted] = useState<boolean>(false);
-  
-  // Disable automatic feedback prompt by always passing true to disable it
-  const { 
-    showFeedbackPrompt, 
-    handleCloseFeedbackPrompt, 
-    handlePostponeFeedback 
-  } = useFeedbackPrompt(true); // Always disable automatic prompts
+  const [showFeedbackPrompt, setShowFeedbackPrompt] = useState(false);
 
   // Load any existing user info from localStorage
   useEffect(() => {
@@ -68,6 +62,18 @@ const App = () => {
     setShowNda(true); // Always show NDA after authentication
   };
 
+  const handleFeedbackClick = () => {
+    setShowFeedbackPrompt(true);
+  };
+
+  const handleCloseFeedbackPrompt = () => {
+    setShowFeedbackPrompt(false);
+  };
+
+  const handlePostponeFeedback = () => {
+    setShowFeedbackPrompt(false);
+  };
+
   if (!isAuthenticated) {
     return (
       <AppProviders>
@@ -96,13 +102,20 @@ const App = () => {
             </Suspense>
             <FloatingAIAssistant />
             
+            {/* Feedback Button - Always visible when authenticated */}
+            {ndaCompleted && (
+              <div className="fixed bottom-4 left-4 z-50">
+                <FeedbackButton onClick={handleFeedbackClick} />
+              </div>
+            )}
+            
             {/* NDA Agreement - Show this first */}
             <NdaAgreement 
               isOpen={showNda} 
               onAgreementComplete={handleNdaAgreementComplete} 
             />
             
-            {/* Feedback Prompt - Only show when manually triggered (never automatically) */}
+            {/* Feedback Prompt - Only show when manually triggered */}
             <FeedbackPrompt
               isOpen={showFeedbackPrompt}
               onClose={handleCloseFeedbackPrompt}

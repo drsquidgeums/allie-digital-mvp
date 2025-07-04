@@ -2,7 +2,6 @@
 import React from 'react';
 import { Editor } from '@tiptap/react';
 import { EditorToolbarContent } from './toolbar/EditorToolbarContent';
-import { AutoSaveIndicator } from './toolbar/AutoSaveIndicator';
 import { DocumentTemplates } from './toolbar/DocumentTemplates';
 import { DocumentSharing } from './toolbar/DocumentSharing';
 import { EnhancedExportMenu } from './toolbar/file-operations/EnhancedExportMenu';
@@ -28,8 +27,8 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
 
   return (
     <div className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      {/* Top toolbar with file operations and status */}
-      <div className="flex items-center justify-between px-4 py-2">
+      {/* Top toolbar with file operations */}
+      <div className="flex items-center justify-between px-4 py-2 border-b">
         <div className="flex items-center gap-2">
           <DocumentTemplates editor={editor} />
           <ImportButton onFileImport={onFileImport} />
@@ -37,7 +36,6 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           <EnhancedExportMenu editor={editor} documentTitle={documentTitle} />
           <DocumentSharing editor={editor} documentTitle={documentTitle} />
         </div>
-        <AutoSaveIndicator editor={editor} documentTitle={documentTitle} />
       </div>
       
       {/* Main formatting toolbar */}

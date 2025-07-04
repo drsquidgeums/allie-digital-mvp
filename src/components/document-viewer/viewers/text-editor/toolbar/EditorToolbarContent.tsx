@@ -18,6 +18,7 @@ import { AdvancedEditingSection } from './sections/AdvancedEditingSection';
 import { ProductivitySection } from './sections/ProductivitySection';
 import { StatusSection } from './sections/StatusSection';
 import { HelpSection } from './sections/HelpSection';
+import { Separator } from '@/components/ui/separator';
 
 interface EditorToolbarContentProps {
   editor: Editor;
@@ -33,28 +34,37 @@ export const EditorToolbarContent: React.FC<EditorToolbarContentProps> = ({
   documentTitle,
 }) => {
   return (
-    <div className="flex flex-wrap items-center gap-1 p-2 bg-background border-b">
-      <FileButtonsSection 
-        editor={editor} 
-        onFileImport={onFileImport}
-        documentTitle={documentTitle}
-      />
-      <HistoryButtonsSection editor={editor} />
-      <HeadingSection editor={editor} />
-      <DocumentStructureSection editor={editor} documentTitle={documentTitle} />
-      <AdvancedEditingSection editor={editor} documentTitle={documentTitle} />
-      <FontFamilySection editor={editor} />
-      <FontSizeSection editor={editor} />
-      <TextFormatButtonsSection editor={editor} />
-      <AdvancedFormatSection editor={editor} />
-      <FontColorSection editor={editor} />
-      <HighlightButtonSection editor={editor} selectedColor={selectedColor} />
-      <TextAlignmentSection editor={editor} />
-      <ListButtonsSection editor={editor} />
-      <MediaButtonsSection editor={editor} />
-      <ProductivitySection editor={editor} documentTitle={documentTitle} />
-      <HelpSection />
-      <StatusSection editor={editor} documentTitle={documentTitle} />
+    <div className="flex flex-wrap items-center gap-1 py-2">
+      {/* Row 1: Basic editing */}
+      <div className="flex items-center gap-1">
+        <HistoryButtonsSection editor={editor} />
+        <Separator orientation="vertical" className="h-6 mx-1" />
+        <HeadingSection editor={editor} />
+        <Separator orientation="vertical" className="h-6 mx-1" />
+        <FontFamilySection editor={editor} />
+        <FontSizeSection editor={editor} />
+        <Separator orientation="vertical" className="h-6 mx-1" />
+        <TextFormatButtonsSection editor={editor} />
+        <AdvancedFormatSection editor={editor} />
+      </div>
+      
+      {/* Row 2: Colors and alignment */}
+      <div className="flex items-center gap-1 w-full mt-1">
+        <FontColorSection editor={editor} />
+        <HighlightButtonSection editor={editor} selectedColor={selectedColor} />
+        <Separator orientation="vertical" className="h-6 mx-1" />
+        <TextAlignmentSection editor={editor} />
+        <ListButtonsSection editor={editor} />
+        <Separator orientation="vertical" className="h-6 mx-1" />
+        <MediaButtonsSection editor={editor} />
+        <Separator orientation="vertical" className="h-6 mx-1" />
+        <DocumentStructureSection editor={editor} documentTitle={documentTitle} />
+        <AdvancedEditingSection editor={editor} documentTitle={documentTitle} />
+        <ProductivitySection editor={editor} documentTitle={documentTitle} />
+        <div className="flex-1" />
+        <HelpSection />
+        <StatusSection editor={editor} documentTitle={documentTitle} />
+      </div>
     </div>
   );
 };
