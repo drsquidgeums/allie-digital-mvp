@@ -1,5 +1,5 @@
 
-import { BookOpen, Mic, Eye, Timer, Text, SpellCheck, Clock, Focus } from "lucide-react";
+import { BookOpen, Mic, Eye, Timer, Text, SpellCheck, Glasses, Music, Focus } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { BionicReader } from "../BionicReader";
@@ -8,14 +8,22 @@ import { PomodoroTimer } from "../PomodoroTimer";
 import { BeelineReader } from "../BeelineReader";
 import { SpeechToText } from "../SpeechToText";
 import { Rewordify } from "../Rewordify";
-import { StudySessionTracker } from "../study/StudySessionTracker";
 import { EnhancedFocusMode } from "../focus/EnhancedFocusMode";
+import { IrlenOverlay } from "../IrlenOverlay";
+import { AmbientMusic } from "../AmbientMusic";
 
 export const ToolbarTools = () => {
   const { t } = useTranslation();
 
   return (
     <div className="flex items-center gap-2">
+      <ToolItem
+        icon={Focus}
+        label="Enhanced Focus"
+        id="enhanced-focus"
+        content={<EnhancedFocusMode />}
+        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+      />
       <ToolItem
         icon={Eye}
         label={t('tools.bionic')}
@@ -45,20 +53,6 @@ export const ToolbarTools = () => {
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
       <ToolItem
-        icon={Clock}
-        label="Study Tracker"
-        id="study-tracker"
-        content={<StudySessionTracker />}
-        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
-      />
-      <ToolItem
-        icon={Focus}
-        label="Enhanced Focus"
-        id="enhanced-focus"
-        content={<EnhancedFocusMode />}
-        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
-      />
-      <ToolItem
         icon={BookOpen}
         label={t('tools.beeline')}
         id="beeline"
@@ -71,6 +65,20 @@ export const ToolbarTools = () => {
         id="rewordify"
         content={<Rewordify />}
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+      />
+      <ToolItem
+        icon={Glasses}
+        label="Irlen Overlay"
+        id="irlen-overlay"
+        content={<IrlenOverlay />}
+        popoverClassName="w-48 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+      />
+      <ToolItem
+        icon={Music}
+        label="Ambient Music"
+        id="ambient-music"
+        content={<AmbientMusic />}
+        popoverClassName="w-64 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
     </div>
   );
