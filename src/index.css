@@ -140,7 +140,7 @@ body {
   border-color: hsla(0, 0%, 100%, 0.15);
 }
 
-/* Better button contrast in dark mode */
+/* Better button contrast in dark mode - using direct CSS properties instead of @apply */
 .dark .bg-primary {
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
