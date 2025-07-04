@@ -15,6 +15,7 @@ import { MediaButtonsSection } from './sections/MediaButtonsSection';
 import { HelpSection } from './sections/HelpSection';
 import { FontColorSection } from './sections/FontColorSection';
 import { StatusSection } from './sections/StatusSection';
+import { DocumentStructureSection } from './sections/DocumentStructureSection';
 
 interface EditorToolbarContentProps {
   editor: Editor;
@@ -38,6 +39,7 @@ export const EditorToolbarContent: React.FC<EditorToolbarContentProps> = ({
       />
       <HistoryButtonsSection editor={editor} />
       <HeadingSection editor={editor} />
+      <DocumentStructureSection editor={editor} documentTitle={documentTitle} />
       <FontFamilySection editor={editor} />
       <FontSizeSection editor={editor} />
       <TextFormatButtonsSection editor={editor} />
