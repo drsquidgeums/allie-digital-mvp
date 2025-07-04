@@ -1,19 +1,18 @@
+
 import OpenAI from "openai";
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from "sonner";
 
 // Create an OpenAI client
 export const createOpenAIClient = async () => {
   try {
-    // Attempt to get the API key from Supabase, but handle the case where the table doesn't exist
     const { data, error } = await supabase
       .from('secrets')
       .select('secret')
       .eq('name', 'OPENAI_API_KEY')
-      .single();
+      .maybeSingle();
 
     if (error || !data?.secret) {
-      console.error('OpenAI API key not found in Supabase');
+      console.log('OpenAI API key not found in Supabase - using fallback responses');
       return null;
     }
 
@@ -22,25 +21,24 @@ export const createOpenAIClient = async () => {
       dangerouslyAllowBrowser: true
     });
   } catch (error) {
-    console.error('Error creating OpenAI client:', error);
+    console.log('Error creating OpenAI client - using fallback responses');
     return null;
   }
 };
 
-// Function to create OpenAI API request with direct API key
-export const createOpenAICompletion = async (messages) => {
+// Function to create OpenAI API request
+export const createOpenAICompletion = async (messages: any[]) => {
   try {
-    // Create client using key from Supabase if available
     const openai = await createOpenAIClient();
     
     if (!openai) {
-      throw new Error("No valid OpenAI client available");
+      throw new Error("No OpenAI client available");
     }
     
-    console.log("Attempting OpenAI API request with gpt-4o-mini model...");
+    console.log("Making OpenAI API request...");
     
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // Using the most cost-effective model
+      model: "gpt-4o-mini",
       messages: messages,
       max_tokens: 1024,
       temperature: 0.7,
@@ -49,52 +47,8 @@ export const createOpenAICompletion = async (messages) => {
     console.log("OpenAI API request successful");
     return response.choices[0].message.content;
   } catch (error) {
-    console.error("OpenAI API error:", error);
-    
-    // Check for specific error types
-    const errorMessage = error?.toString() || "";
-    const errorDetails = error?.error || {};
-    
-    if (errorDetails.type === "insufficient_quota" || errorMessage.includes("quota")) {
-      return `I'm currently experiencing API quota limits. This happens when:
-
-1. The API key has exceeded its usage limits
-2. The billing information needs to be updated
-3. The free tier limits have been reached
-
-You can continue using my built-in knowledge base while this issue is being resolved. What would you like to know about using the learning tools?`;
-    }
-    
-    if (errorMessage.includes("rate limit")) {
-      return `I've hit a rate limit with my AI service. This is a temporary issue that occurs when:
-
-1. Too many requests are made in a short time
-2. The API has usage restrictions in place
-
-Please try again in a minute, or ask me about using any of the learning tools in the meantime.`;
-    }
-    
-    if (errorMessage.includes("authentication") || errorMessage.includes("invalid") || errorMessage.includes("key")) {
-      return `There appears to be an issue with the AI service authentication:
-
-1. The API key may be invalid or expired
-2. The key might not have the correct permissions
-3. The account associated with the key might need verification
-
-In the meantime, I'll use my built-in knowledge to assist you with the ADHD learning application.`;
-    }
-    
-    // Default fallback response
-    return `I'm currently using my built-in knowledge to assist you. The AI service is unavailable, but I can still help with:
-
-- Using the Pomodoro Timer for focused study
-- Setting up Mind Mapping tools for visual organization
-- Managing tasks with our point-based reward system
-- Reading assistance with color overlays and the bionic reader
-- Focus mode settings to reduce distractions
-- PDF annotation and highlighting features
-
-What would you like help with today?`;
+    console.log("OpenAI API unavailable:", error);
+    throw error;
   }
 };
 

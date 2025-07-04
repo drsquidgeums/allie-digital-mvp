@@ -14,6 +14,18 @@ export const ChatInput = ({ value, onChange, onSend, isLoading }: ChatInputProps
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
+      if (value.trim()) {
+        onSend();
+      }
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+  };
+
+  const handleSendClick = () => {
+    if (value.trim() && !isLoading) {
       onSend();
     }
   };
@@ -26,7 +38,7 @@ export const ChatInput = ({ value, onChange, onSend, isLoading }: ChatInputProps
     >
       <Input
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={handleInputChange}
         placeholder="Ask about study tips or how to use our tools..."
         onKeyDown={handleKeyDown}
         disabled={isLoading}
@@ -34,9 +46,9 @@ export const ChatInput = ({ value, onChange, onSend, isLoading }: ChatInputProps
         className="focus:ring-2 focus:ring-primary focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 ease-in-out hover:border-primary/50"
       />
       <Button 
-        onClick={onSend} 
+        onClick={handleSendClick} 
         size="icon" 
-        disabled={isLoading}
+        disabled={isLoading || !value.trim()}
         aria-label="Send message"
         className="focus:ring-2 focus:ring-primary focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 ease-in-out hover:bg-primary/90 hover:scale-105 active:scale-95"
       >
