@@ -3,6 +3,16 @@ import { supabase } from '@/integrations/supabase/client';
 import { ManagedFile } from './types';
 
 /**
+ * Generates a unique file path to avoid collisions
+ */
+const generateUniqueFilePath = (originalName: string): string => {
+  const timestamp = Date.now();
+  const randomSuffix = Math.random().toString(36).substring(2, 8);
+  const cleanName = originalName.replace(/[^a-zA-Z0-9.-]/g, '_');
+  return `${timestamp}_${randomSuffix}_${cleanName}`;
+};
+
+/**
  * Fetches files from Supabase storage
  */
 export const fetchFiles = async (): Promise<ManagedFile[]> => {
@@ -11,50 +21,61 @@ export const fetchFiles = async (): Promise<ManagedFile[]> => {
     const { data: storageData, error } = await supabase
       .storage
       .from('files')
-      .list();
+      .list('', {
+        limit: 100,
+        offset: 0,
+        sortBy: { column: 'created_at', order: 'desc' }
+      });
       
     if (error) {
       console.error('Error fetching files from storage:', error);
+      throw new Error(`Failed to fetch files: ${error.message}`);
+    }
+    
+    if (!storageData) {
+      console.log('No files found in storage');
       return [];
     }
     
-    // Convert storage data to ManagedFile format
+    // Filter out directories and convert storage data to ManagedFile format
     const files: ManagedFile[] = await Promise.all(
-      storageData.filter(item => !item.id.endsWith('/')).map(async (item) => {
-        const { data: urlData } = await supabase
-          .storage
-          .from('files')
-          .createSignedUrl(item.name, 60 * 60 * 24); // 24 hours expiry
-        
-        // Try to extract original name from metadata if it exists
-        let displayName = item.name;
-        try {
-          // Remove timestamp prefix from filename if no metadata is available
-          if (item.name.includes('_') && /^\d+_/.test(item.name)) {
-            displayName = item.name.replace(/^\d+_/, '');
+      storageData
+        .filter(item => item.name && !item.id?.endsWith('/'))
+        .map(async (item) => {
+          try {
+            const { data: urlData } = await supabase
+              .storage
+              .from('files')
+              .createSignedUrl(item.name, 60 * 60 * 24); // 24 hours expiry
+            
+            return {
+              id: item.id || `file_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+              name: item.name,
+              size: item.metadata?.size || 0,
+              type: item.metadata?.mimetype || 'application/octet-stream',
+              lastModified: new Date(item.created_at || Date.now()).getTime(),
+              url: urlData?.signedUrl,
+              path: item.name
+            } as ManagedFile;
+          } catch (urlError) {
+            console.warn(`Failed to create signed URL for ${item.name}:`, urlError);
+            return {
+              id: item.id || `file_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+              name: item.name,
+              size: item.metadata?.size || 0,
+              type: item.metadata?.mimetype || 'application/octet-stream',
+              lastModified: new Date(item.created_at || Date.now()).getTime(),
+              path: item.name
+            } as ManagedFile;
           }
-        } catch (error) {
-          console.warn('Could not parse metadata:', error);
-        }
-        
-        return {
-          id: item.id,
-          name: item.name,
-          displayName: displayName.replace(/_/g, ' '), // Replace underscores with spaces
-          size: item.metadata?.size || 0,
-          type: item.metadata?.mimetype || 'application/octet-stream',
-          lastModified: new Date(item.created_at).getTime(),
-          url: urlData?.signedUrl,
-          path: item.name
-        };
-      })
+        })
     );
     
     console.log('Loaded files from Supabase:', files.length);
-    return files;
+    return files.filter(Boolean); // Remove any null/undefined entries
   } catch (error) {
     console.error('Error fetching files from Supabase:', error);
-    return [];
+    throw error;
   }
 };
 
@@ -62,54 +83,53 @@ export const fetchFiles = async (): Promise<ManagedFile[]> => {
  * Uploads a file to Supabase storage
  */
 export const uploadFileToStorage = async (file: File, metadata?: Record<string, any>): Promise<ManagedFile | null> => {
+  if (!file) {
+    throw new Error('No file provided for upload');
+  }
+
   try {
     console.log('Uploading file to Supabase:', file.name);
     
     // Create a unique file path to avoid collisions
-    const filePath = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+    const filePath = generateUniqueFilePath(file.name);
     
     // Upload to Supabase storage
     const { data: uploadData, error: uploadError } = await supabase
       .storage
       .from('files')
-      .upload(filePath, file);
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
       
     if (uploadError) {
       throw new Error(`Upload failed: ${uploadError.message}`);
+    }
+    
+    if (!uploadData?.path) {
+      throw new Error('Upload succeeded but no path was returned');
     }
     
     // Get the URL for the uploaded file
     const { data: urlData } = await supabase
       .storage
       .from('files')
-      .createSignedUrl(filePath, 60 * 60 * 24); // 24 hour expiry
+      .createSignedUrl(uploadData.path, 60 * 60 * 24); // 24 hour expiry
       
-    if (!urlData?.signedUrl) {
-      throw new Error('Failed to generate signed URL');
-    }
-    
-    // Get display name from metadata or filename
-    let displayName = file.name;
-    if (metadata?.originalName) {
-      displayName = metadata.originalName;
-    } else if (file.name.includes('_') && /^\d+_/.test(file.name)) {
-      // Remove timestamp prefix from filename if no metadata is available
-      displayName = file.name.replace(/^\d+_/, '');
-    }
-    
     // Create a file object with metadata
     const fileObject: ManagedFile = {
       id: uploadData.path || `file_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-      name: file.name,
-      displayName: displayName.replace(/_/g, ' '), // Replace underscores with spaces
+      name: metadata?.originalName || file.name,
+      displayName: metadata?.originalName || file.name,
       size: file.size,
-      type: file.type,
-      lastModified: file.lastModified,
-      url: urlData.signedUrl,
-      path: filePath,
+      type: file.type || 'application/octet-stream',
+      lastModified: Date.now(),
+      url: urlData?.signedUrl,
+      path: uploadData.path,
       file: file
     };
     
+    console.log('File uploaded successfully:', fileObject.name);
     return fileObject;
   } catch (error) {
     console.error("Error uploading file:", error);
@@ -125,13 +145,20 @@ export const deleteFileFromStorage = async (filePath: string): Promise<void> => 
     throw new Error('No file path provided for deletion');
   }
   
-  const { error } = await supabase
-    .storage
-    .from('files')
-    .remove([filePath]);
+  try {
+    const { error } = await supabase
+      .storage
+      .from('files')
+      .remove([filePath]);
+      
+    if (error) {
+      throw new Error(`Delete failed: ${error.message}`);
+    }
     
-  if (error) {
-    throw new Error(`Delete failed: ${error.message}`);
+    console.log('File deleted successfully:', filePath);
+  } catch (error) {
+    console.error('Error deleting file:', error);
+    throw error;
   }
 };
 
@@ -139,14 +166,23 @@ export const deleteFileFromStorage = async (filePath: string): Promise<void> => 
  * Creates a download URL for a file in storage
  */
 export const createDownloadUrl = async (filePath: string): Promise<string> => {
-  const { data, error } = await supabase
-    .storage
-    .from('files')
-    .createSignedUrl(filePath, 60 * 60); // 1 hour expiry
-    
-  if (error || !data?.signedUrl) {
-    throw new Error('Failed to generate download URL');
+  if (!filePath) {
+    throw new Error('No file path provided for download URL creation');
   }
-  
-  return data.signedUrl;
+
+  try {
+    const { data, error } = await supabase
+      .storage
+      .from('files')
+      .createSignedUrl(filePath, 60 * 60); // 1 hour expiry
+      
+    if (error || !data?.signedUrl) {
+      throw new Error(`Failed to generate download URL: ${error?.message || 'No URL returned'}`);
+    }
+    
+    return data.signedUrl;
+  } catch (error) {
+    console.error('Error creating download URL:', error);
+    throw error;
+  }
 };

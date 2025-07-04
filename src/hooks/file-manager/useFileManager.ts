@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { getFiles } from './fileStore';
 import { useFileState } from './core/useFileState';
 import { useFileUpload } from './operations/useFileUpload';
@@ -22,12 +22,22 @@ export function useFileManager() {
   // Combined loading state
   const loading = uploadLoading || updateLoading || refreshLoading;
 
-  // Initialize by loading files from Supabase storage if not already loaded
-  useEffect(() => {
-    if (getFiles().length === 0 && !loading) {
-      refreshFiles().catch(console.error);
+  // Memoized initialization function
+  const initializeFiles = useCallback(async () => {
+    try {
+      if (getFiles().length === 0 && !loading) {
+        console.log('Initializing files from storage...');
+        await refreshFiles();
+      }
+    } catch (error) {
+      console.error('Failed to initialize files:', error);
     }
   }, [loading, refreshFiles]);
+
+  // Initialize by loading files from Supabase storage if not already loaded
+  useEffect(() => {
+    initializeFiles();
+  }, [initializeFiles]);
 
   return {
     files,

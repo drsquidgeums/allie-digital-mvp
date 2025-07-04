@@ -1,4 +1,5 @@
 
+import { useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { ManagedFile } from '../types';
 import { createDownloadUrl } from '../fileService';
@@ -9,40 +10,37 @@ import { createDownloadUrl } from '../fileService';
 export function useFileDownload() {
   const { toast } = useToast();
 
-  const downloadFile = async (file: ManagedFile) => {
+  const downloadFile = useCallback(async (file: ManagedFile): Promise<void> => {
+    if (!file) {
+      console.error('No file provided for download');
+      return;
+    }
+
     try {
-      // If we already have a URL, use it
-      if (file.url) {
-        const a = document.createElement("a");
-        a.href = file.url;
-        a.download = file.displayName || file.name;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        
-        toast({
-          title: "File downloaded",
-          description: `${file.displayName || file.name} has been downloaded`,
-        });
-      } 
-      // If the URL has expired, generate a new one
-      else if (file.path) {
-        const signedUrl = await createDownloadUrl(file.path);
-        
-        const a = document.createElement("a");
-        a.href = signedUrl;
-        a.download = file.displayName || file.name;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        
-        toast({
-          title: "File downloaded",
-          description: `${file.displayName || file.name} has been downloaded`,
-        });
-      } else {
+      let downloadUrl = file.url;
+      
+      // If no URL or URL has expired, generate a new one
+      if (!downloadUrl && file.path) {
+        downloadUrl = await createDownloadUrl(file.path);
+      }
+      
+      if (!downloadUrl) {
         throw new Error("File URL not available");
       }
+      
+      // Create and trigger download
+      const a = document.createElement("a");
+      a.href = downloadUrl;
+      a.download = file.displayName || file.name;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
+      toast({
+        title: "File downloaded",
+        description: `${file.displayName || file.name} has been downloaded`,
+      });
     } catch (error) {
       console.error("Error downloading file:", error);
       toast({
@@ -51,7 +49,7 @@ export function useFileDownload() {
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
 
   return { downloadFile };
 }

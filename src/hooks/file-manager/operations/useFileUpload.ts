@@ -1,9 +1,9 @@
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { ManagedFile } from '../types';
 import { uploadFileToStorage } from '../fileService';
-import { addFile, getFiles } from '../fileStore';
+import { addFile } from '../fileStore';
 
 /**
  * Hook for handling file upload operations
@@ -12,7 +12,12 @@ export function useFileUpload() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const uploadFile = async (newFile: File, metadata?: Record<string, any>) => {
+  const uploadFile = useCallback(async (newFile: File, metadata?: Record<string, any>): Promise<ManagedFile | null> => {
+    if (!newFile) {
+      console.error('No file provided for upload');
+      return null;
+    }
+
     setLoading(true);
     try {
       // Upload to Supabase storage
@@ -24,12 +29,12 @@ export function useFileUpload() {
         
         toast({
           title: "File uploaded",
-          description: `${metadata?.originalName || newFile.name} has been uploaded to Supabase storage`,
+          description: `${metadata?.originalName || newFile.name} has been uploaded successfully`,
         });
         
         return fileObject;
       }
-      throw new Error('File upload failed');
+      throw new Error('File upload failed - no file object returned');
     } catch (error) {
       console.error("Error uploading file:", error);
       toast({
@@ -37,11 +42,11 @@ export function useFileUpload() {
         description: error instanceof Error ? error.message : "There was a problem uploading your file",
         variant: "destructive",
       });
-      throw error;
+      return null;
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   return { uploadFile, loading };
 }

@@ -1,40 +1,36 @@
 
 /**
- * Interface for files managed by the application
+ * Represents a managed file in the application
  */
 export interface ManagedFile {
   id: string;
   name: string;
-  displayName?: string; // Friendly name for display
+  displayName?: string;
   size: number;
   type: string;
   lastModified: number;
   url?: string;
-  path?: string;
   file?: File;
-  folderId?: string; // Associated folder ID
-  lastAccessed?: number; // For recent files tracking
+  path?: string; // Path in Supabase storage
+  folderId?: string; // For organizing files into folders
+  metadata?: Record<string, any>; // Additional metadata
 }
 
 /**
- * Interface for file folders/categories
+ * File upload options
  */
-export interface FileFolder {
-  id: string;
-  name: string;
-  created_at: string;
-  updated_at?: string;
-  file_count: number;
-  color?: string;
-  description?: string;
+export interface FileUploadOptions {
+  originalName?: string;
+  folderId?: string;
+  metadata?: Record<string, any>;
+  overwrite?: boolean;
 }
 
 /**
- * Interface for bulk file operations
+ * File operation result
  */
-export interface BulkOperation {
-  type: 'move' | 'delete' | 'download';
-  fileIds: string[];
-  targetFolderId?: string;
-  timestamp: number;
+export interface FileOperationResult {
+  success: boolean;
+  file?: ManagedFile;
+  error?: string;
 }

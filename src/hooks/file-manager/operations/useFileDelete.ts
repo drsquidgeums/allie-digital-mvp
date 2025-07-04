@@ -1,8 +1,9 @@
 
+import { useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { ManagedFile } from '../types';
 import { deleteFileFromStorage } from '../fileService';
-import { removeFile, getFiles } from '../fileStore';
+import { removeFile } from '../fileStore';
 
 /**
  * Hook for handling file deletion operations
@@ -10,7 +11,12 @@ import { removeFile, getFiles } from '../fileStore';
 export function useFileDelete() {
   const { toast } = useToast();
 
-  const deleteFile = async (fileToDelete: ManagedFile) => {
+  const deleteFile = useCallback(async (fileToDelete: ManagedFile): Promise<void> => {
+    if (!fileToDelete) {
+      console.error('No file provided for deletion');
+      return;
+    }
+
     try {
       if (fileToDelete.path) {
         // Delete from Supabase storage
@@ -32,7 +38,7 @@ export function useFileDelete() {
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
 
   return { deleteFile };
 }
