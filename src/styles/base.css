@@ -8,52 +8,73 @@
   :root {
     --font-family: "Inter", sans-serif;
     --font-weight: normal;
-    /* Enhanced Light Mode Colors */
-    --background: 0 0% 98%;
+    
+    /* Light Mode - Aqua Greens and Purples with White */
+    --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 5.9% 90%;
-    --secondary-foreground: 240 5.9% 10%;
-    /* Increased contrast for muted text */
-    --muted: 240 4.8% 90%;
-    --muted-foreground: 240 10% 25%;
-    /* Enhanced accent colors */
-    --accent: 240 4.8% 90%;
-    --accent-foreground: 240 5.9% 10%;
+    
+    /* Primary - Light Purple */
+    --primary: 258 85% 76%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Secondary - Aqua Blue */
+    --secondary: 200 98% 39%;
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Muted colors with light purple tints */
+    --muted: 258 20% 96%;
+    --muted-foreground: 258 15% 25%;
+    
+    /* Accent colors with aqua tints */
+    --accent: 200 20% 94%;
+    --accent-foreground: 200 98% 25%;
+    
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    /* Strengthened borders */
-    --border: 240 5.9% 80%;
-    --input: 240 5.9% 80%;
-    --ring: 240 5.9% 10%;
+    
+    /* Borders with subtle purple tints */
+    --border: 258 15% 88%;
+    --input: 258 15% 88%;
+    --ring: 258 85% 76%;
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    /* Dark Mode - Allie Digital Color Scheme */
+    --background: 217 25% 14%;    /* #1A1F2C */
+    --foreground: 0 0% 100%;      /* #FFFFFF */
+    --card: 217 25% 15%;
+    --card-foreground: 0 0% 100%;
+    --popover: 217 25% 14%;
+    --popover-foreground: 0 0% 100%;
+    
+    /* Primary Purple */
+    --primary: 258 85% 76%;        /* #a594f9 */
+    --primary-foreground: 217 25% 14%;
+    
+    /* Secondary Blue */
+    --secondary: 200 98% 39%;      /* #0284c7 */
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Muted colors */
+    --muted: 215 25% 17%;          /* #1E293B */
+    --muted-foreground: 220 13% 82%; /* #d1d5db */
+    
+    /* Accent colors */
+    --accent: 215 25% 17%;         /* #1E293B */
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Borders and inputs */
+    --border: 240 10% 17%;         /* #2A2A3C */
+    --input: 240 10% 17%;          /* #2A2A3C */
+    --ring: 258 85% 76%;           /* #a594f9 */
   }
 
   /* High contrast mode support */

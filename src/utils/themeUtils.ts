@@ -1,3 +1,4 @@
+
 export const hexToHSL = (hex: string) => {
   hex = hex.replace(/^#/, '');
   const r = parseInt(hex.slice(0, 2), 16) / 255;
@@ -35,24 +36,24 @@ export const applyThemeColors = (colors: { background: string; text: string; but
   const root = document.documentElement;
   document.body.style.backgroundColor = colors.background;
   
-  // Apply colors to all major theme variables
+  // Apply the new Allie Digital color scheme
   root.style.setProperty("--background", hexToHSL(colors.background));
   root.style.setProperty("--foreground", hexToHSL(colors.text));
-  root.style.setProperty("--primary", hexToHSL(colors.button));
+  root.style.setProperty("--primary", "258 85% 76%"); // #a594f9
   root.style.setProperty("--primary-foreground", "0 0% 100%");
+  root.style.setProperty("--secondary", "200 98% 39%"); // #0284c7
+  root.style.setProperty("--secondary-foreground", "0 0% 100%");
   root.style.setProperty("--card", hexToHSL(colors.background));
   root.style.setProperty("--card-foreground", hexToHSL(colors.text));
   root.style.setProperty("--popover", hexToHSL(colors.background));
   root.style.setProperty("--popover-foreground", hexToHSL(colors.text));
-  root.style.setProperty("--secondary", hexToHSL(colors.button));
-  root.style.setProperty("--secondary-foreground", "0 0% 100%");
-  root.style.setProperty("--muted", hexToHSL(colors.background));
-  root.style.setProperty("--muted-foreground", hexToHSL(colors.text));
-  root.style.setProperty("--accent", hexToHSL(colors.button));
+  root.style.setProperty("--muted", "215 25% 17%"); // #1E293B
+  root.style.setProperty("--muted-foreground", "220 13% 82%"); // #d1d5db
+  root.style.setProperty("--accent", "215 25% 17%"); // #1E293B
   root.style.setProperty("--accent-foreground", "0 0% 100%");
   root.style.setProperty("--destructive", "0 84.2% 60.2%");
   root.style.setProperty("--destructive-foreground", "0 0% 100%");
-  root.style.setProperty("--border", hexToHSL(colors.button));
-  root.style.setProperty("--input", hexToHSL(colors.button));
-  root.style.setProperty("--ring", hexToHSL(colors.button));
+  root.style.setProperty("--border", "240 10% 17%"); // #2A2A3C
+  root.style.setProperty("--input", "240 10% 17%"); // #2A2A3C
+  root.style.setProperty("--ring", "258 85% 76%"); // #a594f9
 };

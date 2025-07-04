@@ -1,49 +1,55 @@
 
 @layer base {
   .dark {
-    /* Enhanced Dark Mode Colors */
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    /* Increased contrast for primary elements */
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    /* Enhanced secondary colors */
-    --secondary: 240 3.7% 20%;
-    --secondary-foreground: 0 0% 98%;
-    /* Improved muted contrast */
-    --muted: 240 3.7% 20%;
-    --muted-foreground: 240 5% 94.9%;
-    /* Enhanced accent visibility */
-    --accent: 240 3.7% 20%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    /* Enhanced border visibility */
-    --border: 240 3.7% 30%;
-    --input: 240 3.7% 20%;
-    --ring: 240 4.9% 93.9%;
+    /* Dark Mode - Using the Allie Digital Color Scheme */
+    --background: 217 25% 14%;  /* #1A1F2C */
+    --foreground: 0 0% 100%;    /* #FFFFFF */
+    --card: 217 25% 15%;        /* Slightly lighter than background */
+    --card-foreground: 0 0% 100%;
+    --popover: 217 25% 14%;
+    --popover-foreground: 0 0% 100%;
+    
+    /* Primary Purple */
+    --primary: 258 85% 76%;      /* #a594f9 */
+    --primary-foreground: 217 25% 14%;
+    
+    /* Secondary Blue */
+    --secondary: 200 98% 39%;    /* #0284c7 */
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Muted colors using the card background */
+    --muted: 215 25% 17%;        /* #1E293B */
+    --muted-foreground: 220 13% 82%; /* #d1d5db */
+    
+    /* Accent colors */
+    --accent: 215 25% 17%;       /* #1E293B */
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Borders and inputs */
+    --border: 240 10% 17%;       /* #2A2A3C */
+    --input: 240 10% 17%;        /* #2A2A3C */
+    --ring: 258 85% 76%;         /* #a594f9 */
 
     /* Enhanced contrast colors for dark mode */
-    --chat-user-bg: 0 0% 98%;
-    --chat-user-text: 240 10% 3.9%;
-    --chat-assistant-bg: 240 3.7% 30%;
-    --chat-assistant-text: 0 0% 98%;
-    --loading-indicator: 240 5% 94.9%;
-    --focus-ring: 0 0% 98%;
-    --hover-bg: 240 3.7% 25%;
+    --chat-user-bg: 258 85% 76%;
+    --chat-user-text: 217 25% 14%;
+    --chat-assistant-bg: 215 25% 17%;
+    --chat-assistant-text: 0 0% 100%;
+    --loading-indicator: 220 13% 82%;
+    --focus-ring: 258 85% 76%;
+    --hover-bg: 215 25% 20%;
   }
 }
 
-/* Place this outside of any layer to ensure it has maximum specificity */
+/* Enhanced dark mode specific overrides */
 html.dark .recharts-legend-item:first-child .recharts-legend-item-symbol {
-  fill: #F1F1F1 !important;
+  fill: #a594f9 !important;
 }
 
-/* Override the feedback form text to be black in both light and dark mode */
+/* Keep feedback form inputs readable */
 .CommentsSection textarea,
 .form textarea,
 .form input,
@@ -53,31 +59,30 @@ textarea {
   background-color: white !important;
 }
 
-/* Ensure feedback form text inputs and textareas are visible when focused */
 textarea:focus,
 input:focus {
   border-color: hsl(var(--primary));
   background-color: white !important;
 }
 
-/* Dark mode URL input styling */
+/* Dark mode URL input styling with new colors */
 .dark input[type="url"] {
-  background-color: #000000 !important;
-  color: #ffffff !important;
+  background-color: hsl(var(--input)) !important;
+  color: hsl(var(--foreground)) !important;
   border-color: hsl(var(--border));
 }
 
 .dark input[type="url"]:focus {
-  background-color: #000000 !important;
-  color: #ffffff !important;
+  background-color: hsl(var(--input)) !important;
+  color: hsl(var(--foreground)) !important;
   border-color: hsl(var(--primary));
 }
 
 .dark input[type="url"]::placeholder {
-  color: #888888 !important;
+  color: hsl(var(--muted-foreground)) !important;
 }
 
-/* NDA form styling to match feedback form */
+/* NDA form styling */
 .dark #name,
 .dark #email {
   background-color: white !important;
@@ -92,31 +97,26 @@ input:focus {
   border-color: hsl(var(--primary));
 }
 
-.dark #name::placeholder,
-.dark #email::placeholder {
-  color: #888888 !important;
-}
-
-/* Chat input styling for virtual assistant in dark mode */
+/* Chat input styling with new purple theme */
 .dark input[aria-label="Chat input"] {
-  background-color: #2a2a2a !important;
-  color: #ffffff !important;
+  background-color: hsl(var(--input)) !important;
+  color: hsl(var(--foreground)) !important;
   border-color: hsl(var(--border));
 }
 
 .dark input[aria-label="Chat input"]:focus {
-  background-color: #2a2a2a !important;
-  color: #ffffff !important;
+  background-color: hsl(var(--input)) !important;
+  color: hsl(var(--foreground)) !important;
   border-color: hsl(var(--primary));
 }
 
 .dark input[aria-label="Chat input"]::placeholder {
-  color: #888888 !important;
+  color: hsl(var(--muted-foreground)) !important;
 }
 
-/* Enhanced NDA text styling for better dark mode readability */
+/* Enhanced text styling with new color scheme */
 .dark .prose {
-  color: #f1f1f1 !important;
+  color: hsl(var(--foreground)) !important;
 }
 
 .dark .prose h1,
@@ -125,24 +125,18 @@ input:focus {
 .dark .prose h4,
 .dark .prose h5,
 .dark .prose h6 {
-  color: #ffffff !important;
+  color: hsl(var(--primary)) !important;
 }
 
-.dark .prose p {
-  color: #e5e5e5 !important;
-}
-
+.dark .prose p,
 .dark .prose ul,
-.dark .prose ol {
-  color: #e5e5e5 !important;
-}
-
+.dark .prose ol,
 .dark .prose li {
-  color: #e5e5e5 !important;
+  color: hsl(var(--muted-foreground)) !important;
 }
 
-/* Force NDA text visibility in dark mode */
+/* NDA region styling */
 .dark [role="region"] {
-  background-color: #1a1a1a !important;
-  border-color: #404040 !important;
+  background-color: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
 }
