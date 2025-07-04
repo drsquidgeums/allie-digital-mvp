@@ -12,4 +12,5 @@ export interface ManagedFile {
   url?: string;
   file?: File;
   path?: string; // Path in Supabase storage
+  folderId?: string; // Optional folder assignment for organization
 }
