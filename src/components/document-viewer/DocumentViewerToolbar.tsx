@@ -3,7 +3,6 @@ import React from "react";
 import { DocumentToolbar } from "./DocumentToolbar";
 import { ToolbarTools } from "./ToolbarTools";
 import { FocusButton } from "../focus/FocusButton";
-import { StudySessionTracker } from "../study/StudySessionTracker";
 
 interface DocumentViewerToolbarProps {
   onUpload: () => void;
@@ -17,8 +16,7 @@ export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
   onUpload,
   onDownload,
   onDelete,
-  hasFile,
-  documentName
+  hasFile
 }) => {
   return (
     <div className="border-b border-border">
@@ -36,12 +34,6 @@ export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
           </div>
         </div>
       </div>
-      
-      {hasFile && documentName && (
-        <div className="px-4 pb-4">
-          <StudySessionTracker documentName={documentName} />
-        </div>
-      )}
     </div>
   );
 };

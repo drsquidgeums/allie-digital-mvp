@@ -96,10 +96,9 @@ export const DocumentViewer = ({
           onDownload={() => handleDownload(displayFile)}
           onDelete={handleDelete}
           hasFile={!!displayFile}
-          documentName={documentName}
         />
         
-        {/* Document Content Area */}
+        {/* Document Content Area with Study Session Tracker at bottom */}
         <DocumentViewerContent
           documentRef={documentRef}
           url={url}
@@ -107,6 +106,7 @@ export const DocumentViewer = ({
           selectedFile={displayFile}
           selectedColor={selectedColor}
           isHighlighter={isHighlighter}
+          documentName={documentName}
         />
         
         {/* Hidden file input for document upload */}

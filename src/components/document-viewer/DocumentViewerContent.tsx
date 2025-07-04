@@ -3,6 +3,7 @@ import React from "react";
 import { ErrorBoundary } from "../ErrorBoundary";
 import { DocumentPreview } from "./DocumentPreview";
 import { UrlInputHandler } from "./UrlInputHandler";
+import { StudySessionTracker } from "../study/StudySessionTracker";
 
 interface DocumentViewerContentProps {
   documentRef: React.RefObject<HTMLDivElement>;
@@ -11,6 +12,7 @@ interface DocumentViewerContentProps {
   selectedFile: File | null;
   selectedColor: string;
   isHighlighter?: boolean;
+  documentName?: string;
 }
 
 /**
@@ -24,33 +26,43 @@ export const DocumentViewerContent: React.FC<DocumentViewerContentProps> = ({
   setUrl,
   selectedFile,
   selectedColor,
-  isHighlighter
+  isHighlighter,
+  documentName
 }) => {
   return (
-    <div className="flex-1 p-4 relative">
-      <UrlInputHandler url={url} setUrl={setUrl} />
-      <div 
-        className="h-full" 
-        ref={documentRef}
-        tabIndex={0}
-        role="document"
-        aria-label={selectedFile ? `Viewing ${selectedFile.name}` : "Document preview area"}
-      >
-        <ErrorBoundary
-          fallback={
-            <div className="flex items-center justify-center h-full p-4">
-              <ErrorFallback onClear={() => setUrl('')} />
-            </div>
-          }
+    <div className="flex-1 flex flex-col">
+      <div className="flex-1 p-4 relative">
+        <UrlInputHandler url={url} setUrl={setUrl} />
+        <div 
+          className="h-full" 
+          ref={documentRef}
+          tabIndex={0}
+          role="document"
+          aria-label={selectedFile ? `Viewing ${selectedFile.name}` : "Document preview area"}
         >
-          <DocumentPreview 
-            file={selectedFile} 
-            url={url} 
-            selectedColor={selectedColor}
-            isHighlighter={isHighlighter} 
-          />
-        </ErrorBoundary>
+          <ErrorBoundary
+            fallback={
+              <div className="flex items-center justify-center h-full p-4">
+                <ErrorFallback onClear={() => setUrl('')} />
+              </div>
+            }
+          >
+            <DocumentPreview 
+              file={selectedFile} 
+              url={url} 
+              selectedColor={selectedColor}
+              isHighlighter={isHighlighter} 
+            />
+          </ErrorBoundary>
+        </div>
       </div>
+      
+      {/* Study Session Tracker at the bottom */}
+      {selectedFile && documentName && (
+        <div className="border-t border-border p-4">
+          <StudySessionTracker documentName={documentName} />
+        </div>
+      )}
     </div>
   );
 };
