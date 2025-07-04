@@ -14,7 +14,7 @@ interface SaveButtonProps {
 
 export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle }) => {
   const { toast } = useToast();
-  const { uploadFile } = useFileManager();
+  const { uploadFile, files } = useFileManager();
 
   const saveToMyFiles = async () => {
     try {
@@ -27,23 +27,50 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle })
       // Create filename with .html extension for storage
       const fileName = generateFileName(documentTitle, 'html');
       
-      // Create a file object from the HTML content
-      const file = new File([content], fileName, { 
-        type: 'text/html' 
-      });
-      
-      // Add metadata for the original display name
-      const metadata = {
-        originalName: displayName
-      };
-      
-      // Upload to file manager with metadata
-      await uploadFile(file, metadata);
-      
-      toast({
-        title: "Document Saved",
-        description: `"${displayName}" saved to My Files`,
-      });
+      // Check if a file with the same display name already exists
+      const existingFile = files.find(file => 
+        (file.displayName || file.name) === displayName ||
+        file.name === fileName
+      );
+
+      if (existingFile) {
+        // Update existing file by creating a new version with the same display name
+        const file = new File([content], fileName, { 
+          type: 'text/html' 
+        });
+        
+        // Add metadata to preserve the original display name
+        const metadata = {
+          originalName: displayName,
+          isUpdate: true
+        };
+        
+        // Upload as new version (this will replace the existing file in practice)
+        await uploadFile(file, metadata);
+        
+        toast({
+          title: "Document Updated",
+          description: `"${displayName}" has been updated in My Files`,
+        });
+      } else {
+        // Create new file
+        const file = new File([content], fileName, { 
+          type: 'text/html' 
+        });
+        
+        // Add metadata for the original display name
+        const metadata = {
+          originalName: displayName
+        };
+        
+        // Upload to file manager with metadata
+        await uploadFile(file, metadata);
+        
+        toast({
+          title: "Document Saved",
+          description: `"${displayName}" saved to My Files`,
+        });
+      }
     } catch (error) {
       console.error('Error saving document to My Files:', error);
       toast({
