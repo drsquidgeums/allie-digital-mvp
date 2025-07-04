@@ -3,8 +3,7 @@ import React from "react";
 import { 
   Users,
   Settings,
-  LogOut,
-  MessageSquare
+  LogOut
 } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -14,13 +13,11 @@ import { useTranslation } from "react-i18next";
 interface SidebarToolsProps {
   activeComponent: string | null;
   setActiveComponent: (component: string) => void;
-  onFeedbackClick?: () => void;
 }
 
 export const SidebarTools = ({ 
   activeComponent, 
-  setActiveComponent, 
-  onFeedbackClick 
+  setActiveComponent
 }: SidebarToolsProps) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,13 +46,6 @@ export const SidebarTools = ({
     navigate("/community");
   };
 
-  const handleFeedbackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (onFeedbackClick) {
-      onFeedbackClick();
-    }
-  };
-
   return (
     <div className="space-y-2">
       <div className="pt-4 border-t border-border space-y-2">
@@ -71,14 +61,6 @@ export const SidebarTools = ({
           isActive={location.pathname === "/community"}
           onClick={handleCommunityClick}
         />
-        {onFeedbackClick && (
-          <SidebarButton
-            icon={MessageSquare}
-            label="Feedback"
-            isActive={false}
-            onClick={handleFeedbackClick}
-          />
-        )}
         <SidebarButton
           icon={LogOut}
           label={t('common.logout')}
