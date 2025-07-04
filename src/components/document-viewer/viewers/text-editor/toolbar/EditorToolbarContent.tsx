@@ -12,11 +12,12 @@ import { HighlightButtonSection } from './sections/HighlightButtonSection';
 import { TextAlignmentSection } from './sections/TextAlignmentSection';
 import { ListButtonsSection } from './sections/ListButtonsSection';
 import { MediaButtonsSection } from './sections/MediaButtonsSection';
-import { HelpSection } from './sections/HelpSection';
 import { FontColorSection } from './sections/FontColorSection';
-import { StatusSection } from './sections/StatusSection';
 import { DocumentStructureSection } from './sections/DocumentStructureSection';
 import { AdvancedEditingSection } from './sections/AdvancedEditingSection';
+import { ProductivitySection } from './sections/ProductivitySection';
+import { StatusSection } from './sections/StatusSection';
+import { HelpSection } from './sections/HelpSection';
 
 interface EditorToolbarContentProps {
   editor: Editor;
@@ -51,6 +52,7 @@ export const EditorToolbarContent: React.FC<EditorToolbarContentProps> = ({
       <TextAlignmentSection editor={editor} />
       <ListButtonsSection editor={editor} />
       <MediaButtonsSection editor={editor} />
+      <ProductivitySection editor={editor} documentTitle={documentTitle} />
       <HelpSection />
       <StatusSection editor={editor} documentTitle={documentTitle} />
     </div>

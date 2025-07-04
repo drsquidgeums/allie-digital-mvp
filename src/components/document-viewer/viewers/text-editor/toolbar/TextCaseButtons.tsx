@@ -2,20 +2,19 @@
 import React from 'react';
 import { Editor } from '@tiptap/react';
 import { Button } from '@/components/ui/button';
+import { Type, CaseSensitive } from 'lucide-react';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Type } from 'lucide-react';
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface TextCaseButtonsProps {
   editor: Editor;
 }
 
 export const TextCaseButtons: React.FC<TextCaseButtonsProps> = ({ editor }) => {
-  const transformSelectedText = (transformation: 'uppercase' | 'lowercase' | 'capitalize') => {
+  const applyTextCase = (caseType: 'uppercase' | 'lowercase' | 'capitalize' | 'toggle') => {
     const { state } = editor;
     const { from, to } = state.selection;
     
@@ -24,7 +23,7 @@ export const TextCaseButtons: React.FC<TextCaseButtonsProps> = ({ editor }) => {
     const selectedText = state.doc.textBetween(from, to, ' ');
     let transformedText = '';
     
-    switch (transformation) {
+    switch (caseType) {
       case 'uppercase':
         transformedText = selectedText.toUpperCase();
         break;
@@ -32,7 +31,12 @@ export const TextCaseButtons: React.FC<TextCaseButtonsProps> = ({ editor }) => {
         transformedText = selectedText.toLowerCase();
         break;
       case 'capitalize':
-        transformedText = selectedText.replace(/\b\w/g, l => l.toUpperCase());
+        transformedText = selectedText.replace(/\b\w/g, char => char.toUpperCase());
+        break;
+      case 'toggle':
+        transformedText = selectedText === selectedText.toUpperCase() 
+          ? selectedText.toLowerCase() 
+          : selectedText.toUpperCase();
         break;
     }
     
@@ -40,28 +44,51 @@ export const TextCaseButtons: React.FC<TextCaseButtonsProps> = ({ editor }) => {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-8 w-8 p-0"
-          aria-label="Text case options"
-        >
-          <Type className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
-        <DropdownMenuItem onClick={() => transformSelectedText('uppercase')}>
-          UPPERCASE
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => transformSelectedText('lowercase')}>
-          lowercase
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => transformSelectedText('capitalize')}>
-          Capitalize Words
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex items-center gap-1">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0"
+            onClick={() => applyTextCase('uppercase')}
+            aria-label="Convert to uppercase"
+          >
+            <Type className="h-4 w-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Convert to UPPERCASE</TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0"
+            onClick={() => applyTextCase('lowercase')}
+            aria-label="Convert to lowercase"
+          >
+            <CaseSensitive className="h-4 w-4 scale-75" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Convert to lowercase</TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 px-2 text-xs"
+            onClick={() => applyTextCase('capitalize')}
+            aria-label="Capitalize words"
+          >
+            Aa
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Capitalize Each Word</TooltipContent>
+      </Tooltip>
+    </div>
   );
 };
