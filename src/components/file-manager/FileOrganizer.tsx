@@ -17,6 +17,7 @@ interface FileOrganizerProps {
   onCreateFolder: (name: string) => void;
   onMoveToFolder: (fileIds: string[], folderId: string) => void;
   onDeleteFolder: (folderId: string) => void;
+  onFolderClick?: (folderId: string) => void;
   folders: FileFolder[];
   selectedFiles: Set<string>;
 }
@@ -33,6 +34,7 @@ export const FileOrganizer: React.FC<FileOrganizerProps> = ({
   onCreateFolder,
   onMoveToFolder,
   onDeleteFolder,
+  onFolderClick,
   folders,
   selectedFiles
 }) => {
@@ -60,6 +62,12 @@ export const FileOrganizer: React.FC<FileOrganizerProps> = ({
         title: "Files moved",
         description: `${selectedFiles.size} file(s) moved to folder`,
       });
+    }
+  };
+
+  const handleFolderClick = (folderId: string) => {
+    if (onFolderClick) {
+      onFolderClick(folderId);
     }
   };
 
@@ -115,10 +123,15 @@ export const FileOrganizer: React.FC<FileOrganizerProps> = ({
             className={`border rounded-lg p-3 cursor-pointer transition-colors hover:bg-accent ${
               selectedFolder === folder.id ? 'border-primary bg-primary/5' : ''
             }`}
-            onClick={() => setSelectedFolder(selectedFolder === folder.id ? null : folder.id)}
+            onClick={() => {
+              setSelectedFolder(selectedFolder === folder.id ? null : folder.id);
+            }}
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
+              <div 
+                className="flex items-center gap-2 flex-1"
+                onClick={() => handleFolderClick(folder.id)}
+              >
                 <FolderOpen className="h-5 w-5 text-blue-500" />
                 <div>
                   <p className="font-medium truncate">{folder.name}</p>
@@ -128,20 +141,34 @@ export const FileOrganizer: React.FC<FileOrganizerProps> = ({
                 </div>
               </div>
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+                <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                   <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                     <MoreHorizontal className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
-                    onClick={() => handleMoveFiles(folder.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleFolderClick(folder.id);
+                    }}
+                  >
+                    Open Folder
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleMoveFiles(folder.id);
+                    }}
                     disabled={selectedFiles.size === 0}
                   >
                     Move Selected Files Here
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => onDeleteFolder(folder.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteFolder(folder.id);
+                    }}
                     className="text-destructive"
                   >
                     Delete Folder
