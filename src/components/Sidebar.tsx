@@ -5,9 +5,6 @@ import { SidebarNavigation } from "./sidebar/SidebarNavigation";
 import { SidebarTools } from "./sidebar/SidebarTools";
 import { SidebarContent } from "./sidebar/SidebarContent";
 import { ThemeToggle } from "./ThemeToggle";
-import { FeedbackButton } from "./community/FeedbackButton";
-import { FeedbackPrompt } from "./community/FeedbackPrompt";
-import { useFeedbackPrompt } from "@/hooks/useFeedbackPrompt";
 
 interface SidebarProps {
   onColorChange: (color: string) => void;
@@ -18,12 +15,6 @@ export const Sidebar = React.memo(({
 }: SidebarProps) => {
   const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const { 
-    showFeedbackPrompt, 
-    handleCloseFeedbackPrompt, 
-    handlePostponeFeedback,
-    handleManualFeedbackOpen
-  } = useFeedbackPrompt();
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
   
   // Get user info from localStorage
@@ -78,15 +69,7 @@ export const Sidebar = React.memo(({
 
       <div className="absolute bottom-4 left-4 flex items-center gap-2">
         <ThemeToggle />
-        <FeedbackButton onClick={handleManualFeedbackOpen} />
       </div>
-      
-      <FeedbackPrompt
-        isOpen={showFeedbackPrompt}
-        onClose={handleCloseFeedbackPrompt}
-        onPostpone={handlePostponeFeedback}
-        userInfo={userInfo}
-      />
     </div>
   );
 });

@@ -1,3 +1,4 @@
+
 import React, { lazy, Suspense, memo, useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -9,8 +10,6 @@ import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
 import { NdaAgreement } from "@/components/nda/NdaAgreement";
-import { FeedbackPrompt } from "@/components/community/FeedbackPrompt";
-import { useFeedbackPrompt } from "@/hooks/useFeedbackPrompt";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
 
 const PomodoroTaskListener = memo(() => {
@@ -30,14 +29,6 @@ const App = () => {
   const [showNda, setShowNda] = useState(false);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
   const [ndaCompleted, setNdaCompleted] = useState<boolean>(false);
-  
-  // Always call the hook but pass parameters to control its behavior
-  const shouldInitializeFeedback = ndaCompleted && !showNda;
-  const { 
-    showFeedbackPrompt, 
-    handleCloseFeedbackPrompt, 
-    handlePostponeFeedback 
-  } = useFeedbackPrompt(!shouldInitializeFeedback);
 
   // Load any existing user info from localStorage
   useEffect(() => {
@@ -101,16 +92,6 @@ const App = () => {
               isOpen={showNda} 
               onAgreementComplete={handleNdaAgreementComplete} 
             />
-            
-            {/* Feedback Prompt - Only show after NDA is completely finished */}
-            {shouldInitializeFeedback && (
-              <FeedbackPrompt
-                isOpen={showFeedbackPrompt}
-                onClose={handleCloseFeedbackPrompt}
-                onPostpone={handlePostponeFeedback}
-                userInfo={userInfo}
-              />
-            )}
           </div>
         </SecurityProvider>
       </AppProviders>
