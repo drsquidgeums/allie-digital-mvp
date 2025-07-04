@@ -132,7 +132,7 @@ export const FileInputHandler: React.FC<FileInputHandlerProps> = ({
             fileName={uploadProgress.fileName}
             progress={uploadProgress.progress}
             status={uploadProgress.status}
-            fileSize={UploadProgress.fileSize}
+            fileSize={uploadProgress.fileSize}
             onCancel={() => setUploadProgress(null)}
           />
         </div>
