@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Editor } from '@tiptap/react';
 import { FileButtonsSection } from './sections/FileButtonsSection';
@@ -6,12 +7,14 @@ import { HeadingSection } from './sections/HeadingSection';
 import { FontFamilySection } from './sections/FontFamilySection';
 import { FontSizeSection } from './sections/FontSizeSection';
 import { TextFormatButtonsSection } from './sections/TextFormatButtonsSection';
+import { AdvancedFormatSection } from './sections/AdvancedFormatSection';
 import { HighlightButtonSection } from './sections/HighlightButtonSection';
 import { TextAlignmentSection } from './sections/TextAlignmentSection';
 import { ListButtonsSection } from './sections/ListButtonsSection';
 import { MediaButtonsSection } from './sections/MediaButtonsSection';
 import { HelpSection } from './sections/HelpSection';
 import { FontColorSection } from './sections/FontColorSection';
+import { StatusSection } from './sections/StatusSection';
 
 interface EditorToolbarContentProps {
   editor: Editor;
@@ -38,12 +41,14 @@ export const EditorToolbarContent: React.FC<EditorToolbarContentProps> = ({
       <FontFamilySection editor={editor} />
       <FontSizeSection editor={editor} />
       <TextFormatButtonsSection editor={editor} />
+      <AdvancedFormatSection editor={editor} />
       <FontColorSection editor={editor} />
       <HighlightButtonSection editor={editor} selectedColor={selectedColor} />
       <TextAlignmentSection editor={editor} />
       <ListButtonsSection editor={editor} />
       <MediaButtonsSection editor={editor} />
       <HelpSection />
+      <StatusSection editor={editor} documentTitle={documentTitle} />
     </div>
   );
 };
