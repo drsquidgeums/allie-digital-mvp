@@ -2,10 +2,9 @@
 import React from 'react';
 import '@xyflow/react/dist/style.css';
 import '../styles/mindmap.css';
-import { MindMapContainer } from './mindmap/MindMapContainer';
+import { EnhancedMindMapContainer } from './mindmap/EnhancedMindMapContainer';
 import { useMindMapState } from './mindmap/hooks/useMindMapState';
 import { downloadMindMapAsJpg, downloadMindMapAsJson } from './mindmap/utils/mindMapUtils';
-import { nodeTypes } from './mindmap/constants/nodeTypes';
 import { colorOptions, textColorOptions } from './mindmap/constants/colors';
 import { ReactFlowProvider } from '@xyflow/react';
 
@@ -41,7 +40,7 @@ export const MindMap = () => {
     <div className="h-full flex flex-col bg-background">
       <div className="flex-1 overflow-hidden">
         <ReactFlowProvider>
-          <MindMapContainer
+          <EnhancedMindMapContainer
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -63,7 +62,6 @@ export const MindMap = () => {
             onClear={clearCanvas}
             colorOptions={colorOptions}
             textColorOptions={textColorOptions}
-            nodeTypes={nodeTypes}
             onUndo={handleUndo}
             onRedo={handleRedo}
             canUndo={canUndo}
