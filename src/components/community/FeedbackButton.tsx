@@ -19,7 +19,7 @@ export const FeedbackButton: React.FC<FeedbackButtonProps> = ({ onClick }) => {
         <Button
           variant="outline"
           size="sm"
-          className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
+          className="h-9 w-9 card-interactive focus-enhanced"
           onClick={onClick}
           aria-label="Provide feedback"
         >
@@ -28,7 +28,7 @@ export const FeedbackButton: React.FC<FeedbackButtonProps> = ({ onClick }) => {
       </TooltipTrigger>
       <TooltipContent 
         side="bottom" 
-        className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-fade-in"
+        className="dialog-elevated z-50 overflow-hidden rounded-md px-3 py-1.5 text-sm shadow-md animate-fade-in"
       >
         Provide feedback
       </TooltipContent>

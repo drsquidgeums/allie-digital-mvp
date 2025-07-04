@@ -28,7 +28,7 @@ export const ThemeToggle = () => {
         <Button
           variant="outline"
           size="sm"
-          className={`${buttonClassName} ${
+          className={`${buttonClassName} card-interactive focus-enhanced ${
             theme === 'light' 
               ? 'bg-accent text-accent-foreground' 
               : 'bg-background hover:bg-accent hover:text-accent-foreground'
@@ -44,7 +44,7 @@ export const ThemeToggle = () => {
       </TooltipTrigger>
       <TooltipContent 
         side="bottom" 
-        className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md"
+        className="dialog-elevated z-50 overflow-hidden rounded-md px-3 py-1.5 text-sm shadow-md"
       >
         Toggle theme
       </TooltipContent>

@@ -10,14 +10,16 @@ export const DisplaySettings = () => {
   
   return (
     <SettingsSection title={t('settings.display.title', 'Display')}>
-      <div className="flex items-center justify-between">
-        <div className="space-y-0.5">
-          <Label>{t('settings.display.compactMode', 'Compact Mode')}</Label>
-          <p className="text-sm text-muted-foreground">
+      <div className="flex items-center justify-between p-4 card-elevated">
+        <div className="space-tight">
+          <Label className="label-primary">
+            {t('settings.display.compactMode', 'Compact Mode')}
+          </Label>
+          <p className="text-sm text-muted-enhanced">
             {t('settings.display.compactModeDescription', 'Reduce spacing between elements')}
           </p>
         </div>
-        <Switch />
+        <Switch className="focus-enhanced" />
       </div>
     </SettingsSection>
   );

@@ -23,8 +23,10 @@ export const RatingSelect: React.FC<RatingSelectProps> = ({
   ];
 
   return (
-    <div className="space-y-2">
-      <Label htmlFor={label.toLowerCase().replace(/\s+/g, "-")}>{label}</Label>
+    <div className="space-content">
+      <Label htmlFor={label.toLowerCase().replace(/\s+/g, "-")} className="label-primary">
+        {label}
+      </Label>
       <div className="flex justify-between gap-2">
         {ratingOptions.map((option) => (
           <Button
@@ -32,7 +34,11 @@ export const RatingSelect: React.FC<RatingSelectProps> = ({
             type="button"
             variant={value === option.value ? "default" : "outline"}
             size="sm"
-            className={`flex-1 ${value === option.value ? "bg-primary text-primary-foreground" : ""}`}
+            className={`flex-1 focus-enhanced ${
+              value === option.value 
+                ? "bg-primary text-primary-foreground shadow-sm" 
+                : "card-interactive"
+            }`}
             onClick={() => onChange(option.value)}
           >
             {option.label}

@@ -10,15 +10,17 @@ interface WorkspaceLayoutProps {
 export const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) => {
   return (
     <div className="flex min-h-screen bg-background">
-      <div className="sticky top-0 h-screen">
+      <div className="sticky top-0 h-screen sidebar-elevated">
         <Sidebar 
           onColorChange={() => {}}
         />
       </div>
       <div className="flex-1 p-6 overflow-y-auto">
-        <Card className="h-full shadow-lg">
-          {children}
-        </Card>
+        <div className="card-elevated h-full shadow-lg">
+          <div className="content-container h-full">
+            {children}
+          </div>
+        </div>
       </div>
     </div>
   );
