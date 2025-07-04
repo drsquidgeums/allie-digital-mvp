@@ -17,7 +17,7 @@ export const FeedbackPrompt: React.FC<FeedbackPromptProps> = ({
   userInfo
 }) => {
   return (
-    <Dialog open={isOpen} modal>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent 
         className="sm:max-w-md dark:bg-background dark:text-foreground" 
         role="dialog" 
