@@ -143,30 +143,25 @@ export const DocumentSections: React.FC<DocumentSectionsProps> = ({ editor }) =>
               ) : (
                 <div className="space-y-1">
                   {sections.map(section => (
-                    <Collapsible
-                      key={section.id}
-                      defaultOpen={!section.isCollapsed}
-                      onOpenChange={() => toggleSection(section.id)}
-                    >
-                      <CollapsibleTrigger asChild>
-                        <button
-                          className="w-full flex items-center justify-between p-2 text-sm hover:bg-accent rounded transition-colors"
-                          style={{ paddingLeft: `${0.5 + (section.level - 1) * 0.75}rem` }}
-                        >
-                          <span className="flex items-center">
-                            {section.isCollapsed ? (
-                              <ChevronRight className="h-3 w-3 mr-1" />
-                            ) : (
-                              <ChevronDown className="h-3 w-3 mr-1" />
-                            )}
-                            {section.title}
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            H{section.level}
-                          </span>
-                        </button>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
+                    <div key={section.id} className="space-y-1">
+                      <button
+                        onClick={() => toggleSection(section.id)}
+                        className="w-full flex items-center justify-between p-2 text-sm hover:bg-accent rounded transition-colors"
+                        style={{ paddingLeft: `${0.5 + (section.level - 1) * 0.75}rem` }}
+                      >
+                        <span className="flex items-center">
+                          {section.isCollapsed ? (
+                            <ChevronRight className="h-3 w-3 mr-1" />
+                          ) : (
+                            <ChevronDown className="h-3 w-3 mr-1" />
+                          )}
+                          {section.title}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          H{section.level}
+                        </span>
+                      </button>
+                      {!section.isCollapsed && (
                         <div className="ml-6 p-2 text-xs text-muted-foreground">
                           <Button
                             variant="ghost"
@@ -177,8 +172,8 @@ export const DocumentSections: React.FC<DocumentSectionsProps> = ({ editor }) =>
                             Jump to section
                           </Button>
                         </div>
-                      </CollapsibleContent>
-                    </Collapsible>
+                      )}
+                    </div>
                   ))}
                 </div>
               )}
