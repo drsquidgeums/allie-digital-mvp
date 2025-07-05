@@ -1,7 +1,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { Bot, User, AlertCircle } from "lucide-react";
+import { Bot, User, AlertCircle, Loader2 } from "lucide-react";
 
 interface ChatMessageProps {
   text: string;
@@ -20,6 +20,7 @@ export const ChatMessage = React.memo(({ text, isUser, tabIndex, isError = false
           ? "bg-primary text-primary-foreground ml-8 flex-row-reverse" 
           : "bg-muted/50 mr-8",
         isError && "bg-red-100 border border-red-300 text-red-800",
+        isConnecting && "bg-blue-50 border border-blue-200",
         "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
       )}
       role="article"
@@ -32,6 +33,8 @@ export const ChatMessage = React.memo(({ text, isUser, tabIndex, isError = false
       )}>
         {isError ? (
           <AlertCircle className="w-4 h-4 text-red-600" />
+        ) : isConnecting ? (
+          <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
         ) : isUser ? (
           <User className="w-4 h-4" />
         ) : (
@@ -41,13 +44,15 @@ export const ChatMessage = React.memo(({ text, isUser, tabIndex, isError = false
       <div className="flex-1 space-y-1 min-w-0">
         <div className={cn(
           "text-xs font-medium",
-          isUser ? "text-primary-foreground/80" : "text-muted-foreground"
+          isUser ? "text-primary-foreground/80" : "text-muted-foreground",
+          isConnecting && "text-blue-600"
         )}>
           {isError ? "Error" : isUser ? "You" : isConnecting ? "Allie (connecting...)" : "Allie"}
         </div>
         <div className={cn(
           "text-sm leading-relaxed whitespace-pre-wrap break-words",
-          isError && "font-medium"
+          isError && "font-medium",
+          isConnecting && "text-blue-700"
         )}>
           {text}
         </div>

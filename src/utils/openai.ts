@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 // Create an OpenAI client
 export const createOpenAIClient = async () => {
   try {
-    console.log("=== ATTEMPTING TO CREATE OPENAI CLIENT ===");
+    console.log("=== OPENAI UTILS: Creating OpenAI client ===");
     
     const { data, error } = await supabase
       .from('secrets')
@@ -13,45 +13,44 @@ export const createOpenAIClient = async () => {
       .eq('name', 'OPENAI_API_KEY')
       .maybeSingle();
 
-    console.log("Supabase secrets query result:", { data, error });
+    console.log("=== OPENAI UTILS: Supabase query result ===");
+    console.log("Data:", data);
+    console.log("Error:", error);
 
     if (error) {
-      console.error('Error fetching OpenAI API key from Supabase:', error);
-      return null;
+      console.error('=== OPENAI UTILS: Supabase error ===', error);
+      throw new Error(`Supabase error: ${error.message}`);
     }
 
     if (!data?.secret) {
-      console.log('OpenAI API key not found in Supabase secrets table');
-      return null;
+      console.log('=== OPENAI UTILS: No API key found ===');
+      throw new Error('OpenAI API key not found in Supabase secrets. Please add your OpenAI API key to the secrets table.');
     }
 
-    console.log("OpenAI API key found, creating client...");
+    console.log("=== OPENAI UTILS: API key found, creating client ===");
     
     const client = new OpenAI({
       apiKey: data.secret,
       dangerouslyAllowBrowser: true
     });
 
-    console.log("OpenAI client created successfully");
+    console.log("=== OPENAI UTILS: Client created successfully ===");
     return client;
   } catch (error) {
-    console.error('Error creating OpenAI client:', error);
-    return null;
+    console.error('=== OPENAI UTILS: Client creation failed ===', error);
+    throw error;
   }
 };
 
 // Function to create OpenAI API request
 export const createOpenAICompletion = async (messages: any[]) => {
   try {
-    console.log("=== CREATING OPENAI COMPLETION ===");
+    console.log("=== OPENAI UTILS: Starting completion request ===");
+    console.log("Messages count:", messages.length);
+    
     const openai = await createOpenAIClient();
     
-    if (!openai) {
-      console.log("No OpenAI client available - throwing error");
-      throw new Error("No OpenAI client available");
-    }
-    
-    console.log("Making OpenAI API request with messages:", messages.length);
+    console.log("=== OPENAI UTILS: Making API call ===");
     
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -60,12 +59,22 @@ export const createOpenAICompletion = async (messages: any[]) => {
       temperature: 0.7,
     });
     
-    console.log("OpenAI API response received:", response);
-    console.log("Response content:", response.choices[0].message.content);
+    console.log("=== OPENAI UTILS: API response received ===");
+    console.log("Response structure:", {
+      choices_length: response.choices?.length,
+      first_choice_message: response.choices?.[0]?.message?.content ? "Present" : "Missing"
+    });
     
-    return response.choices[0].message.content;
+    const content = response.choices[0]?.message?.content;
+    console.log("=== OPENAI UTILS: Extracted content ===");
+    console.log("Content type:", typeof content);
+    console.log("Content length:", content?.length);
+    
+    return content;
   } catch (error) {
-    console.error("OpenAI API call failed with error:", error);
+    console.error("=== OPENAI UTILS: Completion failed ===");
+    console.error("Error type:", error?.constructor?.name);
+    console.error("Error message:", error instanceof Error ? error.message : 'Unknown error');
     throw error;
   }
 };
