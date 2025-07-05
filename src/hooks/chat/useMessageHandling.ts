@@ -6,25 +6,27 @@ interface Message {
   isUser: boolean;
 }
 
-const INITIAL_MESSAGE: Message = {
-  text: "Hi! I'm Allie.ai, your virtual learning assistant. I can help you with document analysis, writing assistance, and research. What can I help you with today?",
-  isUser: false
-};
-
 export const useMessageHandling = () => {
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const addMessage = useCallback((message: Message) => {
-    setMessages(prev => [...prev, message]);
+    console.log("Adding message:", message);
+    setMessages(prev => {
+      const newMessages = [...prev, message];
+      console.log("Updated messages:", newMessages);
+      return newMessages;
+    });
   }, []);
 
   const addUserMessage = useCallback((text: string) => {
+    console.log("Adding user message:", text);
     addMessage({ text, isUser: true });
   }, [addMessage]);
 
   const addAssistantMessage = useCallback((text: string) => {
+    console.log("Adding assistant message:", text);
     addMessage({ text, isUser: false });
   }, [addMessage]);
 

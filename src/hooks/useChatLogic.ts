@@ -25,12 +25,16 @@ export const useChatLogic = (documentContent?: string) => {
     if (!input.trim() || isLoading) return;
 
     console.log("Processing user input:", input);
-    setIsLoading(true);
-    addUserMessage(input);
-    const currentInput = input;
+    const currentInput = input.trim();
+    
+    // Add user message immediately
+    addUserMessage(currentInput);
     setInput("");
+    setIsLoading(true);
 
     try {
+      console.log("Current messages before processing:", messages);
+      
       // Check for specific document analysis requests
       if (documentContent) {
         const lowerInput = currentInput.toLowerCase();
@@ -53,15 +57,23 @@ export const useChatLogic = (documentContent?: string) => {
       
       // Try OpenAI API first
       console.log("Attempting OpenAI API call...");
-      const apiResponse = await sendToOpenAI(currentInput, messages);
+      let response = null;
       
-      if (apiResponse && apiResponse.trim()) {
+      try {
+        response = await sendToOpenAI(currentInput, messages);
+        console.log("OpenAI API response:", response);
+      } catch (error) {
+        console.log("OpenAI API error:", error);
+      }
+      
+      // Use response from API or fallback
+      if (response && response.trim()) {
         console.log("Using OpenAI API response");
-        addAssistantMessage(apiResponse);
+        addAssistantMessage(response);
       } else {
-        // Always use fallback response if API fails or returns empty
         console.log("Using fallback tool response");
         const fallbackResponse = getToolResponse(currentInput, documentContent);
+        console.log("Generated fallback response:", fallbackResponse);
         addAssistantMessage(fallbackResponse);
       }
       
@@ -69,11 +81,13 @@ export const useChatLogic = (documentContent?: string) => {
       console.error("Error in chat flow:", error);
       // Always provide a fallback response
       const fallbackResponse = getToolResponse(currentInput, documentContent);
+      console.log("Error fallback response:", fallbackResponse);
       addAssistantMessage(fallbackResponse);
     } finally {
       setIsLoading(false);
+      console.log("Chat processing completed");
     }
-  }, [input, isLoading, getToolResponse, analyzeDocument, documentContent, messages, setInput, setIsLoading, addUserMessage, addAssistantMessage, sendToOpenAI]);
+  }, [input, isLoading, getToolResponse, analyzeDocument, documentContent, messages, addUserMessage, addAssistantMessage, sendToOpenAI, setInput, setIsLoading]);
 
   return {
     input,
