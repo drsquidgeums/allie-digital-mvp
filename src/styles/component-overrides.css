@@ -1,0 +1,99 @@
+
+/* Component-specific overrides and form styling */
+
+/* Keep feedback form inputs readable */
+.CommentsSection textarea,
+.form textarea,
+.form input,
+input,
+textarea {
+  color: #000000 !important;
+  background-color: white !important;
+}
+
+textarea:focus,
+input:focus {
+  border-color: hsl(var(--primary));
+  background-color: white !important;
+}
+
+/* Dark mode URL input styling with new colors */
+.dark input[type="url"] {
+  background-color: hsl(var(--input)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border));
+}
+
+.dark input[type="url"]:focus {
+  background-color: hsl(var(--input)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--primary));
+}
+
+.dark input[type="url"]::placeholder {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+/* NDA form styling */
+.dark #name,
+.dark #email {
+  background-color: white !important;
+  color: #000000 !important;
+  border-color: hsl(var(--border));
+}
+
+.dark #name:focus,
+.dark #email:focus {
+  background-color: white !important;
+  color: #000000 !important;
+  border-color: hsl(var(--primary));
+}
+
+/* Chat input styling with new purple theme */
+.dark input[aria-label="Chat input"] {
+  background-color: hsl(var(--input)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border));
+}
+
+.dark input[aria-label="Chat input"]:focus {
+  background-color: hsl(var(--input)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--primary));
+}
+
+.dark input[aria-label="Chat input"]::placeholder {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Enhanced text styling with new color scheme */
+.dark .prose {
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4,
+.dark .prose h5,
+.dark .prose h6 {
+  color: hsl(var(--primary)) !important;
+}
+
+.dark .prose p,
+.dark .prose ul,
+.dark .prose ol,
+.dark .prose li {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+/* NDA region styling */
+.dark [role="region"] {
+  background-color: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Enhanced dark mode specific overrides */
+html.dark .recharts-legend-item:first-child .recharts-legend-item-symbol {
+  fill: #a594f9 !important;
+}
