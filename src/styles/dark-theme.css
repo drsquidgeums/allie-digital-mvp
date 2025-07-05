@@ -1,49 +1,120 @@
 
 @layer base {
   .dark {
-    /* Enhanced Dark Mode Colors */
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    /* Increased contrast for primary elements */
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    /* Enhanced secondary colors */
-    --secondary: 240 3.7% 20%;
-    --secondary-foreground: 0 0% 98%;
-    /* Improved muted contrast */
-    --muted: 240 3.7% 20%;
-    --muted-foreground: 240 5% 94.9%;
-    /* Enhanced accent visibility */
-    --accent: 240 3.7% 20%;
-    --accent-foreground: 0 0% 98%;
+    /* Purple-themed Dark Mode Colors based on the reference design */
+    --background: 258 84% 8%;
+    --foreground: 280 25% 95%;
+    --card: 258 84% 12%;
+    --card-foreground: 280 25% 95%;
+    --popover: 258 84% 12%;
+    --popover-foreground: 280 25% 95%;
+    /* Vibrant purple primary */
+    --primary: 280 100% 70%;
+    --primary-foreground: 258 84% 8%;
+    /* Deep purple secondary */
+    --secondary: 258 60% 20%;
+    --secondary-foreground: 280 25% 95%;
+    /* Muted purple tones */
+    --muted: 258 60% 15%;
+    --muted-foreground: 280 15% 75%;
+    /* Accent purple */
+    --accent: 280 100% 70%;
+    --accent-foreground: 258 84% 8%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    /* Enhanced border visibility */
-    --border: 240 3.7% 30%;
-    --input: 240 3.7% 20%;
-    --ring: 240 4.9% 93.9%;
+    --destructive-foreground: 280 25% 95%;
+    /* Purple-tinted borders */
+    --border: 258 60% 25%;
+    --input: 258 60% 20%;
+    --ring: 280 100% 70%;
 
-    /* Enhanced contrast colors for dark mode */
-    --chat-user-bg: 0 0% 98%;
-    --chat-user-text: 240 10% 3.9%;
-    --chat-assistant-bg: 240 3.7% 30%;
-    --chat-assistant-text: 0 0% 98%;
-    --loading-indicator: 240 5% 94.9%;
-    --focus-ring: 0 0% 98%;
-    --hover-bg: 240 3.7% 25%;
+    /* Enhanced purple theme colors */
+    --chat-user-bg: 280 100% 70%;
+    --chat-user-text: 258 84% 8%;
+    --chat-assistant-bg: 258 60% 20%;
+    --chat-assistant-text: 280 25% 95%;
+    --loading-indicator: 280 100% 70%;
+    --focus-ring: 280 100% 70%;
+    --hover-bg: 258 60% 18%;
+  }
+
+  /* Purple gradient background for the main layout */
+  .dark body {
+    background: linear-gradient(135deg, hsl(258, 84%, 8%) 0%, hsl(280, 60%, 15%) 50%, hsl(258, 84%, 8%) 100%);
+  }
+
+  /* Card backgrounds with subtle purple tint */
+  .dark .card-elevated,
+  .dark .sidebar-elevated,
+  .dark .dialog-elevated {
+    background: linear-gradient(135deg, hsl(258, 84%, 12%) 0%, hsl(258, 60%, 15%) 100%);
+    border: 1px solid hsl(258, 60%, 25%);
+    box-shadow: 0 8px 32px rgba(138, 43, 226, 0.1);
+  }
+
+  /* Purple accent for buttons and interactive elements */
+  .dark .button-primary-enhanced,
+  .dark button[data-state="on"],
+  .dark .bg-primary {
+    background: linear-gradient(135deg, hsl(280, 100%, 70%) 0%, hsl(300, 100%, 65%) 100%);
+    color: hsl(258, 84%, 8%);
+    box-shadow: 0 4px 20px rgba(138, 43, 226, 0.3);
+  }
+
+  .dark .button-primary-enhanced:hover,
+  .dark button[data-state="on"]:hover {
+    background: linear-gradient(135deg, hsl(280, 100%, 75%) 0%, hsl(300, 100%, 70%) 100%);
+    box-shadow: 0 6px 25px rgba(138, 43, 226, 0.4);
+    transform: translateY(-1px);
+  }
+
+  /* Purple-themed focus states */
+  .dark *:focus-visible {
+    outline: 2px solid hsl(280, 100%, 70%);
+    outline-offset: 2px;
+  }
+
+  /* Sidebar styling with purple theme */
+  .dark .sidebar-elevated {
+    background: linear-gradient(180deg, hsl(258, 84%, 12%) 0%, hsl(258, 60%, 10%) 100%);
+    border-right: 1px solid hsl(258, 60%, 25%);
+  }
+
+  /* Input fields with purple theme */
+  .dark input,
+  .dark textarea,
+  .dark .bg-background {
+    background: hsl(258, 60%, 15%);
+    border: 1px solid hsl(258, 60%, 25%);
+    color: hsl(280, 25%, 95%);
+  }
+
+  .dark input:focus,
+  .dark textarea:focus {
+    border-color: hsl(280, 100%, 70%);
+    box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.2);
+  }
+
+  /* Purple accent for hover states */
+  .dark .hover\:bg-accent:hover,
+  .dark .button-hover:hover {
+    background: hsl(258, 60%, 18%);
+    color: hsl(280, 100%, 70%);
+  }
+
+  /* Dropdown and popover styling */
+  .dark .popover-content,
+  .dark .dropdown-content {
+    background: linear-gradient(135deg, hsl(258, 84%, 12%) 0%, hsl(258, 60%, 15%) 100%);
+    border: 1px solid hsl(258, 60%, 25%);
+    box-shadow: 0 8px 32px rgba(138, 43, 226, 0.2);
   }
 }
 
-/* Place this outside of any layer to ensure it has maximum specificity */
+/* Maintain existing overrides for specific components */
 html.dark .recharts-legend-item:first-child .recharts-legend-item-symbol {
-  fill: #F1F1F1 !important;
+  fill: hsl(280, 100%, 70%) !important;
 }
 
-/* Override the feedback form text to be black in both light and dark mode */
 .CommentsSection textarea,
 .form textarea,
 .form input,
@@ -53,43 +124,40 @@ textarea {
   background-color: white !important;
 }
 
-/* Ensure feedback form text inputs and textareas are visible when focused */
 textarea:focus,
 input:focus {
-  border-color: hsl(var(--primary));
+  border-color: hsl(280, 100%, 70%);
   background-color: white !important;
 }
 
-/* Dark mode URL input styling */
 .dark input[type="url"] {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-  border-color: hsl(var(--border));
+  background-color: hsl(258, 60%, 15%) !important;
+  color: hsl(280, 25%, 95%) !important;
+  border-color: hsl(258, 60%, 25%);
 }
 
 .dark input[type="url"]:focus {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-  border-color: hsl(var(--primary));
+  background-color: hsl(258, 60%, 15%) !important;
+  color: hsl(280, 25%, 95%) !important;
+  border-color: hsl(280, 100%, 70%);
 }
 
 .dark input[type="url"]::placeholder {
-  color: #888888 !important;
+  color: hsl(280, 15%, 65%) !important;
 }
 
-/* NDA form styling to match feedback form */
 .dark #name,
 .dark #email {
   background-color: white !important;
   color: #000000 !important;
-  border-color: hsl(var(--border));
+  border-color: hsl(258, 60%, 25%);
 }
 
 .dark #name:focus,
 .dark #email:focus {
   background-color: white !important;
   color: #000000 !important;
-  border-color: hsl(var(--primary));
+  border-color: hsl(280, 100%, 70%);
 }
 
 .dark #name::placeholder,
@@ -97,26 +165,24 @@ input:focus {
   color: #888888 !important;
 }
 
-/* Chat input styling for virtual assistant in dark mode */
 .dark input[aria-label="Chat input"] {
-  background-color: #2a2a2a !important;
-  color: #ffffff !important;
-  border-color: hsl(var(--border));
+  background-color: hsl(258, 60%, 15%) !important;
+  color: hsl(280, 25%, 95%) !important;
+  border-color: hsl(258, 60%, 25%);
 }
 
 .dark input[aria-label="Chat input"]:focus {
-  background-color: #2a2a2a !important;
-  color: #ffffff !important;
-  border-color: hsl(var(--primary));
+  background-color: hsl(258, 60%, 15%) !important;
+  color: hsl(280, 25%, 95%) !important;
+  border-color: hsl(280, 100%, 70%);
 }
 
 .dark input[aria-label="Chat input"]::placeholder {
-  color: #888888 !important;
+  color: hsl(280, 15%, 65%) !important;
 }
 
-/* Enhanced NDA text styling for better dark mode readability */
 .dark .prose {
-  color: #f1f1f1 !important;
+  color: hsl(280, 25%, 90%) !important;
 }
 
 .dark .prose h1,
@@ -125,24 +191,23 @@ input:focus {
 .dark .prose h4,
 .dark .prose h5,
 .dark .prose h6 {
-  color: #ffffff !important;
+  color: hsl(280, 100%, 80%) !important;
 }
 
 .dark .prose p {
-  color: #e5e5e5 !important;
+  color: hsl(280, 25%, 85%) !important;
 }
 
 .dark .prose ul,
 .dark .prose ol {
-  color: #e5e5e5 !important;
+  color: hsl(280, 25%, 85%) !important;
 }
 
 .dark .prose li {
-  color: #e5e5e5 !important;
+  color: hsl(280, 25%, 85%) !important;
 }
 
-/* Force NDA text visibility in dark mode */
 .dark [role="region"] {
-  background-color: #1a1a1a !important;
-  border-color: #404040 !important;
+  background-color: hsl(258, 60%, 12%) !important;
+  border-color: hsl(258, 60%, 25%) !important;
 }
