@@ -24,7 +24,7 @@ export const useChatLogic = (documentContent?: string) => {
   const handleSend = useCallback(async () => {
     if (!input.trim() || isLoading) return;
 
-    console.log("Sending message:", input);
+    console.log("Processing user input:", input);
     setIsLoading(true);
     addUserMessage(input);
     const currentInput = input;
@@ -35,6 +35,7 @@ export const useChatLogic = (documentContent?: string) => {
       if (documentContent) {
         const lowerInput = currentInput.toLowerCase();
         if (lowerInput.includes("analyze") && lowerInput.includes("document")) {
+          console.log("Analyzing document...");
           const response = await analyzeDocument(documentContent);
           addAssistantMessage(response);
           setIsLoading(false);
@@ -50,19 +51,23 @@ export const useChatLogic = (documentContent?: string) => {
         }
       }
       
-      // Try OpenAI API first, but always fall back to tool responses
+      // Try OpenAI API first
+      console.log("Attempting OpenAI API call...");
       const apiResponse = await sendToOpenAI(currentInput, messages);
       
-      if (apiResponse) {
+      if (apiResponse && apiResponse.trim()) {
+        console.log("Using OpenAI API response");
         addAssistantMessage(apiResponse);
       } else {
-        // Always use fallback response if API fails or is unavailable
+        // Always use fallback response if API fails or returns empty
+        console.log("Using fallback tool response");
         const fallbackResponse = getToolResponse(currentInput, documentContent);
         addAssistantMessage(fallbackResponse);
       }
       
     } catch (error) {
       console.error("Error in chat flow:", error);
+      // Always provide a fallback response
       const fallbackResponse = getToolResponse(currentInput, documentContent);
       addAssistantMessage(fallbackResponse);
     } finally {

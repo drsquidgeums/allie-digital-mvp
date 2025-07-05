@@ -29,13 +29,15 @@ export const useChatAPI = () => {
       
       const responseText = await createOpenAICompletion(chatHistory);
       
-      if (responseText && !responseText.includes("API") && !responseText.includes("issue")) {
+      if (responseText && responseText.trim() && !responseText.toLowerCase().includes("api") && !responseText.toLowerCase().includes("issue")) {
+        console.log("OpenAI API response received successfully");
         return responseText;
       }
       
+      console.log("OpenAI API response was empty or contained error indicators");
       return null;
     } catch (error) {
-      console.log("OpenAI API unavailable, using built-in responses");
+      console.log("OpenAI API unavailable, using built-in responses:", error);
       return null;
     }
   }, []);
