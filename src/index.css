@@ -1,5 +1,4 @@
 
-
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 @import "./styles/base.css";
 @import "./styles/base-theme.css";
@@ -63,44 +62,44 @@
 }
 
 .dark {
-  /* Dark Mode - Purple/Pink Analytics Theme like the reference image */
-  --background: 240 10% 8%;  /* Very dark background like the reference */
-  --foreground: 0 0% 100%;
-  --card: 240 10% 12%;  /* Slightly lighter for cards */
-  --card-foreground: 0 0% 100%;
-  --popover: 240 10% 12%;
-  --popover-foreground: 0 0% 100%;
+  /* Angular Dark Mode - Deep Purple with Pink/Purple Accents */
+  --background: 260 30% 8%;  /* Deep purple-black like the reference */
+  --foreground: 0 0% 95%;
+  --card: 260 25% 12%;  /* Slightly lighter purple for cards */
+  --card-foreground: 0 0% 95%;
+  --popover: 260 25% 12%;
+  --popover-foreground: 0 0% 95%;
   
-  /* Primary - Purple from reference image */
-  --primary: 270 95% 70%;  /* Bright purple */
+  /* Primary - Bright Purple/Pink from reference */
+  --primary: 280 100% 70%;  /* Bright purple-pink */
   --primary-foreground: 0 0% 100%;
   
-  /* Secondary - Pink/Magenta from reference */
-  --secondary: 320 85% 70%;  /* Pink accent */
+  /* Secondary - Pink/Magenta accent */
+  --secondary: 320 100% 75%;  /* Bright pink */
   --secondary-foreground: 0 0% 100%;
   
-  /* Muted colors */
-  --muted: 240 10% 15%;
-  --muted-foreground: 0 0% 70%;
+  /* Muted colors with purple tints */
+  --muted: 260 20% 15%;
+  --muted-foreground: 0 0% 75%;
   
-  /* Accent colors */
-  --accent: 240 10% 15%;
-  --accent-foreground: 0 0% 100%;
+  /* Accent colors with purple tints */
+  --accent: 260 20% 18%;
+  --accent-foreground: 0 0% 95%;
   
-  --destructive: 0 85% 60%;
+  --destructive: 0 85% 65%;
   --destructive-foreground: 0 0% 100%;
   
-  /* Borders */
-  --border: 240 10% 20%;
-  --input: 240 10% 15%;
-  --ring: 270 95% 70%;
+  /* Borders with purple tints */
+  --border: 260 15% 25%;
+  --input: 260 15% 20%;
+  --ring: 280 100% 70%;
   
-  /* Chart colors for dark mode */
-  --chart-1: 270 95% 70%;  /* Purple */
-  --chart-2: 320 85% 70%;  /* Pink */
-  --chart-3: 200 85% 60%;  /* Cyan */
-  --chart-4: 280 80% 65%;  /* Light purple */
-  --chart-5: 340 80% 65%;  /* Light pink */
+  /* Chart colors for angular dark mode */
+  --chart-1: 280 100% 70%;  /* Bright purple */
+  --chart-2: 320 100% 75%;  /* Bright pink */
+  --chart-3: 260 80% 65%;   /* Medium purple */
+  --chart-4: 300 90% 70%;   /* Purple-pink */
+  --chart-5: 340 85% 70%;   /* Pink-red */
 }
 
 * {
@@ -112,7 +111,19 @@ body {
   color: hsl(var(--foreground));
 }
 
-/* Enhanced Dark Mode Component Outlines - White borders for better visual distinction */
+/* Angular Dark Mode - Enhanced gradient backgrounds */
+.dark body {
+  background: linear-gradient(135deg, 
+    hsl(260, 30%, 8%) 0%, 
+    hsl(280, 35%, 12%) 25%, 
+    hsl(260, 30%, 8%) 50%, 
+    hsl(290, 40%, 10%) 75%, 
+    hsl(260, 30%, 8%) 100%
+  );
+  min-height: 100vh;
+}
+
+/* Enhanced Dark Mode Component Outlines - Purple/Pink theme */
 .dark button,
 .dark .card,
 .dark [role="button"],
@@ -122,115 +133,171 @@ body {
 .dark div[class*="bg-"],
 .dark section,
 .dark article {
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(168, 85, 247, 0.2) !important;
+  background: rgba(30, 20, 60, 0.5) !important;
 }
 
 .dark button:hover,
 .dark [role="button"]:hover,
 .dark .card:hover {
-  border-color: rgba(255, 255, 255, 0.3) !important;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+  border-color: rgba(168, 85, 247, 0.4) !important;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
 }
 
-/* Enhanced focus states for WCAG compliance */
+/* Enhanced focus states with purple glow */
 .dark *:focus-visible,
 .dark *:focus {
   outline: 2px solid hsl(var(--primary)) !important;
   outline-offset: 2px;
-  border-color: rgba(255, 255, 255, 0.4) !important;
+  border-color: rgba(168, 85, 247, 0.6) !important;
+  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2);
 }
 
-/* Better button contrast in dark mode */
+/* Better button contrast with gradient backgrounds */
 .dark button {
-  background-color: hsl(var(--card)) !important;
+  background: linear-gradient(135deg, 
+    rgba(168, 85, 247, 0.1) 0%, 
+    rgba(236, 72, 153, 0.1) 100%
+  ) !important;
   color: hsl(var(--foreground)) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(168, 85, 247, 0.3) !important;
 }
 
 .dark button:hover {
-  background-color: hsl(var(--accent)) !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
+  background: linear-gradient(135deg, 
+    rgba(168, 85, 247, 0.2) 0%, 
+    rgba(236, 72, 153, 0.2) 100%
+  ) !important;
+  border-color: rgba(168, 85, 247, 0.5) !important;
 }
 
-/* Card and component separation */
+/* Card and component separation with purple theme */
 .dark .card,
 .dark [data-radix-aspect-ratio-wrapper] > div,
 .dark .bg-card {
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  background-color: hsl(var(--card)) !important;
+  border: 1px solid rgba(168, 85, 247, 0.2) !important;
+  background: linear-gradient(135deg, 
+    rgba(30, 20, 60, 0.8) 0%, 
+    rgba(40, 20, 80, 0.6) 100%
+  ) !important;
+  backdrop-filter: blur(10px);
 }
 
 .dark .card:hover {
-  border-color: rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border-color: rgba(168, 85, 247, 0.4) !important;
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.2);
 }
 
-/* Input field separation */
+/* Input field separation with angular theme */
 .dark input,
 .dark textarea,
 .dark select {
-  background-color: hsl(var(--input)) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: rgba(30, 20, 60, 0.7) !important;
+  border: 1px solid rgba(168, 85, 247, 0.3) !important;
   color: hsl(var(--foreground)) !important;
+  backdrop-filter: blur(5px);
 }
 
 .dark input:focus,
 .dark textarea:focus,
 .dark select:focus {
-  border-color: rgba(255, 255, 255, 0.4) !important;
-  background-color: hsl(var(--card)) !important;
+  border-color: rgba(168, 85, 247, 0.6) !important;
+  background: rgba(30, 20, 60, 0.9) !important;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
 }
 
-/* Menu and dropdown elements with better separation */
+/* Menu and dropdown elements with angular styling */
 .dark [role="menu"],
 .dark [role="menubar"],
 .dark [role="menuitem"],
 .dark .dropdown-content,
 .dark .popover-content {
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  background-color: hsl(var(--card)) !important;
+  border: 1px solid rgba(168, 85, 247, 0.3) !important;
+  background: linear-gradient(135deg, 
+    rgba(30, 20, 60, 0.95) 0%, 
+    rgba(40, 20, 80, 0.85) 100%
+  ) !important;
+  backdrop-filter: blur(15px);
 }
 
 /* Enhanced component visibility for interactive elements */
 .dark .hover\:bg-accent:hover {
-  background-color: hsl(var(--accent)) !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
+  background: linear-gradient(135deg, 
+    rgba(168, 85, 247, 0.15) 0%, 
+    rgba(236, 72, 153, 0.15) 100%
+  ) !important;
+  border-color: rgba(168, 85, 247, 0.4) !important;
 }
 
-/* Sidebar and navigation elements */
+/* Sidebar and navigation elements with gradient */
 .dark nav,
 .dark aside,
 .dark [role="navigation"] {
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(168, 85, 247, 0.2) !important;
+  background: linear-gradient(135deg, 
+    rgba(30, 20, 60, 0.9) 0%, 
+    rgba(40, 20, 80, 0.7) 100%
+  ) !important;
 }
 
-/* Purple accent borders for primary elements */
+/* Primary elements with bright purple */
 .dark button[class*="primary"],
 .dark .bg-primary {
   border-color: hsl(var(--primary)) !important;
-  background-color: hsl(var(--primary)) !important;
+  background: linear-gradient(135deg, 
+    hsl(280, 100%, 70%) 0%, 
+    hsl(320, 100%, 75%) 100%
+  ) !important;
+  color: white !important;
 }
 
 .dark button[class*="primary"]:hover,
 .dark .bg-primary:hover {
-  border-color: hsl(var(--primary)) !important;
-  background-color: hsl(var(--primary)) !important;
-  opacity: 0.9;
+  background: linear-gradient(135deg, 
+    hsl(280, 100%, 75%) 0%, 
+    hsl(320, 100%, 80%) 100%
+  ) !important;
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
 }
 
-/* Additional component outlines for better visual hierarchy */
+/* Additional component outlines with angular theme */
 .dark .bg-muted {
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  background-color: hsl(var(--muted)) !important;
+  border: 1px solid rgba(168, 85, 247, 0.15) !important;
+  background: rgba(30, 20, 60, 0.3) !important;
 }
 
 .dark .bg-accent {
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  background-color: hsl(var(--accent)) !important;
+  border: 1px solid rgba(168, 85, 247, 0.2) !important;
+  background: rgba(40, 20, 80, 0.4) !important;
 }
 
-/* Ensure all divs with background classes get outlines */
+/* Ensure all divs with background classes get angular styling */
 .dark div[class*="bg-"]:not(.bg-transparent):not(.bg-inherit) {
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(168, 85, 247, 0.15) !important;
+  background: rgba(30, 20, 60, 0.2) !important;
 }
 
+/* Special angular blur effects for modern look */
+.dark .card,
+.dark button,
+.dark input,
+.dark textarea {
+  position: relative;
+}
+
+.dark .card::before,
+.dark button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(168, 85, 247, 0.1) 0%, 
+    rgba(236, 72, 153, 0.05) 100%
+  );
+  border-radius: inherit;
+  z-index: -1;
+  filter: blur(1px);
+}
