@@ -100,7 +100,7 @@ body {
   color: hsl(var(--foreground));
 }
 
-/* Enhanced Dark Mode Component Outlines */
+/* Enhanced Dark Mode Component Outlines - White borders for better visual distinction */
 .dark button,
 .dark .card,
 .dark [role="button"],
@@ -110,63 +110,63 @@ body {
 .dark div[class*="bg-"],
 .dark section,
 .dark article {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 
 .dark button:hover,
 .dark [role="button"]:hover,
 .dark .card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 /* Enhanced focus states for WCAG compliance */
 .dark *:focus-visible,
 .dark *:focus {
-  outline: 2px solid hsl(var(--primary));
+  outline: 2px solid rgba(165, 148, 249, 0.8) !important;
   outline-offset: 2px;
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.4) !important;
 }
 
 /* Better button contrast in dark mode */
 .dark button {
-  background-color: hsl(var(--secondary));
-  color: hsl(var(--secondary-foreground));
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: hsl(0 0% 15%) !important;
+  color: hsl(0 0% 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
 .dark button:hover {
-  background-color: hsl(var(--accent));
-  border-color: rgba(255, 255, 255, 0.25);
+  background-color: hsl(0 0% 20%) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
 /* Card and component separation */
 .dark .card,
 .dark [data-radix-aspect-ratio-wrapper] > div,
 .dark .bg-card {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background-color: hsl(var(--card));
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  background-color: hsl(0 0% 5%) !important;
 }
 
 .dark .card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Input field separation */
 .dark input,
 .dark textarea,
 .dark select {
-  background-color: hsl(var(--input));
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: hsl(var(--foreground));
+  background-color: hsl(0 0% 10%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: hsl(0 0% 100%) !important;
 }
 
 .dark input:focus,
 .dark textarea:focus,
 .dark select:focus {
-  border-color: rgba(255, 255, 255, 0.3);
-  background-color: hsl(var(--background));
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  background-color: hsl(0 0% 5%) !important;
 }
 
 /* Menu and dropdown elements with better separation */
@@ -175,30 +175,48 @@ body {
 .dark [role="menuitem"],
 .dark .dropdown-content,
 .dark .popover-content {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background-color: hsl(var(--popover));
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  background-color: hsl(0 0% 8%) !important;
 }
 
 /* Enhanced component visibility for interactive elements */
 .dark .hover\:bg-accent:hover {
-  background-color: hsl(var(--accent));
-  border-color: rgba(255, 255, 255, 0.2);
+  background-color: hsl(0 0% 20%) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
 }
 
 /* Sidebar and navigation elements */
 .dark nav,
 .dark aside,
 .dark [role="navigation"] {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
 /* Light purple accent borders for primary elements */
 .dark button[class*="primary"],
 .dark .bg-primary {
-  border-color: rgba(165, 148, 249, 0.3); /* Light purple outline */
+  border-color: rgba(165, 148, 249, 0.4) !important;
+  background-color: rgba(165, 148, 249, 0.2) !important;
 }
 
 .dark button[class*="primary"]:hover,
 .dark .bg-primary:hover {
-  border-color: rgba(165, 148, 249, 0.5);
+  border-color: rgba(165, 148, 249, 0.6) !important;
+  background-color: rgba(165, 148, 249, 0.3) !important;
+}
+
+/* Additional component outlines for better visual hierarchy */
+.dark .bg-muted {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background-color: hsl(0 0% 12%) !important;
+}
+
+.dark .bg-accent {
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  background-color: hsl(0 0% 15%) !important;
+}
+
+/* Ensure all divs with background classes get outlines */
+.dark div[class*="bg-"]:not(.bg-transparent):not(.bg-inherit) {
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
