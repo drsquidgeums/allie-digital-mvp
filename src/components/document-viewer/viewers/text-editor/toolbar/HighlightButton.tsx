@@ -39,14 +39,13 @@ export const HighlightButton: React.FC<HighlightButtonProps> = ({
           size="sm"
           className="h-8 w-8 p-0 relative"
           aria-label="Highlight Text"
+          style={{
+            backgroundColor: isHighlightActive() ? 'transparent' : undefined,
+            color: isHighlightActive() ? undefined : undefined,
+            border: isHighlightActive() ? `2px solid ${highlightColor}` : undefined
+          }}
         >
-          <Highlighter 
-            className="h-4 w-4" 
-            style={{ 
-              color: 'hsl(var(--foreground))',
-              opacity: 1
-            }} 
-          />
+          <Highlighter className="h-4 w-4" />
           {isHighlightActive() && (
             <div 
               className="absolute bottom-0 left-0 right-0 h-1"

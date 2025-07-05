@@ -1,16 +1,16 @@
 
 export const getDarkModeDropdownClasses = () => {
-  return "dark:bg-card dark:border dark:border-border dark:text-foreground bg-white border-border shadow-md";
+  return "dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA] bg-white border-border shadow-md";
 };
 
 export const getDarkModeInputClasses = () => {
-  return "dark:bg-input dark:text-foreground dark:border-border dark:placeholder:text-muted-foreground";
+  return "dark:bg-background dark:text-foreground dark:border-border dark:placeholder:text-gray-500";
 };
 
 export const getDarkModeButtonClasses = () => {
-  return "dark:text-foreground dark:hover:bg-accent dark:border-border";
+  return "dark:text-[#FAFAFA] dark:hover:bg-[#FAFAFA]/10 dark:border-[#FAFAFA]/20";
 };
 
 export const getDarkModeCardClasses = () => {
-  return "dark:bg-card dark:border-border dark:text-foreground";
+  return "dark:bg-workspace-dark dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]";
 };

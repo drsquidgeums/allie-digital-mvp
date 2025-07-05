@@ -3,38 +3,29 @@
   :root {
     --font-family: "Inter", sans-serif;
     --font-weight: normal;
-    
-    /* Light Mode - Aqua Greens and Purples with White */
-    --background: 0 0% 100%;
+    /* Enhanced Light Mode Colors */
+    --background: 0 0% 98%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    
-    /* Primary - Light Purple */
-    --primary: 258 85% 76%;  /* #a594f9 converted to HSL */
-    --primary-foreground: 0 0% 100%;
-    
-    /* Secondary - Aqua Blue */
-    --secondary: 200 98% 39%;  /* #0284c7 converted to HSL */
-    --secondary-foreground: 0 0% 100%;
-    
-    /* Muted colors with light purple tints */
-    --muted: 258 20% 96%;
-    --muted-foreground: 258 15% 25%;
-    
-    /* Accent colors with aqua tints */
-    --accent: 200 20% 94%;
-    --accent-foreground: 200 98% 25%;
-    
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 5.9% 90%;
+    --secondary-foreground: 240 5.9% 10%;
+    /* Increased contrast for muted text */
+    --muted: 240 4.8% 90%;
+    --muted-foreground: 240 10% 25%;
+    /* Enhanced accent colors */
+    --accent: 240 4.8% 90%;
+    --accent-foreground: 240 5.9% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    
-    /* Borders with subtle purple tints */
-    --border: 258 15% 88%;
-    --input: 258 15% 88%;
-    --ring: 258 85% 76%;
+    /* Strengthened borders */
+    --border: 240 5.9% 80%;
+    --input: 240 5.9% 80%;
+    --ring: 240 5.9% 10%;
     --radius: 0.5rem;
   }
 }

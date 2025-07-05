@@ -2,11 +2,11 @@
 import React from 'react';
 import '@xyflow/react/dist/style.css';
 import '../styles/mindmap.css';
-import { EnhancedMindMapContainer } from './mindmap/EnhancedMindMapContainer';
+import { MindMapContainer } from './mindmap/MindMapContainer';
 import { useMindMapState } from './mindmap/hooks/useMindMapState';
 import { downloadMindMapAsJpg, downloadMindMapAsJson } from './mindmap/utils/mindMapUtils';
+import { nodeTypes } from './mindmap/constants/nodeTypes';
 import { colorOptions, textColorOptions } from './mindmap/constants/colors';
-import { enhancedNodeTypes } from './mindmap/constants/enhancedNodeTypes';
 import { ReactFlowProvider } from '@xyflow/react';
 
 export const MindMap = () => {
@@ -41,13 +41,12 @@ export const MindMap = () => {
     <div className="h-full flex flex-col bg-background">
       <div className="flex-1 overflow-hidden">
         <ReactFlowProvider>
-          <EnhancedMindMapContainer
+          <MindMapContainer
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            nodeTypes={enhancedNodeTypes}
             selectedColor={selectedColor}
             setSelectedColor={setSelectedColor}
             customColor={customColor}
@@ -64,6 +63,7 @@ export const MindMap = () => {
             onClear={clearCanvas}
             colorOptions={colorOptions}
             textColorOptions={textColorOptions}
+            nodeTypes={nodeTypes}
             onUndo={handleUndo}
             onRedo={handleRedo}
             canUndo={canUndo}
