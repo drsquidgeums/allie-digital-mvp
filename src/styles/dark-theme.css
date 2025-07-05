@@ -53,8 +53,7 @@
 
   /* Purple accent for buttons and interactive elements */
   .dark .button-primary-enhanced,
-  .dark button[data-state="on"],
-  .dark .bg-primary {
+  .dark button[data-state="on"] {
     background: linear-gradient(135deg, hsl(280, 100%, 70%) 0%, hsl(300, 100%, 65%) 100%);
     color: hsl(258, 84%, 8%);
     box-shadow: 0 4px 20px rgba(138, 43, 226, 0.3);
@@ -81,8 +80,7 @@
 
   /* Input fields with purple theme */
   .dark input,
-  .dark textarea,
-  .dark .bg-background {
+  .dark textarea {
     background: hsl(258, 60%, 15%);
     border: 1px solid hsl(258, 60%, 25%);
     color: hsl(280, 25%, 95%);
