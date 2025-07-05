@@ -7,11 +7,14 @@ export const createOpenAIClient = async () => {
   try {
     console.log("Creating OpenAI client...");
     
+    // Try to get the API key from Supabase secrets
     const { data, error } = await supabase
       .from('secrets')
       .select('secret')
       .eq('name', 'OPENAI_API_KEY')
       .maybeSingle();
+
+    console.log("Supabase secrets query result:", { data, error });
 
     if (error) {
       console.error('Supabase error:', error);
@@ -19,7 +22,16 @@ export const createOpenAIClient = async () => {
     }
 
     if (!data?.secret) {
-      console.log('No OpenAI API key found in database');
+      console.log('No OpenAI API key found in database - checking all secrets...');
+      
+      // Let's check what secrets are actually available
+      const { data: allSecrets, error: allSecretsError } = await supabase
+        .from('secrets')
+        .select('name, secret');
+        
+      console.log('All available secrets:', allSecrets);
+      console.log('All secrets error:', allSecretsError);
+      
       throw new Error('OpenAI API key not configured. Please add your API key to continue.');
     }
 
@@ -41,6 +53,7 @@ export const createOpenAIClient = async () => {
 export const createOpenAICompletion = async (messages: any[]) => {
   try {
     console.log("Starting OpenAI completion request...");
+    console.log("Messages being sent:", JSON.stringify(messages, null, 2));
     
     const openai = await createOpenAIClient();
     
@@ -51,12 +64,24 @@ export const createOpenAICompletion = async (messages: any[]) => {
       temperature: 0.7,
     });
     
+    console.log("Raw OpenAI response:", response);
+    
     const content = response.choices[0]?.message?.content;
-    console.log("OpenAI response received:", content ? "Success" : "No content");
+    console.log("Extracted content:", content);
+    
+    if (!content) {
+      console.error("No content in OpenAI response");
+      return null;
+    }
     
     return content;
   } catch (error) {
     console.error("OpenAI completion failed:", error);
+    console.error("Error details:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
     throw error;
   }
 };
