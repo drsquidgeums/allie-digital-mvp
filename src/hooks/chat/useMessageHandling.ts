@@ -4,6 +4,8 @@ import { useState, useCallback } from "react";
 interface Message {
   text: string;
   isUser: boolean;
+  isError?: boolean;
+  isConnecting?: boolean;
 }
 
 export const useMessageHandling = () => {
@@ -12,32 +14,42 @@ export const useMessageHandling = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const addMessage = useCallback((message: Message) => {
-    console.log("=== ADDING MESSAGE ===");
-    console.log("Message:", message);
-    console.log("Message text length:", message.text.length);
-    
     setMessages(prev => {
       const newMessages = [...prev, message];
-      console.log("Previous message count:", prev.length);
-      console.log("New message count:", newMessages.length);
-      console.log("All messages:", newMessages);
       return newMessages;
     });
   }, []);
 
   const addUserMessage = useCallback((text: string) => {
-    console.log("Adding user message with text:", text);
     addMessage({ text, isUser: true });
   }, [addMessage]);
 
   const addAssistantMessage = useCallback((text: string) => {
-    console.log("Adding assistant message with text:", text);
-    console.log("Text length:", text.length);
     if (!text || text.trim().length === 0) {
-      console.error("WARNING: Trying to add empty assistant message!");
+      addMessage({ 
+        text: "I'm having trouble generating a response right now. Please try again.", 
+        isUser: false, 
+        isError: true 
+      });
       return;
     }
     addMessage({ text, isUser: false });
+  }, [addMessage]);
+
+  const addErrorMessage = useCallback((errorText: string) => {
+    addMessage({ 
+      text: errorText, 
+      isUser: false, 
+      isError: true 
+    });
+  }, [addMessage]);
+
+  const addConnectionMessage = useCallback((text: string) => {
+    addMessage({ 
+      text, 
+      isUser: false, 
+      isConnecting: true 
+    });
   }, [addMessage]);
 
   return {
@@ -49,6 +61,8 @@ export const useMessageHandling = () => {
     setIsLoading,
     addMessage,
     addUserMessage,
-    addAssistantMessage
+    addAssistantMessage,
+    addErrorMessage,
+    addConnectionMessage
   };
 };

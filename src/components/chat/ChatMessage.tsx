@@ -1,35 +1,59 @@
+
+import React from "react";
 import { cn } from "@/lib/utils";
+import { Bot, User, AlertCircle } from "lucide-react";
 
 interface ChatMessageProps {
   text: string;
   isUser: boolean;
   tabIndex?: number;
+  isError?: boolean;
+  isConnecting?: boolean;
 }
 
-export const ChatMessage = ({ text, isUser, tabIndex }: ChatMessageProps) => {
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      // Add any specific interaction you want when the message is focused and activated
-      e.preventDefault();
-    }
-  };
-
+export const ChatMessage = React.memo(({ text, isUser, tabIndex, isError = false, isConnecting = false }: ChatMessageProps) => {
   return (
     <div 
-      className="w-full flex flex-col animate-fade-in"
+      className={cn(
+        "flex gap-3 p-3 rounded-lg transition-all duration-200 ease-in-out",
+        isUser 
+          ? "bg-primary text-primary-foreground ml-8 flex-row-reverse" 
+          : "bg-muted/50 mr-8",
+        isError && "bg-red-100 border border-red-300 text-red-800",
+        "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+      )}
       role="article"
-      aria-label={isUser ? "Your message" : "Allie's response"}
+      aria-label={`${isUser ? "User" : "Assistant"} message`}
       tabIndex={tabIndex}
-      onKeyDown={handleKeyDown}
     >
-      <div
-        className={cn(
-          "p-2 rounded-lg max-w-[80%] whitespace-pre-wrap w-fit focus:outline-none focus:ring-2 focus:ring-primary focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 ease-in-out transform hover:scale-[1.02]",
-          isUser ? "bg-primary text-primary-foreground self-end hover:bg-primary/90" : "bg-muted self-start hover:bg-muted/90"
+      <div className={cn(
+        "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
+        isUser ? "bg-primary-foreground/20" : "bg-primary/10"
+      )}>
+        {isError ? (
+          <AlertCircle className="w-4 h-4 text-red-600" />
+        ) : isUser ? (
+          <User className="w-4 h-4" />
+        ) : (
+          <Bot className="w-4 h-4" />
         )}
-      >
-        {text}
+      </div>
+      <div className="flex-1 space-y-1 min-w-0">
+        <div className={cn(
+          "text-xs font-medium",
+          isUser ? "text-primary-foreground/80" : "text-muted-foreground"
+        )}>
+          {isError ? "Error" : isUser ? "You" : isConnecting ? "Allie (connecting...)" : "Allie"}
+        </div>
+        <div className={cn(
+          "text-sm leading-relaxed whitespace-pre-wrap break-words",
+          isError && "font-medium"
+        )}>
+          {text}
+        </div>
       </div>
     </div>
   );
-};
+});
+
+ChatMessage.displayName = "ChatMessage";

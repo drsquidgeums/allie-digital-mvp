@@ -19,12 +19,9 @@ export const AIAssistant = React.memo(({ documentContent, documentName }: AIAssi
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [analyzing, setAnalyzing] = useState(false);
   
-  console.log("AIAssistant render - messages:", messages, "isLoading:", isLoading);
-  
   // Add initial welcome message
   useEffect(() => {
     if (messages.length === 0) {
-      console.log("Setting initial welcome message");
       setMessages([{
         text: "Hi! I'm Allie, your virtual AI learning assistant. What can I help you with today?",
         isUser: false
@@ -146,6 +143,8 @@ export const AIAssistant = React.memo(({ documentContent, documentName }: AIAssi
               key={idx} 
               text={msg.text} 
               isUser={msg.isUser}
+              isError={msg.isError}
+              isConnecting={msg.isConnecting}
               tabIndex={0}
             />
           ))}
