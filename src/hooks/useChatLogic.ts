@@ -37,7 +37,7 @@ export const useChatLogic = (documentContent?: string) => {
     setIsLoading(true);
 
     try {
-      // Check for specific document analysis requests
+      // Check for specific document analysis requests first
       if (documentContent) {
         const lowerInput = currentInput.toLowerCase();
         if (lowerInput.includes("analyze") && lowerInput.includes("document")) {
@@ -59,28 +59,27 @@ export const useChatLogic = (documentContent?: string) => {
         }
       }
       
-      // Try OpenAI API first
+      // Try OpenAI API
       console.log("=== ATTEMPTING OPENAI API CALL ===");
       let response = null;
       
       try {
         response = await sendToOpenAI(currentInput, messages);
-        console.log("OpenAI API call completed. Response:", response);
+        console.log("OpenAI API call result:", response);
       } catch (error) {
         console.error("OpenAI API call failed:", error);
       }
       
-      // Use response from API or fallback
+      // Use OpenAI response if valid, otherwise fallback
       if (response && response.trim() && response.length > 5) {
         console.log("=== USING OPENAI RESPONSE ===");
-        console.log("Response length:", response.length);
+        console.log("Response preview:", response.substring(0, 100) + "...");
         addAssistantMessage(response);
       } else {
         console.log("=== USING FALLBACK RESPONSE ===");
-        console.log("OpenAI response was:", response);
+        console.log("OpenAI response was invalid:", response);
         const fallbackResponse = getToolResponse(currentInput, documentContent);
-        console.log("Generated fallback response:", fallbackResponse);
-        console.log("Fallback response length:", fallbackResponse.length);
+        console.log("Generated fallback response preview:", fallbackResponse.substring(0, 100) + "...");
         addAssistantMessage(fallbackResponse);
       }
       
@@ -89,7 +88,7 @@ export const useChatLogic = (documentContent?: string) => {
       console.error("Error details:", error);
       // Always provide a fallback response
       const fallbackResponse = getToolResponse(currentInput, documentContent);
-      console.log("Error fallback response:", fallbackResponse);
+      console.log("Error fallback response preview:", fallbackResponse.substring(0, 100) + "...");
       addAssistantMessage(fallbackResponse);
     } finally {
       setIsLoading(false);

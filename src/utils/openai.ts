@@ -5,23 +5,37 @@ import { supabase } from '@/integrations/supabase/client';
 // Create an OpenAI client
 export const createOpenAIClient = async () => {
   try {
+    console.log("=== ATTEMPTING TO CREATE OPENAI CLIENT ===");
+    
     const { data, error } = await supabase
       .from('secrets')
       .select('secret')
       .eq('name', 'OPENAI_API_KEY')
       .maybeSingle();
 
-    if (error || !data?.secret) {
-      console.log('OpenAI API key not found in Supabase - using fallback responses');
+    console.log("Supabase secrets query result:", { data, error });
+
+    if (error) {
+      console.error('Error fetching OpenAI API key from Supabase:', error);
       return null;
     }
 
-    return new OpenAI({
+    if (!data?.secret) {
+      console.log('OpenAI API key not found in Supabase secrets table');
+      return null;
+    }
+
+    console.log("OpenAI API key found, creating client...");
+    
+    const client = new OpenAI({
       apiKey: data.secret,
       dangerouslyAllowBrowser: true
     });
+
+    console.log("OpenAI client created successfully");
+    return client;
   } catch (error) {
-    console.log('Error creating OpenAI client - using fallback responses');
+    console.error('Error creating OpenAI client:', error);
     return null;
   }
 };
@@ -29,13 +43,15 @@ export const createOpenAIClient = async () => {
 // Function to create OpenAI API request
 export const createOpenAICompletion = async (messages: any[]) => {
   try {
+    console.log("=== CREATING OPENAI COMPLETION ===");
     const openai = await createOpenAIClient();
     
     if (!openai) {
+      console.log("No OpenAI client available - throwing error");
       throw new Error("No OpenAI client available");
     }
     
-    console.log("Making OpenAI API request...");
+    console.log("Making OpenAI API request with messages:", messages.length);
     
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -44,10 +60,12 @@ export const createOpenAICompletion = async (messages: any[]) => {
       temperature: 0.7,
     });
     
-    console.log("OpenAI API request successful");
+    console.log("OpenAI API response received:", response);
+    console.log("Response content:", response.choices[0].message.content);
+    
     return response.choices[0].message.content;
   } catch (error) {
-    console.log("OpenAI API unavailable:", error);
+    console.error("OpenAI API call failed with error:", error);
     throw error;
   }
 };

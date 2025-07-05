@@ -10,8 +10,8 @@ interface Message {
 export const useChatAPI = () => {
   const sendToOpenAI = useCallback(async (currentInput: string, messages: Message[]): Promise<string | null> => {
     try {
-      console.log("=== OPENAI API CALL START ===");
-      console.log("Input:", currentInput);
+      console.log("=== SEND TO OPENAI START ===");
+      console.log("Current input:", currentInput);
       console.log("Message history length:", messages.length);
       
       const chatHistory = messages.map(msg => ({
@@ -19,7 +19,7 @@ export const useChatAPI = () => {
         content: msg.text
       }));
       
-      // Add system prompt
+      // Add system prompt and current message
       const fullHistory = [
         {
           role: "system" as const,
@@ -32,26 +32,25 @@ export const useChatAPI = () => {
         }
       ];
       
-      console.log("Sending to OpenAI with message count:", fullHistory.length);
+      console.log("Full message history for OpenAI:", fullHistory);
       
       const responseText = await createOpenAICompletion(fullHistory);
       
-      console.log("OpenAI raw response:", responseText);
+      console.log("=== OPENAI RESPONSE RECEIVED ===");
+      console.log("Raw response:", responseText);
       console.log("Response type:", typeof responseText);
       console.log("Response length:", responseText?.length);
       
       if (responseText && responseText.trim() && responseText.trim().length > 0) {
-        console.log("=== OPENAI API SUCCESS ===");
+        console.log("=== RETURNING VALID OPENAI RESPONSE ===");
         return responseText.trim();
       }
       
-      console.log("OpenAI API response was empty or invalid");
+      console.log("OpenAI response was empty or invalid, returning null");
       return null;
     } catch (error) {
-      console.error("=== OPENAI API ERROR ===");
-      console.error("Error type:", error?.constructor?.name);
-      console.error("Error message:", error?.message);
-      console.error("Full error:", error);
+      console.error("=== OPENAI API ERROR IN HOOK ===");
+      console.error("Error details:", error);
       return null;
     }
   }, []);
