@@ -3,85 +3,109 @@
 
 @layer base {
   .dark {
-    /* Enhanced purple-themed dark mode colors */
-    --background: 220 13% 18%;
-    --foreground: 210 20% 85%;
-    --card: 220 13% 21%;
-    --card-foreground: 210 20% 85%;
-    --popover: 220 13% 21%;
-    --popover-foreground: 210 20% 85%;
-    /* Purple primary matching the reference design */
+    /* Deep purple theme based on the reference design */
+    --background: 260 25% 8%;
+    --foreground: 280 15% 85%;
+    --card: 260 30% 12%;
+    --card-foreground: 280 15% 90%;
+    --popover: 260 30% 12%;
+    --popover-foreground: 280 15% 90%;
+    /* Bright purple primary from the reference */
     --primary: 280 100% 70%;
-    --primary-foreground: 210 20% 98%;
-    /* Dark blue-gray secondary */
-    --secondary: 220 13% 25%;
-    --secondary-foreground: 210 20% 85%;
-    /* Muted dark tones */
-    --muted: 220 13% 16%;
-    --muted-foreground: 210 10% 65%;
-    /* Purple accent */
+    --primary-foreground: 0 0% 100%;
+    /* Dark purple secondary */
+    --secondary: 260 25% 15%;
+    --secondary-foreground: 280 15% 85%;
+    /* Very dark muted tones */
+    --muted: 260 25% 10%;
+    --muted-foreground: 280 10% 60%;
+    /* Purple accent matching the button */
     --accent: 280 100% 70%;
-    --accent-foreground: 210 20% 98%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 50%;
-    --destructive-foreground: 210 20% 98%;
-    /* Subtle borders */
-    --border: 220 13% 28%;
-    --input: 220 13% 25%;
+    --destructive-foreground: 0 0% 100%;
+    /* Subtle dark borders */
+    --border: 260 20% 20%;
+    --input: 260 25% 15%;
     --ring: 280 100% 70%;
 
-    /* Enhanced dashboard theme colors */
+    /* Enhanced theme colors matching the reference */
     --chat-user-bg: 280 100% 70%;
-    --chat-user-text: 210 20% 98%;
-    --chat-assistant-bg: 220 13% 25%;
-    --chat-assistant-text: 210 20% 85%;
+    --chat-user-text: 0 0% 100%;
+    --chat-assistant-bg: 260 25% 15%;
+    --chat-assistant-text: 280 15% 85%;
     --loading-indicator: 280 100% 70%;
     --focus-ring: 280 100% 70%;
-    --hover-bg: 220 13% 23%;
+    --hover-bg: 260 25% 13%;
   }
 
-  /* Purple-to-pink gradient background for the main layout */
+  /* Deep purple geometric gradient background matching the reference */
   .dark body {
-    background: linear-gradient(135deg, hsl(220, 13%, 18%) 0%, hsl(220, 13%, 16%) 100%);
+    background: linear-gradient(135deg, 
+      hsl(260, 40%, 8%) 0%, 
+      hsl(280, 50%, 12%) 25%, 
+      hsl(260, 45%, 10%) 50%, 
+      hsl(280, 35%, 8%) 75%, 
+      hsl(260, 40%, 6%) 100%);
+    background-attachment: fixed;
   }
 
-  /* Card backgrounds with dark blue-gray tint */
+  /* Add geometric pattern overlay */
+  .dark body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(45deg, transparent 35%, rgba(139, 69, 255, 0.1) 50%, transparent 65%),
+      linear-gradient(-45deg, transparent 35%, rgba(139, 69, 255, 0.1) 50%, transparent 65%);
+    background-size: 100px 100px, 100px 100px;
+    background-position: 0 0, 50px 50px;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Dark card backgrounds with purple tint */
   .dark .card-elevated,
   .dark .sidebar-elevated,
   .dark .dialog-elevated {
-    background: linear-gradient(135deg, hsl(220, 13%, 21%) 0%, hsl(220, 13%, 19%) 100%);
-    border: 1px solid hsl(220, 13%, 28%);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, 
+      hsl(260, 30%, 12%) 0%, 
+      hsl(280, 25%, 10%) 100%);
+    border: 1px solid hsl(260, 20%, 20%);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
   }
 
-  /* Purple gradient sidebar like in the reference */
+  /* Sidebar with subtle purple gradient */
   .dark .sidebar-elevated {
-    background: linear-gradient(180deg, hsl(280, 100%, 70%) 0%, hsl(320, 100%, 65%) 50%, hsl(280, 100%, 70%) 100%);
-    border-right: 1px solid hsl(280, 50%, 40%);
-    color: white;
+    background: linear-gradient(180deg, 
+      hsl(260, 30%, 12%) 0%, 
+      hsl(280, 25%, 10%) 50%, 
+      hsl(260, 30%, 12%) 100%);
+    border-right: 1px solid hsl(280, 20%, 25%);
   }
 
-  /* Sidebar text colors */
-  .dark .sidebar-elevated * {
-    color: white !important;
-  }
-
-  .dark .sidebar-elevated .text-muted-foreground {
-    color: rgba(255, 255, 255, 0.8) !important;
-  }
-
-  /* Purple accent for buttons and interactive elements */
+  /* Bright purple buttons matching the reference */
   .dark .button-primary-enhanced,
   .dark button[data-state="on"] {
-    background: linear-gradient(135deg, hsl(280, 100%, 70%) 0%, hsl(320, 100%, 65%) 100%);
+    background: linear-gradient(135deg, 
+      hsl(280, 100%, 70%) 0%, 
+      hsl(290, 100%, 65%) 100%);
     color: white;
-    box-shadow: 0 4px 20px rgba(184, 50, 250, 0.3);
+    box-shadow: 0 4px 20px rgba(184, 50, 250, 0.4);
+    border: none;
   }
 
   .dark .button-primary-enhanced:hover,
   .dark button[data-state="on"]:hover {
-    background: linear-gradient(135deg, hsl(280, 100%, 75%) 0%, hsl(320, 100%, 70%) 100%);
-    box-shadow: 0 6px 25px rgba(184, 50, 250, 0.4);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, 
+      hsl(280, 100%, 75%) 0%, 
+      hsl(290, 100%, 70%) 100%);
+    box-shadow: 0 6px 25px rgba(184, 50, 250, 0.6);
+    transform: translateY(-2px);
   }
 
   /* Purple-themed focus states */
@@ -90,54 +114,58 @@
     outline-offset: 2px;
   }
 
-  /* Input fields with dark theme */
+  /* Dark input fields with purple accents */
   .dark input,
   .dark textarea {
-    background-color: hsl(220, 13%, 25%);
-    border: 1px solid hsl(220, 13%, 28%);
-    color: hsl(210, 20%, 85%);
+    background-color: hsl(260, 25%, 15%);
+    border: 1px solid hsl(260, 20%, 20%);
+    color: hsl(280, 15%, 90%);
   }
 
   .dark input:focus,
   .dark textarea:focus {
     border-color: hsl(280, 100%, 70%);
-    box-shadow: 0 0 0 2px rgba(184, 50, 250, 0.2);
+    box-shadow: 0 0 0 2px rgba(184, 50, 250, 0.3);
+    background-color: hsl(260, 25%, 18%);
   }
 
-  /* Purple accent for hover states */
+  /* Purple hover states */
   .dark .hover\:bg-accent:hover,
   .dark .button-hover:hover {
-    background-color: hsl(220, 13%, 23%);
+    background-color: hsl(260, 25%, 13%);
     color: hsl(280, 100%, 70%);
   }
 
-  /* Dropdown and popover styling */
+  /* Dropdown and popover with dark purple theme */
   .dark .popover-content,
   .dark .dropdown-content {
-    background: linear-gradient(135deg, hsl(220, 13%, 21%) 0%, hsl(220, 13%, 19%) 100%);
-    border: 1px solid hsl(220, 13%, 28%);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(135deg, 
+      hsl(260, 30%, 12%) 0%, 
+      hsl(280, 25%, 10%) 100%);
+    border: 1px solid hsl(260, 20%, 20%);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(15px);
   }
 
-  /* Chart and data visualization colors to match the purple theme */
+  /* Chart colors matching the purple theme */
   .dark [data-chart="1"] {
     color: hsl(280, 100%, 70%);
   }
 
   .dark [data-chart="2"] {
-    color: hsl(190, 100%, 60%);
+    color: hsl(290, 100%, 65%);
   }
 
   .dark [data-chart="3"] {
-    color: hsl(320, 100%, 65%);
+    color: hsl(270, 100%, 75%);
   }
 
   .dark [data-chart="4"] {
-    color: hsl(260, 100%, 75%);
+    color: hsl(260, 100%, 70%);
   }
 
   .dark [data-chart="5"] {
-    color: hsl(200, 100%, 65%);
+    color: hsl(300, 100%, 65%);
   }
 }
 
@@ -162,26 +190,26 @@ input:focus {
 }
 
 .dark input[type="url"] {
-  background-color: hsl(220, 13%, 25%) !important;
-  color: hsl(210, 20%, 85%) !important;
-  border-color: hsl(220, 13%, 28%);
+  background-color: hsl(260, 25%, 15%) !important;
+  color: hsl(280, 15%, 90%) !important;
+  border-color: hsl(260, 20%, 20%);
 }
 
 .dark input[type="url"]:focus {
-  background-color: hsl(220, 13%, 25%) !important;
-  color: hsl(210, 20%, 85%) !important;
+  background-color: hsl(260, 25%, 18%) !important;
+  color: hsl(280, 15%, 90%) !important;
   border-color: hsl(280, 100%, 70%);
 }
 
 .dark input[type="url"]::placeholder {
-  color: hsl(210, 10%, 65%) !important;
+  color: hsl(280, 10%, 60%) !important;
 }
 
 .dark #name,
 .dark #email {
   background-color: white !important;
   color: #000000 !important;
-  border-color: hsl(220, 13%, 28%);
+  border-color: hsl(260, 20%, 20%);
 }
 
 .dark #name:focus,
@@ -197,23 +225,23 @@ input:focus {
 }
 
 .dark input[aria-label="Chat input"] {
-  background-color: hsl(220, 13%, 25%) !important;
-  color: hsl(210, 20%, 85%) !important;
-  border-color: hsl(220, 13%, 28%);
+  background-color: hsl(260, 25%, 15%) !important;
+  color: hsl(280, 15%, 90%) !important;
+  border-color: hsl(260, 20%, 20%);
 }
 
 .dark input[aria-label="Chat input"]:focus {
-  background-color: hsl(220, 13%, 25%) !important;
-  color: hsl(210, 20%, 85%) !important;
+  background-color: hsl(260, 25%, 18%) !important;
+  color: hsl(280, 15%, 90%) !important;
   border-color: hsl(280, 100%, 70%);
 }
 
 .dark input[aria-label="Chat input"]::placeholder {
-  color: hsl(210, 10%, 65%) !important;
+  color: hsl(280, 10%, 60%) !important;
 }
 
 .dark .prose {
-  color: hsl(210, 20%, 80%) !important;
+  color: hsl(280, 15%, 85%) !important;
 }
 
 .dark .prose h1,
@@ -226,21 +254,19 @@ input:focus {
 }
 
 .dark .prose p {
-  color: hsl(210, 20%, 75%) !important;
+  color: hsl(280, 15%, 80%) !important;
 }
 
 .dark .prose ul,
 .dark .prose ol {
-  color: hsl(210, 20%, 75%) !important;
+  color: hsl(280, 15%, 80%) !important;
 }
 
 .dark .prose li {
-  color: hsl(210, 20%, 75%) !important;
+  color: hsl(280, 15%, 80%) !important;
 }
 
 .dark [role="region"] {
-  background-color: hsl(220, 13%, 21%) !important;
-  border-color: hsl(220, 13%, 28%) !important;
+  background-color: hsl(260, 30%, 12%) !important;
+  border-color: hsl(260, 20%, 20%) !important;
 }
-
-
