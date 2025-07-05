@@ -1,6 +1,4 @@
 
-
-
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 @import "./styles/base.css";
 @import "./styles/base-theme.css";
@@ -64,7 +62,7 @@
 }
 
 .dark {
-  /* Dark Mode - High Contrast Color Scheme */
+  /* High Contrast Dark Mode Color Scheme */
   --background: 0 0% 0%;
   --foreground: 0 0% 100%;
   --card: 0 0% 0%;
@@ -102,20 +100,24 @@ body {
   color: hsl(var(--foreground));
 }
 
-/* Dark mode component outline enhancements for better distinction */
+/* Enhanced Dark Mode Component Outlines */
 .dark button,
 .dark .card,
 .dark [role="button"],
 .dark input,
 .dark textarea,
-.dark select {
-  border: 1px solid hsl(var(--border));
+.dark select,
+.dark div[class*="bg-"],
+.dark section,
+.dark article {
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dark button:hover,
-.dark [role="button"]:hover {
-  border-color: hsl(var(--primary));
-  box-shadow: 0 0 0 1px hsl(var(--primary));
+.dark [role="button"]:hover,
+.dark .card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 /* Enhanced focus states for WCAG compliance */
@@ -123,51 +125,80 @@ body {
 .dark *:focus {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Ensure proper contrast for interactive elements */
-.dark .hover\:bg-accent:hover {
-  background-color: hsl(var(--accent));
-  border-color: hsl(var(--primary));
-}
-
-/* Better button contrast in dark mode - using direct CSS properties */
-.dark .bg-primary {
-  background-color: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-  border: 1px solid hsl(var(--primary));
-}
-
-.dark .bg-secondary {
+/* Better button contrast in dark mode */
+.dark button {
   background-color: hsl(var(--secondary));
   color: hsl(var(--secondary-foreground));
-  border: 1px solid hsl(var(--secondary));
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* Ensure destructive buttons have proper contrast */
-.dark .bg-destructive {
-  background-color: hsl(var(--destructive));
-  color: hsl(var(--destructive-foreground));
-  border: 1px solid hsl(var(--destructive));
-}
-
-/* Ghost button enhancements for dark mode */
-.dark .variant-ghost {
-  border: 1px solid hsl(var(--border));
-}
-
-.dark .variant-ghost:hover {
+.dark button:hover {
   background-color: hsl(var(--accent));
-  border-color: hsl(var(--primary));
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
-/* Outline variant enhancements */
-.dark .variant-outline {
-  border: 1.5px solid hsl(var(--border));
-  background-color: transparent;
+/* Card and component separation */
+.dark .card,
+.dark [data-radix-aspect-ratio-wrapper] > div,
+.dark .bg-card {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: hsl(var(--card));
 }
 
-.dark .variant-outline:hover {
+.dark .card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Input field separation */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: hsl(var(--input));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: hsl(var(--foreground));
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: rgba(255, 255, 255, 0.3);
+  background-color: hsl(var(--background));
+}
+
+/* Menu and dropdown elements with better separation */
+.dark [role="menu"],
+.dark [role="menubar"],
+.dark [role="menuitem"],
+.dark .dropdown-content,
+.dark .popover-content {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: hsl(var(--popover));
+}
+
+/* Enhanced component visibility for interactive elements */
+.dark .hover\:bg-accent:hover {
   background-color: hsl(var(--accent));
-  border-color: hsl(var(--primary));
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Sidebar and navigation elements */
+.dark nav,
+.dark aside,
+.dark [role="navigation"] {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Light purple accent borders for primary elements */
+.dark button[class*="primary"],
+.dark .bg-primary {
+  border-color: rgba(165, 148, 249, 0.3); /* Light purple outline */
+}
+
+.dark button[class*="primary"]:hover,
+.dark .bg-primary:hover {
+  border-color: rgba(165, 148, 249, 0.5);
 }
