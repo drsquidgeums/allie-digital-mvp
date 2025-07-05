@@ -1,5 +1,6 @@
 
 
+
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 @import "./styles/base.css";
 @import "./styles/base-theme.css";
@@ -63,44 +64,33 @@
 }
 
 .dark {
-  /* Dark Mode - Allie Digital Color Scheme - WCAG AAA Compliant */
-  --background: 217 25% 14%;    /* #1A1F2C */
-  --foreground: 0 0% 100%;      /* #FFFFFF */
-  --card: 217 25% 17%;          /* Lighter for better distinction */
+  /* Dark Mode - High Contrast Color Scheme */
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 0%;
   --card-foreground: 0 0% 100%;
-  --popover: 217 25% 16%;
+  --popover: 0 0% 0%;
   --popover-foreground: 0 0% 100%;
-  
-  /* Primary Purple - Brighter for better contrast */
-  --primary: 258 85% 80%;        /* Brighter for AAA compliance */
-  --primary-foreground: 217 25% 14%;
-  
-  /* Secondary Blue - Brighter for better contrast */
-  --secondary: 200 98% 45%;      /* Brighter for AAA compliance */
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 0 0% 15%;
   --secondary-foreground: 0 0% 100%;
-  
-  /* Muted colors with better contrast */
-  --muted: 215 25% 20%;          /* Lighter for better distinction */
-  --muted-foreground: 220 13% 88%; /* Higher contrast */
-  
-  /* Accent colors with better contrast */
-  --accent: 215 25% 22%;         /* Lighter for better distinction */
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 80%;
+  --accent: 0 0% 15%;
   --accent-foreground: 0 0% 100%;
-  
-  --destructive: 0 70% 55%;      /* Brighter for better contrast */
+  --destructive: 0 100% 50%;
   --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 100%;
+  --input: 0 0% 100%;
+  --ring: 0 0% 100%;
   
-  /* Borders and inputs with subtle outlines */
-  --border: 240 15% 25%;         /* Lighter for better visibility */
-  --input: 240 15% 25%;          /* Lighter for better visibility */
-  --ring: 258 85% 80%;           /* Brighter for better visibility */
-  
-  /* Chart colors for dark mode - AAA compliant */
-  --chart-1: 258 85% 80%;
-  --chart-2: 200 98% 45%;
-  --chart-3: 30 80% 60%;
-  --chart-4: 280 65% 65%;
-  --chart-5: 340 75% 60%;
+  /* Chart colors for dark mode - high contrast */
+  --chart-1: 0 0% 100%;
+  --chart-2: 0 0% 80%;
+  --chart-3: 0 0% 60%;
+  --chart-4: 0 0% 40%;
+  --chart-5: 0 0% 20%;
 }
 
 * {
@@ -124,8 +114,8 @@ body {
 
 .dark button:hover,
 .dark [role="button"]:hover {
-  border-color: hsla(0, 0%, 100%, 0.2);
-  box-shadow: 0 0 0 1px hsla(0, 0%, 100%, 0.1);
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 1px hsl(var(--primary));
 }
 
 /* Enhanced focus states for WCAG compliance */
@@ -138,7 +128,7 @@ body {
 /* Ensure proper contrast for interactive elements */
 .dark .hover\:bg-accent:hover {
   background-color: hsl(var(--accent));
-  border-color: hsla(0, 0%, 100%, 0.15);
+  border-color: hsl(var(--primary));
 }
 
 /* Better button contrast in dark mode - using direct CSS properties */
@@ -163,12 +153,12 @@ body {
 
 /* Ghost button enhancements for dark mode */
 .dark .variant-ghost {
-  border: 1px solid hsla(0, 0%, 100%, 0.1);
+  border: 1px solid hsl(var(--border));
 }
 
 .dark .variant-ghost:hover {
   background-color: hsl(var(--accent));
-  border-color: hsla(0, 0%, 100%, 0.2);
+  border-color: hsl(var(--primary));
 }
 
 /* Outline variant enhancements */
