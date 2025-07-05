@@ -1,15 +1,16 @@
 
 
+
 @layer base {
   .dark {
-    /* Analytics Dashboard Dark Theme Colors based on the reference design */
+    /* Enhanced purple-themed dark mode colors */
     --background: 220 13% 18%;
     --foreground: 210 20% 85%;
     --card: 220 13% 21%;
     --card-foreground: 210 20% 85%;
     --popover: 220 13% 21%;
     --popover-foreground: 210 20% 85%;
-    /* Purple primary matching the sidebar gradient */
+    /* Purple primary matching the reference design */
     --primary: 280 100% 70%;
     --primary-foreground: 210 20% 98%;
     /* Dark blue-gray secondary */
@@ -92,7 +93,7 @@
   /* Input fields with dark theme */
   .dark input,
   .dark textarea {
-    background: hsl(220, 13%, 25%);
+    background-color: hsl(220, 13%, 25%);
     border: 1px solid hsl(220, 13%, 28%);
     color: hsl(210, 20%, 85%);
   }
@@ -106,7 +107,7 @@
   /* Purple accent for hover states */
   .dark .hover\:bg-accent:hover,
   .dark .button-hover:hover {
-    background: hsl(220, 13%, 23%);
+    background-color: hsl(220, 13%, 23%);
     color: hsl(280, 100%, 70%);
   }
 
@@ -118,7 +119,7 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
 
-  /* Chart and data visualization colors to match the analytics theme */
+  /* Chart and data visualization colors to match the purple theme */
   .dark [data-chart="1"] {
     color: hsl(280, 100%, 70%);
   }
@@ -241,4 +242,5 @@ input:focus {
   background-color: hsl(220, 13%, 21%) !important;
   border-color: hsl(220, 13%, 28%) !important;
 }
+
 
