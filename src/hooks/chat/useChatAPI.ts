@@ -12,7 +12,7 @@ interface Message {
 export const useChatAPI = () => {
   const sendToOpenAI = useCallback(async (currentInput: string, messages: Message[]): Promise<string | null> => {
     try {
-      console.log("Preparing OpenAI request...");
+      console.log("=== CHAT API: Preparing OpenAI request ===");
       
       const chatHistory = messages
         .filter(msg => !msg.isError && !msg.isConnecting)
@@ -33,17 +33,18 @@ export const useChatAPI = () => {
         }
       ];
       
+      console.log("=== CHAT API: Sending to OpenAI ===");
       const responseText = await createOpenAICompletion(fullHistory);
       
       if (responseText && typeof responseText === 'string' && responseText.trim().length > 0) {
-        console.log("Valid OpenAI response received");
+        console.log("=== CHAT API: Valid OpenAI response received ===");
         return responseText.trim();
       }
       
-      console.log("Invalid or empty OpenAI response");
+      console.log("=== CHAT API: Invalid or empty OpenAI response ===");
       return null;
     } catch (error) {
-      console.error("OpenAI API error:", error);
+      console.error("=== CHAT API: OpenAI API error ===", error);
       // Don't throw the error, just return null to allow fallback
       return null;
     }

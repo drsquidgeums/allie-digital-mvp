@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card } from './ui/card';
 import { createOpenAICompletion, SYSTEM_PROMPT } from '@/utils/openai';
+import { Loader2 } from 'lucide-react';
 
 export const OpenAITest = () => {
   const [input, setInput] = useState('');
@@ -24,15 +25,19 @@ export const OpenAITest = () => {
         { role: 'user' as const, content: input }
       ];
       
+      console.log("Testing OpenAI with messages:", messages);
       const result = await createOpenAICompletion(messages);
       
       if (result) {
         setResponse(result);
+        console.log("Test successful:", result);
       } else {
         setError('No response received from OpenAI');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(errorMessage);
+      console.error("Test failed:", err);
     } finally {
       setLoading(false);
     }
@@ -48,10 +53,18 @@ export const OpenAITest = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Enter a message to test OpenAI..."
-            onKeyDown={(e) => e.key === 'Enter' && testOpenAI()}
+            onKeyDown={(e) => e.key === 'Enter' && !loading && testOpenAI()}
+            disabled={loading}
           />
-          <Button onClick={testOpenAI} disabled={loading}>
-            {loading ? 'Testing...' : 'Test'}
+          <Button onClick={testOpenAI} disabled={loading || !input.trim()}>
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Testing...
+              </>
+            ) : (
+              'Test'
+            )}
           </Button>
         </div>
         
