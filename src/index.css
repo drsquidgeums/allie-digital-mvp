@@ -1,5 +1,4 @@
 
-
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 @import "./styles/base.css";
 @import "./styles/base-theme.css";
@@ -30,22 +29,22 @@
   --popover-foreground: 240 10% 3.9%;
   
   /* Primary - Darker Purple for better contrast */
-  --primary: 258 85% 65%;  /* Darker for AAA compliance */
+  --primary: 258 85% 65%;
   --primary-foreground: 0 0% 100%;
   
   /* Secondary - Darker Aqua Blue for better contrast */
-  --secondary: 200 98% 35%;  /* Darker for AAA compliance */
+  --secondary: 200 98% 35%;
   --secondary-foreground: 0 0% 100%;
   
   /* Muted colors with better contrast */
   --muted: 258 20% 94%;
-  --muted-foreground: 258 25% 20%;  /* Higher contrast */
+  --muted-foreground: 258 25% 20%;
   
   /* Accent colors with better contrast */
   --accent: 200 20% 92%;
-  --accent-foreground: 200 98% 20%;  /* Higher contrast */
+  --accent-foreground: 200 98% 20%;
   
-  --destructive: 0 84.2% 50%;  /* Darker for better contrast */
+  --destructive: 0 84.2% 50%;
   --destructive-foreground: 0 0% 100%;
   
   /* Borders with better visibility */
@@ -63,33 +62,44 @@
 }
 
 .dark {
-  /* High Contrast Dark Mode Color Scheme */
-  --background: 0 0% 0%;
+  /* Dark Mode - Purple/Pink Analytics Theme like the reference image */
+  --background: 240 10% 8%;  /* Very dark background like the reference */
   --foreground: 0 0% 100%;
-  --card: 0 0% 0%;
+  --card: 240 10% 12%;  /* Slightly lighter for cards */
   --card-foreground: 0 0% 100%;
-  --popover: 0 0% 0%;
+  --popover: 240 10% 12%;
   --popover-foreground: 0 0% 100%;
-  --primary: 0 0% 100%;
-  --primary-foreground: 0 0% 0%;
-  --secondary: 0 0% 15%;
-  --secondary-foreground: 0 0% 100%;
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 80%;
-  --accent: 0 0% 15%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 100% 50%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 0 0% 100%;
-  --input: 0 0% 100%;
-  --ring: 0 0% 100%;
   
-  /* Chart colors for dark mode - high contrast */
-  --chart-1: 0 0% 100%;
-  --chart-2: 0 0% 80%;
-  --chart-3: 0 0% 60%;
-  --chart-4: 0 0% 40%;
-  --chart-5: 0 0% 20%;
+  /* Primary - Purple from reference image */
+  --primary: 270 95% 70%;  /* Bright purple */
+  --primary-foreground: 0 0% 100%;
+  
+  /* Secondary - Pink/Magenta from reference */
+  --secondary: 320 85% 70%;  /* Pink accent */
+  --secondary-foreground: 0 0% 100%;
+  
+  /* Muted colors */
+  --muted: 240 10% 15%;
+  --muted-foreground: 0 0% 70%;
+  
+  /* Accent colors */
+  --accent: 240 10% 15%;
+  --accent-foreground: 0 0% 100%;
+  
+  --destructive: 0 85% 60%;
+  --destructive-foreground: 0 0% 100%;
+  
+  /* Borders */
+  --border: 240 10% 20%;
+  --input: 240 10% 15%;
+  --ring: 270 95% 70%;
+  
+  /* Chart colors for dark mode */
+  --chart-1: 270 95% 70%;  /* Purple */
+  --chart-2: 320 85% 70%;  /* Pink */
+  --chart-3: 200 85% 60%;  /* Cyan */
+  --chart-4: 280 80% 65%;  /* Light purple */
+  --chart-5: 340 80% 65%;  /* Light pink */
 }
 
 * {
@@ -124,20 +134,20 @@ body {
 /* Enhanced focus states for WCAG compliance */
 .dark *:focus-visible,
 .dark *:focus {
-  outline: 2px solid rgba(165, 148, 249, 0.8) !important;
+  outline: 2px solid hsl(var(--primary)) !important;
   outline-offset: 2px;
   border-color: rgba(255, 255, 255, 0.4) !important;
 }
 
 /* Better button contrast in dark mode */
 .dark button {
-  background-color: hsl(0 0% 15%) !important;
-  color: hsl(0 0% 100%) !important;
+  background-color: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
 .dark button:hover {
-  background-color: hsl(0 0% 20%) !important;
+  background-color: hsl(var(--accent)) !important;
   border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
@@ -146,7 +156,7 @@ body {
 .dark [data-radix-aspect-ratio-wrapper] > div,
 .dark .bg-card {
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  background-color: hsl(0 0% 5%) !important;
+  background-color: hsl(var(--card)) !important;
 }
 
 .dark .card:hover {
@@ -158,16 +168,16 @@ body {
 .dark input,
 .dark textarea,
 .dark select {
-  background-color: hsl(0 0% 10%) !important;
+  background-color: hsl(var(--input)) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  color: hsl(0 0% 100%) !important;
+  color: hsl(var(--foreground)) !important;
 }
 
 .dark input:focus,
 .dark textarea:focus,
 .dark select:focus {
   border-color: rgba(255, 255, 255, 0.4) !important;
-  background-color: hsl(0 0% 5%) !important;
+  background-color: hsl(var(--card)) !important;
 }
 
 /* Menu and dropdown elements with better separation */
@@ -177,12 +187,12 @@ body {
 .dark .dropdown-content,
 .dark .popover-content {
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  background-color: hsl(0 0% 8%) !important;
+  background-color: hsl(var(--card)) !important;
 }
 
 /* Enhanced component visibility for interactive elements */
 .dark .hover\:bg-accent:hover {
-  background-color: hsl(0 0% 20%) !important;
+  background-color: hsl(var(--accent)) !important;
   border-color: rgba(255, 255, 255, 0.25) !important;
 }
 
@@ -193,32 +203,32 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
-/* Light purple accent borders for primary elements */
+/* Purple accent borders for primary elements */
 .dark button[class*="primary"],
 .dark .bg-primary {
-  border-color: rgba(165, 148, 249, 0.4) !important;
-  background-color: rgba(165, 148, 249, 0.2) !important;
+  border-color: hsl(var(--primary)) !important;
+  background-color: hsl(var(--primary)) !important;
 }
 
 .dark button[class*="primary"]:hover,
 .dark .bg-primary:hover {
-  border-color: rgba(165, 148, 249, 0.6) !important;
-  background-color: rgba(165, 148, 249, 0.3) !important;
+  border-color: hsl(var(--primary)) !important;
+  background-color: hsl(var(--primary)) !important;
+  opacity: 0.9;
 }
 
 /* Additional component outlines for better visual hierarchy */
 .dark .bg-muted {
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  background-color: hsl(0 0% 12%) !important;
+  background-color: hsl(var(--muted)) !important;
 }
 
 .dark .bg-accent {
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  background-color: hsl(0 0% 15%) !important;
+  background-color: hsl(var(--accent)) !important;
 }
 
 /* Ensure all divs with background classes get outlines */
 .dark div[class*="bg-"]:not(.bg-transparent):not(.bg-inherit) {
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
-
