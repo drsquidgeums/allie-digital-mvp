@@ -11,7 +11,7 @@ import { Task } from "@/types/task";
 interface TaskPlannerProps {
   selectedDate?: Date;
   tasks: Task[];
-  onAddTask: (text: string) => void;
+  onAddTask: (text: string, taskDate?: Date) => void;
   onToggleTask: (id: string) => void;
   onDeleteTask: (id: string) => void;
 }
@@ -29,13 +29,16 @@ export const TaskPlanner = memo(({ selectedDate, tasks, onAddTask, onToggleTask,
   };
 
   const handleAddTask = useCallback((text: string) => {
-    onAddTask(text);
+    console.log('TaskPlanner handleAddTask called with:', text);
+    onAddTask(text, selectedDate);
     setShowStarburst(true);
     setTimeout(() => setShowStarburst(false), 700);
+    
     emitTaskNotification(
       "New Task Added",
       `Task "${text}" has been added to your list for ${selectedDate?.toLocaleDateString() || new Date().toLocaleDateString()}`
     );
+    
     toast({
       title: "Task added",
       description: "New task has been created successfully",
@@ -43,6 +46,7 @@ export const TaskPlanner = memo(({ selectedDate, tasks, onAddTask, onToggleTask,
   }, [onAddTask, selectedDate, toast]);
 
   const handleToggleTask = useCallback((id: string) => {
+    console.log('TaskPlanner handleToggleTask called with:', id);
     onToggleTask(id);
     const task = tasks.find(t => t.id === id);
     if (task) {
@@ -62,6 +66,7 @@ export const TaskPlanner = memo(({ selectedDate, tasks, onAddTask, onToggleTask,
   }, [onToggleTask, tasks, toast]);
 
   const handleDeleteTask = useCallback((id: string) => {
+    console.log('TaskPlanner handleDeleteTask called with:', id);
     const task = tasks.find(t => t.id === id);
     if (task) {
       emitTaskNotification(
@@ -75,6 +80,8 @@ export const TaskPlanner = memo(({ selectedDate, tasks, onAddTask, onToggleTask,
       description: "Task has been removed from your list",
     });
   }, [onDeleteTask, tasks, toast]);
+
+  console.log('TaskPlanner render - tasks:', tasks.length, 'points:', points);
 
   return (
     <div className="h-full flex flex-col">

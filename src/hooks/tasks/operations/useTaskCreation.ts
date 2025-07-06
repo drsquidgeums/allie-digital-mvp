@@ -6,8 +6,11 @@ import { toast } from "sonner";
 const categories = ["work", "personal", "study", "health"];
 
 export const useTaskCreation = (tasks: Task[], updateTasks: (tasks: Task[]) => void, getTaskPoints: (task: Task) => number) => {
-  const handleAddTask = useCallback(async (text: string, taskDate: Date) => {
-    if (!text.trim()) return;
+  const handleAddTask = useCallback(async (text: string, taskDate?: Date) => {
+    if (!text.trim()) {
+      console.log('Empty task text, not adding');
+      return;
+    }
     
     console.log('Adding task:', text);
     
