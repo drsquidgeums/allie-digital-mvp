@@ -1,121 +1,54 @@
 
 import { useState, useEffect } from "react";
 import { Task } from "@/types/task";
-import { extendedSupabase } from "@/integrations/extendedSupabaseClient";
-import { toast } from "sonner";
 
-// Shared state for tasks
-let sharedTasks: Task[] = [];
-const listeners = new Set<(tasks: Task[]) => void>();
+// Simple local storage key
+const TASKS_STORAGE_KEY = 'local_tasks';
 
-const notifyListeners = () => {
-  console.log('Notifying listeners with tasks:', sharedTasks.length);
-  listeners.forEach(listener => listener(sharedTasks));
+// Load tasks from localStorage
+const loadTasksFromStorage = (): Task[] => {
+  try {
+    const stored = localStorage.getItem(TASKS_STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return parsed.map((task: any) => ({
+        ...task,
+        createdAt: new Date(task.createdAt)
+      }));
+    }
+  } catch (error) {
+    console.error('Error loading tasks from storage:', error);
+  }
+  return [];
+};
+
+// Save tasks to localStorage
+const saveTasksToStorage = (tasks: Task[]) => {
+  try {
+    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
+    console.log('Tasks saved to localStorage:', tasks.length);
+  } catch (error) {
+    console.error('Error saving tasks to storage:', error);
+  }
 };
 
 export const useTaskStore = () => {
-  const [tasks, setTasks] = useState<Task[]>(sharedTasks);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch tasks from Supabase on mount
+  // Load tasks on mount
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        setLoading(true);
-        console.log('Fetching tasks from Supabase...');
-        
-        const { data: { user }, error: userError } = await extendedSupabase.auth.getUser();
-        console.log('Current user for task fetch:', user, 'Error:', userError);
-        
-        if (userError || !user) {
-          console.log('No authenticated user, keeping existing local tasks');
-          // Don't clear existing tasks if there's no user
-          // This preserves locally created tasks
-          setLoading(false);
-          return;
-        }
-        
-        const { data, error } = await extendedSupabase
-          .from('tasks')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        console.log('Supabase tasks response:', { data, error });
-
-        if (error) {
-          console.error('Error fetching tasks:', error);
-          toast.error("Failed to load tasks from database");
-          setLoading(false);
-          return;
-        }
-
-        // Convert Supabase data to Task objects
-        const loadedTasks: Task[] = (data || []).map(task => ({
-          id: task.id,
-          text: task.text,
-          completed: task.completed || false,
-          createdAt: new Date(task.created_at as string),
-          points: task.points || 10,
-          color: task.color || undefined,
-          category: task.category || undefined
-        }));
-
-        console.log('Loaded tasks from database:', loadedTasks.length);
-        sharedTasks = loadedTasks;
-        notifyListeners();
-      } catch (err) {
-        console.error('Error in fetchTasks:', err);
-        sharedTasks = [];
-        notifyListeners();
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTasks();
-
-    // Set up realtime subscription
-    const channel = extendedSupabase
-      .channel('tasks-changes')
-      .on('postgres_changes', 
-        { 
-          event: '*', 
-          schema: 'public', 
-          table: 'tasks' 
-        }, 
-        (payload) => {
-          console.log('Realtime task change:', payload);
-          // Refetch tasks when changes occur
-          fetchTasks();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      extendedSupabase.removeChannel(channel);
-    };
-  }, []);
-
-  useEffect(() => {
-    const listener = (newTasks: Task[]) => {
-      console.log('Task store listener - updating local state with tasks:', newTasks.length);
-      setTasks([...newTasks]); // Create new array to force re-render
-    };
-    
-    listeners.add(listener);
-    
-    // Set initial state
-    setTasks([...sharedTasks]);
-    
-    return () => {
-      listeners.delete(listener);
-    };
+    console.log('Loading tasks from localStorage...');
+    const loadedTasks = loadTasksFromStorage();
+    setTasks(loadedTasks);
+    setLoading(false);
+    console.log('Loaded tasks:', loadedTasks.length);
   }, []);
 
   const updateTasks = async (newTasks: Task[]) => {
     console.log('updateTasks called with:', newTasks.length, 'tasks');
-    sharedTasks = [...newTasks]; // Create new array
-    notifyListeners();
+    setTasks(newTasks);
+    saveTasksToStorage(newTasks);
   };
 
   return {

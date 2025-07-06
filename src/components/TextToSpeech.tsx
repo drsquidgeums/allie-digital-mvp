@@ -3,24 +3,34 @@ import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Play, Pause, Square, ArrowDownToLine } from "lucide-react";
+import { Play, Pause, Square, Volume2 } from "lucide-react";
 import { usePersistedText } from "@/hooks/usePersistedText";
 import { useToast } from "@/hooks/use-toast";
-import { useEditorContent } from "@/hooks/useEditorContent";
 
 export const TextToSpeech = () => {
   const [text, setText] = usePersistedText("tts");
   const [selectedVoice, setSelectedVoice] = React.useState("");
   const [voices, setVoices] = React.useState<SpeechSynthesisVoice[]>([]);
   const [isPlaying, setIsPlaying] = React.useState(false);
+  const [isSupported, setIsSupported] = React.useState(false);
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = React.useRef<SpeechSynthesisUtterance | null>(null);
   const { toast } = useToast();
-  const { content, getSelectedText } = useEditorContent();
 
   React.useEffect(() => {
+    // Check if speech synthesis is supported
+    const supported = 'speechSynthesis' in window;
+    setIsSupported(supported);
+    
+    if (!supported) {
+      console.log('Speech synthesis not supported');
+      return;
+    }
+
     const loadVoices = () => {
       const availableVoices = speechSynthesis.getVoices();
+      console.log('Available voices:', availableVoices.length);
+      
       // Filter for English voices only
       const englishVoices = availableVoices.filter(voice => 
         voice.lang.includes('en')
@@ -43,13 +53,6 @@ export const TextToSpeech = () => {
     };
   }, [selectedVoice]);
 
-  // Get text from editor when content changes
-  useEffect(() => {
-    if (content.text && !text) {
-      setText(content.text);
-    }
-  }, [content.text]);
-
   const getVoiceLabel = (voice: SpeechSynthesisVoice) => {
     const lang = voice.lang.toLowerCase();
     if (lang.includes('gb')) return `UK English (${voice.name})`;
@@ -64,11 +67,31 @@ export const TextToSpeech = () => {
   };
 
   const handlePlay = () => {
+    if (!isSupported) {
+      toast({
+        title: "Not supported",
+        description: "Text-to-speech is not supported in your browser",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!text.trim()) {
+      toast({
+        title: "No text",
+        description: "Please enter some text to read",
+        variant: "destructive"
+      });
+      return;
+    }
+
     if (isPlaying) {
       speechSynthesis.pause();
+      setIsPlaying(false);
     } else {
-      if (utteranceRef.current) {
+      if (utteranceRef.current && speechSynthesis.paused) {
         speechSynthesis.resume();
+        setIsPlaying(true);
       } else {
         const utterance = new SpeechSynthesisUtterance(text);
         const selectedVoiceObj = voices.find(v => v.voiceURI === selectedVoice);
@@ -80,38 +103,51 @@ export const TextToSpeech = () => {
           setIsPlaying(false);
           utteranceRef.current = null;
         };
+
+        utterance.onerror = (event) => {
+          console.error('Speech synthesis error:', event);
+          setIsPlaying(false);
+          utteranceRef.current = null;
+          toast({
+            title: "Speech Error",
+            description: "There was an error with text-to-speech",
+            variant: "destructive"
+          });
+        };
         
         utteranceRef.current = utterance;
         speechSynthesis.speak(utterance);
+        setIsPlaying(true);
+        
+        toast({
+          title: "Playing",
+          description: "Text-to-speech started"
+        });
       }
     }
-    setIsPlaying(!isPlaying);
   };
 
   const handleStop = () => {
     speechSynthesis.cancel();
     setIsPlaying(false);
     utteranceRef.current = null;
+    toast({
+      title: "Stopped",
+      description: "Text-to-speech stopped"
+    });
   };
 
-  // Get text from editor
-  const handleGetFromEditor = () => {
-    const selectedText = getSelectedText();
-    
-    if (selectedText) {
-      setText(selectedText);
-      toast({
-        title: "Text selected",
-        description: "Selected text imported from editor"
-      });
-    } else if (content.text) {
-      setText(content.text);
-      toast({
-        title: "Text imported",
-        description: "Full document text imported from editor"
-      });
-    }
-  };
+  if (!isSupported) {
+    return (
+      <div className="p-4 space-y-4 animate-fade-in">
+        <div className="text-center text-muted-foreground">
+          <Volume2 className="w-8 h-8 mx-auto mb-2 opacity-50" />
+          <p>Text-to-speech is not supported in your browser.</p>
+          <p className="text-sm">Try using a different browser.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 space-y-4 animate-fade-in">
@@ -130,22 +166,13 @@ export const TextToSpeech = () => {
         </Select>
       </div>
       
-      <Button 
-        size="sm" 
-        variant="outline" 
-        className="w-full text-xs"
-        onClick={handleGetFromEditor}
-      >
-        <ArrowDownToLine className="w-3 h-3 mr-1" />
-        Get Text from Editor
-      </Button>
-      
       <Textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Enter text to read..."
         className="min-h-[200px]"
       />
+      
       <div className="flex gap-2">
         <Button
           onClick={handlePlay}
