@@ -1,4 +1,5 @@
 
+
 import React, { useRef, lazy, Suspense, memo, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -100,9 +101,6 @@ export const Community = memo(() => {
             <CollaborationActivity />
           </Suspense>
           <Suspense fallback={<LoadingComponent />}>
-            <TutorCommunication />
-          </Suspense>
-          <Suspense fallback={<LoadingComponent />}>
             <CommunityChat />
           </Suspense>
         </div>
@@ -115,6 +113,9 @@ export const Community = memo(() => {
           </Suspense>
           <Suspense fallback={<LoadingComponent />}>
             <PollBox />
+          </Suspense>
+          <Suspense fallback={<LoadingComponent />}>
+            <TutorCommunication />
           </Suspense>
         </div>
       </div>

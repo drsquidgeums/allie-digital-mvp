@@ -50,7 +50,11 @@ export const AccessibilityToolbar = () => {
           Accessibility
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 z-50" side="bottom" align="end">
+      <PopoverContent 
+        className="w-80 z-50 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]" 
+        side="bottom" 
+        align="end"
+      >
         <Card className="border-none shadow-none">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
