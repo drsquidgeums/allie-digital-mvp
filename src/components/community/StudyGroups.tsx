@@ -54,22 +54,62 @@ export const StudyGroups = () => {
     meetingTime: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isCreating, setIsCreating] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newGroup.name || !newGroup.subject || !newGroup.meetingTime) {
+    
+    // Validate required fields
+    if (!newGroup.name.trim()) {
       toast({
-        title: "Required Fields Missing",
-        description: "Please fill in all required fields",
+        title: "Name Required",
+        description: "Please enter a study group name",
         variant: "destructive"
       });
       return;
     }
 
+    if (!newGroup.subject.trim()) {
+      toast({
+        title: "Subject Required",
+        description: "Please enter a subject",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!newGroup.meetingTime.trim()) {
+      toast({
+        title: "Meeting Time Required",
+        description: "Please enter a meeting time",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (newGroup.maxMembers < 2 || newGroup.maxMembers > 20) {
+      toast({
+        title: "Invalid Group Size",
+        description: "Group size must be between 2 and 20 members",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsCreating(true);
+
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     const group: StudyGroup = {
       id: Date.now().toString(),
-      ...newGroup,
-      members: ["Current User"],
-      creator: "Current User",
+      name: newGroup.name.trim(),
+      description: newGroup.description.trim() || `Study group for ${newGroup.subject}`,
+      subject: newGroup.subject.trim(),
+      maxMembers: newGroup.maxMembers,
+      meetingTime: newGroup.meetingTime.trim(),
+      members: ["You"],
+      creator: "You",
       dateCreated: new Date()
     };
 
@@ -81,53 +121,95 @@ export const StudyGroups = () => {
       maxMembers: 5,
       meetingTime: ""
     });
+    
+    setIsCreating(false);
+    
     toast({
-      title: "Study Group Created",
-      description: "Your study group has been created successfully!"
+      title: "Study Group Created! 🎉",
+      description: `"${group.name}" has been created successfully. You are now the group leader.`
     });
   };
 
   const handleJoin = (groupId: string) => {
     setGroups(prev =>
-      prev.map(group =>
-        group.id === groupId && group.members.length < group.maxMembers
-          ? { ...group, members: [...group.members, "Current User"] }
-          : group
-      )
+      prev.map(group => {
+        if (group.id === groupId && group.members.length < group.maxMembers && !group.members.includes("You")) {
+          const updatedGroup = { ...group, members: [...group.members, "You"] };
+          toast({
+            title: "Joined Study Group! 🎊",
+            description: `You have successfully joined "${group.name}"`
+          });
+          return updatedGroup;
+        }
+        return group;
+      })
     );
-    toast({
-      title: "Joined Study Group",
-      description: "You have successfully joined the study group!"
-    });
+  };
+
+  const handleInputChange = (field: keyof typeof newGroup, value: string | number) => {
+    setNewGroup(prev => ({ ...prev, [field]: value }));
   };
 
   return (
     <Card className="p-4">
       <h2 className="text-xl font-semibold mb-4">Study Groups</h2>
       
-      <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+      <form onSubmit={handleSubmit} className="space-y-4 mb-6 p-4 bg-muted/30 rounded-lg">
+        <h3 className="font-medium text-lg">Create New Study Group</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input
+            placeholder="Group Name *"
+            value={newGroup.name}
+            onChange={e => handleInputChange('name', e.target.value)}
+            maxLength={50}
+            required
+          />
+          <Input
+            placeholder="Subject *"
+            value={newGroup.subject}
+            onChange={e => handleInputChange('subject', e.target.value)}
+            maxLength={30}
+            required
+          />
+        </div>
+        
         <Input
-          placeholder="Group Name"
-          value={newGroup.name}
-          onChange={e => setNewGroup(prev => ({ ...prev, name: e.target.value }))}
-        />
-        <Input
-          placeholder="Description"
+          placeholder="Description (optional)"
           value={newGroup.description}
-          onChange={e => setNewGroup(prev => ({ ...prev, description: e.target.value }))}
+          onChange={e => handleInputChange('description', e.target.value)}
+          maxLength={100}
         />
-        <Input
-          placeholder="Subject"
-          value={newGroup.subject}
-          onChange={e => setNewGroup(prev => ({ ...prev, subject: e.target.value }))}
-        />
-        <Input
-          placeholder="Meeting Time (e.g., Mondays 3:00 PM)"
-          value={newGroup.meetingTime}
-          onChange={e => setNewGroup(prev => ({ ...prev, meetingTime: e.target.value }))}
-        />
-        <Button type="submit" className="w-full">
-          Create Study Group
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input
+            placeholder="Meeting Time (e.g., Mondays 3:00 PM) *"
+            value={newGroup.meetingTime}
+            onChange={e => handleInputChange('meetingTime', e.target.value)}
+            maxLength={50}
+            required
+          />
+          <div className="space-y-1">
+            <Input
+              type="number"
+              placeholder="Max Members"
+              value={newGroup.maxMembers}
+              onChange={e => handleInputChange('maxMembers', parseInt(e.target.value) || 5)}
+              min="2"
+              max="20"
+              required
+            />
+            <p className="text-xs text-muted-foreground">Between 2-20 members</p>
+          </div>
+        </div>
+        
+        <Button 
+          type="submit" 
+          className="w-full" 
+          disabled={isCreating}
+          loading={isCreating}
+        >
+          {isCreating ? "Creating Study Group..." : "Create Study Group"}
         </Button>
       </form>
 
@@ -141,7 +223,7 @@ export const StudyGroups = () => {
                     <BookOpen className="h-4 w-4 mr-2" />
                     {group.name}
                   </h3>
-                  {group.members.length < group.maxMembers && (
+                  {group.members.length < group.maxMembers && !group.members.includes("You") && (
                     <Button 
                       variant="outline" 
                       size="sm"
@@ -151,6 +233,11 @@ export const StudyGroups = () => {
                       <UserPlus className="h-4 w-4 mr-1" />
                       Join
                     </Button>
+                  )}
+                  {group.members.includes("You") && (
+                    <div className="text-sm text-green-600 font-medium bg-green-100 px-2 py-1 rounded">
+                      ✓ Joined
+                    </div>
                   )}
                 </div>
                 
@@ -168,7 +255,7 @@ export const StudyGroups = () => {
                 </div>
 
                 <div className="text-sm text-muted-foreground pt-2 border-t">
-                  Subject: {group.subject}
+                  Subject: <span className="font-medium">{group.subject}</span>
                 </div>
 
                 <div className="text-sm text-muted-foreground">
