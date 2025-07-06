@@ -1,3 +1,4 @@
+
 interface SpeechRecognitionErrorEvent extends Event {
   error: string;
 }
@@ -13,6 +14,7 @@ interface SpeechRecognition extends EventTarget {
   lang: string;
   onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null;
   onerror: ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => any) | null;
+  onend: ((this: SpeechRecognition, ev: Event) => any) | null;
   start(): void;
   stop(): void;
   abort(): void;
