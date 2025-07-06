@@ -103,6 +103,9 @@ export const Community = memo(() => {
           <Suspense fallback={<LoadingComponent />}>
             <CommunityChat />
           </Suspense>
+          <Suspense fallback={<LoadingComponent />}>
+            <TutorCommunication />
+          </Suspense>
         </div>
         <div className="space-y-4">
           <Suspense fallback={<LoadingComponent />}>
@@ -113,9 +116,6 @@ export const Community = memo(() => {
           </Suspense>
           <Suspense fallback={<LoadingComponent />}>
             <PollBox />
-          </Suspense>
-          <Suspense fallback={<LoadingComponent />}>
-            <TutorCommunication />
           </Suspense>
         </div>
       </div>
