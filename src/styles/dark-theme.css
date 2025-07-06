@@ -1,6 +1,4 @@
 
-
-
 @layer base {
   .dark {
     /* Deep purple theme based on the reference design */
@@ -134,6 +132,20 @@
   .dark .button-hover:hover {
     background-color: hsl(260, 25%, 13%);
     color: hsl(280, 100%, 70%);
+  }
+
+  /* Custom purple background for dialog/modal overlays and content */
+  .dark [data-radix-dialog-overlay],
+  .dark [data-radix-alert-dialog-overlay],
+  .dark [data-radix-sheet-overlay] {
+    background-color: rgba(89, 55, 111, 0.8) !important; /* #59376f with opacity */
+    backdrop-filter: blur(8px);
+  }
+
+  .dark [data-radix-dialog-content],
+  .dark [data-radix-alert-dialog-content],
+  .dark [data-radix-sheet-content] {
+    background-color: #59376f !important;
   }
 
   /* Dropdown and popover with dark purple theme */
