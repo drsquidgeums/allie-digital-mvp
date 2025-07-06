@@ -134,17 +134,34 @@
     color: hsl(280, 100%, 70%);
   }
 
-  /* Custom purple background for dialog/modal overlays and content */
+  /* Comprehensive dialog/modal background overrides */
   .dark [data-radix-dialog-overlay],
   .dark [data-radix-alert-dialog-overlay],
-  .dark [data-radix-sheet-overlay] {
-    background-color: rgba(89, 55, 111, 0.8) !important; /* #59376f with opacity */
-    backdrop-filter: blur(8px);
+  .dark [data-radix-sheet-overlay],
+  .dark .radix-dialog-overlay,
+  .dark .dialog-overlay {
+    background-color: rgba(89, 55, 111, 0.8) !important;
+    backdrop-filter: blur(8px) !important;
   }
 
   .dark [data-radix-dialog-content],
   .dark [data-radix-alert-dialog-content],
-  .dark [data-radix-sheet-content] {
+  .dark [data-radix-sheet-content],
+  .dark .radix-dialog-content,
+  .dark .dialog-content {
+    background-color: #59376f !important;
+    border-color: rgba(139, 69, 255, 0.3) !important;
+  }
+
+  /* Additional dialog component targeting */
+  .dark [role="dialog"],
+  .dark [role="alertdialog"] {
+    background-color: #59376f !important;
+  }
+
+  /* Sheet component specific overrides */
+  .dark .sheet-content,
+  .dark [data-sheet-content] {
     background-color: #59376f !important;
   }
 
