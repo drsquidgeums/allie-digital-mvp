@@ -9,6 +9,7 @@ let sharedTasks: Task[] = [];
 const listeners = new Set<(tasks: Task[]) => void>();
 
 const notifyListeners = () => {
+  console.log('Notifying listeners with tasks:', sharedTasks.length);
   listeners.forEach(listener => listener(sharedTasks));
 };
 
@@ -27,9 +28,9 @@ export const useTaskStore = () => {
         console.log('Current user for task fetch:', user, 'Error:', userError);
         
         if (userError || !user) {
-          console.log('No authenticated user, using empty task list');
-          sharedTasks = [];
-          notifyListeners();
+          console.log('No authenticated user, keeping existing local tasks');
+          // Don't clear existing tasks if there's no user
+          // This preserves locally created tasks
           setLoading(false);
           return;
         }
@@ -43,9 +44,8 @@ export const useTaskStore = () => {
 
         if (error) {
           console.error('Error fetching tasks:', error);
-          toast.error("Failed to load tasks");
-          sharedTasks = [];
-          notifyListeners();
+          toast.error("Failed to load tasks from database");
+          setLoading(false);
           return;
         }
 
@@ -60,7 +60,7 @@ export const useTaskStore = () => {
           category: task.category || undefined
         }));
 
-        console.log('Loaded tasks:', loadedTasks);
+        console.log('Loaded tasks from database:', loadedTasks.length);
         sharedTasks = loadedTasks;
         notifyListeners();
       } catch (err) {
@@ -98,18 +98,23 @@ export const useTaskStore = () => {
 
   useEffect(() => {
     const listener = (newTasks: Task[]) => {
-      console.log('Task store updated with:', newTasks);
-      setTasks(newTasks);
+      console.log('Task store listener - updating local state with tasks:', newTasks.length);
+      setTasks([...newTasks]); // Create new array to force re-render
     };
+    
     listeners.add(listener);
+    
+    // Set initial state
+    setTasks([...sharedTasks]);
+    
     return () => {
       listeners.delete(listener);
     };
   }, []);
 
   const updateTasks = async (newTasks: Task[]) => {
-    console.log('Updating tasks to:', newTasks);
-    sharedTasks = newTasks;
+    console.log('updateTasks called with:', newTasks.length, 'tasks');
+    sharedTasks = [...newTasks]; // Create new array
     notifyListeners();
   };
 

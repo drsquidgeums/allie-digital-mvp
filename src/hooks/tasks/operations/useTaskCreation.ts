@@ -12,122 +12,91 @@ export const useTaskCreation = (tasks: Task[], updateTasks: (tasks: Task[]) => v
     
     console.log('Adding task:', text);
     
-    // Get the current user
-    const { data: { user }, error: userError } = await extendedSupabase.auth.getUser();
-    
-    console.log('Current user:', user, 'Error:', userError);
-    
-    // If no user is authenticated, create task locally only
-    if (userError || !user) {
-      console.log('No authenticated user, creating task locally');
-      
-      const randomCategory = categories[Math.floor(Math.random() * categories.length)];
-      
-      const newTask: Task = {
-        id: Date.now().toString(),
-        text: text.trim(),
-        completed: false,
-        createdAt: taskDate || new Date(),
-        points: getTaskPoints({ 
-          id: Date.now().toString(),
-          text: text.trim(),
-          completed: false,
-          createdAt: taskDate || new Date(),
-          points: 10,
-          category: randomCategory
-        }),
-        category: randomCategory
-      };
-
-      updateTasks([newTask, ...tasks]);
-      toast.success("Task added successfully (local only)");
-      return;
-    }
-    
     const randomCategory = categories[Math.floor(Math.random() * categories.length)];
     
-    const newTask = {
-      id: Date.now().toString(), // Temporary ID
-      text,
+    // Create the new task object first
+    const newTask: Task = {
+      id: Date.now().toString(),
+      text: text.trim(),
       completed: false,
       createdAt: taskDate || new Date(),
-      points: getTaskPoints({ 
-        id: Date.now().toString(),
-        text,
-        completed: false,
-        createdAt: taskDate || new Date(),
-        points: 10,
-        category: randomCategory
-      }),
+      points: 10, // Default points
       category: randomCategory
     };
 
+    // Set points using the getTaskPoints function
+    newTask.points = getTaskPoints(newTask);
+
     try {
-      console.log('Inserting task to Supabase with user_id:', user.id);
+      // Get the current user
+      const { data: { user }, error: userError } = await extendedSupabase.auth.getUser();
       
-      // Insert task into Supabase with user_id
+      console.log('Auth check - User:', user?.id, 'Error:', userError);
+      
+      // If no user is authenticated, add task locally
+      if (userError || !user) {
+        console.log('No authenticated user, adding task locally');
+        
+        // Add task to the beginning of the array to show newest first
+        const updatedTasks = [newTask, ...tasks];
+        updateTasks(updatedTasks);
+        toast.success("Task added (stored locally)");
+        return;
+      }
+      
+      // User is authenticated, try to save to database
+      console.log('User authenticated, saving to database...');
+      
       const { data, error } = await extendedSupabase
         .from('tasks')
         .insert({
-          user_id: user.id, // Add the required user_id
+          user_id: user.id,
           text: newTask.text,
           completed: newTask.completed,
           created_at: newTask.createdAt.toISOString(),
           points: newTask.points,
           category: newTask.category
         })
-        .select();
+        .select()
+        .single();
 
       if (error) {
-        console.error('Error adding task to Supabase:', error);
+        console.error('Database error:', error);
         
-        // Fallback to local creation
-        const localTask: Task = {
-          id: Date.now().toString(),
-          text: text.trim(),
-          completed: false,
-          createdAt: taskDate || new Date(),
-          points: newTask.points,
-          category: newTask.category
-        };
-
-        updateTasks([localTask, ...tasks]);
-        toast.success("Task added locally (database connection failed)");
+        // Fallback to local storage
+        const updatedTasks = [newTask, ...tasks];
+        updateTasks(updatedTasks);
+        toast.success("Task added locally (database unavailable)");
         return;
       }
 
-      // Update the local state with the task returned from Supabase (including generated ID)
-      if (data && data[0]) {
-        console.log('Task successfully created in Supabase:', data[0]);
+      if (data) {
+        console.log('Task saved to database:', data);
         
-        const persistedTask: Task = {
-          id: data[0].id,
-          text: data[0].text,
-          completed: data[0].completed || false,
-          createdAt: new Date(data[0].created_at as string),
-          points: data[0].points || 10,
-          color: data[0].color as string | undefined,
-          category: data[0].category as string | undefined
+        // Create task object from database response
+        const savedTask: Task = {
+          id: data.id,
+          text: data.text,
+          completed: data.completed || false,
+          createdAt: new Date(data.created_at as string),
+          points: data.points || 10,
+          color: data.color as string | undefined,
+          category: data.category as string | undefined
         };
 
-        updateTasks([persistedTask, ...tasks]);
+        // Add to local state (database realtime will also update, but this is immediate)
+        const updatedTasks = [savedTask, ...tasks];
+        updateTasks(updatedTasks);
         toast.success("Task added successfully");
       }
-    } catch (err) {
-      console.error('Error in handleAddTask:', err);
       
-      // Fallback to local creation
-      const localTask: Task = {
-        id: Date.now().toString(),
-        text: text.trim(),
-        completed: false,
-        createdAt: taskDate || new Date(),
-        points: newTask.points,
-        category: newTask.category
-      };
-
-      updateTasks([localTask, ...tasks]);
-      toast.success("Task added locally (error occurred)");
+    } catch (err) {
+      console.error('Unexpected error in handleAddTask:', err);
+      
+      // Always fallback to local storage on any error
+      const updatedTasks = [newTask, ...tasks];
+      updateTasks(updatedTasks);
+      toast.success("Task added locally");
     }
   }, [tasks, updateTasks, getTaskPoints]);
 
