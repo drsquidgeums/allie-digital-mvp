@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -117,7 +116,9 @@ export const StudyGroups = () => {
       meetingTime: newGroup.meetingTime.trim(),
       members: ["You"],
       creator: "You",
-      dateCreated: new Date()
+      dateCreated: new Date(),
+      safeSpaceFeatures: ["neurodivergent-friendly", "structured-communication"],
+      learningAccommodations: ["Extra processing time", "Written instructions"]
     };
 
     setGroups(prev => [group, ...prev]);
