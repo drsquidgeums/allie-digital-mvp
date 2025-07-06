@@ -21,19 +21,36 @@ export const useTaskStore = () => {
     const fetchTasks = async () => {
       try {
         setLoading(true);
+        console.log('Fetching tasks from Supabase...');
+        
+        const { data: { user }, error: userError } = await extendedSupabase.auth.getUser();
+        console.log('Current user for task fetch:', user, 'Error:', userError);
+        
+        if (userError || !user) {
+          console.log('No authenticated user, using empty task list');
+          sharedTasks = [];
+          notifyListeners();
+          setLoading(false);
+          return;
+        }
+        
         const { data, error } = await extendedSupabase
           .from('tasks')
           .select('*')
           .order('created_at', { ascending: false });
 
+        console.log('Supabase tasks response:', { data, error });
+
         if (error) {
           console.error('Error fetching tasks:', error);
           toast.error("Failed to load tasks");
+          sharedTasks = [];
+          notifyListeners();
           return;
         }
 
         // Convert Supabase data to Task objects
-        const loadedTasks: Task[] = data.map(task => ({
+        const loadedTasks: Task[] = (data || []).map(task => ({
           id: task.id,
           text: task.text,
           completed: task.completed || false,
@@ -43,10 +60,13 @@ export const useTaskStore = () => {
           category: task.category || undefined
         }));
 
+        console.log('Loaded tasks:', loadedTasks);
         sharedTasks = loadedTasks;
         notifyListeners();
       } catch (err) {
         console.error('Error in fetchTasks:', err);
+        sharedTasks = [];
+        notifyListeners();
       } finally {
         setLoading(false);
       }
@@ -63,7 +83,8 @@ export const useTaskStore = () => {
           schema: 'public', 
           table: 'tasks' 
         }, 
-        () => {
+        (payload) => {
+          console.log('Realtime task change:', payload);
           // Refetch tasks when changes occur
           fetchTasks();
         }
@@ -77,6 +98,7 @@ export const useTaskStore = () => {
 
   useEffect(() => {
     const listener = (newTasks: Task[]) => {
+      console.log('Task store updated with:', newTasks);
       setTasks(newTasks);
     };
     listeners.add(listener);
@@ -86,6 +108,7 @@ export const useTaskStore = () => {
   }, []);
 
   const updateTasks = async (newTasks: Task[]) => {
+    console.log('Updating tasks to:', newTasks);
     sharedTasks = newTasks;
     notifyListeners();
   };
