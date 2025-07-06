@@ -1,4 +1,3 @@
-
 import React, { useRef, lazy, Suspense, memo, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,10 +6,13 @@ import { CommunityStats } from "./community/CommunityStats";
 import { TaskPoints } from "./dashboard/TaskPoints";
 import { TaskAchievements } from "./dashboard/TaskAchievements";
 import { CommunityPreferences } from "./community/settings/CommunityPreferences";
+import { SocialInteractionSettings } from "./community/settings/SocialInteractionSettings";
 import { StudyGroupTemplate } from "./community/StudyGroupTemplate";
 import { CognitiveSupportTools } from "./community/CognitiveSupportTools";
+import { AccessibilityToolbar } from "./community/accessibility/AccessibilityToolbar";
+import { EnhancedDiscussionList } from "./community/enhanced/EnhancedDiscussionList";
 import { useTasks } from "@/hooks/useTasks";
-import { Settings, Brain, Users } from "lucide-react";
+import { Settings, Brain, Users, MessageSquare, Shield } from "lucide-react";
 
 // Lazy load less critical components
 const DiscussionList = lazy(() => import("./community/DiscussionList").then(module => ({
@@ -46,8 +48,9 @@ LoadingComponent.displayName = "LoadingComponent";
 export const Community = memo(() => {
   const mainRef = useRef<HTMLDivElement>(null);
   const { calculateTotalPoints, showAchievement, setShowAchievement } = useTasks();
-  const [activeView, setActiveView] = useState<'community' | 'preferences' | 'cognitive-tools'>('community');
+  const [activeView, setActiveView] = useState<'community' | 'preferences' | 'cognitive-tools' | 'social-settings'>('community');
   const [preferences, setPreferences] = useState({});
+  const [socialSettings, setSocialSettings] = useState({});
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -66,6 +69,11 @@ export const Community = memo(() => {
     console.log('Preferences updated:', newPreferences);
   };
 
+  const handleSocialSettingsChange = (newSettings: any) => {
+    setSocialSettings(newSettings);
+    console.log('Social settings updated:', newSettings);
+  };
+
   // Calculate points only once per render cycle
   const points = useMemo(() => calculateTotalPoints(), [calculateTotalPoints]);
 
@@ -78,15 +86,17 @@ export const Community = memo(() => {
       return <CognitiveSupportTools />;
     }
 
+    if (activeView === 'social-settings') {
+      return <SocialInteractionSettings onSettingsChange={handleSocialSettingsChange} />;
+    }
+
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="space-y-4">
           <StudyGroupTemplate onCreateGroup={handleCreateStructuredGroup} />
+          <EnhancedDiscussionList />
           <Suspense fallback={<LoadingComponent />}>
             <CollaborationActivity />
-          </Suspense>
-          <Suspense fallback={<LoadingComponent />}>
-            <DiscussionList />
           </Suspense>
           <Suspense fallback={<LoadingComponent />}>
             <TutorCommunication />
@@ -119,14 +129,17 @@ export const Community = memo(() => {
       ref={mainRef}
     >
       <div className="p-4 space-y-4">
-        <CommunityHeader />
+        <div className="flex justify-between items-center">
+          <CommunityHeader />
+          <AccessibilityToolbar />
+        </div>
         
-        {/* Navigation Tabs */}
-        <div className="flex gap-2 border-b">
+        {/* Enhanced Navigation Tabs */}
+        <div className="flex gap-2 border-b overflow-x-auto">
           <Button
             variant={activeView === 'community' ? 'default' : 'ghost'}
             onClick={() => setActiveView('community')}
-            className="gap-2"
+            className="gap-2 flex-shrink-0"
           >
             <Users className="h-4 w-4" />
             Community
@@ -134,15 +147,23 @@ export const Community = memo(() => {
           <Button
             variant={activeView === 'cognitive-tools' ? 'default' : 'ghost'}
             onClick={() => setActiveView('cognitive-tools')}
-            className="gap-2"
+            className="gap-2 flex-shrink-0"
           >
             <Brain className="h-4 w-4" />
-            Cognitive Tools
+            Focus Tools
+          </Button>
+          <Button
+            variant={activeView === 'social-settings' ? 'default' : 'ghost'}
+            onClick={() => setActiveView('social-settings')}
+            className="gap-2 flex-shrink-0"
+          >
+            <MessageSquare className="h-4 w-4" />
+            Social Support
           </Button>
           <Button
             variant={activeView === 'preferences' ? 'default' : 'ghost'}
             onClick={() => setActiveView('preferences')}
-            className="gap-2"
+            className="gap-2 flex-shrink-0"
           >
             <Settings className="h-4 w-4" />
             Accessibility

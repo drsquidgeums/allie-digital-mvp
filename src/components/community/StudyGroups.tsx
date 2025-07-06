@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Users, Calendar, BookOpen, UserPlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { SafeSpaceIndicator } from "./moderation/SafeSpaceIndicator";
 
 interface StudyGroup {
   id: string;
@@ -17,6 +18,8 @@ interface StudyGroup {
   meetingTime: string;
   creator: string;
   dateCreated: Date;
+  safeSpaceFeatures: string[];
+  learningAccommodations: string[];
 }
 
 export const StudyGroups = () => {
@@ -24,25 +27,29 @@ export const StudyGroups = () => {
   const [groups, setGroups] = useState<StudyGroup[]>([
     {
       id: "1",
-      name: "Biology Study Group",
-      description: "Weekly study sessions for Biology 101",
+      name: "Biology Study Group - Quiet Focus",
+      description: "Weekly study sessions for Biology 101 with minimal distractions",
       subject: "Biology",
       members: ["Sarah M.", "James K.", "Alex P."],
       maxMembers: 5,
       meetingTime: "Mondays 3:00 PM",
       creator: "Sarah M.",
-      dateCreated: new Date("2024-02-15")
+      dateCreated: new Date("2024-02-15"),
+      safeSpaceFeatures: ["neurodivergent-friendly", "structured-communication", "patient-environment"],
+      learningAccommodations: ["Extra processing time", "Written instructions", "Break reminders"]
     },
     {
       id: "2",
-      name: "Math Champions",
-      description: "Advanced calculus problem solving",
+      name: "Math Champions - Visual Learning",
+      description: "Advanced calculus with visual aids and step-by-step explanations",
       subject: "Mathematics",
       members: ["Michael R.", "Emma S."],
       maxMembers: 4,
       meetingTime: "Wednesdays 4:00 PM",
       creator: "Michael R.",
-      dateCreated: new Date("2024-02-14")
+      dateCreated: new Date("2024-02-14"),
+      safeSpaceFeatures: ["neurodivergent-friendly", "verified-safe"],
+      learningAccommodations: ["Visual aids", "No pressure to speak", "Structured sessions"]
     }
   ]);
 
@@ -217,31 +224,54 @@ export const StudyGroups = () => {
         <div className="space-y-4">
           {groups.map(group => (
             <Card key={group.id} className="p-4 bg-muted/50">
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div className="flex justify-between items-start">
-                  <h3 className="font-semibold text-lg flex items-center">
-                    <BookOpen className="h-4 w-4 mr-2" />
-                    {group.name}
-                  </h3>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-lg flex items-center">
+                      <BookOpen className="h-4 w-4 mr-2" />
+                      {group.name}
+                    </h3>
+                    <SafeSpaceIndicator 
+                      features={group.safeSpaceFeatures} 
+                      size="sm" 
+                    />
+                  </div>
                   {group.members.length < group.maxMembers && !group.members.includes("You") && (
                     <Button 
                       variant="outline" 
                       size="sm"
                       onClick={() => handleJoin(group.id)}
-                      className="hover:bg-primary hover:text-primary-foreground"
+                      className="hover:bg-primary hover:text-primary-foreground ml-2"
                     >
                       <UserPlus className="h-4 w-4 mr-1" />
                       Join
                     </Button>
                   )}
                   {group.members.includes("You") && (
-                    <div className="text-sm text-green-600 font-medium bg-green-100 px-2 py-1 rounded">
+                    <div className="text-sm text-green-600 font-medium bg-green-100 px-2 py-1 rounded ml-2">
                       ✓ Joined
                     </div>
                   )}
                 </div>
                 
                 <p className="text-sm text-muted-foreground">{group.description}</p>
+
+                {/* Learning Accommodations */}
+                {group.learningAccommodations.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-medium text-muted-foreground">Learning Accommodations:</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {group.learningAccommodations.map(accommodation => (
+                        <span 
+                          key={accommodation}
+                          className="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100 px-2 py-1 rounded-full"
+                        >
+                          {accommodation}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center">
