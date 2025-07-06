@@ -29,7 +29,7 @@ export const BionicReader = () => {
       return (
         <span 
           key={`${word}-${index}`}
-          className="inline-block mr-1" // Added margin-right for spacing between words
+          className="inline-block mr-1"
           role="text"
           tabIndex={0}
           onKeyDown={(e) => {
@@ -47,8 +47,8 @@ export const BionicReader = () => {
             }
           }}
         >
-          <strong className="font-bold text-foreground">{word.slice(0, midPoint)}</strong>
-          <span className="font-normal text-muted-foreground">{word.slice(midPoint)}</span>
+          <strong className="font-bold text-black dark:text-white">{word.slice(0, midPoint)}</strong>
+          <span className="font-normal text-gray-500 dark:text-gray-400">{word.slice(midPoint)}</span>
         </span>
       );
     });
@@ -150,18 +150,18 @@ export const BionicReader = () => {
         </label>
         <div 
           ref={outputRef}
-          className="border-2 border-border bg-background p-4 rounded-lg min-h-[120px] text-left focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
+          className="border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-4 rounded-lg min-h-[120px] text-left focus:outline-none focus:ring-2 focus:ring-primary shadow-lg"
           tabIndex={text ? 0 : -1}
           role="region"
           aria-label="Processed bionic text"
           aria-live="polite"
         >
           {text ? (
-            <div className="leading-relaxed text-lg font-sans">
+            <div className="leading-relaxed text-lg font-sans text-black dark:text-white">
               {processBionicText(text)}
             </div>
           ) : (
-            <div className="text-muted-foreground italic text-center py-8">
+            <div className="text-gray-500 dark:text-gray-400 italic text-center py-8">
               Enter text above to see the bionic reading effect...
             </div>
           )}

@@ -1,6 +1,5 @@
-
 import React, { useRef, useEffect } from "react";
-import { SpellCheck as SpellCheckIcon } from "lucide-react";  // Use alias to ensure correct import
+import { SpellCheck as SpellCheckIcon } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { usePersistedText } from "@/hooks/usePersistedText";
@@ -111,24 +110,29 @@ export const Rewordify = () => {
     };
 
     // Process the text word by word, preserving punctuation and spacing
-    return input.split(/(\s+|[.,!?;:])/g).map(segment => {
+    return input.split(/(\s+|[.,!?;:])/g).map((segment, index) => {
       // If it's just whitespace or punctuation, return it unchanged
       if (/^\s+$/.test(segment) || /^[.,!?;:]$/.test(segment)) {
-        return segment;
+        return <span key={index}>{segment}</span>;
       }
 
       // Check if the word (lowercase) exists in our dictionary
       const lowercaseWord = segment.toLowerCase();
       if (simplifications[lowercaseWord]) {
         // Preserve original capitalization
-        if (segment[0] === segment[0].toUpperCase()) {
-          return simplifications[lowercaseWord].charAt(0).toUpperCase() + 
-                 simplifications[lowercaseWord].slice(1);
-        }
-        return simplifications[lowercaseWord];
+        const simplified = simplifications[lowercaseWord];
+        const result = segment[0] === segment[0].toUpperCase() 
+          ? simplified.charAt(0).toUpperCase() + simplified.slice(1)
+          : simplified;
+        
+        return (
+          <span key={index} className="bg-yellow-200 dark:bg-yellow-800 px-1 rounded">
+            {result}
+          </span>
+        );
       }
-      return segment;
-    }).join('');
+      return <span key={index}>{segment}</span>;
+    });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -161,9 +165,28 @@ export const Rewordify = () => {
 
   // Send simplified text to editor
   const handleSendToEditor = () => {
-    const simplified = simplifyText(text);
-    if (simplified) {
-      setEditorText(simplified);
+    const simplifiedText = text.split(/(\s+|[.,!?;:])/g).map(segment => {
+      if (/^\s+$/.test(segment) || /^[.,!?;:]$/.test(segment)) {
+        return segment;
+      }
+      const lowercaseWord = segment.toLowerCase();
+      const simplifications: { [key: string]: string } = {
+        "therefore": "so", "however": "but", "nevertheless": "still",
+        "approximately": "about", "sufficient": "enough", "require": "need",
+        "utilize": "use", "implement": "carry out", "facilitate": "help"
+        // ... keeping the simplified version for editor
+      };
+      if (simplifications[lowercaseWord]) {
+        const simplified = simplifications[lowercaseWord];
+        return segment[0] === segment[0].toUpperCase() 
+          ? simplified.charAt(0).toUpperCase() + simplified.slice(1)
+          : simplified;
+      }
+      return segment;
+    }).join('');
+    
+    if (simplifiedText) {
+      setEditorText(simplifiedText);
       toast({
         title: "Text applied",
         description: "Simplified text has been sent to the editor"
@@ -220,15 +243,30 @@ export const Rewordify = () => {
       >
         Press Enter to focus on simplified text, Escape to clear input.
       </div>
-      <div 
-        ref={outputRef}
-        className="bg-background/50 p-3 rounded-lg min-h-[100px] text-left focus:outline-none focus:ring-2 focus:ring-primary"
-        tabIndex={text ? 0 : -1}
-        role="region"
-        aria-label="Simplified text output"
-        aria-live="polite"
-      >
-        {text && simplifyText(text)}
+      
+      {/* Enhanced output display area */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-muted-foreground">
+          Simplified Text Output:
+        </label>
+        <div 
+          ref={outputRef}
+          className="border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-4 rounded-lg min-h-[120px] text-left focus:outline-none focus:ring-2 focus:ring-primary shadow-lg"
+          tabIndex={text ? 0 : -1}
+          role="region"
+          aria-label="Simplified text output"
+          aria-live="polite"
+        >
+          {text ? (
+            <div className="leading-relaxed text-base text-black dark:text-white">
+              {simplifyText(text)}
+            </div>
+          ) : (
+            <div className="text-gray-500 dark:text-gray-400 italic text-center py-8">
+              Enter text above to see the simplified version with highlighted changes...
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
