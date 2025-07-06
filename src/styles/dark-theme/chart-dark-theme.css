@@ -1,0 +1,29 @@
+
+/* Chart and Data Visualization Dark Theme Styles */
+@layer base {
+  /* Chart colors matching the purple theme */
+  .dark [data-chart="1"] {
+    color: hsl(280, 100%, 70%);
+  }
+
+  .dark [data-chart="2"] {
+    color: hsl(290, 100%, 65%);
+  }
+
+  .dark [data-chart="3"] {
+    color: hsl(270, 100%, 75%);
+  }
+
+  .dark [data-chart="4"] {
+    color: hsl(260, 100%, 70%);
+  }
+
+  .dark [data-chart="5"] {
+    color: hsl(300, 100%, 65%);
+  }
+}
+
+/* Maintain existing overrides for specific components */
+html.dark .recharts-legend-item:first-child .recharts-legend-item-symbol {
+  fill: hsl(280, 100%, 70%) !important;
+}

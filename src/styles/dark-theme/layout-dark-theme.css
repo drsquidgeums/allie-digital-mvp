@@ -1,0 +1,52 @@
+
+/* Layout and Background Dark Theme Styles */
+@layer base {
+  /* Deep purple geometric gradient background matching the reference */
+  .dark body {
+    background: linear-gradient(135deg, 
+      hsl(260, 40%, 8%) 0%, 
+      hsl(280, 50%, 12%) 25%, 
+      hsl(260, 45%, 10%) 50%, 
+      hsl(280, 35%, 8%) 75%, 
+      hsl(260, 40%, 6%) 100%);
+    background-attachment: fixed;
+  }
+
+  /* Add geometric pattern overlay */
+  .dark body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(45deg, transparent 35%, rgba(139, 69, 255, 0.1) 50%, transparent 65%),
+      linear-gradient(-45deg, transparent 35%, rgba(139, 69, 255, 0.1) 50%, transparent 65%);
+    background-size: 100px 100px, 100px 100px;
+    background-position: 0 0, 50px 50px;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Dark card backgrounds with purple tint */
+  .dark .card-elevated,
+  .dark .sidebar-elevated,
+  .dark .dialog-elevated {
+    background: linear-gradient(135deg, 
+      hsl(260, 30%, 12%) 0%, 
+      hsl(280, 25%, 10%) 100%);
+    border: 1px solid hsl(260, 20%, 20%);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+  }
+
+  /* Sidebar with subtle purple gradient */
+  .dark .sidebar-elevated {
+    background: linear-gradient(180deg, 
+      hsl(260, 30%, 12%) 0%, 
+      hsl(280, 25%, 10%) 50%, 
+      hsl(260, 30%, 12%) 100%);
+    border-right: 1px solid hsl(280, 20%, 25%);
+  }
+}

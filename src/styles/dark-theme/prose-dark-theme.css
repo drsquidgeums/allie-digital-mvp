@@ -1,0 +1,29 @@
+
+/* Text Content and Prose Dark Theme Styles */
+@layer base {
+  .dark .prose {
+    color: hsl(280, 15%, 85%) !important;
+  }
+
+  .dark .prose h1,
+  .dark .prose h2,
+  .dark .prose h3,
+  .dark .prose h4,
+  .dark .prose h5,
+  .dark .prose h6 {
+    color: hsl(280, 100%, 80%) !important;
+  }
+
+  .dark .prose p {
+    color: hsl(280, 15%, 80%) !important;
+  }
+
+  .dark .prose ul,
+  .dark .prose ol {
+    color: hsl(280, 15%, 80%) !important;
+  }
+
+  .dark .prose li {
+    color: hsl(280, 15%, 80%) !important;
+  }
+}

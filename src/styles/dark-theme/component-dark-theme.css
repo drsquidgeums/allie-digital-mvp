@@ -1,0 +1,36 @@
+
+/* Component Dark Theme Styles */
+@layer base {
+  /* Bright purple buttons matching the reference */
+  .dark .button-primary-enhanced,
+  .dark button[data-state="on"] {
+    background: linear-gradient(135deg, 
+      hsl(280, 100%, 70%) 0%, 
+      hsl(290, 100%, 65%) 100%);
+    color: white;
+    box-shadow: 0 4px 20px rgba(184, 50, 250, 0.4);
+    border: none;
+  }
+
+  .dark .button-primary-enhanced:hover,
+  .dark button[data-state="on"]:hover {
+    background: linear-gradient(135deg, 
+      hsl(280, 100%, 75%) 0%, 
+      hsl(290, 100%, 70%) 100%);
+    box-shadow: 0 6px 25px rgba(184, 50, 250, 0.6);
+    transform: translateY(-2px);
+  }
+
+  /* Purple-themed focus states */
+  .dark *:focus-visible {
+    outline: 2px solid hsl(280, 100%, 70%);
+    outline-offset: 2px;
+  }
+
+  /* Purple hover states */
+  .dark .hover\:bg-accent:hover,
+  .dark .button-hover:hover {
+    background-color: hsl(260, 25%, 13%);
+    color: hsl(280, 100%, 70%);
+  }
+}

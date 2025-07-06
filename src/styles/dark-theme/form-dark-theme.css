@@ -1,0 +1,85 @@
+
+/* Form and Input Dark Theme Styles */
+@layer base {
+  /* Dark input fields with purple accents */
+  .dark input,
+  .dark textarea {
+    background-color: hsl(260, 25%, 15%);
+    border: 1px solid hsl(260, 20%, 20%);
+    color: hsl(280, 15%, 90%);
+  }
+
+  .dark input:focus,
+  .dark textarea:focus {
+    border-color: hsl(280, 100%, 70%);
+    box-shadow: 0 0 0 2px rgba(184, 50, 250, 0.3);
+    background-color: hsl(260, 25%, 18%);
+  }
+
+  /* Specific form field overrides */
+  .CommentsSection textarea,
+  .form textarea,
+  .form input,
+  input,
+  textarea {
+    color: #000000 !important;
+    background-color: white !important;
+  }
+
+  textarea:focus,
+  input:focus {
+    border-color: hsl(280, 100%, 70%);
+    background-color: white !important;
+  }
+
+  .dark input[type="url"] {
+    background-color: hsl(260, 25%, 15%) !important;
+    color: hsl(280, 15%, 90%) !important;
+    border-color: hsl(260, 20%, 20%);
+  }
+
+  .dark input[type="url"]:focus {
+    background-color: hsl(260, 25%, 18%) !important;
+    color: hsl(280, 15%, 90%) !important;
+    border-color: hsl(280, 100%, 70%);
+  }
+
+  .dark input[type="url"]::placeholder {
+    color: hsl(280, 10%, 60%) !important;
+  }
+
+  .dark #name,
+  .dark #email {
+    background-color: white !important;
+    color: #000000 !important;
+    border-color: hsl(260, 20%, 20%);
+  }
+
+  .dark #name:focus,
+  .dark #email:focus {
+    background-color: white !important;
+    color: #000000 !important;
+    border-color: hsl(280, 100%, 70%);
+  }
+
+  .dark #name::placeholder,
+  .dark #email::placeholder {
+    color: #888888 !important;
+  }
+
+  .dark input[aria-label="Chat input"] {
+    background-color: hsl(260, 25%, 15%) !important;
+    color: hsl(280, 15%, 90%) !important;
+    border-color: hsl(260, 20%, 20%);
+  }
+
+  .dark input[aria-label="Chat input"]:focus {
+    background-color: hsl(260, 25%, 18%) !important;
+    color: hsl(280, 15%, 90%) !important;
+    border-color: hsl(280, 100%, 70%);
+  }
+
+  .dark input[aria-label="Chat input"]::placeholder {
+    color: hsl(280, 10%, 60%) !important;
+  }
+}
