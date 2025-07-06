@@ -142,15 +142,30 @@ export const BionicReader = () => {
       >
         Press Enter to focus on processed text, Escape to clear input. Use arrow keys to navigate through processed words.
       </div>
-      <div 
-        ref={outputRef}
-        className="bg-background/50 p-3 rounded-lg min-h-[100px] text-left focus:outline-none focus:ring-2 focus:ring-primary"
-        tabIndex={text ? 0 : -1}
-        role="region"
-        aria-label="Processed bionic text"
-        aria-live="polite"
-      >
-        {text && processBionicText(text)}
+      
+      {/* Enhanced output display area */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-muted-foreground">
+          Bionic Reading Output:
+        </label>
+        <div 
+          ref={outputRef}
+          className="border border-border bg-card p-4 rounded-lg min-h-[120px] text-left focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
+          tabIndex={text ? 0 : -1}
+          role="region"
+          aria-label="Processed bionic text"
+          aria-live="polite"
+        >
+          {text ? (
+            <div className="leading-relaxed text-base">
+              {processBionicText(text)}
+            </div>
+          ) : (
+            <div className="text-muted-foreground italic">
+              Enter text above to see the bionic reading effect...
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
