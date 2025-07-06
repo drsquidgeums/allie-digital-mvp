@@ -15,6 +15,7 @@ interface TaskColumnProps {
   onToggleTask: (id: string) => void;
   onDeleteTask: (id: string) => void;
   onUpdateTaskColor: (id: string, color: string) => void;
+  onUpdateTaskLabels?: (id: string, labels: string[]) => void;
 }
 
 export const TaskColumn: React.FC<TaskColumnProps> = ({
@@ -25,7 +26,8 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({
   isLoading = false,
   onToggleTask,
   onDeleteTask,
-  onUpdateTaskColor
+  onUpdateTaskColor,
+  onUpdateTaskLabels
 }) => {
   return (
     <div className={cn("p-4", className)}>
@@ -52,6 +54,7 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({
               onToggle={() => onToggleTask(task.id)}
               onDelete={() => onDeleteTask(task.id)}
               onUpdateColor={(color) => onUpdateTaskColor(task.id, color)}
+              onUpdateLabels={onUpdateTaskLabels ? (labels) => onUpdateTaskLabels(task.id, labels) : undefined}
             />
           ))
         )}

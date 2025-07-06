@@ -7,6 +7,7 @@ import { useTaskCreation } from "./operations/useTaskCreation";
 import { useTaskToggle } from "./operations/useTaskToggle";
 import { useTaskDeletion } from "./operations/useTaskDeletion";
 import { useTaskColorUpdate } from "./operations/useTaskColorUpdate";
+import { useTaskLabelUpdate } from "./operations/useTaskLabelUpdate";
 
 export const useTaskOperations = (tasks: Task[], updateTasks: (tasks: Task[]) => void) => {
   const {
@@ -39,12 +40,15 @@ export const useTaskOperations = (tasks: Task[], updateTasks: (tasks: Task[]) =>
   
   const { handleUpdateTaskColor } = useTaskColorUpdate(tasks, updateTasks);
 
+  const { handleUpdateTaskLabels } = useTaskLabelUpdate(tasks, updateTasks);
+
   return {
     showAchievement,
     setShowAchievement,
     handleAddTask,
     handleToggleTask,
     handleDeleteTask,
-    handleUpdateTaskColor
+    handleUpdateTaskColor,
+    handleUpdateTaskLabels
   };
 };

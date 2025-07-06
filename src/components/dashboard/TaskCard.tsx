@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Task } from "@/types/task";
 import { Tag } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { TaskLabels } from "./TaskLabels";
 import {
   Tooltip,
   TooltipContent,
@@ -17,13 +18,15 @@ interface TaskCardProps {
   onToggle: () => void;
   onDelete: () => void;
   onUpdateColor: (color: string) => void;
+  onUpdateLabels?: (labels: string[]) => void;
 }
 
 export const TaskCard: React.FC<TaskCardProps> = ({
   task,
   onToggle,
   onDelete,
-  onUpdateColor
+  onUpdateColor,
+  onUpdateLabels
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   const { i18n } = useTranslation();
@@ -36,6 +39,20 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     { value: "#9C27B0", label: i18n.language.startsWith('en-GB') ? "Purple" : "Purple" },
     { value: "", label: i18n.language.startsWith('en-GB') ? "None" : "None" }
   ];
+
+  const handleAddLabel = (label: string) => {
+    if (onUpdateLabels) {
+      const newLabels = [...(task.labels || []), label];
+      onUpdateLabels(newLabels);
+    }
+  };
+
+  const handleRemoveLabel = (label: string) => {
+    if (onUpdateLabels) {
+      const newLabels = (task.labels || []).filter(l => l !== label);
+      onUpdateLabels(newLabels);
+    }
+  };
   
   return (
     <Card 
@@ -45,7 +62,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
       )}
       style={{
         borderLeftColor: task.color || undefined,
-        backgroundColor: task.color ? `${task.color}10` : undefined
+        backgroundColor: task.color ? `${task.color}15` : undefined
       }}
       onClick={() => setShowOptions(!showOptions)}
     >
@@ -71,13 +88,24 @@ export const TaskCard: React.FC<TaskCardProps> = ({
         
         <div className="flex-1">
           <p className={cn(
-            "text-sm font-medium leading-tight",
+            "text-sm font-medium leading-tight mb-2",
             task.completed && "line-through text-muted-foreground"
           )}>
             {task.text}
           </p>
           
-          <div className="flex items-center mt-2 justify-between">
+          {/* Labels */}
+          {task.labels && task.labels.length > 0 && (
+            <div className="mb-2">
+              <TaskLabels
+                labels={task.labels}
+                onAddLabel={handleAddLabel}
+                onRemoveLabel={handleRemoveLabel}
+              />
+            </div>
+          )}
+          
+          <div className="flex items-center justify-between">
             <span className="text-xs px-2 py-1 rounded-full bg-accent/20 text-muted-foreground">
               {task.points} pts
             </span>
@@ -126,7 +154,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             </p>
           </div>
           
-          <div className="flex flex-wrap gap-2 mb-2">
+          <div className="flex flex-wrap gap-2 mb-4">
             {colorOptions.map((color) => (
               <button
                 key={color.value || 'none'}
@@ -160,8 +188,18 @@ export const TaskCard: React.FC<TaskCardProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Labels Section */}
+          <div className="mb-4">
+            <p className="text-xs font-medium mb-2">Labels:</p>
+            <TaskLabels
+              labels={task.labels || []}
+              onAddLabel={handleAddLabel}
+              onRemoveLabel={handleRemoveLabel}
+            />
+          </div>
           
-          <div className="mt-3 flex justify-end">
+          <div className="flex justify-end">
             <button
               className="text-xs text-destructive hover:underline"
               onClick={(e) => {

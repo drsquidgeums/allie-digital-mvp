@@ -12,7 +12,8 @@ export const useTasks = () => {
     handleAddTask,
     handleToggleTask,
     handleDeleteTask,
-    handleUpdateTaskColor
+    handleUpdateTaskColor,
+    handleUpdateTaskLabels
   } = useTaskOperations(tasks, updateTasks);
 
   return {
@@ -24,6 +25,7 @@ export const useTasks = () => {
     handleAddTask,
     handleToggleTask,
     handleDeleteTask,
-    handleUpdateTaskColor
+    handleUpdateTaskColor,
+    handleUpdateTaskLabels
   };
 };
