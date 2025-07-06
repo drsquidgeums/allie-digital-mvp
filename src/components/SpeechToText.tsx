@@ -2,14 +2,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Mic, MicOff, Copy, ArrowUpFromLine, Pencil, Eraser } from "lucide-react";
+import { Mic, MicOff, Copy, Eraser } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { usePersistedText } from "@/hooks/usePersistedText";
 
 export const SpeechToText = () => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = usePersistedText("stt");
-  const [appendMode, setAppendMode] = useState<'replace' | 'append'>('replace');
   const [isSupported, setIsSupported] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const { toast } = useToast();
@@ -43,20 +42,38 @@ export const SpeechToText = () => {
         for (let i = 0; i < event.results.length; i++) {
           currentTranscript += event.results[i][0].transcript;
         }
+        console.log('Speech recognition result:', currentTranscript);
         setTranscript(currentTranscript);
       };
 
       recognitionRef.current.onerror = (event) => {
         console.error('Speech recognition error:', event.error);
-        stopListening();
+        setIsListening(false);
+        
+        let errorMessage = "Speech recognition failed";
+        switch(event.error) {
+          case 'network':
+            errorMessage = "Network error - check your internet connection";
+            break;
+          case 'not-allowed':
+            errorMessage = "Microphone access denied - please allow microphone permission";
+            break;
+          case 'no-speech':
+            errorMessage = "No speech detected - try speaking louder";
+            break;
+          default:
+            errorMessage = `Speech recognition error: ${event.error}`;
+        }
+        
         toast({
           title: "Recognition Error",
-          description: `Speech recognition failed: ${event.error}`,
+          description: errorMessage,
           variant: "destructive"
         });
       };
 
       recognitionRef.current.onend = () => {
+        console.log('Speech recognition ended');
         setIsListening(false);
       };
 
@@ -68,6 +85,7 @@ export const SpeechToText = () => {
       });
     } catch (error) {
       console.error('Failed to start speech recognition:', error);
+      setIsListening(false);
       toast({
         title: "Error",
         description: "Failed to start speech recognition",
@@ -104,6 +122,7 @@ export const SpeechToText = () => {
         description: "Text copied to clipboard"
       });
     } catch (err) {
+      console.error('Copy failed:', err);
       toast({
         title: "Error",
         description: "Failed to copy text",
@@ -112,21 +131,11 @@ export const SpeechToText = () => {
     }
   };
 
-  // Clear transcript
   const clearTranscript = () => {
     setTranscript('');
     toast({
       title: "Cleared",
       description: "Speech transcript has been cleared"
-    });
-  };
-
-  // Toggle append mode
-  const toggleAppendMode = () => {
-    setAppendMode(prev => prev === 'replace' ? 'append' : 'replace');
-    toast({
-      title: "Mode changed",
-      description: `Mode changed to ${appendMode === 'replace' ? 'append' : 'replace'}`
     });
   };
 
@@ -149,17 +158,17 @@ export const SpeechToText = () => {
           onClick={isListening ? stopListening : startListening}
           size="sm"
           variant="outline" 
-          className="flex-1 h-9 text-xs px-2 min-w-0"
+          className="flex-1 h-9 text-xs"
         >
           {isListening ? (
             <>
-              <MicOff className="w-3 h-3 mr-1 flex-shrink-0" />
-              <span className="truncate">Stop Recording</span>
+              <MicOff className="w-3 h-3 mr-1" />
+              Stop Recording
             </>
           ) : (
             <>
-              <Mic className="w-3 h-3 mr-1 flex-shrink-0" />
-              <span className="truncate">Start Recording</span>
+              <Mic className="w-3 h-3 mr-1" />
+              Start Recording
             </>
           )}
         </Button>
@@ -167,11 +176,11 @@ export const SpeechToText = () => {
           onClick={copyToClipboard}
           size="sm"
           variant="outline"
-          className="flex-1 h-9 text-xs px-2 min-w-0"
+          className="flex-1 h-9 text-xs"
           disabled={!transcript}
         >
-          <Copy className="w-3 h-3 mr-1 flex-shrink-0" />
-          <span className="truncate">Copy Text</span>
+          <Copy className="w-3 h-3 mr-1" />
+          Copy Text
         </Button>
       </div>
       
@@ -184,30 +193,22 @@ export const SpeechToText = () => {
       
       <div className="flex gap-2">
         <Button
-          onClick={toggleAppendMode}
-          size="sm"
-          variant="outline"
-          className="h-9 text-xs px-2"
-          title="Toggle between replace and append mode"
-        >
-          {appendMode === 'append' ? <Pencil className="w-3 h-3" /> : <Eraser className="w-3 h-3" />}
-        </Button>
-        <Button
           onClick={clearTranscript}
           size="sm"
           variant="outline"
-          className="h-9 text-xs px-3"
+          className="h-9 text-xs"
           disabled={!transcript}
-          title="Clear transcript"
         >
-          <Eraser className="w-3 h-3" />
+          <Eraser className="w-3 h-3 mr-1" />
+          Clear
         </Button>
       </div>
       
-      <p className="text-xs text-muted-foreground">
-        Mode: {appendMode === 'append' ? 'Append' : 'Replace'}
-        {isListening && " • Recording..."}
-      </p>
+      {isListening && (
+        <p className="text-xs text-muted-foreground">
+          🔴 Recording... Speak now
+        </p>
+      )}
     </div>
   );
 };
