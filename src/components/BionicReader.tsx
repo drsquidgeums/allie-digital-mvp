@@ -47,8 +47,8 @@ export const BionicReader = () => {
             }
           }}
         >
-          <strong>{word.slice(0, midPoint)}</strong>
-          {word.slice(midPoint)}
+          <strong className="font-bold text-foreground">{word.slice(0, midPoint)}</strong>
+          <span className="font-normal text-muted-foreground">{word.slice(midPoint)}</span>
         </span>
       );
     });
@@ -150,18 +150,18 @@ export const BionicReader = () => {
         </label>
         <div 
           ref={outputRef}
-          className="border border-border bg-card p-4 rounded-lg min-h-[120px] text-left focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
+          className="border-2 border-border bg-background p-4 rounded-lg min-h-[120px] text-left focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
           tabIndex={text ? 0 : -1}
           role="region"
           aria-label="Processed bionic text"
           aria-live="polite"
         >
           {text ? (
-            <div className="leading-relaxed text-base">
+            <div className="leading-relaxed text-lg font-sans">
               {processBionicText(text)}
             </div>
           ) : (
-            <div className="text-muted-foreground italic">
+            <div className="text-muted-foreground italic text-center py-8">
               Enter text above to see the bionic reading effect...
             </div>
           )}
