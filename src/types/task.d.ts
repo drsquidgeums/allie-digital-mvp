@@ -7,5 +7,5 @@ export interface Task {
   points: number;
   color?: string;
   category?: string;
-  labels?: string[];
+  labels: string[];
 }

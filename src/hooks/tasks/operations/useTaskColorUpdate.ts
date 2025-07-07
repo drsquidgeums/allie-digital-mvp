@@ -2,24 +2,11 @@
 import { useCallback } from "react";
 import { Task } from "@/types/task";
 import { toast } from "sonner";
-import { extendedSupabase } from "@/integrations/extendedSupabaseClient";
 
 export const useTaskColorUpdate = (tasks: Task[], updateTasks: (tasks: Task[]) => void) => {
   const handleUpdateTaskColor = useCallback(async (id: string, color: string) => {
     try {
-      // Update task color in Supabase
-      const { error } = await extendedSupabase
-        .from('tasks')
-        .update({ color })
-        .eq('id', id);
-
-      if (error) {
-        console.error('Error updating task color:', error);
-        toast.error("Failed to update task color");
-        return;
-      }
-
-      // Update local state
+      // Update local state only (since tasks are stored locally)
       const updatedTasks = tasks.map(task => {
         if (task.id === id) {
           return { ...task, color };
@@ -28,9 +15,10 @@ export const useTaskColorUpdate = (tasks: Task[], updateTasks: (tasks: Task[]) =
       });
       
       updateTasks(updatedTasks);
-      // Using the correct toast API format
+      console.log('Task color updated:', id, color);
+      
       toast("Task updated", {
-        description: "Task colour has been updated"
+        description: "Task color has been updated"
       });
     } catch (err) {
       console.error('Error in handleUpdateTaskColor:', err);

@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Task } from "@/types/task";
+import { v4 as uuidv4 } from 'uuid';
 
 // Simple local storage key
 const TASKS_STORAGE_KEY = 'local_tasks';
@@ -11,10 +12,16 @@ const loadTasksFromStorage = (): Task[] => {
     const stored = localStorage.getItem(TASKS_STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      return parsed.map((task: any) => ({
-        ...task,
-        createdAt: new Date(task.createdAt)
-      }));
+      return parsed.map((task: any) => {
+        // Migrate old timestamp-based IDs to UUIDs and ensure labels exist
+        const migratedTask: Task = {
+          ...task,
+          createdAt: new Date(task.createdAt),
+          id: task.id && task.id.length > 20 ? task.id : uuidv4(), // Keep UUID, replace timestamp IDs
+          labels: task.labels || [] // Ensure labels array exists
+        };
+        return migratedTask;
+      });
     }
   } catch (error) {
     console.error('Error loading tasks from storage:', error);

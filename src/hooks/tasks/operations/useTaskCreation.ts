@@ -2,6 +2,7 @@
 import { useCallback } from "react";
 import { Task } from "@/types/task";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from 'uuid';
 
 const categories = ["work", "personal", "study", "health"];
 
@@ -18,12 +19,13 @@ export const useTaskCreation = (tasks: Task[], updateTasks: (tasks: Task[]) => v
     
     // Create the new task object
     const newTask: Task = {
-      id: Date.now().toString(),
+      id: uuidv4(),
       text: text.trim(),
       completed: false,
       createdAt: taskDate || new Date(),
       points: 10, // Default points
-      category: randomCategory
+      category: randomCategory,
+      labels: []
     };
 
     // Set points using the getTaskPoints function
