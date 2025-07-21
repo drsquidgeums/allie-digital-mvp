@@ -1,5 +1,5 @@
 
-import { BookOpen, Mic, Eye, Timer, Text, SpellCheck, Glasses, Music } from "lucide-react";
+import { BookOpen, Mic, Eye, Timer, Text, SpellCheck, Glasses, Music, Type } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { BionicReader } from "../BionicReader";
@@ -10,6 +10,7 @@ import { SpeechToText } from "../SpeechToText";
 import { Rewordify } from "../Rewordify";
 import { IrlenOverlay } from "../IrlenOverlay";
 import { AmbientMusic } from "../AmbientMusic";
+import { TextTool } from "./toolbar/TextTool";
 
 export const ToolbarTools = () => {
   const { t } = useTranslation();
@@ -59,6 +60,7 @@ export const ToolbarTools = () => {
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
       <IrlenOverlay />
+      <TextTool />
       <AmbientMusic />
     </div>
   );
