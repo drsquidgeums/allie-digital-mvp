@@ -12,10 +12,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { FontSelector } from "@/components/FontSelector";
+import { globalFontState } from "@/utils/fontStateManager";
 
 export const TextTool = () => {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedFont, setSelectedFont] = React.useState("system");
+  const [selectedFont, setSelectedFont] = React.useState(globalFontState.selectedFont);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -50,7 +51,7 @@ export const TextTool = () => {
         </TooltipContent>
       </Tooltip>
       <PopoverContent 
-        className="w-80 bg-popover text-popover-foreground"
+        className="w-80 dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
         align="end"
       >
         <div className="space-y-4 p-2">

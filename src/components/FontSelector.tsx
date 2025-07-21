@@ -6,6 +6,8 @@ import {
 } from "@/components/ui/select";
 import { FontList } from "./font-selector/FontList";
 import { BoldToggle } from "./font-selector/BoldToggle";
+import { globalFontState } from "@/utils/fontStateManager";
+import { useToast } from "@/hooks/use-toast";
 
 interface FontSelectorProps {
   selectedFont: string;
@@ -13,11 +15,34 @@ interface FontSelectorProps {
 }
 
 export const FontSelector = ({ selectedFont, onFontChange }: FontSelectorProps) => {
+  const { toast } = useToast();
+  const [currentFont, setCurrentFont] = React.useState(globalFontState.selectedFont);
+
+  React.useEffect(() => {
+    const unsubscribe = globalFontState.subscribe((newFont) => {
+      setCurrentFont(newFont);
+      onFontChange(newFont);
+    });
+    
+    return () => {
+      unsubscribe();
+    };
+  }, [onFontChange]);
+
+  const handleFontChange = (font: string) => {
+    globalFontState.setFont(font);
+    
+    toast({
+      title: "Font changed",
+      description: `Applied ${font} font across the application`,
+    });
+  };
+
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium text-foreground">Font</label>
       <div className="flex gap-2 items-start">
-        <Select value={selectedFont} onValueChange={onFontChange}>
+        <Select value={currentFont} onValueChange={handleFontChange}>
           <SelectTrigger className="text-foreground bg-background">
             <SelectValue placeholder="Select a font" />
           </SelectTrigger>
