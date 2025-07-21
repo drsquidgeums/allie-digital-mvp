@@ -13,7 +13,6 @@ import { Eye, Volume2, MousePointer, Palette, Type } from "lucide-react";
 export const AccessibilityToolbar = () => {
   const { toast } = useToast();
   const [settings, setSettings] = useState({
-    highContrast: false,
     reducedMotion: false,
     textSize: [100],
     focusIndicators: true,
@@ -26,9 +25,6 @@ export const AccessibilityToolbar = () => {
     setSettings(newSettings);
     
     // Apply settings to document
-    if (key === 'highContrast') {
-      document.documentElement.classList.toggle('high-contrast', value);
-    }
     if (key === 'reducedMotion') {
       document.documentElement.classList.toggle('reduce-motion', value);
     }
@@ -56,24 +52,6 @@ export const AccessibilityToolbar = () => {
         align="end"
       >
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <Label className="text-sm font-medium flex items-center gap-2">
-                <Palette className="h-3 w-3" />
-                High Contrast Mode
-              </Label>
-              <p className="text-xs text-muted-foreground">
-                Increase contrast for better visibility
-              </p>
-            </div>
-            <Switch 
-              checked={settings.highContrast}
-              onCheckedChange={(checked) => handleSettingChange('highContrast', checked)}
-            />
-          </div>
-
-          <Separator />
-
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <Label className="text-sm font-medium">Reduced Motion</Label>
