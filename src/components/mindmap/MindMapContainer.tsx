@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { MindMapToolbar } from './MindMapToolbar';
-import { MindMapFlow } from './MindMapFlow';
+import { MindMapVisualToolbar } from './MindMapVisualToolbar';
+import { MindMapEnhancedFlow } from './MindMapEnhancedFlow';
 import { MindMapCreativeToolbar } from './MindMapCreativeToolbar';
 import { MindMapContainerProps } from './types';
 import { toast } from "sonner";
@@ -69,9 +69,27 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
     toast(`Added ${shape} node`);
   };
 
+  const handleAddNode = (type: string, label?: string) => {
+    const nodeStyle = getShapeStyle(type, selectedColor, customColor);
+
+    const newNode = {
+      id: `${type}_${Date.now()}`,
+      type: type === 'image' ? 'imageNode' : 'shapeNode',
+      data: { 
+        label: label || 'New Node',
+        shape: type,
+        color: selectedColor === 'custom' ? customColor : selectedColor,
+        textColor: selectedTextColor === 'custom' ? customTextColor : selectedTextColor
+      },
+      position: { x: Math.random() * 500, y: Math.random() * 300 },
+      style: nodeStyle,
+    };
+
+    onNodesChange([{ type: 'add', item: newNode }]);
+  };
+
   const handleDeleteNode = (nodeId: string) => {
     onNodesChange([{ type: 'remove', id: nodeId }]);
-    toast(`Node deleted`);
   };
 
   const handleZoomIn = () => {
@@ -90,15 +108,8 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
   };
 
   return (
-    <div 
-      className="w-full h-[calc(100vh-12rem)] bg-background rounded-xl overflow-hidden flex flex-col shadow-lg animate-fade-in relative"
-      role="application"
-      aria-label="Enhanced mind map editor with templates and auto-layout"
-    >
-      <MindMapToolbar
-        newNodeText={newNodeText}
-        setNewNodeText={setNewNodeText}
-        onAddNode={onAddNode}
+    <div className="w-full h-[calc(100vh-12rem)] bg-background rounded-xl overflow-hidden flex flex-col shadow-lg animate-fade-in relative">
+      <MindMapVisualToolbar
         onExportJpg={onExportJpg}
         onExportJson={onExportJson}
         onClear={onClear}
@@ -111,9 +122,18 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
         onZoomIn={handleZoomIn}
         onZoomOut={handleZoomOut}
         onFitView={handleFitView}
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
+        customColor={customColor}
+        setCustomColor={setCustomColor}
+        selectedTextColor={selectedTextColor}
+        setSelectedTextColor={setSelectedTextColor}
+        customTextColor={customTextColor}
+        setCustomTextColor={setCustomTextColor}
       />
+      
       <div className="flex-1 min-h-0 relative">
-        <MindMapFlow
+        <MindMapEnhancedFlow
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
@@ -121,6 +141,7 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
           onConnect={onConnect}
           nodeTypes={nodeTypes}
           onDeleteNode={handleDeleteNode}
+          onAddNode={handleAddNode}
           onUndo={onUndo}
           onRedo={onRedo}
           onZoomIn={handleZoomIn}
@@ -128,6 +149,7 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
           onFitView={handleFitView}
         />
       </div>
+      
       <div className="absolute bottom-0 left-0 right-0 z-50 pointer-events-none">
         <div className="pointer-events-auto">
           <MindMapCreativeToolbar 
