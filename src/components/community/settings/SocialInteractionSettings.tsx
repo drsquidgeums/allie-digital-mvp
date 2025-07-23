@@ -1,6 +1,5 @@
 
 import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -37,8 +36,8 @@ export const SocialInteractionSettings = ({ onSettingsChange }: SocialInteractio
   };
 
   return (
-    <Card className="p-6">
-      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold flex items-center gap-2">
         <Users className="h-5 w-5" />
         Social Interaction Support
       </h3>
@@ -138,6 +137,6 @@ export const SocialInteractionSettings = ({ onSettingsChange }: SocialInteractio
           />
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
