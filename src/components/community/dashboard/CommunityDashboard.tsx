@@ -141,10 +141,6 @@ export const CommunityDashboard = ({ onActionClick }: CommunityDashboardProps) =
           <BarChart3 className="h-4 w-4 mr-2" />
           Poll
         </Button>
-        <Button variant="outline" size="sm" onClick={() => onActionClick('settings')}>
-          <Settings className="h-4 w-4 mr-2" />
-          Settings
-        </Button>
       </div>
     </div>
   );
