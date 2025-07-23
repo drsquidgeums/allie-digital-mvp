@@ -9,12 +9,12 @@ interface SettingsSectionProps {
 
 export const SettingsSection = ({ title, children }: SettingsSectionProps) => {
   return (
-    <div className="section-elevated p-6 space-section">
-      <h3 className="section-title">{title}</h3>
-      <div className="space-content">
+    <div className="space-y-4">
+      <h3 className="text-lg font-medium">{title}</h3>
+      <div className="space-y-4">
         {children}
       </div>
-      <Separator className="divider-soft mt-6" />
+      <Separator className="mt-6" />
     </div>
   );
 };
