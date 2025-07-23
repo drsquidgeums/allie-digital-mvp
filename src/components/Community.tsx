@@ -1,10 +1,8 @@
 
-
 import React, { useRef, lazy, Suspense, memo, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CommunityHeader } from "./community/CommunityHeader";
-import { CommunityStats } from "./community/CommunityStats";
 import { TaskPoints } from "./dashboard/TaskPoints";
 import { TaskAchievements } from "./dashboard/TaskAchievements";
 import { CommunityPreferences } from "./community/settings/CommunityPreferences";
@@ -12,25 +10,16 @@ import { SocialInteractionSettings } from "./community/settings/SocialInteractio
 import { StudyGroupTemplate } from "./community/StudyGroupTemplate";
 import { CognitiveSupportTools } from "./community/CognitiveSupportTools";
 import { AccessibilityToolbar } from "./community/accessibility/AccessibilityToolbar";
-import { EnhancedDiscussionList } from "./community/enhanced/EnhancedDiscussionList";
+import { CommunityDashboard } from "./community/dashboard/CommunityDashboard";
+import { VisualStudyGroups } from "./community/visual/VisualStudyGroups";
+import { VisualDiscussions } from "./community/visual/VisualDiscussions";
+import { VisualResources } from "./community/visual/VisualResources";
 import { useTasks } from "@/hooks/useTasks";
-import { Settings, Brain, Users, MessageSquare, Shield } from "lucide-react";
+import { ArrowLeft, Brain, MessageSquare, Settings, Users } from "lucide-react";
 
 // Lazy load less critical components
-const DiscussionList = lazy(() => import("./community/DiscussionList").then(module => ({
-  default: memo(module.DiscussionList)
-})));
 const CommunityChat = lazy(() => import("./community/CommunityChat").then(module => ({
   default: memo(module.CommunityChat)
-})));
-const ResourceShare = lazy(() => import("./community/ResourceShare").then(module => ({
-  default: memo(module.ResourceShare)
-})));
-const StudyGroups = lazy(() => import("./community/StudyGroups").then(module => ({
-  default: memo(module.StudyGroups)
-})));
-const CollaborationActivity = lazy(() => import("./community/CollaborationActivity").then(module => ({
-  default: memo(module.default)
 })));
 const TutorCommunication = lazy(() => import("./community/TutorCommunication").then(module => ({
   default: memo(module.default)
@@ -50,24 +39,23 @@ LoadingComponent.displayName = "LoadingComponent";
 export const Community = memo(() => {
   const mainRef = useRef<HTMLDivElement>(null);
   const { calculateTotalPoints, showAchievement, setShowAchievement } = useTasks();
-  const [activeView, setActiveView] = useState<'community' | 'preferences' | 'cognitive-tools' | 'social-settings'>('community');
+  const [activeView, setActiveView] = useState<'dashboard' | 'study-groups' | 'discussions' | 'resources' | 'focus-tools' | 'tutor' | 'poll' | 'settings' | 'preferences' | 'social-settings'>('dashboard');
   const [preferences, setPreferences] = useState({});
   const [socialSettings, setSocialSettings] = useState({});
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
+      setActiveView('dashboard');
       mainRef.current?.focus();
     }
   };
 
-  const handleCreateStructuredGroup = (groupData: any) => {
-    console.log('Creating structured group:', groupData);
-    // This would integrate with the existing StudyGroups component
+  const handleActionClick = (action: string) => {
+    setActiveView(action as any);
   };
 
   const handlePreferencesChange = (newPreferences: any) => {
     setPreferences(newPreferences);
-    // Apply preferences to the UI
     console.log('Preferences updated:', newPreferences);
   };
 
@@ -80,46 +68,51 @@ export const Community = memo(() => {
   const points = useMemo(() => calculateTotalPoints(), [calculateTotalPoints]);
 
   const renderContent = () => {
-    if (activeView === 'preferences') {
-      return <CommunityPreferences onPreferencesChange={handlePreferencesChange} />;
-    }
-    
-    if (activeView === 'cognitive-tools') {
-      return <CognitiveSupportTools />;
-    }
-
-    if (activeView === 'social-settings') {
-      return <SocialInteractionSettings onSettingsChange={handleSocialSettingsChange} />;
-    }
-
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="space-y-4">
-          <StudyGroupTemplate onCreateGroup={handleCreateStructuredGroup} />
-          <EnhancedDiscussionList />
-          <Suspense fallback={<LoadingComponent />}>
-            <CollaborationActivity />
-          </Suspense>
-          <Suspense fallback={<LoadingComponent />}>
-            <CommunityChat />
-          </Suspense>
+    switch (activeView) {
+      case 'dashboard':
+        return <CommunityDashboard onActionClick={handleActionClick} />;
+      case 'study-groups':
+        return <VisualStudyGroups />;
+      case 'discussions':
+        return <VisualDiscussions />;
+      case 'resources':
+        return <VisualResources />;
+      case 'focus-tools':
+        return <CognitiveSupportTools />;
+      case 'tutor':
+        return (
           <Suspense fallback={<LoadingComponent />}>
             <TutorCommunication />
           </Suspense>
-        </div>
-        <div className="space-y-4">
-          <Suspense fallback={<LoadingComponent />}>
-            <ResourceShare />
-          </Suspense>
-          <Suspense fallback={<LoadingComponent />}>
-            <StudyGroups />
-          </Suspense>
+        );
+      case 'poll':
+        return (
           <Suspense fallback={<LoadingComponent />}>
             <PollBox />
           </Suspense>
-        </div>
-      </div>
-    );
+        );
+      case 'preferences':
+        return <CommunityPreferences onPreferencesChange={handlePreferencesChange} />;
+      case 'social-settings':
+        return <SocialInteractionSettings onSettingsChange={handleSocialSettingsChange} />;
+      default:
+        return <CommunityDashboard onActionClick={handleActionClick} />;
+    }
+  };
+
+  const getViewTitle = () => {
+    switch (activeView) {
+      case 'dashboard': return 'Community Hub';
+      case 'study-groups': return 'Study Groups';
+      case 'discussions': return 'Discussions';
+      case 'resources': return 'Resources';
+      case 'focus-tools': return 'Focus Tools';
+      case 'tutor': return 'Ask Your Tutor';
+      case 'poll': return 'Community Poll';
+      case 'preferences': return 'Accessibility Settings';
+      case 'social-settings': return 'Social Support Settings';
+      default: return 'Community Hub';
+    }
   };
 
   return (
@@ -132,47 +125,37 @@ export const Community = memo(() => {
     >
       <div className="p-4 space-y-4">
         <div className="flex justify-between items-center">
-          <CommunityHeader />
-          <AccessibilityToolbar />
+          <div className="flex items-center gap-3">
+            {activeView !== 'dashboard' && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setActiveView('dashboard')}
+                className="gap-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back
+              </Button>
+            )}
+            <h1 className="text-2xl font-bold">{getViewTitle()}</h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <AccessibilityToolbar />
+            {activeView === 'dashboard' && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setActiveView('preferences')}
+                className="gap-2"
+              >
+                <Settings className="h-4 w-4" />
+                Settings
+              </Button>
+            )}
+          </div>
         </div>
         
-        {/* Enhanced Navigation Tabs */}
-        <div className="flex gap-2 border-b overflow-x-auto">
-          <Button
-            variant={activeView === 'community' ? 'default' : 'ghost'}
-            onClick={() => setActiveView('community')}
-            className="gap-2 flex-shrink-0"
-          >
-            <Users className="h-4 w-4" />
-            Community
-          </Button>
-          <Button
-            variant={activeView === 'cognitive-tools' ? 'default' : 'ghost'}
-            onClick={() => setActiveView('cognitive-tools')}
-            className="gap-2 flex-shrink-0"
-          >
-            <Brain className="h-4 w-4" />
-            Focus Tools
-          </Button>
-          <Button
-            variant={activeView === 'social-settings' ? 'default' : 'ghost'}
-            onClick={() => setActiveView('social-settings')}
-            className="gap-2 flex-shrink-0"
-          >
-            <MessageSquare className="h-4 w-4" />
-            Social Support
-          </Button>
-          <Button
-            variant={activeView === 'preferences' ? 'default' : 'ghost'}
-            onClick={() => setActiveView('preferences')}
-            className="gap-2 flex-shrink-0"
-          >
-            <Settings className="h-4 w-4" />
-            Accessibility
-          </Button>
-        </div>
-        
-        {activeView === 'community' && (
+        {activeView === 'dashboard' && (
           <>
             <TaskPoints points={points} />
             <TaskAchievements 
@@ -180,7 +163,6 @@ export const Community = memo(() => {
               isOpen={showAchievement}
               onClose={() => setShowAchievement(false)}
             />
-            <CommunityStats />
           </>
         )}
         
