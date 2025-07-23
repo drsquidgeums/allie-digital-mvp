@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Canvas as FabricCanvas, Circle, Rect, Text, Group, FabricObject } from 'fabric';
+import { Canvas as FabricCanvas, Circle, Rect, Text } from 'fabric';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -12,6 +12,7 @@ interface FabricMindMapProps {
 }
 
 export const FabricMindMap: React.FC<FabricMindMapProps> = ({ className }) => {
+  console.log('FabricMindMap component rendering');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [fabricCanvas, setFabricCanvas] = useState<FabricCanvas | null>(null);
   const [activeColor, setActiveColor] = useState("#9b87f5");
@@ -22,30 +23,44 @@ export const FabricMindMap: React.FC<FabricMindMapProps> = ({ className }) => {
 
   // Initialize Fabric canvas
   useEffect(() => {
-    if (!canvasRef.current) return;
+    console.log('FabricMindMap useEffect - initializing canvas');
+    if (!canvasRef.current) {
+      console.log('Canvas ref not available yet');
+      return;
+    }
 
-    const canvas = new FabricCanvas(canvasRef.current, {
-      width: 800,
-      height: 600,
-      backgroundColor: "hsl(var(--background))",
-    });
+    try {
+      const canvas = new FabricCanvas(canvasRef.current, {
+        width: 800,
+        height: 600,
+        backgroundColor: "hsl(var(--background))",
+      });
 
-    setFabricCanvas(canvas);
-    
-    // Save initial state
-    const initialState = JSON.stringify(canvas.toJSON());
-    setHistory([initialState]);
-    setHistoryStep(0);
+      console.log('Fabric canvas created successfully', canvas);
+      setFabricCanvas(canvas);
+      
+      // Save initial state
+      const initialState = JSON.stringify(canvas.toJSON());
+      setHistory([initialState]);
+      setHistoryStep(0);
 
-    // Add canvas event listeners
-    canvas.on('object:added', () => saveState(canvas));
-    canvas.on('object:removed', () => saveState(canvas));
-    canvas.on('object:modified', () => saveState(canvas));
+      // Add canvas event listeners
+      canvas.on('object:added', () => saveState(canvas));
+      canvas.on('object:removed', () => saveState(canvas));
+      canvas.on('object:modified', () => saveState(canvas));
 
-    toast.success("Mind map ready! Click tools to add elements.");
+      toast.success("Mind map ready! Click tools to add elements.");
+      
+    } catch (error) {
+      console.error('Error creating Fabric canvas:', error);
+      toast.error("Failed to initialize mind map canvas");
+    }
 
     return () => {
-      canvas.dispose();
+      console.log('Cleaning up Fabric canvas');
+      if (fabricCanvas) {
+        fabricCanvas.dispose();
+      }
     };
   }, []);
 
