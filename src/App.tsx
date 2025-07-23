@@ -9,7 +9,6 @@ import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
 import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
-import { NdaAgreement } from "@/components/nda/NdaAgreement";
 import { FeedbackPrompt } from "@/components/community/FeedbackPrompt";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
 
@@ -27,9 +26,7 @@ const App = () => {
   }, []);
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showNda, setShowNda] = useState(false);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
-  const [ndaCompleted, setNdaCompleted] = useState<boolean>(false);
   const [showFeedbackPrompt, setShowFeedbackPrompt] = useState(false);
 
   // Load any existing user info from localStorage
@@ -42,7 +39,6 @@ const App = () => {
           name: parsedAgreement.name,
           email: parsedAgreement.email
         });
-        setNdaCompleted(true);
       } catch (error) {
         console.error("Error parsing NDA agreement:", error);
         localStorage.removeItem("nda_agreement");
@@ -50,15 +46,8 @@ const App = () => {
     }
   }, []);
 
-  const handleNdaAgreementComplete = (name: string, email: string) => {
-    setShowNda(false);
-    setUserInfo({ name, email });
-    setNdaCompleted(true);
-  };
-
   const handleAuthentication = () => {
     setIsAuthenticated(true);
-    setShowNda(true); // Always show NDA after authentication
   };
 
   const handleCloseFeedbackPrompt = () => {
@@ -96,12 +85,6 @@ const App = () => {
               <AppRoutes />
             </Suspense>
             <FloatingAIAssistant />
-            
-            {/* NDA Agreement - Show this first */}
-            <NdaAgreement 
-              isOpen={showNda} 
-              onAgreementComplete={handleNdaAgreementComplete} 
-            />
             
             {/* Feedback Prompt - Only show when manually triggered */}
             <FeedbackPrompt
