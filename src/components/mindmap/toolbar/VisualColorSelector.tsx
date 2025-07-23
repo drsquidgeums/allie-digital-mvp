@@ -1,9 +1,17 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
 import { Palette, Type } from "lucide-react";
+import { getDarkModeDropdownClasses } from '@/utils/darkModeUtils';
 
 interface VisualColorSelectorProps {
   selectedColor: string;
@@ -46,83 +54,151 @@ export const VisualColorSelector: React.FC<VisualColorSelectorProps> = ({
     { value: '#10b981', label: 'Green', color: '#10b981' },
   ];
 
+  const getCurrentShapeColor = () => {
+    const color = shapeColors.find(c => c.value === selectedColor);
+    return color ? color.color : customColor;
+  };
+
+  const getCurrentTextColor = () => {
+    const color = textColors.find(c => c.value === selectedTextColor);
+    return color ? color.color : customTextColor;
+  };
+
   return (
     <div className="flex items-center gap-3">
-      <Card className="flex items-center gap-2 p-2 bg-background/80 backdrop-blur-sm">
-        <Palette className="h-4 w-4 text-muted-foreground" />
-        <div className="flex gap-1">
+      {/* Shape Color Dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-9 gap-2"
+            aria-label="Select shape color"
+          >
+            <Palette className="h-4 w-4" />
+            <div 
+              className="w-4 h-4 rounded-full border border-border"
+              style={{ backgroundColor: getCurrentShapeColor() }}
+            />
+            Shape
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent 
+          align="end"
+          className={`w-48 ${getDarkModeDropdownClasses()} animate-fade-in`}
+        >
+          <DropdownMenuLabel>Shape Colors</DropdownMenuLabel>
+          <DropdownMenuSeparator />
           {shapeColors.map((color) => (
-            <Tooltip key={color.value}>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={`h-8 w-8 rounded-full p-0 hover:scale-110 transition-all duration-200 ${
-                    selectedColor === color.value ? 'ring-2 ring-primary ring-offset-2' : ''
-                  }`}
-                  style={{ backgroundColor: color.color }}
-                  onClick={() => setSelectedColor(color.value)}
-                />
-              </TooltipTrigger>
-              <TooltipContent>{color.label}</TooltipContent>
-            </Tooltip>
+            <DropdownMenuItem
+              key={color.value}
+              onClick={() => setSelectedColor(color.value)}
+              className="cursor-pointer flex items-center gap-3"
+            >
+              <div 
+                className="w-5 h-5 rounded-full border border-border"
+                style={{ backgroundColor: color.color }}
+              />
+              <span>{color.label}</span>
+              {selectedColor === color.value && (
+                <div className="ml-auto w-2 h-2 bg-primary rounded-full" />
+              )}
+            </DropdownMenuItem>
           ))}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="relative">
-                <input
-                  type="color"
-                  value={customColor}
-                  onChange={(e) => {
-                    setCustomColor(e.target.value);
-                    setSelectedColor('custom');
-                  }}
-                  className="h-8 w-8 rounded-full border-2 border-border cursor-pointer hover:scale-110 transition-all duration-200"
-                />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>Custom Color</TooltipContent>
-          </Tooltip>
-        </div>
-      </Card>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
+              const input = document.createElement('input');
+              input.type = 'color';
+              input.value = customColor;
+              input.onchange = (e) => {
+                const target = e.target as HTMLInputElement;
+                setCustomColor(target.value);
+                setSelectedColor('custom');
+              };
+              input.click();
+            }}
+            className="cursor-pointer flex items-center gap-3"
+          >
+            <div 
+              className="w-5 h-5 rounded-full border border-border"
+              style={{ backgroundColor: customColor }}
+            />
+            <span>Custom Color</span>
+            {selectedColor === 'custom' && (
+              <div className="ml-auto w-2 h-2 bg-primary rounded-full" />
+            )}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
-      <Card className="flex items-center gap-2 p-2 bg-background/80 backdrop-blur-sm">
-        <Type className="h-4 w-4 text-muted-foreground" />
-        <div className="flex gap-1">
+      {/* Text Color Dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-9 gap-2"
+            aria-label="Select text color"
+          >
+            <Type className="h-4 w-4" />
+            <div 
+              className="w-4 h-4 rounded-full border border-border"
+              style={{ backgroundColor: getCurrentTextColor() }}
+            />
+            Text
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent 
+          align="end"
+          className={`w-48 ${getDarkModeDropdownClasses()} animate-fade-in`}
+        >
+          <DropdownMenuLabel>Text Colors</DropdownMenuLabel>
+          <DropdownMenuSeparator />
           {textColors.map((color) => (
-            <Tooltip key={color.value}>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={`h-8 w-8 rounded-full p-0 hover:scale-110 transition-all duration-200 ${
-                    selectedTextColor === color.value ? 'ring-2 ring-primary ring-offset-2' : ''
-                  } ${color.color === '#ffffff' ? 'border border-border' : ''}`}
-                  style={{ backgroundColor: color.color }}
-                  onClick={() => setSelectedTextColor(color.value)}
-                />
-              </TooltipTrigger>
-              <TooltipContent>{color.label} Text</TooltipContent>
-            </Tooltip>
+            <DropdownMenuItem
+              key={color.value}
+              onClick={() => setSelectedTextColor(color.value)}
+              className="cursor-pointer flex items-center gap-3"
+            >
+              <div 
+                className={`w-5 h-5 rounded-full border border-border ${
+                  color.color === '#ffffff' ? 'border-2' : ''
+                }`}
+                style={{ backgroundColor: color.color }}
+              />
+              <span>{color.label}</span>
+              {selectedTextColor === color.value && (
+                <div className="ml-auto w-2 h-2 bg-primary rounded-full" />
+              )}
+            </DropdownMenuItem>
           ))}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="relative">
-                <input
-                  type="color"
-                  value={customTextColor}
-                  onChange={(e) => {
-                    setCustomTextColor(e.target.value);
-                    setSelectedTextColor('custom');
-                  }}
-                  className="h-8 w-8 rounded-full border-2 border-border cursor-pointer hover:scale-110 transition-all duration-200"
-                />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>Custom Text</TooltipContent>
-          </Tooltip>
-        </div>
-      </Card>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
+              const input = document.createElement('input');
+              input.type = 'color';
+              input.value = customTextColor;
+              input.onchange = (e) => {
+                const target = e.target as HTMLInputElement;
+                setCustomTextColor(target.value);
+                setSelectedTextColor('custom');
+              };
+              input.click();
+            }}
+            className="cursor-pointer flex items-center gap-3"
+          >
+            <div 
+              className="w-5 h-5 rounded-full border border-border"
+              style={{ backgroundColor: customTextColor }}
+            />
+            <span>Custom Text</span>
+            {selectedTextColor === 'custom' && (
+              <div className="ml-auto w-2 h-2 bg-primary rounded-full" />
+            )}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };
