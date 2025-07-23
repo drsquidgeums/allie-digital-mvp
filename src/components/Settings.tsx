@@ -17,8 +17,8 @@ export const Settings = () => {
   const { t } = useTranslation();
   
   return (
-    <Card 
-      className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative border-none shadow-lg ring-offset-background transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+    <div 
+      className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       role="region"
       aria-label={t('settings.title')}
     >
@@ -38,6 +38,6 @@ export const Settings = () => {
           <IntegrationSettings />
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
