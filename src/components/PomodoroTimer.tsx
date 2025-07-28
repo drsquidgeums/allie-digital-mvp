@@ -23,21 +23,21 @@ export const PomodoroTimer = () => {
   
   return (
     <div className="space-y-6 animate-fade-in">
-      <Card>
-        <CardHeader>
-          <CardTitle>Pomodoro Timer</CardTitle>
-          <CardDescription>
+      <div>
+        <div className="mb-6">
+          <h2 className="text-2xl font-semibold tracking-tight">Pomodoro Timer</h2>
+          <p className="text-muted-foreground">
             Focus on your tasks with timed work sessions and smart break reminders
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </p>
+        </div>
+        <div className="space-y-4">
           {taskReadyForCompletion && <TaskCompletionPrompt />}
           <PomodoroSettings />
           <TaskSelector />
           <TimerDisplay />
           <TimerControls />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };
