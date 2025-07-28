@@ -93,7 +93,7 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",
     "react-i18next": "^15.4.0",
-    "react-konva": "^18.2.12",
+    "react-konva": "^18.2.10",
     "react-pdf": "^6.2.2",
     "react-pdf-highlighter": "^6.1.0",
     "react-pdf-highlighter-extended": "^8.1.0",
