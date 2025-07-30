@@ -5,11 +5,11 @@ import { Card } from '@/components/ui/card';
 import { AIStatus } from '@/components/AIStatus';
 import { AIRecommendations } from '@/components/AIRecommendations';
 import { AINotificationBadge } from './AINotificationBadge';
-import { useAIPersonalization } from '@/hooks/useAIPersonalization';
+import { useLocalAIPersonalization } from '@/hooks/useLocalAIPersonalization';
 
 export const FloatingAIButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { personalization } = useAIPersonalization();
+  const { personalization } = useLocalAIPersonalization();
   
   const newRecommendationsCount = personalization.recommendations.length;
 

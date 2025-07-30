@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 
 interface AnalyticsEvent {
   event_type: string;
@@ -7,24 +6,32 @@ interface AnalyticsEvent {
   session_id?: string;
 }
 
+interface StoredAnalyticsEvent {
+  id: string;
+  user_id: string;
+  event_type: string;
+  event_data: Record<string, any>;
+  session_id: string;
+  created_at: string;
+}
+
 export const useUserAnalytics = () => {
-  const [user, setUser] = useState<any>(null);
+  const [user] = useState({ id: 'demo-user' }); // Demo user for MVP
   const sessionId = useRef(crypto.randomUUID());
 
+  // Initialize demo analytics if not exists
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user || null);
-    });
-    return () => subscription.unsubscribe();
+    const existingAnalytics = localStorage.getItem('demoAnalytics');
+    if (!existingAnalytics) {
+      localStorage.setItem('demoAnalytics', JSON.stringify([]));
+    }
   }, []);
 
   const trackEvent = useCallback(async (event: AnalyticsEvent) => {
-    if (!user?.id) return;
-
     try {
-      const eventData = {
-        user_id: user.id,
+      const eventData: StoredAnalyticsEvent = {
+        id: crypto.randomUUID(),
+        user_id: 'demo-user',
         event_type: event.event_type,
         event_data: {
           ...event.event_data,
@@ -36,15 +43,23 @@ export const useUserAnalytics = () => {
           connection_type: (navigator as any).connection?.effectiveType || 'unknown'
         },
         session_id: event.session_id || sessionId.current,
+        created_at: new Date().toISOString(),
       };
 
-      await supabase
-        .from('user_analytics')
-        .insert(eventData);
+      // Store in localStorage
+      const existingAnalytics = JSON.parse(localStorage.getItem('demoAnalytics') || '[]');
+      existingAnalytics.push(eventData);
+      
+      // Keep only last 1000 events to prevent localStorage from growing too large
+      if (existingAnalytics.length > 1000) {
+        existingAnalytics.splice(0, existingAnalytics.length - 1000);
+      }
+      
+      localStorage.setItem('demoAnalytics', JSON.stringify(existingAnalytics));
     } catch (error) {
       console.error('Failed to track analytics event:', error);
     }
-  }, [user?.id]);
+  }, []);
 
   // Track page visits with enhanced context
   useEffect(() => {

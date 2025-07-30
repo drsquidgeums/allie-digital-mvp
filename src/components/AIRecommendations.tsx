@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Lightbulb, Sparkles, Clock, Target, Filter } from 'lucide-react';
-import { useAIPersonalization } from '@/hooks/useAIPersonalization';
+import { useLocalAIPersonalization } from '@/hooks/useLocalAIPersonalization';
 import { generateDemoInsights } from '@/utils/demoInsights';
 import { AIRecommendationCard, AIRecommendation, RecommendationType } from './AIRecommendationCard';
 import { useToast } from '@/hooks/use-toast';
@@ -17,7 +17,7 @@ export const AIRecommendations: React.FC<AIRecommendationsProps> = ({
   className = "", 
   compact = false 
 }) => {
-  const { personalization, isGenerating, generateInsights, fetchInsights } = useAIPersonalization();
+  const { personalization, isGenerating, generateInsights, fetchInsights } = useLocalAIPersonalization();
   const [user, setUser] = React.useState<any>(null);
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
@@ -30,19 +30,20 @@ export const AIRecommendations: React.FC<AIRecommendationsProps> = ({
     });
   }, []);
 
-  // Convert text recommendations to structured recommendations
+  // Convert recommendations to structured recommendations
   const structuredRecommendations = useMemo((): AIRecommendation[] => {
     return personalization.recommendations.map((rec, index) => ({
       id: `rec-${index}`,
-      type: (index === 0 ? 'action' : index === 1 ? 'setting' : index === 2 ? 'warning' : 'insight') as RecommendationType,
-      title: rec.split('.')[0] + '.',
-      description: rec,
-      confidence: Math.floor(Math.random() * 30) + 70, // 70-100% confidence
-      actionable: index < 2,
-      actionLabel: index === 0 ? 'Start Focus Session' : index === 1 ? 'Apply Settings' : undefined,
-      action: index === 0 ? () => toast({ title: "Focus session started!", description: "Timer activated based on AI recommendation." }) : 
-              index === 1 ? () => toast({ title: "Settings applied!", description: "Your preferences have been updated." }) : 
-              undefined
+      type: rec.type as RecommendationType,
+      title: rec.title,
+      description: rec.description,
+      confidence: Math.round(rec.confidence * 100),
+      actionable: rec.actionable,
+      actionLabel: rec.actionable ? 'Apply' : undefined,
+      action: rec.actionable ? () => toast({ 
+        title: "Recommendation applied!", 
+        description: rec.title
+      }) : undefined
     })).filter(rec => !dismissedIds.has(rec.id));
   }, [personalization.recommendations, dismissedIds, toast]);
 
@@ -52,35 +53,14 @@ export const AIRecommendations: React.FC<AIRecommendationsProps> = ({
   }, [structuredRecommendations, filterType]);
 
   const handleGenerateDemo = async () => {
-    if (!user?.id) {
-      toast({ 
-        title: "Authentication required", 
-        description: "Please log in to generate AI insights.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
     toast({ title: "Generating AI insights...", description: "This may take a moment." });
     
     try {
-      const success = await generateDemoInsights(user.id);
-      if (success) {
-        toast({ 
-          title: "AI insights generated!", 
-          description: "Your personalized recommendations are ready." 
-        });
-        // Refresh insights after generating demo data
-        setTimeout(() => {
-          fetchInsights();
-        }, 1000);
-      } else {
-        toast({ 
-          title: "Generation failed", 
-          description: "Could not generate insights. Please try again.",
-          variant: "destructive"
-        });
-      }
+      await generateInsights();
+      toast({ 
+        title: "AI insights generated!", 
+        description: "Your personalized recommendations are ready." 
+      });
     } catch (error) {
       console.error('Demo generation error:', error);
       toast({ 
