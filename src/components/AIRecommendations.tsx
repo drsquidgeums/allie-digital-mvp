@@ -52,14 +52,42 @@ export const AIRecommendations: React.FC<AIRecommendationsProps> = ({
   }, [structuredRecommendations, filterType]);
 
   const handleGenerateDemo = async () => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      toast({ 
+        title: "Authentication required", 
+        description: "Please log in to generate AI insights.",
+        variant: "destructive"
+      });
+      return;
+    }
     
-    const success = await generateDemoInsights(user.id);
-    if (success) {
-      // Refresh insights after generating demo data
-      setTimeout(() => {
-        fetchInsights();
-      }, 1000);
+    toast({ title: "Generating AI insights...", description: "This may take a moment." });
+    
+    try {
+      const success = await generateDemoInsights(user.id);
+      if (success) {
+        toast({ 
+          title: "AI insights generated!", 
+          description: "Your personalized recommendations are ready." 
+        });
+        // Refresh insights after generating demo data
+        setTimeout(() => {
+          fetchInsights();
+        }, 1000);
+      } else {
+        toast({ 
+          title: "Generation failed", 
+          description: "Could not generate insights. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Demo generation error:', error);
+      toast({ 
+        title: "Error occurred", 
+        description: "Something went wrong. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -139,7 +167,7 @@ export const AIRecommendations: React.FC<AIRecommendationsProps> = ({
                 onClick={hasRecommendations ? generateInsights : handleGenerateDemo}
                 className="text-xs"
               >
-                {hasRecommendations ? 'Refresh' : 'Try Demo'}
+                {hasRecommendations ? 'Refresh' : 'Try AI Demo'}
               </Button>
             )}
           </div>
