@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { createOpenAICompletion } from '@/utils/openai';
+import { createAnthropicCompletion } from '@/utils/anthropic';
 
 // Generate demo insights for testing
 export const generateDemoInsights = async (userId: string) => {
@@ -68,7 +68,7 @@ Respond in JSON format:
   "confidence": 0.75
 }`;
 
-    const aiResponse = await createOpenAICompletion([
+    const aiResponse = await createAnthropicCompletion([
       { role: 'system', content: 'You are an AI learning assistant that provides personalized productivity recommendations. Always respond with valid JSON.' },
       { role: 'user', content: prompt }
     ]);

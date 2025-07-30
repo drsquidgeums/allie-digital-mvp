@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { createOpenAICompletion } from '@/utils/openai';
+import { createAnthropicCompletion } from '@/utils/anthropic';
 
 interface AIInsight {
   id: string;
@@ -133,7 +133,7 @@ Respond in JSON format:
   "confidence": number
 }`;
 
-      const aiResponse = await createOpenAICompletion([
+      const aiResponse = await createAnthropicCompletion([
         { role: 'system', content: 'You are an AI learning assistant that analyzes user behavior to provide personalized recommendations. Always respond with valid JSON.' },
         { role: 'user', content: analyticsPrompt }
       ]);
