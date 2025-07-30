@@ -6,8 +6,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { useFileManager } from "@/hooks/file-manager";
 import { useUserAnalytics } from "@/hooks/useUserAnalytics";
-import { AIRecommendations } from "@/components/AIRecommendations";
-import { AIStatus } from "@/components/AIStatus";
+import { FloatingAIButton } from "@/components/FloatingAIButton";
 
 // Lazy load DocumentViewer component for better initial load performance
 const DocumentViewer = lazy(() => import("@/components/DocumentViewer").then(module => ({
@@ -136,29 +135,22 @@ const Index = () => {
       {/* Top-level error boundary for the entire application */}
       <ErrorBoundary>
         <WorkspaceLayout>
-          <div className="space-y-6">
-            {/* AI Status Panel */}
-            <AIStatus />
-            
-            {/* Document Viewer */}
-            <ErrorBoundary fallback={<ErrorFallback />}>
-              <Suspense fallback={<LoadingFallback />}>
-                <DocumentViewer 
-                  file={selectedFile}
-                  selectedColor={selectedColor}
-                  isHighlighter={isHighlighter}
-                  onContentLoaded={handleContentLoaded}
-                  initialDocumentName={documentName}
-                />
-              </Suspense>
-            </ErrorBoundary>
-          </div>
+          {/* Document Viewer */}
+          <ErrorBoundary fallback={<ErrorFallback />}>
+            <Suspense fallback={<LoadingFallback />}>
+              <DocumentViewer 
+                file={selectedFile}
+                selectedColor={selectedColor}
+                isHighlighter={isHighlighter}
+                onContentLoaded={handleContentLoaded}
+                initialDocumentName={documentName}
+              />
+            </Suspense>
+          </ErrorBoundary>
         </WorkspaceLayout>
         
-        {/* AI Recommendations - Floating panel */}
-        <div className="fixed bottom-6 right-6 w-80 z-50">
-          <AIRecommendations />
-        </div>
+        {/* Floating AI Button */}
+        <FloatingAIButton />
       </ErrorBoundary>
     </div>
   );
