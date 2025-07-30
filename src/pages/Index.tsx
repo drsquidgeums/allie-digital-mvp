@@ -4,8 +4,9 @@ import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
 import { useFileManager } from "@/hooks/file-manager";
+import { useUserAnalytics } from "@/hooks/useUserAnalytics";
+import { AIRecommendations } from "@/components/AIRecommendations";
 
 // Lazy load DocumentViewer component for better initial load performance
 const DocumentViewer = lazy(() => import("@/components/DocumentViewer").then(module => ({
@@ -29,6 +30,7 @@ const Index = () => {
   const [documentContent, setDocumentContent] = useState<string>("");
   const [documentName, setDocumentName] = useState<string>("");
   const { files } = useFileManager();
+  const { trackDocumentAction } = useUserAnalytics();
 
   useEffect(() => {
     // Check if there's a selected file ID in sessionStorage
@@ -89,6 +91,11 @@ const Index = () => {
     if (!documentName) {
       setDocumentName(name);
     }
+    // Track document loading
+    trackDocumentAction('document_loaded', { 
+      documentName: name, 
+      contentLength: content.length 
+    });
   };
 
   /**
@@ -141,10 +148,11 @@ const Index = () => {
             </Suspense>
           </ErrorBoundary>
         </WorkspaceLayout>
-        <FloatingAIAssistant 
-          documentContent={documentContent}
-          documentName={documentName}
-        />
+        
+        {/* AI Recommendations - Floating panel */}
+        <div className="fixed bottom-6 right-6 w-80 z-50">
+          <AIRecommendations />
+        </div>
       </ErrorBoundary>
     </div>
   );

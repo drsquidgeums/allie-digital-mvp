@@ -2,8 +2,9 @@
 import React, { useState, useCallback, memo } from "react";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChatMessage } from "../chat/ChatMessage";
-import { ChatInput } from "../chat/ChatInput";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Send } from "lucide-react";
 
 export const CommunityChat = memo(() => {
   const [messages, setMessages] = useState<Array<{ text: string; isUser: boolean }>>([]);
@@ -37,16 +38,32 @@ export const CommunityChat = memo(() => {
         <ScrollArea className="h-[300px] pr-4">
           <div className="space-y-4">
             {messages.map((message, index) => (
-              <ChatMessage key={index} {...message} />
+              <div key={index} className={`p-3 rounded-lg ${
+                message.isUser 
+                  ? 'bg-primary text-primary-foreground ml-12' 
+                  : 'bg-muted mr-12'
+              }`}>
+                {message.text}
+              </div>
             ))}
           </div>
         </ScrollArea>
-        <ChatInput
-          value={inputValue}
-          onChange={handleChangeInput}
-          onSend={handleSendMessage}
-          isLoading={isLoading}
-        />
+        <div className="flex gap-2">
+          <Input
+            value={inputValue}
+            onChange={(e) => handleChangeInput(e.target.value)}
+            placeholder="Type your message..."
+            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            disabled={isLoading}
+          />
+          <Button 
+            onClick={handleSendMessage}
+            disabled={isLoading || !inputValue.trim()}
+            size="icon"
+          >
+            <Send className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
     </Card>
   );

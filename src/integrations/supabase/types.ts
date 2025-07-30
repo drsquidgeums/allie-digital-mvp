@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_insights: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          insight_data: Json
+          insight_type: string
+          user_id: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          insight_data: Json
+          insight_type: string
+          user_id: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          insight_data?: Json
+          insight_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       feedback: {
         Row: {
           comments: string | null
@@ -173,6 +203,33 @@ export type Database = {
           created_at?: string | null
           id?: string
           tenant_id?: string
+        }
+        Relationships: []
+      }
+      user_analytics: {
+        Row: {
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          session_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }

@@ -1,0 +1,101 @@
+import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Lightbulb, Sparkles, Clock, Target } from 'lucide-react';
+import { useAIPersonalization } from '@/hooks/useAIPersonalization';
+
+interface AIRecommendationsProps {
+  className?: string;
+  compact?: boolean;
+}
+
+export const AIRecommendations: React.FC<AIRecommendationsProps> = ({ 
+  className = "", 
+  compact = false 
+}) => {
+  const { personalization, isGenerating, generateInsights } = useAIPersonalization();
+
+  if (personalization.recommendations.length === 0 && !isGenerating) {
+    return null;
+  }
+
+  if (compact) {
+    return (
+      <div className={`space-y-2 ${className}`}>
+        {personalization.recommendations.slice(0, 2).map((rec, index) => (
+          <div key={index} className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg text-sm">
+            <Lightbulb className="w-4 h-4 text-primary shrink-0" />
+            <span className="text-muted-foreground">{rec}</span>
+          </div>
+        ))}
+        {personalization.recommendations.length > 2 && (
+          <Badge variant="secondary" className="text-xs">
+            +{personalization.recommendations.length - 2} more insights
+          </Badge>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <Card className={className}>
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-primary" />
+            <h3 className="font-semibold">AI Insights</h3>
+            <Badge variant="secondary" className="text-xs">
+              Personalized
+            </Badge>
+          </div>
+          {!isGenerating && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={generateInsights}
+              className="text-xs"
+            >
+              Refresh
+            </Button>
+          )}
+        </div>
+
+        {isGenerating ? (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            Analyzing your patterns...
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {personalization.recommendations.map((recommendation, index) => (
+              <div key={index} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
+                <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-full shrink-0">
+                  {index === 0 && <Target className="w-4 h-4 text-primary" />}
+                  {index === 1 && <Clock className="w-4 h-4 text-primary" />}
+                  {index >= 2 && <Lightbulb className="w-4 h-4 text-primary" />}
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm leading-relaxed">{recommendation}</p>
+                </div>
+              </div>
+            ))}
+
+            {personalization.smartDefaults.pomodoro_duration && (
+              <div className="mt-4 p-3 bg-primary/5 border border-primary/20 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <Clock className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-medium">Optimal Settings</span>
+                </div>
+                <div className="text-xs text-muted-foreground space-y-1">
+                  <div>Work sessions: {personalization.smartDefaults.pomodoro_duration} minutes</div>
+                  <div>Break time: {personalization.smartDefaults.break_duration} minutes</div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+};

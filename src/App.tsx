@@ -5,7 +5,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { BrowserRouter, Navigate } from "react-router-dom";
 import { AppProviders } from "@/components/app/AppProviders";
 import { PasswordGate } from "@/components/PasswordGate";
-import { FloatingAIAssistant } from "@/components/chat/FloatingAIAssistant";
 import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
@@ -84,7 +83,6 @@ const App = () => {
               <PomodoroTaskListener />
               <AppRoutes />
             </Suspense>
-            <FloatingAIAssistant />
             
             {/* Feedback Prompt - Only show when manually triggered */}
             <FeedbackPrompt
