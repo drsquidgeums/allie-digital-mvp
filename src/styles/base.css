@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+@import './modern-ui.css';
 @import './button-animations.css';
 
 @layer base {

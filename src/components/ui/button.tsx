@@ -6,25 +6,26 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative overflow-hidden group button-micro",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium focus-modern transition-all duration-200 ease-out disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative overflow-hidden group hover-lift",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-200 disabled:hover:translate-y-0 disabled:hover:shadow-none hover-glow",
+        default: "btn-modern-primary hover:shadow-glow",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90 focus-visible:ring-destructive hover:shadow-lg hover:shadow-destructive/25 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-200 disabled:hover:translate-y-0 disabled:hover:shadow-none",
+          "bg-gradient-to-r from-destructive to-destructive/90 text-destructive-foreground shadow-modern-md hover:shadow-modern-lg hover:shadow-destructive/25",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-primary hover:border-accent-foreground/30 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm transition-all duration-200 disabled:hover:translate-y-0 disabled:hover:shadow-none hover-lift",
+          "border border-border/50 bg-background/80 shadow-modern-sm hover:bg-accent/50 hover:text-accent-foreground hover:border-primary/30 hover:shadow-modern-md backdrop-blur-sm",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80 focus-visible:ring-secondary hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm transition-all duration-200 disabled:hover:translate-y-0 disabled:hover:shadow-none hover-lift",
-        ghost: "hover:bg-accent hover:text-accent-foreground focus-visible:ring-primary hover:shadow-sm transition-all duration-200 disabled:hover:bg-transparent disabled:hover:text-muted-foreground hover-lift",
-        link: "text-primary underline-offset-4 hover:underline focus-visible:ring-primary disabled:text-muted-foreground disabled:no-underline hover:text-primary/80 transition-colors duration-200",
+          "btn-modern-secondary",
+        ghost: "hover:bg-accent/50 hover:text-accent-foreground rounded-lg hover:shadow-modern-sm",
+        link: "text-primary underline-offset-4 hover:underline hover:text-primary-dark transition-colors duration-200",
+        glass: "btn-glass hover:shadow-modern-md",
       },
       size: {
-        default: "h-10 px-4 py-2 min-h-[44px]",
-        sm: "h-9 rounded-md px-3 min-h-[36px]",
-        lg: "h-11 rounded-md px-8 min-h-[44px]",
-        icon: "h-10 w-10 min-h-[44px] min-w-[44px]",
+        default: "h-11 px-6 py-3 min-h-[44px]",
+        sm: "h-9 rounded-md px-4 text-xs min-h-[36px]",
+        lg: "h-12 rounded-lg px-8 text-base min-h-[48px]",
+        icon: "h-11 w-11 min-h-[44px] min-w-[44px]",
       },
     },
     defaultVariants: {
