@@ -58,11 +58,23 @@ export const useEncryption = () => {
 
   const decryptData = useCallback(async (encryptedData: string): Promise<string> => {
     try {
+      // If the data doesn't look encrypted (starts with HTML or plain text), return as-is
+      if (!encryptedData || encryptedData.startsWith('<') || encryptedData.startsWith('{') || encryptedData.includes('<!DOCTYPE')) {
+        return encryptedData;
+      }
+
       const key = await getEncryptionKey();
       if (!key) return encryptedData;
 
-      // Safe base64 decoding
-      const binaryString = atob(encryptedData);
+      // Safe base64 decoding with validation
+      let binaryString;
+      try {
+        binaryString = atob(encryptedData);
+      } catch (error) {
+        // If it's not valid base64, it's probably plain text
+        return encryptedData;
+      }
+
       const combined = new Uint8Array(binaryString.length);
       for (let i = 0; i < binaryString.length; i++) {
         combined[i] = binaryString.charCodeAt(i);
@@ -84,6 +96,8 @@ export const useEncryption = () => {
       return new TextDecoder().decode(decrypted);
     } catch (error) {
       console.warn('Decryption failed:', error);
+      // For document content, if decryption fails, return the original data
+      // This prevents loss of document formatting
       return encryptedData;
     }
   }, [getEncryptionKey]);
