@@ -92,8 +92,8 @@ export const MindMapVisualToolbar: React.FC<MindMapVisualToolbarProps> = ({
   };
 
   return (
-    <div className="p-3 border-b border-border/30 bg-background/95 backdrop-blur-sm flex items-center justify-between">
-      <div className="flex items-center gap-3">
+    <div className="p-3 border-b border-border/30 bg-background/95 backdrop-blur-sm flex items-center justify-between min-w-0">
+      <div className="flex items-center gap-3 min-w-0 flex-1">
         <VisualHistoryControls
           onUndo={onUndo}
           onRedo={onRedo}
@@ -115,7 +115,7 @@ export const MindMapVisualToolbar: React.FC<MindMapVisualToolbarProps> = ({
         />
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 flex-shrink-0">
         <VisualColorSelector
           selectedColor={selectedColor}
           setSelectedColor={setSelectedColor}
