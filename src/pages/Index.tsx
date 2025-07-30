@@ -7,6 +7,7 @@ import { AlertCircle } from "lucide-react";
 import { useFileManager } from "@/hooks/file-manager";
 import { useUserAnalytics } from "@/hooks/useUserAnalytics";
 import { AIRecommendations } from "@/components/AIRecommendations";
+import { AIStatus } from "@/components/AIStatus";
 
 // Lazy load DocumentViewer component for better initial load performance
 const DocumentViewer = lazy(() => import("@/components/DocumentViewer").then(module => ({
@@ -135,18 +136,23 @@ const Index = () => {
       {/* Top-level error boundary for the entire application */}
       <ErrorBoundary>
         <WorkspaceLayout>
-          {/* Specific error boundary for the DocumentViewer component */}
-          <ErrorBoundary fallback={<ErrorFallback />}>
-            <Suspense fallback={<LoadingFallback />}>
-              <DocumentViewer 
-                file={selectedFile}
-                selectedColor={selectedColor}
-                isHighlighter={isHighlighter}
-                onContentLoaded={handleContentLoaded}
-                initialDocumentName={documentName}
-              />
-            </Suspense>
-          </ErrorBoundary>
+          <div className="space-y-6">
+            {/* AI Status Panel */}
+            <AIStatus />
+            
+            {/* Document Viewer */}
+            <ErrorBoundary fallback={<ErrorFallback />}>
+              <Suspense fallback={<LoadingFallback />}>
+                <DocumentViewer 
+                  file={selectedFile}
+                  selectedColor={selectedColor}
+                  isHighlighter={isHighlighter}
+                  onContentLoaded={handleContentLoaded}
+                  initialDocumentName={documentName}
+                />
+              </Suspense>
+            </ErrorBoundary>
+          </div>
         </WorkspaceLayout>
         
         {/* AI Recommendations - Floating panel */}

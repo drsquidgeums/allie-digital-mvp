@@ -16,23 +16,31 @@ export const AIRecommendations: React.FC<AIRecommendationsProps> = ({
 }) => {
   const { personalization, isGenerating, generateInsights } = useAIPersonalization();
 
-  if (personalization.recommendations.length === 0 && !isGenerating) {
-    return null;
-  }
+  // Always show the component, even without data
+  const hasRecommendations = personalization.recommendations.length > 0;
 
   if (compact) {
     return (
       <div className={`space-y-2 ${className}`}>
-        {personalization.recommendations.slice(0, 2).map((rec, index) => (
-          <div key={index} className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg text-sm">
-            <Lightbulb className="w-4 h-4 text-primary shrink-0" />
-            <span className="text-muted-foreground">{rec}</span>
+        {hasRecommendations ? (
+          <>
+            {personalization.recommendations.slice(0, 2).map((rec, index) => (
+              <div key={index} className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg text-sm">
+                <Lightbulb className="w-4 h-4 text-primary shrink-0" />
+                <span className="text-muted-foreground">{rec}</span>
+              </div>
+            ))}
+            {personalization.recommendations.length > 2 && (
+              <Badge variant="secondary" className="text-xs">
+                +{personalization.recommendations.length - 2} more insights
+              </Badge>
+            )}
+          </>
+        ) : (
+          <div className="flex items-center gap-2 p-2 bg-primary/5 border border-primary/20 rounded-lg text-sm">
+            <Sparkles className="w-4 h-4 text-primary shrink-0" />
+            <span className="text-muted-foreground">AI learning your patterns...</span>
           </div>
-        ))}
-        {personalization.recommendations.length > 2 && (
-          <Badge variant="secondary" className="text-xs">
-            +{personalization.recommendations.length - 2} more insights
-          </Badge>
         )}
       </div>
     );
@@ -66,7 +74,7 @@ export const AIRecommendations: React.FC<AIRecommendationsProps> = ({
             <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
             Analyzing your patterns...
           </div>
-        ) : (
+        ) : hasRecommendations ? (
           <div className="space-y-3">
             {personalization.recommendations.map((recommendation, index) => (
               <div key={index} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
@@ -93,6 +101,41 @@ export const AIRecommendations: React.FC<AIRecommendationsProps> = ({
                 </div>
               </div>
             )}
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <div className="flex items-start gap-3 p-3 bg-primary/5 border border-primary/20 rounded-lg">
+              <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-full shrink-0">
+                <Sparkles className="w-4 h-4 text-primary" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium mb-1">AI Learning Mode</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Your AI assistant is observing your work patterns to provide personalized recommendations. 
+                  Use the tools for a few minutes to see intelligent suggestions appear here.
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="p-2 bg-muted/30 rounded">
+                <div className="font-medium">Tracks:</div>
+                <div className="text-muted-foreground">Tool usage, focus patterns</div>
+              </div>
+              <div className="p-2 bg-muted/30 rounded">
+                <div className="font-medium">Suggests:</div>
+                <div className="text-muted-foreground">Optimal timings, workflows</div>
+              </div>
+            </div>
+            
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={generateInsights}
+              className="w-full text-xs"
+            >
+              Generate Sample Insights
+            </Button>
           </div>
         )}
       </CardContent>
