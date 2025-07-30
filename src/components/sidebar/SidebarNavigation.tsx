@@ -62,21 +62,17 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
   }, [navigate, setActiveComponent]);
 
   return (
-    <div className="space-y-2 visual-group nav-primary" data-sidebar-nav>
-      <div className="hierarchy-secondary text-xs uppercase tracking-wider text-muted-foreground mb-3 px-2">
-        Navigation
-      </div>
+    <div className="space-y-2" data-sidebar-nav>
       {navigationItems.map(({ id, label, icon, path, disabled }) => (
-        <div key={id} className={`task-indicator ${location.pathname === path ? 'active' : ''}`}>
-          <SidebarButton
-            icon={icon}
-            label={label}
-            isActive={location.pathname === path}
-            onClick={(e) => handleNavigation(e, id, path, disabled)}
-            className={disabled ? "text-gray-600 cursor-not-allowed" : "focus-enhanced"}
-            disabled={disabled}
-          />
-        </div>
+        <SidebarButton
+          key={id}
+          icon={icon}
+          label={label}
+          isActive={location.pathname === path}
+          onClick={(e) => handleNavigation(e, id, path, disabled)}
+          className={disabled ? "text-gray-600 cursor-not-allowed" : ""}
+          disabled={disabled}
+        />
       ))}
     </div>
   );

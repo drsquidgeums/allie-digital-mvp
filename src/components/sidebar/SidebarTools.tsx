@@ -58,44 +58,33 @@ export const SidebarTools = ({
 
   return (
     <div className="space-y-2">
-      <div className="pt-4 visual-separator space-y-2 nav-tools">
-        <div className="hierarchy-secondary text-xs uppercase tracking-wider text-muted-foreground mb-3 px-2">
-          Tools
-        </div>
-        <div className="tool-section">
+      <div className="pt-4 border-t border-border space-y-2">
+        <SidebarButton
+          icon={Settings}
+          label={t('navigation.settings')}
+          isActive={location.pathname === "/settings"}
+          onClick={handleSettingsClick}
+        />
+        <SidebarButton
+          icon={Users}
+          label={t('navigation.community')}
+          isActive={location.pathname === "/community"}
+          onClick={handleCommunityClick}
+        />
+        {onFeedbackClick && (
           <SidebarButton
-            icon={Settings}
-            label={t('navigation.settings')}
-            isActive={location.pathname === "/settings"}
-            onClick={handleSettingsClick}
-            className="focus-enhanced"
-          />
-          <SidebarButton
-            icon={Users}
-            label={t('navigation.community')}
-            isActive={location.pathname === "/community"}
-            onClick={handleCommunityClick}
-            className="focus-enhanced"
-          />
-          {onFeedbackClick && (
-            <div className="task-indicator">
-              <SidebarButton
-                icon={MessageSquare}
-                label="Feedback"
-                isActive={false}
-                onClick={handleFeedbackClick}
-                className="focus-enhanced"
-              />
-            </div>
-          )}
-          <SidebarButton
-            icon={LogOut}
-            label={t('common.logout')}
+            icon={MessageSquare}
+            label="Feedback"
             isActive={false}
-            onClick={handleLogout}
-            className="focus-enhanced text-destructive hover:text-destructive"
+            onClick={handleFeedbackClick}
           />
-        </div>
+        )}
+        <SidebarButton
+          icon={LogOut}
+          label={t('common.logout')}
+          isActive={false}
+          onClick={handleLogout}
+        />
       </div>
     </div>
   );

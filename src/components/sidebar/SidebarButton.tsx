@@ -25,18 +25,17 @@ export const SidebarButton = ({
     <Button 
       variant={isActive ? "secondary" : "ghost"}
       className={cn(
-        "w-full flex items-center justify-start gap-3 px-3 py-2 transition-all duration-300 ease-in-out button-enhanced",
-        isActive && !disabled && "bg-primary/10 text-primary border-l-4 border-primary shadow-sm",
-        !isActive && !disabled && "hover:bg-accent/50 hover:text-accent-foreground hover:translate-x-1",
-        !disabled && "focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:ring-offset-4",
-        !disabled && "focus:ring-4 focus:ring-primary/50 focus:ring-offset-4",
+        "w-full flex items-center justify-start gap-2 px-2 transition-all duration-200 ease-in-out",
+        isActive && !disabled && "bg-accent text-accent-foreground ring-2 ring-primary ring-offset-2",
+        !isActive && !disabled && "hover:bg-accent/50 hover:text-accent-foreground",
+        !disabled && "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+        !disabled && "focus:ring-2 focus:ring-primary focus:ring-offset-2",
         "dark:ring-offset-workspace-dark",
         "dark:focus-visible:ring-offset-workspace-dark",
         "dark:focus:ring-offset-workspace-dark",
         "sepia:ring-offset-[hsl(35,25%,88%)]",
         "sepia:focus-visible:ring-offset-[hsl(35,25%,88%)]", 
         "sepia:focus:ring-offset-[hsl(35,25%,88%)]",
-        disabled && "opacity-50 cursor-not-allowed",
         className
       )}
       onClick={onClick}
@@ -44,21 +43,8 @@ export const SidebarButton = ({
       aria-current={isActive ? "page" : undefined}
       disabled={disabled}
     >
-      <div className={cn(
-        "icon-state transition-all duration-200",
-        isActive && "text-primary scale-110"
-      )}>
-        <Icon className="h-4 w-4" aria-hidden="true" />
-      </div>
-      <span className={cn(
-        "font-medium transition-all duration-200",
-        isActive && "text-primary"
-      )}>
-        {label}
-      </span>
-      {isActive && (
-        <div className="ml-auto w-2 h-2 rounded-full bg-primary animate-pulse" />
-      )}
+      <Icon className="h-4 w-4" aria-hidden="true" />
+      <span>{label}</span>
     </Button>
   );
 };
