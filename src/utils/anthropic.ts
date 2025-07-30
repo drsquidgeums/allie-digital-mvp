@@ -53,8 +53,8 @@ export const createAnthropicCompletion = async (messages: any[]): Promise<string
     const userMessages = messages.filter(m => m.role !== 'system');
     
     const requestBody = {
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 1000,
+      model: 'claude-sonnet-4-20250514', // Upgraded to Claude 4 for better reasoning
+      max_tokens: 4000, // Increased for more detailed insights
       system: systemMessage?.content || SYSTEM_PROMPT,
       messages: userMessages.map(msg => ({
         role: msg.role === 'user' ? 'user' : 'assistant',
