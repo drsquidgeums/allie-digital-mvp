@@ -4,9 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { AIStatus } from '@/components/AIStatus';
 import { AIRecommendations } from '@/components/AIRecommendations';
+import { AINotificationBadge } from './AINotificationBadge';
+import { useAIPersonalization } from '@/hooks/useAIPersonalization';
 
 export const FloatingAIButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { personalization } = useAIPersonalization();
+  
+  const newRecommendationsCount = personalization.recommendations.length;
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
@@ -14,13 +19,19 @@ export const FloatingAIButton: React.FC = () => {
     <>
       {/* Floating AI Button */}
       <div className="fixed bottom-6 right-6 z-50">
-        <Button
-          onClick={toggleSidebar}
-          size="lg"
-          className="rounded-full w-14 h-14 shadow-lg hover:shadow-xl transition-all duration-200 bg-primary hover:bg-primary/90"
-        >
-          <Sparkles className="w-6 h-6" />
-        </Button>
+        <div className="relative">
+          <Button
+            onClick={toggleSidebar}
+            size="lg"
+            className="rounded-full w-14 h-14 shadow-lg hover:shadow-xl transition-all duration-200 bg-primary hover:bg-primary/90"
+          >
+            <Sparkles className="w-6 h-6" />
+          </Button>
+          <AINotificationBadge 
+            count={newRecommendationsCount} 
+            className="absolute -top-1 -right-1 z-10"
+          />
+        </div>
       </div>
 
       {/* Sliding AI Sidebar */}
