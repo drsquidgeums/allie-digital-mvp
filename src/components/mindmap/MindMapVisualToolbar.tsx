@@ -5,6 +5,7 @@ import { VisualExportButtons } from './toolbar/VisualExportButtons';
 import { VisualTemplateSelector } from './toolbar/VisualTemplateSelector';
 import { VisualLayoutControls } from './toolbar/VisualLayoutControls';
 import { VisualHistoryControls } from './toolbar/VisualHistoryControls';
+import { VisualColorSelector } from './toolbar/VisualColorSelector';
 
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
@@ -25,6 +26,14 @@ interface MindMapVisualToolbarProps {
   onZoomIn?: () => void;
   onZoomOut?: () => void;
   onFitView?: () => void;
+  selectedColor: string;
+  setSelectedColor: (color: string) => void;
+  customColor: string;
+  setCustomColor: (color: string) => void;
+  selectedTextColor: string;
+  setSelectedTextColor: (color: string) => void;
+  customTextColor: string;
+  setCustomTextColor: (color: string) => void;
 }
 
 export const MindMapVisualToolbar: React.FC<MindMapVisualToolbarProps> = ({
@@ -40,6 +49,14 @@ export const MindMapVisualToolbar: React.FC<MindMapVisualToolbarProps> = ({
   onZoomIn,
   onZoomOut,
   onFitView,
+  selectedColor,
+  setSelectedColor,
+  customColor,
+  setCustomColor,
+  selectedTextColor,
+  setSelectedTextColor,
+  customTextColor,
+  setCustomTextColor,
 }) => {
   const handleClear = () => {
     if (confirm("Clear the mind map? This cannot be undone.")) {
@@ -99,6 +116,19 @@ export const MindMapVisualToolbar: React.FC<MindMapVisualToolbarProps> = ({
       </div>
 
       <div className="flex items-center gap-3">
+        <VisualColorSelector
+          selectedColor={selectedColor}
+          setSelectedColor={setSelectedColor}
+          customColor={customColor}
+          setCustomColor={setCustomColor}
+          selectedTextColor={selectedTextColor}
+          setSelectedTextColor={setSelectedTextColor}
+          customTextColor={customTextColor}
+          setCustomTextColor={setCustomTextColor}
+        />
+        
+        <Separator orientation="vertical" className="h-6" />
+        
         <VisualExportButtons
           onExportJpg={onExportJpg}
           onExportJson={onExportJson}

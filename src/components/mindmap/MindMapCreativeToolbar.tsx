@@ -4,30 +4,14 @@ import { Separator } from "@/components/ui/separator";
 import { ShapeGroup } from './toolbar/ShapeGroup';
 import { SHAPE_CONFIGS } from './constants/shapeConfigs';
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ColorSelector } from './toolbar/ColorSelector';
+
 
 interface MindMapCreativeToolbarProps {
   onShapeSelect: (shape: string, label?: string) => void;
-  selectedColor: string;
-  setSelectedColor: (color: string) => void;
-  customColor: string;
-  setCustomColor: (color: string) => void;
-  selectedTextColor: string;
-  setSelectedTextColor: (color: string) => void;
-  customTextColor: string;
-  setCustomTextColor: (color: string) => void;
 }
 
 export const MindMapCreativeToolbar = ({
-  onShapeSelect,
-  selectedColor,
-  setSelectedColor,
-  customColor,
-  setCustomColor,
-  selectedTextColor,
-  setSelectedTextColor,
-  customTextColor,
-  setCustomTextColor
+  onShapeSelect
 }: MindMapCreativeToolbarProps) => {
   return (
     <TooltipProvider delayDuration={300}>
@@ -41,39 +25,6 @@ export const MindMapCreativeToolbar = ({
           <ShapeGroup shapes={SHAPE_CONFIGS.shapes} onShapeSelect={onShapeSelect} />
           <Separator orientation="vertical" className="h-8" />
           <ShapeGroup shapes={SHAPE_CONFIGS.tools} onShapeSelect={onShapeSelect} />
-          <Separator orientation="vertical" className="h-8" />
-          <div className="flex items-center gap-3">
-            <ColorSelector
-              selectedColor={selectedColor}
-              setSelectedColor={setSelectedColor}
-              customColor={customColor}
-              setCustomColor={setCustomColor}
-              colorOptions={[
-                { value: 'hsl(var(--primary))', label: 'Primary' },
-                { value: 'hsl(var(--secondary))', label: 'Secondary' },
-                { value: 'hsl(var(--accent))', label: 'Accent' },
-                { value: 'hsl(var(--muted))', label: 'Shape Color' },
-                { value: 'custom', label: 'Custom' },
-              ]}
-              label="Shape color"
-              type="shape"
-            />
-            <ColorSelector
-              selectedColor={selectedTextColor}
-              setSelectedColor={setSelectedTextColor}
-              customColor={customTextColor}
-              setCustomColor={setCustomTextColor}
-              colorOptions={[
-                { value: 'auto', label: 'Auto Text' },
-                { value: 'hsl(var(--foreground))', label: 'Default Text' },
-                { value: 'hsl(var(--primary))', label: 'Primary Text' },
-                { value: 'hsl(var(--secondary))', label: 'Secondary Text' },
-                { value: 'custom', label: 'Custom Text' },
-              ]}
-              label="Text color"
-              type="text"
-            />
-          </div>
         </div>
       </div>
     </TooltipProvider>
