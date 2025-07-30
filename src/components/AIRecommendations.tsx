@@ -160,14 +160,14 @@ export const AIRecommendations: React.FC<AIRecommendationsProps> = ({
               <Filter className="w-3 h-3 mr-1" />
               {filterType === 'all' ? 'All' : 'Filtered'}
             </Button>
-            {!isGenerating && (
+            {!isGenerating && hasRecommendations && (
               <Button 
                 variant="ghost" 
                 size="sm" 
-                onClick={hasRecommendations ? generateInsights : handleGenerateDemo}
+                onClick={generateInsights}
                 className="text-xs"
               >
-                {hasRecommendations ? 'Refresh' : 'Try AI Demo'}
+                Refresh
               </Button>
             )}
           </div>
