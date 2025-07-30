@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Lightbulb, Sparkles, Clock, Target } from 'lucide-react';
 import { useAIPersonalization } from '@/hooks/useAIPersonalization';
+import { generateDemoInsights } from '@/utils/demoInsights';
 
 interface AIRecommendationsProps {
   className?: string;
@@ -14,7 +15,26 @@ export const AIRecommendations: React.FC<AIRecommendationsProps> = ({
   className = "", 
   compact = false 
 }) => {
-  const { personalization, isGenerating, generateInsights } = useAIPersonalization();
+  const { personalization, isGenerating, generateInsights, fetchInsights } = useAIPersonalization();
+  const [user, setUser] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    import('@/integrations/supabase/client').then(({ supabase }) => {
+      supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
+    });
+  }, []);
+
+  const handleGenerateDemo = async () => {
+    if (!user?.id) return;
+    
+    const success = await generateDemoInsights(user.id);
+    if (success) {
+      // Refresh insights after generating demo data
+      setTimeout(() => {
+        fetchInsights();
+      }, 1000);
+    }
+  };
 
   // Always show the component, even without data
   const hasRecommendations = personalization.recommendations.length > 0;
@@ -61,10 +81,10 @@ export const AIRecommendations: React.FC<AIRecommendationsProps> = ({
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={generateInsights}
+              onClick={hasRecommendations ? generateInsights : handleGenerateDemo}
               className="text-xs"
             >
-              Refresh
+              {hasRecommendations ? 'Refresh' : 'Try Demo'}
             </Button>
           )}
         </div>
@@ -131,10 +151,11 @@ export const AIRecommendations: React.FC<AIRecommendationsProps> = ({
             <Button 
               variant="outline" 
               size="sm" 
-              onClick={generateInsights}
+              onClick={handleGenerateDemo}
               className="w-full text-xs"
+              disabled={isGenerating}
             >
-              Generate Sample Insights
+              {isGenerating ? 'Generating...' : 'Try AI Demo'}
             </Button>
           </div>
         )}

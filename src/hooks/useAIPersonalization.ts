@@ -192,13 +192,13 @@ Respond in JSON format:
   // Auto-generate insights when user has enough data
   useEffect(() => {
     if (user?.id && insights.length === 0) {
-      // Check if user has enough analytics data
+      // Check if user has enough analytics data (lowered threshold)
       supabase
         .from('user_analytics')
         .select('id')
         .eq('user_id', user.id)
         .then(({ data }) => {
-          if (data && data.length >= 10) { // Minimum 10 events for meaningful insights
+          if (data && data.length >= 3) { // Lowered from 10 to 3 events
             generateInsights();
           }
         });
