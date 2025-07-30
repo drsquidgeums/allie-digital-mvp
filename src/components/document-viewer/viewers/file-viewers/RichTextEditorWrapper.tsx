@@ -50,8 +50,13 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
           const text = await response.text();
           const fileName = new URL(url).pathname.split('/').pop() || 'document';
           
+          console.log('RichTextEditorWrapper - Raw file content:', text.substring(0, 200) + '...');
+          console.log('RichTextEditorWrapper - File name:', fileName);
+          
           // Process content to preserve structure
           const processedContent = processDocumentContent(text, fileName);
+          console.log('RichTextEditorWrapper - Processed content:', processedContent.substring(0, 200) + '...');
+          
           setContent(processedContent);
           setDocumentTitle(fileName);
           
@@ -75,16 +80,22 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
   const processDocumentContent = (text: string, fileName: string): string => {
     if (!text) return '<p>No content available</p>';
     
+    console.log('processDocumentContent - Input text:', text.substring(0, 300));
+    
     // Determine file type
     const fileExtension = fileName.split('.').pop()?.toLowerCase();
+    console.log('processDocumentContent - File extension:', fileExtension);
     
     // For HTML content, return as-is if it seems to be valid HTML
     if (text.trim().startsWith('<') && text.includes('</')) {
       // Basic check if it looks like HTML
-      if (text.includes('<p') || text.includes('<div') || text.includes('<html')) {
+      if (text.includes('<p') || text.includes('<div') || text.includes('<html') || text.includes('<h1') || text.includes('<h2')) {
+        console.log('processDocumentContent - Detected valid HTML, returning as-is');
         return text;
       }
     }
+    
+    console.log('processDocumentContent - Processing as plain text');
     
     // For plain text, format properly with paragraphs
     let processedContent = text
@@ -98,6 +109,8 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
     if (!processedContent.endsWith('</p>')) {
       processedContent = `${processedContent}</p>`;
     }
+    
+    console.log('processDocumentContent - Final processed content:', processedContent.substring(0, 300));
     
     return processedContent;
   };

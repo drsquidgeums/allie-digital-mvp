@@ -20,9 +20,11 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ editor, documentTitle })
     try {
       // Get the document content
       const content = editor.getHTML();
+      console.log('SaveButton - Saving content:', content.substring(0, 300) + '...');
       
       // Create display name (without extension)
       const displayName = documentTitle.replace(/\.(html|doc|docx|txt)$/i, '');
+      console.log('SaveButton - Display name:', displayName);
       
       // Create filename with .html extension for storage
       const fileName = generateFileName(documentTitle, 'html');
