@@ -59,8 +59,8 @@ export async function extractTextFromFile(file: File): Promise<string> {
     case 'txt':
       return readTextFile(file);
     case 'html':
-      const content = await readTextFile(file);
-      return stripHtmlTags(content);
+      // For HTML files, preserve the HTML content instead of stripping tags
+      return await readTextFile(file);
     default:
       throw new Error('Unsupported file type for text extraction');
   }
