@@ -19,17 +19,33 @@ export const useActiveSessionMonitor = () => {
   const { getSessionId } = useSessionManager();
 
   const updateSessionActivity = useCallback(async () => {
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
     
-    if (!user) return;
+    if (authError) {
+      console.error('Auth error:', authError);
+      return;
+    }
+    
+    if (!user) {
+      console.log('No authenticated user found');
+      return;
+    }
+
+    console.log('Updating session activity for user:', user.id);
 
     try {
-      await supabase.rpc('update_session_activity', {
+      const { error } = await supabase.rpc('update_session_activity', {
         p_user_id: user.id,
         p_session_id: getSessionId(),
         p_user_agent: navigator.userAgent,
         p_page_url: window.location.href
       });
+      
+      if (error) {
+        console.error('RPC error:', error);
+      } else {
+        console.log('Session activity updated successfully');
+      }
     } catch (error) {
       console.error('Failed to update session activity:', error);
     }
