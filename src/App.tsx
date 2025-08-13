@@ -9,6 +9,7 @@ import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
 import { FeedbackPrompt } from "@/components/community/FeedbackPrompt";
+import { QuickAccessButton } from "@/components/QuickAccessButton";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
 import { useSessionValidation } from "@/hooks/useSessionValidation";
 
@@ -91,6 +92,9 @@ const App = () => {
               <PomodoroTaskListener />
               <AppRoutes />
             </Suspense>
+            
+            {/* Quick Access Button for Live Sessions */}
+            <QuickAccessButton />
             
             {/* Feedback Prompt - Only show when manually triggered */}
             <FeedbackPrompt
