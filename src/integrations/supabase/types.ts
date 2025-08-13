@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      active_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          ip_address: string | null
+          last_activity: string
+          page_url: string | null
+          session_id: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          last_activity?: string
+          page_url?: string | null
+          session_id: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          last_activity?: string
+          page_url?: string | null
+          session_id?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_insights: {
         Row: {
           confidence_score: number | null
@@ -238,7 +271,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      cleanup_inactive_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      update_session_activity: {
+        Args: {
+          p_user_id: string
+          p_session_id: string
+          p_user_agent?: string
+          p_ip_address?: string
+          p_page_url?: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
