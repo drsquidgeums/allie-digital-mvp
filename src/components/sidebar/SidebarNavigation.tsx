@@ -1,7 +1,7 @@
 
 import React, { useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Monitor, CheckSquare, Brain, FileText } from "lucide-react";
+import { Monitor, CheckSquare, Brain, FileText, Users } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 import { useTranslation } from "react-i18next";
 
@@ -42,6 +42,13 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       label: t('navigation.mindMap'),
       icon: Brain,
       path: "/mind-map",
+      disabled: false
+    },
+    {
+      id: "live-sessions",
+      label: "Live Sessions",
+      icon: Users,
+      path: "/live-sessions",
       disabled: false
     }
   ];
