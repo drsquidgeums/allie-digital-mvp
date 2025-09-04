@@ -9,9 +9,7 @@ import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
 import { FeedbackPrompt } from "@/components/community/FeedbackPrompt";
-
 import { SecurityProvider } from "@/components/security/SecurityProvider";
-import { useSessionValidation } from "@/hooks/useSessionValidation";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -51,13 +49,6 @@ const App = () => {
     setIsAuthenticated(true);
   };
 
-  const handleSessionInvalid = () => {
-    setIsAuthenticated(false);
-  };
-
-  // Use session validation hook when authenticated
-  useSessionValidation(handleSessionInvalid);
-
   const handleCloseFeedbackPrompt = () => {
     setShowFeedbackPrompt(false);
   };
@@ -92,9 +83,6 @@ const App = () => {
               <PomodoroTaskListener />
               <AppRoutes />
             </Suspense>
-            
-            {/* Quick Access Button for Live Sessions */}
-            
             
             {/* Feedback Prompt - Only show when manually triggered */}
             <FeedbackPrompt

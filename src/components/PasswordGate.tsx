@@ -5,7 +5,6 @@ import { WelcomeHeader } from "./password-gate/WelcomeHeader";
 import { PasswordForm } from "./password-gate/PasswordForm";
 
 const DEMO_PASSWORD = "A7%UY&%Y4Map!pcm@&j$";
-const SESSION_VERSION = "v1.0"; // Update this to invalidate all sessions
 
 interface PasswordGateProps {
   onAuthenticated: () => void;
@@ -20,7 +19,6 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     e.preventDefault();
     if (password === DEMO_PASSWORD) {
       localStorage.setItem("isAuthenticated", "true");
-      localStorage.setItem("sessionVersion", SESSION_VERSION);
       onAuthenticated();
       toast({
         title: "Success",

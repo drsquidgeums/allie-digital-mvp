@@ -139,26 +139,11 @@ export const useUserAnalytics = () => {
     });
   }, [trackEvent]);
 
-  const getRecentActivity = useCallback(() => {
-    try {
-      const analyticsData = JSON.parse(localStorage.getItem('demoAnalytics') || '[]');
-      // Return last 50 events from the past 24 hours
-      const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-      return analyticsData
-        .filter((event: StoredAnalyticsEvent) => event.created_at > yesterday)
-        .slice(-50);
-    } catch (error) {
-      console.error('Error getting recent activity:', error);
-      return [];
-    }
-  }, []);
-
   return {
     trackEvent,
     trackPomodoroSession,
     trackTaskAction,
     trackDocumentAction,
     trackToolUsage,
-    getRecentActivity,
   };
 };

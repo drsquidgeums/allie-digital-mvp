@@ -7,46 +7,13 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
+  // Allows to automatically instanciate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
   }
   public: {
     Tables: {
-      active_sessions: {
-        Row: {
-          created_at: string
-          id: string
-          ip_address: string | null
-          last_activity: string
-          page_url: string | null
-          session_id: string
-          user_agent: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          ip_address?: string | null
-          last_activity?: string
-          page_url?: string | null
-          session_id: string
-          user_agent?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          ip_address?: string | null
-          last_activity?: string
-          page_url?: string | null
-          session_id?: string
-          user_agent?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
       ai_insights: {
         Row: {
           confidence_score: number | null
@@ -271,20 +238,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      cleanup_inactive_sessions: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      update_session_activity: {
-        Args: {
-          p_ip_address?: string
-          p_page_url?: string
-          p_session_id: string
-          p_user_agent?: string
-          p_user_id: string
-        }
-        Returns: undefined
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never

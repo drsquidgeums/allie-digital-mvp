@@ -9,7 +9,6 @@ import SettingsPage from "@/pages/SettingsPage";
 import MyFilesPage from "@/pages/MyFilesPage";
 import NdaAdminPage from "@/pages/NdaAdminPage";
 
-
 export const AppRoutes = React.memo(() => (
   <Routes>
     <Route path="/" element={<Navigate to="/toolbox" replace />} />
@@ -20,7 +19,6 @@ export const AppRoutes = React.memo(() => (
     <Route path="/mind-map" element={<MindMapDashboard />} />
     <Route path="/settings" element={<SettingsPage />} />
     <Route path="/community" element={<CommunityPage />} />
-    
     <Route path="/nda-admin" element={<NdaAdminPage />} />
     {/* Add a catch-all route to redirect to toolbox */}
     <Route path="*" element={<Navigate to="/toolbox" replace />} />
