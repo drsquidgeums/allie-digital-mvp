@@ -6,7 +6,8 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { useFileManager } from "@/hooks/file-manager";
 import { useUserAnalytics } from "@/hooks/useUserAnalytics";
-import { FloatingAIButton } from "@/components/FloatingAIButton";
+import { AIEnhancementPanel } from "@/components/ai/AIEnhancementPanel";
+
 
 // Lazy load DocumentViewer component for better initial load performance
 const DocumentViewer = lazy(() => import("@/components/DocumentViewer").then(module => ({
@@ -166,8 +167,13 @@ const Index = () => {
           </ErrorBoundary>
         </WorkspaceLayout>
         
-        {/* Floating AI Button */}
-        <FloatingAIButton />
+        {/* AI Enhancement Panel */}
+        <AIEnhancementPanel 
+          currentActivity="document_viewing"
+          documentContent={selectedFile ? "Document content loaded" : undefined}
+          documentType={selectedFile?.type || "general"}
+          fileName={selectedFile?.name}
+        />
       </ErrorBoundary>
     </div>
   );

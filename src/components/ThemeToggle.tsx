@@ -10,7 +10,7 @@ import {
 import { useTheme } from "next-themes";
 
 export const ThemeToggle = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -21,6 +21,9 @@ export const ThemeToggle = () => {
     return null;
   }
 
+  // Use resolvedTheme to fix the double-click issue
+  const currentTheme = resolvedTheme || theme;
+
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -28,10 +31,10 @@ export const ThemeToggle = () => {
           variant="outline"
           size="sm"
           className="h-9 w-9 card-interactive focus-enhanced"
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          onClick={() => setTheme(currentTheme === 'dark' ? 'light' : 'dark')}
           aria-label="Toggle theme"
         >
-          {theme === 'dark' ? (
+          {currentTheme === 'dark' ? (
             <Sun className="h-4 w-4" />
           ) : (
             <Moon className="h-4 w-4" />
