@@ -43,13 +43,6 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       icon: Brain,
       path: "/mind-map",
       disabled: false
-    },
-    {
-      id: "live-sessions",
-      label: "Live Sessions",
-      icon: Users,
-      path: "/live-sessions",
-      disabled: false
     }
   ];
 
