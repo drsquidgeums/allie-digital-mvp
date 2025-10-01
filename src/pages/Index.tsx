@@ -6,7 +6,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { useFileManager } from "@/hooks/file-manager";
 import { useUserAnalytics } from "@/hooks/useUserAnalytics";
-import { FloatingAIButton } from "@/components/FloatingAIButton";
+
 
 // Lazy load DocumentViewer component for better initial load performance
 const DocumentViewer = lazy(() => import("@/components/DocumentViewer").then(module => ({
@@ -165,9 +165,6 @@ const Index = () => {
             </Suspense>
           </ErrorBoundary>
         </WorkspaceLayout>
-        
-        {/* Floating AI Button */}
-        <FloatingAIButton />
       </ErrorBoundary>
     </div>
   );
