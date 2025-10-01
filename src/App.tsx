@@ -19,12 +19,10 @@ const PomodoroTaskListener = memo(() => {
 PomodoroTaskListener.displayName = "PomodoroTaskListener";
 
 const App = () => {
-  // Reset authentication state on initial load
-  React.useEffect(() => {
-    localStorage.removeItem("isAuthenticated");
-  }, []);
-
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Check for existing authentication on mount
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem("isAuthenticated") === "true";
+  });
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
   const [showFeedbackPrompt, setShowFeedbackPrompt] = useState(false);
 
@@ -46,6 +44,7 @@ const App = () => {
   }, []);
 
   const handleAuthentication = () => {
+    localStorage.setItem("isAuthenticated", "true");
     setIsAuthenticated(true);
   };
 
