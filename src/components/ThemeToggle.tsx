@@ -10,14 +10,14 @@ import {
 import { useTheme } from "next-themes";
 
 export const ThemeToggle = () => {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
+  if (!mounted || !resolvedTheme) {
     return null;
   }
 
@@ -28,10 +28,10 @@ export const ThemeToggle = () => {
           variant="outline"
           size="sm"
           className="h-9 w-9 card-interactive focus-enhanced"
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
           aria-label="Toggle theme"
         >
-          {theme === 'dark' ? (
+          {resolvedTheme === 'dark' ? (
             <Sun className="h-4 w-4" />
           ) : (
             <Moon className="h-4 w-4" />
