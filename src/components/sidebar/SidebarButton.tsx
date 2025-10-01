@@ -23,6 +23,7 @@ export const SidebarButton = ({
 }: SidebarButtonProps) => {
   return (
     <Button 
+      type="button"
       variant={isActive ? "secondary" : "ghost"}
       className={cn(
         "w-full flex items-center justify-start gap-2 px-2 transition-all duration-200 ease-in-out",
