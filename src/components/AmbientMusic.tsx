@@ -61,7 +61,7 @@ export const AmbientMusic = () => {
     
     // Find current music selection if available
     const currentMusic = MUSIC_OPTIONS.find(opt => opt.id === selectedMusic) || 
-                         (selectedMusic ? undefined : MUSIC_OPTIONS[0]);
+                         (selectedMusic ? undefined : (MUSIC_OPTIONS.find(opt => opt.id === 'minimal') || MUSIC_OPTIONS[0]));
     
     togglePlay(currentMusic);
   };

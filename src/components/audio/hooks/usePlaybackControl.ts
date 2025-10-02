@@ -130,8 +130,47 @@ export const usePlaybackControl = (
       }
     } catch (error) {
       console.error('Playback error:', error);
-      
-      // Handle streaming failure through fallback system
+
+      // Attempt automatic fallback to known MP3 streams (e.g., SomaFM)
+      try {
+        const candidates = MUSIC_OPTIONS.filter(
+          (m) => m.id !== (currentMusic?.id) && (m.url.includes('somafm') || m.url.endsWith('.mp3'))
+        );
+
+        for (const candidate of candidates) {
+          try {
+            const ok = await testStreamingCapability(candidate.url);
+            if (!ok) continue;
+
+            player.src = candidate.url;
+            player.crossOrigin = 'anonymous';
+            player.load();
+            try { player.muted = false; } catch {}
+            if (player.volume === 0) { player.volume = 0.2; }
+
+            await player.play();
+
+            // Persist and broadcast the new selection
+            localStorage.setItem('selectedMusicId', candidate.id);
+            window.dispatchEvent(new CustomEvent('audioPlayerStateChanged', {
+              detail: { isPlaying: true, selectedMusic: candidate.id }
+            }));
+
+            toast({
+              title: 'Switched stream',
+              description: `Now playing: ${candidate.name}`,
+            });
+
+            setIsPlaying(true);
+            return true;
+          } catch (e) {
+            console.warn('Fallback candidate failed', candidate, e);
+            continue;
+          }
+        }
+      } catch {}
+
+      // If all fallbacks fail, disable audio gracefully
       handleStreamingFailure(currentMusic);
       setIsPlaying(false);
       return false;
