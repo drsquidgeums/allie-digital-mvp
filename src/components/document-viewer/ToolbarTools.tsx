@@ -90,7 +90,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
       />
       <ToolItem
         icon={GraduationCap}
-        label="Learning Tools"
+        label="Learning AI"
         id="learning-tools"
         content={
           <ContentEnhancerTools
