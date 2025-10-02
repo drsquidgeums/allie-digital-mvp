@@ -71,7 +71,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
       <TextTool />
       <ToolItem
         icon={Sparkles}
-        label={t('tools.ai') || 'Document AI'}
+        label="Document AI"
         id="ai-assistant"
         content={
           <DocumentAIChat
