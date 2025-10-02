@@ -25,6 +25,39 @@ export const useMindMapState = () => {
   const { applyLayout } = useAutoLayout();
   const { isGenerating, isExpanding, generateMindMap, expandNode } = useMindMapAI();
 
+  // Update selected nodes when colors change
+  useEffect(() => {
+    const selectedNodes = nodes.filter(node => node.selected);
+    if (selectedNodes.length > 0) {
+      setNodes((nds) => nds.map((node) => {
+        if (node.selected) {
+          const newColor = selectedColor === 'custom' ? customColor : selectedColor;
+          const newTextColor = selectedTextColor === 'custom' ? customTextColor : selectedTextColor;
+          
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              color: newColor,
+              textColor: newTextColor === 'auto' ? undefined : newTextColor,
+            },
+            style: {
+              ...node.style,
+              background: newColor,
+              color: newTextColor === 'auto' ? undefined : newTextColor,
+            }
+          };
+        }
+        return node;
+      }));
+      
+      toast({
+        title: "Colors updated",
+        description: `Updated ${selectedNodes.length} selected node(s)`,
+      });
+    }
+  }, [selectedColor, customColor, selectedTextColor, customTextColor]);
+
   // Save state to history when nodes or edges change
   useEffect(() => {
     const timeoutId = setTimeout(() => {
