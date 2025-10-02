@@ -57,45 +57,36 @@ export const usePlaybackControl = (
         audioRef.current.src = currentMusic.url;
         audioRef.current.load();
         
-        // Add a simple timeout for audio loading
-        const playPromise = new Promise<void>((resolve, reject) => {
-          const timeout = setTimeout(() => {
-            reject(new Error('Audio loading timeout'));
-          }, 5000); // 5 second timeout
-          
+        // Wait for the audio to be ready to play
+        await new Promise<void>((resolve, reject) => {
+          if (!audioRef.current) {
+            reject(new Error('Audio element not found'));
+            return;
+          }
+
           const handleCanPlay = () => {
-            clearTimeout(timeout);
             audioRef.current?.removeEventListener('canplaythrough', handleCanPlay);
+            audioRef.current?.removeEventListener('error', handleError);
             resolve();
           };
-          
-          audioRef.current?.addEventListener('canplaythrough', handleCanPlay, { once: true });
+
+          const handleError = (e: Event) => {
+            audioRef.current?.removeEventListener('canplaythrough', handleCanPlay);
+            audioRef.current?.removeEventListener('error', handleError);
+            reject(new Error('Failed to load audio'));
+          };
+
+          audioRef.current.addEventListener('canplaythrough', handleCanPlay, { once: true });
+          audioRef.current.addEventListener('error', handleError, { once: true });
         });
 
-        try {
-          await playPromise;
-          await audioRef.current.play();
-          toast({
-            title: "Music playing",
-            description: `Now playing: ${currentMusic.name}`,
-          });
-          setIsPlaying(true);
-          return true;
-        } catch (playError) {
-          // If waiting times out, try to play anyway
-          console.log('Attempting to play without full buffer');
-          try {
-            await audioRef.current.play();
-            toast({
-              title: "Music playing",
-              description: `Now playing: ${currentMusic.name}`,
-            });
-            setIsPlaying(true);
-            return true;
-          } catch (finalError) {
-            throw finalError;
-          }
-        }
+        await audioRef.current.play();
+        toast({
+          title: "Music playing",
+          description: `Now playing: ${currentMusic.name}`,
+        });
+        setIsPlaying(true);
+        return true;
       }
     } catch (error) {
       console.error('Playback error:', error);

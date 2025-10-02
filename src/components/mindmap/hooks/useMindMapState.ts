@@ -56,7 +56,7 @@ export const useMindMapState = () => {
         description: `Updated ${selectedNodes.length} selected node(s)`,
       });
     }
-  }, [selectedColor, customColor, selectedTextColor, customTextColor]);
+  }, [selectedColor, customColor, selectedTextColor, customTextColor, toast, setNodes]);
 
   // Save state to history when nodes or edges change
   useEffect(() => {
