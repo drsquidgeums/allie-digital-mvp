@@ -18,6 +18,7 @@ export const useAudioInstance = () => {
     if (!window.globalAudioPlayer) {
       try {
         window.globalAudioPlayer = new Audio();
+        window.globalAudioPlayer.crossOrigin = 'anonymous';
         window.globalAudioPlayer.loop = true;
         window.globalAudioPlayer.volume = 0.2;
         window.globalAudioPlayer.preload = "none";

@@ -79,7 +79,11 @@ export const usePlaybackControl = (
         
         // Set source and load
         player.src = currentMusic.url;
+        player.crossOrigin = 'anonymous';
         player.load();
+        // Ensure audible
+        try { player.muted = false; } catch {}
+        if (player.volume === 0) { player.volume = 0.2; }
         
         // Try to play immediately; if it fails, wait briefly for readiness and retry once
         try {
