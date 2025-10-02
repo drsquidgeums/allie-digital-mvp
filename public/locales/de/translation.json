@@ -18,7 +18,8 @@
     "color": "Farbwerkzeug",
     "focus": "Fokusmodus",
     "beeline": "Beeline Reader",
-    "rewordify": "Umformulieren"
+    "rewordify": "Umformulieren",
+    "ai": "KI-Assistent"
   },
   "common": {
     "logout": "Abmelden",

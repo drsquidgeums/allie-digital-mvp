@@ -18,7 +18,8 @@
     "color": "Color Tool",
     "focus": "Focus Mode",
     "beeline": "Beeline Reader",
-    "rewordify": "Rewordify"
+    "rewordify": "Rewordify",
+    "ai": "AI Assistant"
   },
   "common": {
     "logout": "Logout",
