@@ -57,30 +57,47 @@ export const usePlaybackControl = (
         audioRef.current.src = currentMusic.url;
         audioRef.current.load();
         
-        // Wait for the audio to be ready to play
-        await new Promise<void>((resolve, reject) => {
-          if (!audioRef.current) {
-            reject(new Error('Audio element not found'));
-            return;
-          }
+        // Try to play immediately; if it fails, wait briefly for readiness and retry once
+        try {
+          await audioRef.current.play();
+        } catch (initialError) {
+          await new Promise<void>((resolve, reject) => {
+            if (!audioRef.current) {
+              reject(new Error('Audio element not found'));
+              return;
+            }
 
-          const handleCanPlay = () => {
-            audioRef.current?.removeEventListener('canplaythrough', handleCanPlay);
-            audioRef.current?.removeEventListener('error', handleError);
-            resolve();
-          };
+            const cleanup = () => {
+              audioRef.current?.removeEventListener('canplay', onReady);
+              audioRef.current?.removeEventListener('loadeddata', onReady);
+              audioRef.current?.removeEventListener('error', onError);
+              clearTimeout(timeoutId);
+            };
 
-          const handleError = (e: Event) => {
-            audioRef.current?.removeEventListener('canplaythrough', handleCanPlay);
-            audioRef.current?.removeEventListener('error', handleError);
-            reject(new Error('Failed to load audio'));
-          };
+            const onReady = () => {
+              cleanup();
+              resolve();
+            };
 
-          audioRef.current.addEventListener('canplaythrough', handleCanPlay, { once: true });
-          audioRef.current.addEventListener('error', handleError, { once: true });
-        });
+            const onError = () => {
+              cleanup();
+              reject(new Error('Failed to load audio'));
+            };
 
-        await audioRef.current.play();
+            const timeoutId = window.setTimeout(() => {
+              // Fallback: proceed even if readiness events don't fire
+              cleanup();
+              resolve();
+            }, 1500);
+
+            audioRef.current.addEventListener('canplay', onReady, { once: true });
+            audioRef.current.addEventListener('loadeddata', onReady, { once: true });
+            audioRef.current.addEventListener('error', onError, { once: true });
+          });
+
+          await audioRef.current.play();
+        }
+
         toast({
           title: "Music playing",
           description: `Now playing: ${currentMusic.name}`,
