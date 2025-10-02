@@ -7,6 +7,9 @@ import { TaskInput } from "./dashboard/TaskInput";
 import { emitTaskNotification } from "@/utils/notifications";
 import { Badge } from "./ui/badge";
 import { Task } from "@/types/task";
+import { TaskAISuggestions } from "./tasks/TaskAISuggestions";
+import { Button } from "./ui/button";
+import { Sparkles } from "lucide-react";
 
 interface TaskPlannerProps {
   selectedDate?: Date;
@@ -18,6 +21,7 @@ interface TaskPlannerProps {
 
 export const TaskPlanner = memo(({ selectedDate, tasks, onAddTask, onToggleTask, onDeleteTask }: TaskPlannerProps) => {
   const [showStarburst, setShowStarburst] = useState(false);
+  const [showAISuggestions, setShowAISuggestions] = useState(false);
   const { toast } = useToast();
 
   const points = tasks.reduce((total, task) => total + (task.completed ? task.points : 0), 0);
@@ -88,7 +92,25 @@ export const TaskPlanner = memo(({ selectedDate, tasks, onAddTask, onToggleTask,
       <div className="flex-none mb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Task Manager</h2>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowAISuggestions(!showAISuggestions)}
+            className="gap-2"
+          >
+            <Sparkles className="h-4 w-4" />
+            AI Assist
+          </Button>
         </div>
+
+        {showAISuggestions && (
+          <div className="mb-4">
+            <TaskAISuggestions
+              onAddTask={handleAddTask}
+              currentTasks={tasks.map(t => t.text)}
+            />
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <Badge variant="outline" className="justify-center py-2">
