@@ -23,7 +23,31 @@ export const usePlaybackControl = (
       return false;
     }
 
-    if (!audioRef.current) return false;
+    // Ensure we have an audio element to control
+    const player: HTMLAudioElement = (() => {
+      if (audioRef.current) return audioRef.current;
+      if (typeof window !== 'undefined' && window.globalAudioPlayer) return window.globalAudioPlayer;
+      try {
+        const a = new Audio();
+        a.loop = true;
+        a.volume = 0.2;
+        a.preload = 'none';
+        a.crossOrigin = 'anonymous';
+        if (typeof window !== 'undefined') {
+          window.globalAudioPlayer = a;
+        }
+        return a;
+      } catch (e) {
+        console.error('Failed to initialize audio element', e);
+        toast({
+          title: 'Audio unavailable',
+          description: 'Could not initialize the audio player in this environment.',
+          variant: 'destructive',
+        });
+        // Throw to be caught by outer try/catch and stop flow
+        throw e;
+      }
+    })();
     
     if (!currentMusic) {
       const savedMusicId = localStorage.getItem('selectedMusicId');
@@ -42,8 +66,8 @@ export const usePlaybackControl = (
 
     try {
       if (isPlaying) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+        player.pause();
+        player.currentTime = 0;
         toast({
           title: "Music stopped",
           description: "Background music has been stopped",
@@ -54,23 +78,18 @@ export const usePlaybackControl = (
         console.log('Attempting to play:', currentMusic.name, currentMusic.url);
         
         // Set source and load
-        audioRef.current.src = currentMusic.url;
-        audioRef.current.load();
+        player.src = currentMusic.url;
+        player.load();
         
         // Try to play immediately; if it fails, wait briefly for readiness and retry once
         try {
-          await audioRef.current.play();
+          await player.play();
         } catch (initialError) {
           await new Promise<void>((resolve, reject) => {
-            if (!audioRef.current) {
-              reject(new Error('Audio element not found'));
-              return;
-            }
-
             const cleanup = () => {
-              audioRef.current?.removeEventListener('canplay', onReady);
-              audioRef.current?.removeEventListener('loadeddata', onReady);
-              audioRef.current?.removeEventListener('error', onError);
+              player.removeEventListener('canplay', onReady);
+              player.removeEventListener('loadeddata', onReady);
+              player.removeEventListener('error', onError);
               clearTimeout(timeoutId);
             };
 
@@ -90,12 +109,12 @@ export const usePlaybackControl = (
               resolve();
             }, 1500);
 
-            audioRef.current.addEventListener('canplay', onReady, { once: true });
-            audioRef.current.addEventListener('loadeddata', onReady, { once: true });
-            audioRef.current.addEventListener('error', onError, { once: true });
+            player.addEventListener('canplay', onReady, { once: true });
+            player.addEventListener('loadeddata', onReady, { once: true });
+            player.addEventListener('error', onError, { once: true });
           });
 
-          await audioRef.current.play();
+          await player.play();
         }
 
         toast({
