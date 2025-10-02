@@ -7,12 +7,16 @@ import { Calendar } from "@/components/ui/calendar";
 import { TaskInput } from "@/components/dashboard/TaskInput";
 import { TaskColumn } from "@/components/dashboard/TaskColumn";
 import { TaskDashboardHeader } from "@/components/dashboard/TaskDashboardHeader";
+import { TaskAISuggestions } from "@/components/tasks/TaskAISuggestions";
+import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react";
 
 export const TaskDashboard: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [showCompleted, setShowCompleted] = useState<boolean>(true);
   const [filterByDate, setFilterByDate] = useState<boolean>(false);
+  const [showAISuggestions, setShowAISuggestions] = useState<boolean>(false);
   
   const { 
     tasks, 
@@ -45,14 +49,25 @@ export const TaskDashboard: React.FC = () => {
   return (
     <WorkspaceLayout>
       <div className="p-4 h-full max-w-[1600px] mx-auto">
-        <TaskDashboardHeader 
-          selectedDate={selectedDate}
-          showCompleted={showCompleted}
-          filterByDate={filterByDate}
-          onToggleCalendar={() => setShowCalendar(!showCalendar)}
-          onToggleShowCompleted={setShowCompleted}
-          onToggleFilterByDate={setFilterByDate}
-        />
+        <div className="flex items-center justify-between mb-4">
+          <TaskDashboardHeader 
+            selectedDate={selectedDate}
+            showCompleted={showCompleted}
+            filterByDate={filterByDate}
+            onToggleCalendar={() => setShowCalendar(!showCalendar)}
+            onToggleShowCompleted={setShowCompleted}
+            onToggleFilterByDate={setFilterByDate}
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowAISuggestions(!showAISuggestions)}
+            className="gap-2"
+          >
+            <Sparkles className="h-4 w-4" />
+            AI Assist
+          </Button>
+        </div>
 
         {showCalendar && (
           <Card className="p-4 mb-6 border-none shadow-sm">
@@ -63,6 +78,15 @@ export const TaskDashboard: React.FC = () => {
               className="rounded-md border-none mx-auto"
             />
           </Card>
+        )}
+
+        {showAISuggestions && (
+          <div className="mb-6">
+            <TaskAISuggestions
+              onAddTask={(text) => handleAddTask(text, selectedDate)}
+              currentTasks={tasks.map(t => t.text)}
+            />
+          </div>
         )}
 
         <div className="mb-6">
