@@ -3,9 +3,21 @@ import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Play, Pause, Square, Volume2 } from "lucide-react";
+import { Play, Pause, Square, Volume2, Sparkles } from "lucide-react";
 import { usePersistedText } from "@/hooks/usePersistedText";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+
+const ELEVENLABS_VOICES = [
+  { id: "EXAVITQu4vr4xnSDxMaL", name: "Sarah - Warm & Clear" },
+  { id: "9BWtsMINqrJLrRacOk9x", name: "Aria - Professional" },
+  { id: "CwhRBWXzGAHq8TQ4Fs17", name: "Roger - Deep & Authoritative" },
+  { id: "FGY2WhTYpPnrIDTdsKH5", name: "Laura - Friendly" },
+  { id: "TX3LPaxmHKxFdv7VOQHJ", name: "Liam - British" },
+  { id: "XB0fDUnXU5powFXDhCwa", name: "Charlotte - Energetic" },
+];
 
 export const TextToSpeech = () => {
   const [text, setText] = usePersistedText("tts");
@@ -13,6 +25,10 @@ export const TextToSpeech = () => {
   const [voices, setVoices] = React.useState<SpeechSynthesisVoice[]>([]);
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [isSupported, setIsSupported] = React.useState(false);
+  const [useElevenLabs, setUseElevenLabs] = React.useState(true);
+  const [isLoadingEL, setIsLoadingEL] = React.useState(false);
+  const [selectedELVoice, setSelectedELVoice] = React.useState(ELEVENLABS_VOICES[0].id);
+  const [audioElement, setAudioElement] = React.useState<HTMLAudioElement | null>(null);
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = React.useRef<SpeechSynthesisUtterance | null>(null);
   const { toast } = useToast();
@@ -66,7 +82,95 @@ export const TextToSpeech = () => {
     return `English (${voice.name})`;
   };
 
+  const handlePlayElevenLabs = async () => {
+    if (!text.trim()) {
+      toast({
+        title: "No text",
+        description: "Please enter some text to read",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (isPlaying && audioElement) {
+      audioElement.pause();
+      setIsPlaying(false);
+      return;
+    }
+
+    if (audioElement && audioElement.paused) {
+      audioElement.play();
+      setIsPlaying(true);
+      return;
+    }
+
+    setIsLoadingEL(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('elevenlabs-tts', {
+        body: { text, voiceId: selectedELVoice }
+      });
+
+      if (error) {
+        throw new Error(error.message || "Failed to generate speech");
+      }
+
+      if (!data?.audioContent) {
+        throw new Error("No audio data received");
+      }
+
+      // Convert base64 to audio blob
+      const binaryString = atob(data.audioContent);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const audioBlob = new Blob([bytes], { type: 'audio/mpeg' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      const audio = new Audio(audioUrl);
+      audio.onended = () => {
+        setIsPlaying(false);
+        setAudioElement(null);
+        URL.revokeObjectURL(audioUrl);
+      };
+      audio.onerror = () => {
+        setIsPlaying(false);
+        setAudioElement(null);
+        URL.revokeObjectURL(audioUrl);
+        toast({
+          title: "Playback Error",
+          description: "Failed to play audio",
+          variant: "destructive"
+        });
+      };
+
+      setAudioElement(audio);
+      audio.play();
+      setIsPlaying(true);
+
+      toast({
+        title: "Playing",
+        description: "ElevenLabs text-to-speech started"
+      });
+    } catch (error) {
+      console.error("ElevenLabs TTS error:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to generate speech",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoadingEL(false);
+    }
+  };
+
   const handlePlay = () => {
+    if (useElevenLabs) {
+      handlePlayElevenLabs();
+      return;
+    }
+
     if (!isSupported) {
       toast({
         title: "Not supported",
@@ -128,9 +232,16 @@ export const TextToSpeech = () => {
   };
 
   const handleStop = () => {
-    speechSynthesis.cancel();
-    setIsPlaying(false);
-    utteranceRef.current = null;
+    if (useElevenLabs && audioElement) {
+      audioElement.pause();
+      audioElement.currentTime = 0;
+      setIsPlaying(false);
+      setAudioElement(null);
+    } else {
+      speechSynthesis.cancel();
+      setIsPlaying(false);
+      utteranceRef.current = null;
+    }
     toast({
       title: "Stopped",
       description: "Text-to-speech stopped"
@@ -151,20 +262,51 @@ export const TextToSpeech = () => {
 
   return (
     <div className="p-4 space-y-4 animate-fade-in">
-      <div className="space-y-2">
-        <Select value={selectedVoice} onValueChange={setSelectedVoice}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select a voice" />
-          </SelectTrigger>
-          <SelectContent>
-            {voices.map((voice) => (
-              <SelectItem key={voice.voiceURI} value={voice.voiceURI}>
-                {getVoiceLabel(voice)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="flex items-center justify-between space-x-2 pb-2">
+        <div className="flex items-center space-x-2">
+          <Sparkles className="h-4 w-4 text-primary" />
+          <Label htmlFor="use-elevenlabs">Use ElevenLabs AI</Label>
+        </div>
+        <Switch
+          id="use-elevenlabs"
+          checked={useElevenLabs}
+          onCheckedChange={setUseElevenLabs}
+        />
       </div>
+
+      {useElevenLabs ? (
+        <div className="space-y-2">
+          <Label>AI Voice</Label>
+          <Select value={selectedELVoice} onValueChange={setSelectedELVoice}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {ELEVENLABS_VOICES.map((voice) => (
+                <SelectItem key={voice.id} value={voice.id}>
+                  {voice.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      ) : (
+        <div className="space-y-2">
+          <Label>Browser Voice</Label>
+          <Select value={selectedVoice} onValueChange={setSelectedVoice}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select a voice" />
+            </SelectTrigger>
+            <SelectContent>
+              {voices.map((voice) => (
+                <SelectItem key={voice.voiceURI} value={voice.voiceURI}>
+                  {getVoiceLabel(voice)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
       
       <Textarea
         value={text}
@@ -179,15 +321,23 @@ export const TextToSpeech = () => {
           size="sm"
           variant="outline"
           className="flex-1 h-8 text-xs"
+          disabled={isLoadingEL}
         >
-          {isPlaying ? <Pause className="w-3 h-3 mr-1" /> : <Play className="w-3 h-3 mr-1" />}
-          {isPlaying ? "Pause" : "Play"}
+          {isLoadingEL ? (
+            <>Loading...</>
+          ) : (
+            <>
+              {isPlaying ? <Pause className="w-3 h-3 mr-1" /> : <Play className="w-3 h-3 mr-1" />}
+              {isPlaying ? "Pause" : "Play"}
+            </>
+          )}
         </Button>
         <Button
           onClick={handleStop}
           size="sm"
           variant="outline"
           className="flex-1 h-8 text-xs"
+          disabled={isLoadingEL}
         >
           <Square className="w-3 h-3 mr-1" />
           Stop
