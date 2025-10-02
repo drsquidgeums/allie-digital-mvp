@@ -1,5 +1,5 @@
 
-import { BookOpen, Mic, Eye, Timer, Text, SpellCheck, Sparkles, Bot } from "lucide-react";
+import { BookOpen, Mic, Eye, Timer, Text, SpellCheck, Sparkles, Bot, GraduationCap } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { BionicReader } from "../BionicReader";
@@ -13,6 +13,7 @@ import { AmbientMusic } from "../AmbientMusic";
 import { TextTool } from "./toolbar/TextTool";
 import { DocumentAIChat } from "../ai/DocumentAIChat";
 import { VoiceAssistant } from "../voice/VoiceAssistant";
+import { ContentEnhancerTools } from "../content-enhancer/ContentEnhancerTools";
 
 interface ToolbarToolsProps {
   documentContent?: string;
@@ -86,6 +87,17 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
         id="voice-assistant"
         content={<VoiceAssistant />}
         popoverClassName="w-96 p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+      />
+      <ToolItem
+        icon={GraduationCap}
+        label="Learning Tools"
+        id="learning-tools"
+        content={
+          <ContentEnhancerTools
+            documentContent={documentContent}
+          />
+        }
+        popoverClassName="w-[500px] h-[600px] p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
       <AmbientMusic />
     </div>
