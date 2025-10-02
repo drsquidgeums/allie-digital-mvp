@@ -74,7 +74,9 @@ export const VoiceAssistant: React.FC = () => {
       }
 
       // Start the conversation with the signed URL
-      await conversation.startSession({ url: data.signed_url });
+      await conversation.startSession({
+        signedUrl: data.signed_url,
+      });
       setConversationStarted(true);
     } catch (error) {
       console.error("Error starting conversation:", error);

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@11labs/react": "^0.2.0",
+    "@elevenlabs/client": "^0.7.1",
     "@hookform/resolvers": "^3.9.0",
     "@pdfme/common": "^5.3.13",
     "@pdfme/generator": "^5.3.13",
