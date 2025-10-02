@@ -20,4 +20,10 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    exclude: ['@11labs/react'],
+  },
+  worker: {
+    format: 'es',
+  },
 }));
