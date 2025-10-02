@@ -44,20 +44,20 @@ export const VisualExportButtons: React.FC<VisualExportButtonsProps> = ({
   ];
 
   return (
-    <Card className="flex items-center gap-1 p-1 bg-background/80 backdrop-blur-sm border">
+    <>
       {exportOptions.map((option) => (
         <Tooltip key={option.type}>
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
               size="sm"
-              className={`h-9 w-9 rounded-md ${option.color} hover:scale-105 transition-all duration-200`}
+              className={`h-10 w-full p-0 ${option.color} hover:scale-105 transition-all duration-200`}
               onClick={option.action}
             >
               <option.icon className="h-4 w-4 text-white" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="left">
             <div className="text-center">
               <div className="font-medium">{option.label}</div>
               <div className="text-xs text-muted-foreground">{option.description}</div>
@@ -65,6 +65,6 @@ export const VisualExportButtons: React.FC<VisualExportButtonsProps> = ({
           </TooltipContent>
         </Tooltip>
       ))}
-    </Card>
+    </>
   );
 };
