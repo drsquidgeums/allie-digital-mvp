@@ -45,6 +45,10 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
   canRedo,
   onApplyLayout,
   onLoadTemplate,
+  onAIGenerate,
+  onAIExpand,
+  isGenerating,
+  isExpanding,
 }) => {
   const { zoomIn, zoomOut, fitView } = useReactFlow();
 
@@ -130,6 +134,11 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
         customTextColor={customTextColor}
         setCustomTextColor={setCustomTextColor}
         onShapeSelect={handleShapeSelect}
+        onAIGenerate={onAIGenerate}
+        onAIExpand={onAIExpand}
+        isGenerating={isGenerating}
+        isExpanding={isExpanding}
+        nodes={nodes}
       />
       
       <div className="flex-1 min-h-0">

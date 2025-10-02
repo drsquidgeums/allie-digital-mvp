@@ -55,4 +55,8 @@ export interface MindMapContainerProps {
   colorOptions: ColorOption[];
   textColorOptions: ColorOption[];
   nodeTypes: Record<string, React.ComponentType<any>>;
+  onAIGenerate?: (topic: string) => void;
+  onAIExpand?: (nodeId: string) => void;
+  isGenerating?: boolean;
+  isExpanding?: boolean;
 }

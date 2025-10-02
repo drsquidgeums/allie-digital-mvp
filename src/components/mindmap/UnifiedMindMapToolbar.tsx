@@ -1,8 +1,10 @@
 import React from 'react';
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Trash2, Undo2, Redo2, ZoomIn, ZoomOut, Maximize, Palette, Type, Layers } from "lucide-react";
+import { Trash2, Undo2, Redo2, ZoomIn, ZoomOut, Maximize, Palette, Type, Layers, Sparkles, Lightbulb } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,6 +42,11 @@ interface UnifiedMindMapToolbarProps {
   customTextColor: string;
   setCustomTextColor: (color: string) => void;
   onShapeSelect: (shape: string, label?: string) => void;
+  onAIGenerate?: (topic: string) => void;
+  onAIExpand?: (nodeId: string) => void;
+  isGenerating?: boolean;
+  isExpanding?: boolean;
+  nodes?: MindMapNode[];
 }
 
 export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
@@ -64,7 +71,14 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
   customTextColor,
   setCustomTextColor,
   onShapeSelect,
+  onAIGenerate,
+  onAIExpand,
+  isGenerating,
+  isExpanding,
+  nodes,
 }) => {
+  const [aiTopic, setAiTopic] = React.useState('');
+  const [showAIInput, setShowAIInput] = React.useState(false);
   const handleClear = () => {
     if (confirm("Clear the mind map? This cannot be undone.")) {
       onClear();
@@ -254,6 +268,84 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+
+            <Separator orientation="vertical" className="h-6" />
+
+            {/* AI Features */}
+            {onAIGenerate && (
+              <DropdownMenu open={showAIInput} onOpenChange={setShowAIInput}>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-9 gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
+                    disabled={isGenerating}
+                  >
+                    <Sparkles className="h-4 w-4 text-primary" />
+                    <span className="hidden sm:inline">AI Generate</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-64 p-3">
+                  <DropdownMenuLabel>Generate Mind Map</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <div className="space-y-2">
+                    <Label htmlFor="ai-topic" className="text-sm">Topic</Label>
+                    <Input
+                      id="ai-topic"
+                      placeholder="e.g., Marketing Strategy"
+                      value={aiTopic}
+                      onChange={(e) => setAiTopic(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && aiTopic.trim()) {
+                          onAIGenerate(aiTopic);
+                          setAiTopic('');
+                          setShowAIInput(false);
+                        }
+                      }}
+                    />
+                    <Button
+                      size="sm"
+                      className="w-full"
+                      onClick={() => {
+                        if (aiTopic.trim()) {
+                          onAIGenerate(aiTopic);
+                          setAiTopic('');
+                          setShowAIInput(false);
+                        }
+                      }}
+                      disabled={!aiTopic.trim() || isGenerating}
+                    >
+                      {isGenerating ? 'Generating...' : 'Generate'}
+                    </Button>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            {onAIExpand && nodes && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const selectedNode = nodes.find(n => n.selected);
+                      if (selectedNode) {
+                        onAIExpand(selectedNode.id);
+                      }
+                    }}
+                    disabled={!nodes.some(n => n.selected) || isExpanding}
+                    className="h-9 gap-2"
+                  >
+                    <Lightbulb className="h-4 w-4" />
+                    <span className="hidden sm:inline">AI Expand</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  Select a node and click to expand with AI suggestions
+                </TooltipContent>
+              </Tooltip>
+            )}
           </div>
 
           {/* Center Section - Shapes */}

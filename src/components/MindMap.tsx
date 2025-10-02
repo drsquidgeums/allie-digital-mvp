@@ -35,6 +35,10 @@ export const MindMap = () => {
     canRedo,
     applyAutoLayout,
     loadTemplate,
+    handleAIGenerate,
+    handleAIExpand,
+    isGenerating,
+    isExpanding,
   } = useMindMapState();
 
   return (
@@ -70,6 +74,10 @@ export const MindMap = () => {
             canRedo={canRedo}
             onApplyLayout={applyAutoLayout}
             onLoadTemplate={loadTemplate}
+            onAIGenerate={handleAIGenerate}
+            onAIExpand={handleAIExpand}
+            isGenerating={isGenerating}
+            isExpanding={isExpanding}
           />
         </ReactFlowProvider>
       </div>

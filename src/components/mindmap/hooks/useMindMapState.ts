@@ -6,6 +6,7 @@ import { MindMapNode, NodeStyle } from '../types';
 import { initialNodes } from '../constants/nodeTypes';
 import { useMindMapHistory } from './useMindMapHistory';
 import { useAutoLayout, LayoutType } from './useAutoLayout';
+import { useMindMapAI } from '@/hooks/useMindMapAI';
 
 export const useMindMapState = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState<MindMapNode>(initialNodes as MindMapNode[]);
@@ -22,6 +23,7 @@ export const useMindMapState = () => {
     []
   );
   const { applyLayout } = useAutoLayout();
+  const { isGenerating, isExpanding, generateMindMap, expandNode } = useMindMapAI();
 
   // Save state to history when nodes or edges change
   useEffect(() => {
@@ -142,6 +144,109 @@ export const useMindMapState = () => {
     });
   }, [setNodes, setEdges, toast]);
 
+  const handleAIGenerate = useCallback(async (topic: string) => {
+    const result = await generateMindMap(topic);
+    if (!result) return;
+
+    const centralNode: MindMapNode = {
+      id: `ai_central_${Date.now()}`,
+      type: 'default',
+      data: { label: result.central_topic },
+      position: { x: 400, y: 200 },
+      style: { background: 'hsl(var(--primary))', color: 'hsl(var(--primary-foreground))' }
+    };
+
+    const newNodes: MindMapNode[] = [centralNode];
+    const newEdges: Edge[] = [];
+
+    result.branches.forEach((branch, branchIndex) => {
+      const angle = (2 * Math.PI * branchIndex) / result.branches.length;
+      const branchX = 400 + Math.cos(angle) * 250;
+      const branchY = 200 + Math.sin(angle) * 250;
+
+      const branchNodeId = `ai_branch_${Date.now()}_${branchIndex}`;
+      newNodes.push({
+        id: branchNodeId,
+        type: 'default',
+        data: { label: branch.label },
+        position: { x: branchX, y: branchY },
+        style: { background: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }
+      });
+
+      newEdges.push({
+        id: `edge_central_${branchNodeId}`,
+        source: centralNode.id,
+        target: branchNodeId,
+      });
+
+      branch.children.forEach((child, childIndex) => {
+        const childAngle = angle + (childIndex - branch.children.length / 2) * 0.3;
+        const childX = branchX + Math.cos(childAngle) * 150;
+        const childY = branchY + Math.sin(childAngle) * 150;
+        const childNodeId = `ai_child_${Date.now()}_${branchIndex}_${childIndex}`;
+
+        newNodes.push({
+          id: childNodeId,
+          type: 'default',
+          data: { label: child },
+          position: { x: childX, y: childY },
+          style: { background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }
+        });
+
+        newEdges.push({
+          id: `edge_${branchNodeId}_${childNodeId}`,
+          source: branchNodeId,
+          target: childNodeId,
+        });
+      });
+    });
+
+    setNodes(newNodes);
+    setEdges(newEdges);
+  }, [generateMindMap, setNodes, setEdges]);
+
+  const handleAIExpand = useCallback(async (nodeId: string) => {
+    const selectedNode = nodes.find(n => n.id === nodeId);
+    if (!selectedNode) return;
+
+    const existingLabels = nodes.map(n => n.data.label);
+    const suggestions = await expandNode(selectedNode.data.label, existingLabels);
+    if (!suggestions || suggestions.length === 0) return;
+
+    const newNodes: MindMapNode[] = [];
+    const newEdges: Edge[] = [];
+    
+    const parentNode = nodes.find(n => n.id === nodeId);
+    if (!parentNode) return;
+
+    suggestions.forEach((suggestion, index) => {
+      const angle = (2 * Math.PI * index) / suggestions.length;
+      const offsetX = Math.cos(angle) * 180;
+      const offsetY = Math.sin(angle) * 180;
+      
+      const childId = `ai_expand_${Date.now()}_${index}`;
+      newNodes.push({
+        id: childId,
+        type: 'default',
+        data: { label: suggestion },
+        position: { 
+          x: parentNode.position.x + offsetX, 
+          y: parentNode.position.y + offsetY 
+        },
+        style: { background: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }
+      });
+
+      newEdges.push({
+        id: `edge_expand_${nodeId}_${childId}`,
+        source: nodeId,
+        target: childId,
+      });
+    });
+
+    setNodes((nds) => [...nds, ...newNodes]);
+    setEdges((eds) => [...eds, ...newEdges]);
+  }, [nodes, expandNode, setNodes, setEdges]);
+
   return {
     nodes,
     edges,
@@ -167,5 +272,9 @@ export const useMindMapState = () => {
     canRedo,
     applyAutoLayout,
     loadTemplate,
+    handleAIGenerate,
+    handleAIExpand,
+    isGenerating,
+    isExpanding,
   };
 };

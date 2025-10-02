@@ -6,3 +6,9 @@ verify_jwt = false
 
 [functions.content-enhancer]
 verify_jwt = false
+
+[functions.task-ai-suggestions]
+verify_jwt = true
+
+[functions.mindmap-ai]
+verify_jwt = false
