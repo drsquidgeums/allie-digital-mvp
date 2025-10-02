@@ -1,5 +1,5 @@
 
-import { BookOpen, Mic, Eye, Timer, Text, SpellCheck, Sparkles, Phone } from "lucide-react";
+import { BookOpen, Mic, Eye, Timer, Text, SpellCheck, Sparkles, Bot } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { BionicReader } from "../BionicReader";
@@ -81,7 +81,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
         popoverClassName="w-96 h-[600px] p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
       <ToolItem
-        icon={Phone}
+        icon={Bot}
         label={t('tools.voice') || 'Voice AI'}
         id="voice-assistant"
         content={<VoiceAssistant />}
