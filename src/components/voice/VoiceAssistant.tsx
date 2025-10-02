@@ -32,9 +32,18 @@ export const VoiceAssistant: React.FC = () => {
     },
     onError: (error) => {
       console.error("Voice conversation error:", error);
+      const message =
+        (typeof error === "string" && error) ||
+        (error && (error as any).message) ||
+        "Failed to connect to voice assistant";
+
+      const helpful = message.includes("AudioWorklet") || message.includes("worklet")
+        ? "Audio module blocked by browser/CSP. Try Chrome desktop or open the app in a new tab (outside the editor preview)."
+        : undefined;
+
       toast({
-        title: "Error",
-        description: error || "Failed to connect to voice assistant",
+        title: "Connection Error",
+        description: helpful ? `${message} — ${helpful}` : message,
         variant: "destructive",
       });
       setIsConnecting(false);
