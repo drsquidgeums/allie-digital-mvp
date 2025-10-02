@@ -1,8 +1,7 @@
 
 import React from 'react';
-import { MindMapVisualToolbar } from './MindMapVisualToolbar';
+import { UnifiedMindMapToolbar } from './UnifiedMindMapToolbar';
 import { MindMapEnhancedFlow } from './MindMapEnhancedFlow';
-import { MindMapCreativeToolbar } from './MindMapCreativeToolbar';
 import { MindMapContainerProps } from './types';
 import { toast } from "sonner";
 import { getShapeStyle } from './utils/shapeUtils';
@@ -108,8 +107,8 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
   };
 
   return (
-    <div className="w-full h-[calc(100vh-12rem)] bg-background rounded-xl overflow-hidden flex flex-col shadow-lg animate-fade-in relative">
-      <MindMapVisualToolbar
+    <div className="w-full h-[calc(100vh-12rem)] bg-background rounded-xl overflow-hidden flex flex-col shadow-lg animate-fade-in">
+      <UnifiedMindMapToolbar
         onExportJpg={onExportJpg}
         onExportJson={onExportJson}
         onClear={onClear}
@@ -130,9 +129,10 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
         setSelectedTextColor={setSelectedTextColor}
         customTextColor={customTextColor}
         setCustomTextColor={setCustomTextColor}
+        onShapeSelect={handleShapeSelect}
       />
       
-      <div className="flex-1 min-h-0 relative">
+      <div className="flex-1 min-h-0">
         <MindMapEnhancedFlow
           nodes={nodes}
           edges={edges}
@@ -148,14 +148,6 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
           onZoomOut={handleZoomOut}
           onFitView={handleFitView}
         />
-      </div>
-      
-      <div className="absolute bottom-0 left-0 right-0 z-50 pointer-events-none">
-        <div className="pointer-events-auto">
-          <MindMapCreativeToolbar 
-            onShapeSelect={handleShapeSelect}
-          />
-        </div>
       </div>
     </div>
   );
