@@ -10,13 +10,16 @@ interface DocumentViewerToolbarProps {
   onDelete: () => void;
   hasFile: boolean;
   documentName?: string;
+  documentContent?: string;
 }
 
 export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
   onUpload,
   onDownload,
   onDelete,
-  hasFile
+  hasFile,
+  documentContent,
+  documentName
 }) => {
   return (
     <div className="border-b border-border">
@@ -30,7 +33,10 @@ export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
           />
           <div className="flex items-center gap-2 ml-auto">
             <FocusButton />
-            <ToolbarTools />
+            <ToolbarTools 
+              documentContent={documentContent}
+              documentName={documentName}
+            />
           </div>
         </div>
       </div>

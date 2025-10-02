@@ -7,9 +7,6 @@ import { DocumentViewerContent } from "./document-viewer/DocumentViewerContent";
 import { FileInputHandler } from "./document-viewer/FileInputHandler";
 import { useDocumentViewerEffects } from "./document-viewer/hooks/useDocumentViewerEffects";
 import { extractTextFromFile } from "./document-viewer/FileConverter";
-import { DocumentAIChat } from "./ai/DocumentAIChat";
-import { Button } from "./ui/button";
-import { Sparkles } from "lucide-react";
 
 interface DocumentViewerProps {
   file: File | null;
@@ -58,7 +55,6 @@ export const DocumentViewer = ({
   // State to track extracted text content
   const [documentContent, setDocumentContent] = useState<string>("");
   const [documentName, setDocumentName] = useState<string>("");
-  const [showAIChat, setShowAIChat] = useState(false);
   
   // Custom hook to handle document viewer side effects
   useDocumentViewerEffects(displayFile, url);
@@ -88,20 +84,17 @@ export const DocumentViewer = ({
   }, [displayFile, onContentLoaded, initialDocumentName]);
 
   return (
-    <div className="h-full flex relative">
-      <div 
-        className="flex-1 flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden"
-        role="region"
-        aria-label="Document viewer"
-      >
-        <ErrorBoundary>
-          {/* Document Toolbar Section */}
-          <DocumentViewerToolbar
-            onUpload={handleUpload}
-            onDownload={() => handleDownload(displayFile)}
-            onDelete={handleDelete}
-            hasFile={!!displayFile}
-          />
+    <div className="h-full flex flex-col bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden" role="region" aria-label="Document viewer">
+      <ErrorBoundary>
+        {/* Document Toolbar Section */}
+        <DocumentViewerToolbar
+          onUpload={handleUpload}
+          onDownload={() => handleDownload(displayFile)}
+          onDelete={handleDelete}
+          hasFile={!!displayFile}
+          documentContent={documentContent}
+          documentName={documentName}
+        />
           
           {/* Document Content Area with Study Session Tracker at bottom */}
           <DocumentViewerContent
@@ -119,31 +112,7 @@ export const DocumentViewer = ({
             fileInputRef={fileInputRef}
             onFileChange={setSelectedFile}
           />
-        </ErrorBoundary>
-      </div>
-
-      {/* AI Chat Floating Button */}
-      {!showAIChat && (
-        <Button
-          onClick={() => setShowAIChat(true)}
-          className="fixed bottom-6 right-6 h-12 w-12 rounded-full shadow-lg z-50"
-          size="icon"
-          title="Open AI Assistant"
-        >
-          <Sparkles className="h-5 w-5" />
-        </Button>
-      )}
-
-      {/* AI Chat Panel */}
-      {showAIChat && (
-        <div className="w-96 border-l flex flex-col bg-background">
-          <DocumentAIChat
-            documentContent={documentContent}
-            documentName={documentName}
-            onClose={() => setShowAIChat(false)}
-          />
-        </div>
-      )}
+      </ErrorBoundary>
     </div>
   );
 };

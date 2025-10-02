@@ -10,6 +10,7 @@ interface DocumentAIChatProps {
   documentContent?: string;
   documentName?: string;
   onClose?: () => void;
+  isInPopover?: boolean;
 }
 
 export const DocumentAIChat: React.FC<DocumentAIChatProps> = ({
