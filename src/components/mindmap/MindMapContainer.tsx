@@ -111,36 +111,7 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
   };
 
   return (
-    <div className="w-full h-[calc(100vh-12rem)] bg-background rounded-xl overflow-hidden flex flex-col shadow-lg animate-fade-in">
-      <UnifiedMindMapToolbar
-        onExportJpg={onExportJpg}
-        onExportJson={onExportJson}
-        onClear={onClear}
-        onUndo={onUndo}
-        onRedo={onRedo}
-        canUndo={canUndo}
-        canRedo={canRedo}
-        onApplyLayout={onApplyLayout}
-        onLoadTemplate={onLoadTemplate}
-        onZoomIn={handleZoomIn}
-        onZoomOut={handleZoomOut}
-        onFitView={handleFitView}
-        selectedColor={selectedColor}
-        setSelectedColor={setSelectedColor}
-        customColor={customColor}
-        setCustomColor={setCustomColor}
-        selectedTextColor={selectedTextColor}
-        setSelectedTextColor={setSelectedTextColor}
-        customTextColor={customTextColor}
-        setCustomTextColor={setCustomTextColor}
-        onShapeSelect={handleShapeSelect}
-        onAIGenerate={onAIGenerate}
-        onAIExpand={onAIExpand}
-        isGenerating={isGenerating}
-        isExpanding={isExpanding}
-        nodes={nodes}
-      />
-      
+    <div className="w-full h-[calc(100vh-12rem)] bg-background rounded-xl overflow-hidden flex shadow-lg animate-fade-in">
       <div className="flex-1 min-h-0">
         <MindMapEnhancedFlow
           nodes={nodes}
@@ -156,6 +127,37 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
           onZoomIn={handleZoomIn}
           onZoomOut={handleZoomOut}
           onFitView={handleFitView}
+        />
+      </div>
+      
+      <div className="w-16 border-l border-border/30 bg-background/95 backdrop-blur-sm flex flex-col">
+        <UnifiedMindMapToolbar
+          onExportJpg={onExportJpg}
+          onExportJson={onExportJson}
+          onClear={onClear}
+          onUndo={onUndo}
+          onRedo={onRedo}
+          canUndo={canUndo}
+          canRedo={canRedo}
+          onApplyLayout={onApplyLayout}
+          onLoadTemplate={onLoadTemplate}
+          onZoomIn={handleZoomIn}
+          onZoomOut={handleZoomOut}
+          onFitView={handleFitView}
+          selectedColor={selectedColor}
+          setSelectedColor={setSelectedColor}
+          customColor={customColor}
+          setCustomColor={setCustomColor}
+          selectedTextColor={selectedTextColor}
+          setSelectedTextColor={setSelectedTextColor}
+          customTextColor={customTextColor}
+          setCustomTextColor={setCustomTextColor}
+          onShapeSelect={handleShapeSelect}
+          onAIGenerate={onAIGenerate}
+          onAIExpand={onAIExpand}
+          isGenerating={isGenerating}
+          isExpanding={isExpanding}
+          nodes={nodes}
         />
       </div>
     </div>

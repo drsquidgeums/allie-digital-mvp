@@ -53,65 +53,49 @@ export const usePlaybackControl = (
       } else {
         console.log('Attempting to play:', currentMusic.name, currentMusic.url);
         
-        // Test streaming capability first
-        const canStream = await testStreamingCapability(currentMusic.url);
-        if (!canStream) {
-          handleStreamingFailure(currentMusic);
-          return false;
-        }
-
         // Set source and load
         audioRef.current.src = currentMusic.url;
         audioRef.current.load();
         
-        // Wait for audio to be ready with better error handling
-        await new Promise((resolve, reject) => {
-          let timeoutId: NodeJS.Timeout;
+        // Add a simple timeout for audio loading
+        const playPromise = new Promise<void>((resolve, reject) => {
+          const timeout = setTimeout(() => {
+            reject(new Error('Audio loading timeout'));
+          }, 5000); // 5 second timeout
           
           const handleCanPlay = () => {
-            clearTimeout(timeoutId);
-            audioRef.current?.removeEventListener('canplay', handleCanPlay);
-            audioRef.current?.removeEventListener('error', handleError);
-            audioRef.current?.removeEventListener('canplaythrough', handleCanPlayThrough);
-            resolve(void 0);
+            clearTimeout(timeout);
+            audioRef.current?.removeEventListener('canplaythrough', handleCanPlay);
+            resolve();
           };
           
-          const handleCanPlayThrough = () => {
-            clearTimeout(timeoutId);
-            audioRef.current?.removeEventListener('canplay', handleCanPlay);
-            audioRef.current?.removeEventListener('error', handleError);
-            audioRef.current?.removeEventListener('canplaythrough', handleCanPlayThrough);
-            resolve(void 0);
-          };
-          
-          const handleError = (e: Event) => {
-            clearTimeout(timeoutId);
-            audioRef.current?.removeEventListener('canplay', handleCanPlay);
-            audioRef.current?.removeEventListener('error', handleError);
-            audioRef.current?.removeEventListener('canplaythrough', handleCanPlayThrough);
-            reject(e);
-          };
-          
-          audioRef.current?.addEventListener('canplay', handleCanPlay);
-          audioRef.current?.addEventListener('canplaythrough', handleCanPlayThrough);
-          audioRef.current?.addEventListener('error', handleError);
-          
-          // Reduced timeout to 2 seconds for faster feedback
-          timeoutId = setTimeout(() => {
-            audioRef.current?.removeEventListener('canplay', handleCanPlay);
-            audioRef.current?.removeEventListener('error', handleError);
-            audioRef.current?.removeEventListener('canplaythrough', handleCanPlayThrough);
-            reject(new Error('Audio loading timeout'));
-          }, 2000);
+          audioRef.current?.addEventListener('canplaythrough', handleCanPlay, { once: true });
         });
-        
-        await audioRef.current.play();
-        toast({
-          title: "Music playing",
-          description: `Now playing: ${currentMusic.name}`,
-        });
-        setIsPlaying(true);
-        return true;
+
+        try {
+          await playPromise;
+          await audioRef.current.play();
+          toast({
+            title: "Music playing",
+            description: `Now playing: ${currentMusic.name}`,
+          });
+          setIsPlaying(true);
+          return true;
+        } catch (playError) {
+          // If waiting times out, try to play anyway
+          console.log('Attempting to play without full buffer');
+          try {
+            await audioRef.current.play();
+            toast({
+              title: "Music playing",
+              description: `Now playing: ${currentMusic.name}`,
+            });
+            setIsPlaying(true);
+            return true;
+          } catch (finalError) {
+            throw finalError;
+          }
+        }
       }
     } catch (error) {
       console.error('Playback error:', error);

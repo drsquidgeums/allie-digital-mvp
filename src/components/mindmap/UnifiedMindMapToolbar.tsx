@@ -79,6 +79,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
 }) => {
   const [aiTopic, setAiTopic] = React.useState('');
   const [showAIInput, setShowAIInput] = React.useState(false);
+  
   const handleClear = () => {
     if (confirm("Clear the mind map? This cannot be undone.")) {
       onClear();
@@ -97,6 +98,9 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
         backgroundColor: '#ffffff',
         width: element.offsetWidth,
         height: element.offsetHeight,
+        pixelRatio: 3, // High quality export (3x resolution)
+        quality: 1.0,
+        cacheBust: true,
       });
 
       const pdf = new jsPDF({
@@ -185,378 +189,396 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
 
   return (
     <TooltipProvider delayDuration={300}>
-      <div className="p-3 border-b border-border/30 bg-background/95 backdrop-blur-sm">
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          {/* Left Section - History & Templates */}
-          <div className="flex items-center gap-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onUndo}
-                  disabled={!canUndo}
-                  className="h-9 w-9 p-0"
-                >
-                  <Undo2 className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Undo (Ctrl+Z)</TooltipContent>
-            </Tooltip>
+      <div className="flex flex-col h-full p-2 gap-2 overflow-y-auto">
+        {/* Undo/Redo */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onUndo}
+              disabled={!canUndo}
+              className="h-10 w-full p-0"
+            >
+              <Undo2 className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left">Undo</TooltipContent>
+        </Tooltip>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onRedo}
-                  disabled={!canRedo}
-                  className="h-9 w-9 p-0"
-                >
-                  <Redo2 className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Redo (Ctrl+Y)</TooltipContent>
-            </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onRedo}
+              disabled={!canRedo}
+              className="h-10 w-full p-0"
+            >
+              <Redo2 className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left">Redo</TooltipContent>
+        </Tooltip>
 
-            <Separator orientation="vertical" className="h-6" />
+        <Separator className="my-1" />
 
-            {/* Templates */}
-            <DropdownMenu>
+        {/* Templates */}
+        <DropdownMenu>
+          <Tooltip>
+            <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-9 gap-2">
+                <Button variant="outline" size="sm" className="h-10 w-full p-0">
                   <Layers className="h-4 w-4" />
-                  <span className="hidden sm:inline">Templates</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                <DropdownMenuLabel>Choose Template</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {templates.map((template) => (
-                  <DropdownMenuItem
-                    key={template.id}
-                    onClick={() => onLoadTemplate(template.nodes)}
-                    className="cursor-pointer"
-                  >
-                    {template.name}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            </TooltipTrigger>
+            <TooltipContent side="left">Templates</TooltipContent>
+          </Tooltip>
+          <DropdownMenuContent side="left" className="w-48">
+            <DropdownMenuLabel>Choose Template</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {templates.map((template) => (
+              <DropdownMenuItem
+                key={template.id}
+                onClick={() => onLoadTemplate(template.nodes)}
+                className="cursor-pointer"
+              >
+                {template.name}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
-            {/* Layout */}
-            <DropdownMenu>
+        {/* Layout */}
+        <DropdownMenu>
+          <Tooltip>
+            <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-9 gap-2">
+                <Button variant="outline" size="sm" className="h-10 w-full p-0">
                   <div className="w-4 h-4 bg-primary/20 rounded flex items-center justify-center">
                     <div className="w-2 h-2 bg-primary rounded"></div>
                   </div>
-                  <span className="hidden sm:inline">Layout</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                <DropdownMenuLabel>Auto Layout</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {layouts.map((layout) => (
-                  <DropdownMenuItem
-                    key={layout.type}
-                    onClick={() => onApplyLayout(layout.type)}
-                    className="cursor-pointer"
-                  >
-                    {layout.name}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            </TooltipTrigger>
+            <TooltipContent side="left">Layout</TooltipContent>
+          </Tooltip>
+          <DropdownMenuContent side="left" className="w-48">
+            <DropdownMenuLabel>Auto Layout</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {layouts.map((layout) => (
+              <DropdownMenuItem
+                key={layout.type}
+                onClick={() => onApplyLayout(layout.type)}
+                className="cursor-pointer"
+              >
+                {layout.name}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
-            <Separator orientation="vertical" className="h-6" />
+        <Separator className="my-1" />
 
-            {/* AI Features */}
-            {onAIGenerate && (
-              <DropdownMenu open={showAIInput} onOpenChange={setShowAIInput}>
+        {/* AI Features */}
+        {onAIGenerate && (
+          <DropdownMenu open={showAIInput} onOpenChange={setShowAIInput}>
+            <Tooltip>
+              <TooltipTrigger asChild>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="h-9 gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
+                    className="h-10 w-full p-0 bg-primary/10 hover:bg-primary/20 border-primary/20"
                     disabled={isGenerating}
                   >
                     <Sparkles className="h-4 w-4 text-primary" />
-                    <span className="hidden sm:inline">AI Generate</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-64 p-3">
-                  <DropdownMenuLabel>Generate Mind Map</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <div className="space-y-2">
-                    <Label htmlFor="ai-topic" className="text-sm">Topic</Label>
-                    <Input
-                      id="ai-topic"
-                      placeholder="e.g., Marketing Strategy"
-                      value={aiTopic}
-                      onChange={(e) => setAiTopic(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && aiTopic.trim()) {
-                          onAIGenerate(aiTopic);
-                          setAiTopic('');
-                          setShowAIInput(false);
-                        }
-                      }}
-                    />
-                    <Button
-                      size="sm"
-                      className="w-full"
-                      onClick={() => {
-                        if (aiTopic.trim()) {
-                          onAIGenerate(aiTopic);
-                          setAiTopic('');
-                          setShowAIInput(false);
-                        }
-                      }}
-                      disabled={!aiTopic.trim() || isGenerating}
-                    >
-                      {isGenerating ? 'Generating...' : 'Generate'}
-                    </Button>
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-
-            {onAIExpand && nodes && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      const selectedNode = nodes.find(n => n.selected);
-                      if (selectedNode) {
-                        onAIExpand(selectedNode.id);
-                      }
-                    }}
-                    disabled={!nodes.some(n => n.selected) || isExpanding}
-                    className="h-9 gap-2"
-                  >
-                    <Lightbulb className="h-4 w-4" />
-                    <span className="hidden sm:inline">AI Expand</span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  Select a node and click to expand with AI suggestions
-                </TooltipContent>
-              </Tooltip>
-            )}
-          </div>
-
-          {/* Center Section - Shapes */}
-          <div className="flex items-center gap-2 flex-1 justify-center min-w-0">
-            <div className="flex items-center gap-1 p-1 bg-muted/50 rounded-lg overflow-x-auto max-w-full">
-              {SHAPE_CONFIGS.shapes.map((shape) => (
-                <ShapeButton
-                  key={shape.id}
-                  id={shape.id}
-                  icon={shape.icon}
-                  label={shape.label}
-                  description={shape.description}
-                  onClick={() => onShapeSelect(shape.id, '')}
-                />
-              ))}
-              <Separator orientation="vertical" className="h-6 mx-1" />
-              {SHAPE_CONFIGS.tools.map((tool) => (
-                <ShapeButton
-                  key={tool.id}
-                  id={tool.id}
-                  icon={tool.icon}
-                  label={tool.label}
-                  description={tool.description}
-                  onClick={() => onShapeSelect(tool.id, '')}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Right Section - Colors, Zoom, Export */}
-          <div className="flex items-center gap-2">
-            {/* Colors */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-9 gap-2">
-                  <Palette className="h-4 w-4" />
-                  <div 
-                    className="w-4 h-4 rounded-full border border-border"
-                    style={{ backgroundColor: getCurrentShapeColor() }}
-                  />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className={`w-48 ${getDarkModeDropdownClasses()}`}>
-                <DropdownMenuLabel>Shape Color</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {shapeColors.map((color) => (
-                  <DropdownMenuItem
-                    key={color.value}
-                    onClick={() => setSelectedColor(color.value)}
-                    className="cursor-pointer flex items-center gap-3"
-                  >
-                    <div 
-                      className="w-5 h-5 rounded-full border border-border"
-                      style={{ backgroundColor: color.color }}
-                    />
-                    <span>{color.label}</span>
-                    {selectedColor === color.value && (
-                      <div className="ml-auto w-2 h-2 bg-primary rounded-full" />
-                    )}
-                  </DropdownMenuItem>
-                ))}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    const input = document.createElement('input');
-                    input.type = 'color';
-                    input.value = customColor;
-                    input.onchange = (e) => {
-                      const target = e.target as HTMLInputElement;
-                      setCustomColor(target.value);
-                      setSelectedColor('custom');
-                    };
-                    input.click();
+              </TooltipTrigger>
+              <TooltipContent side="left">AI Generate</TooltipContent>
+            </Tooltip>
+            <DropdownMenuContent side="left" className="w-64 p-3">
+              <DropdownMenuLabel>Generate Mind Map</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <div className="space-y-2">
+                <Label htmlFor="ai-topic" className="text-sm">Topic</Label>
+                <Input
+                  id="ai-topic"
+                  placeholder="e.g., Marketing Strategy"
+                  value={aiTopic}
+                  onChange={(e) => setAiTopic(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && aiTopic.trim()) {
+                      onAIGenerate(aiTopic);
+                      setAiTopic('');
+                      setShowAIInput(false);
+                    }
                   }}
-                  className="cursor-pointer"
-                >
-                  <div 
-                    className="w-5 h-5 rounded-full border border-border mr-3"
-                    style={{ backgroundColor: customColor }}
-                  />
-                  Custom Color
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-9 gap-2">
-                  <Type className="h-4 w-4" />
-                  <div 
-                    className="w-4 h-4 rounded-full border border-border"
-                    style={{ backgroundColor: getCurrentTextColor() }}
-                  />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className={`w-48 ${getDarkModeDropdownClasses()}`}>
-                <DropdownMenuLabel>Text Color</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {textColors.map((color) => (
-                  <DropdownMenuItem
-                    key={color.value}
-                    onClick={() => setSelectedTextColor(color.value)}
-                    className="cursor-pointer flex items-center gap-3"
-                  >
-                    <div 
-                      className={`w-5 h-5 rounded-full border border-border ${
-                        color.color === '#ffffff' ? 'border-2' : ''
-                      }`}
-                      style={{ backgroundColor: color.color }}
-                    />
-                    <span>{color.label}</span>
-                    {selectedTextColor === color.value && (
-                      <div className="ml-auto w-2 h-2 bg-primary rounded-full" />
-                    )}
-                  </DropdownMenuItem>
-                ))}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
+                />
+                <Button
+                  size="sm"
+                  className="w-full"
                   onClick={() => {
-                    const input = document.createElement('input');
-                    input.type = 'color';
-                    input.value = customTextColor;
-                    input.onchange = (e) => {
-                      const target = e.target as HTMLInputElement;
-                      setCustomTextColor(target.value);
-                      setSelectedTextColor('custom');
-                    };
-                    input.click();
+                    if (aiTopic.trim()) {
+                      onAIGenerate(aiTopic);
+                      setAiTopic('');
+                      setShowAIInput(false);
+                    }
                   }}
-                  className="cursor-pointer"
+                  disabled={!aiTopic.trim() || isGenerating}
                 >
-                  <div 
-                    className="w-5 h-5 rounded-full border border-border mr-3"
-                    style={{ backgroundColor: customTextColor }}
-                  />
-                  Custom Text
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  {isGenerating ? 'Generating...' : 'Generate'}
+                </Button>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
 
-            <Separator orientation="vertical" className="h-6" />
+        {onAIExpand && nodes && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const selectedNode = nodes.find(n => n.selected);
+                  if (selectedNode) {
+                    onAIExpand(selectedNode.id);
+                  }
+                }}
+                disabled={!nodes.some(n => n.selected) || isExpanding}
+                className="h-10 w-full p-0"
+              >
+                <Lightbulb className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="left">
+              {isExpanding ? 'Expanding...' : 'AI Expand'}
+            </TooltipContent>
+          </Tooltip>
+        )}
 
-            {/* Zoom Controls */}
-            <div className="flex items-center gap-1 p-1 bg-muted/50 rounded-lg">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={onZoomOut}
-                    className="h-8 w-8 p-0"
-                  >
-                    <ZoomOut className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Zoom Out</TooltipContent>
-              </Tooltip>
+        <Separator className="my-1" />
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={onZoomIn}
-                    className="h-8 w-8 p-0"
-                  >
-                    <ZoomIn className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Zoom In</TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={onFitView}
-                    className="h-8 w-8 p-0"
-                  >
-                    <Maximize className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Fit View</TooltipContent>
-              </Tooltip>
-            </div>
-
-            <Separator orientation="vertical" className="h-6" />
-
-            {/* Export & Clear */}
-            <VisualExportButtons
-              onExportJpg={onExportJpg}
-              onExportJson={onExportJson}
-              onExportPdf={exportToPDF}
-            />
-
-            <Tooltip>
+        {/* Shapes - Vertical scrollable list */}
+        <div className="flex flex-col gap-1">
+          {SHAPE_CONFIGS.shapes.map((shape) => (
+            <Tooltip key={shape.id}>
               <TooltipTrigger asChild>
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
-                  onClick={handleClear}
-                  className="h-9 w-9 p-0 text-destructive hover:bg-destructive/10 border-destructive/30"
+                  onClick={() => onShapeSelect(shape.id, '')}
+                  className="h-10 w-full p-0"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  {React.createElement(shape.icon, { className: "h-4 w-4" })}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Clear Mind Map</TooltipContent>
+              <TooltipContent side="left">{shape.label}</TooltipContent>
             </Tooltip>
-          </div>
+          ))}
+          
+          <Separator className="my-1" />
+          
+          {SHAPE_CONFIGS.tools.map((tool) => (
+            <Tooltip key={tool.id}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onShapeSelect(tool.id, '')}
+                  className="h-10 w-full p-0"
+                >
+                  {React.createElement(tool.icon, { className: "h-4 w-4" })}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="left">{tool.label}</TooltipContent>
+            </Tooltip>
+          ))}
         </div>
+
+        <Separator className="my-1" />
+
+        {/* Colors */}
+        <DropdownMenu>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-10 w-full p-0">
+                  <Palette className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+            <TooltipContent side="left">Shape Color</TooltipContent>
+          </Tooltip>
+          <DropdownMenuContent side="left" className={`w-48 ${getDarkModeDropdownClasses()}`}>
+            <DropdownMenuLabel>Shape Color</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {shapeColors.map((color) => (
+              <DropdownMenuItem
+                key={color.value}
+                onClick={() => setSelectedColor(color.value)}
+                className="cursor-pointer flex items-center gap-3"
+              >
+                <div 
+                  className="w-5 h-5 rounded-full border border-border"
+                  style={{ backgroundColor: color.color }}
+                />
+                <span>{color.label}</span>
+                {selectedColor === color.value && (
+                  <div className="ml-auto w-2 h-2 bg-primary rounded-full" />
+                )}
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                const input = document.createElement('input');
+                input.type = 'color';
+                input.value = customColor;
+                input.onchange = (e) => {
+                  const target = e.target as HTMLInputElement;
+                  setCustomColor(target.value);
+                  setSelectedColor('custom');
+                };
+                input.click();
+              }}
+              className="cursor-pointer"
+            >
+              <div 
+                className="w-5 h-5 rounded-full border border-border mr-3"
+                style={{ backgroundColor: customColor }}
+              />
+              Custom Color
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-10 w-full p-0">
+                  <Type className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+            <TooltipContent side="left">Text Color</TooltipContent>
+          </Tooltip>
+          <DropdownMenuContent side="left" className={`w-48 ${getDarkModeDropdownClasses()}`}>
+            <DropdownMenuLabel>Text Color</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {textColors.map((color) => (
+              <DropdownMenuItem
+                key={color.value}
+                onClick={() => setSelectedTextColor(color.value)}
+                className="cursor-pointer flex items-center gap-3"
+              >
+                <div 
+                  className={`w-5 h-5 rounded-full border border-border ${
+                    color.color === '#ffffff' ? 'border-2' : ''
+                  }`}
+                  style={{ backgroundColor: color.color }}
+                />
+                <span>{color.label}</span>
+                {selectedTextColor === color.value && (
+                  <div className="ml-auto w-2 h-2 bg-primary rounded-full" />
+                )}
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                const input = document.createElement('input');
+                input.type = 'color';
+                input.value = customTextColor;
+                input.onchange = (e) => {
+                  const target = e.target as HTMLInputElement;
+                  setCustomTextColor(target.value);
+                  setSelectedTextColor('custom');
+                };
+                input.click();
+              }}
+              className="cursor-pointer"
+            >
+              <div 
+                className="w-5 h-5 rounded-full border border-border mr-3"
+                style={{ backgroundColor: customTextColor }}
+              />
+              Custom Text
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Separator className="my-1" />
+
+        {/* Zoom Controls */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onZoomOut}
+              className="h-10 w-full p-0"
+            >
+              <ZoomOut className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left">Zoom Out</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onZoomIn}
+              className="h-10 w-full p-0"
+            >
+              <ZoomIn className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left">Zoom In</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onFitView}
+              className="h-10 w-full p-0"
+            >
+              <Maximize className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left">Fit View</TooltipContent>
+        </Tooltip>
+
+        <Separator className="my-1" />
+
+        {/* Export & Clear */}
+        <VisualExportButtons
+          onExportJpg={onExportJpg}
+          onExportJson={onExportJson}
+          onExportPdf={exportToPDF}
+        />
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleClear}
+              className="h-10 w-full p-0 text-destructive hover:bg-destructive/10 border-destructive/30"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left">Clear Mind Map</TooltipContent>
+        </Tooltip>
       </div>
     </TooltipProvider>
   );

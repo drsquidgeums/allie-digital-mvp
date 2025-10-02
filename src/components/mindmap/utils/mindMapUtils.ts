@@ -11,6 +11,9 @@ export const downloadMindMapAsJpg = async () => {
   try {
     const dataUrl = await toPng(element, {
       backgroundColor: '#ffffff',
+      pixelRatio: 3, // High quality export (3x resolution)
+      quality: 1.0,
+      cacheBust: true,
     });
     
     const link = document.createElement('a');
