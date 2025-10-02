@@ -201,7 +201,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                   <Undo2 className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" align="center" sideOffset={8} avoidCollisions={false}>Undo (Ctrl+Z)</TooltipContent>
+              <TooltipContent>Undo (Ctrl+Z)</TooltipContent>
             </Tooltip>
 
             <Tooltip>
@@ -216,7 +216,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                   <Redo2 className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" align="center" sideOffset={8} avoidCollisions={false}>Redo (Ctrl+Y)</TooltipContent>
+              <TooltipContent>Redo (Ctrl+Y)</TooltipContent>
             </Tooltip>
 
             <Separator orientation="vertical" className="h-6" />
@@ -338,10 +338,10 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                     className="h-9 gap-2"
                   >
                     <Lightbulb className="h-4 w-4" />
-                    <span className="hidden sm:inline">{isExpanding ? 'Expanding...' : 'AI Expand'}</span>
+                    <span className="hidden sm:inline">AI Expand</span>
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" align="center" sideOffset={8} avoidCollisions={false}>
+                <TooltipContent>
                   Select a node and click to expand with AI suggestions
                 </TooltipContent>
               </Tooltip>
@@ -501,7 +501,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                     <ZoomOut className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" align="center" sideOffset={8} avoidCollisions={false}>Zoom Out</TooltipContent>
+                <TooltipContent>Zoom Out</TooltipContent>
               </Tooltip>
 
               <Tooltip>
@@ -515,7 +515,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                     <ZoomIn className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" align="center" sideOffset={8} avoidCollisions={false}>Zoom In</TooltipContent>
+                <TooltipContent>Zoom In</TooltipContent>
               </Tooltip>
 
               <Tooltip>
@@ -529,7 +529,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                     <Maximize className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" align="center" sideOffset={8} avoidCollisions={false}>Fit View</TooltipContent>
+                <TooltipContent>Fit View</TooltipContent>
               </Tooltip>
             </div>
 
@@ -553,7 +553,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" align="center" sideOffset={8} avoidCollisions={false}>Clear Mind Map</TooltipContent>
+              <TooltipContent>Clear Mind Map</TooltipContent>
             </Tooltip>
           </div>
         </div>

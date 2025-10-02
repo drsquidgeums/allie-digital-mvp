@@ -34,10 +34,9 @@
   z-index: 1000;
 }
 
-/* Ensure tooltips are visible (Radix + tippy) */
+/* Ensure tooltips are visible */
 .ui-tooltip, 
-.tippy-box, 
-[data-radix-tooltip-content] {
+.tippy-box {
   z-index: 9999;
 }
 
