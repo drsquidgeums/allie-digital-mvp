@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 @import "./styles/base.css";
@@ -13,10 +16,6 @@
 @import "./styles/mindmap.css";
 @import "./styles/pdf/index.css";
 @import "./components/document-viewer/viewers/text-editor/editor.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 :root {
   --background: 0 0% 100%;
