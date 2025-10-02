@@ -19,7 +19,8 @@
     "focus": "Modo concentración",
     "beeline": "Beeline Reader",
     "rewordify": "Rewordificar",
-    "ai": "Asistente IA"
+    "ai": "Asistente IA",
+    "voice": "IA de Voz"
   },
   "common": {
     "logout": "Cerrar sesión",

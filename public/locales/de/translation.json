@@ -19,7 +19,8 @@
     "focus": "Fokusmodus",
     "beeline": "Beeline Reader",
     "rewordify": "Umformulieren",
-    "ai": "KI-Assistent"
+    "ai": "KI-Assistent",
+    "voice": "Sprach-KI"
   },
   "common": {
     "logout": "Abmelden",

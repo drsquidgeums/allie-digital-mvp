@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@11labs/react": "^0.2.0",
     "@hookform/resolvers": "^3.9.0",
     "@pdfme/common": "^5.3.13",
     "@pdfme/generator": "^5.3.13",

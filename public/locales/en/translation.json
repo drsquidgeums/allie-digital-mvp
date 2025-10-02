@@ -19,7 +19,8 @@
     "focus": "Focus Mode",
     "beeline": "Beeline Reader",
     "rewordify": "Rewordify",
-    "ai": "AI Assistant"
+    "ai": "AI Assistant",
+    "voice": "Voice AI"
   },
   "common": {
     "logout": "Logout",
