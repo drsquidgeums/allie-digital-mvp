@@ -12,3 +12,9 @@ verify_jwt = true
 
 [functions.mindmap-ai]
 verify_jwt = false
+
+[functions.document-ai-chat]
+verify_jwt = false
+
+[functions.study-buddy-chat]
+verify_jwt = false

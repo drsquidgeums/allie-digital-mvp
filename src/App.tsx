@@ -10,6 +10,7 @@ import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
 import { FeedbackPrompt } from "@/components/community/FeedbackPrompt";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
+import { StudyBuddy } from "@/components/study-buddy/StudyBuddy";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -90,6 +91,9 @@ const App = () => {
               onPostpone={handlePostponeFeedback}
               userInfo={userInfo}
             />
+            
+            {/* AI Study Buddy - NEW FEATURE */}
+            <StudyBuddy />
           </div>
         </SecurityProvider>
       </AppProviders>
