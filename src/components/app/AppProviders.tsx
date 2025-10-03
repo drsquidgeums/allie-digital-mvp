@@ -14,7 +14,7 @@ export const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children
     <QueryClientProvider client={queryClient}>
       <ThemeProvider
         attribute="class"
-        defaultTheme="system"
+        defaultTheme="light"
         enableSystem
         disableTransitionOnChange
       >
