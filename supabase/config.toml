@@ -1,4 +1,3 @@
-
 project_id = "frvjnuuqacrrrvrhzhuj"
 
 [functions.submit-feedback]
@@ -18,3 +17,6 @@ verify_jwt = false
 
 [functions.study-buddy-chat]
 verify_jwt = false
+
+[functions.ai-study-materials]
+verify_jwt = true

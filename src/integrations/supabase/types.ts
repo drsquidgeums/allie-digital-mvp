@@ -7,13 +7,70 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
   }
   public: {
     Tables: {
+      active_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          ip_address: string | null
+          last_activity: string
+          page_url: string | null
+          session_id: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          last_activity?: string
+          page_url?: string | null
+          session_id: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          last_activity?: string
+          page_url?: string | null
+          session_id?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_feature_usage: {
+        Row: {
+          created_at: string
+          feature_name: string
+          id: string
+          usage_data: Json | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          feature_name: string
+          id?: string
+          usage_data?: Json | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          feature_name?: string
+          id?: string
+          usage_data?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_insights: {
         Row: {
           confidence_score: number | null
@@ -40,6 +97,36 @@ export type Database = {
           id?: string
           insight_data?: Json
           insight_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_study_materials: {
+        Row: {
+          content: Json
+          created_at: string
+          id: string
+          material_type: string
+          source_text: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: Json
+          created_at?: string
+          id?: string
+          material_type: string
+          source_text: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          id?: string
+          material_type?: string
+          source_text?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -238,7 +325,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      cleanup_inactive_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      update_session_activity: {
+        Args: {
+          p_ip_address?: string
+          p_page_url?: string
+          p_session_id: string
+          p_user_agent?: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

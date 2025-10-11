@@ -38,8 +38,11 @@ export interface ExtendedDatabase extends SupabaseDatabase {
         };
         Relationships: [];
       };
+      active_sessions: SupabaseDatabase['public']['Tables']['active_sessions'];
       user_analytics: SupabaseDatabase['public']['Tables']['user_analytics'];
       ai_insights: SupabaseDatabase['public']['Tables']['ai_insights'];
+      ai_study_materials: SupabaseDatabase['public']['Tables']['ai_study_materials'];
+      ai_feature_usage: SupabaseDatabase['public']['Tables']['ai_feature_usage'];
       secrets: SupabaseDatabase['public']['Tables']['secrets'];
       teams_config: SupabaseDatabase['public']['Tables']['teams_config'];
       saved_urls: SupabaseDatabase['public']['Tables']['saved_urls'];

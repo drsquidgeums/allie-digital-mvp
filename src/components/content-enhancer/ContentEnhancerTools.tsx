@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useContentEnhancer, Flashcard, QuizQuestion, PracticeQuestion } from "@/hooks/useContentEnhancer";
 import { Button } from "@/components/ui/button";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Sparkles, Brain } from "lucide-react";
 import { FlashcardViewer } from "./FlashcardViewer";
 import { QuizViewer } from "./QuizViewer";
 import { PracticeQuestionsViewer } from "./PracticeQuestionsViewer";
+import { AIStudyMaterialsTab } from "./AIStudyMaterialsTab";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ContentEnhancerToolsProps {
@@ -16,7 +17,7 @@ export const ContentEnhancerTools = ({ documentContent }: ContentEnhancerToolsPr
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([]);
   const [practiceQuestions, setPracticeQuestions] = useState<PracticeQuestion[]>([]);
-  const [activeTab, setActiveTab] = useState("flashcards");
+  const [activeTab, setActiveTab] = useState("ai-materials");
 
   const handleGenerateFlashcards = async () => {
     if (!documentContent) return;
@@ -87,12 +88,19 @@ export const ContentEnhancerTools = ({ documentContent }: ContentEnhancerToolsPr
 
       <div className="flex-1 overflow-auto">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
-          <TabsList className="w-full grid grid-cols-3 mx-4 mt-2">
-            <TabsTrigger value="flashcards">Flashcards</TabsTrigger>
-            <TabsTrigger value="quiz">Quiz</TabsTrigger>
-            <TabsTrigger value="practice">Practice</TabsTrigger>
+          <TabsList className="w-full grid grid-cols-4 mx-4 mt-2">
+            <TabsTrigger value="ai-materials" className="text-xs gap-1">
+              <Brain className="h-3 w-3" />
+              AI Pro
+            </TabsTrigger>
+            <TabsTrigger value="flashcards" className="text-xs">Cards</TabsTrigger>
+            <TabsTrigger value="quiz" className="text-xs">Quiz</TabsTrigger>
+            <TabsTrigger value="practice" className="text-xs">Practice</TabsTrigger>
           </TabsList>
           <div className="p-4">
+            <TabsContent value="ai-materials" className="mt-0">
+              <AIStudyMaterialsTab documentContent={documentContent} />
+            </TabsContent>
             <TabsContent value="flashcards" className="mt-0">
               <FlashcardViewer flashcards={flashcards} />
             </TabsContent>
