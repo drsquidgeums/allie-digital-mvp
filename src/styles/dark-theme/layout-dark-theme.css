@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Layout and Background Dark Theme Styles */
 @layer base {

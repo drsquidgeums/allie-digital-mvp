@@ -255,9 +255,9 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-10 w-full p-0">
-                  <div className="w-4 h-4 bg-primary/20 rounded flex items-center justify-center">
-                    <div className="w-2 h-2 bg-primary rounded"></div>
+                <Button variant="outline" size="sm" className="h-10 w-full p-0 layout-button">
+                  <div className="layout-icon w-4 h-4 bg-primary/20 rounded flex items-center justify-center">
+                    <div className="layout-icon-dot w-2 h-2 bg-primary rounded"></div>
                   </div>
                 </Button>
               </DropdownMenuTrigger>

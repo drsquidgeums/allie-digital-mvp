@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Chart and Data Visualization Dark Theme Styles */
 @layer base {

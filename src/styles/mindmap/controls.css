@@ -72,3 +72,20 @@
   height: 20px;
   fill: hsl(var(--foreground));
 }
+
+/* Keep layout icon visible when trigger button is selected/open */
+.layout-button[data-state="open"] .layout-icon,
+.layout-button[aria-expanded="true"] .layout-icon,
+.layout-button.selected .layout-icon,
+.layout-button.active .layout-icon,
+.layout-button[data-state="on"] .layout-icon {
+  background-color: hsl(var(--primary-foreground) / 0.25) !important;
+}
+
+.layout-button[data-state="open"] .layout-icon-dot,
+.layout-button[aria-expanded="true"] .layout-icon-dot,
+.layout-button.selected .layout-icon-dot,
+.layout-button.active .layout-icon-dot,
+.layout-button[data-state="on"] .layout-icon-dot {
+  background-color: hsl(var(--primary-foreground)) !important;
+}
