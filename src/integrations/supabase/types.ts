@@ -131,6 +131,44 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_task_breakdowns: {
+        Row: {
+          breakdown: Json
+          created_at: string
+          id: string
+          original_task_text: string
+          task_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          breakdown: Json
+          created_at?: string
+          id?: string
+          original_task_text: string
+          task_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          breakdown?: Json
+          created_at?: string
+          id?: string
+          original_task_text?: string
+          task_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_task_breakdowns_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feedback: {
         Row: {
           comments: string | null

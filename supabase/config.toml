@@ -20,3 +20,6 @@ verify_jwt = false
 
 [functions.ai-study-materials]
 verify_jwt = true
+
+[functions.ai-task-breakdown]
+verify_jwt = true
