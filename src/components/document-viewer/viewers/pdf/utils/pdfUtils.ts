@@ -79,7 +79,7 @@ export const addHighlightsToPdf = async (
  * @param filename - Filename for the downloaded file
  */
 export const downloadPdf = (pdfBytes: Uint8Array, filename: string): void => {
-  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+  const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
   const url = URL.createObjectURL(blob);
   
   const link = document.createElement('a');
