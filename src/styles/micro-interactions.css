@@ -1,125 +1,124 @@
+/* Tool switching animations */
+.tool-transition {
+  transition: all 300ms ease-in-out;
+}
 
-@layer components {
-  /* Tool switching animations */
-  .tool-transition {
-    @apply transition-all duration-300 ease-in-out;
-  }
+.tool-fade-in {
+  animation: tool-fade-in 0.4s ease-out forwards;
+}
 
-  .tool-fade-in {
-    animation: tool-fade-in 0.4s ease-out forwards;
-  }
+.tool-fade-out {
+  animation: tool-fade-out 0.2s ease-in forwards;
+}
 
-  .tool-fade-out {
-    animation: tool-fade-out 0.2s ease-in forwards;
-  }
+/* File upload animations */
+.upload-zone {
+  transition: all 200ms ease-in-out;
+}
 
-  /* File upload animations */
-  .upload-zone {
-    @apply transition-all duration-200 ease-in-out;
-  }
+.upload-zone-active {
+  transform: scale(1.05);
+  border-color: hsl(var(--primary));
+  background-color: hsl(var(--primary) / 0.05);
+  animation: upload-pulse 1s ease-in-out infinite;
+}
 
-  .upload-zone-active {
-    @apply scale-105 border-primary bg-primary/5;
-    animation: upload-pulse 1s ease-in-out infinite;
-  }
+.upload-progress {
+  transition: all 300ms ease-out;
+}
 
-  .upload-progress {
-    @apply transition-all duration-300 ease-out;
-  }
+.upload-success {
+  animation: upload-success 0.6s ease-out;
+}
 
-  .upload-success {
-    animation: upload-success 0.6s ease-out;
-  }
+.upload-error {
+  animation: upload-error 0.4s ease-out;
+}
 
-  .upload-error {
-    animation: upload-error 0.4s ease-out;
-  }
+/* Document switching animations */
+.document-transition {
+  transition: all 400ms ease-in-out;
+}
 
-  /* Document switching animations */
-  .document-transition {
-    @apply transition-all duration-400 ease-in-out;
-  }
+.document-slide-in {
+  animation: document-slide-in 0.5s ease-out;
+}
 
-  .document-slide-in {
-    animation: document-slide-in 0.5s ease-out;
-  }
+.document-slide-out {
+  animation: document-slide-out 0.3s ease-in;
+}
 
-  .document-slide-out {
-    animation: document-slide-out 0.3s ease-in;
-  }
+/* Action completion feedback */
+.action-success {
+  animation: action-success 0.5s ease-out;
+}
 
-  /* Action completion feedback */
-  .action-success {
-    animation: action-success 0.5s ease-out;
-  }
+.action-processing {
+  animation: action-processing 1.5s ease-in-out infinite;
+}
 
-  .action-processing {
-    animation: action-processing 1.5s ease-in-out infinite;
-  }
+/* Button micro-interactions */
+.button-micro {
+  transition: all 200ms ease-in-out;
+}
 
-  /* Button micro-interactions */
-  .button-micro {
-    @apply transition-all duration-200 ease-in-out;
-  }
+.button-micro:hover {
+  transform: translateY(-2px);
+}
 
-  .button-micro:hover {
-    @apply transform -translate-y-0.5 shadow-lg;
-  }
+.button-micro:active {
+  transform: translateY(0);
+  transition-duration: 100ms;
+}
 
-  .button-micro:active {
-    @apply transform translate-y-0 shadow-md;
-    transition-duration: 100ms;
-  }
+/* Tab switching animations */
+.tab-transition {
+  transition: all 250ms ease-out;
+}
 
-  /* Tab switching animations */
-  .tab-transition {
-    @apply transition-all duration-250 ease-out;
-  }
+.tab-content-enter {
+  animation: tab-content-enter 0.3s ease-out;
+}
 
-  .tab-content-enter {
-    animation: tab-content-enter 0.3s ease-out;
-  }
+.tab-indicator {
+  transition: all 300ms ease-out;
+}
 
-  .tab-indicator {
-    @apply transition-all duration-300 ease-out;
-  }
+/* Modal and dialog micro-interactions */
+.modal-backdrop {
+  animation: modal-backdrop-fade 0.2s ease-out;
+}
 
-  /* Modal and dialog micro-interactions */
-  .modal-backdrop {
-    animation: modal-backdrop-fade 0.2s ease-out;
-  }
+.modal-content {
+  animation: modal-scale-in 0.3s ease-out;
+}
 
-  .modal-content {
-    animation: modal-scale-in 0.3s ease-out;
-  }
+/* Loading micro-interactions */
+.loading-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: loading-shimmer 1.5s infinite;
+}
 
-  /* Loading micro-interactions */
-  .loading-shimmer {
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: loading-shimmer 1.5s infinite;
-  }
+.loading-dots::after {
+  content: '';
+  animation: loading-dots 1.5s infinite;
+}
 
-  .loading-dots::after {
-    content: '';
-    animation: loading-dots 1.5s infinite;
-  }
+/* Hover micro-interactions */
+.hover-lift {
+  transition: transform 200ms ease-out;
+}
 
-  /* Hover micro-interactions */
-  .hover-lift {
-    @apply transition-transform duration-200 ease-out;
-  }
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
 
-  .hover-lift:hover {
-    @apply transform -translate-y-1;
-  }
+.hover-glow {
+  transition: box-shadow 300ms ease-out;
+}
 
-  .hover-glow {
-    @apply transition-shadow duration-300 ease-out;
-  }
-
-  .hover-glow:hover {
-    @apply shadow-lg shadow-primary/25;
-  }
+.hover-glow:hover {
+  box-shadow: 0 10px 15px -3px hsl(var(--primary) / 0.25);
 }
 
 /* Keyframe animations */

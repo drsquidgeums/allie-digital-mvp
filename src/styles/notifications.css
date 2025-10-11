@@ -1,45 +1,70 @@
+[data-radix-toast-close-button] {
+  color: #1f2937;
+}
 
+[data-radix-toast-close-button]:hover {
+  color: #111827;
+}
 
-@layer base {
-  [data-radix-toast-close-button] {
-    @apply text-gray-800 hover:text-gray-900 !important;
-  }
+.dark [data-radix-toast-close-button] {
+  color: #d1d5db;
+}
 
-  .dark [data-radix-toast-close-button] {
-    @apply text-gray-300 hover:text-gray-100 !important;
-  }
+.dark [data-radix-toast-close-button]:hover {
+  color: #f3f4f6;
+}
 
-  .sepia [data-radix-toast-close-button] {
-    @apply text-[#8B7355] hover:text-[#8B7355]/80 !important;
-  }
+.sepia [data-radix-toast-close-button] {
+  color: #8B7355;
+}
 
-  [data-radix-dialog-close] {
-    @apply text-gray-800 hover:text-gray-900 opacity-100 !important;
-  }
+.sepia [data-radix-toast-close-button]:hover {
+  color: rgba(139, 115, 85, 0.8);
+}
 
-  .dark [data-radix-dialog-close] {
-    @apply text-gray-300 hover:text-gray-100 opacity-100 !important;
-  }
+[data-radix-dialog-close] {
+  color: #1f2937;
+  opacity: 1;
+}
 
-  .sepia [data-radix-dialog-close] {
-    @apply text-[#8B7355] hover:text-[#8B7355]/80 opacity-100 !important;
-  }
+[data-radix-dialog-close]:hover {
+  color: #111827;
+}
 
-  .sepia [data-radix-dialog-title] {
-    @apply text-[#8B7355] !important;
-  }
+.dark [data-radix-dialog-close] {
+  color: #d1d5db;
+  opacity: 1;
+}
 
-  .dark .notification-dialog {
-    @apply bg-background/95 backdrop-blur-sm border-border;
-  }
+.dark [data-radix-dialog-close]:hover {
+  color: #f3f4f6;
+}
 
-  .dark .notification-item {
-    @apply border-border;
-  }
-  
-  /* Add smooth transition for toast closing */
-  [data-state="closed"] {
-    @apply transition-all duration-500 ease-in-out;
-  }
+.sepia [data-radix-dialog-close] {
+  color: #8B7355;
+  opacity: 1;
+}
+
+.sepia [data-radix-dialog-close]:hover {
+  color: rgba(139, 115, 85, 0.8);
+}
+
+.sepia [data-radix-dialog-title] {
+  color: #8B7355;
+}
+
+.dark .notification-dialog {
+  background-color: hsl(var(--background) / 0.95);
+  backdrop-filter: blur(4px);
+  border-color: hsl(var(--border));
+}
+
+.dark .notification-item {
+  border-color: hsl(var(--border));
+}
+
+/* Add smooth transition for toast closing */
+[data-state="closed"] {
+  transition: all 500ms ease-in-out;
 }
 

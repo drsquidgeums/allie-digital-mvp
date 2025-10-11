@@ -1,42 +1,39 @@
-
 /* Main Dark Theme Configuration */
-@layer base {
-  .dark {
-    /* Deep purple theme based on the reference design */
-    --background: 260 25% 8%;
-    --foreground: 280 15% 85%;
-    --card: 260 30% 12%;
-    --card-foreground: 280 15% 90%;
-    --popover: 260 30% 12%;
-    --popover-foreground: 280 15% 90%;
-    /* Bright purple primary from the reference */
-    --primary: 280 100% 70%;
-    --primary-foreground: 0 0% 100%;
-    /* Dark purple secondary */
-    --secondary: 260 25% 15%;
-    --secondary-foreground: 280 15% 85%;
-    /* Very dark muted tones */
-    --muted: 260 25% 10%;
-    --muted-foreground: 280 10% 60%;
-    /* Purple accent matching the button */
-    --accent: 280 100% 70%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 50%;
-    --destructive-foreground: 0 0% 100%;
-    /* Subtle dark borders */
-    --border: 260 20% 20%;
-    --input: 260 25% 15%;
-    --ring: 280 100% 70%;
+.dark {
+  /* Deep purple theme based on the reference design */
+  --background: 260 25% 8%;
+  --foreground: 280 15% 85%;
+  --card: 260 30% 12%;
+  --card-foreground: 280 15% 90%;
+  --popover: 260 30% 12%;
+  --popover-foreground: 280 15% 90%;
+  /* Bright purple primary from the reference */
+  --primary: 280 100% 70%;
+  --primary-foreground: 0 0% 100%;
+  /* Dark purple secondary */
+  --secondary: 260 25% 15%;
+  --secondary-foreground: 280 15% 85%;
+  /* Very dark muted tones */
+  --muted: 260 25% 10%;
+  --muted-foreground: 280 10% 60%;
+  /* Purple accent matching the button */
+  --accent: 280 100% 70%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 62.8% 50%;
+  --destructive-foreground: 0 0% 100%;
+  /* Subtle dark borders */
+  --border: 260 20% 20%;
+  --input: 260 25% 15%;
+  --ring: 280 100% 70%;
 
-    /* Enhanced theme colors matching the reference */
-    --chat-user-bg: 280 100% 70%;
-    --chat-user-text: 0 0% 100%;
-    --chat-assistant-bg: 260 25% 15%;
-    --chat-assistant-text: 280 15% 85%;
-    --loading-indicator: 280 100% 70%;
-    --focus-ring: 280 100% 70%;
-    --hover-bg: 260 25% 13%;
-  }
+  /* Enhanced theme colors matching the reference */
+  --chat-user-bg: 280 100% 70%;
+  --chat-user-text: 0 0% 100%;
+  --chat-assistant-bg: 260 25% 15%;
+  --chat-assistant-text: 280 15% 85%;
+  --loading-indicator: 280 100% 70%;
+  --focus-ring: 280 100% 70%;
+  --hover-bg: 260 25% 13%;
 }
 
 /* Import all dark theme modules */

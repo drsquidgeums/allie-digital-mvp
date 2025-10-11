@@ -1,49 +1,60 @@
+.button-base {
+  transition: colors 200ms;
+}
 
-@layer base {
-  .button-base {
-    @apply transition-colors duration-200;
-  }
+.button-hover:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
 
-  .button-hover {
-    @apply hover:bg-accent hover:text-accent-foreground;
-  }
+.button-active:active {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
 
-  .button-active {
-    @apply active:bg-accent active:text-accent-foreground;
-  }
+[data-state="open"],
+.selected,
+.active,
+button[aria-expanded="true"],
+button[data-state="on"] {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
 
-  [data-state="open"],
-  .selected,
-  .active,
-  button[aria-expanded="true"],
-  button[data-state="on"] {
-    @apply bg-primary text-primary-foreground;
-  }
+/* Ensure icons are visible in selected state for all color modes */
+[data-state="open"] svg,
+.selected svg,
+.active svg,
+button[aria-expanded="true"] svg,
+button[data-state="on"] svg {
+  color: hsl(var(--primary-foreground)) !important;
+}
 
-  .dark [data-state="open"],
-  .dark .selected,
-  .dark .active,
-  .dark button[aria-expanded="true"],
-  .dark button[data-state="on"] {
-    @apply bg-primary text-primary-foreground;
-  }
+.dark [data-state="open"],
+.dark .selected,
+.dark .active,
+.dark button[aria-expanded="true"],
+.dark button[data-state="on"] {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
 
-  .sepia [data-state="open"],
-  .sepia .selected,
-  .sepia .active,
-  .sepia button[aria-expanded="true"],
-  .sepia button[data-state="on"] {
-    @apply bg-primary text-primary-foreground;
-  }
+.sepia [data-state="open"],
+.sepia .selected,
+.sepia .active,
+.sepia button[aria-expanded="true"],
+.sepia button[data-state="on"] {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
 
-  /* Add high contrast specific styling for toggle buttons */
-  [data-high-contrast="true"] button[role="switch"] {
-    outline: 2px solid #000000;
-    outline-offset: 2px;
-  }
+/* Add high contrast specific styling for toggle buttons */
+[data-high-contrast="true"] button[role="switch"] {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
 
-  [data-high-contrast="true"] button[role="switch"][data-state="checked"] {
-    outline: 2px solid #000000;
-    outline-offset: 2px;
-  }
+[data-high-contrast="true"] button[role="switch"][data-state="checked"] {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
 }

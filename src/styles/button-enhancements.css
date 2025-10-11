@@ -1,62 +1,57 @@
+/* Enhanced button focus states */
+.button-focus-enhanced:focus-visible {
+  animation: focus-pulse 0.3s ease-out;
+}
 
-@layer components {
-  /* Enhanced button focus states */
-  .button-focus-enhanced:focus-visible {
-    @apply ring-2 ring-primary ring-offset-2;
-    animation: focus-pulse 0.3s ease-out;
-  }
+/* Improved disabled states */
+.button-disabled-enhanced:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  filter: grayscale(10%);
+}
 
-  /* Improved disabled states */
-  .button-disabled-enhanced:disabled {
-    @apply opacity-60 cursor-not-allowed;
-    transform: none !important;
-    box-shadow: none !important;
-    filter: grayscale(10%);
-  }
+/* Success state animation */
+.button-success {
+  animation: success-bounce 0.4s ease-out;
+}
 
-  /* Success state animation */
-  .button-success {
-    @apply bg-green-500 text-white;
-    animation: success-bounce 0.4s ease-out;
-  }
+/* Error state animation */
+.button-error {
+  animation: error-shake 0.4s ease-out;
+}
 
-  /* Error state animation */
-  .button-error {
-    @apply bg-red-500 text-white;
-    animation: error-shake 0.4s ease-out;
-  }
+/* Loading shimmer effect for buttons with loading prop */
+.button-loading-shimmer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: loading-shimmer 1.5s infinite;
+}
 
-  /* Loading shimmer effect for buttons with loading prop */
-  .button-loading-shimmer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.3),
-      transparent
-    );
-    animation: loading-shimmer 1.5s infinite;
-  }
+/* Icon button specific enhancements */
+.icon-button-enhanced {
+  transition: all 0.2s ease-out;
+}
 
-  /* Icon button specific enhancements */
-  .icon-button-enhanced {
-    @apply transition-all duration-200 ease-out;
-  }
+.icon-button-enhanced:hover:not(:disabled) {
+  transform: scale(1.1);
+  transform-origin: center;
+}
 
-  .icon-button-enhanced:hover:not(:disabled) {
-    @apply scale-110;
-    transform-origin: center;
-  }
-
-  .icon-button-enhanced:active:not(:disabled) {
-    @apply scale-95;
-    transition-duration: 100ms;
-  }
+.icon-button-enhanced:active:not(:disabled) {
+  transform: scale(0.95);
+  transition-duration: 100ms;
 }
 
 @keyframes focus-pulse {
