@@ -1,16 +1,15 @@
 
-import React, { lazy, Suspense, memo, useEffect, useState } from "react";
+import React, { Suspense, memo } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { BrowserRouter, Navigate } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { AppProviders } from "@/components/app/AppProviders";
-import { PasswordGate } from "@/components/PasswordGate";
 import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
-import { FeedbackPrompt } from "@/components/community/FeedbackPrompt";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
 import { StudyBuddy } from "@/components/study-buddy/StudyBuddy";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -20,82 +19,29 @@ const PomodoroTaskListener = memo(() => {
 PomodoroTaskListener.displayName = "PomodoroTaskListener";
 
 const App = () => {
-  // Check for existing authentication on mount
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem("isAuthenticated") === "true";
-  });
-  const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
-  const [showFeedbackPrompt, setShowFeedbackPrompt] = useState(false);
-
-  // Load any existing user info from localStorage
-  useEffect(() => {
-    const ndaAgreement = localStorage.getItem("nda_agreement");
-    if (ndaAgreement) {
-      try {
-        const parsedAgreement = JSON.parse(ndaAgreement);
-        setUserInfo({
-          name: parsedAgreement.name,
-          email: parsedAgreement.email
-        });
-      } catch (error) {
-        console.error("Error parsing NDA agreement:", error);
-        localStorage.removeItem("nda_agreement");
-      }
-    }
-  }, []);
-
-  const handleAuthentication = () => {
-    localStorage.setItem("isAuthenticated", "true");
-    setIsAuthenticated(true);
-  };
-
-  const handleCloseFeedbackPrompt = () => {
-    setShowFeedbackPrompt(false);
-  };
-
-  const handlePostponeFeedback = () => {
-    setShowFeedbackPrompt(false);
-  };
-
-  if (!isAuthenticated) {
-    return (
-      <AppProviders>
-        <Toaster />
-        <Sonner />
-        <PasswordGate onAuthenticated={handleAuthentication} />
-      </AppProviders>
-    );
-  }
-
   return (
     <BrowserRouter>
       <AppProviders>
-        <SecurityProvider>
-          <div className="app-container">
-            <AppLogo />
-            <Toaster />
-            <Sonner />
-            <Suspense fallback={
-              <div className="flex items-center justify-center h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-              </div>
-            }>
-              <PomodoroTaskListener />
-              <AppRoutes />
-            </Suspense>
-            
-            {/* Feedback Prompt - Only show when manually triggered */}
-            <FeedbackPrompt
-              isOpen={showFeedbackPrompt}
-              onClose={handleCloseFeedbackPrompt}
-              onPostpone={handlePostponeFeedback}
-              userInfo={userInfo}
-            />
-            
-            {/* AI Study Buddy - NEW FEATURE */}
-            <StudyBuddy />
-          </div>
-        </SecurityProvider>
+        <AuthProvider>
+          <SecurityProvider>
+            <div className="app-container">
+              <AppLogo />
+              <Toaster />
+              <Sonner />
+              <Suspense fallback={
+                <div className="flex items-center justify-center h-screen">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                </div>
+              }>
+                <PomodoroTaskListener />
+                <AppRoutes />
+              </Suspense>
+              
+              {/* AI Study Buddy */}
+              <StudyBuddy />
+            </div>
+          </SecurityProvider>
+        </AuthProvider>
       </AppProviders>
     </BrowserRouter>
   );
