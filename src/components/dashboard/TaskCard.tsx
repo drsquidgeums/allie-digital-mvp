@@ -3,12 +3,9 @@ import React, { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Task } from "@/types/task";
-import { Tag, Sparkles } from "lucide-react";
+import { Tag } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { TaskLabels } from "./TaskLabels";
-import { AITaskBreakdownButton } from "@/components/tasks/AITaskBreakdownButton";
-import { TaskBreakdownViewer } from "@/components/tasks/TaskBreakdownViewer";
-import { TaskBreakdown } from "@/hooks/useAITaskBreakdown";
 import {
   Tooltip,
   TooltipContent,
@@ -32,7 +29,6 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   onUpdateLabels
 }) => {
   const [showOptions, setShowOptions] = useState(false);
-  const [breakdown, setBreakdown] = useState<TaskBreakdown | null>(null);
   const { i18n } = useTranslation();
   
   const colorOptions = [
@@ -202,26 +198,6 @@ export const TaskCard: React.FC<TaskCardProps> = ({
               onRemoveLabel={handleRemoveLabel}
             />
           </div>
-
-          {/* AI Task Breakdown Section */}
-          <div className="mb-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="h-4 w-4 text-primary" />
-              <p className="text-xs font-medium">AI Assistant:</p>
-            </div>
-            <AITaskBreakdownButton
-              taskText={task.text}
-              taskId={task.id}
-              category={task.category || undefined}
-              onBreakdownComplete={setBreakdown}
-            />
-          </div>
-
-          {breakdown && (
-            <div className="mb-4">
-              <TaskBreakdownViewer breakdown={breakdown} />
-            </div>
-          )}
           
           <div className="flex justify-end">
             <button
