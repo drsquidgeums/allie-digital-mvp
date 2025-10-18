@@ -29,6 +29,20 @@ export const useAudioInstance = () => {
     
     audioRef.current = window.globalAudioPlayer;
 
+    // Sync playing state with actual audio state on mount
+    if (window.globalAudioPlayer && !window.globalAudioPlayer.paused) {
+      // Dispatch event to notify components that audio is playing
+      window.dispatchEvent(new CustomEvent('audioPlayerStateChanged', {
+        detail: {
+          isPlaying: true,
+          selectedMusic: localStorage.getItem('selectedMusicId') || '',
+          volume: window.globalAudioPlayer.volume * 100,
+          isLooping: window.globalAudioPlayer.loop,
+          isMuted: window.globalAudioPlayer.muted
+        }
+      }));
+    }
+
     const handleError = (e: Event) => {
       const target = e.target as HTMLAudioElement;
       const error = target.error;
