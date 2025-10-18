@@ -20,6 +20,15 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
 
   // Load initial state from localStorage
   useEffect(() => {
+    // If a global player is already playing, sync state and skip auto-init
+    if (audioRef.current && !audioRef.current.paused) {
+      setIsPlaying(true);
+      setVolume(audioRef.current.volume || 0.2);
+      setIsMuted(audioRef.current.muted);
+      setIsLooping(audioRef.current.loop);
+      return;
+    }
+
     // Restore playback state from localStorage
     const savedIsPlaying = localStorage.getItem('musicIsPlaying') === 'true';
     const savedVolume = parseFloat(localStorage.getItem('musicVolume') || '0.2');
@@ -31,14 +40,18 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
     setIsMuted(savedIsMuted);
     setIsLooping(savedIsLooping);
     
-    // Auto-play only if it was playing before
+    // Auto-play only if it was playing before and not already playing
     if (savedIsPlaying && audioRef.current) {
       const savedMusicId = localStorage.getItem('selectedMusicId');
       if (savedMusicId) {
         const savedMusic = MUSIC_OPTIONS.find(opt => opt.id === savedMusicId);
         if (savedMusic) {
           // Prepare for playback
-          audioRef.current.src = savedMusic.url;
+          // IMPORTANT: Do not overwrite src if already set and playing
+          if (!audioRef.current.src || audioRef.current.paused) {
+            audioRef.current.src = savedMusic.url;
+            audioRef.current.load();
+          }
           audioRef.current.volume = savedVolume || 0.2;
           audioRef.current.muted = savedIsMuted;
           audioRef.current.loop = savedIsLooping;
@@ -48,7 +61,7 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
             setIsPlaying(true);
           }).catch(err => {
             console.error("Failed to auto-resume audio:", err);
-            setIsPlaying(false);
+            setIsPlaying(!audioRef.current?.paused);
           });
         }
       }

@@ -21,7 +21,12 @@ export const useMusicSelection = (
       if (audioRef.current && savedMusicId) {
         const savedMusic = MUSIC_OPTIONS.find(opt => opt.id === savedMusicId);
         if (savedMusic) {
-          audioRef.current.src = savedMusic.url;
+          const isAlreadyPlaying = !audioRef.current.paused;
+          const isSameSrc = audioRef.current.src?.includes(savedMusic.url);
+          // Avoid resetting the stream if it's already playing the same source
+          if (!isAlreadyPlaying || !isSameSrc) {
+            audioRef.current.src = savedMusic.url;
+          }
         }
       }
     }
