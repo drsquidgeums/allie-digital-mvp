@@ -31,12 +31,13 @@ export const useAudioInstance = () => {
 
     // Sync playing state with actual audio state on mount
     if (window.globalAudioPlayer && !window.globalAudioPlayer.paused) {
+      console.log('Global audio player is playing, syncing state across components');
       // Dispatch event to notify components that audio is playing
       window.dispatchEvent(new CustomEvent('audioPlayerStateChanged', {
         detail: {
           isPlaying: true,
           selectedMusic: localStorage.getItem('selectedMusicId') || '',
-          volume: window.globalAudioPlayer.volume * 100,
+          volume: window.globalAudioPlayer.volume * 100, // Normalize to 0-100
           isLooping: window.globalAudioPlayer.loop,
           isMuted: window.globalAudioPlayer.muted
         }

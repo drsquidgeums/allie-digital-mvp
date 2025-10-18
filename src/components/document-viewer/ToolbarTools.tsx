@@ -9,7 +9,6 @@ import { BeelineReader } from "../BeelineReader";
 import { SpeechToText } from "../SpeechToText";
 import { Rewordify } from "../Rewordify";
 import { IrlenOverlay } from "../IrlenOverlay";
-import { AmbientMusic } from "../AmbientMusic";
 import { TextTool } from "./toolbar/TextTool";
 import { DocumentAIChat } from "../ai/DocumentAIChat";
 import { VoiceAssistant } from "../voice/VoiceAssistant";
@@ -99,7 +98,6 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
         }
         popoverClassName="w-[500px] h-[600px] p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
-      <AmbientMusic />
     </div>
   );
 };

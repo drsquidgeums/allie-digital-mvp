@@ -32,7 +32,7 @@ export const useAudioPlayer = () => {
         detail: { 
           isPlaying,
           selectedMusic,
-          volume,
+          volume: volume * 100, // Normalize to 0-100 for consistency
           isLooping,
           isMuted
         } 
