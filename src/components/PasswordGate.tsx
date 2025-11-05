@@ -4,7 +4,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { WelcomeHeader } from "./password-gate/WelcomeHeader";
 import { PasswordForm } from "./password-gate/PasswordForm";
 
-const DEMO_PASSWORD = "@MqV^WQVRAer8s$Z0feC";
+const DEMO_PASSWORD = "MxY!sDvbUxN9RhKV#fkSraDS6P";
 
 interface PasswordGateProps {
   onAuthenticated: () => void;
