@@ -10,6 +10,7 @@ import { SidebarButton } from "./SidebarButton";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useTranslation } from "react-i18next";
+import { supabase } from "@/integrations/supabase/client";
 
 interface SidebarToolsProps {
   activeComponent: string | null;
@@ -27,14 +28,21 @@ export const SidebarTools = ({
   const { toast } = useToast();
   const { t } = useTranslation();
 
-  const handleLogout = () => {
-    localStorage.removeItem("isAuthenticated");
-    toast({
-      title: t('common.success'),
-      description: t('common.logout'),
-    });
-    // Force a page reload to return to the password gate
-    window.location.reload();
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: t('common.success'),
+        description: t('common.logout'),
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to log out. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleSettingsClick = (e: React.MouseEvent<HTMLButtonElement>) => {

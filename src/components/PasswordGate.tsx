@@ -1,37 +1,14 @@
 
 import React, { useState, useEffect } from "react";
-import { useToast } from "@/components/ui/use-toast";
 import { WelcomeHeader } from "./password-gate/WelcomeHeader";
-import { PasswordForm } from "./password-gate/PasswordForm";
-
-const DEMO_PASSWORD = "MxY!sDvbUxN9RhKV#fkSraDS6P";
+import { AuthForm } from "./password-gate/AuthForm";
 
 interface PasswordGateProps {
   onAuthenticated: () => void;
 }
 
 export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
-  const [password, setPassword] = useState("");
   const [imagesLoaded, setImagesLoaded] = useState(false);
-  const { toast } = useToast();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === DEMO_PASSWORD) {
-      localStorage.setItem("isAuthenticated", "true");
-      onAuthenticated();
-      toast({
-        title: "Success",
-        description: "Welcome to the application!",
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: "Incorrect password. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
 
   const colors = [
     '#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#8B00FF',
@@ -166,11 +143,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         }}
       >
         <WelcomeHeader colors={colors} />
-        <PasswordForm 
-          password={password}
-          setPassword={setPassword}
-          onSubmit={handleSubmit}
-        />
+        <AuthForm onAuthenticated={onAuthenticated} />
       </div>
       <footer 
         className="absolute bottom-4 text-sm z-10" 
