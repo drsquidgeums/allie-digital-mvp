@@ -67,22 +67,39 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         border-color: #d1d5db !important;
       }
       
-      html.dark .password-gate button,
-      html .password-gate button,
-      .dark .password-gate button,
-      .password-gate button {
-        background-color: #000000 !important;
-        color: #ffffff !important;
-        border-color: #000000 !important;
-      }
-      
-      html.dark .password-gate button:hover,
-      html .password-gate button:hover,
-      .dark .password-gate button:hover,
-      .password-gate button:hover {
-        background-color: #1f1f1f !important;
-        color: #ffffff !important;
-      }
+       html.dark .password-gate button[type="submit"],
+       html .password-gate button[type="submit"],
+       .dark .password-gate button[type="submit"],
+       .password-gate button[type="submit"] {
+         background-color: #000000 !important;
+         color: #ffffff !important;
+         border-color: #000000 !important;
+       }
+
+       html.dark .password-gate button[type="submit"]:hover,
+       html .password-gate button[type="submit"]:hover,
+       .dark .password-gate button[type="submit"]:hover,
+       .password-gate button[type="submit"]:hover {
+         background-color: #1f1f1f !important;
+         color: #ffffff !important;
+       }
+
+       html.dark .password-gate button[type="button"],
+       html .password-gate button[type="button"],
+       .dark .password-gate button[type="button"],
+       .password-gate button[type="button"] {
+         background-color: transparent !important;
+         border: none !important;
+         padding: 0 !important;
+         box-shadow: none !important;
+       }
+
+       html.dark .password-gate button[type="button"]:hover,
+       html .password-gate button[type="button"]:hover,
+       .dark .password-gate button[type="button"]:hover,
+       .password-gate button[type="button"]:hover {
+         background-color: transparent !important;
+       }
       
       html.dark .password-gate h1,
       html.dark .password-gate h2,
