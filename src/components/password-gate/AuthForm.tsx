@@ -260,26 +260,28 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         {isLoading ? "Loading..." : (isSignUp ? "Sign Up" : "Sign In")}
       </Button>
       
-      <button
-        type="button"
-        onClick={() => setIsSignUp(!isSignUp)}
+      <a
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+          setIsSignUp(!isSignUp);
+        }}
         className="text-sm underline transition-colors hover:opacity-70"
-        style={{ color: '#000000', background: 'transparent' }}
-        disabled={isLoading}
       >
         {isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
-      </button>
+      </a>
       
       {!isSignUp && (
-        <button
-          type="button"
-          onClick={() => setIsForgotPassword(true)}
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            setIsForgotPassword(true);
+          }}
           className="text-sm underline transition-colors hover:opacity-70"
-          style={{ color: '#000000', background: 'transparent' }}
-          disabled={isLoading}
         >
           Forgot password?
-        </button>
+        </a>
       )}
       
       <LoadingProgress isLoading={isLoading} progress={progress} />
