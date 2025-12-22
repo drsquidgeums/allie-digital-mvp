@@ -4,7 +4,6 @@ import { Editor } from '@tiptap/react';
 import { AdvancedSearch } from '../AdvancedSearch';
 import { DocumentComparison } from '../DocumentComparison';
 import { VersionHistory } from '../VersionHistory';
-import { CollaborationIndicator } from '../CollaborationIndicator';
 import { ToolbarDivider } from '../ToolbarDivider';
 
 interface AdvancedEditingSectionProps {
@@ -21,7 +20,6 @@ export const AdvancedEditingSection: React.FC<AdvancedEditingSectionProps> = ({
       <AdvancedSearch editor={editor} />
       <DocumentComparison editor={editor} documentTitle={documentTitle} />
       <VersionHistory editor={editor} documentTitle={documentTitle} />
-      <CollaborationIndicator editor={editor} />
       <ToolbarDivider />
     </>
   );

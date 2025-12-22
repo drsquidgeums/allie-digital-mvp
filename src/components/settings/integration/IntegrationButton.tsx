@@ -6,19 +6,22 @@ interface IntegrationButtonProps {
   label: string;
   isLoading?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 export const IntegrationButton = ({ 
   label, 
   isLoading, 
-  onClick 
+  onClick,
+  disabled = false
 }: IntegrationButtonProps) => {
   return (
     <Button 
       variant="outline" 
       size="sm"
       onClick={onClick}
-      disabled={isLoading}
+      disabled={isLoading || disabled}
+      className={disabled ? "opacity-50 cursor-not-allowed" : ""}
     >
       {isLoading ? (
         <>
