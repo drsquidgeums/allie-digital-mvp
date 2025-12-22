@@ -26,7 +26,7 @@ export const MusicButton = ({
         disabled={isDisabled}
         aria-disabled={isDisabled}
       >
-        <Music className="h-4 w-4" />
+        <Music className="h-4 w-4 relative z-10" />
         {isPlaying && (
           <div 
             className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"
