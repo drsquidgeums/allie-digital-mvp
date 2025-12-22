@@ -39,9 +39,7 @@ export const IntegrationSettings = () => {
     {
       title: t('settings.integrations.microsoftTeams', 'Microsoft Teams'),
       description: t('settings.integrations.teamsDesc', 'Connect to Teams chat channels for collaborative discussions'),
-      onClick: handleTeamsConnect,
-      isLoading: isConnecting,
-      disabled: false,
+      disabled: true,
     },
     {
       title: t('settings.integrations.slack', 'Slack'),
@@ -79,8 +77,6 @@ export const IntegrationSettings = () => {
             key={integration.title}
             title={integration.title}
             description={integration.description}
-            isLoading={integration.isLoading}
-            onClick={integration.onClick}
             disabled={integration.disabled}
           />
         ))}
