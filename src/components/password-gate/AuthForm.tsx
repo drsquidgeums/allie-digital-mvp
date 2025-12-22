@@ -16,7 +16,48 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { toast } = useToast();
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email) {
+      toast({
+        title: "Error",
+        description: "Please enter your email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/`,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Password Reset Email Sent",
+        description: "Check your email for a link to reset your password.",
+      });
+      
+      setIsForgotPassword(false);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to send reset email. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,6 +163,50 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     }
   };
 
+  if (isForgotPassword) {
+    return (
+      <form onSubmit={handleForgotPassword} className="space-y-4 flex flex-col items-center">
+        <div className="w-[70%]">
+          <Input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full transition-colors"
+            style={{
+              backgroundColor: 'white',
+              color: '#000000',
+              borderColor: '#d1d5db',
+            }}
+            disabled={isLoading}
+          />
+        </div>
+        <Button 
+          type="submit" 
+          className="w-[70%] transition-colors" 
+          style={{
+            backgroundColor: '#000000',
+            color: '#ffffff',
+            borderColor: '#000000',
+          }}
+          disabled={isLoading}
+        >
+          {isLoading ? "Sending..." : "Send Reset Link"}
+        </Button>
+        
+        <button
+          type="button"
+          onClick={() => setIsForgotPassword(false)}
+          className="text-sm underline transition-colors"
+          style={{ color: '#666666' }}
+          disabled={isLoading}
+        >
+          Back to Sign In
+        </button>
+      </form>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4 flex flex-col items-center">
       <div className="w-[70%]">
@@ -184,6 +269,18 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       >
         {isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
       </button>
+      
+      {!isSignUp && (
+        <button
+          type="button"
+          onClick={() => setIsForgotPassword(true)}
+          className="text-sm underline transition-colors"
+          style={{ color: '#666666' }}
+          disabled={isLoading}
+        >
+          Forgot password?
+        </button>
+      )}
       
       <LoadingProgress isLoading={isLoading} progress={progress} />
     </form>
