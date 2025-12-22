@@ -11,15 +11,44 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, documentContent } = await req.json();
+    const body = await req.json();
+    const { messages, documentContent } = body;
+
+    // Validate messages input
+    if (!messages || !Array.isArray(messages)) {
+      return new Response(
+        JSON.stringify({ error: "Messages array is required" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate each message has role and content
+    for (const msg of messages) {
+      if (!msg.role || typeof msg.role !== 'string' || !msg.content || typeof msg.content !== 'string') {
+        return new Response(
+          JSON.stringify({ error: "Each message must have role and content strings" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
+
+    // Limit document content length for safety
+    const sanitizedDocContent = documentContent && typeof documentContent === 'string' 
+      ? documentContent.slice(0, 100000) 
+      : null;
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const systemPrompt = documentContent 
-      ? `You are a helpful AI assistant analyzing a document. Here is the document content:\n\n${documentContent}\n\nAnswer questions about this document clearly and concisely. If asked to summarize, provide key points. If asked to explain concepts, break them down simply.`
+    console.log("Document AI chat request:", { 
+      messageCount: messages.length, 
+      hasDocument: !!sanitizedDocContent 
+    });
+
+    const systemPrompt = sanitizedDocContent 
+      ? `You are a helpful AI assistant analyzing a document. Here is the document content:\n\n${sanitizedDocContent}\n\nAnswer questions about this document clearly and concisely. If asked to summarize, provide key points. If asked to explain concepts, break them down simply.`
       : "You are a helpful AI learning assistant. Provide clear, concise answers to help users learn effectively.";
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {

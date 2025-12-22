@@ -11,12 +11,33 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, context } = await req.json();
+    const body = await req.json();
+    const { messages, context } = body;
+
+    // Validate messages input
+    if (!messages || !Array.isArray(messages)) {
+      return new Response(
+        JSON.stringify({ error: "Messages array is required" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate each message has role and content
+    for (const msg of messages) {
+      if (!msg.role || typeof msg.role !== 'string' || !msg.content || typeof msg.content !== 'string') {
+        return new Response(
+          JSON.stringify({ error: "Each message must have role and content strings" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
+
+    console.log("Study buddy chat request:", { messageCount: messages.length, hasContext: !!context });
 
     // Build context-aware system prompt
     let systemPrompt = `You are Allie, an AI study buddy specifically designed for students with ADHD. Your personality traits:
@@ -50,18 +71,22 @@ serve(async (req) => {
 - Proactively offer to create tasks/flashcards from the conversation
 - Remember context from earlier in the chat`;
 
-    // Add context if provided
-    if (context) {
-      if (context.currentDocument) {
-        systemPrompt += `\n\n**Current Context:** The user is working on a document titled "${context.currentDocument.name}".`;
+    // Add context if provided (with validation)
+    if (context && typeof context === 'object') {
+      if (context.currentDocument && typeof context.currentDocument === 'object' && context.currentDocument.name) {
+        const docName = String(context.currentDocument.name).slice(0, 200);
+        systemPrompt += `\n\n**Current Context:** The user is working on a document titled "${docName}".`;
       }
-      if (context.recentTasks && context.recentTasks.length > 0) {
-        systemPrompt += `\n\n**Recent Tasks:** ${context.recentTasks.join(", ")}`;
+      if (context.recentTasks && Array.isArray(context.recentTasks)) {
+        const tasks = context.recentTasks.slice(0, 10).map(t => String(t).slice(0, 100)).join(", ");
+        systemPrompt += `\n\n**Recent Tasks:** ${tasks}`;
       }
       if (context.currentTime) {
         const hour = new Date(context.currentTime).getHours();
-        const timeOfDay = hour < 12 ? "morning" : hour < 17 ? "afternoon" : "evening";
-        systemPrompt += `\n\n**Time Context:** It's currently ${timeOfDay}. Adjust energy/focus suggestions accordingly.`;
+        if (!isNaN(hour)) {
+          const timeOfDay = hour < 12 ? "morning" : hour < 17 ? "afternoon" : "evening";
+          systemPrompt += `\n\n**Time Context:** It's currently ${timeOfDay}. Adjust energy/focus suggestions accordingly.`;
+        }
       }
     }
 
@@ -78,7 +103,7 @@ serve(async (req) => {
           ...messages,
         ],
         stream: true,
-        temperature: 0.8, // Slightly higher for more personality
+        temperature: 0.8,
       }),
     });
 

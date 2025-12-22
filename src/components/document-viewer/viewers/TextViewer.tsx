@@ -1,5 +1,5 @@
-
 import React, { useEffect, useState } from 'react';
+import DOMPurify from 'dompurify';
 import { readTextFile } from '../FileConverter';
 
 interface TextViewerProps {
@@ -61,7 +61,7 @@ export const TextViewer = ({ file }: TextViewerProps) => {
   return (
     <div
       className="p-4 focus:outline-none focus:ring-2 focus:ring-primary overflow-auto"
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
       style={{ minHeight: '100%' }}
       tabIndex={0}
       role="textbox"

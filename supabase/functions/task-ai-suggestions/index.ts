@@ -12,28 +12,44 @@ serve(async (req) => {
   }
 
   try {
-    const { type, context } = await req.json();
+    const body = await req.json();
+    const { type, context } = body;
+
+    // Validate type
+    if (!type || typeof type !== 'string' || !['suggest', 'schedule', 'optimize'].includes(type)) {
+      return new Response(
+        JSON.stringify({ error: "Type must be 'suggest', 'schedule', or 'optimize'" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Sanitize context
+    const sanitizedContext = context && typeof context === 'string' 
+      ? context.slice(0, 5000) 
+      : '';
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
+
+    console.log("Task AI suggestions request:", { type, contextLength: sanitizedContext.length });
 
     let systemPrompt = "";
     let userPrompt = "";
 
     if (type === "suggest") {
       systemPrompt = "You are a study planning AI assistant. Suggest actionable study tasks based on the user's context.";
-      userPrompt = context || "Suggest 5 study tasks for a college student preparing for exams.";
+      userPrompt = sanitizedContext || "Suggest 5 study tasks for a college student preparing for exams.";
     } else if (type === "schedule") {
       systemPrompt = "You are a study schedule optimizer. Create realistic, balanced study schedules.";
-      userPrompt = context || "Create a study schedule for the next 7 days with morning and evening sessions.";
+      userPrompt = sanitizedContext || "Create a study schedule for the next 7 days with morning and evening sessions.";
     } else if (type === "optimize") {
       systemPrompt = "You are a productivity optimizer. Analyze existing tasks and suggest improvements.";
-      userPrompt = `Current tasks: ${context}. Suggest how to prioritize and optimize these tasks.`;
+      userPrompt = `Current tasks: ${sanitizedContext}. Suggest how to prioritize and optimize these tasks.`;
     }
 
-    const body: any = {
+    const requestBody: any = {
       model: "google/gemini-2.5-flash",
       messages: [
         { role: "system", content: systemPrompt },
@@ -42,7 +58,7 @@ serve(async (req) => {
     };
 
     if (type === "suggest") {
-      body.tools = [
+      requestBody.tools = [
         {
           type: "function",
           function: {
@@ -71,7 +87,7 @@ serve(async (req) => {
           }
         }
       ];
-      body.tool_choice = { type: "function", function: { name: "suggest_tasks" } };
+      requestBody.tool_choice = { type: "function", function: { name: "suggest_tasks" } };
     }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -80,7 +96,7 @@ serve(async (req) => {
         "Authorization": `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
@@ -105,6 +121,7 @@ serve(async (req) => {
     }
 
     const data = await response.json();
+    console.log("Task AI suggestions response received");
     
     let result;
     if (type === "suggest" && data.choices?.[0]?.message?.tool_calls?.[0]) {
