@@ -263,8 +263,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       <button
         type="button"
         onClick={() => setIsSignUp(!isSignUp)}
-        className="text-sm transition-colors hover:opacity-70"
-        style={{ color: '#000000' }}
+        className="text-sm underline transition-colors hover:opacity-70"
+        style={{ color: '#000000', background: 'transparent' }}
         disabled={isLoading}
       >
         {isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
@@ -274,8 +274,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         <button
           type="button"
           onClick={() => setIsForgotPassword(true)}
-          className="text-sm transition-colors hover:opacity-70"
-          style={{ color: '#000000' }}
+          className="text-sm underline transition-colors hover:opacity-70"
+          style={{ color: '#000000', background: 'transparent' }}
           disabled={isLoading}
         >
           Forgot password?
