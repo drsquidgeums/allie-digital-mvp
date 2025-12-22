@@ -3,15 +3,29 @@ import { supabase } from '@/integrations/supabase/client';
 import { ManagedFile } from '@/types/file';
 
 /**
- * Fetches files from Supabase storage
+ * Gets the current user's ID for folder-based file storage
+ */
+const getCurrentUserId = async (): Promise<string | null> => {
+  const { data: { user } } = await supabase.auth.getUser();
+  return user?.id || null;
+};
+
+/**
+ * Fetches files from Supabase storage for the current user
  */
 export const fetchFiles = async (): Promise<ManagedFile[]> => {
   try {
-    console.log('Fetching files from Supabase storage');
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      console.log('No authenticated user, returning empty file list');
+      return [];
+    }
+    
+    console.log('Fetching files from Supabase storage for user:', userId);
     const { data: storageData, error } = await supabase
       .storage
       .from('files')
-      .list();
+      .list(userId);
       
     if (error) {
       console.error('Error fetching files from storage:', error);
@@ -21,10 +35,11 @@ export const fetchFiles = async (): Promise<ManagedFile[]> => {
     // Convert storage data to ManagedFile format
     const files: ManagedFile[] = await Promise.all(
       storageData.filter(item => !item.id.endsWith('/')).map(async (item) => {
+        const filePath = `${userId}/${item.name}`;
         const { data: urlData } = await supabase
           .storage
           .from('files')
-          .createSignedUrl(item.name, 60 * 60 * 24); // 24 hours expiry
+          .createSignedUrl(filePath, 60 * 60 * 24); // 24 hours expiry
         
         return {
           id: item.id,
@@ -33,7 +48,7 @@ export const fetchFiles = async (): Promise<ManagedFile[]> => {
           type: item.metadata?.mimetype || 'application/octet-stream',
           lastModified: new Date(item.created_at).getTime(),
           url: urlData?.signedUrl,
-          path: item.name
+          path: filePath
         };
       })
     );
@@ -47,14 +62,19 @@ export const fetchFiles = async (): Promise<ManagedFile[]> => {
 };
 
 /**
- * Uploads a file to Supabase storage
+ * Uploads a file to Supabase storage in the user's folder
  */
 export const uploadFileToStorage = async (file: File): Promise<ManagedFile | null> => {
   try {
-    console.log('Uploading file to Supabase:', file.name);
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      throw new Error('User must be authenticated to upload files');
+    }
     
-    // Create a unique file path to avoid collisions
-    const filePath = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+    console.log('Uploading file to Supabase for user:', userId, file.name);
+    
+    // Create a unique file path within the user's folder
+    const filePath = `${userId}/${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
     
     // Upload to Supabase storage
     const { data: uploadData, error: uploadError } = await supabase
