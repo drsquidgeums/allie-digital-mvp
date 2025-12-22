@@ -37,7 +37,8 @@ export const useAudioInstance = () => {
         detail: {
           isPlaying: true,
           selectedMusic: localStorage.getItem('selectedMusicId') || '',
-          volume: window.globalAudioPlayer.volume * 100, // Normalize to 0-100
+          // Keep volume normalized (0-1) to match HTMLAudioElement.volume
+          volume: window.globalAudioPlayer.volume,
           isLooping: window.globalAudioPlayer.loop,
           isMuted: window.globalAudioPlayer.muted
         }

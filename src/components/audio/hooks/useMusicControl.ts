@@ -31,12 +31,18 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
 
     // Restore playback state from localStorage
     const savedIsPlaying = localStorage.getItem('musicIsPlaying') === 'true';
-    const savedVolume = parseFloat(localStorage.getItem('musicVolume') || '0.2');
+
+    // Stored as 0-1; older builds may have stored 0-100, so normalize.
+    const rawSavedVolume = parseFloat(localStorage.getItem('musicVolume') || '0.2');
+    const savedVolume = Number.isFinite(rawSavedVolume)
+      ? (rawSavedVolume > 1 ? rawSavedVolume / 100 : rawSavedVolume)
+      : 0.2;
+
     const savedIsMuted = localStorage.getItem('musicIsMuted') === 'true';
     const savedIsLooping = localStorage.getItem('musicIsLooping') !== 'false'; // Default to true
-    
+
     // Only update states, don't actually play yet
-    setVolume(savedVolume || 0.2);
+    setVolume(Math.max(0, Math.min(1, savedVolume || 0.2)));
     setIsMuted(savedIsMuted);
     setIsLooping(savedIsLooping);
     
@@ -52,7 +58,8 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
             audioRef.current.src = savedMusic.url;
             audioRef.current.load();
           }
-          audioRef.current.volume = savedVolume || 0.2;
+          
+          audioRef.current.volume = Math.max(0, Math.min(1, savedVolume || 0.2));
           audioRef.current.muted = savedIsMuted;
           audioRef.current.loop = savedIsLooping;
           
@@ -69,14 +76,26 @@ export const useMusicControl = (audioRef: React.RefObject<HTMLAudioElement>) => 
     
     // Listen for audio state changes from other components
     const handleAudioStateChange = (event: CustomEvent) => {
-      const { isPlaying: newIsPlaying, volume: newVolume, isMuted: newIsMuted, isLooping: newIsLooping } = event.detail;
-      
+      const {
+        isPlaying: newIsPlaying,
+        volume: newVolume,
+        isMuted: newIsMuted,
+        isLooping: newIsLooping,
+      } = event.detail;
+
       if (newIsPlaying !== undefined && newIsPlaying !== isPlaying) {
         setIsPlaying(newIsPlaying);
       }
-      if (newVolume !== undefined && newVolume !== volume) {
-        setVolume(newVolume);
+
+      if (newVolume !== undefined) {
+        // Expect 0-1; accept legacy 0-100 just in case.
+        const normalized = newVolume > 1 ? newVolume / 100 : newVolume;
+        const clamped = Math.max(0, Math.min(1, normalized));
+        if (clamped !== volume) {
+          setVolume(clamped);
+        }
       }
+
       if (newIsMuted !== undefined && newIsMuted !== isMuted) {
         setIsMuted(newIsMuted);
       }

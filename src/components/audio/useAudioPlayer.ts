@@ -28,14 +28,15 @@ export const useAudioPlayer = () => {
 
     // Dispatch event to share music state across components
     const shareAudioState = () => {
-      window.dispatchEvent(new CustomEvent('audioPlayerStateChanged', { 
-        detail: { 
+      window.dispatchEvent(new CustomEvent('audioPlayerStateChanged', {
+        detail: {
           isPlaying,
           selectedMusic,
-          volume: volume * 100, // Normalize to 0-100 for consistency
+          // Keep volume normalized (0-1) to match HTMLAudioElement.volume
+          volume,
           isLooping,
           isMuted
-        } 
+        }
       }));
     };
 
