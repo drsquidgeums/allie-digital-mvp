@@ -194,15 +194,16 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           {isLoading ? "Sending..." : "Send Reset Link"}
         </Button>
         
-        <button
-          type="button"
-          onClick={() => setIsForgotPassword(false)}
-          className="text-sm underline transition-colors"
-          style={{ color: '#666666' }}
-          disabled={isLoading}
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            setIsForgotPassword(false);
+          }}
+          className="text-sm underline transition-colors hover:opacity-70"
         >
           Back to Sign In
-        </button>
+        </a>
       </form>
     );
   }
