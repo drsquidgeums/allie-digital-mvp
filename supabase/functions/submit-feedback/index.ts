@@ -19,6 +19,16 @@ const supabaseAdmin = createClient(
   }
 );
 
+// Input validation helpers
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email) && email.length <= 255;
+}
+
+function sanitizeString(str: string, maxLength: number): string {
+  return str.trim().slice(0, maxLength);
+}
+
 interface FeedbackData {
   comments: string;
   userEmail: string;
@@ -37,12 +47,12 @@ serve(async (req) => {
 
   try {
     const requestBody = await req.json();
-    console.log("Request body:", requestBody);
     
     const { comments, userEmail } = requestBody as FeedbackData;
 
-    if (!comments) {
-      console.log("Missing comments in request");
+    // Validate and sanitize inputs
+    if (!comments || typeof comments !== 'string') {
+      console.log("Missing or invalid comments in request");
       return new Response(
         JSON.stringify({ success: false, error: "Comments are required" }),
         {
@@ -52,10 +62,10 @@ serve(async (req) => {
       );
     }
 
-    if (!userEmail) {
-      console.log("Missing userEmail in request");
+    if (!userEmail || typeof userEmail !== 'string' || !isValidEmail(userEmail)) {
+      console.log("Missing or invalid userEmail in request");
       return new Response(
-        JSON.stringify({ success: false, error: "User email is required" }),
+        JSON.stringify({ success: false, error: "Valid email is required" }),
         {
           status: 400,
           headers: { "Content-Type": "application/json", ...corsHeaders },
@@ -63,52 +73,47 @@ serve(async (req) => {
       );
     }
 
-    console.log(`Processing feedback from: ${userEmail}`);
+    // Sanitize inputs
+    const sanitizedComments = sanitizeString(comments, 5000);
+    const sanitizedEmail = sanitizeString(userEmail.toLowerCase(), 255);
 
-    // Special user email can submit multiple times
-    const SPECIAL_USER_EMAIL = "antoinettecelinemarshall@gmail.com";
+    console.log(`Processing feedback submission`);
+
+    // Check for existing feedback by looking for the email in comments
+    console.log("Checking for existing feedback...");
+    const { data: existingFeedback, error: checkError } = await supabaseAdmin
+      .from('feedback')
+      .select('id, comments')
+      .ilike('comments', `%${sanitizedEmail}%`)
+      .limit(1);
+      
+    if (checkError) {
+      console.error("Error checking existing feedback:", checkError);
+      return new Response(
+        JSON.stringify({ success: false, error: "Error checking existing feedback" }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
     
-    // Only check for existing feedback if not a special user
-    if (userEmail !== SPECIAL_USER_EMAIL) {
-      console.log("Checking for existing feedback...");
-      
-      // Check for existing feedback by looking for the email in comments
-      const { data: existingFeedback, error: checkError } = await supabaseAdmin
-        .from('feedback')
-        .select('id, comments')
-        .ilike('comments', `%${userEmail}%`)
-        .limit(1);
-        
-      if (checkError) {
-        console.error("Error checking existing feedback:", checkError);
-        return new Response(
-          JSON.stringify({ success: false, error: "Error checking existing feedback" }),
-          {
-            status: 500,
-            headers: { "Content-Type": "application/json", ...corsHeaders },
-          }
-        );
-      }
-      
-      console.log("Existing feedback check result:", existingFeedback);
-      
-      if (existingFeedback && existingFeedback.length > 0) {
-        console.log("User has already provided feedback");
-        return new Response(
-          JSON.stringify({ 
-            success: false, 
-            error: "You have already provided feedback. Thank you!" 
-          }),
-          {
-            status: 400,
-            headers: { "Content-Type": "application/json", ...corsHeaders },
-          }
-        );
-      }
+    if (existingFeedback && existingFeedback.length > 0) {
+      console.log("User has already provided feedback");
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: "You have already provided feedback. Thank you!" 
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
     }
 
     // Enhance comments with email for reference
-    const enhancedComments = `${comments}\n\n[Email: ${userEmail}]`;
+    const enhancedComments = `${sanitizedComments}\n\n[Email: ${sanitizedEmail}]`;
     
     console.log("Inserting feedback into database...");
     
@@ -130,8 +135,7 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: "Database error while submitting feedback",
-          details: insertError.message
+          error: "Database error while submitting feedback"
         }),
         {
           status: 500,
@@ -140,13 +144,12 @@ serve(async (req) => {
       );
     }
 
-    console.log("Feedback inserted successfully:", insertData);
+    console.log("Feedback inserted successfully");
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: "Feedback submitted successfully",
-        data: insertData
+        message: "Feedback submitted successfully"
       }),
       {
         status: 200,
@@ -158,8 +161,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: "Server error",
-        details: err instanceof Error ? err.message : String(err)
+        error: "Server error"
       }),
       {
         status: 500,

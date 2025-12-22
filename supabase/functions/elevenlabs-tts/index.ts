@@ -11,22 +11,55 @@ serve(async (req) => {
   }
 
   try {
-    const { text, voiceId } = await req.json();
+    const body = await req.json();
+    const { text, voiceId } = body;
+
+    // Validate text input
+    if (!text || typeof text !== 'string') {
+      return new Response(
+        JSON.stringify({ error: "Text is required and must be a string" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Limit text length for safety (ElevenLabs has limits anyway)
+    const sanitizedText = text.trim().slice(0, 5000);
+    if (sanitizedText.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "Text cannot be empty" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate voiceId if provided
+    let selectedVoiceId = "EXAVITQu4vr4xnSDxMaL"; // Default (Sarah)
+    if (voiceId) {
+      if (typeof voiceId !== 'string') {
+        return new Response(
+          JSON.stringify({ error: "Voice ID must be a string" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      // Sanitize voiceId - only allow alphanumeric
+      const sanitizedVoiceId = voiceId.replace(/[^a-zA-Z0-9]/g, '').slice(0, 50);
+      if (sanitizedVoiceId !== voiceId) {
+        return new Response(
+          JSON.stringify({ error: "Invalid voice ID format" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      selectedVoiceId = sanitizedVoiceId;
+    }
+
     const ELEVENLABS_API_KEY = Deno.env.get('ELEVENLABS_API_KEY');
-    
     if (!ELEVENLABS_API_KEY) {
       throw new Error("ELEVENLABS_API_KEY is not configured");
     }
 
-    if (!text) {
-      throw new Error("Text is required");
-    }
-
-    // Use the provided voiceId or default to "EXAVITQu4vr4xnSDxMaL" (Sarah)
-    const selectedVoiceId = voiceId || "EXAVITQu4vr4xnSDxMaL";
+    console.log("Generating TTS for text length:", sanitizedText.length);
 
     const response = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${selectedVoiceId}`,
+      `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(selectedVoiceId)}`,
       {
         method: "POST",
         headers: {
@@ -34,7 +67,7 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          text: text,
+          text: sanitizedText,
           model_id: "eleven_turbo_v2_5",
           voice_settings: {
             stability: 0.5,
@@ -57,6 +90,8 @@ serve(async (req) => {
     const base64Audio = btoa(
       String.fromCharCode(...new Uint8Array(audioBuffer))
     );
+
+    console.log("TTS generated successfully");
 
     return new Response(
       JSON.stringify({ audioContent: base64Audio }),

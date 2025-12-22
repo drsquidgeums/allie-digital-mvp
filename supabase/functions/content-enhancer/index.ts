@@ -11,19 +11,31 @@ serve(async (req) => {
   }
 
   try {
-    const { type, documentContent } = await req.json();
-    console.log("Content enhancer request:", { type, contentLength: documentContent?.length });
+    const reqBody = await req.json();
+    const { type, documentContent } = reqBody;
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    // Validate inputs
+    if (!type || typeof type !== 'string' || !['flashcards', 'quiz', 'practice'].includes(type)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid type. Must be 'flashcards', 'quiz', or 'practice'" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
-    if (!documentContent) {
+    if (!documentContent || typeof documentContent !== 'string') {
       return new Response(
         JSON.stringify({ error: "Document content is required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
+    }
+
+    // Limit content length for safety
+    const sanitizedContent = documentContent.slice(0, 100000);
+    console.log("Content enhancer request:", { type, contentLength: sanitizedContent.length });
+
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
+      throw new Error("LOVABLE_API_KEY is not configured");
     }
 
     let systemPrompt = "";
@@ -37,7 +49,7 @@ serve(async (req) => {
       
       body.messages = [
         { role: "system", content: systemPrompt },
-        { role: "user", content: `Generate 8-12 flashcards from this content:\n\n${documentContent}` }
+        { role: "user", content: `Generate 8-12 flashcards from this content:\n\n${sanitizedContent}` }
       ];
 
       body.tools = [
@@ -76,7 +88,7 @@ serve(async (req) => {
       
       body.messages = [
         { role: "system", content: systemPrompt },
-        { role: "user", content: `Generate a 10-question quiz from this content:\n\n${documentContent}` }
+        { role: "user", content: `Generate a 10-question quiz from this content:\n\n${sanitizedContent}` }
       ];
 
       body.tools = [
@@ -121,7 +133,7 @@ serve(async (req) => {
       
       body.messages = [
         { role: "system", content: systemPrompt },
-        { role: "user", content: `Generate 6-8 practice questions from this content:\n\n${documentContent}` }
+        { role: "user", content: `Generate 6-8 practice questions from this content:\n\n${sanitizedContent}` }
       ];
 
       body.tools = [
@@ -155,12 +167,6 @@ serve(async (req) => {
         }
       ];
       body.tool_choice = { type: "function", function: { name: "generate_practice_questions" } };
-
-    } else {
-      return new Response(
-        JSON.stringify({ error: "Invalid type. Must be 'flashcards', 'quiz', or 'practice'" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
     }
 
     console.log("Calling Lovable AI Gateway...");

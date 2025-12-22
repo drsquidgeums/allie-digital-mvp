@@ -12,22 +12,57 @@ serve(async (req) => {
   }
 
   try {
-    const { type, topic, nodeLabel, existingNodes } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    const body = await req.json();
+    const { type, topic, nodeLabel, existingNodes } = body;
 
+    // Validate type
+    if (!type || typeof type !== 'string' || !['generate', 'expand'].includes(type)) {
+      return new Response(
+        JSON.stringify({ error: "Type must be 'generate' or 'expand'" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate based on type
+    if (type === 'generate') {
+      if (!topic || typeof topic !== 'string') {
+        return new Response(
+          JSON.stringify({ error: "Topic is required for generate type" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    } else if (type === 'expand') {
+      if (!nodeLabel || typeof nodeLabel !== 'string') {
+        return new Response(
+          JSON.stringify({ error: "Node label is required for expand type" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
+
+    // Sanitize inputs
+    const sanitizedTopic = topic ? String(topic).slice(0, 500) : '';
+    const sanitizedNodeLabel = nodeLabel ? String(nodeLabel).slice(0, 200) : '';
+    const sanitizedExistingNodes = existingNodes && Array.isArray(existingNodes) 
+      ? existingNodes.slice(0, 50).map(n => String(n).slice(0, 100))
+      : [];
+
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
+
+    console.log("Mindmap AI request:", { type, topic: sanitizedTopic?.slice(0, 50) });
 
     let systemPrompt = '';
     let userPrompt = '';
 
     if (type === 'generate') {
       systemPrompt = 'You are an expert mind map creator. Generate comprehensive, well-structured mind maps with main topics and subtopics.';
-      userPrompt = `Create a mind map structure for the topic: "${topic}". Return a hierarchical structure with a central idea and 4-6 main branches, each with 2-4 sub-branches.`;
+      userPrompt = `Create a mind map structure for the topic: "${sanitizedTopic}". Return a hierarchical structure with a central idea and 4-6 main branches, each with 2-4 sub-branches.`;
     } else if (type === 'expand') {
       systemPrompt = 'You are an expert at expanding ideas. Generate relevant subtopics and related concepts.';
-      userPrompt = `Expand on this mind map node: "${nodeLabel}". Context: ${existingNodes ? `Existing nodes: ${existingNodes.join(', ')}` : 'New mind map'}. Suggest 3-5 relevant child nodes or related concepts.`;
+      userPrompt = `Expand on this mind map node: "${sanitizedNodeLabel}". Context: ${sanitizedExistingNodes.length > 0 ? `Existing nodes: ${sanitizedExistingNodes.join(', ')}` : 'New mind map'}. Suggest 3-5 relevant child nodes or related concepts.`;
     }
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -105,7 +140,7 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    console.log('AI Response:', JSON.stringify(data, null, 2));
+    console.log('Mindmap AI response received');
 
     const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
     if (!toolCall) {
@@ -120,7 +155,7 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in mindmap-ai function:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
