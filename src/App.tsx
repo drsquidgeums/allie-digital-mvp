@@ -11,6 +11,8 @@ import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
 import { FeedbackPrompt } from "@/components/community/FeedbackPrompt";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
 import { StudyBuddy } from "@/components/study-buddy/StudyBuddy";
+import { supabase } from "@/integrations/supabase/client";
+import { Session, User } from "@supabase/supabase-js";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -20,33 +22,52 @@ const PomodoroTaskListener = memo(() => {
 PomodoroTaskListener.displayName = "PomodoroTaskListener";
 
 const App = () => {
-  // Check for existing authentication on mount
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem("isAuthenticated") === "true";
-  });
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
   const [showFeedbackPrompt, setShowFeedbackPrompt] = useState(false);
 
-  // Load any existing user info from localStorage
+  // Set up Supabase auth listener
   useEffect(() => {
-    const ndaAgreement = localStorage.getItem("nda_agreement");
-    if (ndaAgreement) {
-      try {
-        const parsedAgreement = JSON.parse(ndaAgreement);
-        setUserInfo({
-          name: parsedAgreement.name,
-          email: parsedAgreement.email
-        });
-      } catch (error) {
-        console.error("Error parsing NDA agreement:", error);
-        localStorage.removeItem("nda_agreement");
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setIsLoading(false);
+        
+        // Update userInfo when user changes
+        if (session?.user) {
+          setUserInfo({
+            name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
+            email: session.user.email || ''
+          });
+        } else {
+          setUserInfo(null);
+        }
       }
-    }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setIsLoading(false);
+      
+      if (session?.user) {
+        setUserInfo({
+          name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
+          email: session.user.email || ''
+        });
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleAuthentication = () => {
-    localStorage.setItem("isAuthenticated", "true");
-    setIsAuthenticated(true);
+    // This is now handled by the auth state change listener
   };
 
   const handleCloseFeedbackPrompt = () => {
@@ -57,7 +78,18 @@ const App = () => {
     setShowFeedbackPrompt(false);
   };
 
-  if (!isAuthenticated) {
+  // Show loading state while checking auth
+  if (isLoading) {
+    return (
+      <AppProviders>
+        <div className="flex items-center justify-center h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </AppProviders>
+    );
+  }
+
+  if (!session) {
     return (
       <AppProviders>
         <Toaster />
