@@ -34,32 +34,39 @@ export const IntegrationSettings = () => {
     {
       title: t('settings.integrations.googleCalendar', 'Google Calendar'),
       description: t('settings.integrations.googleCalendarDesc', 'Sync tasks with Google Calendar'),
+      disabled: true,
     },
     {
       title: t('settings.integrations.microsoftTeams', 'Microsoft Teams'),
       description: t('settings.integrations.teamsDesc', 'Connect to Teams chat channels for collaborative discussions'),
       onClick: handleTeamsConnect,
       isLoading: isConnecting,
+      disabled: false,
     },
     {
       title: t('settings.integrations.slack', 'Slack'),
       description: t('settings.integrations.slackDesc', 'Connect with Slack workspace'),
+      disabled: true,
     },
     {
       title: t('settings.integrations.canvasLMS', 'Canvas LMS'),
       description: t('settings.integrations.canvasDesc', 'Sync with your Canvas courses and assignments'),
+      disabled: true,
     },
     {
       title: t('settings.integrations.googleClassroom', 'Google Classroom'),
       description: t('settings.integrations.classroomDesc', 'Connect and sync with Google Classroom'),
+      disabled: true,
     },
     {
       title: t('settings.integrations.blackboard', 'Blackboard'),
       description: t('settings.integrations.blackboardDesc', 'Sync with Blackboard courses and assignments'),
+      disabled: true,
     },
     {
       title: t('settings.integrations.trello', 'Trello'),
       description: t('settings.integrations.trelloDesc', 'Sync tasks with Trello boards'),
+      disabled: true,
     },
   ];
 
@@ -74,6 +81,7 @@ export const IntegrationSettings = () => {
             description={integration.description}
             isLoading={integration.isLoading}
             onClick={integration.onClick}
+            disabled={integration.disabled}
           />
         ))}
       </div>
