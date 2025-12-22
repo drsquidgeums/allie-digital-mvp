@@ -76,8 +76,10 @@ export const SidebarTools = ({
         <SidebarButton
           icon={Users}
           label={t('navigation.community')}
-          isActive={location.pathname === "/community"}
-          onClick={handleCommunityClick}
+          isActive={false}
+          onClick={() => {}}
+          disabled
+          className="opacity-50 cursor-not-allowed"
         />
         {onFeedbackClick && (
           <SidebarButton
