@@ -111,26 +111,8 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
   };
 
   return (
-    <div className="w-full h-[calc(100vh-12rem)] bg-background rounded-xl overflow-hidden flex shadow-lg animate-fade-in">
-      <div className="flex-1 min-h-0">
-        <MindMapEnhancedFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          nodeTypes={nodeTypes}
-          onDeleteNode={handleDeleteNode}
-          onAddNode={handleAddNode}
-          onUndo={onUndo}
-          onRedo={onRedo}
-          onZoomIn={handleZoomIn}
-          onZoomOut={handleZoomOut}
-          onFitView={handleFitView}
-        />
-      </div>
-      
-      <div className="w-16 border-l border-border/30 bg-background/95 backdrop-blur-sm flex flex-col">
+    <div className="w-full h-[calc(100vh-12rem)] bg-background rounded-xl overflow-hidden flex flex-col shadow-lg animate-fade-in">
+      <div className="h-14 border-b border-border/30 bg-background/95 backdrop-blur-sm flex-shrink-0">
         <UnifiedMindMapToolbar
           onExportJpg={onExportJpg}
           onExportJson={onExportJson}
@@ -158,6 +140,23 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
           isGenerating={isGenerating}
           isExpanding={isExpanding}
           nodes={nodes}
+        />
+      </div>
+      <div className="flex-1 min-h-0">
+        <MindMapEnhancedFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+          onDeleteNode={handleDeleteNode}
+          onAddNode={handleAddNode}
+          onUndo={onUndo}
+          onRedo={onRedo}
+          onZoomIn={handleZoomIn}
+          onZoomOut={handleZoomOut}
+          onFitView={handleFitView}
         />
       </div>
     </div>

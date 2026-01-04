@@ -189,7 +189,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
 
   return (
     <TooltipProvider delayDuration={300}>
-      <div className="flex flex-col h-full p-2 gap-2 overflow-y-auto">
+      <div className="flex flex-row h-full px-3 gap-1 items-center overflow-x-auto">
         {/* Undo/Redo */}
         <Tooltip>
           <TooltipTrigger asChild>
@@ -198,12 +198,12 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
               size="sm"
               onClick={onUndo}
               disabled={!canUndo}
-              className="h-10 w-full p-0"
+              className="h-9 w-9 p-0"
             >
               <Undo2 className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left">Undo</TooltipContent>
+          <TooltipContent side="bottom">Undo</TooltipContent>
         </Tooltip>
 
         <Tooltip>
@@ -213,29 +213,29 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
               size="sm"
               onClick={onRedo}
               disabled={!canRedo}
-              className="h-10 w-full p-0"
+              className="h-9 w-9 p-0"
             >
               <Redo2 className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left">Redo</TooltipContent>
+          <TooltipContent side="bottom">Redo</TooltipContent>
         </Tooltip>
 
-        <Separator className="my-1" />
+        <Separator orientation="vertical" className="h-6 mx-1" />
 
         {/* Templates */}
         <DropdownMenu>
           <Tooltip>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-10 w-full p-0">
+                <Button variant="outline" size="sm" className="h-9 w-9 p-0">
                   <Layers className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <TooltipContent side="left">Templates</TooltipContent>
+            <TooltipContent side="bottom">Templates</TooltipContent>
           </Tooltip>
-          <DropdownMenuContent side="left" className="w-48">
+          <DropdownMenuContent side="bottom" className="w-48">
             <DropdownMenuLabel>Choose Template</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {templates.map((template) => (
@@ -255,16 +255,16 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-10 w-full p-0 layout-button">
+                <Button variant="outline" size="sm" className="h-9 w-9 p-0 layout-button">
                   <div className="layout-icon w-4 h-4 bg-primary/20 rounded flex items-center justify-center">
                     <div className="layout-icon-dot w-2 h-2 bg-primary rounded"></div>
                   </div>
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <TooltipContent side="left">Layout</TooltipContent>
+            <TooltipContent side="bottom">Layout</TooltipContent>
           </Tooltip>
-          <DropdownMenuContent side="left" className="w-48">
+          <DropdownMenuContent side="bottom" className="w-48">
             <DropdownMenuLabel>Auto Layout</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {layouts.map((layout) => (
@@ -279,7 +279,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Separator className="my-1" />
+        <Separator orientation="vertical" className="h-6 mx-1" />
 
         {/* AI Features */}
         {onAIGenerate && (
@@ -290,16 +290,16 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="h-10 w-full p-0 bg-primary/10 hover:bg-primary/20 border-primary/20"
+                    className="h-9 w-9 p-0 bg-primary/10 hover:bg-primary/20 border-primary/20"
                     disabled={isGenerating}
                   >
                     <Sparkles className="h-4 w-4 text-primary" />
                   </Button>
                 </DropdownMenuTrigger>
               </TooltipTrigger>
-              <TooltipContent side="left">AI Generate</TooltipContent>
+              <TooltipContent side="bottom">AI Generate</TooltipContent>
             </Tooltip>
-            <DropdownMenuContent side="left" className="w-64 p-3">
+            <DropdownMenuContent side="bottom" className="w-64 p-3">
               <DropdownMenuLabel>Generate Mind Map</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <div className="space-y-2">
@@ -349,21 +349,21 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                   }
                 }}
                 disabled={!nodes.some(n => n.selected) || isExpanding}
-                className="h-10 w-full p-0"
+                className="h-9 w-9 p-0"
               >
                 <Lightbulb className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="left">
+            <TooltipContent side="bottom">
               {isExpanding ? 'Expanding...' : 'AI Expand'}
             </TooltipContent>
           </Tooltip>
         )}
 
-        <Separator className="my-1" />
+        <Separator orientation="vertical" className="h-6 mx-1" />
 
-        {/* Shapes - Vertical scrollable list */}
-        <div className="flex flex-col gap-1">
+        {/* Shapes - Horizontal list */}
+        <div className="flex flex-row gap-1 items-center">
           {SHAPE_CONFIGS.shapes.map((shape) => (
             <Tooltip key={shape.id}>
               <TooltipTrigger asChild>
@@ -371,16 +371,16 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                   variant="ghost"
                   size="sm"
                   onClick={() => onShapeSelect(shape.id, '')}
-                  className="h-10 w-full p-0"
+                  className="h-9 w-9 p-0"
                 >
                   {React.createElement(shape.icon, { className: "h-4 w-4" })}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="left">{shape.label}</TooltipContent>
+              <TooltipContent side="bottom">{shape.label}</TooltipContent>
             </Tooltip>
           ))}
           
-          <Separator className="my-1" />
+          <Separator orientation="vertical" className="h-6 mx-1" />
           
           {SHAPE_CONFIGS.tools.map((tool) => (
             <Tooltip key={tool.id}>
@@ -389,31 +389,31 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                   variant="ghost"
                   size="sm"
                   onClick={() => onShapeSelect(tool.id, '')}
-                  className="h-10 w-full p-0"
+                  className="h-9 w-9 p-0"
                 >
                   {React.createElement(tool.icon, { className: "h-4 w-4" })}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="left">{tool.label}</TooltipContent>
+              <TooltipContent side="bottom">{tool.label}</TooltipContent>
             </Tooltip>
           ))}
         </div>
 
-        <Separator className="my-1" />
+        <Separator orientation="vertical" className="h-6 mx-1" />
 
         {/* Colors */}
         <DropdownMenu>
           <Tooltip>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-10 w-full p-0">
+                <Button variant="outline" size="sm" className="h-9 w-9 p-0">
                   <Palette className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <TooltipContent side="left">Shape Color</TooltipContent>
+            <TooltipContent side="bottom">Shape Color</TooltipContent>
           </Tooltip>
-          <DropdownMenuContent side="left" className={`w-48 ${getDarkModeDropdownClasses()}`}>
+          <DropdownMenuContent side="bottom" className={`w-48 ${getDarkModeDropdownClasses()}`}>
             <DropdownMenuLabel>Shape Color</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {shapeColors.map((color) => (
@@ -460,14 +460,14 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-10 w-full p-0">
+                <Button variant="outline" size="sm" className="h-9 w-9 p-0">
                   <Type className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <TooltipContent side="left">Text Color</TooltipContent>
+            <TooltipContent side="bottom">Text Color</TooltipContent>
           </Tooltip>
-          <DropdownMenuContent side="left" className={`w-48 ${getDarkModeDropdownClasses()}`}>
+          <DropdownMenuContent side="bottom" className={`w-48 ${getDarkModeDropdownClasses()}`}>
             <DropdownMenuLabel>Text Color</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {textColors.map((color) => (
@@ -512,7 +512,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Separator className="my-1" />
+        <Separator orientation="vertical" className="h-6 mx-1" />
 
         {/* Zoom Controls */}
         <Tooltip>
@@ -521,12 +521,12 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
               variant="ghost"
               size="sm"
               onClick={onZoomOut}
-              className="h-10 w-full p-0"
+              className="h-9 w-9 p-0"
             >
               <ZoomOut className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left">Zoom Out</TooltipContent>
+          <TooltipContent side="bottom">Zoom Out</TooltipContent>
         </Tooltip>
 
         <Tooltip>
@@ -535,12 +535,12 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
               variant="ghost"
               size="sm"
               onClick={onZoomIn}
-              className="h-10 w-full p-0"
+              className="h-9 w-9 p-0"
             >
               <ZoomIn className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left">Zoom In</TooltipContent>
+          <TooltipContent side="bottom">Zoom In</TooltipContent>
         </Tooltip>
 
         <Tooltip>
@@ -549,15 +549,15 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
               variant="ghost"
               size="sm"
               onClick={onFitView}
-              className="h-10 w-full p-0"
+              className="h-9 w-9 p-0"
             >
               <Maximize className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left">Fit View</TooltipContent>
+          <TooltipContent side="bottom">Fit View</TooltipContent>
         </Tooltip>
 
-        <Separator className="my-1" />
+        <Separator orientation="vertical" className="h-6 mx-1" />
 
         {/* Export & Clear */}
         <VisualExportButtons
@@ -572,12 +572,12 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
               variant="outline"
               size="sm"
               onClick={handleClear}
-              className="h-10 w-full p-0 text-destructive hover:bg-destructive/10 border-destructive/30"
+              className="h-9 w-9 p-0 text-destructive hover:bg-destructive/10 border-destructive/30"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left">Clear Mind Map</TooltipContent>
+          <TooltipContent side="bottom">Clear Mind Map</TooltipContent>
         </Tooltip>
       </div>
     </TooltipProvider>
