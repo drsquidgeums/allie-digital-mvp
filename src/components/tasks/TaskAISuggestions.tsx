@@ -71,7 +71,7 @@ export const TaskAISuggestions: React.FC<TaskAISuggestionsProps> = ({
               Schedule
             </TabsTrigger>
             <TabsTrigger value="optimize">
-              <Sparkles className="h-4 w-4 mr-2" />
+              <Sparkles className="h-4 w-4 mr-2 text-primary" />
               Optimize
             </TabsTrigger>
           </TabsList>
