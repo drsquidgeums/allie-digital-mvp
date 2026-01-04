@@ -2,7 +2,7 @@
 import React, { lazy, Suspense, memo, useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { BrowserRouter, Navigate } from "react-router-dom";
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import { AppProviders } from "@/components/app/AppProviders";
 import { PasswordGate } from "@/components/PasswordGate";
 import { AppRoutes } from "@/components/app/AppRoutes";
@@ -13,6 +13,10 @@ import { SecurityProvider } from "@/components/security/SecurityProvider";
 import { StudyBuddy } from "@/components/study-buddy/StudyBuddy";
 import { supabase } from "@/integrations/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
+import { usePaymentStatus } from "@/hooks/usePaymentStatus";
+import { PaymentRequiredGate } from "@/components/payment/PaymentRequiredGate";
+import PaymentSuccess from "@/pages/PaymentSuccess";
+import PaymentCanceled from "@/pages/PaymentCanceled";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -27,6 +31,8 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
   const [showFeedbackPrompt, setShowFeedbackPrompt] = useState(false);
+
+  const { hasPaid, isLoading: isCheckingPayment, refetch: refetchPayment } = usePaymentStatus(user?.id);
 
   // Set up Supabase auth listener
   useEffect(() => {
@@ -70,6 +76,10 @@ const App = () => {
     // This is now handled by the auth state change listener
   };
 
+  const handlePaymentComplete = () => {
+    refetchPayment();
+  };
+
   const handleCloseFeedbackPrompt = () => {
     setShowFeedbackPrompt(false);
   };
@@ -89,6 +99,7 @@ const App = () => {
     );
   }
 
+  // Not authenticated - show login gate
   if (!session) {
     return (
       <AppProviders>
@@ -96,6 +107,35 @@ const App = () => {
         <Sonner />
         <PasswordGate onAuthenticated={handleAuthentication} />
       </AppProviders>
+    );
+  }
+
+  // Authenticated but checking payment status
+  if (isCheckingPayment) {
+    return (
+      <AppProviders>
+        <div className="flex items-center justify-center h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </AppProviders>
+    );
+  }
+
+  // Authenticated but hasn't paid - show payment gate
+  // But allow access to payment success/canceled pages
+  if (!hasPaid) {
+    return (
+      <BrowserRouter>
+        <AppProviders>
+          <Toaster />
+          <Sonner />
+          <Routes>
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-canceled" element={<PaymentCanceled />} />
+            <Route path="*" element={<PaymentRequiredGate onPaymentComplete={handlePaymentComplete} />} />
+          </Routes>
+        </AppProviders>
+      </BrowserRouter>
     );
   }
 
