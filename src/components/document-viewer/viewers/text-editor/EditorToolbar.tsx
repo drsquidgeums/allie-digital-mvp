@@ -3,7 +3,6 @@ import React from 'react';
 import { Editor } from '@tiptap/react';
 import { EditorToolbarContent } from './toolbar/EditorToolbarContent';
 import { DocumentTemplates } from './toolbar/DocumentTemplates';
-import { DocumentSharing } from './toolbar/DocumentSharing';
 import { EnhancedExportMenu } from './toolbar/file-operations/EnhancedExportMenu';
 import { ImportButton } from './toolbar/file-operations/ImportButton';
 import { SaveButton } from './toolbar/file-operations/SaveButton';
@@ -34,7 +33,6 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           <ImportButton onFileImport={onFileImport} />
           <SaveButton editor={editor} documentTitle={documentTitle} />
           <EnhancedExportMenu editor={editor} documentTitle={documentTitle} />
-          <DocumentSharing editor={editor} documentTitle={documentTitle} />
         </div>
       </div>
       
