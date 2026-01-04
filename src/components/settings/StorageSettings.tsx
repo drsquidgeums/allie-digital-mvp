@@ -151,14 +151,6 @@ export const StorageSettings = () => {
             </Button>
           </div>
         </div>
-
-        <div className="space-y-4">
-          <Label>{t('settings.storage.exportData', 'Export Data')}</Label>
-          <p className="text-sm text-muted-foreground">
-            {t('settings.storage.exportDescription', 'Download all your workspace data including documents, annotations, and settings')}
-          </p>
-          <Button variant="outline" size="sm">{t('settings.storage.downloadData', 'Download My Data')}</Button>
-        </div>
       </div>
       <Separator />
     </div>
