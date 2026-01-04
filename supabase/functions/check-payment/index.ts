@@ -43,6 +43,25 @@ serve(async (req) => {
     if (!user?.email) throw new Error("User not authenticated or email not available");
     logStep("User authenticated", { userId: user.id, email: user.email });
 
+    // Check if user is an admin - admins bypass payment
+    const { data: adminRole } = await supabaseClient
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .single();
+
+    if (adminRole) {
+      logStep("User is admin, bypassing payment check");
+      return new Response(JSON.stringify({ 
+        hasPaid: true, 
+        subscriptionStatus: "admin" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      });
+    }
+
     // First check the profiles table for subscription status
     const { data: profile, error: profileError } = await supabaseClient
       .from("profiles")
