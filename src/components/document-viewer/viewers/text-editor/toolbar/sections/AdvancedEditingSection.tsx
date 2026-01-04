@@ -2,8 +2,6 @@
 import React from 'react';
 import { Editor } from '@tiptap/react';
 import { AdvancedSearch } from '../AdvancedSearch';
-import { DocumentComparison } from '../DocumentComparison';
-import { VersionHistory } from '../VersionHistory';
 import { ToolbarDivider } from '../ToolbarDivider';
 
 interface AdvancedEditingSectionProps {
@@ -18,8 +16,6 @@ export const AdvancedEditingSection: React.FC<AdvancedEditingSectionProps> = ({
   return (
     <>
       <AdvancedSearch editor={editor} />
-      <DocumentComparison editor={editor} documentTitle={documentTitle} />
-      <VersionHistory editor={editor} documentTitle={documentTitle} />
       <ToolbarDivider />
     </>
   );
