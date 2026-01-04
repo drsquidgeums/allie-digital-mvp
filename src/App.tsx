@@ -25,6 +25,11 @@ const PomodoroTaskListener = memo(() => {
 
 PomodoroTaskListener.displayName = "PomodoroTaskListener";
 
+// Development bypass for Lovable preview environment
+const isDevBypass = window.location.hostname.includes('lovableproject.com') || 
+                    window.location.hostname.includes('lovable.app') ||
+                    window.location.hostname === 'localhost';
+
 const App = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -99,8 +104,8 @@ const App = () => {
     );
   }
 
-  // Not authenticated - show login gate
-  if (!session) {
+  // Not authenticated - show login gate (unless dev bypass)
+  if (!session && !isDevBypass) {
     return (
       <AppProviders>
         <Toaster />
@@ -110,8 +115,8 @@ const App = () => {
     );
   }
 
-  // Authenticated but checking payment status
-  if (isCheckingPayment) {
+  // Authenticated but checking payment status (skip if dev bypass)
+  if (!isDevBypass && isCheckingPayment) {
     return (
       <AppProviders>
         <div className="flex items-center justify-center h-screen">
@@ -121,9 +126,9 @@ const App = () => {
     );
   }
 
-  // Authenticated but hasn't paid - show payment gate
+  // Authenticated but hasn't paid - show payment gate (skip if dev bypass)
   // But allow access to payment success/canceled pages
-  if (!hasPaid) {
+  if (!isDevBypass && !hasPaid) {
     return (
       <BrowserRouter>
         <AppProviders>
