@@ -44,7 +44,7 @@ export const DocumentAIChat: React.FC<DocumentAIChatProps> = ({
     <Card className="flex flex-col h-full">
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-primary" />
+          <Sparkles className="h-5 w-5 text-primary dark:text-primary" />
           <div>
             <h3 className="font-semibold">AI Document Assistant</h3>
             {documentName && (

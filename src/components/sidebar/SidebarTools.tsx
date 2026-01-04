@@ -1,7 +1,5 @@
-
 import React from "react";
 import { 
-  Users,
   Settings,
   LogOut,
   MessageSquare
@@ -51,12 +49,6 @@ export const SidebarTools = ({
     navigate("/settings");
   };
 
-  const handleCommunityClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setActiveComponent("community");
-    navigate("/community");
-  };
-
   const handleFeedbackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (onFeedbackClick) {
@@ -72,14 +64,6 @@ export const SidebarTools = ({
           label={t('navigation.settings')}
           isActive={location.pathname === "/settings"}
           onClick={handleSettingsClick}
-        />
-        <SidebarButton
-          icon={Users}
-          label={t('navigation.community')}
-          isActive={false}
-          onClick={() => {}}
-          disabled
-          className="opacity-50 cursor-not-allowed"
         />
         {onFeedbackClick && (
           <SidebarButton

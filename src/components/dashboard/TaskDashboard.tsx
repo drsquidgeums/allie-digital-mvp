@@ -64,7 +64,7 @@ export const TaskDashboard: React.FC = () => {
             onClick={() => setShowAISuggestions(!showAISuggestions)}
             className="gap-2"
           >
-            <Sparkles className="h-4 w-4" />
+            <Sparkles className="h-4 w-4 text-primary" />
             AI Assist
           </Button>
         </div>
