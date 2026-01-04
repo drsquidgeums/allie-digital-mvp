@@ -8,6 +8,7 @@ import MyFilesPage from "@/pages/MyFilesPage";
 import NdaAdminPage from "@/pages/NdaAdminPage";
 import PaymentSuccess from "@/pages/PaymentSuccess";
 import PaymentCanceled from "@/pages/PaymentCanceled";
+import ResetPassword from "@/pages/ResetPassword";
 
 export const AppRoutes = React.memo(() => (
   <Routes>
@@ -21,6 +22,7 @@ export const AppRoutes = React.memo(() => (
     <Route path="/nda-admin" element={<NdaAdminPage />} />
     <Route path="/payment-success" element={<PaymentSuccess />} />
     <Route path="/payment-canceled" element={<PaymentCanceled />} />
+    <Route path="/reset-password" element={<ResetPassword />} />
     {/* Add a catch-all route to redirect to toolbox */}
     <Route path="*" element={<Navigate to="/toolbox" replace />} />
   </Routes>

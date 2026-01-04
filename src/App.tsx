@@ -137,6 +137,9 @@ const App = () => {
           <Routes>
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/payment-canceled" element={<PaymentCanceled />} />
+            <Route path="/reset-password" element={
+              React.createElement(React.lazy(() => import("@/pages/ResetPassword")))
+            } />
             <Route path="*" element={<PaymentRequiredGate onPaymentComplete={handlePaymentComplete} />} />
           </Routes>
         </AppProviders>
