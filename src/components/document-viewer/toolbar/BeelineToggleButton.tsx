@@ -6,10 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useEditorContent } from "@/hooks/useEditorContent";
 import { useToast } from "@/hooks/use-toast";
 
-const BEELINE_COLORS = {
-  start: "#006400", // Dark Green
-  end: "#301934", // Dark Purple
-};
+// Beeline gradient colors are defined in editor.css
 
 // Apply beeline gradient to text nodes while preserving HTML structure
 const applyBeelineToHTML = (html: string): string => {
@@ -30,14 +27,9 @@ const applyBeelineToHTML = (html: string): string => {
     if (node.nodeType === Node.TEXT_NODE) {
       const text = node.textContent || '';
       if (text.trim()) {
-        // Create a span with the gradient effect
+        // Create a span with data attribute - CSS handles the styling
         const span = doc.createElement('span');
         span.setAttribute('data-beeline', 'true');
-        span.style.backgroundImage = `linear-gradient(90deg, ${BEELINE_COLORS.start}, ${BEELINE_COLORS.end})`;
-        span.style.webkitBackgroundClip = 'text';
-        span.style.backgroundClip = 'text';
-        span.style.webkitTextFillColor = 'transparent';
-        span.style.color = 'transparent';
         span.textContent = text;
         node.parentNode?.replaceChild(span, node);
       }
