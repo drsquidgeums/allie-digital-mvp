@@ -13,8 +13,18 @@ const BEELINE_COLORS = {
 
 // Apply beeline gradient to text nodes while preserving HTML structure
 const applyBeelineToHTML = (html: string): string => {
+  // If html is empty or just whitespace, return as-is
+  if (!html || !html.trim()) {
+    return html;
+  }
+
   const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
+  const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+  const container = doc.body.firstChild as Element;
+  
+  if (!container) {
+    return html;
+  }
   
   const processNode = (node: Node): void => {
     if (node.nodeType === Node.TEXT_NODE) {
@@ -42,22 +52,32 @@ const applyBeelineToHTML = (html: string): string => {
     }
   };
   
-  processNode(doc.body);
-  return doc.body.innerHTML;
+  Array.from(container.childNodes).forEach(child => processNode(child));
+  return container.innerHTML;
 };
 
 // Remove beeline formatting from HTML
 const removeBeelineFormatting = (html: string): string => {
+  // If html is empty or just whitespace, return as-is
+  if (!html || !html.trim()) {
+    return html;
+  }
+
   const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
+  const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+  const container = doc.body.firstChild as Element;
   
-  const beelineSpans = doc.querySelectorAll('[data-beeline="true"]');
+  if (!container) {
+    return html;
+  }
+  
+  const beelineSpans = container.querySelectorAll('[data-beeline="true"]');
   beelineSpans.forEach(span => {
     const textNode = doc.createTextNode(span.textContent || '');
     span.parentNode?.replaceChild(textNode, span);
   });
   
-  return doc.body.innerHTML;
+  return container.innerHTML;
 };
 
 export const BeelineToggleButton = () => {
