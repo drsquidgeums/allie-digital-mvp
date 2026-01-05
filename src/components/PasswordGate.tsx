@@ -168,7 +168,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
           color: '#666666',
         }}
       >
-        © Allie Digital Ltd. All Rights Reserved 2025
+        © Allie Digital Ltd. All Rights Reserved {new Date().getFullYear()}
       </footer>
     </div>
   );

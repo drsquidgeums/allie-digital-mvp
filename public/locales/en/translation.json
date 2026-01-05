@@ -3,6 +3,7 @@
   "navigation": {
     "fileUploader": "File Uploader",
     "toolbox": "Toolbox",
+    "workspace": "Workspace",
     "tasks": "Task Planner", 
     "aiAssistant": "AI Assistant",
     "mindMap": "Mind Map",
