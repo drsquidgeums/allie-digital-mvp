@@ -2,12 +2,12 @@
 {
   "navigation": {
     "fileUploader": "Cargador de archivos",
+    "toolbox": "Caja de herramientas",
     "tasks": "Planificador de tareas",
     "aiAssistant": "Asistente IA",
     "mindMap": "Mapa mental",
     "settings": "Configuración",
     "community": "Centro Comunitario",
-    "toolbox": "Caja de herramientas",
     "myFiles": "Mis archivos"
   },
   "tools": {
@@ -18,7 +18,7 @@
     "color": "Herramienta de color",
     "focus": "Modo concentración",
     "beeline": "Beeline Reader",
-    "rewordify": "Rewordificar",
+    "rewordify": "Reformular",
     "ai": "Asistente IA",
     "voice": "IA de Voz"
   },
@@ -27,6 +27,7 @@
     "loading": "Cargando...",
     "error": "Ocurrió un error",
     "success": "Éxito",
+    "information": "Información",
     "language": "Seleccionar idioma",
     "noNotifications": "No hay notificaciones",
     "loadingText": "Cargando..."
@@ -60,6 +61,18 @@
       "screenReaderEnabled": "Soporte de lector de pantalla activado",
       "screenReaderDisabled": "Soporte de lector de pantalla desactivado"
     },
+    "display": {
+      "title": "Pantalla",
+      "compactMode": "Modo compacto",
+      "compactModeDescription": "Reducir el espacio entre elementos"
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "taskReminders": "Recordatorios de tareas",
+      "taskRemindersDescription": "Recibir notificaciones de tareas próximas",
+      "focusTimerAlerts": "Alertas del temporizador de concentración",
+      "focusTimerAlertsDescription": "Recibir notificación cuando terminen las sesiones de concentración"
+    },
     "performance": {
       "title": "Rendimiento",
       "animations": "Animaciones",
@@ -74,7 +87,55 @@
       "dataCollection": "Recolección de datos",
       "dataCollectionDescription": "Permitir recolección anónima de datos de uso",
       "twoFactor": "Autenticación de dos factores",
-      "twoFactorDescription": "Habilitar 2FA para seguridad adicional"
+      "twoFactorDescription": "Habilitar 2FA para seguridad adicional",
+      "sessionTimeout": "Tiempo de espera de sesión",
+      "sessionTimeoutDescription": "Cerrar sesión automáticamente después de inactividad",
+      "changePassword": "Cambiar contraseña",
+      "changePasswordDescription": "Actualizar la contraseña de tu cuenta",
+      "changeEmail": "Cambiar correo electrónico",
+      "changeEmailDescription": "Actualizar tu dirección de correo electrónico"
+    },
+    "keyboard": {
+      "title": "Atajos de teclado",
+      "toggleFocusMode": "Alternar modo concentración",
+      "openSettings": "Abrir configuración",
+      "saveDocument": "Guardar documento",
+      "toggleTheme": "Alternar tema"
+    },
+    "storage": {
+      "title": "Datos y Almacenamiento",
+      "usage": "Uso de almacenamiento (Supabase)",
+      "management": "Gestión de almacenamiento",
+      "clearFiles": "Borrar todos los archivos",
+      "clearLocalStorage": "Borrar almacenamiento local",
+      "exportData": "Exportar datos",
+      "exportDescription": "Descargar todos tus datos del espacio de trabajo incluyendo documentos, anotaciones y configuración",
+      "downloadData": "Descargar mis datos",
+      "clearedFiles": "Todos los archivos han sido borrados del almacenamiento",
+      "noFiles": "No hay archivos para borrar",
+      "clearError": "Error al borrar el almacenamiento",
+      "fetchError": "Error al obtener estadísticas de almacenamiento",
+      "localStorageCleared": "El almacenamiento local ha sido borrado"
+    },
+    "integrations": {
+      "title": "Integraciones",
+      "googleCalendar": "Google Calendar",
+      "googleCalendarDesc": "Sincronizar tareas con Google Calendar",
+      "microsoftTeams": "Microsoft Teams",
+      "teamsDesc": "Conectar con canales de chat de Teams para discusiones colaborativas",
+      "teamsSuccessConnect": "Conexión con Teams iniciada exitosamente. Por favor completa la autenticación en la ventana emergente.",
+      "teamsConnectError": "Error al conectar con Microsoft Teams. Por favor intenta de nuevo.",
+      "connectionError": "Error de conexión",
+      "slack": "Slack",
+      "slackDesc": "Conectar con el espacio de trabajo de Slack",
+      "canvasLMS": "Canvas LMS",
+      "canvasDesc": "Sincronizar con tus cursos y tareas de Canvas",
+      "googleClassroom": "Google Classroom",
+      "classroomDesc": "Conectar y sincronizar con Google Classroom",
+      "blackboard": "Blackboard",
+      "blackboardDesc": "Sincronizar con cursos y tareas de Blackboard",
+      "trello": "Trello",
+      "trelloDesc": "Sincronizar tareas con tableros de Trello"
     }
   },
   "fileUploader": {
