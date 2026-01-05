@@ -1,9 +1,8 @@
 
-import { BookOpen, Timer, Text, SpellCheck, Sparkles, Bot, GraduationCap } from "lucide-react";
+import { Timer, Text, SpellCheck, Sparkles, Bot, GraduationCap } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { PomodoroTimer } from "../PomodoroTimer";
-import { BeelineReader } from "../BeelineReader";
 import { SpeechToText } from "../SpeechToText";
 import { Rewordify } from "../Rewordify";
 import { IrlenOverlay } from "../IrlenOverlay";
@@ -14,6 +13,7 @@ import { VoiceAssistant } from "../voice/VoiceAssistant";
 import { ContentEnhancerTools } from "../content-enhancer/ContentEnhancerTools";
 import { BionicToggleButton } from "./toolbar/BionicToggleButton";
 import { TTSButton } from "./toolbar/TTSButton";
+import { BeelineToggleButton } from "./toolbar/BeelineToggleButton";
 
 interface ToolbarToolsProps {
   documentContent?: string;
@@ -41,13 +41,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
         content={<PomodoroTimer />}
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
-      <ToolItem
-        icon={BookOpen}
-        label={t('tools.beeline')}
-        id="beeline"
-        content={<BeelineReader />}
-        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
-      />
+      <BeelineToggleButton />
       <ToolItem
         icon={SpellCheck}
         label={t('tools.rewordify')}
