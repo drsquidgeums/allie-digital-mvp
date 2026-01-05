@@ -59,19 +59,22 @@
       "screenReader": "Bildschirmleser-Unterstützung",
       "screenReaderDescription": "Verbesserte Kompatibilität mit Bildschirmlesern aktivieren",
       "screenReaderEnabled": "Bildschirmleser-Unterstützung aktiviert",
-      "screenReaderDisabled": "Bildschirmleser-Unterstützung deaktiviert"
+      "screenReaderDisabled": "Bildschirmleser-Unterstützung deaktiviert",
+      "comingSoon": "Barrierefreiheits-Einstellungen kommen bald. Wir arbeiten an Funktionen, um die App für alle zugänglicher zu machen."
     },
     "display": {
       "title": "Anzeige",
       "compactMode": "Kompakter Modus",
-      "compactModeDescription": "Reduziert den Abstand zwischen Elementen"
+      "compactModeDescription": "Reduziert den Abstand zwischen Elementen",
+      "comingSoon": "Anzeige-Anpassungsoptionen kommen bald."
     },
     "notifications": {
       "title": "Benachrichtigungen",
       "taskReminders": "Aufgabenerinnerungen",
       "taskRemindersDescription": "Erhalte Benachrichtigungen für anstehende Aufgaben",
       "focusTimerAlerts": "Fokus-Timer-Alarme",
-      "focusTimerAlertsDescription": "Werde benachrichtigt, wenn Fokus-Sitzungen enden"
+      "focusTimerAlertsDescription": "Werde benachrichtigt, wenn Fokus-Sitzungen enden",
+      "comingSoon": "Benachrichtigungseinstellungen kommen bald. Bleib dran!"
     },
     "performance": {
       "title": "Leistung",
@@ -80,7 +83,8 @@
       "autoSave": "Automatisches Speichern",
       "autoSaveDescription": "Änderungen automatisch speichern",
       "hardware": "Hardware-Beschleunigung",
-      "hardwareDescription": "GPU für bessere Leistung verwenden"
+      "hardwareDescription": "GPU für bessere Leistung verwenden",
+      "comingSoon": "Leistungseinstellungen kommen bald."
     },
     "privacy": {
       "title": "Datenschutz & Sicherheit",
@@ -93,14 +97,17 @@
       "changePassword": "Passwort ändern",
       "changePasswordDescription": "Aktualisiere dein Konto-Passwort",
       "changeEmail": "E-Mail ändern",
-      "changeEmailDescription": "Aktualisiere deine E-Mail-Adresse"
+      "changeEmailDescription": "Aktualisiere deine E-Mail-Adresse",
+      "antiScreenshot": "Anti-Screenshot-Schutz",
+      "antiScreenshotDescription": "Blockiere Versuche, Bildschirminhalte zu erfassen"
     },
     "keyboard": {
       "title": "Tastaturkürzel",
       "toggleFocusMode": "Fokus-Modus umschalten",
       "openSettings": "Einstellungen öffnen",
       "saveDocument": "Dokument speichern",
-      "toggleTheme": "Design umschalten"
+      "toggleTheme": "Design umschalten",
+      "comingSoon": "Benutzerdefinierte Tastaturkürzel-Konfiguration kommt bald."
     },
     "storage": {
       "title": "Daten & Speicher",
@@ -135,7 +142,10 @@
       "blackboard": "Blackboard",
       "blackboardDesc": "Synchronisieren mit Blackboard-Kursen und -Aufgaben",
       "trello": "Trello",
-      "trelloDesc": "Aufgaben mit Trello-Boards synchronisieren"
+      "trelloDesc": "Aufgaben mit Trello-Boards synchronisieren",
+      "comingSoon": "Integrationen mit externen Diensten kommen bald. Bleib dran!",
+      "connect": "Verbinden",
+      "comingSoonButton": "Demnächst"
     }
   },
   "fileUploader": {

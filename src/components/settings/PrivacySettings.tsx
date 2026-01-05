@@ -19,8 +19,8 @@ export const PrivacySettings = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label>Anti-Screenshot Protection</Label>
-            <p className="text-sm text-muted-foreground">Block attempts to capture screen content</p>
+            <Label>{t('settings.privacy.antiScreenshot', 'Anti-Screenshot Protection')}</Label>
+            <p className="text-sm text-muted-foreground">{t('settings.privacy.antiScreenshotDescription', 'Block attempts to capture screen content')}</p>
           </div>
           <Switch checked={enableAntiScreenCapture} onCheckedChange={toggleAntiScreenCapture} />
         </div>

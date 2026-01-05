@@ -7,7 +7,8 @@ export const supportedLanguages = [
   { code: 'en-GB', name: 'English (UK)' },
   { code: 'en-US', name: 'English (US)' },
   { code: 'es', name: 'Español' },
-  { code: 'de', name: 'Deutsch' }
+  { code: 'de', name: 'Deutsch' },
+  { code: 'fr', name: 'Français' }
 ];
 
 // Function to switch language throughout the application
