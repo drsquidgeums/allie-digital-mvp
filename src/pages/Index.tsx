@@ -55,27 +55,10 @@ const Index = () => {
         sessionStorage.removeItem('selectedFileName');
       } else if (selectedFileUrl && fileToOpen) {
         // If we don't have the File object but have URL, need to fetch it
-        console.log('Index.tsx - Fetching file from URL:', selectedFileUrl);
-        console.log('Index.tsx - File info:', fileToOpen);
-        
         fetch(selectedFileUrl)
-          .then(response => {
-            console.log('Index.tsx - Fetch response status:', response.status);
-            return response.blob();
-          })
+          .then(response => response.blob())
           .then(blob => {
-            console.log('Index.tsx - Received blob:', blob.size, 'bytes, type:', blob.type);
-            
-            // Read the blob content to check what we're getting
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              const content = e.target?.result as string;
-              console.log('Index.tsx - Blob content preview:', content.substring(0, 300));
-            };
-            reader.readAsText(blob);
-            
             const file = new File([blob], fileToOpen.name, { type: fileToOpen.type || 'application/octet-stream' });
-            console.log('Index.tsx - Created File object:', file.name, file.type, file.size);
             setSelectedFile(file);
             
             // Set document name from sessionStorage if available

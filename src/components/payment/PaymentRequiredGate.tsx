@@ -149,7 +149,7 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
           color: '#666666',
         }}
       >
-        © Allie Digital Ltd. All Rights Reserved 2025
+        © Allie Digital Ltd. All Rights Reserved {new Date().getFullYear()}
       </footer>
     </div>
   );

@@ -50,10 +50,13 @@ const PaymentSuccess = () => {
 
   if (isVerifying) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div 
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: '#ffffff' }}
+      >
         <div className="text-center space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin mx-auto text-primary" />
-          <p className="text-lg text-muted-foreground">Verifying your payment...</p>
+          <Loader2 className="h-12 w-12 animate-spin mx-auto" style={{ color: '#000000' }} />
+          <p className="text-lg" style={{ color: '#6b7280' }}>Verifying your payment...</p>
         </div>
       </div>
     );
@@ -61,10 +64,17 @@ const PaymentSuccess = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div 
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: '#ffffff' }}
+      >
         <div className="text-center space-y-4 max-w-md mx-auto p-6">
-          <p className="text-lg text-destructive">{error}</p>
-          <Button onClick={() => navigate("/")} variant="outline">
+          <p className="text-lg" style={{ color: '#ef4444' }}>{error}</p>
+          <Button 
+            onClick={() => navigate("/")} 
+            variant="outline"
+            style={{ borderColor: '#d1d5db', color: '#000000' }}
+          >
             Go Back
           </Button>
         </div>
@@ -73,14 +83,21 @@ const PaymentSuccess = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+    <div 
+      className="min-h-screen flex items-center justify-center"
+      style={{ backgroundColor: '#ffffff' }}
+    >
       <div className="text-center space-y-6 max-w-md mx-auto p-6">
-        <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
-        <h1 className="text-2xl font-bold">Payment Successful!</h1>
-        <p className="text-muted-foreground">
+        <CheckCircle className="h-16 w-16 mx-auto" style={{ color: '#22c55e' }} />
+        <h1 className="text-2xl font-bold" style={{ color: '#000000' }}>Payment Successful!</h1>
+        <p style={{ color: '#6b7280' }}>
           Thank you for your purchase. You now have lifetime access to all features.
         </p>
-        <Button onClick={handleContinue} className="w-full">
+        <Button 
+          onClick={handleContinue} 
+          className="w-full"
+          style={{ backgroundColor: '#000000', color: '#ffffff' }}
+        >
           Continue to App
         </Button>
       </div>

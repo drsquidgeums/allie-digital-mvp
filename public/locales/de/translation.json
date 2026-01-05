@@ -2,6 +2,7 @@
 {
   "navigation": {
     "fileUploader": "Datei-Uploader",
+    "workspace": "Arbeitsbereich",
     "tasks": "Aufgabenplaner",
     "aiAssistant": "KI-Assistent",
     "mindMap": "Mind Map",
