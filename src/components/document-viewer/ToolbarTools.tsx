@@ -1,8 +1,7 @@
 
-import { BookOpen, Mic, Timer, Text, SpellCheck, Sparkles, Bot, GraduationCap } from "lucide-react";
+import { BookOpen, Timer, Text, SpellCheck, Sparkles, Bot, GraduationCap } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
-import { TextToSpeech } from "../TextToSpeech";
 import { PomodoroTimer } from "../PomodoroTimer";
 import { BeelineReader } from "../BeelineReader";
 import { SpeechToText } from "../SpeechToText";
@@ -14,6 +13,7 @@ import { DocumentAIChat } from "../ai/DocumentAIChat";
 import { VoiceAssistant } from "../voice/VoiceAssistant";
 import { ContentEnhancerTools } from "../content-enhancer/ContentEnhancerTools";
 import { BionicToggleButton } from "./toolbar/BionicToggleButton";
+import { TTSButton } from "./toolbar/TTSButton";
 
 interface ToolbarToolsProps {
   documentContent?: string;
@@ -26,13 +26,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
   return (
     <div className="flex items-center gap-2">
       <BionicToggleButton />
-      <ToolItem
-        icon={Mic}
-        label={t('tools.tts')}
-        id="tts"
-        content={<TextToSpeech />}
-        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
-      />
+      <TTSButton />
       <ToolItem
         icon={Text}
         label={t('tools.stt')}
