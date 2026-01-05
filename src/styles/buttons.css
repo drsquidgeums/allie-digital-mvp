@@ -12,7 +12,7 @@
   color: hsl(var(--accent-foreground));
 }
 
-[data-state="open"],
+button[data-state="open"],
 .selected,
 .active,
 button[aria-expanded="true"],
@@ -22,15 +22,15 @@ button[data-state="on"] {
 }
 
 /* Ensure icons are visible in selected state for all color modes */
-[data-state="open"] svg,
+button[data-state="open"] svg,
 .selected svg,
 .active svg,
 button[aria-expanded="true"] svg,
 button[data-state="on"] svg {
-  color: hsl(var(--primary-foreground)) !important;
+  color: hsl(var(--primary-foreground));
 }
 
-.dark [data-state="open"],
+.dark button[data-state="open"],
 .dark .selected,
 .dark .active,
 .dark button[aria-expanded="true"],
@@ -39,7 +39,7 @@ button[data-state="on"] svg {
   color: hsl(var(--primary-foreground));
 }
 
-.sepia [data-state="open"],
+.sepia button[data-state="open"],
 .sepia .selected,
 .sepia .active,
 .sepia button[aria-expanded="true"],

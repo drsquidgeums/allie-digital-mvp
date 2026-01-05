@@ -39,7 +39,7 @@ export const BoldToggle = () => {
       aria-pressed={isBold}
       aria-label={`${isBold ? 'Disable' : 'Enable'} bold text`}
     >
-      <Bold className="h-4 w-4 text-primary" />
+      <Bold className="h-4 w-4 !text-foreground dark:!text-primary" />
       {isBold && (
         <div 
           className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"

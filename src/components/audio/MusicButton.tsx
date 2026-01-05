@@ -17,7 +17,7 @@ export const MusicButton = ({ isPlaying, isDisabled }: MusicButtonProps) => {
         type="button"
         className={cn(
           buttonVariants({ variant: "outline", size: "sm" }),
-          "h-9 w-9 px-0 relative bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+          "h-9 w-9 px-0 relative bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 data-[state=open]:bg-background data-[state=open]:text-primary data-[state=open]:ring-2 data-[state=open]:ring-primary",
           isPlaying && "text-primary ring-2 ring-primary",
           isDisabled && "opacity-50 cursor-not-allowed"
         )}
