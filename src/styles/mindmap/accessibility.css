@@ -58,3 +58,8 @@
 .color-selector-text {
   border: 2px solid hsl(var(--secondary/30));
 }
+
+/* Ensure Radix tooltip/popper layers appear above the ReactFlow canvas */
+[data-radix-popper-content-wrapper] {
+  z-index: 9999 !important;
+}
