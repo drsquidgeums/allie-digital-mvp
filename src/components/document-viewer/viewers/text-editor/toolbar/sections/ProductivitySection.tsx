@@ -7,7 +7,6 @@ import { KeyboardShortcutsButton } from '../KeyboardShortcutsButton';
 import { PrintPreview } from '../PrintPreview';
 import { OutlineGenerator } from '../OutlineGenerator';
 import { ToolbarDivider } from '../ToolbarDivider';
-import { BionicReaderButton } from '../BionicReaderButton';
 
 interface ProductivitySectionProps {
   editor: Editor;
@@ -21,7 +20,6 @@ export const ProductivitySection: React.FC<ProductivitySectionProps> = ({
   return (
     <>
       <TextCaseButtons editor={editor} />
-      <BionicReaderButton editor={editor} />
       <ToolbarDivider />
       <OutlineGenerator editor={editor} />
       <PrintPreview editor={editor} documentTitle={documentTitle} />
