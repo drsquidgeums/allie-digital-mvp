@@ -88,7 +88,7 @@ export const BeelineToggleButton = () => {
 
   const toggleBeelineMode = () => {
     const editor = content.editor;
-    
+
     if (!editor) {
       toast({
         title: "Editor not available",
@@ -99,12 +99,25 @@ export const BeelineToggleButton = () => {
     }
 
     const currentHTML = editor.getHTML();
-    
+    const selectionFrom = editor.state.selection.from;
+
+    // If user just did "Select all", the editor can stay visually selected after toggling,
+    // making text appear white due to selection styling. Collapse the selection afterward.
+    const collapseSelection = () => {
+      requestAnimationFrame(() => {
+        const maxPos = Math.max(1, editor.state.doc.content.size);
+        const pos = Math.min(Math.max(1, selectionFrom), maxPos);
+        editor.commands.setTextSelection(pos);
+        editor.commands.focus();
+      });
+    };
+
     if (!isBeelineMode) {
       // Apply beeline formatting
       const beelineHTML = applyBeelineToHTML(currentHTML);
       editor.commands.setContent(beelineHTML);
       setIsBeelineMode(true);
+      collapseSelection();
       toast({
         title: "Beeline Reader enabled",
         description: "Color gradient applied to text"
@@ -114,6 +127,7 @@ export const BeelineToggleButton = () => {
       const cleanHTML = removeBeelineFormatting(currentHTML);
       editor.commands.setContent(cleanHTML);
       setIsBeelineMode(false);
+      collapseSelection();
       toast({
         title: "Beeline Reader disabled",
         description: "Color gradient removed"
