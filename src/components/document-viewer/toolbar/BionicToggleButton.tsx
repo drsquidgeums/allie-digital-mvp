@@ -8,33 +8,95 @@ import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 
 /**
- * Applies bionic reading formatting to text by bolding the first portion of each word
+ * Applies bionic reading formatting to a single word
  */
-const processBionicText = (text: string): string => {
-  if (!text) return '';
+const processBionicWord = (word: string): string => {
+  if (!word || /^\s+$/.test(word)) return word;
   
-  return text.split(/(\s+)/).map(word => {
-    // Skip whitespace
-    if (/^\s+$/.test(word)) return word;
-    
-    // Skip if word is too short
-    if (word.length <= 1) return `<strong>${word}</strong>`;
-    
-    // Calculate how many characters to bold (roughly first half)
-    const boldLength = Math.ceil(word.length / 2);
-    const boldPart = word.slice(0, boldLength);
-    const normalPart = word.slice(boldLength);
-    
-    return `<strong>${boldPart}</strong>${normalPart}`;
-  }).join('');
+  // Skip if word is too short
+  if (word.length <= 1) return `<strong>${word}</strong>`;
+  
+  // Calculate how many characters to bold (roughly first half)
+  const boldLength = Math.ceil(word.length / 2);
+  const boldPart = word.slice(0, boldLength);
+  const normalPart = word.slice(boldLength);
+  
+  return `<strong>${boldPart}</strong>${normalPart}`;
 };
 
 /**
- * Removes bionic formatting (strong tags) while preserving the text content
+ * Applies bionic reading formatting to HTML while preserving structure
+ * Processes text content within HTML elements without destroying formatting
+ */
+const applyBionicToHTML = (html: string): string => {
+  // Create a temporary container to parse HTML
+  const container = document.createElement('div');
+  container.innerHTML = html;
+  
+  // Process all text nodes
+  const processNode = (node: Node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.textContent || '';
+      if (text.trim()) {
+        // Process each word in the text
+        const processedText = text.split(/(\s+)/).map(word => {
+          if (/^\s+$/.test(word)) return word;
+          return processBionicWord(word);
+        }).join('');
+        
+        // Create a span to hold the processed HTML
+        const span = document.createElement('span');
+        span.innerHTML = processedText;
+        
+        // Replace text node with the new content
+        if (node.parentNode) {
+          // Insert all child nodes of span before the text node
+          while (span.firstChild) {
+            node.parentNode.insertBefore(span.firstChild, node);
+          }
+          node.parentNode.removeChild(node);
+        }
+      }
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      // Skip if it's already a strong tag (avoid double processing)
+      if ((node as Element).tagName.toLowerCase() === 'strong') {
+        return;
+      }
+      // Process child nodes (make a copy of childNodes since we're modifying)
+      Array.from(node.childNodes).forEach(child => processNode(child));
+    }
+  };
+  
+  processNode(container);
+  return container.innerHTML;
+};
+
+/**
+ * Removes bionic formatting (strong tags) while preserving the text content and other formatting
  */
 const removeBionicFormatting = (html: string): string => {
-  // Remove <strong> and </strong> tags but keep the content
-  return html.replace(/<\/?strong>/gi, '');
+  // Create a temporary container to parse HTML
+  const container = document.createElement('div');
+  container.innerHTML = html;
+  
+  // Find all strong elements and unwrap them
+  const strongElements = container.querySelectorAll('strong');
+  strongElements.forEach(strong => {
+    const parent = strong.parentNode;
+    if (parent) {
+      // Move all children of strong before the strong element
+      while (strong.firstChild) {
+        parent.insertBefore(strong.firstChild, strong);
+      }
+      // Remove the now-empty strong element
+      parent.removeChild(strong);
+    }
+  });
+  
+  // Normalize to merge adjacent text nodes
+  container.normalize();
+  
+  return container.innerHTML;
 };
 
 export const BionicToggleButton: React.FC = () => {
@@ -58,7 +120,7 @@ export const BionicToggleButton: React.FC = () => {
       setIsBionicMode(false);
       toast.success('Bionic reading mode disabled');
     } else {
-      // Turn on bionic mode - apply formatting
+      // Turn on bionic mode - apply formatting while preserving structure
       const textContent = editor.getText();
       
       if (!textContent.trim()) {
@@ -66,11 +128,11 @@ export const BionicToggleButton: React.FC = () => {
         return;
       }
       
-      // Process the text with bionic formatting
-      const bionicHTML = processBionicText(textContent);
+      // Get HTML and apply bionic formatting while preserving structure
+      const currentHTML = editor.getHTML();
+      const bionicHTML = applyBionicToHTML(currentHTML);
       
-      // Set the new content
-      editor.commands.setContent(`<p>${bionicHTML}</p>`);
+      editor.commands.setContent(bionicHTML);
       
       setIsBionicMode(true);
       toast.success('Bionic reading mode enabled');
