@@ -29,11 +29,18 @@ const processBionicText = (text: string): string => {
   }).join('');
 };
 
+/**
+ * Removes bionic formatting (strong tags) while preserving the text content
+ */
+const removeBionicFormatting = (html: string): string => {
+  // Remove <strong> and </strong> tags but keep the content
+  return html.replace(/<\/?strong>/gi, '');
+};
+
 export const BionicToggleButton: React.FC = () => {
   const { t } = useTranslation();
-  const { content, updateContent } = useEditorContent();
+  const { content } = useEditorContent();
   const [isBionicMode, setIsBionicMode] = useState(false);
-  const [originalContent, setOriginalContent] = useState<string>('');
 
   const toggleBionicMode = () => {
     const editor = content.editor;
@@ -44,11 +51,10 @@ export const BionicToggleButton: React.FC = () => {
     }
 
     if (isBionicMode) {
-      // Turn off bionic mode - restore original content
-      if (originalContent) {
-        editor.commands.setContent(originalContent);
-      }
-      setOriginalContent('');
+      // Turn off bionic mode - remove strong tags from current content
+      const currentHTML = editor.getHTML();
+      const cleanedHTML = removeBionicFormatting(currentHTML);
+      editor.commands.setContent(cleanedHTML);
       setIsBionicMode(false);
       toast.success('Bionic reading mode disabled');
     } else {
@@ -59,10 +65,6 @@ export const BionicToggleButton: React.FC = () => {
         toast.error('No text to apply bionic reading effect');
         return;
       }
-      
-      // Save current HTML content before transformation
-      const savedContent = editor.getHTML();
-      setOriginalContent(savedContent);
       
       // Process the text with bionic formatting
       const bionicHTML = processBionicText(textContent);
