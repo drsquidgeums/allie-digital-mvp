@@ -1,6 +1,6 @@
 import { Mic, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTranslation } from "react-i18next";
 import { useEditorContent } from "@/hooks/useEditorContent";
 import { useToast } from "@/hooks/use-toast";
@@ -122,27 +122,38 @@ export const TTSButton = () => {
   };
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleClick}
-            disabled={isLoading}
-            className={`h-8 w-8 ${isPlaying ? 'bg-primary/20 text-primary' : ''}`}
-          >
-            {isPlaying ? (
-              <Square className="h-4 w-4" />
-            ) : (
-              <Mic className={`h-4 w-4 ${isLoading ? 'animate-pulse' : ''}`} />
-            )}
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>{isPlaying ? 'Stop reading' : (t('tools.tts') || 'Read selected text')}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleClick}
+          disabled={isLoading}
+          className={`h-9 w-9 relative bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+            isPlaying ? 'bg-primary text-primary-foreground ring-2 ring-primary' : ''
+          }`}
+          aria-label={isPlaying ? 'Stop reading' : 'Read selected text aloud'}
+        >
+          {isPlaying ? (
+            <Square className="h-4 w-4" />
+          ) : (
+            <Mic className={`h-4 w-4 ${isLoading ? 'animate-pulse' : ''}`} />
+          )}
+          {isPlaying && (
+            <div 
+              className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"
+              role="status"
+              aria-label="Audio playing"
+            />
+          )}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent 
+        side="bottom"
+        className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+      >
+        {isPlaying ? 'Stop reading' : (t('tools.tts') || 'Read selected text')}
+      </TooltipContent>
+    </Tooltip>
   );
 };
