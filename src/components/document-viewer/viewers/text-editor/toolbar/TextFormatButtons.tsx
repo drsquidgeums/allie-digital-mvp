@@ -18,7 +18,7 @@ export const TextFormatButtons: React.FC<TextFormatButtonsProps> = ({ editor }) 
         className="h-8 w-8 p-0"
         aria-label="Bold"
       >
-        <Bold className="h-4 w-4" />
+        <Bold className="h-4 w-4 text-foreground" />
       </Button>
       
       <Button
