@@ -1,0 +1,157 @@
+{
+  "navigation": {
+    "fileUploader": "Téléverseur de fichiers",
+    "toolbox": "Boîte à outils",
+    "tasks": "Planificateur de tâches",
+    "aiAssistant": "Assistant IA",
+    "mindMap": "Carte mentale",
+    "settings": "Paramètres",
+    "community": "Centre communautaire",
+    "myFiles": "Mes fichiers"
+  },
+  "tools": {
+    "pomodoro": "Minuteur Pomodoro",
+    "tts": "Synthèse vocale",
+    "stt": "Reconnaissance vocale",
+    "bionic": "Lecteur bionique",
+    "color": "Outil couleur",
+    "focus": "Mode concentration",
+    "beeline": "Beeline Reader",
+    "rewordify": "Reformuler",
+    "ai": "Assistant IA",
+    "voice": "IA vocale"
+  },
+  "common": {
+    "logout": "Déconnexion",
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "success": "Succès",
+    "information": "Information",
+    "language": "Sélectionner la langue",
+    "noNotifications": "Aucune notification",
+    "loadingText": "Chargement..."
+  },
+  "chat": {
+    "title": "Allie IA",
+    "inputPlaceholder": "Tapez votre message..."
+  },
+  "notifications": {
+    "empty": "Aucune notification",
+    "markAsRead": "Marquer comme lu"
+  },
+  "tasks": {
+    "taskAdded": "Nouvelle tâche créée avec succès",
+    "pointsEarned": "Vous avez gagné {{points}} points pour avoir terminé cette tâche !",
+    "title": "Liste des tâches",
+    "empty": "Aucune tâche pour le moment",
+    "addTask": "Ajouter une tâche"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "description": "Gérez vos préférences d'application",
+    "language": "Paramètres de langue",
+    "selectLanguage": "Sélectionner la langue",
+    "languageChanged": "La langue de l'application a été changée en {{language}}",
+    "languageChangeError": "Échec du changement de langue. Veuillez réessayer.",
+    "accessibility": {
+      "title": "Accessibilité",
+      "screenReader": "Support lecteur d'écran",
+      "screenReaderDescription": "Activer la compatibilité améliorée avec les lecteurs d'écran",
+      "screenReaderEnabled": "Support du lecteur d'écran activé",
+      "screenReaderDisabled": "Support du lecteur d'écran désactivé",
+      "comingSoon": "Les paramètres d'accessibilité arrivent bientôt. Nous travaillons sur des fonctionnalités pour rendre l'application plus accessible à tous."
+    },
+    "display": {
+      "title": "Affichage",
+      "compactMode": "Mode compact",
+      "compactModeDescription": "Réduire l'espacement entre les éléments",
+      "comingSoon": "Les options de personnalisation de l'affichage arrivent bientôt."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "taskReminders": "Rappels de tâches",
+      "taskRemindersDescription": "Recevoir des notifications pour les tâches à venir",
+      "focusTimerAlerts": "Alertes du minuteur de concentration",
+      "focusTimerAlertsDescription": "Être notifié lorsque les sessions de concentration se terminent",
+      "comingSoon": "Les paramètres de notifications arrivent bientôt. Restez à l'écoute !"
+    },
+    "performance": {
+      "title": "Performance",
+      "animations": "Animations",
+      "animationsDescription": "Activer les animations de l'interface",
+      "autoSave": "Sauvegarde automatique",
+      "autoSaveDescription": "Enregistrer automatiquement les modifications",
+      "hardware": "Accélération matérielle",
+      "hardwareDescription": "Utiliser le GPU pour de meilleures performances",
+      "comingSoon": "Les paramètres de performance arrivent bientôt."
+    },
+    "privacy": {
+      "title": "Confidentialité et sécurité",
+      "dataCollection": "Collecte de données",
+      "dataCollectionDescription": "Autoriser la collecte anonyme des données d'utilisation",
+      "twoFactor": "Authentification à deux facteurs",
+      "twoFactorDescription": "Activer la 2FA pour une sécurité supplémentaire",
+      "sessionTimeout": "Expiration de session",
+      "sessionTimeoutDescription": "Se déconnecter automatiquement après inactivité",
+      "changePassword": "Changer le mot de passe",
+      "changePasswordDescription": "Mettre à jour le mot de passe de votre compte",
+      "changeEmail": "Changer l'adresse e-mail",
+      "changeEmailDescription": "Mettre à jour votre adresse e-mail",
+      "antiScreenshot": "Protection anti-capture d'écran",
+      "antiScreenshotDescription": "Bloquer les tentatives de capture du contenu de l'écran"
+    },
+    "keyboard": {
+      "title": "Raccourcis clavier",
+      "toggleFocusMode": "Basculer le mode concentration",
+      "openSettings": "Ouvrir les paramètres",
+      "saveDocument": "Enregistrer le document",
+      "toggleTheme": "Basculer le thème",
+      "comingSoon": "La configuration personnalisée des raccourcis clavier arrive bientôt."
+    },
+    "storage": {
+      "title": "Données et stockage",
+      "usage": "Utilisation du stockage (Supabase)",
+      "management": "Gestion du stockage",
+      "clearFiles": "Supprimer tous les fichiers",
+      "clearLocalStorage": "Effacer le stockage local",
+      "exportData": "Exporter les données",
+      "exportDescription": "Télécharger toutes vos données d'espace de travail, y compris les documents, annotations et paramètres",
+      "downloadData": "Télécharger mes données",
+      "clearedFiles": "Tous les fichiers ont été supprimés du stockage",
+      "noFiles": "Aucun fichier à supprimer",
+      "clearError": "Échec de la suppression du stockage",
+      "fetchError": "Échec de la récupération des statistiques de stockage",
+      "localStorageCleared": "Le stockage local a été effacé"
+    },
+    "integrations": {
+      "title": "Intégrations",
+      "googleCalendar": "Google Agenda",
+      "googleCalendarDesc": "Synchroniser les tâches avec Google Agenda",
+      "microsoftTeams": "Microsoft Teams",
+      "teamsDesc": "Se connecter aux canaux de discussion Teams pour des discussions collaboratives",
+      "teamsSuccessConnect": "Connexion Teams initiée avec succès. Veuillez compléter l'authentification dans la fenêtre popup.",
+      "teamsConnectError": "Échec de la connexion à Microsoft Teams. Veuillez réessayer.",
+      "connectionError": "Erreur de connexion",
+      "slack": "Slack",
+      "slackDesc": "Se connecter à l'espace de travail Slack",
+      "canvasLMS": "Canvas LMS",
+      "canvasDesc": "Synchroniser avec vos cours et devoirs Canvas",
+      "googleClassroom": "Google Classroom",
+      "classroomDesc": "Se connecter et synchroniser avec Google Classroom",
+      "blackboard": "Blackboard",
+      "blackboardDesc": "Synchroniser avec les cours et devoirs Blackboard",
+      "trello": "Trello",
+      "trelloDesc": "Synchroniser les tâches avec les tableaux Trello",
+      "comingSoon": "Les intégrations avec les services externes arrivent bientôt. Restez à l'écoute !",
+      "connect": "Connecter",
+      "comingSoonButton": "Bientôt disponible"
+    }
+  },
+  "fileUploader": {
+    "dropzone": "Déposez les fichiers ici ou cliquez pour téléverser",
+    "supportedFormats": "Formats pris en charge : PDF, DOCX, TXT",
+    "uploading": "Téléversement...",
+    "success": "Fichier téléversé avec succès",
+    "error": "Erreur lors du téléversement du fichier"
+  }
+}

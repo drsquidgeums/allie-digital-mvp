@@ -59,19 +59,22 @@
       "screenReader": "Screen Reader Support",
       "screenReaderDescription": "Enable enhanced screen reader compatibility",
       "screenReaderEnabled": "Screen reader support enabled",
-      "screenReaderDisabled": "Screen reader support disabled"
+      "screenReaderDisabled": "Screen reader support disabled",
+      "comingSoon": "Accessibility settings are coming soon. We are working on features to make the app more accessible for everyone."
     },
     "display": {
       "title": "Display",
       "compactMode": "Compact Mode",
-      "compactModeDescription": "Reduce spacing between elements"
+      "compactModeDescription": "Reduce spacing between elements",
+      "comingSoon": "Display customization options are coming soon."
     },
     "notifications": {
       "title": "Notifications",
       "taskReminders": "Task Reminders",
       "taskRemindersDescription": "Receive notifications for upcoming tasks",
       "focusTimerAlerts": "Focus Timer Alerts",
-      "focusTimerAlertsDescription": "Get notified when focus sessions end"
+      "focusTimerAlertsDescription": "Get notified when focus sessions end",
+      "comingSoon": "Notification settings are coming soon. Stay tuned for updates!"
     },
     "performance": {
       "title": "Performance",
@@ -80,7 +83,8 @@
       "autoSave": "Auto-save",
       "autoSaveDescription": "Automatically save changes",
       "hardware": "Hardware Acceleration",
-      "hardwareDescription": "Use GPU for better performance"
+      "hardwareDescription": "Use GPU for better performance",
+      "comingSoon": "Performance settings are coming soon."
     },
     "privacy": {
       "title": "Privacy & Security",
@@ -93,14 +97,17 @@
       "changePassword": "Change Password",
       "changePasswordDescription": "Update your account password",
       "changeEmail": "Change Email",
-      "changeEmailDescription": "Update your email address"
+      "changeEmailDescription": "Update your email address",
+      "antiScreenshot": "Anti-Screenshot Protection",
+      "antiScreenshotDescription": "Block attempts to capture screen content"
     },
     "keyboard": {
       "title": "Keyboard Shortcuts",
       "toggleFocusMode": "Toggle Focus Mode",
       "openSettings": "Open Settings",
       "saveDocument": "Save Document",
-      "toggleTheme": "Toggle Theme"
+      "toggleTheme": "Toggle Theme",
+      "comingSoon": "Custom keyboard shortcut configuration is coming soon."
     },
     "storage": {
       "title": "Data & Storage",
@@ -135,7 +142,10 @@
       "blackboard": "Blackboard",
       "blackboardDesc": "Sync with Blackboard courses and assignments",
       "trello": "Trello",
-      "trelloDesc": "Sync tasks with Trello boards"
+      "trelloDesc": "Sync tasks with Trello boards",
+      "comingSoon": "Integrations with external services are coming soon. Stay tuned for updates!",
+      "connect": "Connect",
+      "comingSoonButton": "Coming Soon"
     }
   },
   "fileUploader": {

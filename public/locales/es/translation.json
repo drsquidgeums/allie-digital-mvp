@@ -59,19 +59,22 @@
       "screenReader": "Soporte para lector de pantalla",
       "screenReaderDescription": "Habilitar compatibilidad mejorada con lector de pantalla",
       "screenReaderEnabled": "Soporte de lector de pantalla activado",
-      "screenReaderDisabled": "Soporte de lector de pantalla desactivado"
+      "screenReaderDisabled": "Soporte de lector de pantalla desactivado",
+      "comingSoon": "Los ajustes de accesibilidad llegarán pronto. Estamos trabajando en funciones para hacer la aplicación más accesible para todos."
     },
     "display": {
       "title": "Pantalla",
       "compactMode": "Modo compacto",
-      "compactModeDescription": "Reducir el espacio entre elementos"
+      "compactModeDescription": "Reducir el espacio entre elementos",
+      "comingSoon": "Las opciones de personalización de pantalla llegarán pronto."
     },
     "notifications": {
       "title": "Notificaciones",
       "taskReminders": "Recordatorios de tareas",
       "taskRemindersDescription": "Recibir notificaciones de tareas próximas",
       "focusTimerAlerts": "Alertas del temporizador de concentración",
-      "focusTimerAlertsDescription": "Recibir notificación cuando terminen las sesiones de concentración"
+      "focusTimerAlertsDescription": "Recibir notificación cuando terminen las sesiones de concentración",
+      "comingSoon": "Los ajustes de notificaciones llegarán pronto. ¡Mantente atento!"
     },
     "performance": {
       "title": "Rendimiento",
@@ -80,7 +83,8 @@
       "autoSave": "Auto-guardado",
       "autoSaveDescription": "Guardar cambios automáticamente",
       "hardware": "Aceleración de hardware",
-      "hardwareDescription": "Usar GPU para mejor rendimiento"
+      "hardwareDescription": "Usar GPU para mejor rendimiento",
+      "comingSoon": "Los ajustes de rendimiento llegarán pronto."
     },
     "privacy": {
       "title": "Privacidad y Seguridad",
@@ -93,14 +97,17 @@
       "changePassword": "Cambiar contraseña",
       "changePasswordDescription": "Actualizar la contraseña de tu cuenta",
       "changeEmail": "Cambiar correo electrónico",
-      "changeEmailDescription": "Actualizar tu dirección de correo electrónico"
+      "changeEmailDescription": "Actualizar tu dirección de correo electrónico",
+      "antiScreenshot": "Protección anti-captura de pantalla",
+      "antiScreenshotDescription": "Bloquear intentos de capturar contenido de pantalla"
     },
     "keyboard": {
       "title": "Atajos de teclado",
       "toggleFocusMode": "Alternar modo concentración",
       "openSettings": "Abrir configuración",
       "saveDocument": "Guardar documento",
-      "toggleTheme": "Alternar tema"
+      "toggleTheme": "Alternar tema",
+      "comingSoon": "La configuración personalizada de atajos de teclado llegará pronto."
     },
     "storage": {
       "title": "Datos y Almacenamiento",
@@ -135,7 +142,10 @@
       "blackboard": "Blackboard",
       "blackboardDesc": "Sincronizar con cursos y tareas de Blackboard",
       "trello": "Trello",
-      "trelloDesc": "Sincronizar tareas con tableros de Trello"
+      "trelloDesc": "Sincronizar tareas con tableros de Trello",
+      "comingSoon": "Las integraciones con servicios externos llegarán pronto. ¡Mantente atento!",
+      "connect": "Conectar",
+      "comingSoonButton": "Próximamente"
     }
   },
   "fileUploader": {
