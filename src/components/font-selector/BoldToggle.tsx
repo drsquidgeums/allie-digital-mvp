@@ -34,12 +34,12 @@ export const BoldToggle = () => {
       variant="outline"
       size="icon"
       onClick={handleBoldToggle}
-      className={`h-10 w-10 ${isBold ? 'bg-accent text-accent-foreground ring-2 ring-primary' : 'text-foreground'}`}
+      className={`h-10 w-10 ${isBold ? 'bg-accent ring-2 ring-primary' : ''}`}
       title="Toggle bold text"
       aria-pressed={isBold}
       aria-label={`${isBold ? 'Disable' : 'Enable'} bold text`}
     >
-      <Bold className="h-4 w-4" />
+      <Bold className="h-4 w-4 text-primary" />
       {isBold && (
         <div 
           className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"
