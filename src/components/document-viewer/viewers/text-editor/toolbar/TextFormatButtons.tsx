@@ -3,6 +3,7 @@ import React from 'react';
 import { Editor } from '@tiptap/react';
 import { Button } from '@/components/ui/button';
 import { Bold, Italic, Underline } from 'lucide-react';
+import { ClearFormattingButton } from './ClearFormattingButton';
 
 interface TextFormatButtonsProps {
   editor: Editor;
@@ -40,6 +41,8 @@ export const TextFormatButtons: React.FC<TextFormatButtonsProps> = ({ editor }) 
       >
         <Underline className="h-4 w-4" />
       </Button>
+      
+      <ClearFormattingButton editor={editor} />
     </>
   );
 };

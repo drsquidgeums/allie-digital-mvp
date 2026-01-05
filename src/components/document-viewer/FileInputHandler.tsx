@@ -120,7 +120,7 @@ export const FileInputHandler: React.FC<FileInputHandlerProps> = ({
         type="file"
         ref={fileInputRef}
         className="hidden"
-        accept=".pdf,.doc,.docx,.txt,.html"
+        accept=".doc,.docx,.txt,.html"
         onChange={handleFileChange}
         aria-hidden="true"
       />
