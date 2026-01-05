@@ -1,6 +1,5 @@
 import React from 'react';
 import { getFileType } from '../../FileConverter';
-import { PdfViewerWrapper } from './PdfViewerWrapper';
 import { TextViewerWrapper } from './TextViewerWrapper';
 import { RichTextEditorWrapper } from './RichTextEditorWrapper';
 import { ErrorDisplay } from '../ErrorDisplay';
@@ -47,15 +46,6 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
     
     // Otherwise use the original viewers
     switch (fileType) {
-      case 'pdf':
-        return (
-          <PdfViewerWrapper
-            file={file}
-            url=""
-            selectedColor={selectedColor || '#FFFF00'} // Default to yellow if no color specified
-            isHighlighter={isHighlighter}
-          />
-        );
       case 'txt':
       case 'html':
         return <TextViewerWrapper file={file} />;
@@ -64,7 +54,7 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
         return (
           <ErrorDisplay 
             title="Unsupported File Type" 
-            description="The file type you're trying to view is not supported. Please try a PDF, TXT, or HTML file." 
+            description="The file type you're trying to view is not supported. Please try a TXT, DOCX, or HTML file." 
           />
         );
     }

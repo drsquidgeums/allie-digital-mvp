@@ -2,7 +2,6 @@
 import React from "react";
 import { ErrorBoundary } from "../ErrorBoundary";
 import { DocumentPreview } from "./DocumentPreview";
-import { UrlInputHandler } from "./UrlInputHandler";
 import { StudySessionTracker } from "../study/StudySessionTracker";
 
 interface DocumentViewerContentProps {
@@ -18,7 +17,7 @@ interface DocumentViewerContentProps {
 /**
  * DocumentViewerContent Component
  * 
- * Container for the document content area including URL input and preview
+ * Container for the document content area including preview
  */
 export const DocumentViewerContent: React.FC<DocumentViewerContentProps> = ({
   documentRef,
@@ -32,7 +31,6 @@ export const DocumentViewerContent: React.FC<DocumentViewerContentProps> = ({
   return (
     <div className="flex-1 flex flex-col">
       <div className="flex-1 p-4 relative">
-        <UrlInputHandler url={url} setUrl={setUrl} />
         <div 
           className="h-full" 
           ref={documentRef}
@@ -49,7 +47,6 @@ export const DocumentViewerContent: React.FC<DocumentViewerContentProps> = ({
           >
             <DocumentPreview 
               file={selectedFile} 
-              url={url} 
               selectedColor={selectedColor}
               isHighlighter={isHighlighter} 
             />
