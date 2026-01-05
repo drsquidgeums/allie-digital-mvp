@@ -175,3 +175,12 @@
 .ProseMirror.bionic-mode strong {
   font-weight: 700;
 }
+
+/* Beeline Reader styles */
+.ProseMirror span[data-beeline="true"] {
+  background-image: linear-gradient(90deg, #006400, #301934) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
