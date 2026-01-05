@@ -170,3 +170,8 @@
   outline: none;
   border: none;
 }
+
+/* Bionic reading mode styles */
+.ProseMirror.bionic-mode strong {
+  font-weight: 700;
+}
