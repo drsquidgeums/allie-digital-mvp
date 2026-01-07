@@ -151,7 +151,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
 
   return (
     <div 
-      className="password-gate min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
+      className="password-gate min-h-screen flex flex-col items-center justify-between relative overflow-hidden py-8"
       style={{
         opacity: imagesLoaded ? 1 : 0,
         transition: 'opacity 0.3s ease-in-out',
@@ -172,6 +172,10 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
           zIndex: 0,
         }}
       />
+      
+      {/* Spacer for top */}
+      <div className="flex-shrink-0" />
+      
       <div 
         className="w-full max-w-xl space-y-8 p-8 relative z-10"
         style={{
@@ -182,8 +186,9 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         <WelcomeHeader colors={colors} />
         <AuthForm onAuthenticated={onAuthenticated} />
       </div>
+      
       <footer 
-        className="absolute bottom-4 text-center z-10" 
+        className="text-center z-10 flex-shrink-0 mt-4" 
         style={{ 
           color: '#666666',
         }}
