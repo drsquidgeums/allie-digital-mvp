@@ -16,31 +16,58 @@ const ResetPassword = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if we have a valid recovery session
+    // Supports both Supabase reset link formats:
+    // 1) Implicit flow tokens in hash (#access_token=...&type=recovery)
+    // 2) PKCE/code flow (?code=...)
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      // Check URL for recovery token (Supabase adds these as hash params)
-      const hashParams = new URLSearchParams(window.location.hash.substring(1));
-      const accessToken = hashParams.get('access_token');
-      const type = hashParams.get('type');
-      
-      if (type === 'recovery' && accessToken) {
-        // Set the session from the recovery token
-        const { error } = await supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: hashParams.get('refresh_token') || '',
-        });
-        
-        if (!error) {
+      try {
+        const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+        const searchParams = new URLSearchParams(window.location.search);
+
+        const code = searchParams.get("code");
+        const typeFromQuery = searchParams.get("type");
+        const typeFromHash = hashParams.get("type");
+        const type = typeFromQuery || typeFromHash;
+
+        // PKCE/code exchange flow
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+          if (!error) {
+            setIsValidSession(true);
+          }
+          return;
+        }
+
+        // Legacy implicit flow (hash tokens)
+        const accessToken = hashParams.get("access_token");
+        const refreshToken = hashParams.get("refresh_token");
+
+        if (type === "recovery" && accessToken && refreshToken) {
+          const { error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+
+          if (!error) {
+            setIsValidSession(true);
+          }
+          return;
+        }
+
+        // Fallback: if a recovery session is already present
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (session) {
           setIsValidSession(true);
         }
-      } else if (session) {
-        // User might already have a recovery session
-        setIsValidSession(true);
+      } catch (e) {
+        // If anything fails, we keep isValidSession=false and show the invalid link UI
+        console.error("Reset password session check failed", e);
+      } finally {
+        setIsChecking(false);
       }
-      
-      setIsChecking(false);
     };
 
     checkSession();
