@@ -122,10 +122,8 @@ const ResetPassword = () => {
         description: "Your password has been successfully reset. Please sign in with your new password.",
       });
 
-      // Redirect to home (sign-in gate) after successful reset
-      setTimeout(() => {
-        navigate("/", { replace: true });
-      }, 1500);
+      // Clear any hash/query params and redirect to home immediately
+      window.location.href = window.location.origin;
     } catch (error: any) {
       console.error("Password reset error:", error);
       toast({
@@ -133,7 +131,6 @@ const ResetPassword = () => {
         description: error.message || "Failed to reset password. Please try again.",
         variant: "destructive",
       });
-    } finally {
       setIsLoading(false);
     }
   };
