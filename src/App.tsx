@@ -54,6 +54,17 @@ const App = () => {
             name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
             email: session.user.email || ''
           });
+          
+          // If user just signed in, check if they have a stored paid email match
+          const storedPaidEmail = localStorage.getItem("paid_email");
+          if (storedPaidEmail && session.user.email?.toLowerCase() === storedPaidEmail.toLowerCase()) {
+            // Clear the stored email and refetch payment status
+            localStorage.removeItem("paid_email");
+            // Small delay to ensure the check-payment can find the Stripe record
+            setTimeout(() => {
+              refetchPayment();
+            }, 1000);
+          }
         } else {
           setUserInfo(null);
         }
@@ -75,7 +86,7 @@ const App = () => {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [refetchPayment]);
 
   const handleAuthentication = () => {
     // This is now handled by the auth state change listener
