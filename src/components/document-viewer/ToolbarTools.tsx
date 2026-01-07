@@ -26,8 +26,8 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
   return (
     <div className="flex items-center gap-2">
       <BionicToggleButton />
-      <TTSButton />
       <BeelineToggleButton />
+      <TTSButton />
       <ToolItem
         icon={Text}
         label={t('tools.stt')}
