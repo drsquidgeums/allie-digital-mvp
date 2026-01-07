@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { WelcomeHeader } from "../password-gate/WelcomeHeader";
 import { PaymentGate } from "./PaymentGate";
 
@@ -8,13 +8,22 @@ interface PaymentRequiredGateProps {
 
 export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaymentComplete }) => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [paidEmail, setPaidEmail] = useState<string | null>(null);
 
   const colors = [
     '#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#8B00FF',
     '#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#8B00FF',
   ];
 
-  React.useEffect(() => {
+  // Check if user just paid and came back
+  useEffect(() => {
+    const storedPaidEmail = localStorage.getItem("paid_email");
+    if (storedPaidEmail) {
+      setPaidEmail(storedPaidEmail);
+    }
+  }, []);
+
+  useEffect(() => {
     const bgImage = new Image();
     const logoImage = new Image();
     let loadedCount = 0;
@@ -34,7 +43,7 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
   }, []);
 
   // Inject CSS styles to override theme styles with maximum specificity
-  React.useEffect(() => {
+  useEffect(() => {
     const styleElement = document.createElement('style');
     styleElement.textContent = `
       html.dark .payment-gate,
@@ -114,6 +123,14 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
         color: #000000 !important;
         text-shadow: none !important;
       }
+      
+      html.dark .payment-gate .paid-notice,
+      html .payment-gate .paid-notice,
+      .dark .payment-gate .paid-notice,
+      .payment-gate .paid-notice {
+        background-color: #f0fdf4 !important;
+        border-color: #22c55e !important;
+      }
     `;
     document.head.appendChild(styleElement);
 
@@ -121,6 +138,11 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
       document.head.removeChild(styleElement);
     };
   }, []);
+
+  const handleClearPaidEmail = () => {
+    localStorage.removeItem("paid_email");
+    setPaidEmail(null);
+  };
 
   return (
     <div 
@@ -141,7 +163,34 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
         }}
       >
         <WelcomeHeader colors={colors} />
-        <PaymentGate onPaymentComplete={onPaymentComplete} />
+        
+        {paidEmail ? (
+          <div className="space-y-6 text-center">
+            <div 
+              className="paid-notice p-4 rounded-lg border-2"
+              style={{ 
+                backgroundColor: '#f0fdf4', 
+                borderColor: '#22c55e' 
+              }}
+            >
+              <p className="font-semibold" style={{ color: '#166534' }}>
+                ✓ Payment received for {paidEmail}
+              </p>
+              <p className="text-sm mt-1" style={{ color: '#166534' }}>
+                Please sign out and sign back in, or refresh the page to access the app.
+              </p>
+            </div>
+            <button
+              onClick={handleClearPaidEmail}
+              className="text-sm underline transition-colors hover:opacity-70"
+              style={{ color: '#6b7280' }}
+            >
+              Use a different email?
+            </button>
+          </div>
+        ) : (
+          <PaymentGate onPaymentComplete={onPaymentComplete} />
+        )}
       </div>
       <footer 
         className="absolute bottom-4 text-sm z-10" 
