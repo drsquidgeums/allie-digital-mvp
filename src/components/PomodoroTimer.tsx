@@ -1,5 +1,6 @@
 
 import React from "react";
+import { Timer } from "lucide-react";
 import { PomodoroSettings } from "./pomodoro/PomodoroSettings";
 import { TaskSelector } from "./pomodoro/TaskSelector";
 import { TimerDisplay } from "./pomodoro/TimerDisplay";
@@ -21,22 +22,18 @@ export const PomodoroTimer = () => {
   }, [trackToolUsage]);
   
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-semibold tracking-tight">Pomodoro Timer</h2>
-          <p className="text-muted-foreground">
-            Focus on your tasks with timed work sessions and smart break reminders
-          </p>
-        </div>
-        <div className="space-y-4">
-          {taskReadyForCompletion && <TaskCompletionPrompt />}
-          <PomodoroSettings />
-          <TaskSelector />
-          <TimerDisplay />
-          <TimerControls />
-        </div>
+    <div className="p-4 space-y-4 animate-fade-in">
+      <div className="flex items-center gap-2">
+        <Timer className="w-4 h-4" />
+        <h3 className="font-medium">Pomodoro Timer</h3>
       </div>
+      
+      {taskReadyForCompletion && <TaskCompletionPrompt />}
+      
+      <TimerDisplay />
+      <TimerControls />
+      <TaskSelector />
+      <PomodoroSettings />
     </div>
   );
 };
