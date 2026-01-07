@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { WelcomeHeader } from "./password-gate/WelcomeHeader";
 import { AuthForm } from "./password-gate/AuthForm";
+import lovableLogo from "@/assets/lovable-logo.png";
 
 interface PasswordGateProps {
   onAuthenticated: () => void;
@@ -163,12 +164,16 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         <AuthForm onAuthenticated={onAuthenticated} />
       </div>
       <footer 
-        className="absolute bottom-4 text-sm z-10" 
+        className="absolute bottom-4 text-center z-10" 
         style={{ 
           color: '#666666',
         }}
       >
-        © Allie Digital Ltd. All Rights Reserved {new Date().getFullYear()}
+        <div className="flex items-center justify-center gap-1.5 mb-1" style={{ fontSize: '10px' }}>
+          <span>Powered by</span>
+          <img src={lovableLogo} alt="Lovable" className="h-3" style={{ display: 'inline-block' }} />
+        </div>
+        <span className="text-sm">© Allie Digital Ltd. All Rights Reserved {new Date().getFullYear()}</span>
       </footer>
     </div>
   );
