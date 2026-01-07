@@ -160,15 +160,16 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         filter: 'none',
       }}
     >
-      {/* Background image with 50% opacity */}
+      {/* Background image - fixed position so it doesn't move */}
       <div
         style={{
-          position: 'absolute',
+          position: 'fixed',
           inset: 0,
           backgroundImage: `url(${gatewayBackground})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          opacity: 0.5,
+          backgroundAttachment: 'fixed',
+          opacity: 0.35,
           zIndex: 0,
         }}
       />
