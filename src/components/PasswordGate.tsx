@@ -31,8 +31,9 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
     bgImage.onload = handleImageLoad;
     logoImage.onload = handleImageLoad;
 
-    bgImage.src = '/lovable-uploads/c6d002da-1686-4204-97e5-213169f7c0b5.png';
-    logoImage.src = '/lovable-uploads/3a3ef3bc-dbfb-441c-88cd-8b91d4891d61.png';
+    // Preload the actual imported images
+    bgImage.src = gatewayBackground;
+    logoImage.src = lovableLogo;
   }, []);
 
   // Inject CSS styles to override theme styles with maximum specificity
