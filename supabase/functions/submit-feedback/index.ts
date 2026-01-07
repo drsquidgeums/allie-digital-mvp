@@ -1,23 +1,11 @@
-
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.43.1";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 // Set up CORS headers for browser requests
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
-
-// Create authenticated Supabase client (uses service_role key to bypass RLS)
-const supabaseAdmin = createClient(
-  Deno.env.get("SUPABASE_URL") ?? "",
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
-  {
-    auth: {
-      persistSession: false,
-    }
-  }
-);
 
 // Input validation helpers
 function isValidEmail(email: string): boolean {
@@ -27,6 +15,11 @@ function isValidEmail(email: string): boolean {
 
 function sanitizeString(str: string, maxLength: number): string {
   return str.trim().slice(0, maxLength);
+}
+
+// Escape SQL wildcards to prevent injection
+function escapeSqlWildcards(str: string): string {
+  return str.replace(/[%_\\]/g, '\\$&');
 }
 
 interface FeedbackData {
@@ -46,6 +39,51 @@ serve(async (req) => {
   }
 
   try {
+    // Authentication check
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      return new Response(JSON.stringify({ success: false, error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const token = authHeader.replace("Bearer ", "");
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    if (token === anonKey) {
+      return new Response(JSON.stringify({ success: false, error: "User authentication required" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const supabaseClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
+    if (authError || !user) {
+      return new Response(JSON.stringify({ success: false, error: "Invalid authentication" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    console.log("Request from user:", user.id);
+
+    // Create authenticated Supabase client (uses service_role key to bypass RLS)
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      {
+        auth: {
+          persistSession: false,
+        }
+      }
+    );
+
     const requestBody = await req.json();
     
     const { comments, userEmail } = requestBody as FeedbackData;
@@ -76,15 +114,16 @@ serve(async (req) => {
     // Sanitize inputs
     const sanitizedComments = sanitizeString(comments, 5000);
     const sanitizedEmail = sanitizeString(userEmail.toLowerCase(), 255);
+    const escapedEmail = escapeSqlWildcards(sanitizedEmail);
 
     console.log(`Processing feedback submission`);
 
-    // Check for existing feedback by looking for the email in comments
+    // Check for existing feedback by looking for the email in comments (with escaped wildcards)
     console.log("Checking for existing feedback...");
     const { data: existingFeedback, error: checkError } = await supabaseAdmin
       .from('feedback')
       .select('id, comments')
-      .ilike('comments', `%${sanitizedEmail}%`)
+      .ilike('comments', `%${escapedEmail}%`)
       .limit(1);
       
     if (checkError) {
