@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { WelcomeHeader } from "../password-gate/WelcomeHeader";
 import { PaymentGate } from "./PaymentGate";
-import gatewayBackground from "@/assets/gateway-background.png";
+
+const gatewayBackground = "/images/gateway-background.png";
 
 interface PaymentRequiredGateProps {
   onPaymentComplete: () => void;
