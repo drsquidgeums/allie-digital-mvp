@@ -7,48 +7,51 @@ export const PomodoroSettings = () => {
   const { state, dispatch } = usePomodoroContext();
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="space-y-2">
-        <Label className="text-sm font-medium">Work Duration (min)</Label>
-        <Input
-          type="number"
-          value={state.workMinutes}
-          onChange={(e) => dispatch({ 
-            type: 'SET_WORK_MINUTES', 
-            payload: Number(e.target.value) 
-          })}
-          min="1"
-          disabled={state.isActive}
-          className="h-9"
-        />
-      </div>
-      <div className="space-y-2">
-        <Label className="text-sm font-medium">Short Break (min)</Label>
-        <Input
-          type="number"
-          value={state.shortBreakMinutes}
-          onChange={(e) => dispatch({ 
-            type: 'SET_SHORT_BREAK', 
-            payload: Number(e.target.value) 
-          })}
-          min="1"
-          disabled={state.isActive}
-          className="h-9"
-        />
-      </div>
-      <div className="space-y-2">
-        <Label className="text-sm font-medium">Long Break (min)</Label>
-        <Input
-          type="number"
-          value={state.longBreakMinutes}
-          onChange={(e) => dispatch({ 
-            type: 'SET_LONG_BREAK', 
-            payload: Number(e.target.value) 
-          })}
-          min="1"
-          disabled={state.isActive}
-          className="h-9"
-        />
+    <div className="space-y-2">
+      <Label className="text-xs font-medium text-muted-foreground">Duration Settings</Label>
+      <div className="grid grid-cols-3 gap-2">
+        <div className="space-y-1">
+          <Label className="text-xs">Work</Label>
+          <Input
+            type="number"
+            value={state.workMinutes}
+            onChange={(e) => dispatch({ 
+              type: 'SET_WORK_MINUTES', 
+              payload: Number(e.target.value) 
+            })}
+            min="1"
+            disabled={state.isActive}
+            className="h-8 text-xs"
+          />
+        </div>
+        <div className="space-y-1">
+          <Label className="text-xs">Short</Label>
+          <Input
+            type="number"
+            value={state.shortBreakMinutes}
+            onChange={(e) => dispatch({ 
+              type: 'SET_SHORT_BREAK', 
+              payload: Number(e.target.value) 
+            })}
+            min="1"
+            disabled={state.isActive}
+            className="h-8 text-xs"
+          />
+        </div>
+        <div className="space-y-1">
+          <Label className="text-xs">Long</Label>
+          <Input
+            type="number"
+            value={state.longBreakMinutes}
+            onChange={(e) => dispatch({ 
+              type: 'SET_LONG_BREAK', 
+              payload: Number(e.target.value) 
+            })}
+            min="1"
+            disabled={state.isActive}
+            className="h-8 text-xs"
+          />
+        </div>
       </div>
     </div>
   );

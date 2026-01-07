@@ -7,17 +7,17 @@ export const TimerDisplay = () => {
   const progress = ((state.workMinutes * 60 + state.seconds) / (state.isWork ? (25 * 60) : (state.shortBreakMinutes * 60))) * 100;
 
   return (
-    <div className="space-y-4">
-      <div className="text-center">
-        <h3 className="text-3xl font-bold">
+    <div className="border-2 border-primary/30 bg-primary/5 p-4 rounded-lg">
+      <div className="text-center space-y-2">
+        <h3 className="text-3xl font-bold tabular-nums">
           {String(state.workMinutes).padStart(2, "0")}:
           {String(state.seconds).padStart(2, "0")}
         </h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           {state.isWork ? "Work Time" : "Break Time"}
         </p>
+        <Progress value={progress} className="h-1.5" />
       </div>
-      <Progress value={progress} className="h-2" />
     </div>
   );
 };
