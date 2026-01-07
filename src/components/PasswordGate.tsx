@@ -169,7 +169,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed',
-          opacity: 0.35,
+          opacity: 0.3,
           zIndex: 0,
         }}
       />
