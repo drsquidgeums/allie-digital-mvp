@@ -65,7 +65,7 @@ serve(async (req) => {
     // First check the profiles table for subscription status
     const { data: profile, error: profileError } = await supabaseClient
       .from("profiles")
-      .select("subscription_status, stripe_customer_id")
+      .select("subscription_status")
       .eq("id", user.id)
       .single();
 
@@ -108,16 +108,21 @@ serve(async (req) => {
     );
 
     if (hasSuccessfulPayment) {
-      logStep("User has successful payment, updating profile");
+      logStep("User has successful payment, updating profile and stripe_subscriptions");
       
       // Update the profile to mark as lifetime
       await supabaseClient
         .from("profiles")
-        .update({
-          subscription_status: "lifetime",
-          stripe_customer_id: customerId,
-        })
+        .update({ subscription_status: "lifetime" })
         .eq("id", user.id);
+
+      // Store Stripe customer ID in secure table (upsert)
+      await supabaseClient
+        .from("stripe_subscriptions")
+        .upsert({
+          user_id: user.id,
+          stripe_customer_id: customerId,
+        }, { onConflict: 'user_id' });
 
       return new Response(JSON.stringify({ 
         hasPaid: true, 
