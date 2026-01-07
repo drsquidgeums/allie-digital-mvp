@@ -27,6 +27,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
     <div className="flex items-center gap-2">
       <BionicToggleButton />
       <TTSButton />
+      <BeelineToggleButton />
       <ToolItem
         icon={Text}
         label={t('tools.stt')}
@@ -41,7 +42,6 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
         content={<PomodoroTimer />}
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
-      <BeelineToggleButton />
       <IrlenOverlay />
       <TextTool />
       <ToolItem
