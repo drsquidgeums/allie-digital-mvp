@@ -42,6 +42,8 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
       <BeelineToggleButton />
+      <IrlenOverlay />
+      <TextTool />
       <ToolItem
         icon={Wand2}
         label="AI Simplify"
@@ -49,8 +51,6 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
         content={<Rewordify />}
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
       />
-      <IrlenOverlay />
-      <TextTool />
       <ToolItem
         icon={Sparkles}
         label="Document AI"
