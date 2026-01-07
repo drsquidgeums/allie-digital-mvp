@@ -202,33 +202,6 @@ export type Database = {
         }
         Relationships: []
       }
-      nda_agreements: {
-        Row: {
-          agreed_at: string
-          agreement_version: string
-          email: string
-          id: string
-          ip_address: string | null
-          name: string
-        }
-        Insert: {
-          agreed_at?: string
-          agreement_version?: string
-          email: string
-          id?: string
-          ip_address?: string | null
-          name: string
-        }
-        Update: {
-          agreed_at?: string
-          agreement_version?: string
-          email?: string
-          id?: string
-          ip_address?: string | null
-          name?: string
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           created_at: string
