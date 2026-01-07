@@ -115,14 +115,24 @@ const App = () => {
     );
   }
 
-  // Not authenticated - show login gate (unless dev bypass)
+  // Not authenticated - show unified auth/payment gate (unless dev bypass)
+  // This single gate handles sign-up + payment and sign-in
   if (!session && !isDevBypass) {
     return (
-      <AppProviders>
-        <Toaster />
-        <Sonner />
-        <PasswordGate onAuthenticated={handleAuthentication} />
-      </AppProviders>
+      <BrowserRouter>
+        <AppProviders>
+          <Toaster />
+          <Sonner />
+          <Routes>
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-canceled" element={<PaymentCanceled />} />
+            <Route path="/reset-password" element={
+              React.createElement(React.lazy(() => import("@/pages/ResetPassword")))
+            } />
+            <Route path="*" element={<PasswordGate onAuthenticated={handleAuthentication} />} />
+          </Routes>
+        </AppProviders>
+      </BrowserRouter>
     );
   }
 
@@ -137,8 +147,8 @@ const App = () => {
     );
   }
 
-  // Authenticated but hasn't paid - show payment gate (skip if dev bypass)
-  // But allow access to payment success/canceled pages
+  // Authenticated but hasn't paid - show payment required message
+  // This shouldn't happen often since we now require payment before sign-in completes
   if (!isDevBypass && !hasPaid) {
     return (
       <BrowserRouter>
@@ -151,7 +161,7 @@ const App = () => {
             <Route path="/reset-password" element={
               React.createElement(React.lazy(() => import("@/pages/ResetPassword")))
             } />
-            <Route path="*" element={<PaymentRequiredGate onPaymentComplete={handlePaymentComplete} />} />
+            <Route path="*" element={<PasswordGate onAuthenticated={handleAuthentication} />} />
           </Routes>
         </AppProviders>
       </BrowserRouter>
