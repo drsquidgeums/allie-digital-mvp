@@ -123,14 +123,23 @@ const App = () => {
         <AppProviders>
           <Toaster />
           <Sonner />
-          <Routes>
-            <Route path="/payment-success" element={<PaymentSuccess />} />
-            <Route path="/payment-canceled" element={<PaymentCanceled />} />
-            <Route path="/reset-password" element={
-              React.createElement(React.lazy(() => import("@/pages/ResetPassword")))
-            } />
-            <Route path="*" element={<PasswordGate onAuthenticated={handleAuthentication} />} />
-          </Routes>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              </div>
+            }
+          >
+            <Routes>
+              <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/payment-canceled" element={<PaymentCanceled />} />
+              <Route
+                path="/reset-password"
+                element={React.createElement(React.lazy(() => import("@/pages/ResetPassword")))}
+              />
+              <Route path="*" element={<PasswordGate onAuthenticated={handleAuthentication} />} />
+            </Routes>
+          </Suspense>
         </AppProviders>
       </BrowserRouter>
     );
@@ -155,14 +164,23 @@ const App = () => {
         <AppProviders>
           <Toaster />
           <Sonner />
-          <Routes>
-            <Route path="/payment-success" element={<PaymentSuccess />} />
-            <Route path="/payment-canceled" element={<PaymentCanceled />} />
-            <Route path="/reset-password" element={
-              React.createElement(React.lazy(() => import("@/pages/ResetPassword")))
-            } />
-            <Route path="*" element={<PasswordGate onAuthenticated={handleAuthentication} />} />
-          </Routes>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              </div>
+            }
+          >
+            <Routes>
+              <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/payment-canceled" element={<PaymentCanceled />} />
+              <Route
+                path="/reset-password"
+                element={React.createElement(React.lazy(() => import("@/pages/ResetPassword")))}
+              />
+              <Route path="*" element={<PasswordGate onAuthenticated={handleAuthentication} />} />
+            </Routes>
+          </Suspense>
         </AppProviders>
       </BrowserRouter>
     );
