@@ -10,6 +10,7 @@ const PaymentSuccess = () => {
   const [isVerifying, setIsVerifying] = useState(true);
   const [isVerified, setIsVerified] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [paidEmail, setPaidEmail] = useState<string | null>(null);
 
   useEffect(() => {
     const verifyPayment = async () => {
@@ -30,6 +31,11 @@ const PaymentSuccess = () => {
 
         if (data.success) {
           setIsVerified(true);
+          setPaidEmail(data.email);
+          // Store the paid email in localStorage for reference
+          if (data.email) {
+            localStorage.setItem("paid_email", data.email);
+          }
         } else {
           setError("Payment verification failed. Please contact support.");
         }
@@ -44,8 +50,11 @@ const PaymentSuccess = () => {
     verifyPayment();
   }, [searchParams]);
 
-  const handleContinue = () => {
-    navigate("/");
+  const handleSignIn = () => {
+    // Clear any stale session first
+    supabase.auth.signOut().then(() => {
+      navigate("/");
+    });
   };
 
   if (isVerifying) {
@@ -90,16 +99,27 @@ const PaymentSuccess = () => {
       <div className="text-center space-y-6 max-w-md mx-auto p-6">
         <CheckCircle className="h-16 w-16 mx-auto" style={{ color: '#22c55e' }} />
         <h1 className="text-2xl font-bold" style={{ color: '#000000' }}>Payment Successful!</h1>
-        <p style={{ color: '#6b7280' }}>
-          Thank you for your purchase. You now have lifetime access to all features.
-        </p>
+        <div className="space-y-2">
+          <p style={{ color: '#6b7280' }}>
+            Thank you for your purchase! You now have lifetime access to all features.
+          </p>
+          {paidEmail && (
+            <p style={{ color: '#374151', fontWeight: 500 }}>
+              Please sign in or create an account using: <br />
+              <span style={{ color: '#000000', fontWeight: 700 }}>{paidEmail}</span>
+            </p>
+          )}
+        </div>
         <Button 
-          onClick={handleContinue} 
+          onClick={handleSignIn} 
           className="w-full"
           style={{ backgroundColor: '#000000', color: '#ffffff' }}
         >
-          Continue to App
+          Continue to Sign In
         </Button>
+        <p className="text-xs" style={{ color: '#9ca3af' }}>
+          Use the same email address you used for payment
+        </p>
       </div>
     </div>
   );

@@ -24,6 +24,13 @@ serve(async (req) => {
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
 
+    // Create Supabase admin client to update profiles
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      { auth: { persistSession: false } }
+    );
+
     const body = await req.json();
     const { sessionId } = body;
 
@@ -42,13 +49,40 @@ serve(async (req) => {
 
     // Retrieve the checkout session
     const session = await stripe.checkout.sessions.retrieve(sanitizedSessionId);
-    logStep("Session retrieved", { status: session.payment_status, email: session.customer_email });
+    const customerEmail = session.customer_email || session.metadata?.email;
+    logStep("Session retrieved", { status: session.payment_status, email: customerEmail });
 
-    if (session.payment_status === "paid") {
+    if (session.payment_status === "paid" && customerEmail) {
+      // Update the user's profile to mark them as having lifetime access
+      const { data: profiles, error: profileError } = await supabaseAdmin
+        .from("profiles")
+        .select("id")
+        .eq("email", customerEmail.toLowerCase());
+
+      if (profileError) {
+        logStep("Error fetching profile", { error: profileError.message });
+      } else if (profiles && profiles.length > 0) {
+        // Update the profile to lifetime status
+        const { error: updateError } = await supabaseAdmin
+          .from("profiles")
+          .update({ subscription_status: "lifetime" })
+          .eq("id", profiles[0].id);
+
+        if (updateError) {
+          logStep("Error updating profile", { error: updateError.message });
+        } else {
+          logStep("Profile updated to lifetime", { profileId: profiles[0].id });
+        }
+      } else {
+        logStep("No profile found for email, user needs to sign up", { email: customerEmail });
+      }
+
+      // Store the email in localStorage via response so frontend can use it
       return new Response(JSON.stringify({ 
         success: true, 
-        email: session.customer_email || session.metadata?.email,
-        paymentStatus: session.payment_status 
+        email: customerEmail,
+        paymentStatus: session.payment_status,
+        message: "Payment verified! Please sign in with the email you used for payment."
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
