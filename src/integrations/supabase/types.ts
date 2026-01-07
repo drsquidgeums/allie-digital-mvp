@@ -169,39 +169,6 @@ export type Database = {
           },
         ]
       }
-      feedback: {
-        Row: {
-          comments: string | null
-          created_at: string
-          id: string
-          rating: number
-          usability: number
-          user_id: string | null
-          visual_appeal: number
-          would_recommend: boolean
-        }
-        Insert: {
-          comments?: string | null
-          created_at?: string
-          id?: string
-          rating: number
-          usability: number
-          user_id?: string | null
-          visual_appeal: number
-          would_recommend?: boolean
-        }
-        Update: {
-          comments?: string | null
-          created_at?: string
-          id?: string
-          rating?: number
-          usability?: number
-          user_id?: string | null
-          visual_appeal?: number
-          would_recommend?: boolean
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           created_at: string
