@@ -60,7 +60,13 @@ export const PasswordRequirements: React.FC<PasswordRequirementsProps> = ({ pass
           <span className="text-xs font-medium" style={{ color: '#374151' }}>
             Password strength
           </span>
-          <span className="text-xs font-semibold" style={{ color: strength.color }}>
+          <span 
+            className="text-xs font-bold" 
+            style={{ 
+              color: strength.color,
+              textShadow: '0 0 1px rgba(0,0,0,0.1)'
+            }}
+          >
             {strength.label}
           </span>
         </div>
