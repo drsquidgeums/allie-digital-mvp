@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { WelcomeHeader } from "../password-gate/WelcomeHeader";
 import { PaymentGate } from "./PaymentGate";
+import gatewayBackground from "@/assets/gateway-background.png";
 
 interface PaymentRequiredGateProps {
   onPaymentComplete: () => void;
@@ -150,11 +151,23 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
       style={{
         opacity: imagesLoaded ? 1 : 0,
         transition: 'opacity 0.3s ease-in-out',
-        backgroundColor: '#ffffff !important',
+        backgroundColor: '#ffffff',
         color: '#000000',
         filter: 'none',
       }}
     >
+      {/* Background image with 50% opacity */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: `url(${gatewayBackground})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: 0.5,
+          zIndex: 0,
+        }}
+      />
       <div 
         className="w-full max-w-xl space-y-8 p-8 relative z-10"
         style={{

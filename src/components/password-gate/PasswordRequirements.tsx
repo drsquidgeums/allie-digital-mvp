@@ -29,11 +29,11 @@ export const getPasswordStrength = (password: string): { score: number; label: s
   const requirements = validatePassword(password);
   const metCount = Object.values(requirements).filter(Boolean).length;
   
-  if (metCount === 0) return { score: 0, label: "Too weak", color: "#ef4444" };
-  if (metCount === 1) return { score: 20, label: "Weak", color: "#ef4444" };
-  if (metCount === 2) return { score: 40, label: "Fair", color: "#f97316" };
-  if (metCount === 3) return { score: 60, label: "Good", color: "#eab308" };
-  if (metCount === 4) return { score: 80, label: "Strong", color: "#22c55e" };
+  if (metCount === 0) return { score: 0, label: "Too weak", color: "#dc2626" };
+  if (metCount === 1) return { score: 20, label: "Weak", color: "#dc2626" };
+  if (metCount === 2) return { score: 40, label: "Fair", color: "#ea580c" };
+  if (metCount === 3) return { score: 60, label: "Good", color: "#ca8a04" };
+  if (metCount === 4) return { score: 80, label: "Strong", color: "#16a34a" };
   return { score: 100, label: "Excellent", color: "#16a34a" };
 };
 
