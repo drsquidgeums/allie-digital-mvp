@@ -87,7 +87,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     try {
       if (isSignUp) {
         const redirectUrl = `${window.location.origin}/`;
-        const { error } = await supabase.auth.signUp({
+        const { data: signUpData, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -102,18 +102,26 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         setProgress(100);
         clearInterval(interval);
         
-        toast({
-          title: "Success",
-          description: "Account created! Please check your email to verify your account, or sign in if email confirmation is disabled.",
-        });
+        // Check if email confirmation is required
+        const needsEmailConfirmation = signUpData.user && !signUpData.session;
         
-        // Try to sign in immediately (works if email confirmation is disabled)
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        
-        if (!signInError) {
+        if (needsEmailConfirmation) {
+          // Show a prominent success message for email verification
+          toast({
+            title: "✅ Sign Up Successful!",
+            description: "We've sent a verification link to your email. Please check your inbox (and spam folder) to verify your account before signing in.",
+            duration: 10000, // Show for 10 seconds
+          });
+          
+          // Switch to sign in mode
+          setIsSignUp(false);
+          setPassword("");
+        } else {
+          // Email confirmation is disabled, user is signed in immediately
+          toast({
+            title: "Success",
+            description: "Account created! Welcome!",
+          });
           onAuthenticated();
         }
       } else {
