@@ -1,5 +1,5 @@
 
-import { Timer, Text, SpellCheck, Sparkles, Bot, GraduationCap } from "lucide-react";
+import { Timer, Text, Wand2, Sparkles, Bot, GraduationCap } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { PomodoroTimer } from "../PomodoroTimer";
@@ -43,8 +43,8 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
       />
       <BeelineToggleButton />
       <ToolItem
-        icon={SpellCheck}
-        label={t('tools.rewordify')}
+        icon={Wand2}
+        label="AI Simplify"
         id="rewordify"
         content={<Rewordify />}
         popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
