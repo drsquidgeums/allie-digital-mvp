@@ -142,6 +142,10 @@ export const SpeechToText = () => {
   if (!isSupported) {
     return (
       <div className="p-4 space-y-4 animate-fade-in">
+        <div className="flex items-center gap-2">
+          <Mic className="w-4 h-4" />
+          <h3 className="font-medium">Speech to Text</h3>
+        </div>
         <div className="text-center text-muted-foreground">
           <Mic className="w-8 h-8 mx-auto mb-2 opacity-50" />
           <p>Speech recognition is not supported in your browser.</p>
@@ -153,22 +157,27 @@ export const SpeechToText = () => {
 
   return (
     <div className="p-4 space-y-4 animate-fade-in">
+      <div className="flex items-center gap-2">
+        <Mic className="w-4 h-4" />
+        <h3 className="font-medium">Speech to Text</h3>
+      </div>
+      
       <div className="flex gap-2">
         <Button
           onClick={isListening ? stopListening : startListening}
           size="sm"
           variant="outline" 
-          className="flex-1 h-9 text-xs"
+          className="text-xs flex-1"
         >
           {isListening ? (
             <>
               <MicOff className="w-3 h-3 mr-1" />
-              Stop Recording
+              Stop
             </>
           ) : (
             <>
               <Mic className="w-3 h-3 mr-1" />
-              Start Recording
+              Start
             </>
           )}
         </Button>
@@ -176,11 +185,11 @@ export const SpeechToText = () => {
           onClick={copyToClipboard}
           size="sm"
           variant="outline"
-          className="flex-1 h-9 text-xs"
+          className="text-xs flex-1"
           disabled={!transcript}
         >
           <Copy className="w-3 h-3 mr-1" />
-          Copy Text
+          Copy
         </Button>
       </div>
       
@@ -188,26 +197,27 @@ export const SpeechToText = () => {
         value={transcript}
         onChange={(e) => setTranscript(e.target.value)}
         placeholder="Your speech will appear here..."
-        className="min-h-[200px]"
+        className="w-full min-h-[80px] resize-none"
+        rows={3}
       />
       
-      <div className="flex gap-2">
-        <Button
-          onClick={clearTranscript}
-          size="sm"
-          variant="outline"
-          className="h-9 text-xs"
-          disabled={!transcript}
-        >
-          <Eraser className="w-3 h-3 mr-1" />
-          Clear
-        </Button>
-      </div>
+      <Button
+        onClick={clearTranscript}
+        size="sm"
+        variant="outline"
+        className="w-full"
+        disabled={!transcript}
+      >
+        <Eraser className="w-4 h-4 mr-2" />
+        Clear Transcript
+      </Button>
       
       {isListening && (
-        <p className="text-xs text-muted-foreground">
-          🔴 Recording... Speak now
-        </p>
+        <div className="border-2 border-primary/30 bg-primary/5 p-4 rounded-lg">
+          <p className="text-sm text-center">
+            🔴 Recording... Speak now
+          </p>
+        </div>
       )}
     </div>
   );
