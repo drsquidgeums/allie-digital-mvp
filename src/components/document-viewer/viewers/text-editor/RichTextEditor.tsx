@@ -19,6 +19,7 @@ import { useToast } from '@/hooks/use-toast';
 import { EditorToolbar } from './EditorToolbar';
 import './editor.css';
 import { initializeEditor } from '@/hooks/useEditorContent';
+import { BeelineMark } from './extensions/BeelineMark';
 
 interface RichTextEditorProps {
   initialContent?: string;
@@ -77,6 +78,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         openOnClick: true,
         linkOnPaste: true,
       }),
+      BeelineMark,
     ],
     content: initialContent,
     editable: !isReadOnly,
