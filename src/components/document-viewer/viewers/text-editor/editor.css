@@ -178,7 +178,7 @@
 
 /* Beeline Reader styles */
 .ProseMirror span[data-beeline="true"] {
-  background-image: linear-gradient(90deg, #006400, #301934) !important;
+  background-image: linear-gradient(90deg, #6B21A8, #2563EB, #92400E) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
