@@ -19,6 +19,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   const [isSignIn, setIsSignIn] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [paidEmail, setPaidEmail] = useState<string | null>(null);
+  const [signInError, setSignInError] = useState<string | null>(null);
   const { toast } = useToast();
 
   // Check if user just paid and came back
@@ -80,13 +81,10 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSignInError(null);
     
     if (!email || !password) {
-      toast({
-        title: "Error",
-        description: "Please enter both email and password.",
-        variant: "destructive",
-      });
+      setSignInError("Please enter both email and password.");
       return;
     }
 
@@ -123,18 +121,14 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       let errorMessage = "An error occurred. Please try again.";
       
       if (error.message?.includes("Invalid login credentials")) {
-        errorMessage = "Invalid email or password.";
+        errorMessage = "Invalid email or password. Please try again.";
       } else if (error.message?.includes("Email not confirmed")) {
         errorMessage = "Please check your email to confirm your account.";
       } else if (error.message) {
         errorMessage = error.message;
       }
       
-      toast({
-        title: "Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      setSignInError(errorMessage);
     } finally {
       setIsLoading(false);
       clearInterval(interval);
@@ -323,16 +317,27 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         
         <form onSubmit={handleSignIn} className="space-y-4 flex flex-col items-center w-full">
           <div className="w-[70%]">
+            {signInError && (
+              <p 
+                className="text-sm mb-3 text-center font-medium"
+                style={{ color: '#b91c1c' }}
+              >
+                {signInError}
+              </p>
+            )}
             <Input
               type="email"
               placeholder="Enter email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setSignInError(null);
+              }}
               className="w-full transition-colors mb-3"
               style={{
                 backgroundColor: 'white',
                 color: '#000000',
-                borderColor: '#d1d5db',
+                borderColor: signInError ? '#b91c1c' : '#d1d5db',
               }}
               disabled={isLoading}
             />
@@ -340,12 +345,15 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
               type="password"
               placeholder="Enter password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setSignInError(null);
+              }}
               className="w-full transition-colors"
               style={{
                 backgroundColor: 'white',
                 color: '#000000',
-                borderColor: '#d1d5db',
+                borderColor: signInError ? '#b91c1c' : '#d1d5db',
               }}
               disabled={isLoading}
             />
