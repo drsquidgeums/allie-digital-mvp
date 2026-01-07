@@ -114,16 +114,20 @@ const ResetPassword = () => {
         throw error;
       }
 
+      // Sign out after password reset so user can sign in with new password
+      await supabase.auth.signOut();
+
       toast({
         title: "Password Updated",
-        description: "Your password has been successfully reset.",
+        description: "Your password has been successfully reset. Please sign in with your new password.",
       });
 
-      // Redirect to home after successful reset
+      // Redirect to home (sign-in gate) after successful reset
       setTimeout(() => {
-        navigate("/");
+        navigate("/", { replace: true });
       }, 1500);
     } catch (error: any) {
+      console.error("Password reset error:", error);
       toast({
         title: "Error",
         description: error.message || "Failed to reset password. Please try again.",
