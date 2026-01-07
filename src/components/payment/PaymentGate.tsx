@@ -74,7 +74,7 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete }) =
       <div className="space-y-2">
         <h2 className="text-xl font-semibold">Get Lifetime Access</h2>
         <p className="text-muted-foreground">
-          One-time payment of <span className="font-bold">£10</span> for unlimited access
+          One-time payment of <span className="font-bold">£30</span> for unlimited access
         </p>
       </div>
       
@@ -120,7 +120,7 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete }) =
               Processing...
             </>
           ) : (
-            "Pay £10 for Lifetime Access"
+            "Pay £30 for Lifetime Access"
           )}
         </Button>
       </form>
