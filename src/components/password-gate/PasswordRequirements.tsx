@@ -91,9 +91,9 @@ export const PasswordRequirements: React.FC<PasswordRequirementsProps> = ({ pass
         {requirementsList.map((req, index) => (
           <li key={index} className="flex items-center gap-2 text-xs">
             {req.met ? (
-              <Check className="h-3 w-3" style={{ color: '#22c55e' }} />
+              <Check className="h-3 w-3" color="#22c55e" />
             ) : (
-              <X className="h-3 w-3" style={{ color: '#ef4444' }} />
+              <X className="h-3 w-3" color="#ef4444" />
             )}
             <span style={{ color: req.met ? '#22c55e' : '#6b7280' }}>
               {req.label}

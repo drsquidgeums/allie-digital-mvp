@@ -59,6 +59,14 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         border-color: #d1d5db !important;
       }
       
+      /* Allow SVG icons to have their own colors */
+      html.dark .password-gate svg,
+      html .password-gate svg,
+      .dark .password-gate svg,
+      .password-gate svg {
+        color: inherit !important;
+      }
+      
       html.dark .password-gate input,
       html .password-gate input,
       .dark .password-gate input,
