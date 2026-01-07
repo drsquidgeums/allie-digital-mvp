@@ -175,10 +175,6 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
-          stripe_customer_id: string | null
-          subscription_current_period_end: string | null
-          subscription_id: string | null
-          subscription_price_id: string | null
           subscription_status: string | null
           updated_at: string
         }
@@ -187,10 +183,6 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
-          stripe_customer_id?: string | null
-          subscription_current_period_end?: string | null
-          subscription_id?: string | null
-          subscription_price_id?: string | null
           subscription_status?: string | null
           updated_at?: string
         }
@@ -199,10 +191,6 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
-          stripe_customer_id?: string | null
-          subscription_current_period_end?: string | null
-          subscription_id?: string | null
-          subscription_price_id?: string | null
           subscription_status?: string | null
           updated_at?: string
         }
@@ -253,6 +241,39 @@ export type Database = {
           id?: string
           name?: string
           secret?: string
+        }
+        Relationships: []
+      }
+      stripe_subscriptions: {
+        Row: {
+          created_at: string
+          id: string
+          stripe_customer_id: string | null
+          subscription_current_period_end: string | null
+          subscription_id: string | null
+          subscription_price_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          stripe_customer_id?: string | null
+          subscription_current_period_end?: string | null
+          subscription_id?: string | null
+          subscription_price_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          stripe_customer_id?: string | null
+          subscription_current_period_end?: string | null
+          subscription_id?: string | null
+          subscription_price_id?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -372,6 +393,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      hash_ip_address: { Args: { ip_address: string }; Returns: string }
       update_session_activity: {
         Args: {
           p_ip_address?: string
