@@ -6,6 +6,7 @@ import { LoadingProgress } from "./LoadingProgress";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
+import { PasswordRequirements, isPasswordValid } from "./PasswordRequirements";
 
 interface AuthFormProps {
   onAuthenticated: () => void;
@@ -158,10 +159,10 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       return;
     }
 
-    if (password.length < 6) {
+    if (!isPasswordValid(password)) {
       toast({
         title: "Error",
-        description: "Password must be at least 6 characters.",
+        description: "Password does not meet all requirements.",
         variant: "destructive",
       });
       return;
@@ -435,34 +436,36 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           />
           <Input
             type="password"
-            placeholder="Create password (min 6 characters)"
+            placeholder="Create a strong password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full transition-colors"
             style={{
               backgroundColor: 'white',
               color: '#000000',
-              borderColor: '#d1d5db',
+              borderColor: password && !isPasswordValid(password) ? '#ef4444' : '#d1d5db',
             }}
             disabled={isLoading}
           />
+          <PasswordRequirements password={password} />
         </div>
         <Button 
           type="submit" 
           className="w-[70%] transition-colors" 
           style={{
-            backgroundColor: '#000000',
+            backgroundColor: !isPasswordValid(password) || !email ? '#9ca3af' : '#000000',
             color: '#ffffff',
-            borderColor: '#000000',
+            borderColor: !isPasswordValid(password) || !email ? '#9ca3af' : '#000000',
+            cursor: !isPasswordValid(password) || !email ? 'not-allowed' : 'pointer',
           }}
-          disabled={isLoading}
+          disabled={isLoading || !isPasswordValid(password) || !email}
           onMouseEnter={(e) => {
-            if (!isLoading) {
+            if (!isLoading && isPasswordValid(password) && email) {
               e.currentTarget.style.backgroundColor = '#1f1f1f';
             }
           }}
           onMouseLeave={(e) => {
-            if (!isLoading) {
+            if (!isLoading && isPasswordValid(password) && email) {
               e.currentTarget.style.backgroundColor = '#000000';
             }
           }}

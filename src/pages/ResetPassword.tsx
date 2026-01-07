@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
+import { PasswordRequirements, isPasswordValid } from "@/components/password-gate/PasswordRequirements";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -94,10 +95,10 @@ const ResetPassword = () => {
       return;
     }
 
-    if (password.length < 6) {
+    if (!isPasswordValid(password)) {
       toast({
         title: "Error",
-        description: "Password must be at least 6 characters.",
+        description: "Password does not meet all requirements.",
         variant: "destructive",
       });
       return;
@@ -182,10 +183,11 @@ const ResetPassword = () => {
               style={{
                 backgroundColor: 'white',
                 color: '#000000',
-                borderColor: '#d1d5db',
+                borderColor: password && !isPasswordValid(password) ? '#ef4444' : '#d1d5db',
               }}
               disabled={isLoading}
             />
+            <PasswordRequirements password={password} />
           </div>
           <div>
             <Input
@@ -197,19 +199,25 @@ const ResetPassword = () => {
               style={{
                 backgroundColor: 'white',
                 color: '#000000',
-                borderColor: '#d1d5db',
+                borderColor: confirmPassword && password !== confirmPassword ? '#ef4444' : '#d1d5db',
               }}
               disabled={isLoading}
             />
+            {confirmPassword && password !== confirmPassword && (
+              <p className="text-xs mt-1" style={{ color: '#ef4444' }}>
+                Passwords do not match
+              </p>
+            )}
           </div>
           <Button
             type="submit"
             className="w-full"
             style={{
-              backgroundColor: '#000000',
+              backgroundColor: !isPasswordValid(password) || password !== confirmPassword ? '#9ca3af' : '#000000',
               color: '#ffffff',
+              cursor: !isPasswordValid(password) || password !== confirmPassword ? 'not-allowed' : 'pointer',
             }}
-            disabled={isLoading}
+            disabled={isLoading || !isPasswordValid(password) || password !== confirmPassword}
           >
             {isLoading ? "Updating..." : "Update Password"}
           </Button>
