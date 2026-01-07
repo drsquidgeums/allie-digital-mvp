@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
+import stripeLogo from "@/assets/stripe-logo.png";
 
 interface PaymentGateProps {
   onPaymentComplete: () => void;
@@ -125,8 +126,9 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete }) =
         </Button>
       </form>
       
-      <p className="text-xs text-muted-foreground">
-        Secure payment powered by Stripe
+      <p className="text-xs text-muted-foreground flex items-center justify-center gap-1.5">
+        <span>Secure payment powered by</span>
+        <img src={stripeLogo} alt="Stripe" className="h-4" />
       </p>
     </div>
   );

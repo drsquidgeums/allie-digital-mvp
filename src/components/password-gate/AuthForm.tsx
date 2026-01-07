@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { PasswordRequirements, isPasswordValid } from "./PasswordRequirements";
+import stripeLogo from "@/assets/stripe-logo.png";
 
 interface AuthFormProps {
   onAuthenticated: () => void;
@@ -481,8 +482,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         </Button>
       </form>
       
-      <p className="text-xs" style={{ color: '#9ca3af' }}>
-        Secure payment powered by Stripe
+      <p className="text-xs flex items-center justify-center gap-1.5" style={{ color: '#9ca3af' }}>
+        <span>Secure payment powered by</span>
+        <img src={stripeLogo} alt="Stripe" className="h-4" style={{ display: 'inline-block' }} />
       </p>
       
       <a
