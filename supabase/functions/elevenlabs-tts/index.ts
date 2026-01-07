@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { encode as base64Encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -85,11 +86,9 @@ serve(async (req) => {
       throw new Error(`ElevenLabs TTS error: ${response.status}`);
     }
 
-    // Get the audio as array buffer and convert to base64
+    // Get the audio as array buffer and convert to base64 using Deno's encoding library
     const audioBuffer = await response.arrayBuffer();
-    const base64Audio = btoa(
-      String.fromCharCode(...new Uint8Array(audioBuffer))
-    );
+    const base64Audio = base64Encode(audioBuffer);
 
     console.log("TTS generated successfully");
 
