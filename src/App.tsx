@@ -8,7 +8,7 @@ import { PasswordGate } from "@/components/PasswordGate";
 import { AppRoutes } from "@/components/app/AppRoutes";
 import { AppLogo } from "@/components/app/AppLogo";
 import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
-import { FeedbackPrompt } from "@/components/community/FeedbackPrompt";
+
 import { SecurityProvider } from "@/components/security/SecurityProvider";
 import { StudyBuddy } from "@/components/study-buddy/StudyBuddy";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,7 +35,6 @@ const App = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
-  const [showFeedbackPrompt, setShowFeedbackPrompt] = useState(false);
 
   const { hasPaid, isLoading: isCheckingPayment, refetch: refetchPayment } = usePaymentStatus(user?.id);
 
@@ -96,13 +95,6 @@ const App = () => {
     refetchPayment();
   };
 
-  const handleCloseFeedbackPrompt = () => {
-    setShowFeedbackPrompt(false);
-  };
-
-  const handlePostponeFeedback = () => {
-    setShowFeedbackPrompt(false);
-  };
 
   // Show loading state while checking auth
   if (isLoading) {
@@ -202,14 +194,6 @@ const App = () => {
               <PomodoroTaskListener />
               <AppRoutes />
             </Suspense>
-            
-            {/* Feedback Prompt - Only show when manually triggered */}
-            <FeedbackPrompt
-              isOpen={showFeedbackPrompt}
-              onClose={handleCloseFeedbackPrompt}
-              onPostpone={handlePostponeFeedback}
-              userInfo={userInfo}
-            />
             
             {/* AI Study Buddy - NEW FEATURE */}
             <StudyBuddy />
