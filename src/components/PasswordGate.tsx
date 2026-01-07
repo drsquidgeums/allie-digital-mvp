@@ -194,8 +194,8 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
           color: '#666666',
         }}
       >
-        <div className="flex items-center justify-center gap-1.5 mb-1" style={{ fontSize: '10px' }}>
-          <span>Powered by</span>
+        <div className="flex items-center justify-center gap-1.5 mb-1">
+          <span style={{ fontSize: '12px', lineHeight: 1 }}>Powered by</span>
           <img src={lovableLogo} alt="Lovable" className="h-3" style={{ display: 'inline-block' }} />
         </div>
         <span className="text-sm">© Allie Digital Ltd. All Rights Reserved {new Date().getFullYear()}</span>
