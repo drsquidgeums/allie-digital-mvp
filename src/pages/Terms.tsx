@@ -31,7 +31,7 @@ const Terms = () => {
       
       {/* Logo - top right */}
       <div className="absolute top-6 right-6 z-10">
-        <img src={allieLogo} alt="Allie Digital" className="h-8" />
+        <img src={allieLogo} alt="Allie Digital" className="h-12" />
       </div>
       
       {/* Content */}
