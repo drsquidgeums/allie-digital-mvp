@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { LoadingProgress } from "./LoadingProgress";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
@@ -21,6 +22,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [paidEmail, setPaidEmail] = useState<string | null>(null);
   const [signInError, setSignInError] = useState<string | null>(null);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const { toast } = useToast();
 
   // Check if user just paid and came back
@@ -163,6 +165,15 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       toast({
         title: "Error",
         description: "Password does not meet all requirements.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!acceptedTerms) {
+      toast({
+        title: "Error",
+        description: "Please accept the Terms of Service and Privacy Policy.",
         variant: "destructive",
       });
       return;
@@ -448,24 +459,64 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
             disabled={isLoading}
           />
           <PasswordRequirements password={password} />
+          
+          <div className="flex items-start space-x-2 mt-4">
+            <Checkbox
+              id="terms"
+              checked={acceptedTerms}
+              onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
+              className="mt-0.5"
+              style={{
+                borderColor: '#d1d5db',
+                backgroundColor: acceptedTerms ? '#000000' : 'white',
+              }}
+              disabled={isLoading}
+            />
+            <label
+              htmlFor="terms"
+              className="text-xs leading-tight cursor-pointer"
+              style={{ color: '#666666' }}
+            >
+              I agree to the{' '}
+              <a
+                href="/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:opacity-70"
+                style={{ color: '#000000' }}
+              >
+                Terms of Service
+              </a>{' '}
+              and{' '}
+              <a
+                href="/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:opacity-70"
+                style={{ color: '#000000' }}
+              >
+                Privacy Policy
+              </a>
+            </label>
+          </div>
         </div>
         <Button 
           type="submit" 
           className="w-[70%] transition-colors" 
           style={{
-            backgroundColor: !isPasswordValid(password) || !email ? '#9ca3af' : '#000000',
+            backgroundColor: !isPasswordValid(password) || !email || !acceptedTerms ? '#9ca3af' : '#000000',
             color: '#ffffff',
-            borderColor: !isPasswordValid(password) || !email ? '#9ca3af' : '#000000',
-            cursor: !isPasswordValid(password) || !email ? 'not-allowed' : 'pointer',
+            borderColor: !isPasswordValid(password) || !email || !acceptedTerms ? '#9ca3af' : '#000000',
+            cursor: !isPasswordValid(password) || !email || !acceptedTerms ? 'not-allowed' : 'pointer',
           }}
-          disabled={isLoading || !isPasswordValid(password) || !email}
+          disabled={isLoading || !isPasswordValid(password) || !email || !acceptedTerms}
           onMouseEnter={(e) => {
-            if (!isLoading && isPasswordValid(password) && email) {
+            if (!isLoading && isPasswordValid(password) && email && acceptedTerms) {
               e.currentTarget.style.backgroundColor = '#1f1f1f';
             }
           }}
           onMouseLeave={(e) => {
-            if (!isLoading && isPasswordValid(password) && email) {
+            if (!isLoading && isPasswordValid(password) && email && acceptedTerms) {
               e.currentTarget.style.backgroundColor = '#000000';
             }
           }}
