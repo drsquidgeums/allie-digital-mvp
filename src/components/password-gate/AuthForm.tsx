@@ -21,11 +21,21 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   const [isSignIn, setIsSignIn] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [paidEmail, setPaidEmail] = useState<string | null>(null);
+  const [passwordResetSuccess, setPasswordResetSuccess] = useState(false);
   const [signInError, setSignInError] = useState<string | null>(null);
   const { toast } = useToast();
 
-  // Check if user just paid and came back
+  // Check if user just paid and came back, or just reset their password
   useEffect(() => {
+    // Check for password reset success first (takes priority)
+    const resetSuccess = localStorage.getItem("password_reset_success");
+    if (resetSuccess) {
+      setPasswordResetSuccess(true);
+      setIsSignIn(true);
+      localStorage.removeItem("password_reset_success");
+      return; // Don't check for paid email if password was just reset
+    }
+    
     const storedPaidEmail = localStorage.getItem("paid_email");
     if (storedPaidEmail) {
       setPaidEmail(storedPaidEmail);
@@ -303,7 +313,21 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   if (isSignIn) {
     return (
       <div className="space-y-4 flex flex-col items-center">
-        {paidEmail && (
+        {passwordResetSuccess && (
+          <div 
+            className="w-[70%] p-4 rounded-lg border-2 text-center mb-2"
+            style={{ 
+              backgroundColor: '#f0fdf4', 
+              borderColor: '#22c55e' 
+            }}
+          >
+            <p className="font-semibold text-sm" style={{ color: '#166534' }}>
+              ✓ Password successfully reset! Sign in below.
+            </p>
+          </div>
+        )}
+        
+        {paidEmail && !passwordResetSuccess && (
           <div 
             className="w-[70%] p-4 rounded-lg border-2 text-center mb-2"
             style={{ 
