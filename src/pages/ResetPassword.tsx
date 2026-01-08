@@ -117,6 +117,10 @@ const ResetPassword = () => {
 
       // Sign out after password reset so user can sign in with new password
       await supabase.auth.signOut();
+      
+      // Clear any paid_email flag and set password reset success flag
+      localStorage.removeItem("paid_email");
+      localStorage.setItem("password_reset_success", "true");
 
       toast({
         title: "Password Updated",
