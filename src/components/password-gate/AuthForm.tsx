@@ -460,21 +460,17 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           />
           <PasswordRequirements password={password} />
           
-          <div className="flex items-center space-x-2 mt-4">
+          <div className="flex items-center gap-2 mt-4">
             <Checkbox
               id="terms"
               checked={acceptedTerms}
               onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
-              className="h-3 w-3 shrink-0 rounded-[2px] border data-[state=checked]:bg-transparent data-[state=checked]:text-black"
-              style={{
-                borderColor: '#666666',
-                backgroundColor: 'transparent',
-              }}
+              className="h-4 w-4 shrink-0 rounded-sm border border-gray-400 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
               disabled={isLoading}
             />
             <label
               htmlFor="terms"
-              className="text-xs leading-none cursor-pointer"
+              className="text-xs leading-tight cursor-pointer"
               style={{ color: '#666666' }}
             >
               I accept the{' '}
@@ -485,7 +481,17 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
                 className="underline hover:opacity-70"
                 style={{ color: '#2563eb' }}
               >
-                terms and conditions
+                Terms of Service
+              </a>
+              {' '}and{' '}
+              <a
+                href="/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:opacity-70"
+                style={{ color: '#2563eb' }}
+              >
+                Privacy Policy
               </a>
             </label>
           </div>
