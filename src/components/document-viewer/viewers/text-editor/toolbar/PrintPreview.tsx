@@ -118,7 +118,7 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
           </Tooltip>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[80vh]">
+      <DialogContent className="max-w-3xl w-[90vw] max-h-[85vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>Print Preview - {documentTitle}</DialogTitle>
           <DialogDescription>
@@ -126,23 +126,20 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
           </DialogDescription>
         </DialogHeader>
         
-        <div className="flex-1 overflow-auto border rounded-lg bg-white">
+        <div className="flex-1 overflow-auto border rounded-lg bg-white min-h-0">
           <div 
-            className="p-8 prose prose-sm max-w-none"
+            className="p-6 sm:p-8 prose prose-sm max-w-none"
             style={{
               fontFamily: '"Times New Roman", serif',
               lineHeight: '1.6',
-              minHeight: '11in',
-              width: '8.5in',
-              margin: '0 auto',
+              minHeight: '400px',
               background: 'white',
-              boxShadow: '0 0 10px rgba(0,0,0,0.1)'
             }}
           >
-            <h1 className="text-2xl font-bold mb-6">{documentTitle}</h1>
+            <h1 className="text-2xl font-bold mb-6 text-black">{documentTitle}</h1>
             <div 
               dangerouslySetInnerHTML={{ __html: editor.getHTML() }}
-              className="prose-p:mb-4 prose-headings:mt-6 prose-headings:mb-3"
+              className="prose-p:mb-4 prose-headings:mt-6 prose-headings:mb-3 text-black"
             />
           </div>
         </div>
