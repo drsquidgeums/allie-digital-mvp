@@ -426,7 +426,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     <div className="space-y-4 flex flex-col items-center">
       <div className="text-center mb-2">
         <p className="text-sm" style={{ color: '#666666' }}>
-          One-time payment of <span className="font-bold">£30</span> for unlimited lifetime access
+          One off payment of <span className="font-bold">£30</span> for unlimited lifetime access
         </p>
       </div>
       
