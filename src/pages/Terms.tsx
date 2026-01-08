@@ -15,7 +15,7 @@ const Terms = () => {
         color: '#000000',
       }}
     >
-      {/* Background image - fixed position with blue hue */}
+      {/* Background image - fixed position */}
       <div
         style={{
           position: 'fixed',
@@ -26,7 +26,6 @@ const Terms = () => {
           backgroundAttachment: 'fixed',
           opacity: 0.3,
           zIndex: 0,
-          filter: 'hue-rotate(200deg) saturate(1.2)',
         }}
       />
       
