@@ -26,6 +26,13 @@ const ResetPassword = () => {
     // 1) Implicit flow tokens in hash (#access_token=...&type=recovery)
     // 2) PKCE/code flow (?code=...)
     const checkSession = async () => {
+      // If password was just reset successfully, show success state immediately
+      if (localStorage.getItem("password_reset_success")) {
+        setIsSuccess(true);
+        setIsChecking(false);
+        return;
+      }
+
       try {
         const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
         const searchParams = new URLSearchParams(window.location.search);
