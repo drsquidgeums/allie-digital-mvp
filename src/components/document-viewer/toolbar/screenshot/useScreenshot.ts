@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { toPng } from 'html-to-image';
 import { useToast } from '@/hooks/use-toast';
 import { useSecurityContext } from '@/components/security/SecurityProvider';
@@ -11,13 +11,59 @@ interface CaptureArea {
   height: number;
 }
 
+export type CaptureMode = 'selection' | 'fullpage';
+
 export const useScreenshot = () => {
   const { toast } = useToast();
   const [isSelecting, setIsSelecting] = useState(false);
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [showAnnotator, setShowAnnotator] = useState(false);
   const { enableAntiScreenCapture } = useSecurityContext();
 
-  const startSelection = () => {
-    // If anti-screen capture is enabled, don't allow screenshots
+  const captureFullPage = useCallback(async () => {
+    if (enableAntiScreenCapture) {
+      toast({
+        title: "Screenshot Disabled",
+        description: "Screenshots are disabled due to security settings.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      toast({
+        title: "Capturing screenshot",
+        description: "Please wait while we capture the full page...",
+      });
+
+      const scale = window.devicePixelRatio;
+      
+      const dataUrl = await toPng(document.body, {
+        quality: 1.0,
+        pixelRatio: scale,
+        filter: (node) => {
+          const element = node as HTMLElement;
+          return (
+            !element.id?.includes('screenshot-overlay') &&
+            !element.id?.includes('selection-box') &&
+            !element.classList?.contains('radix-toast')
+          );
+        },
+      });
+
+      setCapturedImage(dataUrl);
+      setShowAnnotator(true);
+    } catch (error) {
+      console.error('Error taking full page screenshot:', error);
+      toast({
+        title: "Error",
+        description: "Failed to capture screenshot",
+        variant: "destructive",
+      });
+    }
+  }, [enableAntiScreenCapture, toast]);
+
+  const startSelection = useCallback(() => {
     if (enableAntiScreenCapture) {
       toast({
         title: "Screenshot Disabled",
@@ -30,7 +76,7 @@ export const useScreenshot = () => {
     setIsSelecting(true);
     toast({
       title: "Selection mode active",
-      description: "Click and drag to select an area to capture",
+      description: "Click and drag to select an area to capture. Press ESC to cancel.",
     });
 
     // Create selection overlay
@@ -115,7 +161,7 @@ export const useScreenshot = () => {
         document.removeEventListener('keydown', handleEscKey);
       };
     };
-  };
+  }, [enableAntiScreenCapture, toast]);
 
   const captureScreenshot = async (area: CaptureArea) => {
     try {
@@ -173,15 +219,8 @@ export const useScreenshot = () => {
         );
 
         const croppedDataUrl = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.download = 'screenshot.png';
-        link.href = croppedDataUrl;
-        link.click();
-
-        toast({
-          title: "Screenshot captured",
-          description: "Your screenshot has been downloaded",
-        });
+        setCapturedImage(croppedDataUrl);
+        setShowAnnotator(true);
       }
     } catch (error) {
       console.error('Error taking screenshot:', error);
@@ -195,9 +234,64 @@ export const useScreenshot = () => {
     }
   };
 
+  const downloadImage = useCallback((dataUrl: string) => {
+    const link = document.createElement('a');
+    link.download = `screenshot-${new Date().toISOString().slice(0, 10)}.png`;
+    link.href = dataUrl;
+    link.click();
+
+    toast({
+      title: "Screenshot saved",
+      description: "Your screenshot has been downloaded",
+    });
+    
+    setShowAnnotator(false);
+    setCapturedImage(null);
+  }, [toast]);
+
+  const copyToClipboard = useCallback(async (dataUrl: string) => {
+    try {
+      // Convert data URL to blob
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'image/png': blob
+        })
+      ]);
+
+      toast({
+        title: "Copied to clipboard",
+        description: "Screenshot copied to your clipboard",
+      });
+      
+      setShowAnnotator(false);
+      setCapturedImage(null);
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+      toast({
+        title: "Copy failed",
+        description: "Could not copy to clipboard. Try downloading instead.",
+        variant: "destructive",
+      });
+    }
+  }, [toast]);
+
+  const closeAnnotator = useCallback(() => {
+    setShowAnnotator(false);
+    setCapturedImage(null);
+  }, []);
+
   return {
     isSelecting,
     enableAntiScreenCapture,
-    startSelection
+    startSelection,
+    captureFullPage,
+    capturedImage,
+    showAnnotator,
+    downloadImage,
+    copyToClipboard,
+    closeAnnotator
   };
 };
