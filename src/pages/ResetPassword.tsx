@@ -4,8 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import { PasswordRequirements, isPasswordValid } from "@/components/password-gate/PasswordRequirements";
+
+const gatewayBackground = "/images/gateway-background.png";
+const lovableLogo = "/images/lovable-logo.png";
+const allieLogo = "/images/allie-digital-logo.png";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -13,8 +18,8 @@ const ResetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isValidSession, setIsValidSession] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
+  const [isSuccess, setIsSuccess] = useState(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Supports both Supabase reset link formats:
@@ -122,13 +127,8 @@ const ResetPassword = () => {
       localStorage.removeItem("paid_email");
       localStorage.setItem("password_reset_success", "true");
 
-      toast({
-        title: "Password Updated",
-        description: "Your password has been successfully reset. Please sign in with your new password.",
-      });
-
-      // Clear any hash/query params and redirect to home immediately
-      window.location.href = window.location.origin;
+      // Show success state
+      setIsSuccess(true);
     } catch (error: any) {
       console.error("Password reset error:", error);
       toast({
@@ -140,39 +140,124 @@ const ResetPassword = () => {
     }
   };
 
+  const handleReturnToSignIn = () => {
+    window.location.href = window.location.origin;
+  };
+
+  // Shared layout wrapper
+  const PageWrapper = ({ children }: { children: React.ReactNode }) => (
+    <div 
+      className="min-h-screen flex flex-col items-center justify-between relative overflow-hidden py-8 px-4 sm:px-6 lg:px-8"
+      style={{
+        backgroundColor: '#ffffff',
+        color: '#000000',
+      }}
+    >
+      {/* Background image - fixed position */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundImage: `url(${gatewayBackground})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+          opacity: 0.3,
+          zIndex: 0,
+        }}
+      />
+      
+      {/* Logo - top right */}
+      <div className="absolute top-6 right-6 z-10">
+        <img src={allieLogo} alt="Allie Digital" className="h-[130px]" />
+      </div>
+      
+      {/* Content */}
+      <div className="max-w-md w-full relative z-10 flex-grow flex flex-col justify-center">
+        {children}
+      </div>
+      
+      {/* Footer */}
+      <footer 
+        className="text-center z-10 flex-shrink-0 mt-12"
+        style={{ color: '#666666' }}
+      >
+        <div className="flex items-center justify-center gap-1.5 mb-1">
+          <span style={{ fontSize: '12px', lineHeight: 1 }}>Powered by</span>
+          <img src={lovableLogo} alt="Lovable" className="h-3" style={{ display: 'inline-block' }} />
+        </div>
+        <span className="text-sm">© Allie Digital Ltd. All Rights Reserved {new Date().getFullYear()}</span>
+      </footer>
+    </div>
+  );
+
   if (isChecking) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
-      </div>
+      <PageWrapper>
+        <div className="flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
+        </div>
+      </PageWrapper>
     );
   }
 
-  if (!isValidSession) {
+  // Success state - password was reset successfully
+  if (isSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
-        <div className="text-center p-8 max-w-md">
-          <h1 className="text-2xl font-bold mb-4" style={{ color: '#000000' }}>Invalid or Expired Link</h1>
+      <PageWrapper>
+        <div className="text-center p-8">
+          <div 
+            className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: '#22c55e' }}
+          >
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold mb-4" style={{ color: '#000000' }}>Password Successfully Reset</h1>
           <p className="mb-6" style={{ color: '#666666' }}>
-            This password reset link is invalid or has expired. Please request a new one.
+            Your password has been updated. Please return to sign in to access your account with your new password.
           </p>
           <Button
-            onClick={() => navigate("/")}
+            onClick={handleReturnToSignIn}
+            className="w-full"
             style={{
               backgroundColor: '#000000',
               color: '#ffffff',
             }}
           >
-            Back to Login
+            Return to Sign In
           </Button>
         </div>
-      </div>
+      </PageWrapper>
+    );
+  }
+
+  if (!isValidSession) {
+    return (
+      <PageWrapper>
+        <div className="text-center p-8">
+          <h1 className="text-2xl font-bold mb-4" style={{ color: '#000000' }}>Invalid or Expired Link</h1>
+          <p className="mb-6" style={{ color: '#666666' }}>
+            This password reset link is invalid or has expired. Please request a new one from the sign in page.
+          </p>
+          <Button
+            onClick={handleReturnToSignIn}
+            style={{
+              backgroundColor: '#000000',
+              color: '#ffffff',
+            }}
+          >
+            Back to Sign In
+          </Button>
+        </div>
+      </PageWrapper>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
-      <div className="w-full max-w-md p-8">
+    <PageWrapper>
+      <div className="w-full p-8">
         <h1 className="text-2xl font-bold text-center mb-6" style={{ color: '#000000' }}>
           Set New Password
         </h1>
@@ -227,7 +312,7 @@ const ResetPassword = () => {
           </Button>
         </form>
       </div>
-    </div>
+    </PageWrapper>
   );
 };
 

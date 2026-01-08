@@ -187,24 +187,45 @@ const App = () => {
   return (
     <BrowserRouter>
       <AppProviders>
-        <SecurityProvider>
-          <div className="app-container">
-            <AppLogo />
-            <Toaster />
-            <Sonner />
-            <Suspense fallback={
-              <div className="flex items-center justify-center h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-              </div>
-            }>
-              <PomodoroTaskListener />
-              <AppRoutes />
-            </Suspense>
-            
-            {/* AI Study Buddy - NEW FEATURE */}
-            <StudyBuddy />
-          </div>
-        </SecurityProvider>
+        <Routes>
+          {/* Reset password should render standalone, outside the main app layout */}
+          <Route
+            path="/reset-password"
+            element={
+              <Suspense fallback={
+                <div className="flex items-center justify-center h-screen">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                </div>
+              }>
+                {React.createElement(React.lazy(() => import("@/pages/ResetPassword")))}
+              </Suspense>
+            }
+          />
+          {/* Main app with layout */}
+          <Route
+            path="*"
+            element={
+              <SecurityProvider>
+                <div className="app-container">
+                  <AppLogo />
+                  <Toaster />
+                  <Sonner />
+                  <Suspense fallback={
+                    <div className="flex items-center justify-center h-screen">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    </div>
+                  }>
+                    <PomodoroTaskListener />
+                    <AppRoutes />
+                  </Suspense>
+                  
+                  {/* AI Study Buddy - NEW FEATURE */}
+                  <StudyBuddy />
+                </div>
+              </SecurityProvider>
+            }
+          />
+        </Routes>
       </AppProviders>
     </BrowserRouter>
   );
