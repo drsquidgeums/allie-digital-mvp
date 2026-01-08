@@ -223,15 +223,14 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           description: "Complete your payment to activate your account.",
         });
 
-        // Store the email for post-payment verification
-        localStorage.setItem("paid_email", email);
-        
-        // Open checkout in new tab
+        // Open checkout in new tab - email will be stored ONLY after successful payment verification
         window.open(data.url, "_blank");
         
-        // Switch to sign-in mode with instructions
-        setPaidEmail(email);
-        setIsSignIn(true);
+        // Show message that user should complete payment then return
+        toast({
+          title: "Complete payment in the new tab",
+          description: "After payment, you'll be redirected back here to sign in.",
+        });
       } else {
         throw new Error("No checkout URL received");
       }
