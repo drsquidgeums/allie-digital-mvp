@@ -465,10 +465,10 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
               id="terms"
               checked={acceptedTerms}
               onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
-              className="h-4 w-4 shrink-0 border-2"
+              className="h-4 w-4 shrink-0 border-2 bg-white data-[state=checked]:bg-black"
               style={{
                 borderColor: '#9ca3af',
-                backgroundColor: 'white',
+                backgroundColor: acceptedTerms ? '#000000' : '#ffffff',
               }}
               disabled={isLoading}
             />
