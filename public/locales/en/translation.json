@@ -55,6 +55,17 @@
     "selectLanguage": "Select Language",
     "languageChanged": "Application language changed to {{language}}",
     "languageChangeError": "Failed to change language. Please try again.",
+    "account": {
+      "title": "Account",
+      "email": "Email",
+      "memberSince": "Member Since",
+      "plan": "Plan",
+      "lifetimeAccess": "Lifetime Access",
+      "noSubscription": "No Active Plan",
+      "viewBilling": "View Billing History",
+      "notLoggedIn": "Please log in to access billing",
+      "billingError": "Unable to open billing portal. Please try again."
+    },
     "accessibility": {
       "title": "Accessibility",
       "screenReader": "Screen Reader Support",

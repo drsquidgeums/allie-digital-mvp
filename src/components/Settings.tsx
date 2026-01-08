@@ -2,6 +2,7 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { AccountSettings } from "./settings/AccountSettings";
 import { LanguageSettings } from "./settings/LanguageSettings";
 import { AccessibilitySettings } from "./settings/AccessibilitySettings";
 import { NotificationSettings } from "./settings/NotificationSettings";
@@ -27,6 +28,7 @@ export const Settings = () => {
         <p className="text-muted-foreground">{t('settings.description')}</p>
         <Separator />
         <div className="space-y-6">
+          <AccountSettings />
           <LanguageSettings />
           <AccessibilitySettings />
           <DisplaySettings />
