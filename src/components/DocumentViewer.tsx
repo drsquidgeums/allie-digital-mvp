@@ -88,10 +88,6 @@ export const DocumentViewer = ({
       <ErrorBoundary>
         {/* Document Toolbar Section */}
         <DocumentViewerToolbar
-          onUpload={handleUpload}
-          onDownload={() => handleDownload(displayFile)}
-          onDelete={handleDelete}
-          hasFile={!!displayFile}
           documentContent={documentContent}
           documentName={documentName}
         />
