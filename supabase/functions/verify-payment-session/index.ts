@@ -86,6 +86,17 @@ serve(async (req) => {
     const customerEmail = session.customer_email || session.metadata?.email;
     logStep("Session retrieved", { status: session.payment_status, email: customerEmail });
 
+    // Security check: Verify the session email matches the authenticated user's email
+    if (customerEmail && user.email && customerEmail.toLowerCase() !== user.email.toLowerCase()) {
+      logStep("Email mismatch", { sessionEmail: customerEmail, userEmail: user.email });
+      return new Response(JSON.stringify({ 
+        error: "Session email does not match authenticated user" 
+      }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     if (session.payment_status === "paid" && customerEmail) {
       // Update the user's profile to mark them as having lifetime access
       const { data: profiles, error: profileError } = await supabaseAdmin

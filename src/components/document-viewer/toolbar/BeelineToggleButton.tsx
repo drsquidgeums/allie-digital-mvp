@@ -5,6 +5,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { useTranslation } from "react-i18next";
 import { useEditorContent } from "@/hooks/useEditorContent";
 import { useToast } from "@/hooks/use-toast";
+import DOMPurify from 'dompurify';
 
 // Beeline gradient colors are defined in editor.css
 
@@ -15,8 +16,11 @@ const applyBeelineToHTML = (html: string): string => {
     return html;
   }
 
+  // Sanitize input HTML to prevent XSS
+  const sanitizedHtml = DOMPurify.sanitize(html);
+  
   const parser = new DOMParser();
-  const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+  const doc = parser.parseFromString(`<div>${sanitizedHtml}</div>`, 'text/html');
   const container = doc.body.firstChild as Element;
   
   if (!container) {
@@ -45,7 +49,8 @@ const applyBeelineToHTML = (html: string): string => {
   };
   
   Array.from(container.childNodes).forEach(child => processNode(child));
-  return container.innerHTML;
+  // Sanitize output to ensure no XSS in modified content
+  return DOMPurify.sanitize(container.innerHTML);
 };
 
 // Remove beeline formatting from HTML
@@ -55,8 +60,11 @@ const removeBeelineFormatting = (html: string): string => {
     return html;
   }
 
+  // Sanitize input HTML to prevent XSS
+  const sanitizedHtml = DOMPurify.sanitize(html);
+  
   const parser = new DOMParser();
-  const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+  const doc = parser.parseFromString(`<div>${sanitizedHtml}</div>`, 'text/html');
   const container = doc.body.firstChild as Element;
   
   if (!container) {
