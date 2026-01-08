@@ -15,7 +15,7 @@ const SecurityContext = createContext<SecurityContextType>({
 export const useSecurityContext = () => useContext(SecurityContext);
 
 export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [enableAntiScreenCapture, setEnableAntiScreenCapture] = useState<boolean>(true);
+  const [enableAntiScreenCapture, setEnableAntiScreenCapture] = useState<boolean>(false);
 
   // Use the anti-screen capture hook
   useAntiScreenCapture(enableAntiScreenCapture);
