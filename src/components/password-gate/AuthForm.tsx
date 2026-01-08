@@ -516,7 +516,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           href="/terms"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm hover:opacity-70 transition-colors"
+          className="text-sm underline hover:opacity-70 transition-colors"
           style={{ color: '#6b7280' }}
         >
           Terms of Service
@@ -525,7 +525,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           href="/privacy"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm hover:opacity-70 transition-colors"
+          className="text-sm underline hover:opacity-70 transition-colors"
           style={{ color: '#6b7280' }}
         >
           Privacy Policy
