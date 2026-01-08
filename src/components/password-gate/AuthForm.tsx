@@ -460,21 +460,21 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           />
           <PasswordRequirements password={password} />
           
-          <div className="flex items-start space-x-2 mt-4">
+          <div className="flex items-center space-x-2 mt-4">
             <Checkbox
               id="terms"
               checked={acceptedTerms}
               onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
-              className="mt-0.5"
+              className="h-4 w-4 shrink-0 border-2"
               style={{
-                borderColor: '#d1d5db',
-                backgroundColor: acceptedTerms ? '#000000' : 'white',
+                borderColor: '#9ca3af',
+                backgroundColor: 'white',
               }}
               disabled={isLoading}
             />
             <label
               htmlFor="terms"
-              className="text-xs leading-tight cursor-pointer"
+              className="text-xs leading-none cursor-pointer"
               style={{ color: '#666666' }}
             >
               I agree to the{' '}
