@@ -182,7 +182,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         filter: 'none',
       }}
     >
-      {/* Background image - fixed position with blue hue */}
+      {/* Background image - fixed position so it doesn't move */}
       <div
         style={{
           position: 'fixed',
@@ -193,7 +193,6 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
           backgroundAttachment: 'fixed',
           opacity: 0.3,
           zIndex: 0,
-          filter: 'hue-rotate(200deg) saturate(1.2)',
         }}
       />
       
