@@ -170,6 +170,16 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
           zIndex: 0,
         }}
       />
+      {/* Blue tint overlay */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: '#3b82f6',
+          opacity: 0.15,
+          zIndex: 0,
+        }}
+      />
       <div 
         className="w-full max-w-xl space-y-8 p-8 relative z-10"
         style={{

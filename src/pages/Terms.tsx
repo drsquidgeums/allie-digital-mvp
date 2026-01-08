@@ -28,6 +28,16 @@ const Terms = () => {
           zIndex: 0,
         }}
       />
+      {/* Blue tint overlay */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: '#3b82f6',
+          opacity: 0.15,
+          zIndex: 0,
+        }}
+      />
       
       {/* Logo - top right */}
       <div className="absolute top-6 right-6 z-10">
