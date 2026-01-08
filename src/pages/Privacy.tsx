@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 const gatewayBackground = "/images/gateway-background.png";
 const lovableLogo = "/images/lovable-logo.png";
+const allieLogo = "/images/allie-digital-logo.png";
 
 const Privacy = () => {
   return (
@@ -27,6 +28,11 @@ const Privacy = () => {
           zIndex: 0,
         }}
       />
+      
+      {/* Logo - top right */}
+      <div className="absolute top-6 right-6 z-10">
+        <img src={allieLogo} alt="Allie Digital" className="h-8" />
+      </div>
       
       {/* Content */}
       <div className="max-w-3xl w-full relative z-10 flex-grow">
@@ -178,7 +184,7 @@ const Privacy = () => {
       
       {/* Footer */}
       <footer 
-        className="text-center z-10 flex-shrink-0 mt-8" 
+        className="text-center z-10 flex-shrink-0 mt-12"
         style={{ color: '#666666' }}
       >
         <div className="flex items-center justify-center gap-1.5 mb-1">
