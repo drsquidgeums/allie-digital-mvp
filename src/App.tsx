@@ -17,6 +17,8 @@ import { usePaymentStatus } from "@/hooks/usePaymentStatus";
 import { PaymentRequiredGate } from "@/components/payment/PaymentRequiredGate";
 import PaymentSuccess from "@/pages/PaymentSuccess";
 import PaymentCanceled from "@/pages/PaymentCanceled";
+import Terms from "@/pages/Terms";
+import Privacy from "@/pages/Privacy";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -125,6 +127,8 @@ const App = () => {
             <Routes>
               <Route path="/payment-success" element={<PaymentSuccess />} />
               <Route path="/payment-canceled" element={<PaymentCanceled />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route
                 path="/reset-password"
                 element={React.createElement(React.lazy(() => import("@/pages/ResetPassword")))}
@@ -166,6 +170,8 @@ const App = () => {
             <Routes>
               <Route path="/payment-success" element={<PaymentSuccess />} />
               <Route path="/payment-canceled" element={<PaymentCanceled />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route
                 path="/reset-password"
                 element={React.createElement(React.lazy(() => import("@/pages/ResetPassword")))}
