@@ -77,7 +77,27 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         color: #000000 !important;
         border-color: #d1d5db !important;
       }
-      
+
+      /* Radix/shadcn Checkbox (it's a button[role=checkbox]) */
+      html.dark .password-gate button[role="checkbox"],
+      html .password-gate button[role="checkbox"],
+      .dark .password-gate button[role="checkbox"],
+      .password-gate button[role="checkbox"] {
+        background-color: #ffffff !important;
+        border-color: #9ca3af !important;
+        color: #000000 !important;
+        opacity: 1 !important;
+      }
+
+      html.dark .password-gate button[role="checkbox"][data-state="checked"],
+      html .password-gate button[role="checkbox"][data-state="checked"],
+      .dark .password-gate button[role="checkbox"][data-state="checked"],
+      .password-gate button[role="checkbox"][data-state="checked"] {
+        background-color: #000000 !important;
+        border-color: #000000 !important;
+        color: #ffffff !important; /* makes the Check icon visible */
+      }
+
        html.dark .password-gate button[type="submit"],
        html .password-gate button[type="submit"],
        .dark .password-gate button[type="submit"],
@@ -95,20 +115,20 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
          color: #ffffff !important;
        }
 
-       html.dark .password-gate button[type="button"],
-       html .password-gate button[type="button"],
-       .dark .password-gate button[type="button"],
-       .password-gate button[type="button"] {
+       html.dark .password-gate button[type="button"]:not([role="checkbox"]),
+       html .password-gate button[type="button"]:not([role="checkbox"]),
+       .dark .password-gate button[type="button"]:not([role="checkbox"]),
+       .password-gate button[type="button"]:not([role="checkbox"]) {
          background-color: transparent !important;
          border: none !important;
          padding: 0 !important;
          box-shadow: none !important;
        }
 
-       html.dark .password-gate button[type="button"]:hover,
-       html .password-gate button[type="button"]:hover,
-       .dark .password-gate button[type="button"]:hover,
-       .password-gate button[type="button"]:hover {
+       html.dark .password-gate button[type="button"]:not([role="checkbox"]):hover,
+       html .password-gate button[type="button"]:not([role="checkbox"]):hover,
+       .dark .password-gate button[type="button"]:not([role="checkbox"]):hover,
+       .password-gate button[type="button"]:not([role="checkbox"]):hover {
          background-color: transparent !important;
        }
       
