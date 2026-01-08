@@ -195,6 +195,16 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
           zIndex: 0,
         }}
       />
+      {/* Blue tint overlay */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: '#3b82f6',
+          opacity: 0.15,
+          zIndex: 0,
+        }}
+      />
       
       {/* Spacer for top */}
       <div className="flex-shrink-0" />
