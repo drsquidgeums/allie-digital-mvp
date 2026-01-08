@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useEditorContent } from '@/hooks/useEditorContent';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import DOMPurify from 'dompurify';
 
 /**
  * Applies bionic reading formatting to a single word
@@ -29,9 +30,12 @@ const processBionicWord = (word: string): string => {
  * Processes text content within HTML elements without destroying formatting
  */
 const applyBionicToHTML = (html: string): string => {
+  // Sanitize input HTML to prevent XSS
+  const sanitizedHtml = DOMPurify.sanitize(html);
+  
   // Create a temporary container to parse HTML
   const container = document.createElement('div');
-  container.innerHTML = html;
+  container.innerHTML = sanitizedHtml;
   
   // Process all text nodes
   const processNode = (node: Node) => {
@@ -68,16 +72,20 @@ const applyBionicToHTML = (html: string): string => {
   };
   
   processNode(container);
-  return container.innerHTML;
+  // Sanitize output to ensure no XSS in modified content
+  return DOMPurify.sanitize(container.innerHTML);
 };
 
 /**
  * Removes bionic formatting (strong tags) while preserving the text content and other formatting
  */
 const removeBionicFormatting = (html: string): string => {
+  // Sanitize input HTML to prevent XSS
+  const sanitizedHtml = DOMPurify.sanitize(html);
+  
   // Create a temporary container to parse HTML
   const container = document.createElement('div');
-  container.innerHTML = html;
+  container.innerHTML = sanitizedHtml;
   
   // Find all strong elements and unwrap them
   const strongElements = container.querySelectorAll('strong');
