@@ -460,15 +460,16 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           />
           <PasswordRequirements password={password} />
           
-          <div className="flex items-center space-x-2 mt-4">
+          <div className="flex items-start space-x-2 mt-4">
             <Checkbox
               id="terms"
               checked={acceptedTerms}
               onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
-              className="h-4 w-4 shrink-0 border-2 bg-white data-[state=checked]:bg-black"
+              className="h-3.5 w-3.5 shrink-0 rounded-sm border border-gray-400 data-[state=checked]:border-black"
               style={{
                 borderColor: '#9ca3af',
                 backgroundColor: acceptedTerms ? '#000000' : '#ffffff',
+                marginTop: '1px',
               }}
               disabled={isLoading}
             />
