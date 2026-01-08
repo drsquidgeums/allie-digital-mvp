@@ -143,7 +143,7 @@ const Terms = () => {
           
           <section className="space-y-3">
             <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>13. Governing Law</h2>
-            <p>These Terms are governed by the laws of England and Wales. Any disputes shall be resolved in the courts of England and Wales.</p>
+            <p>These Terms are governed by the laws of Northern Ireland and Great Britain. Any disputes shall be resolved in the courts of Northern Ireland and Great Britain.</p>
           </section>
           
           <section className="space-y-3">
