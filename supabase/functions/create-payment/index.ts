@@ -67,7 +67,7 @@ serve(async (req) => {
       customer_email: customerId ? undefined : sanitizedEmail,
       line_items: [
         {
-          price: "price_1Sn08SI6zpynUGIH7i6XXpoC", // £30 Lifetime Access - UPDATE THIS PRICE ID IN STRIPE
+          price: "price_1SnHUGI6zpynUGIHog1UzIhu", // £30 Lifetime Access
           quantity: 1,
         },
       ],
