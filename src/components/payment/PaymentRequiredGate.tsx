@@ -157,7 +157,7 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
         filter: 'none',
       }}
     >
-      {/* Background image - fixed position so it doesn't move */}
+      {/* Background image - fixed position with blue hue */}
       <div
         style={{
           position: 'fixed',
@@ -168,16 +168,7 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
           backgroundAttachment: 'fixed',
           opacity: 0.3,
           zIndex: 0,
-        }}
-      />
-      {/* Blue tint overlay */}
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: '#3b82f6',
-          opacity: 0.15,
-          zIndex: 0,
+          filter: 'hue-rotate(200deg) saturate(1.2)',
         }}
       />
       <div 

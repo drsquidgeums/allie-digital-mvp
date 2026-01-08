@@ -15,7 +15,7 @@ const Privacy = () => {
         color: '#000000',
       }}
     >
-      {/* Background image - fixed position */}
+      {/* Background image - fixed position with blue hue */}
       <div
         style={{
           position: 'fixed',
@@ -26,16 +26,7 @@ const Privacy = () => {
           backgroundAttachment: 'fixed',
           opacity: 0.3,
           zIndex: 0,
-        }}
-      />
-      {/* Blue tint overlay */}
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: '#3b82f6',
-          opacity: 0.15,
-          zIndex: 0,
+          filter: 'hue-rotate(200deg) saturate(1.2)',
         }}
       />
       
