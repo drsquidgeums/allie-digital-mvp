@@ -64,6 +64,15 @@ export const AccountSettings = () => {
 
       if (error) throw error;
 
+      if (data?.error) {
+        if (data.error.includes('No Stripe customer found')) {
+          toast.error(t('settings.account.noStripeCustomer', 'No billing history available. Your payment may have been processed externally.'));
+        } else {
+          throw new Error(data.error);
+        }
+        return;
+      }
+
       if (data?.url) {
         window.open(data.url, '_blank');
       }
