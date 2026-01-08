@@ -12,22 +12,31 @@
   color: hsl(var(--accent-foreground));
 }
 
-button[data-state="open"],
+button[data-state="open"]:not(.music-button),
 .selected,
 .active,
-button[aria-expanded="true"],
+button[aria-expanded="true"]:not(.music-button),
 button[data-state="on"] {
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
 }
 
 /* Ensure icons are visible in selected state for all color modes */
-button[data-state="open"] svg,
+button[data-state="open"]:not(.music-button) svg,
 .selected svg,
 .active svg,
-button[aria-expanded="true"] svg,
+button[aria-expanded="true"]:not(.music-button) svg,
 button[data-state="on"] svg {
   color: hsl(var(--primary-foreground));
+}
+
+/* Music button keeps its own styling when open */
+button.music-button[data-state="open"] {
+  background-color: hsl(var(--background));
+}
+
+button.music-button[data-state="open"] svg.music-icon {
+  color: hsl(var(--primary));
 }
 
 .dark button[data-state="open"],
