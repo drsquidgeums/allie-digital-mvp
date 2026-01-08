@@ -460,16 +460,15 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           />
           <PasswordRequirements password={password} />
           
-          <div className="flex items-start space-x-2 mt-4">
+          <div className="flex items-center space-x-2 mt-4">
             <Checkbox
               id="terms"
               checked={acceptedTerms}
               onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
-              className="h-3.5 w-3.5 shrink-0 rounded-sm border border-gray-400 data-[state=checked]:border-black"
+              className="h-3 w-3 shrink-0 rounded-[2px] border data-[state=checked]:bg-transparent data-[state=checked]:text-black"
               style={{
-                borderColor: '#9ca3af',
-                backgroundColor: acceptedTerms ? '#000000' : '#ffffff',
-                marginTop: '1px',
+                borderColor: '#666666',
+                backgroundColor: 'transparent',
               }}
               disabled={isLoading}
             />
@@ -478,25 +477,15 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
               className="text-xs leading-none cursor-pointer"
               style={{ color: '#666666' }}
             >
-              I agree to the{' '}
+              I accept the{' '}
               <a
                 href="/terms"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline hover:opacity-70"
-                style={{ color: '#000000' }}
+                style={{ color: '#2563eb' }}
               >
-                Terms of Service
-              </a>{' '}
-              and{' '}
-              <a
-                href="/privacy"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:opacity-70"
-                style={{ color: '#000000' }}
-              >
-                Privacy Policy
+                terms and conditions
               </a>
             </label>
           </div>
