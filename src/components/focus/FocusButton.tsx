@@ -44,23 +44,29 @@ export const FocusButton = () => {
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
           onClick={handleToggle}
           className={cn(
-            "h-9 w-9 relative",
-            isActive && "bg-red-500 text-white hover:bg-red-600",
-            !isActive && "hover:bg-accent hover:text-accent-foreground"
+            "h-9 w-9 relative bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+            isActive && "bg-primary text-primary-foreground ring-2 ring-primary hover:bg-primary/90"
           )}
           aria-label={isActive ? "Exit focus mode" : "Enter focus mode"}
         >
           <Focus className="h-4 w-4" />
           {isActive && (
-            <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
+            <div 
+              className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"
+              role="status"
+              aria-label="Focus mode active"
+            />
           )}
         </Button>
       </TooltipTrigger>
-      <TooltipContent side="bottom" align="center">
+      <TooltipContent 
+        side="bottom"
+        className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+      >
         {isActive ? "Exit focus mode" : "Enter focus mode"}
       </TooltipContent>
     </Tooltip>
