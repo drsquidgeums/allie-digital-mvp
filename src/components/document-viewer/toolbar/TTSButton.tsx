@@ -150,9 +150,14 @@ export const TTSButton = () => {
       </TooltipTrigger>
       <TooltipContent 
         side="bottom"
-        className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
+        className="bg-popover text-popover-foreground px-3 py-2 text-sm max-w-48 text-center"
       >
-        {isPlaying ? 'Stop reading' : (t('tools.tts') || 'Read selected text')}
+        {isPlaying ? 'Stop reading' : (
+          <div className="flex flex-col gap-0.5">
+            <span className="font-medium">{t('tools.tts') || 'Read Aloud'}</span>
+            <span className="text-xs text-muted-foreground">Highlight text first</span>
+          </div>
+        )}
       </TooltipContent>
     </Tooltip>
   );
