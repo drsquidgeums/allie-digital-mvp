@@ -24,6 +24,6 @@ export const WelcomeContent: React.FC<WelcomeContentProps> = ({
       <p className="relative z-20 whitespace-nowrap text-lg text-black" style={{
       color: '#000000 !important',
       textShadow: 'none !important'
-    }} aria-describedby="welcome-heading">Sign in or sign up below to access the Web Application</p>
+    }} aria-describedby="welcome-heading">Fill in the details below to sign up or sign in.</p>
     </div>;
 };
