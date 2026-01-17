@@ -32,7 +32,8 @@
     "submitting": "Submitting...",
     "success": "Support ticket submitted successfully!",
     "error": "Failed to submit support ticket. Please try again.",
-    "validationError": "Please fill in all fields"
+    "validationError": "Please fill in all fields",
+    "notice": "Please note: Allie.ai is an open source, self-funded platform. Your support request may take up to 7 working days for a response. Thank you for your patience!"
   },
   "tools": {
     "pomodoro": "Pomodoro Timer",

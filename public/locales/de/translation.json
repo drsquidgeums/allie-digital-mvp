@@ -32,7 +32,8 @@
     "submitting": "Wird gesendet...",
     "success": "Support-Ticket erfolgreich gesendet!",
     "error": "Fehler beim Senden des Support-Tickets. Bitte versuchen Sie es erneut.",
-    "validationError": "Bitte füllen Sie alle Felder aus"
+    "validationError": "Bitte füllen Sie alle Felder aus",
+    "notice": "Bitte beachten Sie: Allie.ai ist eine Open-Source, selbstfinanzierte Plattform. Ihre Support-Anfrage kann bis zu 7 Werktage für eine Antwort benötigen. Vielen Dank für Ihre Geduld!"
   },
   "tools": {
     "pomodoro": "Pomodoro-Timer",

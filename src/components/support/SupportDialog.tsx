@@ -149,6 +149,10 @@ export const SupportDialog = ({ open, onOpenChange }: SupportDialogProps) => {
               disabled={isSubmitting}
             />
           </div>
+
+          <div className="rounded-md bg-muted/50 border border-border p-3 text-sm text-muted-foreground">
+            <p>{t("support.notice", "Please note: Allie.ai is an open source, self-funded platform. Your support request may take up to 7 working days for a response. Thank you for your patience!")}</p>
+          </div>
           
           <div className="flex justify-end gap-2">
             <Button

@@ -31,7 +31,8 @@
     "submitting": "Envoi en cours...",
     "success": "Ticket d'assistance soumis avec succès !",
     "error": "Échec de l'envoi du ticket d'assistance. Veuillez réessayer.",
-    "validationError": "Veuillez remplir tous les champs"
+    "validationError": "Veuillez remplir tous les champs",
+    "notice": "Veuillez noter : Allie.ai est une plateforme open source et autofinancée. Votre demande d'assistance peut prendre jusqu'à 7 jours ouvrables pour recevoir une réponse. Merci de votre patience !"
   },
   "tools": {
     "pomodoro": "Minuteur Pomodoro",
