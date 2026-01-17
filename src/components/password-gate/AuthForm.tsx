@@ -514,8 +514,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       <div className="flex items-center justify-center gap-8 mt-2">
         <a
           href="/terms"
-          target="_blank"
-          rel="noopener noreferrer"
           className="text-sm underline hover:opacity-70 transition-colors"
           style={{ color: '#6b7280' }}
         >
@@ -523,8 +521,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         </a>
         <a
           href="/privacy"
-          target="_blank"
-          rel="noopener noreferrer"
           className="text-sm underline hover:opacity-70 transition-colors"
           style={{ color: '#6b7280' }}
         >
