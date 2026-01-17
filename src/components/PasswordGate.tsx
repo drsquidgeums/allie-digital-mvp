@@ -180,6 +180,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         backgroundColor: '#ffffff',
         color: '#000000',
         filter: 'none',
+        fontFamily: "'Segoe UI', system-ui, sans-serif",
       }}
     >
       {/* Background image - fixed position so it doesn't move */}
