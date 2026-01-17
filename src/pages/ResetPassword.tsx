@@ -193,7 +193,7 @@ const ResetPassword = () => {
           <span style={{ fontSize: '12px', lineHeight: 1 }}>Powered by</span>
           <img src={lovableLogo} alt="Lovable" className="h-3" style={{ display: 'inline-block' }} />
         </div>
-        <span className="text-sm">© Allie Digital Ltd. All Rights Reserved {new Date().getFullYear()}</span>
+        <span className="text-sm">Allie Digital CIC © All Rights Reserved 2026</span>
       </footer>
     </div>
   );
