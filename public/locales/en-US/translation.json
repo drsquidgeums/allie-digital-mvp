@@ -9,7 +9,27 @@
     "mindMap": "Mind Map",
     "settings": "Settings",
     "community": "Community Hub",
-    "myFiles": "My Files"
+    "myFiles": "My Files",
+    "support": "Support"
+  },
+  "support": {
+    "title": "Contact Support",
+    "description": "Submit a support ticket and we'll get back to you as soon as possible.",
+    "subject": "Subject",
+    "subjectPlaceholder": "Brief summary of your issue",
+    "issueType": "Issue Type",
+    "selectIssueType": "Select issue type",
+    "bugReport": "Bug Report",
+    "featureRequest": "Feature Request",
+    "accountIssue": "Account / Payment Issue",
+    "generalQuestion": "General Question",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Please describe your issue in detail...",
+    "submit": "Submit Ticket",
+    "submitting": "Submitting...",
+    "success": "Support ticket submitted successfully!",
+    "error": "Failed to submit support ticket. Please try again.",
+    "validationError": "Please fill in all fields"
   },
   "tools": {
     "pomodoro": "Pomodoro Timer",
