@@ -39,7 +39,7 @@ const Privacy = () => {
         <Link 
           to="/" 
           className="inline-flex items-center text-sm mb-8 hover:opacity-70 transition-opacity"
-          style={{ color: '#666666' }}
+          style={{ color: '#000000' }}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Home
@@ -47,8 +47,8 @@ const Privacy = () => {
         
         <h1 className="text-3xl font-bold mb-8" style={{ color: '#000000' }}>Privacy Policy</h1>
         
-        <div className="prose prose-sm max-w-none space-y-6" style={{ color: '#4b5563' }}>
-          <p className="text-sm" style={{ color: '#6b7280' }}>Last updated: January 2026</p>
+        <div className="prose prose-sm max-w-none space-y-6" style={{ color: '#000000' }}>
+          <p className="text-sm" style={{ color: '#000000' }}>Last updated: January 2026</p>
           
           <section className="space-y-3">
             <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>1. Introduction</h2>
@@ -185,7 +185,7 @@ const Privacy = () => {
       {/* Footer */}
       <footer 
         className="text-center z-10 flex-shrink-0 mt-12"
-        style={{ color: '#666666' }}
+        style={{ color: '#000000' }}
       >
         <div className="flex items-center justify-center gap-1.5 mb-1">
           <span style={{ fontSize: '12px', lineHeight: 1 }}>Powered by</span>
