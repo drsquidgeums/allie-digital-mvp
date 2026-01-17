@@ -515,14 +515,14 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         <a
           href="/terms"
           className="text-sm underline hover:opacity-70 transition-colors"
-          style={{ color: '#6b7280' }}
+          style={{ color: '#000000' }}
         >
           Terms of Service
         </a>
         <a
           href="/privacy"
           className="text-sm underline hover:opacity-70 transition-colors"
-          style={{ color: '#6b7280' }}
+          style={{ color: '#000000' }}
         >
           Privacy Policy
         </a>
