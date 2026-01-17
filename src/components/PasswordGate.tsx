@@ -216,6 +216,9 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
           color: '#666666',
         }}
       >
+        <div className="mb-3">
+          <img src="/images/open-source-logo.png" alt="Open Source" className="h-12 mx-auto" />
+        </div>
         <div className="flex items-center justify-center gap-1.5 mb-1">
           <span style={{ fontSize: '12px', lineHeight: 1 }}>Powered by</span>
           <img src={lovableLogo} alt="Lovable" className="h-3" style={{ display: 'inline-block' }} />
