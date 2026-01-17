@@ -7,7 +7,7 @@ interface WelcomeContentProps {
 export const WelcomeContent: React.FC<WelcomeContentProps> = ({
   colors
 }) => {
-  return <div className="text-center relative p-6 text-black" role="region" aria-labelledby="welcome-heading" style={{
+  return <div className="text-center relative pt-1 pb-6 px-6 text-black" role="region" aria-labelledby="welcome-heading" style={{
     backgroundColor: 'transparent !important',
     color: '#000000 !important'
   }}>
