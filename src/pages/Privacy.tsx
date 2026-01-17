@@ -147,7 +147,7 @@ const Privacy = () => {
               <li><strong>Object:</strong> Object to certain processing of your data</li>
               <li><strong>Withdraw Consent:</strong> Where processing is based on consent</li>
             </ul>
-            <p>To exercise these rights, please contact us through the application.</p>
+            <p>To exercise these rights, please contact us at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a>.</p>
           </section>
           
           <section className="space-y-3">
@@ -177,7 +177,7 @@ const Privacy = () => {
           
           <section className="space-y-3">
             <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>13. Contact Us</h2>
-            <p>If you have questions about this Privacy Policy or wish to exercise your data rights, please contact us through the support features within the application.</p>
+            <p>If you have questions about this Privacy Policy or wish to exercise your data rights, please contact us at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a>.</p>
           </section>
         </div>
       </div>
@@ -191,7 +191,7 @@ const Privacy = () => {
           <span style={{ fontSize: '12px', lineHeight: 1 }}>Powered by</span>
           <img src={lovableLogo} alt="Lovable" className="h-3" style={{ display: 'inline-block' }} />
         </div>
-        <span className="text-sm">© Allie Digital Ltd. All Rights Reserved {new Date().getFullYear()}</span>
+        <span className="text-sm">Allie Digital CIC © All Rights Reserved 2026</span>
       </footer>
     </div>
   );
