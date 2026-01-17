@@ -15,6 +15,9 @@
   "support": {
     "title": "Contactar soporte",
     "description": "Envía un ticket de soporte y te responderemos lo antes posible.",
+    "email": "Tu correo electrónico",
+    "emailPlaceholder": "tu@email.com",
+    "invalidEmail": "Por favor ingresa una dirección de correo válida",
     "subject": "Asunto",
     "subjectPlaceholder": "Breve resumen de tu problema",
     "issueType": "Tipo de problema",

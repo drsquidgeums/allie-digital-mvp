@@ -15,6 +15,9 @@
   "support": {
     "title": "Support kontaktieren",
     "description": "Senden Sie ein Support-Ticket und wir melden uns so schnell wie möglich bei Ihnen.",
+    "email": "Ihre E-Mail",
+    "emailPlaceholder": "ihre@email.com",
+    "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
     "subject": "Betreff",
     "subjectPlaceholder": "Kurze Zusammenfassung Ihres Problems",
     "issueType": "Problemtyp",

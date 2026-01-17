@@ -14,6 +14,9 @@
   "support": {
     "title": "Contacter l'assistance",
     "description": "Soumettez un ticket d'assistance et nous vous répondrons dès que possible.",
+    "email": "Votre e-mail",
+    "emailPlaceholder": "votre@email.com",
+    "invalidEmail": "Veuillez entrer une adresse e-mail valide",
     "subject": "Sujet",
     "subjectPlaceholder": "Bref résumé de votre problème",
     "issueType": "Type de problème",

@@ -15,6 +15,9 @@
   "support": {
     "title": "Contact Support",
     "description": "Submit a support ticket and we'll get back to you as soon as possible.",
+    "email": "Your Email",
+    "emailPlaceholder": "your@email.com",
+    "invalidEmail": "Please enter a valid email address",
     "subject": "Subject",
     "subjectPlaceholder": "Brief summary of your issue",
     "issueType": "Issue Type",
