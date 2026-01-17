@@ -13,6 +13,7 @@ const Privacy = () => {
       style={{
         backgroundColor: '#ffffff',
         color: '#000000',
+        fontFamily: "'Segoe UI', system-ui, sans-serif",
       }}
     >
       {/* Background image - fixed position */}
