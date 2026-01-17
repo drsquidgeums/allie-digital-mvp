@@ -9,7 +9,27 @@
     "settings": "Einstellungen",
     "community": "Community Hub",
     "toolbox": "Werkzeugkasten",
-    "myFiles": "Meine Dateien"
+    "myFiles": "Meine Dateien",
+    "support": "Support"
+  },
+  "support": {
+    "title": "Support kontaktieren",
+    "description": "Senden Sie ein Support-Ticket und wir melden uns so schnell wie möglich bei Ihnen.",
+    "subject": "Betreff",
+    "subjectPlaceholder": "Kurze Zusammenfassung Ihres Problems",
+    "issueType": "Problemtyp",
+    "selectIssueType": "Problemtyp auswählen",
+    "bugReport": "Fehlerbericht",
+    "featureRequest": "Funktionsanfrage",
+    "accountIssue": "Konto- / Zahlungsproblem",
+    "generalQuestion": "Allgemeine Frage",
+    "descriptionLabel": "Beschreibung",
+    "descriptionPlaceholder": "Bitte beschreiben Sie Ihr Problem im Detail...",
+    "submit": "Ticket senden",
+    "submitting": "Wird gesendet...",
+    "success": "Support-Ticket erfolgreich gesendet!",
+    "error": "Fehler beim Senden des Support-Tickets. Bitte versuchen Sie es erneut.",
+    "validationError": "Bitte füllen Sie alle Felder aus"
   },
   "tools": {
     "pomodoro": "Pomodoro-Timer",

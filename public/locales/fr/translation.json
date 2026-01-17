@@ -8,7 +8,27 @@
     "mindMap": "Carte mentale",
     "settings": "Paramètres",
     "community": "Centre communautaire",
-    "myFiles": "Mes fichiers"
+    "myFiles": "Mes fichiers",
+    "support": "Assistance"
+  },
+  "support": {
+    "title": "Contacter l'assistance",
+    "description": "Soumettez un ticket d'assistance et nous vous répondrons dès que possible.",
+    "subject": "Sujet",
+    "subjectPlaceholder": "Bref résumé de votre problème",
+    "issueType": "Type de problème",
+    "selectIssueType": "Sélectionner le type de problème",
+    "bugReport": "Rapport de bug",
+    "featureRequest": "Demande de fonctionnalité",
+    "accountIssue": "Problème de compte / paiement",
+    "generalQuestion": "Question générale",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Veuillez décrire votre problème en détail...",
+    "submit": "Soumettre le ticket",
+    "submitting": "Envoi en cours...",
+    "success": "Ticket d'assistance soumis avec succès !",
+    "error": "Échec de l'envoi du ticket d'assistance. Veuillez réessayer.",
+    "validationError": "Veuillez remplir tous les champs"
   },
   "tools": {
     "pomodoro": "Minuteur Pomodoro",

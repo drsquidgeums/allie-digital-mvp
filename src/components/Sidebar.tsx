@@ -1,10 +1,13 @@
-
 import React, { useRef, useState } from "react";
 import { SidebarLogo } from "./sidebar/SidebarLogo";
 import { SidebarNavigation } from "./sidebar/SidebarNavigation";
 import { SidebarTools } from "./sidebar/SidebarTools";
 import { SidebarContent } from "./sidebar/SidebarContent";
 import { ThemeToggle } from "./ThemeToggle";
+import { SidebarButton } from "./sidebar/SidebarButton";
+import { SupportDialog } from "./support/SupportDialog";
+import { Headset } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface SidebarProps {
   onColorChange: (color: string) => void;
@@ -13,7 +16,9 @@ interface SidebarProps {
 export const Sidebar = React.memo(({ 
   onColorChange
 }: SidebarProps) => {
+  const { t } = useTranslation();
   const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
+  const [supportDialogOpen, setSupportDialogOpen] = useState(false);
   
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
@@ -69,9 +74,17 @@ export const Sidebar = React.memo(({
         onColorChange={onColorChange}
       />
 
-      <div className="absolute bottom-4 left-4">
+      <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
+        <SidebarButton
+          icon={Headset}
+          label={t("navigation.support", "Support")}
+          isActive={false}
+          onClick={() => setSupportDialogOpen(true)}
+        />
         <ThemeToggle />
       </div>
+      
+      <SupportDialog open={supportDialogOpen} onOpenChange={setSupportDialogOpen} />
     </div>
   );
 });
