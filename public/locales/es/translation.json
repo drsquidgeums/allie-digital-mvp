@@ -32,7 +32,8 @@
     "submitting": "Enviando...",
     "success": "¡Ticket de soporte enviado exitosamente!",
     "error": "Error al enviar el ticket de soporte. Por favor intenta de nuevo.",
-    "validationError": "Por favor completa todos los campos"
+    "validationError": "Por favor completa todos los campos",
+    "notice": "Nota: Allie.ai es una plataforma de código abierto y autofinanciada. Tu solicitud de soporte puede tardar hasta 7 días hábiles en recibir respuesta. ¡Gracias por tu paciencia!"
   },
   "tools": {
     "pomodoro": "Temporizador Pomodoro",
