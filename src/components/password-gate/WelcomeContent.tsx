@@ -15,15 +15,11 @@ export const WelcomeContent: React.FC<WelcomeContentProps> = ({
         <StarburstAnimation colors={colors} />
         <DustParticles colors={colors} />
       </div>
-      <h1 id="welcome-heading" className="text-3xl font-bold mb-3 relative z-20 text-black" style={{
+      <h1 id="welcome-heading" className="text-3xl font-bold relative z-20 text-black" style={{
       color: '#000000 !important',
       textShadow: 'none !important'
     }}>
         Allie.ai
       </h1>
-      <p className="relative z-20 whitespace-nowrap text-lg text-black" style={{
-      color: '#000000 !important',
-      textShadow: 'none !important'
-    }} aria-describedby="welcome-heading">Fill in the details below to sign up or if you have an account click the sign in link.</p>
     </div>;
 };
