@@ -529,7 +529,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       </div>
       
       <div className="text-center mt-2">
-        <p className="text-xs" style={{ color: '#666666' }}>
+        <p className="text-base" style={{ color: '#666666' }}>
           Need enterprise licensing?{' '}
           <a
             href="mailto:alliedigital@pm.me?subject=Enterprise%20Licensing%20Inquiry"
