@@ -217,7 +217,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
         }}
       >
         <div className="mb-3">
-          <img src="/images/open-source-logo.png" alt="Open Source" className="h-12 mx-auto" />
+          <img src="/images/open-source-logo.png" alt="Open Source" className="h-[60px] mx-auto" />
         </div>
         <div className="flex items-center justify-center gap-1.5 mb-1">
           <span style={{ fontSize: '12px', lineHeight: 1 }}>Powered by</span>
