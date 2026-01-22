@@ -224,6 +224,19 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
 
       if (error) throw error;
 
+      // Check if user already has payment (duplicate prevention)
+      if (data?.error === "ALREADY_PAID") {
+        clearInterval(interval);
+        setProgress(0);
+        toast({
+          title: "Account already exists",
+          description: data.message || "This email already has access. Please sign in or reset your password.",
+          variant: "destructive",
+        });
+        setIsSignIn(true);
+        return;
+      }
+
       if (data?.url) {
         setProgress(100);
         clearInterval(interval);
@@ -241,6 +254,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           title: "Complete payment in the new tab",
           description: "After payment, you'll be redirected back here to sign in.",
         });
+      } else if (data?.error) {
+        throw new Error(data.message || data.error);
       } else {
         throw new Error("No checkout URL received");
       }
