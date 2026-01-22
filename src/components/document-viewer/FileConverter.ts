@@ -54,13 +54,35 @@ export async function extractTextFromFile(file: File): Promise<string> {
     case 'pdf':
       return extractTextFromPdf(file);
     case 'docx':
-      const html = await convertDocxToHtml(file);
-      return stripHtmlTags(html);
+      // Return HTML to preserve formatting (bold, italic, lists, etc.)
+      return await convertDocxToHtml(file);
     case 'txt':
       return readTextFile(file);
     case 'html':
       // For HTML files, preserve the HTML content instead of stripping tags
       return await readTextFile(file);
+    default:
+      throw new Error('Unsupported file type for text extraction');
+  }
+}
+
+/**
+ * Extract plain text only (strips formatting) - use when you need just the text
+ */
+export async function extractPlainTextFromFile(file: File): Promise<string> {
+  const fileType = getFileType(file);
+  
+  switch (fileType) {
+    case 'pdf':
+      return extractTextFromPdf(file);
+    case 'docx':
+      const html = await convertDocxToHtml(file);
+      return stripHtmlTags(html);
+    case 'txt':
+      return readTextFile(file);
+    case 'html':
+      const htmlContent = await readTextFile(file);
+      return stripHtmlTags(htmlContent);
     default:
       throw new Error('Unsupported file type for text extraction');
   }

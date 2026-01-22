@@ -4,6 +4,7 @@ import RichTextEditor from '../text-editor/RichTextEditor';
 import { extractTextFromFile } from '../../FileConverter';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
+import { useEditorPersistence } from '@/hooks/useEditorPersistence';
 
 interface RichTextEditorWrapperProps {
   file?: File | null;
@@ -25,20 +26,24 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
   const [documentTitle, setDocumentTitle] = useState<string>('Untitled Document');
   const [isEditingTitle, setIsEditingTitle] = useState<boolean>(false);
   const { toast } = useToast();
+  const { persistFile, getPersistedFile } = useEditorPersistence();
   
-  // Load content from file or URL
+  // Load content from file, URL, or persisted state
   useEffect(() => {
     const loadContent = async () => {
       setIsLoading(true);
       
       try {
         if (file) {
-          // Extract text from the file
-          const extractedText = await extractTextFromFile(file);
-          // Process content to preserve structure
-          const processedContent = processDocumentContent(extractedText, file.name);
+          // Extract content from the file (now preserves HTML formatting for DOCX)
+          const extractedContent = await extractTextFromFile(file);
+          // Process content to ensure proper structure
+          const processedContent = processDocumentContent(extractedContent, file.name);
           setContent(processedContent);
           setDocumentTitle(file.name);
+          
+          // Persist for navigation
+          persistFile(file, processedContent, url);
           
           // Notify parent component that content is loaded
           if (onContentLoaded) {
@@ -50,19 +55,29 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
           const text = await response.text();
           const fileName = new URL(url).pathname.split('/').pop() || 'document';
           
-          console.log('RichTextEditorWrapper - Raw file content:', text.substring(0, 200) + '...');
-          console.log('RichTextEditorWrapper - File name:', fileName);
-          
           // Process content to preserve structure
           const processedContent = processDocumentContent(text, fileName);
-          console.log('RichTextEditorWrapper - Processed content:', processedContent.substring(0, 200) + '...');
           
           setContent(processedContent);
           setDocumentTitle(fileName);
           
+          // Persist for navigation
+          persistFile(null, processedContent, url);
+          
           // Notify parent component that content is loaded
           if (onContentLoaded) {
             onContentLoaded(processedContent, fileName);
+          }
+        } else {
+          // No file or URL - check for persisted content
+          const persisted = getPersistedFile();
+          if (persisted && persisted.content) {
+            setContent(persisted.content);
+            setDocumentTitle(persisted.fileName);
+            
+            if (onContentLoaded) {
+              onContentLoaded(persisted.content, persisted.fileName);
+            }
           }
         }
       } catch (error) {
@@ -74,7 +89,7 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
     };
     
     loadContent();
-  }, [file, url, onContentLoaded]);
+  }, [file, url, onContentLoaded, persistFile, getPersistedFile]);
   
   // Process document content to better preserve structure
   const processDocumentContent = (text: string, fileName: string): string => {
@@ -115,8 +130,13 @@ export const RichTextEditorWrapper: React.FC<RichTextEditorWrapperProps> = ({
     return processedContent;
   };
   
-  // Handle content change
+  // Handle content change and persist
   const handleContentChange = (newContent: string) => {
+    setContent(newContent);
+    
+    // Persist updated content for navigation
+    persistFile(file || null, newContent, url);
+    
     if (onContentLoaded && !isLoading) {
       onContentLoaded(newContent, documentTitle);
     }
