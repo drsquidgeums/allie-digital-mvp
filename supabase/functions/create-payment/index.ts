@@ -51,14 +51,65 @@ serve(async (req) => {
 
     logStep("Processing payment for email", { email: sanitizedEmail });
 
+    // Create Supabase admin client to check existing accounts
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      { auth: { persistSession: false } }
+    );
+
+    // Check if email already has an account with lifetime access
+    const { data: existingProfile } = await supabaseAdmin
+      .from("profiles")
+      .select("id, subscription_status")
+      .eq("email", sanitizedEmail)
+      .single();
+
+    if (existingProfile) {
+      if (existingProfile.subscription_status === "lifetime") {
+        logStep("User already has lifetime access", { email: sanitizedEmail });
+        return new Response(JSON.stringify({ 
+          error: "ALREADY_PAID",
+          message: "This email already has lifetime access. Please sign in instead."
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        });
+      } else {
+        // Account exists but hasn't paid - allow payment but warn
+        logStep("Existing account without payment", { email: sanitizedEmail });
+      }
+    }
+
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
 
-    // Check if customer already exists
+    // Check if customer already exists in Stripe with a successful payment
     const customers = await stripe.customers.list({ email: sanitizedEmail, limit: 1 });
     let customerId;
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
-      logStep("Existing customer found", { customerId });
+      logStep("Existing Stripe customer found", { customerId });
+
+      // Check if this customer already has a successful payment
+      const paymentIntents = await stripe.paymentIntents.list({
+        customer: customerId,
+        limit: 10,
+      });
+
+      const hasSuccessfulPayment = paymentIntents.data.some(
+        (pi) => pi.status === "succeeded"
+      );
+
+      if (hasSuccessfulPayment) {
+        logStep("Customer already has successful payment", { customerId });
+        return new Response(JSON.stringify({ 
+          error: "ALREADY_PAID",
+          message: "This email has already paid. Please sign in or reset your password."
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        });
+      }
     }
 
     // Create checkout session for one-time payment
