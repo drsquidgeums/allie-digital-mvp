@@ -19,6 +19,8 @@ import PaymentSuccess from "@/pages/PaymentSuccess";
 import PaymentCanceled from "@/pages/PaymentCanceled";
 import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
+import { clearFiles as clearGlobalFiles } from "@/store/fileStore";
+import { clearFiles as clearFileManagerFiles } from "@/hooks/file-manager/fileStore";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -68,6 +70,9 @@ const App = () => {
           }
         } else {
           setUserInfo(null);
+          // Clear all cached data when user signs out to prevent data leakage
+          clearGlobalFiles();
+          clearFileManagerFiles();
         }
       }
     );

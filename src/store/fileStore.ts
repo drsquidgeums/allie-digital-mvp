@@ -52,3 +52,11 @@ export const removeFile = (fileId: string): void => {
   globalFiles = globalFiles.filter(file => file.id !== fileId);
   notifyListeners();
 };
+
+/**
+ * Clears all files from global state (used on logout)
+ */
+export const clearFiles = (): void => {
+  globalFiles = [];
+  notifyListeners();
+};
