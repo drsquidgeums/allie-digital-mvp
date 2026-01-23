@@ -15,6 +15,7 @@ export interface ExtendedDatabase extends SupabaseDatabase {
           points: number | null;
           color: string | null;
           category: string | null;
+          labels: string[] | null;
         };
         Insert: {
           id?: string;
@@ -25,6 +26,7 @@ export interface ExtendedDatabase extends SupabaseDatabase {
           points?: number | null;
           color?: string | null;
           category?: string | null;
+          labels?: string[] | null;
         };
         Update: {
           id?: string;
@@ -35,6 +37,7 @@ export interface ExtendedDatabase extends SupabaseDatabase {
           points?: number | null;
           color?: string | null;
           category?: string | null;
+          labels?: string[] | null;
         };
         Relationships: [];
       };

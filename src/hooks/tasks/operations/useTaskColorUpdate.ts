@@ -2,11 +2,24 @@
 import { useCallback } from "react";
 import { Task } from "@/types/task";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 export const useTaskColorUpdate = (tasks: Task[], updateTasks: (tasks: Task[]) => void) => {
   const handleUpdateTaskColor = useCallback(async (id: string, color: string) => {
     try {
-      // Update local state only (since tasks are stored locally)
+      // Update in Supabase
+      const { error } = await supabase
+        .from('tasks')
+        .update({ color })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error updating task color:', error);
+        toast.error("Failed to update task color");
+        return;
+      }
+
+      // Update local state
       const updatedTasks = tasks.map(task => {
         if (task.id === id) {
           return { ...task, color };

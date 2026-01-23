@@ -2,13 +2,13 @@
 import { useCallback } from "react";
 import { Task } from "@/types/task";
 import { toast } from "sonner";
-import { extendedSupabase } from "@/integrations/extendedSupabaseClient";
+import { supabase } from "@/integrations/supabase/client";
 
 export const useTaskDeletion = (tasks: Task[], updateTasks: (tasks: Task[]) => void) => {
   const handleDeleteTask = useCallback(async (id: string) => {
     try {
       // Delete task from Supabase
-      const { error } = await extendedSupabase
+      const { error } = await supabase
         .from('tasks')
         .delete()
         .eq('id', id);

@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { Task } from "@/types/task";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
+import { supabase } from "@/integrations/supabase/client";
 
 const categories = ["work", "personal", "study", "health"];
 
@@ -15,14 +16,25 @@ export const useTaskCreation = (tasks: Task[], updateTasks: (tasks: Task[]) => v
     
     console.log('Adding task:', text);
     
-    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+    // Get current user
+    const { data: { user } } = await supabase.auth.getUser();
     
-    // Create the new task object
+    if (!user) {
+      console.error('No authenticated user, cannot add task');
+      toast.error("Please sign in to add tasks");
+      return;
+    }
+    
+    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+    const taskId = uuidv4();
+    const createdAt = taskDate || new Date();
+    
+    // Create the new task object for local state
     const newTask: Task = {
-      id: uuidv4(),
+      id: taskId,
       text: text.trim(),
       completed: false,
-      createdAt: taskDate || new Date(),
+      createdAt: createdAt,
       points: 10, // Default points
       category: randomCategory,
       labels: []
@@ -32,14 +44,35 @@ export const useTaskCreation = (tasks: Task[], updateTasks: (tasks: Task[]) => v
     newTask.points = getTaskPoints(newTask);
 
     try {
-      console.log('Creating task locally:', newTask);
+      console.log('Creating task in Supabase:', newTask);
+      
+      // Insert into Supabase
+      const { error } = await supabase
+        .from('tasks')
+        .insert({
+          id: taskId,
+          user_id: user.id,
+          text: text.trim(),
+          completed: false,
+          created_at: createdAt.toISOString(),
+          points: newTask.points,
+          category: randomCategory,
+          color: null,
+          labels: []
+        });
+
+      if (error) {
+        console.error('Error creating task in Supabase:', error);
+        toast.error("Failed to add task");
+        return;
+      }
       
       // Add task to the beginning of the array to show newest first
       const updatedTasks = [newTask, ...tasks];
       updateTasks(updatedTasks);
       
       toast.success("Task added successfully!");
-      console.log('Task added to local state, total tasks:', updatedTasks.length);
+      console.log('Task added to Supabase, total tasks:', updatedTasks.length);
       
     } catch (err) {
       console.error('Unexpected error in handleAddTask:', err);
