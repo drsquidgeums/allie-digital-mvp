@@ -7,7 +7,7 @@ const AppLogo = React.memo(() => (
     role="banner"
   >
     <img 
-      src="/lovable-uploads/logo-var-01.png" 
+      src="/lovable-uploads/logo-var-02.png" 
       alt="Allie Digital Logo" 
       className="w-12 h-12"
     />
