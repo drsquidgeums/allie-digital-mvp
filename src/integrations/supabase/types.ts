@@ -284,6 +284,7 @@ export type Database = {
           completed: boolean | null
           created_at: string | null
           id: string
+          labels: string[] | null
           points: number | null
           text: string
           user_id: string
@@ -294,6 +295,7 @@ export type Database = {
           completed?: boolean | null
           created_at?: string | null
           id?: string
+          labels?: string[] | null
           points?: number | null
           text: string
           user_id: string
@@ -304,6 +306,7 @@ export type Database = {
           completed?: boolean | null
           created_at?: string | null
           id?: string
+          labels?: string[] | null
           points?: number | null
           text?: string
           user_id?: string

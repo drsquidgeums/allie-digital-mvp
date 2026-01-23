@@ -2,7 +2,7 @@
 import { useCallback, useState } from "react";
 import { Task } from "@/types/task";
 import { toast } from "sonner";
-import { extendedSupabase } from "@/integrations/extendedSupabaseClient";
+import { supabase } from "@/integrations/supabase/client";
 
 export const useTaskToggle = (
   tasks: Task[], 
@@ -23,7 +23,7 @@ export const useTaskToggle = (
       const newStatus = !task.completed;
       
       // Update task in Supabase
-      const { error } = await extendedSupabase
+      const { error } = await supabase
         .from('tasks')
         .update({ completed: newStatus })
         .eq('id', id);

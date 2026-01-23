@@ -1,61 +1,78 @@
 
 import { useState, useEffect } from "react";
 import { Task } from "@/types/task";
-import { v4 as uuidv4 } from 'uuid';
-
-// Simple local storage key
-const TASKS_STORAGE_KEY = 'local_tasks';
-
-// Load tasks from localStorage
-const loadTasksFromStorage = (): Task[] => {
-  try {
-    const stored = localStorage.getItem(TASKS_STORAGE_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      return parsed.map((task: any) => {
-        // Migrate old timestamp-based IDs to UUIDs and ensure labels exist
-        const migratedTask: Task = {
-          ...task,
-          createdAt: new Date(task.createdAt),
-          id: task.id && task.id.length > 20 ? task.id : uuidv4(), // Keep UUID, replace timestamp IDs
-          labels: task.labels || [] // Ensure labels array exists
-        };
-        return migratedTask;
-      });
-    }
-  } catch (error) {
-    console.error('Error loading tasks from storage:', error);
-  }
-  return [];
-};
-
-// Save tasks to localStorage
-const saveTasksToStorage = (tasks: Task[]) => {
-  try {
-    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
-    console.log('Tasks saved to localStorage:', tasks.length);
-  } catch (error) {
-    console.error('Error saving tasks to storage:', error);
-  }
-};
+import { supabase } from "@/integrations/supabase/client";
 
 export const useTaskStore = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Load tasks on mount
+  // Load tasks from Supabase on mount
   useEffect(() => {
-    console.log('Loading tasks from localStorage...');
-    const loadedTasks = loadTasksFromStorage();
-    setTasks(loadedTasks);
-    setLoading(false);
-    console.log('Loaded tasks:', loadedTasks.length);
+    const fetchTasks = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+          console.log('No authenticated user, skipping task fetch');
+          setLoading(false);
+          return;
+        }
+
+        console.log('Fetching tasks from Supabase for user:', user.id);
+        
+        const { data, error } = await supabase
+          .from('tasks')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Error fetching tasks:', error);
+          setLoading(false);
+          return;
+        }
+
+        // Transform Supabase data to Task type
+        const transformedTasks: Task[] = (data || []).map(task => ({
+          id: task.id,
+          text: task.text,
+          completed: task.completed || false,
+          createdAt: new Date(task.created_at || new Date()),
+          points: task.points || 10,
+          color: task.color || undefined,
+          category: task.category || undefined,
+          labels: task.labels || []
+        }));
+
+        console.log('Loaded tasks from Supabase:', transformedTasks.length);
+        setTasks(transformedTasks);
+      } catch (err) {
+        console.error('Error in fetchTasks:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
+
+    // Subscribe to auth state changes to refetch tasks
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN') {
+        fetchTasks();
+      } else if (event === 'SIGNED_OUT') {
+        setTasks([]);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const updateTasks = async (newTasks: Task[]) => {
     console.log('updateTasks called with:', newTasks.length, 'tasks');
     setTasks(newTasks);
-    saveTasksToStorage(newTasks);
   };
 
   return {
