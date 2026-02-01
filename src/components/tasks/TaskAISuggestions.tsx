@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "react-i18next";
 
 interface TaskAISuggestionsProps {
   onAddTask: (text: string) => void;
@@ -18,6 +19,7 @@ export const TaskAISuggestions: React.FC<TaskAISuggestionsProps> = ({
   currentTasks = []
 }) => {
   const { isLoading, getSuggestions, generateSchedule, optimizeTasks } = useTaskAI();
+  const { t } = useTranslation();
   const [suggestions, setSuggestions] = useState<TaskSuggestion[]>([]);
   const [schedule, setSchedule] = useState<string>("");
   const [optimization, setOptimization] = useState<string>("");
@@ -53,10 +55,10 @@ export const TaskAISuggestions: React.FC<TaskAISuggestionsProps> = ({
       <CardHeader>
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-primary" />
-          <CardTitle>AI Task Assistant</CardTitle>
+          <CardTitle>{t('tasks.aiAssistant')}</CardTitle>
         </div>
         <CardDescription>
-          Get intelligent suggestions, schedules, and task optimization
+          {t('tasks.aiDescription')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -64,22 +66,22 @@ export const TaskAISuggestions: React.FC<TaskAISuggestionsProps> = ({
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="suggestions">
               <Lightbulb className="h-4 w-4 mr-2" />
-              Suggestions
+              {t('tasks.suggestions')}
             </TabsTrigger>
             <TabsTrigger value="schedule">
               <Calendar className="h-4 w-4 mr-2" />
-              Schedule
+              {t('tasks.schedule')}
             </TabsTrigger>
             <TabsTrigger value="optimize">
               <Sparkles className="h-4 w-4 mr-2 text-primary" />
-              Optimize
+              {t('tasks.optimise')}
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="suggestions" className="space-y-4">
             <div className="space-y-2">
               <Textarea
-                placeholder="Describe what you're studying or what you need help with (optional)"
+                placeholder={t('tasks.suggestionsPlaceholder')}
                 value={context}
                 onChange={(e) => setContext(e.target.value)}
                 rows={3}
@@ -89,7 +91,7 @@ export const TaskAISuggestions: React.FC<TaskAISuggestionsProps> = ({
                 disabled={isLoading}
                 className="w-full"
               >
-                {isLoading ? "Generating..." : "Get AI Suggestions"}
+                {isLoading ? t('tasks.generating') : t('tasks.getSuggestions')}
               </Button>
             </div>
 
@@ -128,7 +130,7 @@ export const TaskAISuggestions: React.FC<TaskAISuggestionsProps> = ({
           <TabsContent value="schedule" className="space-y-4">
             <div className="space-y-2">
               <Textarea
-                placeholder="Describe your study goals or schedule preferences (optional)"
+                placeholder={t('tasks.schedulePlaceholder')}
                 value={context}
                 onChange={(e) => setContext(e.target.value)}
                 rows={3}
@@ -138,7 +140,7 @@ export const TaskAISuggestions: React.FC<TaskAISuggestionsProps> = ({
                 disabled={isLoading}
                 className="w-full"
               >
-                {isLoading ? "Generating..." : "Generate Study Schedule"}
+                {isLoading ? t('tasks.generating') : t('tasks.generateSchedule')}
               </Button>
             </div>
 
@@ -156,14 +158,14 @@ export const TaskAISuggestions: React.FC<TaskAISuggestionsProps> = ({
           <TabsContent value="optimize" className="space-y-4">
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">
-                Current tasks: {currentTasks.length}
+                {t('tasks.currentTasks')}: {currentTasks.length}
               </p>
               <Button 
                 onClick={handleOptimizeTasks} 
                 disabled={isLoading || currentTasks.length === 0}
                 className="w-full"
               >
-                {isLoading ? "Analyzing..." : "Optimize My Tasks"}
+                {isLoading ? t('tasks.analysing') : t('tasks.optimiseMyTasks')}
               </Button>
             </div>
 

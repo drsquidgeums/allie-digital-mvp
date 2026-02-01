@@ -59,7 +59,9 @@
   },
   "chat": {
     "title": "Allie AI",
-    "inputPlaceholder": "Type your message..."
+    "inputPlaceholder": "Type your message...",
+    "studyBuddyTitle": "Allie - Study Buddy",
+    "studyBuddyDescription": "ADHD-optimized learning assistant"
   },
   "notifications": {
     "empty": "No notifications",
@@ -70,7 +72,20 @@
     "pointsEarned": "You earned {{points}} points for completing this task!",
     "title": "Task List",
     "empty": "No tasks yet",
-    "addTask": "Add a task"
+    "addTask": "Add a task",
+    "aiAssistant": "AI Task Assistant",
+    "aiDescription": "Get intelligent suggestions, schedules, and task optimization",
+    "suggestions": "Suggestions",
+    "schedule": "Schedule",
+    "optimise": "Optimize",
+    "getSuggestions": "Get AI Suggestions",
+    "generating": "Generating...",
+    "generateSchedule": "Generate Study Schedule",
+    "optimiseMyTasks": "Optimize My Tasks",
+    "analysing": "Analyzing...",
+    "currentTasks": "Current tasks",
+    "suggestionsPlaceholder": "Describe what you're studying or what you need help with (optional)",
+    "schedulePlaceholder": "Describe your study goals or schedule preferences (optional)"
   },
   "settings": {
     "title": "Settings",

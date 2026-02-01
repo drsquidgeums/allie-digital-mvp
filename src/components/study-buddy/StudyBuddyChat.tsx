@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, RotateCcw, Loader2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface Message {
   role: "user" | "assistant";
@@ -27,6 +28,7 @@ export const StudyBuddyChat: React.FC<StudyBuddyChatProps> = ({
   const [input, setInput] = useState("");
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -55,8 +57,8 @@ export const StudyBuddyChat: React.FC<StudyBuddyChatProps> = ({
             <Sparkles className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <h3 className="font-semibold text-sm">Allie - Study Buddy</h3>
-            <p className="text-xs text-muted-foreground">ADHD-optimized learning assistant</p>
+            <h3 className="font-semibold text-sm">{t('chat.studyBuddyTitle')}</h3>
+            <p className="text-xs text-muted-foreground">{t('chat.studyBuddyDescription')}</p>
           </div>
         </div>
         <Button
