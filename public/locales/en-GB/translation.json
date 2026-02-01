@@ -92,6 +92,10 @@
     "suggestionsPlaceholder": "Describe what you're studying or what you need help with (optional)",
     "schedulePlaceholder": "Describe your study goals or schedule preferences (optional)"
   },
+  "mindMap": {
+    "title": "Mind Map",
+    "description": "Visualise and organise your ideas"
+  },
   "settings": {
     "title": "Settings",
     "description": "Manage your application preferences",

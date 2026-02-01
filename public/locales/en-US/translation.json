@@ -1,4 +1,3 @@
-
 {
   "navigation": {
     "fileUploader": "File Uploader",
@@ -10,7 +9,8 @@
     "settings": "Settings",
     "community": "Community Hub",
     "myFiles": "My Files",
-    "support": "Support"
+    "support": "Support",
+    "progress": "Progress"
   },
   "support": {
     "title": "Contact Support",
@@ -55,7 +55,12 @@
     "information": "Information",
     "language": "Select Language",
     "noNotifications": "No notifications",
-    "loadingText": "Loading..."
+    "loadingText": "Loading...",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close"
   },
   "chat": {
     "title": "Allie AI",
@@ -87,6 +92,10 @@
     "suggestionsPlaceholder": "Describe what you're studying or what you need help with (optional)",
     "schedulePlaceholder": "Describe your study goals or schedule preferences (optional)"
   },
+  "mindMap": {
+    "title": "Mind Map",
+    "description": "Visualize and organize your ideas"
+  },
   "settings": {
     "title": "Settings",
     "description": "Manage your application preferences",
@@ -94,6 +103,17 @@
     "selectLanguage": "Select Language",
     "languageChanged": "Application language changed to {{language}}",
     "languageChangeError": "Failed to change language. Please try again.",
+    "account": {
+      "title": "Account",
+      "email": "Email",
+      "memberSince": "Member Since",
+      "plan": "Plan",
+      "lifetimeAccess": "Lifetime Access",
+      "noSubscription": "No Active Plan",
+      "viewBilling": "View Billing History",
+      "notLoggedIn": "Please log in to access billing",
+      "billingError": "Unable to open billing portal. Please try again."
+    },
     "accessibility": {
       "title": "Accessibility",
       "screenReader": "Screen Reader Support",
