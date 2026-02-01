@@ -179,5 +179,24 @@
     "uploading": "Subiendo...",
     "success": "Archivo subido exitosamente",
     "error": "Error al subir el archivo"
+  },
+  "fileManager": {
+    "title": "Mis Archivos",
+    "description": "Gestiona y organiza tus documentos",
+    "allFiles": "Todos los Archivos",
+    "folderFiles": "Archivos de Carpeta",
+    "recent": "Recientes",
+    "folders": "Carpetas",
+    "organise": "Organizar",
+    "upload": "Subir",
+    "name": "Nombre",
+    "size": "Tamaño",
+    "type": "Tipo",
+    "modified": "Modificado",
+    "actions": "Acciones",
+    "noFiles": "No hay archivos subidos aún",
+    "filesDeleted": "{{count}} archivo(s) han sido eliminados",
+    "filesDownloaded": "{{count}} archivo(s) han sido descargados",
+    "filesMoved": "{{count}} archivo(s) movidos a {{folder}}"
   }
 }

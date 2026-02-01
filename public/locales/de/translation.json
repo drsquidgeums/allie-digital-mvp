@@ -179,5 +179,24 @@
     "uploading": "Wird hochgeladen...",
     "success": "Datei erfolgreich hochgeladen",
     "error": "Fehler beim Hochladen der Datei"
+  },
+  "fileManager": {
+    "title": "Meine Dateien",
+    "description": "Verwalten und organisieren Sie Ihre Dokumente",
+    "allFiles": "Alle Dateien",
+    "folderFiles": "Ordnerdateien",
+    "recent": "Zuletzt",
+    "folders": "Ordner",
+    "organise": "Organisieren",
+    "upload": "Hochladen",
+    "name": "Name",
+    "size": "Größe",
+    "type": "Typ",
+    "modified": "Geändert",
+    "actions": "Aktionen",
+    "noFiles": "Noch keine Dateien hochgeladen",
+    "filesDeleted": "{{count}} Datei(en) wurden gelöscht",
+    "filesDownloaded": "{{count}} Datei(en) wurden heruntergeladen",
+    "filesMoved": "{{count}} Datei(en) nach {{folder}} verschoben"
   }
 }

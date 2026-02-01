@@ -179,5 +179,24 @@
     "uploading": "Uploading...",
     "success": "File uploaded successfully",
     "error": "Error uploading file"
+  },
+  "fileManager": {
+    "title": "My Files",
+    "description": "Manage and organise your documents",
+    "allFiles": "All Files",
+    "folderFiles": "Folder Files",
+    "recent": "Recent",
+    "folders": "Folders",
+    "organise": "Organise",
+    "upload": "Upload",
+    "name": "Name",
+    "size": "Size",
+    "type": "Type",
+    "modified": "Modified",
+    "actions": "Actions",
+    "noFiles": "No files uploaded yet",
+    "filesDeleted": "{{count}} file(s) have been deleted",
+    "filesDownloaded": "{{count}} file(s) have been downloaded",
+    "filesMoved": "{{count}} file(s) moved to {{folder}}"
   }
 }

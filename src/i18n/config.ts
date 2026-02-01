@@ -9,6 +9,7 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
+    lng: localStorage.getItem('i18nextLng') || 'en-GB', // Default to UK English
     fallbackLng: 'en-GB',
     debug: process.env.NODE_ENV === 'development',
     supportedLngs: ['en-GB', 'en-US', 'es', 'de', 'fr'],
@@ -20,7 +21,7 @@ i18n
       loadPath: '/locales/{{lng}}/translation.json',
     },
     detection: {
-      order: ['localStorage', 'navigator'],
+      order: ['localStorage'], // Only check localStorage, not browser navigator
       caches: ['localStorage'],
       lookupLocalStorage: 'i18nextLng'
     },
