@@ -48,26 +48,27 @@ export const TaskDashboard: React.FC = () => {
 
   return (
     <WorkspaceLayout>
-      <div className="p-4 h-full max-w-[1600px] mx-auto">
-        <div className="flex items-center justify-between mb-4">
-          <TaskDashboardHeader 
-            selectedDate={selectedDate}
-            showCompleted={showCompleted}
-            filterByDate={filterByDate}
-            onToggleCalendar={() => setShowCalendar(!showCalendar)}
-            onToggleShowCompleted={setShowCompleted}
-            onToggleFilterByDate={setFilterByDate}
-          />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowAISuggestions(!showAISuggestions)}
-            className="gap-2"
-          >
-            <Sparkles className="h-4 w-4 text-primary" />
-            AI Assist
-          </Button>
-        </div>
+      <div className="p-6 h-full overflow-auto">
+        <div className="max-w-[1600px] mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <TaskDashboardHeader 
+              selectedDate={selectedDate}
+              showCompleted={showCompleted}
+              filterByDate={filterByDate}
+              onToggleCalendar={() => setShowCalendar(!showCalendar)}
+              onToggleShowCompleted={setShowCompleted}
+              onToggleFilterByDate={setFilterByDate}
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowAISuggestions(!showAISuggestions)}
+              className="gap-2"
+            >
+              <Sparkles className="h-4 w-4 text-primary" />
+              AI Assist
+            </Button>
+          </div>
 
         {showCalendar && (
           <Card className="p-4 mb-6 border-none shadow-sm">
@@ -123,6 +124,7 @@ export const TaskDashboard: React.FC = () => {
               className="bg-background/50 border border-dashed border-muted/50 rounded-lg"
             />
           )}
+        </div>
         </div>
       </div>
     </WorkspaceLayout>
