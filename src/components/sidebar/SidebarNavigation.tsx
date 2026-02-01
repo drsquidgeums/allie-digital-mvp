@@ -24,13 +24,6 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       disabled: false
     },
     {
-      id: "progress",
-      label: t('navigation.progress', 'Progress'),
-      icon: TrendingUp,
-      path: "/progress",
-      disabled: false
-    },
-    {
       id: "myfiles",
       label: t('navigation.myFiles'),
       icon: FileText,
@@ -49,6 +42,13 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       label: t('navigation.mindMap'),
       icon: Brain,
       path: "/mind-map",
+      disabled: false
+    },
+    {
+      id: "progress",
+      label: t('navigation.progress', 'Progress'),
+      icon: TrendingUp,
+      path: "/progress",
       disabled: false
     }
   ];
