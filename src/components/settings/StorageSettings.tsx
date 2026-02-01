@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 
 export const StorageSettings = () => {
   const [storageUsed, setStorageUsed] = useState(0);
-  const [storageLimit, setStorageLimit] = useState(5 * 1024 * 1024 * 1024); // 5GB default
+  const [storageLimit, setStorageLimit] = useState(1 * 1024 * 1024 * 1024); // 1GB (Supabase free tier)
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   const { t } = useTranslation();
