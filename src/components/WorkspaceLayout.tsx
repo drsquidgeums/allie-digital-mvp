@@ -15,11 +15,9 @@ export const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) =
           onColorChange={() => {}}
         />
       </div>
-      <div className="flex-1 section-modern overflow-y-auto">
-        <div className="card-elevated h-full animate-in">
-          <div className="content-container h-full section-modern">
-            {children}
-          </div>
+      <div className="flex-1 overflow-y-auto bg-card">
+        <div className="h-full animate-in">
+          {children}
         </div>
       </div>
     </div>
