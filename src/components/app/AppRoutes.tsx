@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import { TaskDashboard } from "@/components/dashboard/TaskDashboard";
 import MindMapDashboard from "@/pages/MindMapDashboard";
+import ProgressDashboard from "@/pages/ProgressDashboard";
 import SettingsPage from "@/pages/SettingsPage";
 import MyFilesPage from "@/pages/MyFilesPage";
 import PaymentSuccess from "@/pages/PaymentSuccess";
@@ -16,6 +17,7 @@ export const AppRoutes = React.memo(() => (
     <Route path="/my-files" element={<MyFilesPage />} />
     <Route path="/file-uploader" element={<Navigate to="/toolbox" replace />} />
     <Route path="/tasks" element={<TaskDashboard />} />
+    <Route path="/progress" element={<ProgressDashboard />} />
     <Route path="/mind-map" element={<MindMapDashboard />} />
     <Route path="/settings" element={<SettingsPage />} />
     <Route path="/payment-success" element={<PaymentSuccess />} />
