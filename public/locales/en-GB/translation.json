@@ -1,4 +1,3 @@
-
 {
   "navigation": {
     "fileUploader": "File Uploader",
@@ -10,7 +9,8 @@
     "settings": "Settings",
     "community": "Community Hub",
     "myFiles": "My Files",
-    "support": "Support"
+    "support": "Support",
+    "progress": "Progress"
   },
   "support": {
     "title": "Contact Support",
@@ -55,7 +55,12 @@
     "information": "Information",
     "language": "Select Language",
     "noNotifications": "No notifications",
-    "loadingText": "Loading..."
+    "loadingText": "Loading...",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close"
   },
   "chat": {
     "title": "Allie AI",
@@ -94,6 +99,17 @@
     "selectLanguage": "Select Language",
     "languageChanged": "Application language changed to {{language}}",
     "languageChangeError": "Failed to change language. Please try again.",
+    "account": {
+      "title": "Account",
+      "email": "Email",
+      "memberSince": "Member Since",
+      "plan": "Plan",
+      "lifetimeAccess": "Lifetime Access",
+      "noSubscription": "No Active Plan",
+      "viewBilling": "View Billing History",
+      "notLoggedIn": "Please log in to access billing",
+      "billingError": "Unable to open billing portal. Please try again."
+    },
     "accessibility": {
       "title": "Accessibility",
       "screenReader": "Screen Reader Support",
@@ -106,7 +122,7 @@
       "title": "Display",
       "compactMode": "Compact Mode",
       "compactModeDescription": "Reduce spacing between elements",
-      "comingSoon": "Display customization options are coming soon."
+      "comingSoon": "Display customisation options are coming soon."
     },
     "notifications": {
       "title": "Notifications",
