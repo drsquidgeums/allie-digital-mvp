@@ -252,57 +252,57 @@ const ProgressDashboard = React.memo(() => {
 
         {/* Top Stats Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <Card>
+          <Card className="border-primary/20 bg-gradient-to-br from-card to-primary/10 hover:shadow-lg hover:shadow-primary/10 transition-shadow">
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
+                <div className="p-2.5 rounded-xl bg-primary/20 ring-2 ring-primary/30">
                   <Flame className="h-5 w-5 text-primary" />
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Current Streak</p>
-                  <p className="text-2xl font-bold">{streakData.currentStreak} days</p>
+                  <p className="text-2xl font-bold text-primary">{streakData.currentStreak} days</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-chart-2/20 bg-gradient-to-br from-card to-chart-2/10 hover:shadow-lg hover:shadow-chart-2/10 transition-shadow">
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-chart-2/10">
+                <div className="p-2.5 rounded-xl bg-chart-2/20 ring-2 ring-chart-2/30">
                   <Target className="h-5 w-5 text-chart-2" />
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Longest Streak</p>
-                  <p className="text-2xl font-bold">{streakData.longestStreak} days</p>
+                  <p className="text-2xl font-bold text-chart-2">{streakData.longestStreak} days</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-chart-3/20 bg-gradient-to-br from-card to-chart-3/10 hover:shadow-lg hover:shadow-chart-3/10 transition-shadow">
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-chart-3/10">
+                <div className="p-2.5 rounded-xl bg-chart-3/20 ring-2 ring-chart-3/30">
                   <Clock className="h-5 w-5 text-chart-3" />
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Peak Hour</p>
-                  <p className="text-2xl font-bold">{formatPeakHour(focusAnalysis.peakHour)}</p>
+                  <p className="text-2xl font-bold text-chart-3">{formatPeakHour(focusAnalysis.peakHour)}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-chart-4/20 bg-gradient-to-br from-card to-chart-4/10 hover:shadow-lg hover:shadow-chart-4/10 transition-shadow">
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-chart-4/10">
+                <div className="p-2.5 rounded-xl bg-chart-4/20 ring-2 ring-chart-4/30">
                   <Zap className="h-5 w-5 text-chart-4" />
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Best Day</p>
-                  <p className="text-2xl font-bold">{focusAnalysis.peakDay}</p>
+                  <p className="text-2xl font-bold text-chart-4">{focusAnalysis.peakDay}</p>
                 </div>
               </div>
             </CardContent>
@@ -310,29 +310,31 @@ const ProgressDashboard = React.memo(() => {
         </div>
 
         {/* Streak Calendar */}
-        <Card className="mb-6">
+        <Card className="mb-6 border-primary/10">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <Calendar className="h-5 w-5" />
+              <div className="p-1.5 rounded-lg bg-primary/15">
+                <Calendar className="h-5 w-5 text-primary" />
+              </div>
               30-Day Activity
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1.5">
               {streakCalendar.map((day, i) => (
                 <div
                   key={i}
-                  className={`w-4 h-4 rounded-sm ${
+                  className={`w-4 h-4 rounded-sm transition-all hover:scale-125 cursor-default ${
                     day.hasActivity 
-                      ? "bg-primary" 
-                      : "bg-muted"
+                      ? "bg-gradient-to-br from-primary to-chart-2 shadow-sm shadow-primary/30" 
+                      : "bg-muted/50 hover:bg-muted"
                   }`}
                   title={format(day.date, "d MMM yyyy")}
                 />
               ))}
             </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              {focusAnalysis.totalCompleted} tasks completed • {streakData.streakDays.length} active days
+            <p className="text-xs text-muted-foreground mt-3">
+              <span className="text-primary font-medium">{focusAnalysis.totalCompleted}</span> tasks completed • <span className="text-chart-2 font-medium">{streakData.streakDays.length}</span> active days
             </p>
           </CardContent>
         </Card>
@@ -340,10 +342,12 @@ const ProgressDashboard = React.memo(() => {
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Weekly Trend */}
-          <Card>
+          <Card className="border-chart-3/10">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
-                <TrendingUp className="h-5 w-5" />
+                <div className="p-1.5 rounded-lg bg-chart-3/15">
+                  <TrendingUp className="h-5 w-5 text-chart-3" />
+                </div>
                 Weekly Trend
               </CardTitle>
             </CardHeader>
@@ -390,10 +394,12 @@ const ProgressDashboard = React.memo(() => {
           </Card>
 
           {/* Hourly Distribution */}
-          <Card>
+          <Card className="border-chart-4/10">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
-                <Clock className="h-5 w-5" />
+                <div className="p-1.5 rounded-lg bg-chart-4/15">
+                  <Clock className="h-5 w-5 text-chart-4" />
+                </div>
                 Focus Time Pattern
               </CardTitle>
             </CardHeader>
@@ -402,7 +408,7 @@ const ProgressDashboard = React.memo(() => {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={focusAnalysis.hourData}>
                     <XAxis 
-                      dataKey="label" 
+                      dataKey="label"
                       tick={{ fontSize: 10 }}
                       tickLine={false}
                       axisLine={false}
@@ -435,9 +441,14 @@ const ProgressDashboard = React.memo(() => {
         </div>
 
         {/* Day of Week Distribution */}
-        <Card>
+        <Card className="border-chart-2/10">
           <CardHeader>
-            <CardTitle className="text-lg">Productivity by Day of Week</CardTitle>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <div className="p-1.5 rounded-lg bg-chart-2/15">
+                <Calendar className="h-5 w-5 text-chart-2" />
+              </div>
+              Productivity by Day of Week
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-48">
