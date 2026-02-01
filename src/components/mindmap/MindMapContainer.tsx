@@ -112,7 +112,7 @@ export const MindMapContainer: React.FC<ExtendedMindMapContainerProps> = ({
 
   return (
     <div className="w-full h-[calc(100vh-12rem)] bg-background rounded-xl overflow-hidden flex flex-col shadow-lg animate-fade-in">
-      <div className="h-14 border-b border-border/30 bg-background/95 backdrop-blur-sm flex-shrink-0">
+      <div className="h-16 border-b border-border/30 bg-background/95 backdrop-blur-sm flex-shrink-0 pt-2">
         <UnifiedMindMapToolbar
           onExportJpg={onExportJpg}
           onExportJson={onExportJson}
