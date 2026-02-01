@@ -1,5 +1,4 @@
-
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 import { useTasks } from "@/hooks/useTasks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,6 +21,8 @@ import {
   differenceInDays
 } from "date-fns";
 import { Flame, TrendingUp, Clock, Target, Calendar, Zap } from "lucide-react";
+import { AIInsightsPanel } from "@/components/progress/AIInsightsPanel";
+import { useProgressAI, InsightType, ProgressData } from "@/hooks/useProgressAI";
 
 const CHART_COLORS = [
   "hsl(var(--primary))",
@@ -35,6 +36,7 @@ const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const ProgressDashboard = React.memo(() => {
   const { tasks } = useTasks();
+  const { insights, generateInsight, generateAllInsights } = useProgressAI();
 
   // Calculate streak data
   const streakData = useMemo(() => {
@@ -208,6 +210,28 @@ const ProgressDashboard = React.memo(() => {
     return `${hour - 12}:00 PM`;
   };
 
+  // Prepare progress data for AI insights
+  const progressData: ProgressData = useMemo(() => ({
+    currentStreak: streakData.currentStreak,
+    longestStreak: streakData.longestStreak,
+    totalCompleted: focusAnalysis.totalCompleted,
+    activeDays: streakData.streakDays.length,
+    peakHour: focusAnalysis.peakHour,
+    peakDay: focusAnalysis.peakDay,
+    weeklyTrend: weeklyTrend,
+    dayDistribution: focusAnalysis.dayData,
+  }), [streakData, focusAnalysis, weeklyTrend]);
+
+  const handleGenerateInsight = useCallback((type: InsightType) => {
+    generateInsight(type, progressData);
+  }, [generateInsight, progressData]);
+
+  const handleGenerateAll = useCallback(() => {
+    generateAllInsights(progressData);
+  }, [generateAllInsights, progressData]);
+
+  const isAnyLoading = Object.values(insights).some(i => i.loading);
+
   return (
     <WorkspaceLayout>
       <div className="p-6 h-full overflow-auto">
@@ -217,6 +241,14 @@ const ProgressDashboard = React.memo(() => {
             Track your productivity streaks, trends, and focus patterns
           </p>
         </div>
+
+        {/* AI Insights Panel */}
+        <AIInsightsPanel
+          insights={insights}
+          onGenerate={handleGenerateInsight}
+          onGenerateAll={handleGenerateAll}
+          isAnyLoading={isAnyLoading}
+        />
 
         {/* Top Stats Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
