@@ -1,7 +1,7 @@
 
 import React, { useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Monitor, CheckSquare, Brain, FileText } from "lucide-react";
+import { Monitor, CheckSquare, Brain, FileText, TrendingUp } from "lucide-react";
 import { SidebarButton } from "./SidebarButton";
 import { useTranslation } from "react-i18next";
 
@@ -35,6 +35,13 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       label: t('navigation.tasks'),
       icon: CheckSquare,
       path: "/tasks",
+      disabled: false
+    },
+    {
+      id: "progress",
+      label: t('navigation.progress', 'Progress'),
+      icon: TrendingUp,
+      path: "/progress",
       disabled: false
     },
     {
