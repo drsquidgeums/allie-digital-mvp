@@ -189,7 +189,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
 
   return (
     <TooltipProvider delayDuration={300}>
-      <div className="flex flex-row h-full px-3 gap-1 items-center overflow-x-auto">
+      <div className="flex flex-row h-full px-3 pt-1 gap-1 items-center overflow-x-auto">
         {/* Undo/Redo */}
         <Tooltip>
           <TooltipTrigger asChild>
