@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Check, Trash2, Tag } from "lucide-react";
 import {
@@ -12,7 +11,23 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Task } from "@/types/task";
 import { useTranslation } from "react-i18next";
+import { format, isToday, isYesterday, isThisWeek } from "date-fns";
 
+const formatTaskDate = (date: Date): string => {
+  const taskDate = new Date(date);
+  const timeStr = format(taskDate, 'h:mm a');
+  
+  if (isToday(taskDate)) {
+    return `Today at ${timeStr}`;
+  }
+  if (isYesterday(taskDate)) {
+    return `Yesterday at ${timeStr}`;
+  }
+  if (isThisWeek(taskDate)) {
+    return `${format(taskDate, 'EEE')} at ${timeStr}`;
+  }
+  return `${format(taskDate, 'd MMM')} at ${timeStr}`;
+};
 interface TaskListProps {
   tasks: Task[];
   onToggleTask: (id: string) => void;
@@ -89,9 +104,14 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onUpdateTaskColor,
           >
             {task.completed && <Check className="h-3 w-3" />}
           </Button>
-          <span className={`flex-1 text-sm ${task.completed ? "line-through text-gray-400 dark:text-gray-300" : ""}`}>
-            {task.text}
-          </span>
+          <div className="flex-1 min-w-0">
+            <span className={`text-sm ${task.completed ? "line-through text-gray-400 dark:text-gray-300" : ""}`}>
+              {task.text}
+            </span>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {formatTaskDate(task.createdAt)}
+            </p>
+          </div>
           <span className="text-xs px-2 py-1 rounded-full bg-accent/10 text-muted-foreground">
             {task.points} pts
           </span>
