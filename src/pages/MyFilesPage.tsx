@@ -9,7 +9,7 @@ const MyFilesPage: React.FC = () => {
 
   return (
     <WorkspaceLayout>
-      <div className="p-6 space-y-6">
+      <div className="p-6 h-full overflow-auto">
         <EnhancedFileManager />
       </div>
     </WorkspaceLayout>

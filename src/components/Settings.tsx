@@ -19,26 +19,26 @@ export const Settings = () => {
   
   return (
     <div 
-      className="h-full bg-card text-card-foreground animate-fade-in rounded-xl overflow-hidden relative transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="p-6 h-full overflow-auto bg-card text-card-foreground animate-fade-in"
       role="region"
       aria-label={t('settings.title')}
     >
-      <div className="p-4 space-y-4">
-        <h2 className="text-2xl font-bold">{t('settings.title')}</h2>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold mb-1">{t('settings.title')}</h1>
         <p className="text-muted-foreground">{t('settings.description')}</p>
-        <Separator />
-        <div className="space-y-6">
-          <AccountSettings />
-          <LanguageSettings />
-          <AccessibilitySettings />
-          <DisplaySettings />
-          <NotificationSettings />
-          <PerformanceSettings />
-          <PrivacySettings />
-          <KeyboardSettings />
-          <StorageSettings />
-          <IntegrationSettings />
-        </div>
+      </div>
+      <Separator className="mb-6" />
+      <div className="space-y-6">
+        <AccountSettings />
+        <LanguageSettings />
+        <AccessibilitySettings />
+        <DisplaySettings />
+        <NotificationSettings />
+        <PerformanceSettings />
+        <PrivacySettings />
+        <KeyboardSettings />
+        <StorageSettings />
+        <IntegrationSettings />
       </div>
     </div>
   );

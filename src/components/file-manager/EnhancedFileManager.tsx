@@ -201,43 +201,49 @@ export const EnhancedFileManager: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          {selectedFolderId && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleBackToAllFiles}
-              className="mr-2"
-            >
-              <ArrowLeft className="h-4 w-4 mr-1" />
-              Back
-            </Button>
-          )}
-          <h1 className="text-2xl font-bold">
-            {selectedFolderId ? (
-              <span className="flex items-center gap-2">
-                <Folder className="h-6 w-6" />
-                {selectedFolder?.name}
-              </span>
-            ) : (
-              'My Files'
+      {/* Page Header */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {selectedFolderId && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleBackToAllFiles}
+                className="mr-2"
+              >
+                <ArrowLeft className="h-4 w-4 mr-1" />
+                Back
+              </Button>
             )}
-          </h1>
+            <div>
+              <h1 className="text-2xl font-bold mb-1">
+                {selectedFolderId ? (
+                  <span className="flex items-center gap-2">
+                    <Folder className="h-6 w-6" />
+                    {selectedFolder?.name}
+                  </span>
+                ) : (
+                  'My Files'
+                )}
+              </h1>
+              <p className="text-muted-foreground">Manage and organize your documents</p>
+            </div>
+          </div>
+          <Button 
+            onClick={() => fileInputRef.current?.click()}
+            disabled={loading}
+          >
+            <Upload className="h-4 w-4 mr-2" />
+            Upload
+          </Button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+          />
         </div>
-        <Button 
-          onClick={() => fileInputRef.current?.click()}
-          disabled={loading}
-        >
-          <Upload className="h-4 w-4 mr-2" />
-          Upload
-        </Button>
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          className="hidden"
-        />
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
