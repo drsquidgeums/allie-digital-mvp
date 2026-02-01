@@ -178,5 +178,24 @@
     "uploading": "Téléversement...",
     "success": "Fichier téléversé avec succès",
     "error": "Erreur lors du téléversement du fichier"
+  },
+  "fileManager": {
+    "title": "Mes Fichiers",
+    "description": "Gérez et organisez vos documents",
+    "allFiles": "Tous les Fichiers",
+    "folderFiles": "Fichiers du Dossier",
+    "recent": "Récents",
+    "folders": "Dossiers",
+    "organise": "Organiser",
+    "upload": "Téléverser",
+    "name": "Nom",
+    "size": "Taille",
+    "type": "Type",
+    "modified": "Modifié",
+    "actions": "Actions",
+    "noFiles": "Aucun fichier téléversé pour l'instant",
+    "filesDeleted": "{{count}} fichier(s) ont été supprimés",
+    "filesDownloaded": "{{count}} fichier(s) ont été téléchargés",
+    "filesMoved": "{{count}} fichier(s) déplacés vers {{folder}}"
   }
 }

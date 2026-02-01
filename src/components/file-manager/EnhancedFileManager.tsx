@@ -20,6 +20,7 @@ import { RecentFiles } from './RecentFiles';
 import { FilePreview } from './FilePreview';
 import { BulkActions } from './BulkActions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Enhanced File Manager with organization, recent files, previews, and bulk operations
@@ -29,6 +30,7 @@ export const EnhancedFileManager: React.FC = () => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
   
   // Local state for file management features
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
@@ -224,10 +226,10 @@ export const EnhancedFileManager: React.FC = () => {
                     {selectedFolder?.name}
                   </span>
                 ) : (
-                  'My Files'
+                  t('fileManager.title')
                 )}
               </h1>
-              <p className="text-muted-foreground">Manage and organize your documents</p>
+              <p className="text-muted-foreground">{t('fileManager.description')}</p>
             </div>
           </div>
           <Button 
@@ -235,7 +237,7 @@ export const EnhancedFileManager: React.FC = () => {
             disabled={loading}
           >
             <Upload className="h-4 w-4 mr-2" />
-            Upload
+            {t('fileManager.upload')}
           </Button>
           <input
             type="file"
@@ -249,11 +251,11 @@ export const EnhancedFileManager: React.FC = () => {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="all">
-            {selectedFolderId ? 'Folder Files' : 'All Files'}
+            {selectedFolderId ? t('fileManager.folderFiles') : t('fileManager.allFiles')}
           </TabsTrigger>
-          <TabsTrigger value="recent">Recent</TabsTrigger>
-          <TabsTrigger value="folders">Folders</TabsTrigger>
-          <TabsTrigger value="organize">Organize</TabsTrigger>
+          <TabsTrigger value="recent">{t('fileManager.recent')}</TabsTrigger>
+          <TabsTrigger value="folders">{t('fileManager.folders')}</TabsTrigger>
+          <TabsTrigger value="organize">{t('fileManager.organise')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="recent" className="space-y-4">
