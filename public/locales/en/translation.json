@@ -1,16 +1,16 @@
-
 {
   "navigation": {
     "fileUploader": "File Uploader",
     "toolbox": "Toolbox",
     "workspace": "Workspace",
-    "tasks": "Task Planner", 
+    "tasks": "Task Planner",
     "aiAssistant": "AI Assistant",
     "mindMap": "Mind Map",
     "settings": "Settings",
     "community": "Community Hub",
     "myFiles": "My Files",
-    "support": "Support"
+    "support": "Support",
+    "progress": "Progress"
   },
   "support": {
     "title": "Contact Support",
@@ -40,7 +40,7 @@
     "tts": "Text to Speech",
     "stt": "Speech to Text",
     "bionic": "Bionic Reader",
-    "color": "Color Tool",
+    "colour": "Colour Tool",
     "focus": "Focus Mode",
     "beeline": "Beeline Reader",
     "rewordify": "Rewordify",
@@ -55,11 +55,18 @@
     "information": "Information",
     "language": "Select Language",
     "noNotifications": "No notifications",
-    "loadingText": "Loading..."
+    "loadingText": "Loading...",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close"
   },
   "chat": {
-    "title": "Virtual Assistant",
-    "inputPlaceholder": "Type your message..."
+    "title": "Allie AI",
+    "inputPlaceholder": "Type your message...",
+    "studyBuddyTitle": "Allie - Study Buddy",
+    "studyBuddyDescription": "ADHD-optimised learning assistant"
   },
   "notifications": {
     "empty": "No notifications",
@@ -70,7 +77,20 @@
     "pointsEarned": "You earned {{points}} points for completing this task!",
     "title": "Task List",
     "empty": "No tasks yet",
-    "addTask": "Add a task"
+    "addTask": "Add a task",
+    "aiAssistant": "AI Task Assistant",
+    "aiDescription": "Get intelligent suggestions, schedules, and task optimisation",
+    "suggestions": "Suggestions",
+    "schedule": "Schedule",
+    "optimise": "Optimise",
+    "getSuggestions": "Get AI Suggestions",
+    "generating": "Generating...",
+    "generateSchedule": "Generate Study Schedule",
+    "optimiseMyTasks": "Optimise My Tasks",
+    "analysing": "Analysing...",
+    "currentTasks": "Current tasks",
+    "suggestionsPlaceholder": "Describe what you're studying or what you need help with (optional)",
+    "schedulePlaceholder": "Describe your study goals or schedule preferences (optional)"
   },
   "settings": {
     "title": "Settings",
@@ -95,19 +115,22 @@
       "screenReader": "Screen Reader Support",
       "screenReaderDescription": "Enable enhanced screen reader compatibility",
       "screenReaderEnabled": "Screen reader support enabled",
-      "screenReaderDisabled": "Screen reader support disabled"
+      "screenReaderDisabled": "Screen reader support disabled",
+      "comingSoon": "Accessibility settings are coming soon. We are working on features to make the app more accessible for everyone."
     },
     "display": {
       "title": "Display",
       "compactMode": "Compact Mode",
-      "compactModeDescription": "Reduce spacing between elements"
+      "compactModeDescription": "Reduce spacing between elements",
+      "comingSoon": "Display customisation options are coming soon."
     },
     "notifications": {
       "title": "Notifications",
       "taskReminders": "Task Reminders",
       "taskRemindersDescription": "Receive notifications for upcoming tasks",
       "focusTimerAlerts": "Focus Timer Alerts",
-      "focusTimerAlertsDescription": "Get notified when focus sessions end"
+      "focusTimerAlertsDescription": "Get notified when focus sessions end",
+      "comingSoon": "Notification settings are coming soon. Stay tuned for updates!"
     },
     "performance": {
       "title": "Performance",
@@ -116,7 +139,8 @@
       "autoSave": "Auto-save",
       "autoSaveDescription": "Automatically save changes",
       "hardware": "Hardware Acceleration",
-      "hardwareDescription": "Use GPU for better performance"
+      "hardwareDescription": "Use GPU for better performance",
+      "comingSoon": "Performance settings are coming soon."
     },
     "privacy": {
       "title": "Privacy & Security",
@@ -129,14 +153,17 @@
       "changePassword": "Change Password",
       "changePasswordDescription": "Update your account password",
       "changeEmail": "Change Email",
-      "changeEmailDescription": "Update your email address"
+      "changeEmailDescription": "Update your email address",
+      "antiScreenshot": "Anti-Screenshot Protection",
+      "antiScreenshotDescription": "Block attempts to capture screen content"
     },
     "keyboard": {
       "title": "Keyboard Shortcuts",
       "toggleFocusMode": "Toggle Focus Mode",
       "openSettings": "Open Settings",
       "saveDocument": "Save Document",
-      "toggleTheme": "Toggle Theme"
+      "toggleTheme": "Toggle Theme",
+      "comingSoon": "Custom keyboard shortcut configuration is coming soon."
     },
     "storage": {
       "title": "Data & Storage",
@@ -171,7 +198,10 @@
       "blackboard": "Blackboard",
       "blackboardDesc": "Sync with Blackboard courses and assignments",
       "trello": "Trello",
-      "trelloDesc": "Sync tasks with Trello boards"
+      "trelloDesc": "Sync tasks with Trello boards",
+      "comingSoon": "Integrations with external services are coming soon. Stay tuned for updates!",
+      "connect": "Connect",
+      "comingSoonButton": "Coming Soon"
     }
   },
   "fileUploader": {
@@ -180,5 +210,24 @@
     "uploading": "Uploading...",
     "success": "File uploaded successfully",
     "error": "Error uploading file"
+  },
+  "fileManager": {
+    "title": "My Files",
+    "description": "Manage and organise your documents",
+    "allFiles": "All Files",
+    "folderFiles": "Folder Files",
+    "recent": "Recent",
+    "folders": "Folders",
+    "organise": "Organise",
+    "upload": "Upload",
+    "name": "Name",
+    "size": "Size",
+    "type": "Type",
+    "modified": "Modified",
+    "actions": "Actions",
+    "noFiles": "No files uploaded yet",
+    "filesDeleted": "{{count}} file(s) have been deleted",
+    "filesDownloaded": "{{count}} file(s) have been downloaded",
+    "filesMoved": "{{count}} file(s) moved to {{folder}}"
   }
 }
