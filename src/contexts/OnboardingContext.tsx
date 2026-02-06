@@ -6,6 +6,7 @@ export interface OnboardingStep {
   title: string;
   description: string;
   placement?: "top" | "bottom" | "left" | "right";
+  route?: string; // Route to navigate to before showing this step
 }
 
 interface OnboardingContextType {
@@ -96,83 +97,94 @@ const defaultTourSteps: OnboardingStep[] = [
     description: "Switch between light and dark mode. Dark mode can help reduce eye strain during long study sessions.",
     placement: "right"
   },
-  // === WORKSPACE TOOLS ===
+  // === WORKSPACE TOOLS (need to be on /toolbox route) ===
   {
     id: "bionic",
     target: "[data-tour='bionic']",
     title: "Bionic Reading",
     description: "Highlights the first part of each word to help your eyes glide through text faster. Great for improving reading speed and focus.",
-    placement: "bottom"
+    placement: "bottom",
+    route: "/toolbox"
   },
   {
     id: "beeline",
     target: "[data-tour='beeline']",
     title: "Beeline Reader",
     description: "Adds a colour gradient to lines of text to help your eyes track from line to line more easily.",
-    placement: "bottom"
+    placement: "bottom",
+    route: "/toolbox"
   },
   {
     id: "tts",
     target: "[data-tour='tts']",
     title: "Text-to-Speech",
     description: "Have documents read aloud to you. Helpful for auditory learners or when you need a break from reading.",
-    placement: "bottom"
+    placement: "bottom",
+    route: "/toolbox"
   },
   {
     id: "stt",
     target: "[data-tour='stt']",
     title: "Speech-to-Text",
     description: "Dictate notes and text using your voice. Perfect for capturing ideas quickly without typing.",
-    placement: "bottom"
+    placement: "bottom",
+    route: "/toolbox"
   },
   {
     id: "pomodoro",
     target: "[data-tour='pomodoro']",
     title: "Pomodoro Timer",
     description: "Work in focused 25-minute sessions with short breaks. A proven technique to maintain concentration.",
-    placement: "bottom"
+    placement: "bottom",
+    route: "/toolbox"
   },
   {
     id: "irlen",
     target: "[data-tour='irlen']",
-    title: "Colour Overlay",
+    title: "Irlen Overlay",
     description: "Apply tinted overlays to reduce visual stress. Some people find certain colours make reading easier.",
-    placement: "bottom"
+    placement: "bottom",
+    route: "/toolbox"
   },
   {
     id: "ai-simplify",
     target: "[data-tour='ai-simplify']",
     title: "AI Simplify",
     description: "Reword complex text into simpler language. Helps break down academic or technical content.",
-    placement: "bottom"
+    placement: "bottom",
+    route: "/toolbox"
   },
   {
     id: "document-ai",
     target: "[data-tour='document-ai']",
     title: "Document AI",
     description: "Ask questions about your document and get instant answers. Great for understanding difficult passages.",
-    placement: "bottom"
+    placement: "bottom",
+    route: "/toolbox"
   },
   {
     id: "voice-ai",
     target: "[data-tour='voice-ai']",
     title: "Voice AI",
     description: "Have a voice conversation with AI about your studies. Speak naturally and get spoken responses.",
-    placement: "bottom"
+    placement: "bottom",
+    route: "/toolbox"
   },
   {
     id: "learning-ai",
     target: "[data-tour='learning-ai']",
     title: "Learning Tools",
     description: "Generate flashcards, quizzes, and summaries from your documents. Turn passive reading into active learning.",
-    placement: "bottom"
+    placement: "bottom",
+    route: "/toolbox"
   },
   {
     id: "ambient",
     target: "[data-tour='ambient']",
     title: "Ambient Music",
     description: "Play calming background sounds to help you focus. Choose from rain, café ambience, and more.",
-    placement: "bottom"
+    placement: "bottom",
+    route: "/toolbox"
   },
   // === AI STUDY BUDDY ===
   {
@@ -180,7 +192,8 @@ const defaultTourSteps: OnboardingStep[] = [
     target: "[data-tour='study-buddy']",
     title: "AI Study Buddy",
     description: "Your personal AI assistant! Click this anytime to get help with studying, break down complex topics, or just chat for motivation.",
-    placement: "left"
+    placement: "left",
+    route: "/toolbox"
   }
 ];
 
