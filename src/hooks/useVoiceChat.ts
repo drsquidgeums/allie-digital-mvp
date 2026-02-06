@@ -92,7 +92,7 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
     isSpeakingRef.current = true;
 
     try {
-      const { data, error } = await supabase.functions.invoke('elevenlabs-tts', {
+      const { data, error } = await supabase.functions.invoke('elevenlabs-tts-public', {
         body: { text, voiceId: 'EXAVITQu4vr4xnSDxMaL' },
       });
 
@@ -109,15 +109,19 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
         audio.play().catch(reject);
       });
     } catch (err) {
-      // If user isn't logged in, our elevenlabs-tts function may reject; fallback gracefully.
       console.error('TTS error (fallback to browser):', err);
+      toast({
+        title: 'Voice Playback Issue',
+        description: 'If you can’t hear Allie, check your device volume and site sound permissions.',
+        variant: 'destructive',
+      });
       await speakWithBrowserTTS(text);
     } finally {
       setIsSpeaking(false);
       isSpeakingRef.current = false;
       audioRef.current = null;
     }
-  }, [speakWithBrowserTTS]);
+  }, [speakWithBrowserTTS, toast]);
 
   const transcribeWithElevenLabs = useCallback(async (blob: Blob) => {
     const { base64, mimeType } = await blobToBase64(blob);
@@ -294,6 +298,16 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
       // Set up analyser for VAD
       const AudioContextCtor = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContextCtor();
+
+      // Best-effort: ensure the audio context is running (some browsers start it suspended)
+      if (ctx.state === 'suspended') {
+        try {
+          await ctx.resume();
+        } catch {
+          // ignore
+        }
+      }
+
       const source = ctx.createMediaStreamSource(stream);
       const analyser = ctx.createAnalyser();
       analyser.fftSize = 2048;
