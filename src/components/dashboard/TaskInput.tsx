@@ -21,7 +21,7 @@ export const TaskInput = ({ selectedDate, onAddTask, showStarburst }: TaskInputP
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 relative">
+    <form onSubmit={handleSubmit} className="flex gap-2 relative" data-tour="task-input">
       <Input
         value={newTask}
         onChange={(e) => setNewTask(e.target.value)}

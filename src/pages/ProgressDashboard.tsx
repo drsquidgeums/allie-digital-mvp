@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback, useEffect, useRef } from "react";
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 import { useTasks } from "@/hooks/useTasks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,6 +23,7 @@ import {
 import { Flame, TrendingUp, Clock, Target, Calendar, Zap } from "lucide-react";
 import { AIInsightsPanel } from "@/components/progress/AIInsightsPanel";
 import { useProgressAI, InsightType, ProgressData } from "@/hooks/useProgressAI";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 
 const CHART_COLORS = [
   "hsl(var(--primary))",
@@ -37,6 +38,15 @@ const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const ProgressDashboard = React.memo(() => {
   const { tasks } = useTasks();
   const { insights, generateInsight, generateAllInsights } = useProgressAI();
+  const { completeChecklistItem, onboardingEnabled } = useOnboarding();
+  const hasTrackedRef = useRef(false);
+
+  // Track progress page visit for onboarding
+  useEffect(() => {
+    if (!onboardingEnabled || hasTrackedRef.current) return;
+    hasTrackedRef.current = true;
+    completeChecklistItem("check-progress");
+  }, [completeChecklistItem, onboardingEnabled]);
 
   // Calculate streak data
   const streakData = useMemo(() => {

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -12,6 +11,7 @@ import { PrivacySettings } from "./settings/PrivacySettings";
 import { KeyboardSettings } from "./settings/KeyboardSettings";
 import { StorageSettings } from "./settings/StorageSettings";
 import { IntegrationSettings } from "./settings/IntegrationSettings";
+import { OnboardingSettings } from "./onboarding/OnboardingSettings";
 import { useTranslation } from "react-i18next";
 
 export const Settings = () => {
@@ -31,6 +31,7 @@ export const Settings = () => {
       <div className="space-y-6">
         <AccountSettings />
         <LanguageSettings />
+        <OnboardingSettings />
         <AccessibilitySettings />
         <DisplaySettings />
         <NotificationSettings />

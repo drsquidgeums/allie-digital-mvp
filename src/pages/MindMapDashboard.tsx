@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { MindMap } from "@/components/MindMap";
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 import { useTranslation } from "react-i18next";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 
 const MindMapDashboard = React.memo(() => {
   const { t } = useTranslation();
+  const { completeChecklistItem, onboardingEnabled } = useOnboarding();
+  const hasTrackedRef = useRef(false);
+
+  // Track mind map visit for onboarding
+  useEffect(() => {
+    if (!onboardingEnabled || hasTrackedRef.current) return;
+    hasTrackedRef.current = true;
+    completeChecklistItem("try-mind-map");
+  }, [completeChecklistItem, onboardingEnabled]);
   
   return (
     <WorkspaceLayout>
