@@ -52,7 +52,7 @@ const defaultTourSteps: OnboardingStep[] = [
     id: "tasks",
     target: "[data-tour='tasks']",
     title: "Task Entry",
-    description: "Create and manage your to-do list. Break down work into manageable chunks with our ADHD-friendly task system.",
+    description: "Create and manage your to do list. Break down work into manageable chunks with our ADHD friendly task system.",
     placement: "right"
   },
   {
@@ -99,6 +99,22 @@ const defaultTourSteps: OnboardingStep[] = [
   },
   // === WORKSPACE TOOLS (need to be on /toolbox route) ===
   {
+    id: "screenshot",
+    target: "[data-tour='screenshot']",
+    title: "Screenshot",
+    description: "Capture screenshots of your document or selected areas. Annotate and save images for your notes.",
+    placement: "bottom",
+    route: "/toolbox"
+  },
+  {
+    id: "focus-mode",
+    target: "[data-tour='focus-mode']",
+    title: "Focus Mode",
+    description: "Hide distractions and focus on your reading. Creates a clean, minimal interface for deep concentration.",
+    placement: "bottom",
+    route: "/toolbox"
+  },
+  {
     id: "bionic",
     target: "[data-tour='bionic']",
     title: "Bionic Reading",
@@ -117,7 +133,7 @@ const defaultTourSteps: OnboardingStep[] = [
   {
     id: "tts",
     target: "[data-tour='tts']",
-    title: "Text-to-Speech",
+    title: "Text to Speech",
     description: "Have documents read aloud to you. Helpful for auditory learners or when you need a break from reading.",
     placement: "bottom",
     route: "/toolbox"
@@ -125,7 +141,7 @@ const defaultTourSteps: OnboardingStep[] = [
   {
     id: "stt",
     target: "[data-tour='stt']",
-    title: "Speech-to-Text",
+    title: "Speech to Text",
     description: "Dictate notes and text using your voice. Perfect for capturing ideas quickly without typing.",
     placement: "bottom",
     route: "/toolbox"
@@ -134,7 +150,7 @@ const defaultTourSteps: OnboardingStep[] = [
     id: "pomodoro",
     target: "[data-tour='pomodoro']",
     title: "Pomodoro Timer",
-    description: "Work in focused 25-minute sessions with short breaks. A proven technique to maintain concentration.",
+    description: "Work in focused 25 minute sessions with short breaks. A proven technique to maintain concentration.",
     placement: "bottom",
     route: "/toolbox"
   },

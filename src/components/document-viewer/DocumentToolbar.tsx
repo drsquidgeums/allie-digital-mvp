@@ -10,7 +10,9 @@ export const DocumentToolbar = () => {
       aria-label="Document actions"
     >
       <div className="flex gap-2">
-        <ScreenshotButton />
+        <div data-tour="screenshot">
+          <ScreenshotButton />
+        </div>
       </div>
     </div>
   );
