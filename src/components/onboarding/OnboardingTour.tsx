@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import { Button } from "@/components/ui/button";
 import { X, ChevronLeft, ChevronRight, SkipForward } from "lucide-react";
@@ -11,6 +12,8 @@ interface TooltipPosition {
 }
 
 export const OnboardingTour: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const {
     isTourActive,
     currentTourStep,
@@ -24,23 +27,54 @@ export const OnboardingTour: React.FC = () => {
 
   const [position, setPosition] = useState<TooltipPosition | null>(null);
   const [highlightRect, setHighlightRect] = useState<DOMRect | null>(null);
+  const [isNavigating, setIsNavigating] = useState(false);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   const currentStep = tourSteps[currentTourStep];
 
+  // Handle navigation when step requires a different route
   useEffect(() => {
-    if (!isTourActive || !currentStep || !onboardingEnabled) {
+    if (!isTourActive || !currentStep || !onboardingEnabled) return;
+    
+    const requiredRoute = currentStep.route;
+    if (requiredRoute && location.pathname !== requiredRoute) {
+      setIsNavigating(true);
       setPosition(null);
       setHighlightRect(null);
+      navigate(requiredRoute);
+      
+      // Wait for navigation and DOM to settle
+      const timer = setTimeout(() => {
+        setIsNavigating(false);
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isTourActive, currentStep, onboardingEnabled, location.pathname, navigate]);
+
+  useEffect(() => {
+    if (!isTourActive || !currentStep || !onboardingEnabled || isNavigating) {
+      if (!isTourActive || !onboardingEnabled) {
+        setPosition(null);
+        setHighlightRect(null);
+      }
       return;
     }
 
     const updatePosition = () => {
       const target = document.querySelector(currentStep.target);
-      if (!target || !tooltipRef.current) return;
+      if (!target || !tooltipRef.current) {
+        // Element not found yet, retry
+        return;
+      }
 
       const targetRect = target.getBoundingClientRect();
       const tooltipRect = tooltipRef.current.getBoundingClientRect();
+      
+      // Check if element is visible (has dimensions)
+      if (targetRect.width === 0 || targetRect.height === 0) {
+        return;
+      }
       
       setHighlightRect(targetRect);
 
@@ -84,18 +118,24 @@ export const OnboardingTour: React.FC = () => {
       setPosition({ top, left, arrowPosition });
     };
 
-    // Initial position
-    setTimeout(updatePosition, 100);
+    // Try to find element multiple times (it may not be rendered yet)
+    const attempts = [100, 300, 500, 800];
+    const timers: NodeJS.Timeout[] = [];
+    
+    attempts.forEach(delay => {
+      timers.push(setTimeout(updatePosition, delay));
+    });
 
     // Update on resize/scroll
     window.addEventListener("resize", updatePosition);
     window.addEventListener("scroll", updatePosition, true);
 
     return () => {
+      timers.forEach(timer => clearTimeout(timer));
       window.removeEventListener("resize", updatePosition);
       window.removeEventListener("scroll", updatePosition, true);
     };
-  }, [isTourActive, currentStep, onboardingEnabled]);
+  }, [isTourActive, currentStep, onboardingEnabled, isNavigating]);
 
   if (!isTourActive || !currentStep || !onboardingEnabled) return null;
 
