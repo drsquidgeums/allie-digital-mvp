@@ -134,6 +134,7 @@ export const SupportDialog = ({ open, onOpenChange }: SupportDialogProps) => {
                 <SelectItem value="feature">{t("support.featureRequest", "Feature Request")}</SelectItem>
                 <SelectItem value="account">{t("support.accountIssue", "Account / Payment Issue")}</SelectItem>
                 <SelectItem value="general">{t("support.generalQuestion", "General Question")}</SelectItem>
+                <SelectItem value="feedback">{t("support.generalFeedback", "General Feedback")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
