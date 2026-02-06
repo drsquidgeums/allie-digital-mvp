@@ -208,6 +208,16 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
           isActiveRef.current = false;
           setIsActive(false);
           setIsListening(false);
+        } else if (event.error === 'network') {
+          // Network error - common in embedded iframes
+          toast({
+            title: 'Network Error',
+            description: 'Speech recognition failed. Try opening the app in a new tab.',
+            variant: 'destructive'
+          });
+          isActiveRef.current = false;
+          setIsActive(false);
+          setIsListening(false);
         } else if (event.error === 'no-speech') {
           // Normal timeout due to silence, onend will handle restart
           console.log('No speech detected, will auto-restart.');
