@@ -1,7 +1,9 @@
-
 project_id = "frvjnuuqacrrrvrhzhuj"
 
 [functions.submit-feedback]
+verify_jwt = false
+
+[functions.voice-chat]
 verify_jwt = false
 
 [functions.content-enhancer]
