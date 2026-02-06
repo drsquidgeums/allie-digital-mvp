@@ -97,7 +97,8 @@ serve(async (req) => {
       });
     }
 
-    if (session.payment_status === "paid" && customerEmail) {
+    // Handle both "paid" and "no_payment_required" (100% off coupon)
+    if ((session.payment_status === "paid" || session.payment_status === "no_payment_required") && customerEmail) {
       // Update the user's profile to mark them as having lifetime access
       const { data: profiles, error: profileError } = await supabaseAdmin
         .from("profiles")
