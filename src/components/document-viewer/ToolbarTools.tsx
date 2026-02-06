@@ -25,63 +25,85 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
 
   return (
     <div className="flex items-center gap-2">
-      <BionicToggleButton />
-      <BeelineToggleButton />
-      <TTSButton />
-      <ToolItem
-        icon={Text}
-        label={t('tools.stt')}
-        id="stt"
-        content={<SpeechToText />}
-        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
-      />
-      <ToolItem
-        icon={Timer}
-        label={t('tools.pomodoro')}
-        id="pomodoro"
-        content={<PomodoroTimer />}
-        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
-      />
-      <IrlenOverlay />
+      <div data-tour="bionic">
+        <BionicToggleButton />
+      </div>
+      <div data-tour="beeline">
+        <BeelineToggleButton />
+      </div>
+      <div data-tour="tts">
+        <TTSButton />
+      </div>
+      <div data-tour="stt">
+        <ToolItem
+          icon={Text}
+          label={t('tools.stt')}
+          id="stt"
+          content={<SpeechToText />}
+          popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+        />
+      </div>
+      <div data-tour="pomodoro">
+        <ToolItem
+          icon={Timer}
+          label={t('tools.pomodoro')}
+          id="pomodoro"
+          content={<PomodoroTimer />}
+          popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+        />
+      </div>
+      <div data-tour="irlen">
+        <IrlenOverlay />
+      </div>
       <TextTool />
-      <ToolItem
-        icon={Wand2}
-        label="AI Simplify"
-        id="rewordify"
-        content={<Rewordify />}
-        popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
-      />
-      <ToolItem
-        icon={Sparkles}
-        label="Document AI"
-        id="ai-assistant"
-        content={
-          <DocumentAIChat
-            documentContent={documentContent}
-            documentName={documentName}
-          />
-        }
-        popoverClassName="w-96 h-[600px] p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
-      />
-      <ToolItem
-        icon={Bot}
-        label={t('tools.voice') || 'Voice AI'}
-        id="voice-assistant"
-        content={<VoiceAssistant />}
-        popoverClassName="w-96 p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
-      />
-      <ToolItem
-        icon={GraduationCap}
-        label="Learning AI"
-        id="learning-tools"
-        content={
-          <ContentEnhancerTools
-            documentContent={documentContent}
-          />
-        }
-        popoverClassName="w-[500px] h-[600px] p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
-      />
-      <AmbientMusic />
+      <div data-tour="ai-simplify">
+        <ToolItem
+          icon={Wand2}
+          label="AI Simplify"
+          id="rewordify"
+          content={<Rewordify />}
+          popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+        />
+      </div>
+      <div data-tour="document-ai">
+        <ToolItem
+          icon={Sparkles}
+          label="Document AI"
+          id="ai-assistant"
+          content={
+            <DocumentAIChat
+              documentContent={documentContent}
+              documentName={documentName}
+            />
+          }
+          popoverClassName="w-96 h-[600px] p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+        />
+      </div>
+      <div data-tour="voice-ai">
+        <ToolItem
+          icon={Bot}
+          label={t('tools.voice') || 'Voice AI'}
+          id="voice-assistant"
+          content={<VoiceAssistant />}
+          popoverClassName="w-96 p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+        />
+      </div>
+      <div data-tour="learning-ai">
+        <ToolItem
+          icon={GraduationCap}
+          label="Learning AI"
+          id="learning-tools"
+          content={
+            <ContentEnhancerTools
+              documentContent={documentContent}
+            />
+          }
+          popoverClassName="w-[500px] h-[600px] p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+        />
+      </div>
+      <div data-tour="ambient">
+        <AmbientMusic />
+      </div>
     </div>
   );
 };

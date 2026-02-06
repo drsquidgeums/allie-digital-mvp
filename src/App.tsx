@@ -21,7 +21,7 @@ import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import { clearFiles as clearGlobalFiles } from "@/store/fileStore";
 import { clearFiles as clearFileManagerFiles } from "@/hooks/file-manager/fileStore";
-import { OnboardingTour, OnboardingChecklist, WelcomeModal } from "@/components/onboarding";
+import { OnboardingTour, WelcomeModal } from "@/components/onboarding";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -231,7 +231,6 @@ const App = () => {
                   {/* Onboarding Components */}
                   <WelcomeModal />
                   <OnboardingTour />
-                  <OnboardingChecklist />
                 </div>
               </SecurityProvider>
             }

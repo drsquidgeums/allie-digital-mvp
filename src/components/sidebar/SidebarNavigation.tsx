@@ -22,7 +22,7 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       icon: Monitor,
       path: "/toolbox",
       disabled: false,
-      tourId: "toolbox"
+      tourId: "workspace"
     },
     {
       id: "myfiles",

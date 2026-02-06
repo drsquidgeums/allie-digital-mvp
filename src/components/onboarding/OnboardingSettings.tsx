@@ -5,15 +5,13 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useTranslation } from "react-i18next";
-import { RotateCcw, Play, Sparkles, HelpCircle, ListChecks } from "lucide-react";
+import { RotateCcw, Play, Sparkles, ListChecks } from "lucide-react";
 
 export const OnboardingSettings: React.FC = () => {
   const { t } = useTranslation();
   const {
     onboardingEnabled,
     setOnboardingEnabled,
-    hintsEnabled,
-    setHintsEnabled,
     startTour,
     resetOnboarding,
     hasCompletedOnboarding
@@ -37,32 +35,13 @@ export const OnboardingSettings: React.FC = () => {
               {t('settings.onboarding.enableOnboarding', 'Enable Onboarding')}
             </Label>
             <p className="text-xs text-muted-foreground">
-              {t('settings.onboarding.enableOnboardingDesc', 'Show tutorials and getting started guides')}
+              {t('settings.onboarding.enableOnboardingDesc', 'Show welcome screen and tutorial options')}
             </p>
           </div>
           <Switch
             id="onboarding-enabled"
             checked={onboardingEnabled}
             onCheckedChange={setOnboardingEnabled}
-          />
-        </div>
-
-        {/* Hints toggle */}
-        <div className="flex items-center justify-between">
-          <div className="space-y-0.5">
-            <Label htmlFor="hints-enabled" className="flex items-center gap-2 text-sm font-medium">
-              <HelpCircle className="h-4 w-4" />
-              {t('settings.onboarding.contextualHints', 'Contextual Hints')}
-            </Label>
-            <p className="text-xs text-muted-foreground">
-              {t('settings.onboarding.contextualHintsDesc', 'Show helpful tips on features you haven\'t explored')}
-            </p>
-          </div>
-          <Switch
-            id="hints-enabled"
-            checked={hintsEnabled && onboardingEnabled}
-            onCheckedChange={setHintsEnabled}
-            disabled={!onboardingEnabled}
           />
         </div>
 
