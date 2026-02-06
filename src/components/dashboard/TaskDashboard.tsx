@@ -1,5 +1,4 @@
-
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { WorkspaceLayout } from "@/components/WorkspaceLayout";
 import { useTasks } from "@/hooks/useTasks";
 import { Card } from "@/components/ui/card";
@@ -10,6 +9,7 @@ import { TaskDashboardHeader } from "@/components/dashboard/TaskDashboardHeader"
 import { TaskAISuggestions } from "@/components/tasks/TaskAISuggestions";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 
 export const TaskDashboard: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -17,6 +17,9 @@ export const TaskDashboard: React.FC = () => {
   const [showCompleted, setShowCompleted] = useState<boolean>(true);
   const [filterByDate, setFilterByDate] = useState<boolean>(false);
   const [showAISuggestions, setShowAISuggestions] = useState<boolean>(false);
+  const { completeChecklistItem, onboardingEnabled } = useOnboarding();
+  const prevTaskCountRef = useRef<number>(0);
+  const prevCompletedCountRef = useRef<number>(0);
   
   const { 
     tasks, 
@@ -27,6 +30,27 @@ export const TaskDashboard: React.FC = () => {
     handleUpdateTaskColor,
     handleUpdateTaskLabels
   } = useTasks();
+
+  // Track task creation and completion for onboarding
+  useEffect(() => {
+    if (!onboardingEnabled) return;
+    
+    const currentTaskCount = tasks.length;
+    const currentCompletedCount = tasks.filter(t => t.completed).length;
+    
+    // Task was added
+    if (currentTaskCount > prevTaskCountRef.current) {
+      completeChecklistItem("create-task");
+    }
+    
+    // Task was completed
+    if (currentCompletedCount > prevCompletedCountRef.current) {
+      completeChecklistItem("complete-task");
+    }
+    
+    prevTaskCountRef.current = currentTaskCount;
+    prevCompletedCountRef.current = currentCompletedCount;
+  }, [tasks, completeChecklistItem, onboardingEnabled]);
 
   const groupedTasks = useMemo(() => {
     const filteredTasks = filterByDate ? tasks.filter(task => {

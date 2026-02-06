@@ -18,6 +18,7 @@ export const StudyBuddyToggle: React.FC<StudyBuddyToggleProps> = ({
     <Button
       onClick={onToggle}
       size="lg"
+      data-tour="study-buddy"
       className={cn(
         "fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full shadow-lg transition-all duration-300",
         "bg-primary hover:bg-primary/90 text-primary-foreground",
@@ -32,7 +33,7 @@ export const StudyBuddyToggle: React.FC<StudyBuddyToggleProps> = ({
         <>
           <MessageCircle className="h-6 w-6" />
           {hasUnread && (
-            <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse" />
+            <span className="absolute -top-1 -right-1 h-3 w-3 bg-destructive rounded-full animate-pulse" />
           )}
         </>
       )}

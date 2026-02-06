@@ -21,35 +21,40 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
       label: t('navigation.workspace'),
       icon: Monitor,
       path: "/toolbox",
-      disabled: false
+      disabled: false,
+      tourId: "toolbox"
     },
     {
       id: "myfiles",
       label: t('navigation.myFiles'),
       icon: FileText,
       path: "/my-files",
-      disabled: false
+      disabled: false,
+      tourId: "myfiles"
     },
     {
       id: "tasks",
       label: t('navigation.tasks'),
       icon: CheckSquare,
       path: "/tasks",
-      disabled: false
+      disabled: false,
+      tourId: "tasks"
     },
     {
       id: "mind-map",
       label: t('navigation.mindMap'),
       icon: Brain,
       path: "/mind-map",
-      disabled: false
+      disabled: false,
+      tourId: "mindmap"
     },
     {
       id: "progress",
       label: t('navigation.progress', 'Progress'),
       icon: TrendingUp,
       path: "/progress",
-      disabled: false
+      disabled: false,
+      tourId: "progress"
     }
   ];
 
@@ -69,17 +74,18 @@ export const SidebarNavigation = React.memo(({ activeComponent, setActiveCompone
   }, [navigate, setActiveComponent]);
 
   return (
-    <div className="space-y-2" data-sidebar-nav>
-      {navigationItems.map(({ id, label, icon, path, disabled }) => (
-        <SidebarButton
-          key={id}
-          icon={icon}
-          label={label}
-          isActive={location.pathname === path}
-          onClick={(e) => handleNavigation(e, id, path, disabled)}
-          className={disabled ? "text-gray-600 cursor-not-allowed" : ""}
-          disabled={disabled}
-        />
+    <div className="space-y-2" data-tour="sidebar">
+      {navigationItems.map(({ id, label, icon, path, disabled, tourId }) => (
+        <div key={id} data-tour={tourId}>
+          <SidebarButton
+            icon={icon}
+            label={label}
+            isActive={location.pathname === path}
+            onClick={(e) => handleNavigation(e, id, path, disabled)}
+            className={disabled ? "text-gray-600 cursor-not-allowed" : ""}
+            disabled={disabled}
+          />
+        </div>
       ))}
     </div>
   );
