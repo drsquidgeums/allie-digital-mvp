@@ -23,9 +23,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   const [paidEmail, setPaidEmail] = useState<string | null>(null);
   const [passwordResetSuccess, setPasswordResetSuccess] = useState(false);
   const [signInError, setSignInError] = useState<string | null>(null);
-  const [showVoucher, setShowVoucher] = useState(false);
-  const [voucherCode, setVoucherCode] = useState("");
-  const [voucherSuccess, setVoucherSuccess] = useState(false);
   const { toast } = useToast();
 
   // Check if user just paid and came back, or just reset their password
@@ -150,96 +147,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     }
   };
 
-  // Handle voucher redemption
-  const handleVoucherRedemption = async (e: React.FormEvent) => {
+  const handleSignUpAndPay = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !password || !voucherCode) {
-      toast({
-        title: "Error",
-        description: "Please enter email, password, and voucher code.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      toast({
-        title: "Error",
-        description: "Please enter a valid email address.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!isPasswordValid(password)) {
-      toast({
-        title: "Error",
-        description: "Password does not meet all requirements.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
-    setProgress(0);
-
-    const interval = setInterval(() => {
-      setProgress((prev) => (prev >= 90 ? 90 : prev + 10));
-    }, 100);
-
-    try {
-      const { data, error } = await supabase.functions.invoke("redeem-voucher", {
-        body: { code: voucherCode, email, password },
-      });
-
-      clearInterval(interval);
-
-      // Check for function invocation error
-      if (error) {
-        console.error("Function invoke error:", error);
-        throw new Error(error.message || "Failed to connect to server");
-      }
-
-      // Check for error in response data
-      if (data?.error) {
-        console.error("Voucher error:", data.error);
-        throw new Error(data.error);
-      }
-
-      // Success
-      setProgress(100);
-      
-      toast({
-        title: "Success!",
-        description: data?.message || "Account created with lifetime access! You can now sign in.",
-      });
-      
-      // Switch to sign in mode
-      setVoucherSuccess(true);
-      setShowVoucher(false);
-      setVoucherCode("");
-      setIsSignIn(true);
-      
-    } catch (error: any) {
-      clearInterval(interval);
-      setProgress(0);
-      
-      console.error("Voucher redemption failed:", error);
-      
-      toast({
-        title: "Voucher Error",
-        description: error.message || "Failed to redeem voucher. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSignUpAndPay = async (e: React.FormEvent) => {
     if (!email || !password) {
       toast({
         title: "Error",
@@ -432,21 +342,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           </div>
         )}
         
-        {voucherSuccess && !passwordResetSuccess && (
-          <div 
-            className="w-[70%] p-4 rounded-lg border-2 text-center mb-2"
-            style={{ 
-              backgroundColor: '#f0fdf4', 
-              borderColor: '#22c55e' 
-            }}
-          >
-            <p className="font-semibold text-sm" style={{ color: '#166534' }}>
-              ✓ Voucher redeemed! Sign in to access the app.
-            </p>
-          </div>
-        )}
-        
-        {paidEmail && !passwordResetSuccess && !voucherSuccess && (
+        {paidEmail && !passwordResetSuccess && (
           <div 
             className="w-[70%] p-4 rounded-lg border-2 text-center mb-2"
             style={{ 
@@ -557,231 +453,117 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   // Default: Sign Up + Pay Form (for new users)
   return (
     <div className="space-y-4 flex flex-col items-center">
-      {!showVoucher ? (
-        <>
-          <div className="text-center mb-2">
-            <p className="text-sm" style={{ color: '#666666' }}>
-              One off payment of <span className="font-bold">£30</span> for unlimited lifetime access.
-            </p>
-          </div>
-          
-          <form onSubmit={handleSignUpAndPay} className="space-y-4 flex flex-col items-center w-full">
-            <div className="w-[70%]">
-              <Input
-                type="email"
-                placeholder="Enter email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full transition-colors mb-3"
-                style={{
-                  backgroundColor: 'white',
-                  color: '#000000',
-                  borderColor: '#d1d5db',
-                }}
-                disabled={isLoading}
-              />
-              <Input
-                type="password"
-                placeholder="Create a strong password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full transition-colors"
-                style={{
-                  backgroundColor: 'white',
-                  color: '#000000',
-                  borderColor: password && !isPasswordValid(password) ? '#ef4444' : '#d1d5db',
-                }}
-                disabled={isLoading}
-              />
-              <PasswordRequirements password={password} />
-              
-            </div>
-            <Button 
-              type="submit" 
-              className="w-[70%] transition-colors" 
-              style={{
-                backgroundColor: !isPasswordValid(password) || !email ? '#9ca3af' : '#000000',
-                color: '#ffffff',
-                borderColor: !isPasswordValid(password) || !email ? '#9ca3af' : '#000000',
-                cursor: !isPasswordValid(password) || !email ? 'not-allowed' : 'pointer',
-              }}
-              disabled={isLoading || !isPasswordValid(password) || !email}
-              onMouseEnter={(e) => {
-                if (!isLoading && isPasswordValid(password) && email) {
-                  e.currentTarget.style.backgroundColor = '#1f1f1f';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isLoading && isPasswordValid(password) && email) {
-                  e.currentTarget.style.backgroundColor = '#000000';
-                }
-              }}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                "Pay Now"
-              )}
-            </Button>
-          </form>
-          
-          <p className="text-xs" style={{ color: '#9ca3af' }}>
-            Secure payments with Stripe
-          </p>
-          
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              setShowVoucher(true);
+      <div className="text-center mb-2">
+        <p className="text-sm" style={{ color: '#666666' }}>
+          One off payment of <span className="font-bold">£30</span> for unlimited lifetime access.
+        </p>
+      </div>
+      
+      <form onSubmit={handleSignUpAndPay} className="space-y-4 flex flex-col items-center w-full">
+        <div className="w-[70%]">
+          <Input
+            type="email"
+            placeholder="Enter email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full transition-colors mb-3"
+            style={{
+              backgroundColor: 'white',
+              color: '#000000',
+              borderColor: '#d1d5db',
             }}
-            className="text-sm underline transition-colors hover:opacity-70"
-            style={{ color: '#000000' }}
-          >
-            Have a voucher code?
-          </a>
-          
-          <div className="flex items-center justify-center gap-8 mt-2">
-            <a
-              href="/terms"
-              className="text-sm underline hover:opacity-70 transition-colors"
-              style={{ color: '#000000' }}
-            >
-              Terms of Service
-            </a>
-            <a
-              href="/privacy"
-              className="text-sm underline hover:opacity-70 transition-colors"
-              style={{ color: '#000000' }}
-            >
-              Privacy Policy
-            </a>
-          </div>
-          
-          <p className="text-sm" style={{ color: '#666666' }}>
-            Need enterprise licensing?{' '}
-            <a
-              href="mailto:alliedigital@pm.me?subject=Enterprise%20Licensing%20Inquiry"
-              className="underline hover:opacity-70 transition-colors"
-              style={{ color: '#000000' }}
-            >
-              Contact us for pricing
-            </a>
-          </p>
-          
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              setIsSignIn(true);
+            disabled={isLoading}
+          />
+          <Input
+            type="password"
+            placeholder="Create a strong password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full transition-colors"
+            style={{
+              backgroundColor: 'white',
+              color: '#000000',
+              borderColor: password && !isPasswordValid(password) ? '#ef4444' : '#d1d5db',
             }}
-            className="text-sm underline transition-colors hover:opacity-70"
-          >
-            Already have an account? Sign In
-          </a>
-        </>
-      ) : (
-        <>
-          <div className="text-center mb-2">
-            <p className="text-sm font-medium" style={{ color: '#000000' }}>
-              Redeem Your Voucher Code
-            </p>
-            <p className="text-xs mt-1" style={{ color: '#666666' }}>
-              Enter your details and voucher code to get free access
-            </p>
-          </div>
+            disabled={isLoading}
+          />
+          <PasswordRequirements password={password} />
           
-          <form onSubmit={handleVoucherRedemption} className="space-y-4 flex flex-col items-center w-full">
-            <div className="w-[70%]">
-              <Input
-                type="email"
-                placeholder="Enter email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full transition-colors mb-3"
-                style={{
-                  backgroundColor: 'white',
-                  color: '#000000',
-                  borderColor: '#d1d5db',
-                }}
-                disabled={isLoading}
-              />
-              <Input
-                type="password"
-                placeholder="Create a strong password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full transition-colors mb-3"
-                style={{
-                  backgroundColor: 'white',
-                  color: '#000000',
-                  borderColor: password && !isPasswordValid(password) ? '#ef4444' : '#d1d5db',
-                }}
-                disabled={isLoading}
-              />
-              <PasswordRequirements password={password} />
-              <Input
-                type="text"
-                placeholder="Enter voucher code"
-                value={voucherCode}
-                onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
-                className="w-full transition-colors mt-3"
-                style={{
-                  backgroundColor: 'white',
-                  color: '#000000',
-                  borderColor: '#d1d5db',
-                  textTransform: 'uppercase',
-                }}
-                disabled={isLoading}
-              />
-            </div>
-            <Button 
-              type="submit" 
-              className="w-[70%] transition-colors" 
-              style={{
-                backgroundColor: !isPasswordValid(password) || !email || !voucherCode ? '#9ca3af' : '#22c55e',
-                color: '#ffffff',
-                cursor: !isPasswordValid(password) || !email || !voucherCode ? 'not-allowed' : 'pointer',
-              }}
-              disabled={isLoading || !isPasswordValid(password) || !email || !voucherCode}
-              onMouseEnter={(e) => {
-                if (!isLoading && isPasswordValid(password) && email && voucherCode) {
-                  e.currentTarget.style.backgroundColor = '#16a34a';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isLoading && isPasswordValid(password) && email && voucherCode) {
-                  e.currentTarget.style.backgroundColor = '#22c55e';
-                }
-              }}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Redeeming...
-                </>
-              ) : (
-                "Redeem & Sign Up"
-              )}
-            </Button>
-          </form>
-          
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              setShowVoucher(false);
-              setVoucherCode("");
-            }}
-            className="text-sm underline transition-colors hover:opacity-70"
-          >
-            ← Back to payment
-          </a>
-        </>
-      )}
+        </div>
+        <Button 
+          type="submit" 
+          className="w-[70%] transition-colors" 
+          style={{
+            backgroundColor: !isPasswordValid(password) || !email ? '#9ca3af' : '#000000',
+            color: '#ffffff',
+            borderColor: !isPasswordValid(password) || !email ? '#9ca3af' : '#000000',
+            cursor: !isPasswordValid(password) || !email ? 'not-allowed' : 'pointer',
+          }}
+          disabled={isLoading || !isPasswordValid(password) || !email}
+          onMouseEnter={(e) => {
+            if (!isLoading && isPasswordValid(password) && email) {
+              e.currentTarget.style.backgroundColor = '#1f1f1f';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!isLoading && isPasswordValid(password) && email) {
+              e.currentTarget.style.backgroundColor = '#000000';
+            }
+          }}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Processing...
+            </>
+          ) : (
+            "Pay Now"
+          )}
+        </Button>
+      </form>
+      
+      <p className="text-xs" style={{ color: '#9ca3af' }}>
+        Secure payments with Stripe
+      </p>
+      
+      <div className="flex items-center justify-center gap-8 mt-2">
+        <a
+          href="/terms"
+          className="text-sm underline hover:opacity-70 transition-colors"
+          style={{ color: '#000000' }}
+        >
+          Terms of Service
+        </a>
+        <a
+          href="/privacy"
+          className="text-sm underline hover:opacity-70 transition-colors"
+          style={{ color: '#000000' }}
+        >
+          Privacy Policy
+        </a>
+      </div>
+      
+      <p className="text-sm" style={{ color: '#666666' }}>
+        Need enterprise licensing?{' '}
+        <a
+          href="mailto:alliedigital@pm.me?subject=Enterprise%20Licensing%20Inquiry"
+          className="underline hover:opacity-70 transition-colors"
+          style={{ color: '#000000' }}
+        >
+          Contact us for pricing
+        </a>
+      </p>
+      
+      <a
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+          setIsSignIn(true);
+        }}
+        className="text-sm underline transition-colors hover:opacity-70"
+      >
+        Already have an account? Sign In
+      </a>
       
       <LoadingProgress isLoading={isLoading} progress={progress} />
     </div>
