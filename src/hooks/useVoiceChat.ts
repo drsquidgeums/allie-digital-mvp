@@ -12,6 +12,26 @@ interface UseVoiceChatOptions {
   onListeningChange?: (isListening: boolean) => void;
 }
 
+const SPEECH_THRESHOLD = 0.03; // RMS threshold for "speech"
+const SILENCE_MS_TO_COMMIT = 1100;
+const MIN_RECORD_MS = 700;
+
+function blobToBase64(blob: Blob): Promise<{ base64: string; mimeType: string }> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Failed to read audio'));
+    reader.onloadend = () => {
+      const result = reader.result;
+      if (typeof result !== 'string') return reject(new Error('Invalid audio encoding'));
+      const comma = result.indexOf(',');
+      if (comma === -1) return reject(new Error('Invalid data url'));
+      const base64 = result.slice(comma + 1);
+      resolve({ base64, mimeType: blob.type || 'audio/webm' });
+    };
+    reader.readAsDataURL(blob);
+  });
+}
+
 export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
   const { toast } = useToast();
   const [isActive, setIsActive] = useState(false);
@@ -20,27 +40,31 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [conversationHistory, setConversationHistory] = useState<Message[]>([]);
-  
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isProcessingRef = useRef(false);
-  const isActiveRef = useRef(false); // Use ref to avoid stale closure in onend
+  const isActiveRef = useRef(false);
   const isSpeakingRef = useRef(false);
+
+  // Mic/VAD refs
+  const streamRef = useRef<MediaStream | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const vadRafRef = useRef<number | null>(null);
+
+  // Recording refs
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const recordingRef = useRef(false);
+  const recordStartedAtRef = useRef<number>(0);
+  const lastVoiceAtRef = useRef<number>(0);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      isActiveRef.current = false;
-      if (recognitionRef.current) {
-        recognitionRef.current.abort();
-        recognitionRef.current = null;
-      }
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-      speechSynthesis.cancel();
+      stopSession();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Notify parent of state changes
@@ -51,39 +75,6 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
   useEffect(() => {
     options.onListeningChange?.(isListening);
   }, [isListening, options.onListeningChange]);
-
-  const speakWithElevenLabs = useCallback(async (text: string): Promise<void> => {
-    setIsSpeaking(true);
-    isSpeakingRef.current = true;
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('elevenlabs-tts', {
-        body: { text, voiceId: 'EXAVITQu4vr4xnSDxMaL' } // Sarah voice
-      });
-
-      if (error) throw new Error(error.message);
-      if (!data?.audioContent) throw new Error('No audio received');
-
-      // Use data URI for base64 audio - browser handles decoding
-      const audioUrl = `data:audio/mpeg;base64,${data.audioContent}`;
-      const audio = new Audio(audioUrl);
-      audioRef.current = audio;
-
-      await new Promise<void>((resolve, reject) => {
-        audio.onended = () => resolve();
-        audio.onerror = () => reject(new Error('Audio playback failed'));
-        audio.play().catch(reject);
-      });
-    } catch (error) {
-      console.error('TTS error:', error);
-      // Fallback to browser TTS
-      await speakWithBrowserTTS(text);
-    } finally {
-      setIsSpeaking(false);
-      isSpeakingRef.current = false;
-      audioRef.current = null;
-    }
-  }, []);
 
   const speakWithBrowserTTS = useCallback((text: string): Promise<void> => {
     return new Promise((resolve) => {
@@ -96,187 +87,272 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
     });
   }, []);
 
-  const restartRecognition = useCallback(() => {
-    if (isActiveRef.current && !isProcessingRef.current && !isSpeakingRef.current && recognitionRef.current) {
-      try {
-        console.log('Restarting speech recognition...');
-        setIsListening(true);
-        recognitionRef.current.start();
-      } catch (e) {
-        console.log('Recognition restart failed:', e);
-        // May already be running, ignore
-      }
-    }
-  }, []);
-
-  const processUserInput = useCallback(async (userMessage: string) => {
-    if (isProcessingRef.current || !userMessage.trim()) return;
-    
-    isProcessingRef.current = true;
-    setIsProcessing(true);
-    setIsListening(false);
-    setTranscript('');
+  const speakWithElevenLabs = useCallback(async (text: string): Promise<void> => {
+    setIsSpeaking(true);
+    isSpeakingRef.current = true;
 
     try {
-      console.log('Processing user input:', userMessage);
-      
-      const { data, error } = await supabase.functions.invoke('voice-chat', {
-        body: { 
-          message: userMessage,
-          conversationHistory 
-        }
+      const { data, error } = await supabase.functions.invoke('elevenlabs-tts', {
+        body: { text, voiceId: 'EXAVITQu4vr4xnSDxMaL' },
       });
 
       if (error) throw new Error(error.message);
+      if (!data?.audioContent) throw new Error('No audio received');
 
-      const aiResponse = data.response;
-      console.log('AI response:', aiResponse);
-      setConversationHistory(data.conversationHistory || []);
+      const audioUrl = `data:audio/mpeg;base64,${data.audioContent}`;
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
 
-      // Speak the response
-      await speakWithElevenLabs(aiResponse);
-
-    } catch (error) {
-      console.error('Voice chat error:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to process your message. Please try again.',
-        variant: 'destructive'
+      await new Promise<void>((resolve, reject) => {
+        audio.onended = () => resolve();
+        audio.onerror = () => reject(new Error('Audio playback failed'));
+        audio.play().catch(reject);
       });
+    } catch (err) {
+      // If user isn't logged in, our elevenlabs-tts function may reject; fallback gracefully.
+      console.error('TTS error (fallback to browser):', err);
+      await speakWithBrowserTTS(text);
     } finally {
-      isProcessingRef.current = false;
-      setIsProcessing(false);
-      
-      // Resume listening after speaking completes
-      restartRecognition();
+      setIsSpeaking(false);
+      isSpeakingRef.current = false;
+      audioRef.current = null;
     }
-  }, [conversationHistory, speakWithElevenLabs, toast, restartRecognition]);
+  }, [speakWithBrowserTTS]);
 
-  const startSession = useCallback(async () => {
-    // Check for speech recognition support
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
+  const transcribeWithElevenLabs = useCallback(async (blob: Blob) => {
+    const { base64, mimeType } = await blobToBase64(blob);
+    const { data, error } = await supabase.functions.invoke('elevenlabs-transcribe', {
+      body: { audioBase64: base64, mimeType },
+    });
+    if (error) throw new Error(error.message);
+    const text = typeof data?.text === 'string' ? data.text : '';
+    return text.trim();
+  }, []);
+
+  const runVadLoop = useCallback(() => {
+    if (!isActiveRef.current) return;
+    if (!analyserRef.current) return;
+
+    const analyser = analyserRef.current;
+    const buffer = new Uint8Array(analyser.fftSize);
+    analyser.getByteTimeDomainData(buffer);
+
+    let sum = 0;
+    for (let i = 0; i < buffer.length; i++) {
+      const v = (buffer[i] - 128) / 128;
+      sum += v * v;
+    }
+    const rms = Math.sqrt(sum / buffer.length);
+    const now = Date.now();
+
+    const canRecord = !isProcessingRef.current && !isSpeakingRef.current;
+
+    if (canRecord) {
+      if (rms > SPEECH_THRESHOLD) {
+        lastVoiceAtRef.current = now;
+        if (!recordingRef.current) {
+          // Start recording when user begins speaking
+          startRecording();
+        }
+      }
+
+      if (recordingRef.current) {
+        const silentFor = now - lastVoiceAtRef.current;
+        const recordedFor = now - recordStartedAtRef.current;
+        if (silentFor > SILENCE_MS_TO_COMMIT && recordedFor > MIN_RECORD_MS) {
+          stopRecording();
+        }
+      }
+    }
+
+    vadRafRef.current = requestAnimationFrame(runVadLoop);
+  }, []);
+
+  const startRecording = useCallback(() => {
+    const stream = streamRef.current;
+    if (!stream) return;
+
+    if (typeof MediaRecorder === 'undefined') {
       toast({
         title: 'Not Supported',
-        description: 'Speech recognition is not supported in your browser. Please try Chrome or Edge.',
-        variant: 'destructive'
+        description: 'Audio recording is not supported in this browser.',
+        variant: 'destructive',
       });
       return;
     }
 
     try {
-      // Request microphone permission
-      await navigator.mediaDevices.getUserMedia({ audio: true });
+      chunksRef.current = [];
 
-      const recognition = new SpeechRecognition();
-      recognition.continuous = true; // Keep listening continuously
-      recognition.interimResults = true;
-      recognition.lang = 'en-US';
+      let recorder: MediaRecorder;
+      const preferred = 'audio/webm;codecs=opus';
+      if (MediaRecorder.isTypeSupported?.(preferred)) {
+        recorder = new MediaRecorder(stream, { mimeType: preferred });
+      } else {
+        recorder = new MediaRecorder(stream);
+      }
 
-      recognition.onresult = (event) => {
-        let finalTranscript = '';
-        let interimTranscript = '';
-
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcriptText = event.results[i][0].transcript;
-          if (event.results[i].isFinal) {
-            finalTranscript += transcriptText;
-          } else {
-            interimTranscript += transcriptText;
-          }
-        }
-
-        setTranscript(interimTranscript || finalTranscript);
-
-        if (finalTranscript && finalTranscript.trim()) {
-          console.log('Final transcript:', finalTranscript);
-          // Stop recognition while processing
-          recognition.stop();
-          processUserInput(finalTranscript);
-        }
+      recorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) chunksRef.current.push(e.data);
       };
 
-      recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-        
-        if (event.error === 'not-allowed') {
-          toast({
-            title: 'Microphone Denied',
-            description: 'Please allow microphone access to use voice chat.',
-            variant: 'destructive'
-          });
-          isActiveRef.current = false;
-          setIsActive(false);
-          setIsListening(false);
-        } else if (event.error === 'network') {
-          // Network error - common in embedded iframes
-          toast({
-            title: 'Network Error',
-            description: 'Speech recognition failed. Try opening the app in a new tab.',
-            variant: 'destructive'
-          });
-          isActiveRef.current = false;
-          setIsActive(false);
-          setIsListening(false);
-        } else if (event.error === 'no-speech') {
-          // Normal timeout due to silence, onend will handle restart
-          console.log('No speech detected, will auto-restart.');
-        } else if (event.error !== 'aborted') {
-          toast({
-            title: 'Recognition Error',
-            description: `Speech error: ${event.error}`,
-            variant: 'destructive'
-          });
-        }
+      recorder.onstart = () => {
+        recordingRef.current = true;
+        recordStartedAtRef.current = Date.now();
+        lastVoiceAtRef.current = Date.now();
+        setIsListening(true);
       };
 
-      recognition.onend = () => {
-        console.log('Speech recognition ended, isActive:', isActiveRef.current);
+      recorder.onstop = async () => {
+        recordingRef.current = false;
+
+        const blob = new Blob(chunksRef.current, { type: recorder.mimeType || 'audio/webm' });
+        chunksRef.current = [];
+
+        if (!isActiveRef.current) return;
+        if (blob.size < 800) return; // ignore tiny clips
+
         setIsListening(false);
-        
-        // Auto-restart if session is still active and not processing/speaking
-        if (isActiveRef.current && !isProcessingRef.current && !isSpeakingRef.current) {
-          console.log('Auto-restarting speech recognition...');
-          try {
-            setIsListening(true);
-            recognition.start();
-          } catch (e) {
-            console.log('Could not restart:', e);
+        setIsProcessing(true);
+        isProcessingRef.current = true;
+
+        try {
+          const text = await transcribeWithElevenLabs(blob);
+          if (!text) {
+            // go back to listening
+            return;
           }
+
+          setTranscript(text);
+
+          const { data, error } = await supabase.functions.invoke('voice-chat', {
+            body: {
+              message: text,
+              conversationHistory,
+            },
+          });
+
+          if (error) throw new Error(error.message);
+
+          const aiResponse = data?.response;
+          const nextHistory = data?.conversationHistory;
+
+          if (Array.isArray(nextHistory)) {
+            setConversationHistory(nextHistory);
+          } else {
+            // fallback local append
+            setConversationHistory((prev) => [...prev, { role: 'user', content: text }, { role: 'assistant', content: String(aiResponse || '') }]);
+          }
+
+          if (typeof aiResponse === 'string' && aiResponse.trim()) {
+            await speakWithElevenLabs(aiResponse.trim());
+          }
+        } catch (err: any) {
+          console.error('Voice flow error:', err);
+          toast({
+            title: 'Voice Assistant Error',
+            description: err?.message || 'Something went wrong. Please try again.',
+            variant: 'destructive',
+          });
+        } finally {
+          isProcessingRef.current = false;
+          setIsProcessing(false);
+          // resume passive listening
+          setIsListening(true);
         }
       };
 
-      recognitionRef.current = recognition;
+      recorderRef.current = recorder;
+      recorder.start();
+    } catch (err) {
+      console.error('Failed to start recorder:', err);
+    }
+  }, [conversationHistory, speakWithElevenLabs, toast, transcribeWithElevenLabs]);
+
+  const stopRecording = useCallback(() => {
+    const rec = recorderRef.current;
+    if (!rec) return;
+    try {
+      if (rec.state !== 'inactive') rec.stop();
+    } catch (err) {
+      console.log('Recorder stop failed:', err);
+    }
+  }, []);
+
+  const startSession = useCallback(async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      });
+
+      streamRef.current = stream;
+
+      // Set up analyser for VAD
+      const AudioContextCtor = window.AudioContext || (window as any).webkitAudioContext;
+      const ctx = new AudioContextCtor();
+      const source = ctx.createMediaStreamSource(stream);
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 2048;
+      source.connect(analyser);
+
+      audioContextRef.current = ctx;
+      analyserRef.current = analyser;
+
       isActiveRef.current = true;
       setIsActive(true);
       setIsListening(true);
       setConversationHistory([]);
-      
-      recognition.start();
-      console.log('Speech recognition started');
 
       toast({
         title: 'Voice Assistant Ready',
-        description: 'Start speaking to chat with Allie'
+        description: 'Start speaking to chat with Allie',
       });
-    } catch (error) {
-      console.error('Failed to start voice session:', error);
+
+      // Start VAD loop
+      if (vadRafRef.current) cancelAnimationFrame(vadRafRef.current);
+      vadRafRef.current = requestAnimationFrame(runVadLoop);
+    } catch (err) {
+      console.error('Failed to start voice session:', err);
       toast({
         title: 'Microphone Error',
         description: 'Please allow microphone access to use the voice assistant.',
-        variant: 'destructive'
+        variant: 'destructive',
       });
     }
-  }, [processUserInput, toast]);
+  }, [runVadLoop, toast]);
 
   const stopSession = useCallback(() => {
-    console.log('Stopping voice session');
     isActiveRef.current = false;
-    
-    if (recognitionRef.current) {
-      recognitionRef.current.abort();
-      recognitionRef.current = null;
+
+    if (vadRafRef.current) {
+      cancelAnimationFrame(vadRafRef.current);
+      vadRafRef.current = null;
     }
+
+    if (recorderRef.current) {
+      try {
+        if (recorderRef.current.state !== 'inactive') recorderRef.current.stop();
+      } catch {
+        // ignore
+      }
+      recorderRef.current = null;
+    }
+
+    if (streamRef.current) {
+      for (const track of streamRef.current.getTracks()) track.stop();
+      streamRef.current = null;
+    }
+
+    if (audioContextRef.current) {
+      audioContextRef.current.close().catch(() => undefined);
+      audioContextRef.current = null;
+    }
+
+    analyserRef.current = null;
 
     if (audioRef.current) {
       audioRef.current.pause();
@@ -284,6 +360,10 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
     }
 
     speechSynthesis.cancel();
+
+    isProcessingRef.current = false;
+    recordingRef.current = false;
+    chunksRef.current = [];
 
     setIsActive(false);
     setIsListening(false);
@@ -300,6 +380,6 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
     transcript,
     conversationHistory,
     startSession,
-    stopSession
+    stopSession,
   };
 };
