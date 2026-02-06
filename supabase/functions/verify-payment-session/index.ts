@@ -21,39 +21,27 @@ serve(async (req) => {
   try {
     logStep("Function started");
 
-    // Authentication check
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const token = authHeader.replace("Bearer ", "");
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
-    if (token === anonKey) {
-      return new Response(JSON.stringify({ error: "User authentication required" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
+    // Create Supabase client - auth is optional for this function
+    // Users may verify payment before creating an account
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-      { global: { headers: { Authorization: authHeader } } }
+      Deno.env.get("SUPABASE_ANON_KEY") ?? ""
     );
 
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
-    if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Invalid authentication" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    // Try to get authenticated user if available (for email verification)
+    let authenticatedUserEmail: string | null = null;
+    const authHeader = req.headers.get("Authorization");
+    if (authHeader) {
+      const token = authHeader.replace("Bearer ", "");
+      const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+      if (token !== anonKey) {
+        const { data: { user } } = await supabaseClient.auth.getUser(token);
+        if (user?.email) {
+          authenticatedUserEmail = user.email;
+          logStep("Authenticated user found", { email: authenticatedUserEmail });
+        }
+      }
     }
-
-    logStep("Request from user:", user.id);
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
@@ -86,9 +74,10 @@ serve(async (req) => {
     const customerEmail = session.customer_email || session.metadata?.email;
     logStep("Session retrieved", { status: session.payment_status, email: customerEmail });
 
-    // Security check: Verify the session email matches the authenticated user's email
-    if (customerEmail && user.email && customerEmail.toLowerCase() !== user.email.toLowerCase()) {
-      logStep("Email mismatch", { sessionEmail: customerEmail, userEmail: user.email });
+    // Security check: If user is authenticated, verify the session email matches
+    if (authenticatedUserEmail && customerEmail && 
+        customerEmail.toLowerCase() !== authenticatedUserEmail.toLowerCase()) {
+      logStep("Email mismatch", { sessionEmail: customerEmail, userEmail: authenticatedUserEmail });
       return new Response(JSON.stringify({ 
         error: "Session email does not match authenticated user" 
       }), {
