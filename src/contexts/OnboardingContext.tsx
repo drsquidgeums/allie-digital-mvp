@@ -8,14 +8,6 @@ export interface OnboardingStep {
   placement?: "top" | "bottom" | "left" | "right";
 }
 
-export interface ChecklistItem {
-  id: string;
-  title: string;
-  description: string;
-  completed: boolean;
-  route?: string;
-}
-
 interface OnboardingContextType {
   // Tour
   isTourActive: boolean;
@@ -26,17 +18,6 @@ interface OnboardingContextType {
   nextStep: () => void;
   prevStep: () => void;
   skipTour: () => void;
-  
-  // Hints
-  hintsEnabled: boolean;
-  setHintsEnabled: (enabled: boolean) => void;
-  dismissedHints: string[];
-  dismissHint: (hintId: string) => void;
-  
-  // Checklist
-  checklistItems: ChecklistItem[];
-  completeChecklistItem: (itemId: string) => void;
-  resetChecklist: () => void;
   
   // Settings
   onboardingEnabled: boolean;
@@ -49,94 +30,163 @@ const OnboardingContext = createContext<OnboardingContextType | undefined>(undef
 
 const STORAGE_KEY = "allie_onboarding";
 
+// Comprehensive tour covering all sidebar navigation and workspace tools
 const defaultTourSteps: OnboardingStep[] = [
+  // === SIDEBAR NAVIGATION ===
   {
-    id: "sidebar",
-    target: "[data-tour='sidebar']",
-    title: "Navigation Sidebar",
-    description: "This is your main navigation. Access all your tools from here - Tasks, Files, Mind Maps, and more!",
+    id: "workspace",
+    target: "[data-tour='workspace']",
+    title: "Workspace",
+    description: "Your main reading and study area. Upload documents and use powerful accessibility tools to help you focus and understand content better.",
+    placement: "right"
+  },
+  {
+    id: "myfiles",
+    target: "[data-tour='myfiles']",
+    title: "My Files",
+    description: "Access all your uploaded documents in one place. Organise files into folders and quickly open them in the workspace.",
     placement: "right"
   },
   {
     id: "tasks",
-    target: "[data-tour='task-input']",
-    title: "Quick Task Entry",
-    description: "Add tasks instantly! Just type and press Enter. Allie helps you stay organised with ADHD-friendly task management.",
-    placement: "bottom"
+    target: "[data-tour='tasks']",
+    title: "Task Entry",
+    description: "Create and manage your to-do list. Break down work into manageable chunks with our ADHD-friendly task system.",
+    placement: "right"
   },
   {
-    id: "study-buddy",
-    target: "[data-tour='study-buddy']",
-    title: "AI Study Buddy",
-    description: "Your personal AI assistant! Get help with studying, break down complex topics, or just chat for motivation.",
-    placement: "left"
-  },
-  {
-    id: "toolbox",
-    target: "[data-tour='toolbox']",
-    title: "Toolbox",
-    description: "Access powerful reading aids like Bionic Reader, Beeline Reader, and text-to-speech to help you focus.",
+    id: "mindmap",
+    target: "[data-tour='mindmap']",
+    title: "Mind Map",
+    description: "Visualise your ideas and create connections between concepts. Great for brainstorming and revision.",
     placement: "right"
   },
   {
     id: "progress",
     target: "[data-tour='progress']",
-    title: "Progress Dashboard",
-    description: "Track your productivity with streaks, charts, and AI insights. Celebrate your wins!",
+    title: "Progress",
+    description: "Track your productivity with streaks, charts, and AI insights. Celebrate your wins and stay motivated!",
     placement: "right"
-  }
-];
-
-const defaultChecklistItems: ChecklistItem[] = [
-  {
-    id: "create-task",
-    title: "Create your first task",
-    description: "Add a task using the task input",
-    completed: false,
-    route: "/toolbox"
   },
   {
-    id: "complete-task",
-    title: "Complete a task",
-    description: "Mark a task as done",
-    completed: false,
-    route: "/toolbox"
+    id: "settings",
+    target: "[data-tour='settings']",
+    title: "Settings",
+    description: "Customise Allie to work for you. Change language, accessibility options, and manage your account.",
+    placement: "right"
   },
   {
-    id: "upload-file",
-    title: "Upload a document",
-    description: "Upload a PDF or text file to read",
-    completed: false,
-    route: "/my-files"
+    id: "logout",
+    target: "[data-tour='logout']",
+    title: "Sign Out",
+    description: "Securely sign out of your account when you're done.",
+    placement: "right"
   },
   {
-    id: "use-study-buddy",
-    title: "Chat with Study Buddy",
-    description: "Ask Allie for help with anything",
-    completed: false
+    id: "support",
+    target: "[data-tour='support']",
+    title: "Support",
+    description: "Need help? Send us a message and we'll get back to you. You can also submit feedback and feature requests here.",
+    placement: "right"
   },
   {
-    id: "try-mind-map",
-    title: "Create a mind map",
-    description: "Visualise your ideas",
-    completed: false,
-    route: "/mind-map"
+    id: "theme",
+    target: "[data-tour='theme']",
+    title: "Theme Toggle",
+    description: "Switch between light and dark mode. Dark mode can help reduce eye strain during long study sessions.",
+    placement: "right"
+  },
+  // === WORKSPACE TOOLS ===
+  {
+    id: "bionic",
+    target: "[data-tour='bionic']",
+    title: "Bionic Reading",
+    description: "Highlights the first part of each word to help your eyes glide through text faster. Great for improving reading speed and focus.",
+    placement: "bottom"
   },
   {
-    id: "check-progress",
-    title: "View your progress",
-    description: "See your productivity stats",
-    completed: false,
-    route: "/progress"
+    id: "beeline",
+    target: "[data-tour='beeline']",
+    title: "Beeline Reader",
+    description: "Adds a colour gradient to lines of text to help your eyes track from line to line more easily.",
+    placement: "bottom"
+  },
+  {
+    id: "tts",
+    target: "[data-tour='tts']",
+    title: "Text-to-Speech",
+    description: "Have documents read aloud to you. Helpful for auditory learners or when you need a break from reading.",
+    placement: "bottom"
+  },
+  {
+    id: "stt",
+    target: "[data-tour='stt']",
+    title: "Speech-to-Text",
+    description: "Dictate notes and text using your voice. Perfect for capturing ideas quickly without typing.",
+    placement: "bottom"
+  },
+  {
+    id: "pomodoro",
+    target: "[data-tour='pomodoro']",
+    title: "Pomodoro Timer",
+    description: "Work in focused 25-minute sessions with short breaks. A proven technique to maintain concentration.",
+    placement: "bottom"
+  },
+  {
+    id: "irlen",
+    target: "[data-tour='irlen']",
+    title: "Colour Overlay",
+    description: "Apply tinted overlays to reduce visual stress. Some people find certain colours make reading easier.",
+    placement: "bottom"
+  },
+  {
+    id: "ai-simplify",
+    target: "[data-tour='ai-simplify']",
+    title: "AI Simplify",
+    description: "Reword complex text into simpler language. Helps break down academic or technical content.",
+    placement: "bottom"
+  },
+  {
+    id: "document-ai",
+    target: "[data-tour='document-ai']",
+    title: "Document AI",
+    description: "Ask questions about your document and get instant answers. Great for understanding difficult passages.",
+    placement: "bottom"
+  },
+  {
+    id: "voice-ai",
+    target: "[data-tour='voice-ai']",
+    title: "Voice AI",
+    description: "Have a voice conversation with AI about your studies. Speak naturally and get spoken responses.",
+    placement: "bottom"
+  },
+  {
+    id: "learning-ai",
+    target: "[data-tour='learning-ai']",
+    title: "Learning Tools",
+    description: "Generate flashcards, quizzes, and summaries from your documents. Turn passive reading into active learning.",
+    placement: "bottom"
+  },
+  {
+    id: "ambient",
+    target: "[data-tour='ambient']",
+    title: "Ambient Music",
+    description: "Play calming background sounds to help you focus. Choose from rain, café ambience, and more.",
+    placement: "bottom"
+  },
+  // === AI STUDY BUDDY ===
+  {
+    id: "study-buddy",
+    target: "[data-tour='study-buddy']",
+    title: "AI Study Buddy",
+    description: "Your personal AI assistant! Click this anytime to get help with studying, break down complex topics, or just chat for motivation.",
+    placement: "left"
   }
 ];
 
 export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isTourActive, setIsTourActive] = useState(false);
   const [currentTourStep, setCurrentTourStep] = useState(0);
-  const [hintsEnabled, setHintsEnabled] = useState(true);
-  const [dismissedHints, setDismissedHints] = useState<string[]>([]);
-  const [checklistItems, setChecklistItems] = useState<ChecklistItem[]>(defaultChecklistItems);
   const [onboardingEnabled, setOnboardingEnabled] = useState(true);
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
 
@@ -146,13 +196,7 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const data = JSON.parse(saved);
-        setDismissedHints(data.dismissedHints || []);
-        setChecklistItems(prev => prev.map(item => ({
-          ...item,
-          completed: data.completedItems?.includes(item.id) || false
-        })));
         setOnboardingEnabled(data.onboardingEnabled ?? true);
-        setHintsEnabled(data.hintsEnabled ?? true);
         setHasCompletedOnboarding(data.hasCompletedOnboarding ?? false);
       }
     } catch (e) {
@@ -164,17 +208,14 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   useEffect(() => {
     try {
       const data = {
-        dismissedHints,
-        completedItems: checklistItems.filter(i => i.completed).map(i => i.id),
         onboardingEnabled,
-        hintsEnabled,
         hasCompletedOnboarding
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     } catch (e) {
       console.error("Error saving onboarding state:", e);
     }
-  }, [dismissedHints, checklistItems, onboardingEnabled, hintsEnabled, hasCompletedOnboarding]);
+  }, [onboardingEnabled, hasCompletedOnboarding]);
 
   const startTour = useCallback(() => {
     setCurrentTourStep(0);
@@ -205,26 +246,12 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setHasCompletedOnboarding(true);
   }, []);
 
-  const dismissHint = useCallback((hintId: string) => {
-    setDismissedHints(prev => [...prev, hintId]);
-  }, []);
-
-  const completeChecklistItem = useCallback((itemId: string) => {
-    setChecklistItems(prev => prev.map(item => 
-      item.id === itemId ? { ...item, completed: true } : item
-    ));
-  }, []);
-
-  const resetChecklist = useCallback(() => {
-    setChecklistItems(defaultChecklistItems);
-  }, []);
-
   const resetOnboarding = useCallback(() => {
-    setDismissedHints([]);
-    setChecklistItems(defaultChecklistItems);
     setHasCompletedOnboarding(false);
     setCurrentTourStep(0);
     localStorage.removeItem(STORAGE_KEY);
+    // Also clear the welcome shown flag
+    localStorage.removeItem("allie_welcome_shown");
   }, []);
 
   return (
@@ -237,13 +264,6 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       nextStep,
       prevStep,
       skipTour,
-      hintsEnabled,
-      setHintsEnabled,
-      dismissedHints,
-      dismissHint,
-      checklistItems,
-      completeChecklistItem,
-      resetChecklist,
       onboardingEnabled,
       setOnboardingEnabled,
       hasCompletedOnboarding,

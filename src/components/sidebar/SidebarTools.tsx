@@ -59,12 +59,14 @@ export const SidebarTools = ({
   return (
     <div className="space-y-2">
       <div className="pt-4 border-t border-border space-y-2">
-        <SidebarButton
-          icon={Settings}
-          label={t('navigation.settings')}
-          isActive={location.pathname === "/settings"}
-          onClick={handleSettingsClick}
-        />
+        <div data-tour="settings">
+          <SidebarButton
+            icon={Settings}
+            label={t('navigation.settings')}
+            isActive={location.pathname === "/settings"}
+            onClick={handleSettingsClick}
+          />
+        </div>
         {onFeedbackClick && (
           <SidebarButton
             icon={MessageSquare}
@@ -73,12 +75,14 @@ export const SidebarTools = ({
             onClick={handleFeedbackClick}
           />
         )}
-        <SidebarButton
-          icon={LogOut}
-          label={t('common.logout')}
-          isActive={false}
-          onClick={handleLogout}
-        />
+        <div data-tour="logout">
+          <SidebarButton
+            icon={LogOut}
+            label={t('common.logout')}
+            isActive={false}
+            onClick={handleLogout}
+          />
+        </div>
       </div>
     </div>
   );

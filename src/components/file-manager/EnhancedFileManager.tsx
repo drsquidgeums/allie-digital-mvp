@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Table, 
   TableBody, 
@@ -20,7 +20,6 @@ import { FilePreview } from './FilePreview';
 import { BulkActions } from './BulkActions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTranslation } from 'react-i18next';
-import { useOnboarding } from '@/contexts/OnboardingContext';
 
 /**
  * Enhanced File Manager with organization, recent files, previews, and bulk operations
@@ -31,8 +30,6 @@ export const EnhancedFileManager: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useTranslation();
-  const { completeChecklistItem, onboardingEnabled } = useOnboarding();
-  const prevFileCountRef = useRef<number>(0);
   
   // Local state for file management features
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
@@ -40,17 +37,6 @@ export const EnhancedFileManager: React.FC = () => {
   const [recentFiles, setRecentFiles] = useState<ManagedFile[]>([]);
   const [activeTab, setActiveTab] = useState('all');
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
-
-  // Track file uploads for onboarding
-  useEffect(() => {
-    if (!onboardingEnabled) return;
-    
-    if (files.length > prevFileCountRef.current && prevFileCountRef.current > 0) {
-      completeChecklistItem("upload-file");
-    }
-    
-    prevFileCountRef.current = files.length;
-  }, [files, completeChecklistItem, onboardingEnabled]);
 
   // Initialize recent files and folders
   useEffect(() => {

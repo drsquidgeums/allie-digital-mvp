@@ -75,13 +75,17 @@ export const Sidebar = React.memo(({
       />
 
       <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
-        <SidebarButton
-          icon={Headset}
-          label={t("navigation.support", "Support")}
-          isActive={false}
-          onClick={() => setSupportDialogOpen(true)}
-        />
-        <ThemeToggle />
+        <div data-tour="support">
+          <SidebarButton
+            icon={Headset}
+            label={t("navigation.support", "Support")}
+            isActive={false}
+            onClick={() => setSupportDialogOpen(true)}
+          />
+        </div>
+        <div data-tour="theme">
+          <ThemeToggle />
+        </div>
       </div>
       
       <SupportDialog open={supportDialogOpen} onOpenChange={setSupportDialogOpen} />
