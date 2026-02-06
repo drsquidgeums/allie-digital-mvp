@@ -5,10 +5,13 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useTranslation } from "react-i18next";
-import { RotateCcw, Play, Sparkles, ListChecks } from "lucide-react";
+import { RotateCcw, Play, Sparkles, ListChecks, Info } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export const OnboardingSettings: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const {
     onboardingEnabled,
     setOnboardingEnabled,
@@ -16,6 +19,20 @@ export const OnboardingSettings: React.FC = () => {
     resetOnboarding,
     hasCompletedOnboarding
   } = useOnboarding();
+
+  const handleStartTour = () => {
+    // Navigate to toolbox first so tour elements are visible
+    navigate("/toolbox");
+    // Small delay to let page render
+    setTimeout(() => {
+      startTour();
+    }, 300);
+  };
+
+  const handleResetOnboarding = () => {
+    resetOnboarding();
+    toast.success("Onboarding reset! The welcome screen will appear on your next visit.");
+  };
 
   return (
     <div className="space-y-4">
@@ -48,22 +65,22 @@ export const OnboardingSettings: React.FC = () => {
         <Separator />
 
         {/* Actions */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           <Button
-            variant="outline"
+            variant="default"
             size="sm"
-            onClick={startTour}
+            onClick={handleStartTour}
             disabled={!onboardingEnabled}
             className="gap-2"
           >
             <Play className="h-4 w-4" />
-            {t('settings.onboarding.startTour', 'Start Tour')}
+            {t('settings.onboarding.startTour', 'Start Interactive Tour')}
           </Button>
           
           <Button
             variant="outline"
             size="sm"
-            onClick={resetOnboarding}
+            onClick={handleResetOnboarding}
             className="gap-2"
           >
             <RotateCcw className="h-4 w-4" />
@@ -71,10 +88,15 @@ export const OnboardingSettings: React.FC = () => {
           </Button>
         </div>
 
-        {hasCompletedOnboarding && (
+        {hasCompletedOnboarding ? (
           <p className="text-xs text-muted-foreground flex items-center gap-1">
             <ListChecks className="h-3 w-3" />
             {t('settings.onboarding.tourCompleted', 'You\'ve completed the tour!')}
+          </p>
+        ) : (
+          <p className="text-xs text-muted-foreground flex items-center gap-1">
+            <Info className="h-3 w-3" />
+            Take the interactive tour to learn about all of Allie's features
           </p>
         )}
       </div>

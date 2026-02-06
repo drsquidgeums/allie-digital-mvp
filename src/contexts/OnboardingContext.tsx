@@ -199,6 +199,13 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setOnboardingEnabled(data.onboardingEnabled ?? true);
         setHasCompletedOnboarding(data.hasCompletedOnboarding ?? false);
       }
+      
+      // Auto-start tour for new users who haven't seen the welcome modal
+      const hasSeenWelcome = localStorage.getItem("allie_welcome_shown");
+      if (!hasSeenWelcome) {
+        // Welcome modal will handle showing the tour option
+        // This is just for users who might have closed the modal without choosing
+      }
     } catch (e) {
       console.error("Error loading onboarding state:", e);
     }
