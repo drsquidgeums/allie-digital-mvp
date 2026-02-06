@@ -19,7 +19,9 @@ export const DocumentViewerToolbar: React.FC<DocumentViewerToolbarProps> = ({
         <div className="flex items-center justify-between gap-2">
           <DocumentToolbar />
           <div className="flex items-center gap-2 ml-auto">
-            <FocusButton />
+            <div data-tour="focus-mode">
+              <FocusButton />
+            </div>
             <ToolbarTools 
               documentContent={documentContent}
               documentName={documentName}
