@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { X, ChevronLeft, ChevronRight, SkipForward } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -121,12 +120,20 @@ export const OnboardingTour: React.FC = () => {
         />
       )}
 
-      {/* Tooltip */}
-      <Card
+      {/* Tooltip - High contrast for WCAG 3.0 compliance */}
+      <div
         ref={tooltipRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tour-step-title"
+        aria-describedby="tour-step-description"
         className={cn(
-          "fixed z-[10000] p-4 w-80 shadow-xl border-primary/20",
-          "animate-in fade-in-0 zoom-in-95 duration-200"
+          "fixed z-[10000] p-5 w-80 rounded-xl shadow-2xl",
+          "animate-in fade-in-0 zoom-in-95 duration-200",
+          // Explicit high-contrast background - white in light, dark gray in dark
+          "bg-white dark:bg-zinc-900",
+          // Strong border for visibility
+          "border-2 border-primary ring-4 ring-primary/20"
         )}
         style={{
           top: position?.top ?? -9999,
@@ -137,56 +144,82 @@ export const OnboardingTour: React.FC = () => {
         {/* Arrow */}
         <div
           className={cn(
-            "absolute w-3 h-3 bg-card border rotate-45",
-            position?.arrowPosition === "top" && "-top-1.5 left-1/2 -translate-x-1/2 border-l border-t",
-            position?.arrowPosition === "bottom" && "-bottom-1.5 left-1/2 -translate-x-1/2 border-r border-b",
-            position?.arrowPosition === "left" && "-left-1.5 top-1/2 -translate-y-1/2 border-l border-b",
-            position?.arrowPosition === "right" && "-right-1.5 top-1/2 -translate-y-1/2 border-r border-t"
+            "absolute w-3 h-3 rotate-45",
+            "bg-white dark:bg-zinc-900",
+            "border-primary",
+            position?.arrowPosition === "top" && "-top-1.5 left-1/2 -translate-x-1/2 border-l-2 border-t-2",
+            position?.arrowPosition === "bottom" && "-bottom-1.5 left-1/2 -translate-x-1/2 border-r-2 border-b-2",
+            position?.arrowPosition === "left" && "-left-1.5 top-1/2 -translate-y-1/2 border-l-2 border-b-2",
+            position?.arrowPosition === "right" && "-right-1.5 top-1/2 -translate-y-1/2 border-r-2 border-t-2"
           )}
         />
+
+        {/* Step indicator badge */}
+        <div className="absolute -top-3 left-4 px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+          Step {currentTourStep + 1} of {tourSteps.length}
+        </div>
 
         {/* Close button */}
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-2 right-2 h-6 w-6"
+          className="absolute top-2 right-2 h-7 w-7 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800"
           onClick={skipTour}
+          aria-label="Close tour"
         >
-          <X className="h-4 w-4" />
+          <X className="h-4 w-4 text-zinc-600 dark:text-zinc-300" />
         </Button>
 
-        {/* Content */}
-        <div className="pr-6">
-          <h3 className="font-semibold text-lg mb-2">{currentStep.title}</h3>
-          <p className="text-sm text-muted-foreground mb-4">{currentStep.description}</p>
+        {/* Content - Explicit high contrast text colours */}
+        <div className="pr-6 mt-2">
+          <h3 
+            id="tour-step-title"
+            className="font-bold text-lg mb-2 text-zinc-900 dark:text-white"
+          >
+            {currentStep.title}
+          </h3>
+          <p 
+            id="tour-step-description"
+            className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-200 mb-5"
+          >
+            {currentStep.description}
+          </p>
         </div>
 
-        {/* Progress & Navigation */}
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">
-            {currentTourStep + 1} of {tourSteps.length}
-          </span>
+        {/* Navigation buttons - High contrast */}
+        <div className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-200 dark:border-zinc-700">
+          {currentTourStep > 0 && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={prevStep}
+              className="border-zinc-300 dark:border-zinc-600 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            >
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              Back
+            </Button>
+          )}
           
-          <div className="flex gap-2">
-            {currentTourStep > 0 && (
-              <Button variant="outline" size="sm" onClick={prevStep}>
-                <ChevronLeft className="h-4 w-4 mr-1" />
-                Back
-              </Button>
-            )}
-            
-            <Button variant="ghost" size="sm" onClick={skipTour}>
-              <SkipForward className="h-4 w-4 mr-1" />
-              Skip
-            </Button>
-            
-            <Button size="sm" onClick={nextStep}>
-              {currentTourStep === tourSteps.length - 1 ? "Finish" : "Next"}
-              {currentTourStep < tourSteps.length - 1 && <ChevronRight className="h-4 w-4 ml-1" />}
-            </Button>
-          </div>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={skipTour}
+            className="text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          >
+            <SkipForward className="h-4 w-4 mr-1" />
+            Skip
+          </Button>
+          
+          <Button 
+            size="sm" 
+            onClick={nextStep}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium"
+          >
+            {currentTourStep === tourSteps.length - 1 ? "Finish" : "Next"}
+            {currentTourStep < tourSteps.length - 1 && <ChevronRight className="h-4 w-4 ml-1" />}
+          </Button>
         </div>
-      </Card>
+      </div>
     </>
   );
 };
