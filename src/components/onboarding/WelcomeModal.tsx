@@ -53,19 +53,14 @@ export const WelcomeModal: React.FC = () => {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Sparkles className="h-6 w-6 text-primary" />
-            Welcome to Allie!
+            Welcome to Allie.ai!
           </DialogTitle>
           <DialogDescription>
-            Your ADHD optimised learning and productivity assistant
+            Allie is designed to help you optimise your studies and keep you focused on learning effectively. Here's what you can do:
           </DialogDescription>
         </DialogHeader>
 
         <div className="py-4 space-y-4">
-          <p className="text-sm text-muted-foreground">
-            Allie is designed to help you stay focused, organised, and motivated. 
-            Here's what you can do:
-          </p>
-
           <div className="grid grid-cols-2 gap-3">
             <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/50">
               <ListTodo className="h-5 w-5 text-primary shrink-0 mt-0.5" />
