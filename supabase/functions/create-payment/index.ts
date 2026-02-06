@@ -123,6 +123,7 @@ serve(async (req) => {
         },
       ],
       mode: "payment",
+      allow_promotion_codes: true,
       success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}&email=${encodeURIComponent(sanitizedEmail)}`,
       cancel_url: `${req.headers.get("origin")}/payment-canceled`,
       metadata: {
