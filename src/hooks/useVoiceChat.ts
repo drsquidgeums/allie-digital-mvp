@@ -24,11 +24,22 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isProcessingRef = useRef(false);
+  const isActiveRef = useRef(false); // Use ref to avoid stale closure in onend
+  const isSpeakingRef = useRef(false);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      stopSession();
+      isActiveRef.current = false;
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
+        recognitionRef.current = null;
+      }
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      speechSynthesis.cancel();
     };
   }, []);
 
@@ -43,6 +54,7 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
 
   const speakWithElevenLabs = useCallback(async (text: string): Promise<void> => {
     setIsSpeaking(true);
+    isSpeakingRef.current = true;
     
     try {
       const { data, error } = await supabase.functions.invoke('elevenlabs-tts', {
@@ -68,6 +80,7 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
       await speakWithBrowserTTS(text);
     } finally {
       setIsSpeaking(false);
+      isSpeakingRef.current = false;
       audioRef.current = null;
     }
   }, []);
@@ -83,14 +96,30 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
     });
   }, []);
 
+  const restartRecognition = useCallback(() => {
+    if (isActiveRef.current && !isProcessingRef.current && !isSpeakingRef.current && recognitionRef.current) {
+      try {
+        console.log('Restarting speech recognition...');
+        setIsListening(true);
+        recognitionRef.current.start();
+      } catch (e) {
+        console.log('Recognition restart failed:', e);
+        // May already be running, ignore
+      }
+    }
+  }, []);
+
   const processUserInput = useCallback(async (userMessage: string) => {
     if (isProcessingRef.current || !userMessage.trim()) return;
     
     isProcessingRef.current = true;
     setIsProcessing(true);
+    setIsListening(false);
     setTranscript('');
 
     try {
+      console.log('Processing user input:', userMessage);
+      
       const { data, error } = await supabase.functions.invoke('voice-chat', {
         body: { 
           message: userMessage,
@@ -101,19 +130,12 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
       if (error) throw new Error(error.message);
 
       const aiResponse = data.response;
+      console.log('AI response:', aiResponse);
       setConversationHistory(data.conversationHistory || []);
 
       // Speak the response
       await speakWithElevenLabs(aiResponse);
 
-      // Resume listening after speaking (if still active)
-      if (isActive && recognitionRef.current) {
-        try {
-          recognitionRef.current.start();
-        } catch (e) {
-          // Recognition might already be started
-        }
-      }
     } catch (error) {
       console.error('Voice chat error:', error);
       toast({
@@ -124,8 +146,11 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
     } finally {
       isProcessingRef.current = false;
       setIsProcessing(false);
+      
+      // Resume listening after speaking completes
+      restartRecognition();
     }
-  }, [conversationHistory, isActive, speakWithElevenLabs, toast]);
+  }, [conversationHistory, speakWithElevenLabs, toast, restartRecognition]);
 
   const startSession = useCallback(async () => {
     // Check for speech recognition support
@@ -144,62 +169,81 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
       await navigator.mediaDevices.getUserMedia({ audio: true });
 
       const recognition = new SpeechRecognition();
-      recognition.continuous = false;
+      recognition.continuous = true; // Keep listening continuously
       recognition.interimResults = true;
       recognition.lang = 'en-US';
-
-      // Set listening state when recognition starts
-      setIsListening(true);
 
       recognition.onresult = (event) => {
         let finalTranscript = '';
         let interimTranscript = '';
 
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
+          const transcriptText = event.results[i][0].transcript;
           if (event.results[i].isFinal) {
-            finalTranscript += transcript;
+            finalTranscript += transcriptText;
           } else {
-            interimTranscript += transcript;
+            interimTranscript += transcriptText;
           }
         }
 
         setTranscript(interimTranscript || finalTranscript);
 
-        if (finalTranscript) {
-          setIsListening(false);
+        if (finalTranscript && finalTranscript.trim()) {
+          console.log('Final transcript:', finalTranscript);
+          // Stop recognition while processing
+          recognition.stop();
           processUserInput(finalTranscript);
         }
       };
 
       recognition.onerror = (event) => {
         console.error('Speech recognition error:', event.error);
-        if (event.error !== 'aborted' && event.error !== 'no-speech') {
+        
+        if (event.error === 'not-allowed') {
+          toast({
+            title: 'Microphone Denied',
+            description: 'Please allow microphone access to use voice chat.',
+            variant: 'destructive'
+          });
+          isActiveRef.current = false;
+          setIsActive(false);
+          setIsListening(false);
+        } else if (event.error === 'no-speech') {
+          // Normal timeout due to silence, onend will handle restart
+          console.log('No speech detected, will auto-restart.');
+        } else if (event.error !== 'aborted') {
           toast({
             title: 'Recognition Error',
-            description: 'Failed to recognize speech. Please try again.',
+            description: `Speech error: ${event.error}`,
             variant: 'destructive'
           });
         }
-        setIsListening(false);
       };
 
       recognition.onend = () => {
+        console.log('Speech recognition ended, isActive:', isActiveRef.current);
         setIsListening(false);
-        // Auto-restart if session is still active and not processing
-        if (isActive && !isProcessingRef.current && !isSpeaking) {
+        
+        // Auto-restart if session is still active and not processing/speaking
+        if (isActiveRef.current && !isProcessingRef.current && !isSpeakingRef.current) {
+          console.log('Auto-restarting speech recognition...');
           try {
+            setIsListening(true);
             recognition.start();
           } catch (e) {
-            // Ignore errors when restarting
+            console.log('Could not restart:', e);
           }
         }
       };
 
       recognitionRef.current = recognition;
+      isActiveRef.current = true;
       setIsActive(true);
+      setIsListening(true);
       setConversationHistory([]);
+      
       recognition.start();
+      console.log('Speech recognition started');
 
       toast({
         title: 'Voice Assistant Ready',
@@ -213,9 +257,12 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
         variant: 'destructive'
       });
     }
-  }, [isActive, isSpeaking, processUserInput, toast]);
+  }, [processUserInput, toast]);
 
   const stopSession = useCallback(() => {
+    console.log('Stopping voice session');
+    isActiveRef.current = false;
+    
     if (recognitionRef.current) {
       recognitionRef.current.abort();
       recognitionRef.current = null;
