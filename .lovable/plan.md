@@ -1,54 +1,56 @@
 
-# Plan: Fix Storage Limit and Verify Translations
 
-## Issues Identified
+# Plan: Enable Stripe Coupon Codes at Checkout
 
-### 1. Incorrect Storage Limit
-The settings page shows **5 GB** as the storage limit, but the actual **Supabase free tier limit is 1 GB**.
+## Current Issue
 
-### 2. Translation Loading (Potential Cache Issue)
-The translation files appear correctly configured with UK spellings. If raw keys are still showing, it's likely a browser cache issue with the old translation files.
+The `create-payment` edge function creates a Stripe Checkout session, but it doesn't allow users to enter promotion/coupon codes. The checkout page won't show the "Add promotion code" field.
 
----
+## Solution
 
-## Implementation Steps
-
-### Step 1: Fix Storage Limit in StorageSettings.tsx
-Update the default storage limit from 5 GB to 1 GB to match Supabase's free tier:
-
-**File:** `src/components/settings/StorageSettings.tsx`
-- Change line 13 from `5 * 1024 * 1024 * 1024` to `1 * 1024 * 1024 * 1024`
-- Update the comment to reflect "1GB default (Supabase free tier)"
-
-### Step 2: Ensure Translation Files Load Fresh
-Add a cache-busting mechanism to the i18n configuration to prevent stale translation files:
-
-**File:** `src/i18n/config.ts`
-- Add a version query parameter to the `loadPath` to bust browser cache
+Add `allow_promotion_codes: true` to the checkout session configuration. This is a one-line change.
 
 ---
 
-## Technical Details
+## Implementation
 
-### Storage Limit Change
+### File: `supabase/functions/create-payment/index.ts`
+
+Update the `stripe.checkout.sessions.create()` call to include the promotion codes option:
+
 ```typescript
-// Before
-const [storageLimit, setStorageLimit] = useState(5 * 1024 * 1024 * 1024); // 5GB default
-
-// After  
-const [storageLimit, setStorageLimit] = useState(1 * 1024 * 1024 * 1024); // 1GB (Supabase free tier)
-```
-
-### i18n Cache Busting
-```typescript
-backend: {
-  loadPath: '/locales/{{lng}}/translation.json?v=' + Date.now(),
-}
+const session = await stripe.checkout.sessions.create({
+  customer: customerId,
+  customer_email: customerId ? undefined : sanitizedEmail,
+  line_items: [
+    {
+      price: "price_1SnHUGI6zpynUGIHog1UzIhu",
+      quantity: 1,
+    },
+  ],
+  mode: "payment",
+  allow_promotion_codes: true,  // ← ADD THIS LINE
+  success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}&email=${encodeURIComponent(sanitizedEmail)}`,
+  cancel_url: `${req.headers.get("origin")}/payment-canceled`,
+  metadata: {
+    email: sanitizedEmail,
+  },
+});
 ```
 
 ---
 
-## Verification After Implementation
-1. Navigate to Settings and confirm storage shows "X / 1 GB" instead of "X / 5 GB"
-2. Hard refresh the page to ensure translations load correctly
-3. Verify UK spellings appear throughout the app (e.g., "Organise", "Visualise")
+## What This Enables
+
+Once deployed, users will see an "Add promotion code" link on the Stripe Checkout page. They can enter the coupon code you created (with 100% off), and the price will update to £0.00 before they complete checkout.
+
+---
+
+## Verification Steps
+
+1. After the change is deployed, go through the payment flow
+2. On the Stripe Checkout page, look for "Add promotion code" link
+3. Enter your 100% off coupon code
+4. Confirm the total changes to £0.00
+5. Complete the checkout and verify the user gets lifetime access
+
