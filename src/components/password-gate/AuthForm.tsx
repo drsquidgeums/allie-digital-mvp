@@ -195,18 +195,26 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         body: { code: voucherCode, email, password },
       });
 
-      if (error) throw error;
+      clearInterval(interval);
 
+      // Check for function invocation error
+      if (error) {
+        console.error("Function invoke error:", error);
+        throw new Error(error.message || "Failed to connect to server");
+      }
+
+      // Check for error in response data
       if (data?.error) {
+        console.error("Voucher error:", data.error);
         throw new Error(data.error);
       }
 
+      // Success
       setProgress(100);
-      clearInterval(interval);
       
       toast({
         title: "Success!",
-        description: data.message || "Account created with lifetime access! You can now sign in.",
+        description: data?.message || "Account created with lifetime access! You can now sign in.",
       });
       
       // Switch to sign in mode
@@ -219,6 +227,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       clearInterval(interval);
       setProgress(0);
       
+      console.error("Voucher redemption failed:", error);
+      
       toast({
         title: "Voucher Error",
         description: error.message || "Failed to redeem voucher. Please try again.",
@@ -226,7 +236,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       });
     } finally {
       setIsLoading(false);
-      clearInterval(interval);
     }
   };
 
