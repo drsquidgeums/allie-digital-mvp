@@ -9,7 +9,7 @@ import { IrlenOverlay } from "../IrlenOverlay";
 import { AmbientMusic } from "../AmbientMusic";
 import { TextTool } from "./toolbar/TextTool";
 import { DocumentAIChat } from "../ai/DocumentAIChat";
-import { VoiceAssistant } from "../voice/VoiceAssistant";
+import { SimpleVoiceAssistant } from "../voice/SimpleVoiceAssistant";
 import { ContentEnhancerTools } from "../content-enhancer/ContentEnhancerTools";
 import { BionicToggleButton } from "./toolbar/BionicToggleButton";
 import { TTSButton } from "./toolbar/TTSButton";
@@ -84,7 +84,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
           icon={Bot}
           label={t('tools.voice') || 'Voice AI'}
           id="voice-assistant"
-          content={<VoiceAssistant />}
+          content={<SimpleVoiceAssistant />}
           popoverClassName="w-96 p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
         />
       </div>
