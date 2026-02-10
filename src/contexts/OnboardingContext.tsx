@@ -99,6 +99,14 @@ const defaultTourSteps: OnboardingStep[] = [
   },
   // === WORKSPACE TOOLS (need to be on /toolbox route) ===
   {
+    id: "text-options",
+    target: "[data-tour='text-options']",
+    title: "Text Options",
+    description: "Change font style and size to make reading more comfortable. Choose from dyslexia friendly fonts and adjust text to suit your needs.",
+    placement: "bottom",
+    route: "/toolbox"
+  },
+  {
     id: "screenshot",
     target: "[data-tour='screenshot']",
     title: "Screenshot",

@@ -55,7 +55,9 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
       <div data-tour="irlen">
         <IrlenOverlay />
       </div>
-      <TextTool />
+      <div data-tour="text-options">
+        <TextTool />
+      </div>
       <div data-tour="ai-simplify">
         <ToolItem
           icon={Wand2}
