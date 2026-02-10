@@ -99,14 +99,6 @@ const defaultTourSteps: OnboardingStep[] = [
   },
   // === WORKSPACE TOOLS (need to be on /toolbox route) ===
   {
-    id: "text-options",
-    target: "[data-tour='text-options']",
-    title: "Text Options",
-    description: "Change font style and size to make reading more comfortable. Choose from dyslexia friendly fonts and adjust text to suit your needs.",
-    placement: "bottom",
-    route: "/toolbox"
-  },
-  {
     id: "screenshot",
     target: "[data-tour='screenshot']",
     title: "Screenshot",
@@ -167,6 +159,14 @@ const defaultTourSteps: OnboardingStep[] = [
     target: "[data-tour='irlen']",
     title: "Irlen Overlay",
     description: "Apply tinted overlays to reduce visual stress. Some people find certain colours make reading easier.",
+    placement: "bottom",
+    route: "/toolbox"
+  },
+  {
+    id: "text-options",
+    target: "[data-tour='text-options']",
+    title: "Text Options",
+    description: "Change font style and size to make reading more comfortable. Choose from dyslexia friendly fonts and adjust text to suit your needs.",
     placement: "bottom",
     route: "/toolbox"
   },
