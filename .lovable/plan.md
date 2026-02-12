@@ -1,56 +1,54 @@
 
 
-# Plan: Enable Stripe Coupon Codes at Checkout
+# Security Headers Remediation Plan
 
-## Current Issue
+## Summary
 
-The `create-payment` edge function creates a Stripe Checkout session, but it doesn't allow users to enter promotion/coupon codes. The checkout page won't show the "Add promotion code" field.
-
-## Solution
-
-Add `allow_promotion_codes: true` to the checkout session configuration. This is a one-line change.
+Your app has duplicate, conflicting Content Security Policies and several security header meta tags that browsers ignore because they only work as server-sent HTTP headers. This plan consolidates everything into a single, tightened CSP in `index.html` and cleans up the ineffective JS-based headers.
 
 ---
 
-## Implementation
+## What Will Change
 
-### File: `supabase/functions/create-payment/index.ts`
+### 1. Consolidate CSP into `index.html` (single source of truth)
 
-Update the `stripe.checkout.sessions.create()` call to include the promotion codes option:
+Update the existing CSP meta tag in `index.html` to add the missing `frame-ancestors 'none'` directive and remove `http:` from `img-src`. The final CSP will be:
 
-```typescript
-const session = await stripe.checkout.sessions.create({
-  customer: customerId,
-  customer_email: customerId ? undefined : sanitizedEmail,
-  line_items: [
-    {
-      price: "price_1SnHUGI6zpynUGIHog1UzIhu",
-      quantity: 1,
-    },
-  ],
-  mode: "payment",
-  allow_promotion_codes: true,  // ← ADD THIS LINE
-  success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}&email=${encodeURIComponent(sanitizedEmail)}`,
-  cancel_url: `${req.headers.get("origin")}/payment-canceled`,
-  metadata: {
-    email: sanitizedEmail,
-  },
-});
+- `default-src 'self'`
+- `script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://cdn.gpteng.co https://api.elevenlabs.io https://cdn.elevenlabs.io https://*.elevenlabs.io`
+- `connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.elevenlabs.io wss://api.elevenlabs.io https://*.elevenlabs.io https://fonts.googleapis.com https://fonts.cdnfonts.com`
+- `worker-src 'self' blob:`
+- `child-src 'self' blob:`
+- `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.cdnfonts.com`
+- `font-src 'self' https://fonts.gstatic.com https://fonts.cdnfonts.com data:`
+- `img-src 'self' data: https: blob:` (removed `http:`)
+- `media-src 'self' https: blob: data: https://ice1.somafm.com https://radio.stereoscenic.com https://media-ssl.musicradio.com`
+- `frame-ancestors 'none'` (added -- prevents clickjacking)
+
+### 2. Simplify `useSecurityHeaders.ts`
+
+Remove the CSP, X-Frame-Options, X-Content-Type-Options, and Permissions-Policy meta tag injections since browsers ignore these as meta tags (they must be HTTP headers). Keep only the referrer policy meta tag, which browsers **do** respect when set via meta tag.
+
+### 3. Add Referrer Policy to `index.html`
+
+Move the referrer policy into `index.html` as a static meta tag for reliability:
+
+```html
+<meta name="referrer" content="strict-origin-when-cross-origin" />
 ```
 
 ---
 
-## What This Enables
+## Files to Modify
 
-Once deployed, users will see an "Add promotion code" link on the Stripe Checkout page. They can enter the coupon code you created (with 100% off), and the price will update to £0.00 before they complete checkout.
+- **`index.html`** -- Update CSP, add referrer policy meta tag
+- **`src/hooks/security/useSecurityHeaders.ts`** -- Strip down to minimal (or remove entirely since all effective headers will be in `index.html`)
 
 ---
 
-## Verification Steps
+## Technical Notes
 
-1. After the change is deployed, go through the payment flow
-2. On the Stripe Checkout page, look for "Add promotion code" link
-3. Enter your 100% off coupon code
-4. Confirm the total changes to £0.00
-5. Complete the checkout and verify the user gets lifetime access
+- `X-Frame-Options`, `X-Content-Type-Options`, and `Permissions-Policy` only work as HTTP response headers set by the server. Lovable's hosting infrastructure controls these -- if the pentest flagged them, that would need to be raised with Lovable support.
+- `unsafe-inline` and `unsafe-eval` in `script-src` are required by Vite/React's runtime. Removing them would break the app. This is a known trade-off.
+- `frame-ancestors 'none'` in a meta tag CSP is actually ignored by browsers too (it only works as an HTTP header), but including it does no harm and documents intent. True clickjacking protection requires Lovable's server to send the header.
 
