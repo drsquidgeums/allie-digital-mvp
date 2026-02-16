@@ -30,6 +30,7 @@ export const PdfDocumentViewer: React.FC<PdfDocumentViewerProps> = ({
         <Document
           file={pdfUrl}
           onLoadSuccess={onLoadSuccess}
+          options={{ isEvalSupported: false }}
           loading={<div className="loading">Loading document...</div>}
           error={<div className="error">Failed to load document</div>}
         >

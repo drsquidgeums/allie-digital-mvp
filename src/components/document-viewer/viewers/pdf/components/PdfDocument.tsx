@@ -49,6 +49,7 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
           onLoadError={onLoadError}
           onItemClick={onLoadingStart}
           options={{
+            isEvalSupported: false,
             // Use unpkg for better worker reliability
             standardFontDataUrl: `https://unpkg.com/pdfjs-dist@3.4.120/standard_fonts/`,
             cMapUrl: `https://unpkg.com/pdfjs-dist@3.4.120/cmaps/`,
