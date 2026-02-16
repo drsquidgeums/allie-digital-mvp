@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { decode as base64Decode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
 
 const corsHeaders = {
@@ -13,6 +14,40 @@ serve(async (req) => {
   }
 
   try {
+    // Authentication check
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const token = authHeader.replace("Bearer ", "");
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    if (token === anonKey) {
+      return new Response(JSON.stringify({ error: "User authentication required" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const supabaseClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: "Invalid authentication" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    console.log("[ELEVENLABS-TRANSCRIBE] Request from user:", user.id);
+
     const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
     if (!ELEVENLABS_API_KEY) {
       throw new Error("ELEVENLABS_API_KEY is not configured");
@@ -31,7 +66,6 @@ serve(async (req) => {
 
     const safeMimeType = typeof mimeType === "string" && mimeType.length < 100 ? mimeType : "audio/webm";
 
-    // Guardrail: roughly cap to ~8MB base64 payload (base64 overhead ~1.33)
     if (audioBase64.length > 11_000_000) {
       return new Response(JSON.stringify({ error: "Audio clip is too large" }), {
         status: 413,

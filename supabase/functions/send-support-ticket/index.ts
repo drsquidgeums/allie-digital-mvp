@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { Resend } from "npm:resend@2.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -13,7 +14,6 @@ interface SupportTicketRequest {
   subject: string;
   issueType: string;
   description: string;
-  userEmail: string;
 }
 
 const getIssueTypeLabel = (type: string): string => {
@@ -27,13 +27,47 @@ const getIssueTypeLabel = (type: string): string => {
 };
 
 const handler = async (req: Request): Promise<Response> => {
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { subject, issueType, description, userEmail }: SupportTicketRequest = await req.json();
+    // Authentication check
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+
+    const token = authHeader.replace("Bearer ", "");
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    if (token === anonKey) {
+      return new Response(JSON.stringify({ error: "User authentication required" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+
+    const supabaseClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: "Invalid authentication" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+
+    const userEmail = user.email || "unknown";
+    console.log("Support ticket from user:", user.id);
+
+    const { subject, issueType, description }: SupportTicketRequest = await req.json();
 
     // Validate required fields
     if (!subject || !issueType || !description) {
@@ -47,12 +81,17 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    console.log("Sending support ticket email:", { subject, issueType, userEmail });
+    // Sanitize inputs
+    const sanitizedSubject = String(subject).trim().slice(0, 200);
+    const sanitizedIssueType = String(issueType).trim().slice(0, 50);
+    const sanitizedDescription = String(description).trim().slice(0, 5000);
+
+    console.log("Sending support ticket email:", { subject: sanitizedSubject, issueType: sanitizedIssueType, userEmail });
 
     const emailResponse = await resend.emails.send({
       from: "Allie.ai Support <onboarding@resend.dev>",
       to: ["fizzeee@pm.me"],
-      subject: `[Support Ticket] ${getIssueTypeLabel(issueType)}: ${subject}`,
+      subject: `[Support Ticket] ${getIssueTypeLabel(sanitizedIssueType)}: ${sanitizedSubject}`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -81,15 +120,15 @@ const handler = async (req: Request): Promise<Response> => {
                 </div>
                 <div class="field">
                   <div class="label">Issue Type:</div>
-                  <div class="value">${getIssueTypeLabel(issueType)}</div>
+                  <div class="value">${getIssueTypeLabel(sanitizedIssueType)}</div>
                 </div>
                 <div class="field">
                   <div class="label">Subject:</div>
-                  <div class="value">${subject}</div>
+                  <div class="value">${sanitizedSubject}</div>
                 </div>
                 <div class="field">
                   <div class="label">Description:</div>
-                  <div class="description">${description.replace(/\n/g, '<br>')}</div>
+                  <div class="description">${sanitizedDescription.replace(/\n/g, '<br>')}</div>
                 </div>
                 <div class="footer">
                   <p>This ticket was submitted via Allie.ai Support System</p>
