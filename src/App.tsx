@@ -181,6 +181,8 @@ const App = () => {
               <Route path="/payment-canceled" element={<PaymentCanceled />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
+              <Route path="/open-source-license" element={<OpenSourceLicense />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route
                 path="/reset-password"
                 element={React.createElement(React.lazy(() => import("@/pages/ResetPassword")))}
