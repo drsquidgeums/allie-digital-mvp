@@ -541,6 +541,13 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         >
           Privacy Policy
         </a>
+        <a
+          href="/open-source-license"
+          className="text-sm underline hover:opacity-70 transition-colors"
+          style={{ color: '#000000' }}
+        >
+          Open Source License
+        </a>
       </div>
       
       <p className="text-sm" style={{ color: '#666666' }}>

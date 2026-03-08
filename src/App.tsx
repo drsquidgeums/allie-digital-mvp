@@ -19,6 +19,7 @@ import PaymentSuccess from "@/pages/PaymentSuccess";
 import PaymentCanceled from "@/pages/PaymentCanceled";
 import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
+import OpenSourceLicense from "@/pages/OpenSourceLicense";
 import { clearFiles as clearGlobalFiles } from "@/store/fileStore";
 import { clearFiles as clearFileManagerFiles } from "@/hooks/file-manager/fileStore";
 import { OnboardingTour, WelcomeModal } from "@/components/onboarding";
