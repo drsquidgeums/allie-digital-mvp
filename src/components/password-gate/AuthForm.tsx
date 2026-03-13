@@ -241,6 +241,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       setProgress(100);
       setPassword("");
       setVerifyEmail(email);
+      setResendCooldown(60);
       setShowVerifyPopup(true);
     } catch (error: any) {
       clearInterval(interval);
