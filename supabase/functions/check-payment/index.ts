@@ -12,8 +12,9 @@ const logStep = (step: string, details?: any) => {
   console.log(`[CHECK-PAYMENT] ${step}${detailsStr}`);
 };
 
+const TRIAL_DAYS = 7;
+
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -23,9 +24,7 @@ serve(async (req) => {
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
-    logStep("Stripe key verified");
 
-    // Create Supabase client
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
@@ -34,7 +33,6 @@ serve(async (req) => {
 
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) throw new Error("No authorization header provided");
-    logStep("Authorization header found");
 
     const token = authHeader.replace("Bearer ", "");
     const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
@@ -62,15 +60,16 @@ serve(async (req) => {
       });
     }
 
-    // First check the profiles table for subscription status
-    const { data: profile, error: profileError } = await supabaseClient
+    // Fetch profile
+    const { data: profile } = await supabaseClient
       .from("profiles")
-      .select("subscription_status")
+      .select("subscription_status, trial_started_at")
       .eq("id", user.id)
       .single();
 
+    // Lifetime access
     if (profile?.subscription_status === "lifetime") {
-      logStep("User has lifetime access from database");
+      logStep("User has lifetime access");
       return new Response(JSON.stringify({ 
         hasPaid: true, 
         subscriptionStatus: "lifetime" 
@@ -80,24 +79,49 @@ serve(async (req) => {
       });
     }
 
-    // Check Stripe for payment
-    const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
+    // Trial check
+    if (profile?.subscription_status === "trial" && profile?.trial_started_at) {
+      const trialStart = new Date(profile.trial_started_at);
+      const now = new Date();
+      const diffMs = now.getTime() - trialStart.getTime();
+      const diffDays = diffMs / (1000 * 60 * 60 * 24);
+      const daysRemaining = Math.max(0, Math.ceil(TRIAL_DAYS - diffDays));
+      
+      if (diffDays < TRIAL_DAYS) {
+        logStep("User is in active trial", { daysRemaining });
+        return new Response(JSON.stringify({ 
+          hasPaid: true, 
+          subscriptionStatus: "trial",
+          trialActive: true,
+          trialDaysRemaining: daysRemaining,
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        });
+      } else {
+        logStep("Trial expired", { diffDays });
+        // Trial expired - check Stripe as fallback
+      }
+    }
 
-    // Look for customer by email
+    // Check Stripe for payment (fallback for expired trial or inactive users)
+    const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     
     if (customers.data.length === 0) {
-      logStep("No Stripe customer found");
-      return new Response(JSON.stringify({ hasPaid: false }), {
+      logStep("No Stripe customer found, trial expired or inactive");
+      return new Response(JSON.stringify({ 
+        hasPaid: false,
+        subscriptionStatus: profile?.subscription_status || "inactive",
+        trialActive: false,
+        trialExpired: profile?.subscription_status === "trial",
+      }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
       });
     }
 
     const customerId = customers.data[0].id;
-    logStep("Found Stripe customer", { customerId });
-
-    // Check for successful one-time payments (lifetime access)
     const paymentIntents = await stripe.paymentIntents.list({
       customer: customerId,
       limit: 100,
@@ -108,15 +132,13 @@ serve(async (req) => {
     );
 
     if (hasSuccessfulPayment) {
-      logStep("User has successful payment, updating profile and stripe_subscriptions");
+      logStep("User has successful payment, updating profile");
       
-      // Update the profile to mark as lifetime
       await supabaseClient
         .from("profiles")
         .update({ subscription_status: "lifetime" })
         .eq("id", user.id);
 
-      // Store Stripe customer ID in secure table (upsert)
       await supabaseClient
         .from("stripe_subscriptions")
         .upsert({
@@ -134,7 +156,12 @@ serve(async (req) => {
     }
 
     logStep("No successful payment found");
-    return new Response(JSON.stringify({ hasPaid: false }), {
+    return new Response(JSON.stringify({ 
+      hasPaid: false,
+      subscriptionStatus: profile?.subscription_status || "inactive",
+      trialActive: false,
+      trialExpired: profile?.subscription_status === "trial",
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
