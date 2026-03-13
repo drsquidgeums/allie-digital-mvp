@@ -1,13 +1,12 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { checkAndTrackUsage, getUsageLimitResponse, getAIRequestConfig } from "../_shared/ai-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
-
-const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
 const SYSTEM_PROMPT = `You are Allie, a friendly and supportive AI study assistant.
 
@@ -20,12 +19,10 @@ Voice style rules:
 Your job: help the user study effectively, explain concepts simply, and keep them focused.`;
 
 type HistoryMessage = { role: "user" | "assistant"; content: string };
-
 type GatewayMessage = { role: "system" | "user" | "assistant"; content: string };
 
 function sanitizeHistory(input: unknown): HistoryMessage[] {
   if (!Array.isArray(input)) return [];
-
   const out: HistoryMessage[] = [];
   for (const item of input) {
     if (!item || typeof item !== "object") continue;
@@ -45,12 +42,10 @@ serve(async (req) => {
   }
 
   try {
-    // Authentication check
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -58,8 +53,7 @@ serve(async (req) => {
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
     if (token === anonKey) {
       return new Response(JSON.stringify({ error: "User authentication required" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -72,17 +66,18 @@ serve(async (req) => {
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Invalid authentication" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    console.log("[VOICE-CHAT] Request from user:", user.id);
-
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    // Check usage limits
+    const usageResult = await checkAndTrackUsage(user.id, "voice-chat");
+    if (!usageResult.allowed) {
+      return getUsageLimitResponse(0);
     }
+
+    const aiConfig = getAIRequestConfig(usageResult.userApiKey);
+    console.log("[VOICE-CHAT] using own key:", usageResult.usingOwnKey);
 
     const body = await req.json().catch(() => ({}));
     const message = (body as any)?.message;
@@ -90,16 +85,14 @@ serve(async (req) => {
 
     if (!message || typeof message !== "string") {
       return new Response(JSON.stringify({ error: "Message is required" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const sanitizedMessage = message.trim().slice(0, 2000);
     if (!sanitizedMessage) {
       return new Response(JSON.stringify({ error: "Message cannot be empty" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -109,16 +102,11 @@ serve(async (req) => {
       { role: "user", content: sanitizedMessage },
     ];
 
-    console.log("[VOICE-CHAT] prompt chars:", sanitizedMessage.length, "history:", conversationHistory.length);
-
-    const response = await fetch(LOVABLE_AI_URL, {
+    const response = await fetch(aiConfig.url, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
+      headers: aiConfig.headers,
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: aiConfig.model,
         messages,
         max_tokens: 250,
         temperature: 0.7,
@@ -127,34 +115,24 @@ serve(async (req) => {
 
     if (!response.ok) {
       const t = await response.text();
-      console.error("[VOICE-CHAT] gateway error:", response.status, t);
-
+      console.error("[VOICE-CHAT] AI error:", response.status, t);
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again in a moment." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        return new Response(JSON.stringify({ error: "Rate limit exceeded." }), {
+          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-
       if (response.status === 402) {
-        return new Response(JSON.stringify({
-          error: "Lovable AI credits are depleted. Please add credits in Workspace Usage to continue.",
-        }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        return new Response(JSON.stringify({ error: "AI credits depleted." }), {
+          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-
       return new Response(JSON.stringify({ error: "AI gateway error" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const data = await response.json();
-    const aiResponse =
-      data?.choices?.[0]?.message?.content ||
-      "Sorry—I missed that. Could you say it again?";
+    const aiResponse = data?.choices?.[0]?.message?.content || "Sorry—I missed that. Could you say it again?";
 
     const nextHistory: HistoryMessage[] = [
       ...conversationHistory.slice(-10),
@@ -167,9 +145,8 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error("[VOICE-CHAT] error:", error);
-    return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }), {
+      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });
