@@ -134,6 +134,8 @@ This project is open source and licensed under the GNU Affero General Public Lic
 
 ## 🏢 About
 
-Built by **Allie Digital CIC** — a Community Interest Company dedicated to making education accessible for everyone. Click here to review our Community Interest Statement: [https://alliedigital.org.uk/cic](https://alliedigital.org.uk/cic-statement)
+Built by **Allie Digital CIC** — a Community Interest Company dedicated to making education accessible for everyone. 
 
-© Allie Digital CIC 2026. All Rights Reserved.
+Click here to review our Community Interest Statement: [https://alliedigital.org.uk/cic](https://alliedigital.org.uk/cic-statement)
+
+© Allie Digital CIC 2026. Registered in Northern Ireland. Company No. NI718014.
