@@ -132,4 +132,4 @@ This project is open source and licensed under the GNU Affero General Public Lic
 
 Built by **Allie Digital CIC** — a Community Interest Company dedicated to making education accessible for everyone.
 
-© Allie Digital CIC 2026. All Rights Reserved.
+© 2026 Allie Digital CIC · Licensed under AGPL v3
