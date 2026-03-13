@@ -9,7 +9,7 @@ interface PaymentRequiredGateProps {
   trialExpired?: boolean;
 }
 
-export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaymentComplete }) => {
+export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaymentComplete, trialExpired }) => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [paidEmail, setPaidEmail] = useState<string | null>(null);
 
