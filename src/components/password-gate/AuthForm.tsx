@@ -366,23 +366,12 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         
         <Button
           type="button"
-          className="w-[70%] transition-colors"
-          style={{
-            backgroundColor: '#000000',
-            color: '#ffffff',
-            borderColor: '#000000',
-          }}
+          className="w-[70%] transition-colors bg-[#000000] text-[#ffffff] border-[#000000] hover:bg-[#1f1f1f]"
           onClick={() => {
             setShowVerifyPopup(false);
             setIsSignIn(true);
             setEmail(verifyEmail);
             setPassword("");
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#1f1f1f';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#000000';
           }}
         >
           I've verified — Sign In
