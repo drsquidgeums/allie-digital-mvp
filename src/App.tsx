@@ -42,7 +42,7 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
 
-  const { hasPaid, isLoading: isCheckingPayment, refetch: refetchPayment } = usePaymentStatus(user?.id);
+  const { hasPaid, isLoading: isCheckingPayment, refetch: refetchPayment, trialActive, trialDaysRemaining, trialExpired, subscriptionStatus } = usePaymentStatus(user?.id);
 
   // Set up Supabase auth listener
   useEffect(() => {
