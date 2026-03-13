@@ -24,9 +24,12 @@ export const useTaskAI = () => {
 
       if (error) {
         console.error("Error getting task suggestions:", error);
+        const errMsg = error.message || "Failed to get AI suggestions";
         toast({
-          title: "Error",
-          description: error.message || "Failed to get AI suggestions",
+          title: errMsg.includes("Monthly AI credits") ? "AI Credits Used Up" : "Error",
+          description: errMsg.includes("Monthly AI credits") 
+            ? "Go to Settings → AI Settings to add your own API key for unlimited access."
+            : errMsg,
           variant: "destructive"
         });
         return [];

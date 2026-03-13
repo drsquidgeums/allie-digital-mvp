@@ -14,6 +14,7 @@ import { ContentEnhancerTools } from "../content-enhancer/ContentEnhancerTools";
 import { BionicToggleButton } from "./toolbar/BionicToggleButton";
 import { TTSButton } from "./toolbar/TTSButton";
 import { BeelineToggleButton } from "./toolbar/BeelineToggleButton";
+import { AICreditsIndicator } from "./toolbar/AICreditsIndicator";
 
 interface ToolbarToolsProps {
   documentContent?: string;
@@ -25,6 +26,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
 
   return (
     <div className="flex items-center gap-2">
+      <AICreditsIndicator />
       <div data-tour="bionic">
         <BionicToggleButton />
       </div>
