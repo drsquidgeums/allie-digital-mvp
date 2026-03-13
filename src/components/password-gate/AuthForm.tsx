@@ -403,7 +403,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           }}
           className="text-sm underline transition-colors hover:opacity-70"
         >
-          Don't have an account? Get Lifetime Access
+          Don't have an account? Start your 7-day free trial
         </a>
         
         <a
