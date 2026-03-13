@@ -194,18 +194,20 @@ export const OnboardingTour: React.FC = () => {
           visibility: position ? "visible" : "hidden"
         }}
       >
-        {/* Arrow */}
-        <div
-          className={cn(
-            "absolute w-3 h-3 rotate-45",
-            "bg-white dark:bg-zinc-900",
-            "border-primary",
-            position?.arrowPosition === "top" && "-top-1.5 left-1/2 -translate-x-1/2 border-l-2 border-t-2",
-            position?.arrowPosition === "bottom" && "-bottom-1.5 left-1/2 -translate-x-1/2 border-r-2 border-b-2",
-            position?.arrowPosition === "left" && "-left-1.5 top-1/2 -translate-y-1/2 border-l-2 border-b-2",
-            position?.arrowPosition === "right" && "-right-1.5 top-1/2 -translate-y-1/2 border-r-2 border-t-2"
-          )}
-        />
+        {/* Arrow - hidden for centered steps */}
+        {!isCenteredStep && (
+          <div
+            className={cn(
+              "absolute w-3 h-3 rotate-45",
+              "bg-white dark:bg-zinc-900",
+              "border-primary",
+              position?.arrowPosition === "top" && "-top-1.5 left-1/2 -translate-x-1/2 border-l-2 border-t-2",
+              position?.arrowPosition === "bottom" && "-bottom-1.5 left-1/2 -translate-x-1/2 border-r-2 border-b-2",
+              position?.arrowPosition === "left" && "-left-1.5 top-1/2 -translate-y-1/2 border-l-2 border-b-2",
+              position?.arrowPosition === "right" && "-right-1.5 top-1/2 -translate-y-1/2 border-r-2 border-t-2"
+            )}
+          />
+        )}
 
         {/* Step indicator badge */}
         <div className="absolute -top-3 left-4 px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
