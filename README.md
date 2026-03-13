@@ -53,7 +53,7 @@
 ```bash
 # Clone the repository
 git clone https://github.com/drsquidgeums/allie-digital-mvp.git
-cd allie-web-app
+cd allie-digital-mvp
 
 # Install dependencies
 npm install
