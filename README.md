@@ -1,7 +1,7 @@
-# Allie.ai – Accessible Learning & Literacy Intelligent Environment
+# Allie.ai – Digital Learning Support Web Application
 
 <p align="center">
-  <strong>AI-powered assistive learning platform for students with dyslexia, ADHD, and other learning differences.</strong>
+  <strong>AI powered assistive learning tools for students with ADHD and comorbid learning differences.</strong>
 </p>
 
 <p align="center">
