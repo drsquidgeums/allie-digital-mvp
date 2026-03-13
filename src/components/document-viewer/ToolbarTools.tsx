@@ -26,7 +26,9 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
 
   return (
     <div className="flex items-center gap-2">
-      <AICreditsIndicator />
+      <div data-tour="ai-credits">
+        <AICreditsIndicator />
+      </div>
       <div data-tour="bionic">
         <BionicToggleButton />
       </div>
