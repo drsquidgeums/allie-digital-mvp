@@ -50,7 +50,7 @@ const OpenSourceLicense = () => {
           
           <section className="space-y-3">
             <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>AGPL v3 License</h2>
-            <p>Allie.ai will be licensed under the GNU Affero General Public License v3 (AGPL v3). This ensures the software remains open, accessible, and community driven now and in the future.</p>
+            <p>Allie.ai is licensed under the GNU Affero General Public License v3 (AGPL v3). This ensures the software remains open, accessible, and community driven now and in the future.</p>
           </section>
           
           <section className="space-y-3">
@@ -98,8 +98,13 @@ const OpenSourceLicense = () => {
           </section>
           
           <section className="space-y-3">
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>Source Code</h2>
+            <p>The full source code is available on GitHub: <a href="https://github.com/drsquidgeums/allie-digital-mvp" className="underline" style={{ color: '#000000' }} target="_blank" rel="noopener noreferrer">github.com/drsquidgeums/allie-digital-mvp</a></p>
+          </section>
+
+          <section className="space-y-3">
             <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>Full License Text</h2>
-            <p>The full text of the GNU Affero General Public License v3 can be found at: <a href="https://www.gnu.org/licenses/agpl-3.0.en.html" className="underline" style={{ color: '#000000' }}>https://www.gnu.org/licenses/agpl-3.0.en.html</a></p>
+            <p>The full text of the GNU Affero General Public License v3 can be found at: <a href="https://www.gnu.org/licenses/agpl-3.0.en.html" className="underline" style={{ color: '#000000' }} target="_blank" rel="noopener noreferrer">gnu.org/licenses/agpl-3.0.en.html</a></p>
           </section>
         </div>
       </div>
