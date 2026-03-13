@@ -6,6 +6,7 @@ import { SidebarContent } from "./sidebar/SidebarContent";
 import { ThemeToggle } from "./ThemeToggle";
 import { SidebarButton } from "./sidebar/SidebarButton";
 import { SupportDialog } from "./support/SupportDialog";
+import { SidebarAICredits } from "./sidebar/SidebarAICredits";
 import { Headset } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -75,6 +76,9 @@ export const Sidebar = React.memo(({
       />
 
       <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
+        <div data-tour="ai-credits">
+          <SidebarAICredits />
+        </div>
         <div data-tour="support">
           <SidebarButton
             icon={Headset}
