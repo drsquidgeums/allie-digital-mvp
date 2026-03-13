@@ -6,6 +6,7 @@ const gatewayBackground = "/images/gateway-background.png";
 
 interface PaymentRequiredGateProps {
   onPaymentComplete: () => void;
+  trialExpired?: boolean;
 }
 
 export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaymentComplete }) => {
