@@ -171,6 +171,14 @@ const defaultTourSteps: OnboardingStep[] = [
     route: "/toolbox"
   },
   {
+    id: "ai-credits",
+    target: "[data-tour='ai-credits']",
+    title: "AI Credits",
+    description: "You get 15 free AI uses per month. This badge shows your remaining credits. If you run out, you can add your own OpenAI API key in Settings for unlimited access.",
+    placement: "bottom",
+    route: "/toolbox"
+  },
+  {
     id: "ai-simplify",
     target: "[data-tour='ai-simplify']",
     title: "AI Simplify",
