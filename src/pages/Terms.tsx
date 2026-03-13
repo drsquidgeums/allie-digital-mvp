@@ -73,10 +73,14 @@ const Terms = () => {
           </section>
           
           <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>4. Payment and Refund Policy</h2>
-            <p>The Service operates on a one-time payment of £30 for lifetime access. By completing payment and accessing the Service, you expressly request immediate access to the digital content and acknowledge that your statutory 14 day cancellation right is waived upon accessing the Service, in accordance with the Consumer Contracts Regulations 2013.</p>
-            <p>Due to the nature of digital services and the low one-time cost, refunds will not be issued once access to the Service has been granted. If you experience a technical issue that prevents you from accessing the Service entirely, please contact us at <a href="mailto:alliedigital@pm.me" className="underline" style={{ color: '#000000' }}>alliedigital@pm.me</a> and we will work to resolve it promptly.</p>
-            <p>"Lifetime" refers to the operational lifetime of the Service, not the user's lifetime.</p>
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>4. Payment and Lifetime Access</h2>
+            <p>The Service operates on a one-time payment model (currently £30) for lifetime access. By completing payment:</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>You receive unlimited access to the Service for as long as it remains operational</li>
+              <li>Payment is processed securely through Stripe</li>
+              <li>Refunds may be requested within 14 days of purchase if you have not substantially used the Service</li>
+              <li>"Lifetime" refers to the operational lifetime of the Service, not the user's lifetime</li>
+            </ul>
             <h3 className="text-lg font-semibold mt-4" style={{ color: '#000000' }}>Accessibility Commitment</h3>
             <p>As a Community Interest Corporation, we are committed to ensuring cost is not a barrier to access. If you are a student or learner who cannot afford the one-time payment, your educational provider (school, college, university, or training organisation) can purchase access on your behalf. Educational providers interested in bulk or institutional access should contact us directly.</p>
             <p>This approach allows us to maintain the infrastructure and AI services that power the platform, whilst ensuring equitable access for all learners regardless of socioeconomic background.</p>

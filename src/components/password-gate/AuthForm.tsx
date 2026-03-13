@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 
 import { LoadingProgress } from "./LoadingProgress";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,7 +23,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   const [paidEmail, setPaidEmail] = useState<string | null>(null);
   const [passwordResetSuccess, setPasswordResetSuccess] = useState(false);
   const [signInError, setSignInError] = useState<string | null>(null);
-  const [cancellationAcknowledged, setCancellationAcknowledged] = useState(false);
   const { toast } = useToast();
 
   // Check if user just paid and came back, or just reset their password
@@ -491,39 +489,24 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           />
           <PasswordRequirements password={password} />
           
-          <div className="flex items-start gap-2 mt-3">
-            <Checkbox
-              id="cancellation-acknowledge"
-              checked={cancellationAcknowledged}
-              onCheckedChange={(checked) => setCancellationAcknowledged(checked === true)}
-              className="h-3.5 w-3.5 mt-0.5"
-            />
-            <label
-              htmlFor="cancellation-acknowledge"
-              className="text-xs leading-snug cursor-pointer"
-              style={{ color: '#666666' }}
-            >
-              I acknowledge that by completing payment I am requesting immediate access to the Service and waiving my 14 day cancellation right under the Consumer Contracts Regulations 2013. No refunds will be issued once access is granted.
-            </label>
-          </div>
         </div>
         <Button 
           type="submit" 
           className="w-[70%] transition-colors" 
           style={{
-            backgroundColor: !isPasswordValid(password) || !email || !cancellationAcknowledged ? '#9ca3af' : '#000000',
+            backgroundColor: !isPasswordValid(password) || !email ? '#9ca3af' : '#000000',
             color: '#ffffff',
-            borderColor: !isPasswordValid(password) || !email || !cancellationAcknowledged ? '#9ca3af' : '#000000',
-            cursor: !isPasswordValid(password) || !email || !cancellationAcknowledged ? 'not-allowed' : 'pointer',
+            borderColor: !isPasswordValid(password) || !email ? '#9ca3af' : '#000000',
+            cursor: !isPasswordValid(password) || !email ? 'not-allowed' : 'pointer',
           }}
-          disabled={isLoading || !isPasswordValid(password) || !email || !cancellationAcknowledged}
+          disabled={isLoading || !isPasswordValid(password) || !email}
           onMouseEnter={(e) => {
-            if (!isLoading && isPasswordValid(password) && email && cancellationAcknowledged) {
+            if (!isLoading && isPasswordValid(password) && email) {
               e.currentTarget.style.backgroundColor = '#1f1f1f';
             }
           }}
           onMouseLeave={(e) => {
-            if (!isLoading && isPasswordValid(password) && email && cancellationAcknowledged) {
+            if (!isLoading && isPasswordValid(password) && email) {
               e.currentTarget.style.backgroundColor = '#000000';
             }
           }}

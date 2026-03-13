@@ -53,7 +53,7 @@
 ```bash
 # Clone the repository
 git clone https://github.com/drsquidgeums/allie-digital-mvp.git
-cd allie-digital-mvp
+cd allie-web-app
 
 # Install dependencies
 npm install
@@ -96,46 +96,12 @@ Join our Discord server to get help, share feedback and report issues or bugs, a
 
 [![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2?logo=discord&logoColor=white)](https://discord.com/invite/wAwjSyqY6a)
 
-## ✨ How To Contribute (Developers)
-
-Allie.ai is an open source project built for the ADHD community, and contributions of all kinds are welcome — you don't need to be a developer to help make it better.
-
-Non-Technical Contributions
-1. Bug Reports & Feedback
-2. If something isn't working as expected or you have a suggestion, open a GitHub Issue and describe what you experienced. Please include your browser, device, and steps to reproduce the issue where possible.
-
-Feature Suggestions
-Have an idea for a new feature or improvement? We'd love to hear it — open an Issue with the label enhancement and describe what you'd like to see and why it would help.
-
-Community Support
-Join our Discord to share feedback, help other users, and be part of shaping the direction of the app.
-
-Technical Contributions
-1. Reporting Bugs with Code Context
-2. If you've identified a bug and can pinpoint it in the code, open a GitHub Issue with as much technical detail as possible including any relevant error messages or logs.
-
-Submitting a Pull Request
-1. Fork the repository
-2. Create a new branch for your change (git checkout -b fix/your-fix-name)
-3. Make your changes and test them locally
-4. Submit a Pull Request with a clear description of what you changed and why
-
-Code Guidelines
-
-1. Keep changes focused — one fix or feature per Pull Request
-2. Follow the existing code style and structure
-3. All modifications must remain licensed under AGPL v3 — by submitting a Pull Request you agree your contribution will be released under the same licence
-
-This project is maintained by a small team. We review contributions as regularly as we can and appreciate your patience. All contributors are expected to engage respectfully in line with our community ethos.
-
 ## 📄 Licence
 
 This project is open source and licensed under the GNU Affero General Public License v3.0. Check the LICENSE file in the root of this repository for the full licence text, or visit https://www.gnu.org/licenses/agpl-3.0.en.html for more information on permissions.
 
 ## 🏢 About
 
-Built by **Allie Digital CIC** — a Community Interest Company dedicated to making education accessible for everyone. 
+Built by **Allie Digital CIC** — a Community Interest Company dedicated to making education accessible for everyone.
 
-Click here to review our Community Interest Statement: [https://alliedigital.org.uk/cic](https://alliedigital.org.uk/cic-statement)
-
-© Allie Digital CIC 2026. Registered in Northern Ireland. Company No. NI718014.
+© Allie Digital CIC 2026. All Rights Reserved.
