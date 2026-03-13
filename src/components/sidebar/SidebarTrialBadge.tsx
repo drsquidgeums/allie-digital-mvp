@@ -6,8 +6,11 @@ interface SidebarTrialBadgeProps {
 
 export const SidebarTrialBadge: React.FC<SidebarTrialBadgeProps> = ({ daysRemaining }) => {
   const totalDays = 7;
-  const size = 112;
-  const strokeWidth = 10;
+  const displaySize = 112;
+  // Render at 2x for crisp edges on high-DPI screens
+  const scale = 2;
+  const size = displaySize * scale;
+  const strokeWidth = 12 * scale;
   const radius = (size - strokeWidth) / 2;
   const center = size / 2;
   const circumference = 2 * Math.PI * radius;
@@ -17,8 +20,14 @@ export const SidebarTrialBadge: React.FC<SidebarTrialBadgeProps> = ({ daysRemain
 
   return (
     <div className="flex justify-center" style={{ marginTop: "-50px" }}>
-      <div className="relative" style={{ width: size, height: size }}>
-        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      <div className="relative" style={{ width: displaySize, height: displaySize }}>
+        <svg
+          width={displaySize}
+          height={displaySize}
+          viewBox={`0 0 ${size} ${size}`}
+          xmlns="http://www.w3.org/2000/svg"
+          shapeRendering="geometricPrecision"
+        >
           {/* Grey background track */}
           <circle
             cx={center}
@@ -26,6 +35,7 @@ export const SidebarTrialBadge: React.FC<SidebarTrialBadgeProps> = ({ daysRemain
             r={radius}
             fill="none"
             strokeWidth={strokeWidth}
+            strokeLinecap="round"
             className="stroke-muted-foreground/30"
           />
           {/* Active arc (remaining days) */}
