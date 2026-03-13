@@ -489,7 +489,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
               Processing...
             </>
           ) : (
-            "Pay Now"
+            "Start 7-Day Free Trial"
           )}
         </Button>
       </form>
