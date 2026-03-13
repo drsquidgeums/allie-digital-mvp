@@ -78,12 +78,12 @@ export const Sidebar = React.memo(({
       />
 
       <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
-        <div data-tour="ai-credits">
-          <SidebarAICredits />
-        </div>
         {trialActive && trialDaysRemaining !== null && (
           <SidebarTrialBadge daysRemaining={trialDaysRemaining} />
         )}
+        <div data-tour="ai-credits">
+          <SidebarAICredits />
+        </div>
         <div data-tour="discord">
           <a
             href="https://discord.com/invite/wAwjSyqY6a"
