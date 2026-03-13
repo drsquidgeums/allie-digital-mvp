@@ -188,7 +188,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     }, 100);
 
     try {
-      // First, create the account
       const redirectUrl = `${window.location.origin}/`;
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
@@ -199,7 +198,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       });
 
       if (signUpError) {
-        // Check if user already exists
         if (signUpError.message?.includes("User already registered")) {
           toast({
             title: "Account exists",
@@ -212,53 +210,24 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         throw signUpError;
       }
 
-      setProgress(50);
+      setProgress(100);
+      clearInterval(interval);
 
-      // Store email and password temporarily for after payment
-      localStorage.setItem("pending_signup_email", email);
-
-      // Now redirect to Stripe payment
-      const { data, error } = await supabase.functions.invoke("create-payment", {
-        body: { email },
-      });
-
-      if (error) throw error;
-
-      // Check if user already has payment (duplicate prevention)
-      if (data?.error === "ALREADY_PAID") {
-        clearInterval(interval);
-        setProgress(0);
+      if (signUpData.session) {
         toast({
-          title: "Account already exists",
-          description: data.message || "This email already has access. Please sign in or reset your password.",
-          variant: "destructive",
+          title: "Trial started",
+          description: "Your 7-day free trial is now active.",
         });
-        setIsSignIn(true);
+        onAuthenticated();
         return;
       }
 
-      if (data?.url) {
-        setProgress(100);
-        clearInterval(interval);
-
-        toast({
-          title: "Redirecting to payment",
-          description: "Complete your payment to activate your account.",
-        });
-
-        // Open checkout in new tab - email will be stored ONLY after successful payment verification
-        window.open(data.url, "_blank");
-        
-        // Show message that user should complete payment then return
-        toast({
-          title: "Complete payment in the new tab",
-          description: "After payment, you'll be redirected back here to sign in.",
-        });
-      } else if (data?.error) {
-        throw new Error(data.message || data.error);
-      } else {
-        throw new Error("No checkout URL received");
-      }
+      setIsSignIn(true);
+      setPassword("");
+      toast({
+        title: "Account created",
+        description: "Check your email to confirm your account, then sign in to start your 7-day free trial.",
+      });
     } catch (error: any) {
       clearInterval(interval);
       setProgress(0);
