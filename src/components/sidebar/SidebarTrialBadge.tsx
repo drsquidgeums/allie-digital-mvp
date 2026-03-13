@@ -6,7 +6,7 @@ interface SidebarTrialBadgeProps {
 
 export const SidebarTrialBadge: React.FC<SidebarTrialBadgeProps> = ({ daysRemaining }) => {
   const totalDays = 7;
-  const size = 90;
+  const size = 112;
   const strokeWidth = 10;
   const radius = (size - strokeWidth) / 2;
   const center = size / 2;
@@ -16,7 +16,7 @@ export const SidebarTrialBadge: React.FC<SidebarTrialBadgeProps> = ({ daysRemain
   const inactiveLength = circumference - activeLength;
 
   return (
-    <div className="flex justify-center -mt-2.5">
+    <div className="flex justify-center" style={{ marginTop: "-50px" }}>
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
           {/* Grey background track */}
@@ -44,8 +44,9 @@ export const SidebarTrialBadge: React.FC<SidebarTrialBadgeProps> = ({ daysRemain
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-[9px] font-semibold leading-tight text-foreground">Trial</span>
-          <span className="text-sm font-bold leading-tight text-foreground">{daysRemaining}d</span>
+          <span className="text-xs font-semibold leading-tight text-foreground">Trial</span>
+          <span className="text-base font-bold leading-tight text-foreground">{daysRemaining} days</span>
+          <span className="text-[10px] font-medium leading-tight text-foreground">left</span>
         </div>
       </div>
     </div>
