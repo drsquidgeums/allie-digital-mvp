@@ -453,16 +453,25 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       
       <form onSubmit={handleSignUpForTrial} className="space-y-4 flex flex-col items-center w-full">
         <div className="w-[70%]">
+          {signUpNotice && (
+            <p className="text-sm mb-3 text-center text-primary font-medium">{signUpNotice}</p>
+          )}
+          {signUpError && (
+            <p className="text-sm mb-3 text-center text-destructive font-medium">{signUpError}</p>
+          )}
           <Input
             type="email"
             placeholder="Enter email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setSignUpError(null);
+            }}
             className="w-full transition-colors mb-3"
             style={{
               backgroundColor: 'white',
               color: '#000000',
-              borderColor: '#d1d5db',
+              borderColor: signUpError ? '#b91c1c' : '#d1d5db',
             }}
             disabled={isLoading}
           />
@@ -470,21 +479,23 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
             type="password"
             placeholder="Create a strong password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setSignUpError(null);
+            }}
             className="w-full transition-colors"
             style={{
               backgroundColor: 'white',
               color: '#000000',
-              borderColor: password && !isPasswordValid(password) ? '#ef4444' : '#d1d5db',
+              borderColor: signUpError || (password && !isPasswordValid(password)) ? '#b91c1c' : '#d1d5db',
             }}
             disabled={isLoading}
           />
           <PasswordRequirements password={password} />
-          
         </div>
-        <Button 
-          type="submit" 
-          className="w-[70%] transition-colors" 
+        <Button
+          type="submit"
+          className="w-[70%] transition-colors"
           style={{
             backgroundColor: !isPasswordValid(password) || !email ? '#9ca3af' : '#000000',
             color: '#ffffff',
@@ -506,7 +517,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Processing...
+              Creating account...
             </>
           ) : (
             "Start 7-Day Free Trial"
