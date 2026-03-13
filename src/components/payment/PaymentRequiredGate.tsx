@@ -222,7 +222,7 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
             </button>
           </div>
         ) : (
-          <PaymentGate onPaymentComplete={onPaymentComplete} />
+          <PaymentGate onPaymentComplete={onPaymentComplete} userEmail={userEmail} />
         )}
       </div>
       <footer 
