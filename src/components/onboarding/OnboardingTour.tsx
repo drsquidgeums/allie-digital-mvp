@@ -52,6 +52,8 @@ export const OnboardingTour: React.FC = () => {
     }
   }, [isTourActive, currentStep, onboardingEnabled, location.pathname, navigate]);
 
+  const isCenteredStep = !currentStep?.target;
+
   useEffect(() => {
     if (!isTourActive || !currentStep || !onboardingEnabled || isNavigating) {
       if (!isTourActive || !onboardingEnabled) {
@@ -61,17 +63,31 @@ export const OnboardingTour: React.FC = () => {
       return;
     }
 
+    // For steps without a target, center on screen
+    if (isCenteredStep) {
+      setHighlightRect(null);
+      const centerPosition = () => {
+        if (!tooltipRef.current) return;
+        const tooltipRect = tooltipRef.current.getBoundingClientRect();
+        setPosition({
+          top: (window.innerHeight - tooltipRect.height) / 2,
+          left: (window.innerWidth - tooltipRect.width) / 2,
+          arrowPosition: "top" // won't be shown
+        });
+      };
+      const timer = setTimeout(centerPosition, 100);
+      return () => clearTimeout(timer);
+    }
+
     const updatePosition = () => {
       const target = document.querySelector(currentStep.target);
       if (!target || !tooltipRef.current) {
-        // Element not found yet, retry
         return;
       }
 
       const targetRect = target.getBoundingClientRect();
       const tooltipRect = tooltipRef.current.getBoundingClientRect();
       
-      // Check if element is visible (has dimensions)
       if (targetRect.width === 0 || targetRect.height === 0) {
         return;
       }
@@ -108,7 +124,6 @@ export const OnboardingTour: React.FC = () => {
           break;
       }
 
-      // Keep tooltip in viewport
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       
@@ -118,7 +133,6 @@ export const OnboardingTour: React.FC = () => {
       setPosition({ top, left, arrowPosition });
     };
 
-    // Try to find element multiple times (it may not be rendered yet)
     const attempts = [100, 300, 500, 800];
     const timers: NodeJS.Timeout[] = [];
     
@@ -126,7 +140,6 @@ export const OnboardingTour: React.FC = () => {
       timers.push(setTimeout(updatePosition, delay));
     });
 
-    // Update on resize/scroll
     window.addEventListener("resize", updatePosition);
     window.addEventListener("scroll", updatePosition, true);
 
@@ -135,7 +148,7 @@ export const OnboardingTour: React.FC = () => {
       window.removeEventListener("resize", updatePosition);
       window.removeEventListener("scroll", updatePosition, true);
     };
-  }, [isTourActive, currentStep, onboardingEnabled, isNavigating]);
+  }, [isTourActive, currentStep, onboardingEnabled, isNavigating, isCenteredStep]);
 
   if (!isTourActive || !currentStep || !onboardingEnabled) return null;
 
@@ -181,18 +194,20 @@ export const OnboardingTour: React.FC = () => {
           visibility: position ? "visible" : "hidden"
         }}
       >
-        {/* Arrow */}
-        <div
-          className={cn(
-            "absolute w-3 h-3 rotate-45",
-            "bg-white dark:bg-zinc-900",
-            "border-primary",
-            position?.arrowPosition === "top" && "-top-1.5 left-1/2 -translate-x-1/2 border-l-2 border-t-2",
-            position?.arrowPosition === "bottom" && "-bottom-1.5 left-1/2 -translate-x-1/2 border-r-2 border-b-2",
-            position?.arrowPosition === "left" && "-left-1.5 top-1/2 -translate-y-1/2 border-l-2 border-b-2",
-            position?.arrowPosition === "right" && "-right-1.5 top-1/2 -translate-y-1/2 border-r-2 border-t-2"
-          )}
-        />
+        {/* Arrow - hidden for centered steps */}
+        {!isCenteredStep && (
+          <div
+            className={cn(
+              "absolute w-3 h-3 rotate-45",
+              "bg-white dark:bg-zinc-900",
+              "border-primary",
+              position?.arrowPosition === "top" && "-top-1.5 left-1/2 -translate-x-1/2 border-l-2 border-t-2",
+              position?.arrowPosition === "bottom" && "-bottom-1.5 left-1/2 -translate-x-1/2 border-r-2 border-b-2",
+              position?.arrowPosition === "left" && "-left-1.5 top-1/2 -translate-y-1/2 border-l-2 border-b-2",
+              position?.arrowPosition === "right" && "-right-1.5 top-1/2 -translate-y-1/2 border-r-2 border-t-2"
+            )}
+          />
+        )}
 
         {/* Step indicator badge */}
         <div className="absolute -top-3 left-4 px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-semibold">

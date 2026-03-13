@@ -84,6 +84,20 @@ const defaultTourSteps: OnboardingStep[] = [
     placement: "right"
   },
   {
+    id: "ai-credits",
+    target: "[data-tour='ai-credits']",
+    title: "AI Credits",
+    description: "You get 15 free AI uses per month with our built-in AI features like Simplify, Document AI, and Learning Tools. This badge shows your remaining credits.",
+    placement: "right"
+  },
+  {
+    id: "discord",
+    target: "[data-tour='discord']",
+    title: "Discord Community",
+    description: "Join our Discord community to connect with other users, get tips, share feedback, and stay updated on new features.",
+    placement: "right"
+  },
+  {
     id: "support",
     target: "[data-tour='support']",
     title: "Support",
@@ -171,22 +185,6 @@ const defaultTourSteps: OnboardingStep[] = [
     route: "/toolbox"
   },
   {
-    id: "ai-credits",
-    target: "[data-tour='ai-credits']",
-    title: "AI Credits",
-    description: "You get 15 free AI uses per month with our built-in AI features like Simplify, Document AI, and Learning Tools. This badge shows your remaining credits.",
-    placement: "bottom",
-    route: "/toolbox"
-  },
-  {
-    id: "external-apis",
-    target: "[data-tour='ai-credits']",
-    title: "External API Accounts",
-    description: "Some features require separate accounts: ElevenLabs (for Voice AI) and Anthropic/Claude (for advanced AI). You can set these up in Settings by adding your own API keys. OpenAI keys can also be added for unlimited built-in AI access.",
-    placement: "bottom",
-    route: "/toolbox"
-  },
-  {
     id: "ai-simplify",
     target: "[data-tour='ai-simplify']",
     title: "AI Simplify",
@@ -234,6 +232,14 @@ const defaultTourSteps: OnboardingStep[] = [
     description: "Your personal AI assistant! Click this anytime to get help with studying, break down complex topics, or just chat for motivation.",
     placement: "left",
     route: "/toolbox"
+  },
+  // === FINAL INFO STEP (no target - centered on screen) ===
+  {
+    id: "external-apis",
+    target: "",
+    title: "External API Accounts",
+    description: "Some features require separate accounts: ElevenLabs (for Voice AI) and Anthropic/Claude (for advanced AI). You can set these up in Settings by adding your own API keys. OpenAI keys can also be added for unlimited built-in AI access.",
+    placement: "bottom"
   }
 ];
 
