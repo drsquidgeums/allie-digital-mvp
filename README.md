@@ -103,7 +103,7 @@ Allie.ai is an open source project built for the ADHD community, and contributio
 
 - Bug Reports & Feedback
 - If something isn't working as expected or you have a suggestion, open a GitHub Issue and describe what you experienced. Please include your browser, device, and steps to reproduce the issue where possible.
-Feature Suggestions Have an idea for a new feature or improvement? We'd love to hear it — open an Issue with the label enhancement and describe what you'd like to see and why it would help.
+Feature Suggestions Have an idea for a new feature or improvement? We'd love to hear it — open an Issue with the label enhancement and describe what you'd like to see and why it would help. https://github.com/drsquidgeums/allie-digital-mvp/issues
 
 **Technical Contributions**
 
@@ -130,6 +130,6 @@ This project is open source and licensed under the GNU Affero General Public Lic
 
 ## 🏢 About
 
-Built by **Allie Digital CIC** — a Community Interest Company dedicated to making education accessible for everyone.
+Built by **Allie Digital CIC** — a Community Interest Company dedicated to making education accessible for everyone. Click here to read our Community Interest Statement: https://alliedigital.org.uk/cic-statement
 
 © 2026 Allie Digital CIC · Licensed under AGPL v3
