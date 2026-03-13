@@ -6,6 +6,28 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const PROVIDER_LIMITS: Record<string, number> = {
+  openai: 15,
+  anthropic: 15,
+  elevenlabs: 10,
+};
+
+// Map feature names to their provider
+const FEATURE_PROVIDER_MAP: Record<string, string> = {
+  "simplify-text": "openai",
+  "document-ai-chat": "openai",
+  "content-enhancer": "openai",
+  "study-buddy-chat": "openai",
+  "task-ai-suggestions": "openai",
+  "mindmap-ai": "openai",
+  "voice-chat": "openai",
+  "progress-ai-insights": "openai",
+  "elevenlabs-tts": "elevenlabs",
+  "elevenlabs-tts-public": "elevenlabs",
+  "elevenlabs-transcribe": "elevenlabs",
+  "elevenlabs-session": "elevenlabs",
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -47,27 +69,51 @@ serve(async (req) => {
     const { action, provider, apiKey } = body;
 
     if (action === "get-usage") {
-      // Return current month usage count
       const now = new Date();
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 
-      const { count } = await supabaseClient
+      // Get all usage records this month
+      const { data: usageRecords } = await supabaseClient
         .from("ai_feature_usage")
-        .select("id", { count: "exact", head: true })
+        .select("feature_name, usage_data")
         .eq("user_id", user.id)
         .gte("created_at", monthStart);
 
-      // Check if user has own key
+      // Count usage per provider
+      const providerUsage: Record<string, number> = { openai: 0, anthropic: 0, elevenlabs: 0 };
+      for (const record of usageRecords ?? []) {
+        const source = (record.usage_data as any)?.source;
+        if (source === "user_key") continue; // Don't count BYOK usage against limits
+        const prov = FEATURE_PROVIDER_MAP[record.feature_name] || "openai";
+        providerUsage[prov] = (providerUsage[prov] || 0) + 1;
+      }
+
+      // Check which providers user has own keys for
       const { data: keys } = await supabaseClient
         .from("user_api_keys")
         .select("provider")
         .eq("user_id", user.id);
 
+      const ownKeyProviders = keys?.map(k => k.provider) ?? [];
+
+      const providers = Object.entries(PROVIDER_LIMITS).map(([name, limit]) => ({
+        name,
+        used: providerUsage[name] || 0,
+        limit,
+        remaining: Math.max(0, limit - (providerUsage[name] || 0)),
+        hasOwnKey: ownKeyProviders.includes(name),
+      }));
+
+      // Also return legacy flat format for backward compat
+      const totalUsed = Object.values(providerUsage).reduce((a, b) => a + b, 0);
+      const totalLimit = Object.values(PROVIDER_LIMITS).reduce((a, b) => a + b, 0);
+
       return new Response(JSON.stringify({
-        used: count ?? 0,
-        limit: 15,
-        hasOwnKey: (keys?.length ?? 0) > 0,
-        providers: keys?.map(k => k.provider) ?? [],
+        used: totalUsed,
+        limit: totalLimit,
+        hasOwnKey: ownKeyProviders.length > 0,
+        providers: ownKeyProviders,
+        byProvider: providers,
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -88,7 +134,6 @@ serve(async (req) => {
         });
       }
 
-      // Validate key format loosely
       const trimmedKey = apiKey.trim();
       if (trimmedKey.length < 10 || trimmedKey.length > 200) {
         return new Response(JSON.stringify({ error: "Invalid API key format" }), {
@@ -97,7 +142,6 @@ serve(async (req) => {
         });
       }
 
-      // Upsert the key
       const { error } = await supabaseClient
         .from("user_api_keys")
         .upsert({

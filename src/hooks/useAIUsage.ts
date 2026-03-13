@@ -2,11 +2,20 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "./use-toast";
 
+export interface ProviderUsage {
+  name: string;
+  used: number;
+  limit: number;
+  remaining: number;
+  hasOwnKey: boolean;
+}
+
 interface AIUsageData {
   used: number;
   limit: number;
   hasOwnKey: boolean;
   providers: string[];
+  byProvider: ProviderUsage[];
 }
 
 export const useAIUsage = () => {
@@ -37,7 +46,7 @@ export const useAIUsage = () => {
         body: { action: "save", provider, apiKey },
       });
       if (error) throw error;
-      toast({ title: "API key saved", description: "Your AI features will now use your own key for unlimited access." });
+      toast({ title: "API key saved", description: `Your ${provider} key is now active for unlimited access.` });
       await fetchUsage();
       return true;
     } catch (e) {
@@ -54,7 +63,7 @@ export const useAIUsage = () => {
       await supabase.functions.invoke("manage-api-keys", {
         body: { action: "delete", provider },
       });
-      toast({ title: "API key removed", description: "AI features will use the shared monthly credits." });
+      toast({ title: "API key removed", description: `${provider} will use shared monthly credits.` });
       await fetchUsage();
     } catch (e) {
       toast({ title: "Error", description: "Failed to remove API key", variant: "destructive" });
