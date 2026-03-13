@@ -147,7 +147,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     }
   };
 
-  const handleSignUpAndPay = async (e: React.FormEvent) => {
+  const handleSignUpForTrial = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !password) {
@@ -188,7 +188,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     }, 100);
 
     try {
-      // First, create the account
       const redirectUrl = `${window.location.origin}/`;
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
@@ -199,7 +198,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       });
 
       if (signUpError) {
-        // Check if user already exists
         if (signUpError.message?.includes("User already registered")) {
           toast({
             title: "Account exists",
@@ -212,58 +210,29 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         throw signUpError;
       }
 
-      setProgress(50);
+      setProgress(100);
+      clearInterval(interval);
 
-      // Store email and password temporarily for after payment
-      localStorage.setItem("pending_signup_email", email);
-
-      // Now redirect to Stripe payment
-      const { data, error } = await supabase.functions.invoke("create-payment", {
-        body: { email },
-      });
-
-      if (error) throw error;
-
-      // Check if user already has payment (duplicate prevention)
-      if (data?.error === "ALREADY_PAID") {
-        clearInterval(interval);
-        setProgress(0);
+      if (signUpData.session) {
         toast({
-          title: "Account already exists",
-          description: data.message || "This email already has access. Please sign in or reset your password.",
-          variant: "destructive",
+          title: "Trial started",
+          description: "Your 7-day free trial is now active.",
         });
-        setIsSignIn(true);
+        onAuthenticated();
         return;
       }
 
-      if (data?.url) {
-        setProgress(100);
-        clearInterval(interval);
-
-        toast({
-          title: "Redirecting to payment",
-          description: "Complete your payment to activate your account.",
-        });
-
-        // Open checkout in new tab - email will be stored ONLY after successful payment verification
-        window.open(data.url, "_blank");
-        
-        // Show message that user should complete payment then return
-        toast({
-          title: "Complete payment in the new tab",
-          description: "After payment, you'll be redirected back here to sign in.",
-        });
-      } else if (data?.error) {
-        throw new Error(data.message || data.error);
-      } else {
-        throw new Error("No checkout URL received");
-      }
+      setIsSignIn(true);
+      setPassword("");
+      toast({
+        title: "Account created",
+        description: "Check your email to confirm your account, then sign in to start your 7-day free trial.",
+      });
     } catch (error: any) {
       clearInterval(interval);
       setProgress(0);
       
-      console.error("Signup/payment error:", error);
+      console.error("Signup/trial start error:", error);
       
       if (!error.message?.includes("User already registered")) {
         toast({
@@ -328,6 +297,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   if (isSignIn) {
     return (
       <div className="space-y-4 flex flex-col items-center">
+        <p className="w-[70%] text-sm text-center" style={{ color: '#666666' }}>
+          New here? Start your <span className="font-semibold">7-day free trial</span> with no payment details required.
+        </p>
         {passwordResetSuccess && (
           <div 
             className="w-[70%] p-4 rounded-lg border-2 text-center mb-2"
@@ -431,7 +403,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           }}
           className="text-sm underline transition-colors hover:opacity-70"
         >
-          Don't have an account? Get Lifetime Access
+          Don't have an account? Start your 7-day free trial
         </a>
         
         <a
@@ -450,16 +422,16 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     );
   }
 
-  // Default: Sign Up + Pay Form (for new users)
+  // Default: Sign Up Form (starts 7-day trial for new users)
   return (
     <div className="space-y-4 flex flex-col items-center">
       <div className="text-center mb-2">
         <p className="text-sm" style={{ color: '#666666' }}>
-          One off payment of <span className="font-bold">£30</span> for unlimited lifetime access.
+          Start with a <span className="font-bold">7-day free trial</span> (no card required). After trial, lifetime access is a one-time <span className="font-bold">£30</span>.
         </p>
       </div>
       
-      <form onSubmit={handleSignUpAndPay} className="space-y-4 flex flex-col items-center w-full">
+      <form onSubmit={handleSignUpForTrial} className="space-y-4 flex flex-col items-center w-full">
         <div className="w-[70%]">
           <Input
             type="email"
@@ -517,7 +489,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
               Processing...
             </>
           ) : (
-            "Pay Now"
+            "Start 7-Day Free Trial"
           )}
         </Button>
       </form>
