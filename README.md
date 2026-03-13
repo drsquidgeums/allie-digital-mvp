@@ -96,6 +96,34 @@ Join our Discord server to get help, share feedback and report issues or bugs, a
 
 [![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2?logo=discord&logoColor=white)](https://discord.com/invite/wAwjSyqY6a)
 
+## ✨ Contributing
+Allie.ai is an open source project built for the ADHD community, and contributions of all kinds are welcome — you don't need to be a developer to help make it better.
+
+**Non-Technical Contributions**
+
+- Bug Reports & Feedback
+- If something isn't working as expected or you have a suggestion, open a GitHub Issue and describe what you experienced. Please include your browser, device, and steps to reproduce the issue where possible.
+Feature Suggestions Have an idea for a new feature or improvement? We'd love to hear it — open an Issue with the label enhancement and describe what you'd like to see and why it would help.
+
+**Technical Contributions**
+
+- Reporting Bugs with Code Context
+- If you've identified a bug and can pinpoint it in the code, open a GitHub Issue with as much technical detail as possible including any relevant error messages or logs.
+Submitting a Pull Request
+
+Fork the repository
+- Create a new branch for your change (git checkout -b fix/your-fix-name)
+- Make your changes and test them locally
+- Submit a Pull Request with a clear description of what you changed and why
+
+**Code Guidelines**
+
+- Keep changes focused — one fix or feature per Pull Request
+- Follow the existing code style and structure
+- All modifications must remain licensed under AGPL v3 — by submitting a Pull Request you agree your contribution will be released under the same licence
+  
+**This project is maintained by a small team. We review contributions as regularly as we can and appreciate your patience. All contributors are expected to engage respectfully in line with our community ethos.**
+
 ## 📄 Licence
 
 This project is open source and licensed under the GNU Affero General Public License v3.0. Check the LICENSE file in the root of this repository for the full licence text, or visit https://www.gnu.org/licenses/agpl-3.0.en.html for more information on permissions.
