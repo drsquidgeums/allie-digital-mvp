@@ -23,6 +23,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   const [paidEmail, setPaidEmail] = useState<string | null>(null);
   const [passwordResetSuccess, setPasswordResetSuccess] = useState(false);
   const [signInError, setSignInError] = useState<string | null>(null);
+  const [signUpError, setSignUpError] = useState<string | null>(null);
+  const [signUpNotice, setSignUpNotice] = useState<string | null>(null);
   const { toast } = useToast();
 
   // Check if user just paid and came back, or just reset their password
