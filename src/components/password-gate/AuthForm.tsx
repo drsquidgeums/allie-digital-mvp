@@ -491,6 +491,20 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           />
           <PasswordRequirements password={password} />
           
+          <div className="flex items-start gap-2 mt-3">
+            <Checkbox
+              id="cancellation-acknowledge"
+              checked={cancellationAcknowledged}
+              onCheckedChange={(checked) => setCancellationAcknowledged(checked === true)}
+            />
+            <label
+              htmlFor="cancellation-acknowledge"
+              className="text-xs leading-snug cursor-pointer"
+              style={{ color: '#666666' }}
+            >
+              I acknowledge that by completing payment I am requesting immediate access to the Service and waiving my 14-day cancellation right under the Consumer Contracts Regulations 2013. No refunds will be issued once access is granted.
+            </label>
+          </div>
         </div>
         <Button 
           type="submit" 
