@@ -5,18 +5,14 @@ import { Sidebar } from "@/components/Sidebar";
 
 interface WorkspaceLayoutProps {
   children: React.ReactNode;
-  trialActive?: boolean;
-  trialDaysRemaining?: number | null;
 }
 
-export const WorkspaceLayout = React.memo(({ children, trialActive, trialDaysRemaining }: WorkspaceLayoutProps) => {
+export const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) => {
   return (
     <div className="workspace-modern flex min-h-screen">
       <div className="sticky top-0 h-screen sidebar-modern">
         <Sidebar 
           onColorChange={() => {}}
-          trialActive={trialActive}
-          trialDaysRemaining={trialDaysRemaining}
         />
       </div>
       <div className="flex-1 overflow-y-auto bg-card">
