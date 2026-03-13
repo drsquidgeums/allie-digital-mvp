@@ -49,16 +49,16 @@ const Terms = () => {
         <h1 className="text-3xl font-bold mb-8" style={{ color: '#000000' }}>Terms of Service</h1>
         
         <div className="prose prose-sm max-w-none space-y-6" style={{ color: '#000000' }}>
-          <p className="text-sm" style={{ color: '#000000' }}>Last updated: January 2026</p>
+          <p className="text-sm" style={{ color: '#000000' }}>Last updated: March 2026</p>
           
           <section className="space-y-3">
             <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>1. Acceptance of Terms</h2>
-            <p>By accessing and using this educational technology platform ("the Service"), you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.</p>
+            <p>By accessing and using Allie.ai ("the Service"), operated by Allie Digital CIC (Company No. NI718014), you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.</p>
           </section>
           
           <section className="space-y-3">
             <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>2. Description of Service</h2>
-            <p>The Service is an educational technology platform designed to enhance learning through interactive study tools, AI-powered features, and document management capabilities. The Service is intended for educational purposes only.</p>
+            <p>The Service is an open source educational technology platform designed to enhance learning through interactive study tools, AI-powered features, and document management capabilities. The Service is intended for educational purposes and is licensed under the GNU Affero General Public License v3 (AGPL v3).</p>
           </section>
           
           <section className="space-y-3">
@@ -89,11 +89,11 @@ const Terms = () => {
             <ul className="list-disc pl-6 space-y-2">
               <li>Upload content that infringes intellectual property rights</li>
               <li>Share your account credentials with others</li>
-              <li>Attempt to reverse-engineer, hack, or disrupt the Service</li>
-              <li>Use the Service for any commercial purposes without permission</li>
-              <li>Upload malicious content, viruses, or harmful code</li>
+              <li>Attempt to disrupt the hosted Service infrastructure or interfere with other users' access</li>
+              <li>Upload malicious content, viruses, or harmful code to the hosted Service</li>
               <li>Use the AI features to generate inappropriate or harmful content</li>
             </ul>
+            <p className="text-sm mt-2">Note: This section applies to your use of the hosted Service. Your rights to study, modify, and redistribute the source code under the AGPL v3 licence are not restricted by these terms. See our <Link to="/open-source-license" className="underline" style={{ color: '#000000' }}>Open Source License</Link> page for details.</p>
           </section>
           
           <section className="space-y-3">
@@ -113,8 +113,16 @@ const Terms = () => {
           </section>
           
           <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>8. Intellectual Property</h2>
-            <p>The Service, including its design, features, and functionality, is owned by us and protected by intellectual property laws. You may not copy, modify, or distribute any part of the Service without permission.</p>
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>8. Intellectual Property and Open Source</h2>
+            <p>The source code of Allie.ai is licensed under the GNU Affero General Public License v3 (AGPL v3). Under this licence, you have the right to:</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Use, study, and modify the source code</li>
+              <li>Distribute copies of the original or modified code</li>
+              <li>Commercialise the software, provided any modifications or derivative works are also made available under the AGPL v3</li>
+            </ul>
+            <p>The Allie Digital name, logo, and branding are trademarks of Allie Digital CIC and are not covered by the AGPL v3 licence. You may not use these trademarks to imply endorsement or affiliation without written permission.</p>
+            <p>User-generated content (documents, notes, and study materials you create) remains your property and is not subject to the AGPL v3 licence.</p>
+            <p>For the full licence text, visit our <Link to="/open-source-license" className="underline" style={{ color: '#000000' }}>Open Source License</Link> page or the <a href="https://github.com/drsquidgeums/allie-digital-mvp" className="underline" style={{ color: '#000000' }} target="_blank" rel="noopener noreferrer">GitHub repository</a>.</p>
           </section>
           
           <section className="space-y-3">
@@ -144,7 +152,7 @@ const Terms = () => {
           
           <section className="space-y-3">
             <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>13. Governing Law</h2>
-            <p>These Terms are governed by the laws of Northern Ireland and Great Britain. Any disputes shall be resolved in the courts of Northern Ireland and Great Britain.</p>
+            <p>These Terms are governed by the laws of Northern Ireland. Any disputes shall be subject to the exclusive jurisdiction of the courts of Northern Ireland.</p>
           </section>
           
           <section className="space-y-3">

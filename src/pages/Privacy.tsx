@@ -49,13 +49,17 @@ const Privacy = () => {
         <h1 className="text-3xl font-bold mb-8" style={{ color: '#000000' }}>Privacy Policy</h1>
         
         <div className="prose prose-sm max-w-none space-y-6" style={{ color: '#000000' }}>
-          <p className="text-sm" style={{ color: '#000000' }}>Last updated: January 2026</p>
+          <p className="text-sm" style={{ color: '#000000' }}>Last updated: March 2026</p>
           
           <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>1. Introduction</h2>
-            <p>This Privacy Policy explains how we collect, use, and protect your personal information when you use our educational technology platform ("the Service"). We are committed to safeguarding your privacy and handling your data responsibly.</p>
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>1. Data Controller</h2>
+            <p>The data controller responsible for your personal data is:</p>
+            <p><strong>Allie Digital CIC</strong><br />
+            Company Number: NI718014<br />
+            Email: <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a></p>
+            <p>For the purposes of the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018, Allie Digital CIC is the controller of your personal data.</p>
           </section>
-          
+
           <section className="space-y-3">
             <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>2. Information We Collect</h2>
             <p>We collect the following types of information:</p>
@@ -78,9 +82,20 @@ const Privacy = () => {
               <li>Device and browser information</li>
             </ul>
           </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>3. Lawful Basis for Processing</h2>
+            <p>We process your personal data on the following lawful bases under Article 6 of the UK GDPR:</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li><strong>Contract (Article 6(1)(b)):</strong> Processing your account information and payment data is necessary to perform our contract with you (providing access to the Service)</li>
+              <li><strong>Legitimate Interests (Article 6(1)(f)):</strong> Processing usage data to improve the Service, ensure security, and prevent fraud. We have assessed that these interests do not override your rights and freedoms</li>
+              <li><strong>Legal Obligation (Article 6(1)(c)):</strong> Where we are required to retain data for tax, accounting, or regulatory purposes</li>
+              <li><strong>Consent (Article 6(1)(a)):</strong> Where you explicitly opt in to optional features such as AI-powered content processing. You may withdraw consent at any time</li>
+            </ul>
+          </section>
           
           <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>3. How We Use Your Information</h2>
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>4. How We Use Your Information</h2>
             <p>We use your information to:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Provide and maintain the educational Service</li>
@@ -93,18 +108,24 @@ const Privacy = () => {
           </section>
           
           <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>4. AI Processing of Your Content</h2>
-            <p>When you use AI-powered features:</p>
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>5. AI Processing of Your Content</h2>
+            <p>When you use AI-powered features, your content is processed by the following third-party AI providers:</p>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Your documents and text may be processed by AI systems to generate study materials</li>
-              <li>We use industry-leading AI providers with appropriate data protection agreements</li>
+              <li><strong>OpenAI</strong> — Powers the AI study assistant, text simplification, task suggestions, and content enhancement features</li>
+              <li><strong>Anthropic (Claude)</strong> — Used for document analysis and AI chat capabilities</li>
+              <li><strong>ElevenLabs</strong> — Provides text-to-speech and voice AI functionality</li>
+            </ul>
+            <p>When using these AI features:</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Your documents and text are sent to these providers for processing</li>
+              <li>We have appropriate data processing agreements in place with each provider</li>
               <li>Your content is not used to train AI models</li>
               <li>AI-processed content is associated with your account and protected accordingly</li>
             </ul>
           </section>
           
           <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>5. Data Storage and Security</h2>
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>6. Data Storage and Security</h2>
             <p>We take your data security seriously:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Data is stored securely using Supabase, a trusted cloud infrastructure provider</li>
@@ -116,18 +137,20 @@ const Privacy = () => {
           </section>
           
           <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>6. Data Sharing</h2>
-            <p>We do not sell your personal information. We may share data with:</p>
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>7. Data Sharing</h2>
+            <p>We do not sell your personal information. We share data with the following third parties who act as data processors on our behalf:</p>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Stripe:</strong> For secure payment processing</li>
-              <li><strong>Supabase:</strong> For data storage and authentication</li>
-              <li><strong>AI Providers:</strong> For processing content through AI features</li>
-              <li><strong>Legal Authorities:</strong> If required by law or to protect our rights</li>
+              <li><strong>Stripe</strong> (United States) — For secure payment processing</li>
+              <li><strong>Supabase</strong> (United States/EU) — For data storage, authentication, and backend services</li>
+              <li><strong>OpenAI</strong> (United States) — For AI-powered study features</li>
+              <li><strong>Anthropic</strong> (United States) — For AI document analysis and chat</li>
+              <li><strong>ElevenLabs</strong> (United States) — For text-to-speech and voice features</li>
+              <li><strong>Legal Authorities</strong> — If required by law or to protect our rights</li>
             </ul>
           </section>
           
           <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>7. Cookies and Tracking</h2>
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>8. Cookies and Tracking</h2>
             <p>We use essential cookies to:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Keep you logged in to your account</li>
@@ -138,21 +161,38 @@ const Privacy = () => {
           </section>
           
           <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>8. Your Rights</h2>
-            <p>Under data protection laws, you have the right to:</p>
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>9. International Data Transfers</h2>
+            <p>Some of our third-party processors are based in the United States. Where your data is transferred outside the United Kingdom, we ensure appropriate safeguards are in place, including the UK International Data Transfer Agreement (IDTA) or standard contractual clauses approved by the Information Commissioner's Office (ICO).</p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>10. Your Rights</h2>
+            <p>Under the UK GDPR, you have the following rights:</p>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Access:</strong> Request a copy of your personal data</li>
-              <li><strong>Rectification:</strong> Correct inaccurate personal data</li>
-              <li><strong>Erasure:</strong> Request deletion of your personal data</li>
-              <li><strong>Data Portability:</strong> Export your data in a standard format</li>
-              <li><strong>Object:</strong> Object to certain processing of your data</li>
-              <li><strong>Withdraw Consent:</strong> Where processing is based on consent</li>
+              <li><strong>Right of Access (Article 15):</strong> Request a copy of your personal data</li>
+              <li><strong>Right to Rectification (Article 16):</strong> Correct inaccurate personal data</li>
+              <li><strong>Right to Erasure (Article 17):</strong> Request deletion of your personal data</li>
+              <li><strong>Right to Restrict Processing (Article 18):</strong> Limit how we process your data</li>
+              <li><strong>Right to Data Portability (Article 20):</strong> Export your data in a standard format</li>
+              <li><strong>Right to Object (Article 21):</strong> Object to processing based on legitimate interests</li>
+              <li><strong>Right to Withdraw Consent:</strong> Where processing is based on consent, you may withdraw it at any time without affecting the lawfulness of prior processing</li>
             </ul>
-            <p>To exercise these rights, please contact us at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a>.</p>
+            <p>To exercise these rights, please contact us at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a>. We will respond within one month of your request.</p>
           </section>
           
           <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>9. Data Retention</h2>
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>11. Complaints</h2>
+            <p>If you are not satisfied with how we handle your personal data, you have the right to lodge a complaint with the Information Commissioner's Office (ICO):</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Website: <a href="https://ico.org.uk/make-a-complaint/" className="underline" style={{ color: '#000000' }} target="_blank" rel="noopener noreferrer">ico.org.uk/make-a-complaint</a></li>
+              <li>Telephone: 0303 123 1113</li>
+              <li>Post: Information Commissioner's Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF</li>
+            </ul>
+            <p>We would appreciate the opportunity to address your concerns before you approach the ICO, so please contact us first at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a>.</p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>12. Data Retention</h2>
             <p>We retain your data for as long as your account is active. If you delete your account:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Personal data is deleted within 30 days</li>
@@ -162,23 +202,21 @@ const Privacy = () => {
           </section>
           
           <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>10. Children's Privacy</h2>
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>13. Children's Privacy</h2>
             <p>The Service is intended for users aged 16 and over. We do not knowingly collect personal information from children under 16. If you believe a child has provided us with personal information, please contact us immediately.</p>
           </section>
           
           <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>11. International Data Transfers</h2>
-            <p>Your data may be processed in countries outside your residence. We ensure appropriate safeguards are in place, including standard contractual clauses where required.</p>
-          </section>
-          
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>12. Changes to This Policy</h2>
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>14. Changes to This Policy</h2>
             <p>We may update this Privacy Policy periodically. We will notify you of significant changes via email or through the Service. The "Last updated" date at the top indicates when changes were made.</p>
           </section>
           
           <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>13. Contact Us</h2>
-            <p>If you have questions about this Privacy Policy or wish to exercise your data rights, please contact us at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a>.</p>
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>15. Contact Us</h2>
+            <p>If you have questions about this Privacy Policy or wish to exercise your data rights, please contact:</p>
+            <p><strong>Allie Digital CIC</strong><br />
+            Company Number: NI718014<br />
+            Email: <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a></p>
           </section>
         </div>
       </div>
