@@ -52,6 +52,7 @@ export interface ExtendedDatabase extends SupabaseDatabase {
       saved_urls: SupabaseDatabase['public']['Tables']['saved_urls'];
       stripe_subscriptions: SupabaseDatabase['public']['Tables']['stripe_subscriptions'];
       vouchers: SupabaseDatabase['public']['Tables']['vouchers'];
+      user_api_keys: SupabaseDatabase['public']['Tables']['user_api_keys'];
       
       profiles: SupabaseDatabase['public']['Tables']['profiles'];
       user_roles: SupabaseDatabase['public']['Tables']['user_roles'];
