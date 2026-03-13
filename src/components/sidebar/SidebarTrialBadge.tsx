@@ -16,7 +16,7 @@ export const SidebarTrialBadge: React.FC<SidebarTrialBadgeProps> = ({ daysRemain
   const inactiveLength = circumference - activeLength;
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center -mt-2.5">
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
           {/* Grey background track */}
