@@ -8,15 +8,20 @@ import { ThemeToggle } from "./ThemeToggle";
 import { SidebarButton } from "./sidebar/SidebarButton";
 import { SupportDialog } from "./support/SupportDialog";
 import { SidebarAICredits } from "./sidebar/SidebarAICredits";
+import { SidebarTrialBadge } from "./sidebar/SidebarTrialBadge";
 import { Headset } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface SidebarProps {
   onColorChange: (color: string) => void;
+  trialActive?: boolean;
+  trialDaysRemaining?: number | null;
 }
 
 export const Sidebar = React.memo(({ 
-  onColorChange
+  onColorChange,
+  trialActive,
+  trialDaysRemaining
 }: SidebarProps) => {
   const { t } = useTranslation();
   const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
@@ -79,6 +84,12 @@ export const Sidebar = React.memo(({
       <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
         <div data-tour="ai-credits">
           <SidebarAICredits />
+        </div>
+        {trialActive && trialDaysRemaining !== null && (
+          <SidebarTrialBadge daysRemaining={trialDaysRemaining} />
+        )}
+        <div data-tour="logout">
+          {/* Logout is inside SidebarTools */}
         </div>
         <div data-tour="discord">
           <a
