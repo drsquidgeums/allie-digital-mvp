@@ -147,7 +147,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     }
   };
 
-  const handleSignUpAndPay = async (e: React.FormEvent) => {
+  const handleSignUpForTrial = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !password) {
