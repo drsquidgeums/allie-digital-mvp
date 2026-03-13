@@ -233,8 +233,8 @@ const FocusTimer = ({ onTimerComplete }: FocusTimerProps) => {
 };
 
 export const CognitiveSupportTools = () => {
-  const handleBreakdownGenerated = (breakdown: any) => {
-    console.log('Task breakdown generated:', breakdown);
+  const handleBreakdownGenerated = (breakdown: TaskBreakdownData) => {
+    // Breakdown generated — no-op in production
   };
 
   const handleTimerComplete = () => {

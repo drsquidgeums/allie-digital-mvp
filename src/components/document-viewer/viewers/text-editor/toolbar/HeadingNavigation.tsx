@@ -57,8 +57,8 @@ export const HeadingNavigation: React.FC<HeadingNavigationProps> = ({ editor }) 
             }
           }
           
-          if (node.content) {
-            extractHeadings(node.content, position);
+          if (Array.isArray(node.content)) {
+            extractHeadings(node.content as Record<string, unknown>[], position);
           }
           
           position++;
