@@ -5,9 +5,9 @@
 </p>
 
 <p align="center">
-  <a href="https://allie.org.uk">Website</a> •
+  <a href="https://alliedigital.org.uk">Website</a> •
   <a href="https://discord.com/invite/wAwjSyqY6a">Discord</a> •
-  <a href="https://allie-web-app.lovable.app">Live App</a>
+  <a href="https://allie.org.uk">Live App</a>
 </p>
 
 ---
