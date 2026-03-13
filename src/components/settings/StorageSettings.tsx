@@ -18,18 +18,22 @@ export const StorageSettings = () => {
   useEffect(() => {
     const fetchStorageStats = async () => {
       try {
-        // Get all files to calculate total size
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          setIsLoading(false);
+          return;
+        }
+
+        // Files are stored under {userId}/ path
         const { data: files, error } = await supabase
           .storage
           .from('files')
-          .list();
+          .list(user.id, { limit: 1000 });
 
         if (error) {
           throw error;
         }
         
-        // Calculate total size - this is an approximation
-        // In a production app, you might want to track this more precisely
         let totalSize = 0;
         if (files) {
           for (const file of files) {
@@ -57,17 +61,20 @@ export const StorageSettings = () => {
 
   const clearStorage = async () => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
       const { data: files, error: listError } = await supabase
         .storage
         .from('files')
-        .list();
+        .list(user.id, { limit: 1000 });
 
       if (listError) {
         throw listError;
       }
 
       if (files && files.length > 0) {
-        const filePaths = files.map(file => file.name);
+        const filePaths = files.map(file => `${user.id}/${file.name}`);
         
         const { error: deleteError } = await supabase
           .storage
