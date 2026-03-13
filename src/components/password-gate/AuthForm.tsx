@@ -232,7 +232,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       clearInterval(interval);
       setProgress(0);
       
-      console.error("Signup/payment error:", error);
+      console.error("Signup/trial start error:", error);
       
       if (!error.message?.includes("User already registered")) {
         toast({
