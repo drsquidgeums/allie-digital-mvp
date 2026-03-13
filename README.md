@@ -1,5 +1,7 @@
 # Allie.ai – Digital Learning Support Web Application
 
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
 <p align="left">
   <strong>AI powered assistive learning tool for students with ADHD and comorbid learning differences.</strong>
 </p>
