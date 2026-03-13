@@ -510,19 +510,19 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           type="submit" 
           className="w-[70%] transition-colors" 
           style={{
-            backgroundColor: !isPasswordValid(password) || !email ? '#9ca3af' : '#000000',
+            backgroundColor: !isPasswordValid(password) || !email || !cancellationAcknowledged ? '#9ca3af' : '#000000',
             color: '#ffffff',
-            borderColor: !isPasswordValid(password) || !email ? '#9ca3af' : '#000000',
-            cursor: !isPasswordValid(password) || !email ? 'not-allowed' : 'pointer',
+            borderColor: !isPasswordValid(password) || !email || !cancellationAcknowledged ? '#9ca3af' : '#000000',
+            cursor: !isPasswordValid(password) || !email || !cancellationAcknowledged ? 'not-allowed' : 'pointer',
           }}
-          disabled={isLoading || !isPasswordValid(password) || !email}
+          disabled={isLoading || !isPasswordValid(password) || !email || !cancellationAcknowledged}
           onMouseEnter={(e) => {
-            if (!isLoading && isPasswordValid(password) && email) {
+            if (!isLoading && isPasswordValid(password) && email && cancellationAcknowledged) {
               e.currentTarget.style.backgroundColor = '#1f1f1f';
             }
           }}
           onMouseLeave={(e) => {
-            if (!isLoading && isPasswordValid(password) && email) {
+            if (!isLoading && isPasswordValid(password) && email && cancellationAcknowledged) {
               e.currentTarget.style.backgroundColor = '#000000';
             }
           }}
