@@ -242,6 +242,9 @@ const App = () => {
                   {/* AI Study Buddy */}
                   <StudyBuddy />
                   
+                  {/* Email Verification Reminder (shows once after signup) */}
+                  <EmailVerificationReminder />
+                  
                   {/* Onboarding Components */}
                   <WelcomeModal />
                   <OnboardingTour />
