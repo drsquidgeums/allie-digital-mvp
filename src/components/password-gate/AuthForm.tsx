@@ -224,12 +224,34 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       clearInterval(interval);
 
       if (signUpData.session) {
+        // Flag so the in-app reminder popup shows after redirect
+        sessionStorage.setItem("just_signed_up", "true");
         toast({
           title: "Trial started",
           description: "Your 7-day free trial is now active.",
         });
         onAuthenticated();
         return;
+      }
+
+      // If no session (email confirmation still required), also flag and show notice
+      if (signUpData.user && !signUpData.session) {
+        // User created but needs confirmation — try signing in anyway
+        // (will work if confirm is disabled in dashboard)
+        const { data: signInData } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (signInData.session) {
+          sessionStorage.setItem("just_signed_up", "true");
+          toast({
+            title: "Trial started",
+            description: "Your 7-day free trial is now active.",
+          });
+          onAuthenticated();
+          return;
+        }
       }
 
       setPassword("");
