@@ -161,8 +161,7 @@ const App = () => {
     );
   }
 
-  // Authenticated but hasn't paid - show payment required message
-  // This shouldn't happen often since we now require payment before sign-in completes
+  // Authenticated but hasn't paid and trial expired - show payment wall
   if (!isDevBypass && !hasPaid) {
     return (
       <BrowserRouter>
@@ -182,12 +181,16 @@ const App = () => {
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/open-source-license" element={<OpenSourceLicense />} />
-              <Route path="/privacy" element={<Privacy />} />
               <Route
                 path="/reset-password"
                 element={React.createElement(React.lazy(() => import("@/pages/ResetPassword")))}
               />
-              <Route path="*" element={<PasswordGate onAuthenticated={handleAuthentication} />} />
+              <Route path="*" element={
+                <PaymentRequiredGate 
+                  onPaymentComplete={handlePaymentComplete} 
+                  trialExpired={trialExpired}
+                />
+              } />
             </Routes>
           </Suspense>
         </AppProviders>
