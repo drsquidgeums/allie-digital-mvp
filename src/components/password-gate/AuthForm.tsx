@@ -151,11 +151,15 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
 
   const handleSignUpForTrial = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setSignUpError(null);
+    setSignUpNotice(null);
+
     if (!email || !password) {
+      const message = "Please enter both email and password.";
+      setSignUpError(message);
       toast({
         title: "Error",
-        description: "Please enter both email and password.",
+        description: message,
         variant: "destructive",
       });
       return;
@@ -164,23 +168,26 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
+      const message = "Please enter a valid email address.";
+      setSignUpError(message);
       toast({
         title: "Error",
-        description: "Please enter a valid email address.",
+        description: message,
         variant: "destructive",
       });
       return;
     }
 
     if (!isPasswordValid(password)) {
+      const message = "Password does not meet all requirements.";
+      setSignUpError(message);
       toast({
         title: "Error",
-        description: "Password does not meet all requirements.",
+        description: message,
         variant: "destructive",
       });
       return;
     }
-
 
     setIsLoading(true);
     setProgress(0);
@@ -201,6 +208,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
 
       if (signUpError) {
         if (signUpError.message?.includes("User already registered")) {
+          setSignUpError("This email is already registered. Please sign in instead.");
           toast({
             title: "Account exists",
             description: "An account with this email already exists. Please sign in instead.",
@@ -224,8 +232,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         return;
       }
 
-      setIsSignIn(true);
       setPassword("");
+      setSignUpNotice("Account created. Check your inbox (and spam) for the verification email, then sign in.");
       toast({
         title: "Account created",
         description: "Check your email to confirm your account, then sign in to start your 7-day free trial.",
@@ -233,13 +241,23 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     } catch (error: any) {
       clearInterval(interval);
       setProgress(0);
-      
+
       console.error("Signup/trial start error:", error);
-      
+
       if (!error.message?.includes("User already registered")) {
+        const isRateLimited =
+          error?.status === 429 ||
+          error?.code === "over_email_send_rate_limit" ||
+          error?.message?.toLowerCase().includes("rate limit");
+
+        const message = isRateLimited
+          ? "Too many signup attempts right now. Please wait a minute and try again."
+          : error.message || "Failed to process. Please try again.";
+
+        setSignUpError(message);
         toast({
           title: "Error",
-          description: error.message || "Failed to process. Please try again.",
+          description: message,
           variant: "destructive",
         });
       }
