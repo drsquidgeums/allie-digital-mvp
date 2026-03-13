@@ -10,7 +10,7 @@ interface PaymentRequiredGateProps {
   userEmail?: string | null;
 }
 
-export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaymentComplete, trialExpired }) => {
+export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaymentComplete, trialExpired, userEmail }) => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [paidEmail, setPaidEmail] = useState<string | null>(null);
 
