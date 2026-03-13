@@ -36,14 +36,14 @@ export const HeadingNavigation: React.FC<HeadingNavigationProps> = ({ editor }) 
       const doc = editor.getJSON();
       const extractedHeadings: HeadingNavItem[] = [];
       
-      const extractHeadings = (content: any[], startPos = 0) => {
+      const extractHeadings = (content: Record<string, unknown>[], startPos = 0) => {
         let position = startPos;
         
-        content.forEach((node: any) => {
-          if (node.type === 'heading' && node.content) {
-            const text = node.content
-              .filter((item: any) => item.type === 'text')
-              .map((item: any) => item.text)
+        content.forEach((node: Record<string, unknown>) => {
+          if (node.type === 'heading' && Array.isArray(node.content)) {
+            const text = (node.content as Record<string, unknown>[])
+              .filter((item) => item.type === 'text')
+              .map((item) => item.text as string)
               .join('');
             
             if (text.trim()) {
