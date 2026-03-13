@@ -60,6 +60,17 @@ export const useStudyBuddy = (context?: StudyBuddyContext) => {
 
       if (!response.ok) {
         const errorData = await response.json();
+        if (errorData.code === "USAGE_LIMIT_REACHED" || errorData.error?.includes("Monthly AI credits")) {
+          setMessages(prev => [
+            ...prev,
+            {
+              role: "assistant",
+              content: "⚠️ Your monthly AI credits have been used up. You can add your own OpenAI API key in **Settings → AI Settings** for unlimited access, or wait until credits reset on the 1st of next month."
+            }
+          ]);
+          setIsLoading(false);
+          return;
+        }
         throw new Error(errorData.error || "Failed to get response");
       }
 

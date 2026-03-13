@@ -33,7 +33,17 @@ export const Rewordify = () => {
       });
 
       if (error) {
-        throw new Error(error.message || "Failed to simplify text");
+        const errMsg = error.message || "Failed to simplify text";
+        if (errMsg.includes("Monthly AI credits") || errMsg.includes("USAGE_LIMIT_REACHED")) {
+          toast({
+            title: "AI Credits Used Up",
+            description: "Go to Settings → AI Settings to add your own API key for unlimited access.",
+            variant: "destructive"
+          });
+        } else {
+          throw new Error(errMsg);
+        }
+        return;
       }
 
       if (data?.simplifiedText) {

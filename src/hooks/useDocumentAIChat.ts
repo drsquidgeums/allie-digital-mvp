@@ -34,6 +34,14 @@ export const useDocumentAIChat = (documentContent?: string) => {
 
       if (!resp.ok) {
         const errorData = await resp.json();
+        if (errorData.code === "USAGE_LIMIT_REACHED" || errorData.error?.includes("Monthly AI credits")) {
+          setMessages(prev => [...prev, {
+            role: "assistant",
+            content: "⚠️ Your monthly AI credits have been used up. Go to **Settings → AI Settings** to add your own OpenAI API key for unlimited access, or wait until credits reset on the 1st."
+          }]);
+          setIsLoading(false);
+          return;
+        }
         throw new Error(errorData.error || "Failed to get AI response");
       }
 
