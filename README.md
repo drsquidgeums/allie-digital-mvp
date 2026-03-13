@@ -96,7 +96,7 @@ Join our Discord server to get help, share feedback, and connect with other user
 
 ## 📄 Licence
 
-This project is open source and licensed under the GNU Affero General Public License v3.0. See the <a href="[https://alliedigital.org.uk](https://github.com/drsquidgeums/allie-digital-mvp/blob/main/LICENSE)">LICENSE</a> file in the root of this repository for the full licence text, or visit https://www.gnu.org/licenses/agpl-3.0.en.html for more information on permissions.
+This project is open source and licensed under the GNU Affero General Public License v3.0. Check the LICENSE file in the root of this repository for the full licence text, or visit https://www.gnu.org/licenses/agpl-3.0.en.html for more information on permissions.
 
 ## 🏢 About
 
