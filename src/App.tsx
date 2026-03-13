@@ -15,6 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
 import { usePaymentStatus } from "@/hooks/usePaymentStatus";
 import { PaymentRequiredGate } from "@/components/payment/PaymentRequiredGate";
+import { TrialBanner } from "@/components/payment/TrialBanner";
 import PaymentSuccess from "@/pages/PaymentSuccess";
 import PaymentCanceled from "@/pages/PaymentCanceled";
 import Terms from "@/pages/Terms";
