@@ -373,12 +373,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
             setEmail(verifyEmail);
             setPassword("");
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#1f1f1f';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#000000';
-          }}
         >
           I've verified — Sign In
         </Button>
