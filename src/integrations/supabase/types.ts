@@ -420,6 +420,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_voucher_by_code: {
+        Args: { _code: string }
+        Returns: {
+          code: string
+          description: string
+          expires_at: string
+          id: string
+          is_used: boolean
+        }[]
+      }
       cleanup_inactive_sessions: { Args: never; Returns: undefined }
       cleanup_old_sessions: { Args: never; Returns: undefined }
       has_role: {
