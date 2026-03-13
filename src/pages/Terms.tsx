@@ -74,7 +74,7 @@ const Terms = () => {
           
           <section className="space-y-3">
             <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>4. Payment and Refund Policy</h2>
-            <p>The Service operates on a one-time payment of £30 for lifetime access. By completing payment and accessing the Service, you expressly request immediate access to the digital content and acknowledge that your statutory 14-day cancellation right is waived upon accessing the Service, in accordance with the Consumer Contracts Regulations 2013.</p>
+            <p>The Service operates on a one-time payment of £30 for lifetime access. By completing payment and accessing the Service, you expressly request immediate access to the digital content and acknowledge that your statutory 14 day cancellation right is waived upon accessing the Service, in accordance with the Consumer Contracts Regulations 2013.</p>
             <p>Due to the nature of digital services and the low one-time cost, refunds will not be issued once access to the Service has been granted. If you experience a technical issue that prevents you from accessing the Service entirely, please contact us at <a href="mailto:alliedigital@pm.me" className="underline" style={{ color: '#000000' }}>alliedigital@pm.me</a> and we will work to resolve it promptly.</p>
             <p>"Lifetime" refers to the operational lifetime of the Service, not the user's lifetime.</p>
             <h3 className="text-lg font-semibold mt-4" style={{ color: '#000000' }}>Accessibility Commitment</h3>

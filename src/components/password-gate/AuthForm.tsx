@@ -502,7 +502,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
               className="text-xs leading-snug cursor-pointer"
               style={{ color: '#666666' }}
             >
-              I acknowledge that by completing payment I am requesting immediate access to the Service and waiving my 14-day cancellation right under the Consumer Contracts Regulations 2013. No refunds will be issued once access is granted.
+              I acknowledge that by completing payment I am requesting immediate access to the Service and waiving my 14 day cancellation right under the Consumer Contracts Regulations 2013. No refunds will be issued once access is granted.
             </label>
           </div>
         </div>
