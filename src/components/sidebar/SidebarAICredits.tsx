@@ -86,7 +86,7 @@ export const SidebarAICredits = () => {
         <Sparkles className="h-3.5 w-3.5 text-primary" />
         <span className="text-xs font-semibold text-foreground">AI Credits</span>
       </div>
-      {usage.byProvider.map((p) => (
+      {providers.map((p) => (
         <CreditBar key={p.name} provider={p} />
       ))}
     </button>

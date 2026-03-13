@@ -37,7 +37,7 @@ export const AICreditsIndicator = () => {
                 {remaining ?? "..."}/{usage.limit}
               </span>
             )}
-          </button>
+          </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="max-w-[220px]">
           {hasOwnKey ? (
