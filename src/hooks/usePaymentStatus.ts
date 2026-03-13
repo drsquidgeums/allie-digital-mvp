@@ -5,6 +5,10 @@ interface PaymentStatus {
   hasPaid: boolean;
   isLoading: boolean;
   error: string | null;
+  subscriptionStatus: string | null;
+  trialActive: boolean;
+  trialDaysRemaining: number | null;
+  trialExpired: boolean;
 }
 
 export const usePaymentStatus = (userId: string | undefined) => {
@@ -12,11 +16,15 @@ export const usePaymentStatus = (userId: string | undefined) => {
     hasPaid: false,
     isLoading: true,
     error: null,
+    subscriptionStatus: null,
+    trialActive: false,
+    trialDaysRemaining: null,
+    trialExpired: false,
   });
 
   const checkPayment = useCallback(async () => {
     if (!userId) {
-      setStatus({ hasPaid: false, isLoading: false, error: null });
+      setStatus({ hasPaid: false, isLoading: false, error: null, subscriptionStatus: null, trialActive: false, trialDaysRemaining: null, trialExpired: false });
       return;
     }
 
@@ -26,7 +34,7 @@ export const usePaymentStatus = (userId: string | undefined) => {
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
-        setStatus({ hasPaid: false, isLoading: false, error: null });
+        setStatus({ hasPaid: false, isLoading: false, error: null, subscriptionStatus: null, trialActive: false, trialDaysRemaining: null, trialExpired: false });
         return;
       }
 
@@ -42,6 +50,10 @@ export const usePaymentStatus = (userId: string | undefined) => {
         hasPaid: data?.hasPaid || false,
         isLoading: false,
         error: null,
+        subscriptionStatus: data?.subscriptionStatus || null,
+        trialActive: data?.trialActive || false,
+        trialDaysRemaining: data?.trialDaysRemaining ?? null,
+        trialExpired: data?.trialExpired || false,
       });
     } catch (err: any) {
       console.error("Error checking payment:", err);
@@ -49,6 +61,10 @@ export const usePaymentStatus = (userId: string | undefined) => {
         hasPaid: false,
         isLoading: false,
         error: err.message || "Failed to check payment status",
+        subscriptionStatus: null,
+        trialActive: false,
+        trialDaysRemaining: null,
+        trialExpired: false,
       });
     }
   }, [userId]);
