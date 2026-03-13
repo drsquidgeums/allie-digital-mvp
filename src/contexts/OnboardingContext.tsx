@@ -185,22 +185,6 @@ const defaultTourSteps: OnboardingStep[] = [
     route: "/toolbox"
   },
   {
-    id: "ai-credits",
-    target: "[data-tour='ai-credits']",
-    title: "AI Credits",
-    description: "You get 15 free AI uses per month with our built-in AI features like Simplify, Document AI, and Learning Tools. This badge shows your remaining credits.",
-    placement: "bottom",
-    route: "/toolbox"
-  },
-  {
-    id: "external-apis",
-    target: "[data-tour='ai-credits']",
-    title: "External API Accounts",
-    description: "Some features require separate accounts: ElevenLabs (for Voice AI) and Anthropic/Claude (for advanced AI). You can set these up in Settings by adding your own API keys. OpenAI keys can also be added for unlimited built-in AI access.",
-    placement: "bottom",
-    route: "/toolbox"
-  },
-  {
     id: "ai-simplify",
     target: "[data-tour='ai-simplify']",
     title: "AI Simplify",
