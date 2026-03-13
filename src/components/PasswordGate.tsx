@@ -68,6 +68,18 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
       .password-gate svg {
         color: inherit !important;
       }
+
+      /* Discord link color override */
+      html.dark .password-gate .discord-link,
+      html .password-gate .discord-link,
+      .dark .password-gate .discord-link,
+      .password-gate .discord-link,
+      html.dark .password-gate .discord-link svg,
+      html .password-gate .discord-link svg,
+      .dark .password-gate .discord-link svg,
+      .password-gate .discord-link svg {
+        color: #5865F2 !important;
+      }
       
       html.dark .password-gate input,
       html .password-gate input,
