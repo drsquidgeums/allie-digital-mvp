@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { SidebarLogo } from "./sidebar/SidebarLogo";
 import { SidebarNavigation } from "./sidebar/SidebarNavigation";
 import { SidebarTools } from "./sidebar/SidebarTools";
