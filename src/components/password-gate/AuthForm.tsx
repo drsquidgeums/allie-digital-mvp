@@ -23,6 +23,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   const [paidEmail, setPaidEmail] = useState<string | null>(null);
   const [passwordResetSuccess, setPasswordResetSuccess] = useState(false);
   const [signInError, setSignInError] = useState<string | null>(null);
+  const [signUpError, setSignUpError] = useState<string | null>(null);
+  const [signUpNotice, setSignUpNotice] = useState<string | null>(null);
   const { toast } = useToast();
 
   // Check if user just paid and came back, or just reset their password
@@ -149,11 +151,15 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
 
   const handleSignUpForTrial = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setSignUpError(null);
+    setSignUpNotice(null);
+
     if (!email || !password) {
+      const message = "Please enter both email and password.";
+      setSignUpError(message);
       toast({
         title: "Error",
-        description: "Please enter both email and password.",
+        description: message,
         variant: "destructive",
       });
       return;
@@ -162,23 +168,26 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
+      const message = "Please enter a valid email address.";
+      setSignUpError(message);
       toast({
         title: "Error",
-        description: "Please enter a valid email address.",
+        description: message,
         variant: "destructive",
       });
       return;
     }
 
     if (!isPasswordValid(password)) {
+      const message = "Password does not meet all requirements.";
+      setSignUpError(message);
       toast({
         title: "Error",
-        description: "Password does not meet all requirements.",
+        description: message,
         variant: "destructive",
       });
       return;
     }
-
 
     setIsLoading(true);
     setProgress(0);
@@ -189,7 +198,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
 
     try {
       const redirectUrl = `${window.location.origin}/`;
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      const { data: signUpData, error: signUpResponseError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -197,17 +206,18 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         },
       });
 
-      if (signUpError) {
-        if (signUpError.message?.includes("User already registered")) {
+      if (signUpResponseError) {
+        if (signUpResponseError.message?.includes("User already registered")) {
+          setSignUpError("This email is already registered. Please sign in instead.");
           toast({
             title: "Account exists",
             description: "An account with this email already exists. Please sign in instead.",
             variant: "destructive",
           });
           setIsSignIn(true);
-          throw signUpError;
+          throw signUpResponseError;
         }
-        throw signUpError;
+        throw signUpResponseError;
       }
 
       setProgress(100);
@@ -222,8 +232,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         return;
       }
 
-      setIsSignIn(true);
       setPassword("");
+      setSignUpNotice("Account created. Check your inbox (and spam) for the verification email, then sign in.");
       toast({
         title: "Account created",
         description: "Check your email to confirm your account, then sign in to start your 7-day free trial.",
@@ -231,13 +241,23 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     } catch (error: any) {
       clearInterval(interval);
       setProgress(0);
-      
+
       console.error("Signup/trial start error:", error);
-      
+
       if (!error.message?.includes("User already registered")) {
+        const isRateLimited =
+          error?.status === 429 ||
+          error?.code === "over_email_send_rate_limit" ||
+          error?.message?.toLowerCase().includes("rate limit");
+
+        const message = isRateLimited
+          ? "Too many signup attempts right now. Please wait a minute and try again."
+          : error.message || "Failed to process. Please try again.";
+
+        setSignUpError(message);
         toast({
           title: "Error",
-          description: error.message || "Failed to process. Please try again.",
+          description: message,
           variant: "destructive",
         });
       }
@@ -433,16 +453,25 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       
       <form onSubmit={handleSignUpForTrial} className="space-y-4 flex flex-col items-center w-full">
         <div className="w-[70%]">
+          {signUpNotice && (
+            <p className="text-sm mb-3 text-center text-primary font-medium">{signUpNotice}</p>
+          )}
+          {signUpError && (
+            <p className="text-sm mb-3 text-center text-destructive font-medium">{signUpError}</p>
+          )}
           <Input
             type="email"
             placeholder="Enter email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setSignUpError(null);
+            }}
             className="w-full transition-colors mb-3"
             style={{
               backgroundColor: 'white',
               color: '#000000',
-              borderColor: '#d1d5db',
+              borderColor: signUpError ? '#b91c1c' : '#d1d5db',
             }}
             disabled={isLoading}
           />
@@ -450,21 +479,23 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
             type="password"
             placeholder="Create a strong password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setSignUpError(null);
+            }}
             className="w-full transition-colors"
             style={{
               backgroundColor: 'white',
               color: '#000000',
-              borderColor: password && !isPasswordValid(password) ? '#ef4444' : '#d1d5db',
+              borderColor: signUpError || (password && !isPasswordValid(password)) ? '#b91c1c' : '#d1d5db',
             }}
             disabled={isLoading}
           />
           <PasswordRequirements password={password} />
-          
         </div>
-        <Button 
-          type="submit" 
-          className="w-[70%] transition-colors" 
+        <Button
+          type="submit"
+          className="w-[70%] transition-colors"
           style={{
             backgroundColor: !isPasswordValid(password) || !email ? '#9ca3af' : '#000000',
             color: '#ffffff',
@@ -486,7 +517,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Processing...
+              Creating account...
             </>
           ) : (
             "Start 7-Day Free Trial"
