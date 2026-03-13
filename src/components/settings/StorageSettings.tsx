@@ -61,10 +61,13 @@ export const StorageSettings = () => {
 
   const clearStorage = async () => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
       const { data: files, error: listError } = await supabase
         .storage
         .from('files')
-        .list();
+        .list(user.id, { limit: 1000 });
 
       if (listError) {
         throw listError;
