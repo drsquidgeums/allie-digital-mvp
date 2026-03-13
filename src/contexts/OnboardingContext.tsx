@@ -236,10 +236,10 @@ const defaultTourSteps: OnboardingStep[] = [
   // === FINAL INFO STEP (no target - centered on screen) ===
   {
     id: "external-apis",
-    target: "",
+    target: "[data-tour='settings']",
     title: "External API Accounts",
     description: "Some features require separate accounts: ElevenLabs (for Voice AI) and Anthropic/Claude (for advanced AI). You can set these up in Settings by adding your own API keys. OpenAI keys can also be added for unlimited built-in AI access.",
-    placement: "bottom"
+    placement: "right"
   }
 ];
 
