@@ -20,6 +20,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   const [progress, setProgress] = useState(0);
   const [isSignIn, setIsSignIn] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [showVerifyPopup, setShowVerifyPopup] = useState(false);
+  const [verifyEmail, setVerifyEmail] = useState("");
   const [paidEmail, setPaidEmail] = useState<string | null>(null);
   const [passwordResetSuccess, setPasswordResetSuccess] = useState(false);
   const [signInError, setSignInError] = useState<string | null>(null);
