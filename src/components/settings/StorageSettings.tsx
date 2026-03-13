@@ -74,7 +74,7 @@ export const StorageSettings = () => {
       }
 
       if (files && files.length > 0) {
-        const filePaths = files.map(file => file.name);
+        const filePaths = files.map(file => `${user.id}/${file.name}`);
         
         const { error: deleteError } = await supabase
           .storage
