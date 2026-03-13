@@ -431,7 +431,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         </p>
       </div>
       
-      <form onSubmit={handleSignUpAndPay} className="space-y-4 flex flex-col items-center w-full">
+      <form onSubmit={handleSignUpForTrial} className="space-y-4 flex flex-col items-center w-full">
         <div className="w-[70%]">
           <Input
             type="email"
