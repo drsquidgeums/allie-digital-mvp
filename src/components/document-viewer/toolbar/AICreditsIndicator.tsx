@@ -28,15 +28,6 @@ export const AICreditsIndicator = () => {
             aria-label="AI Credits"
           >
             <Sparkles className={`h-4 w-4 ${isExhausted ? "text-destructive" : isLow ? "text-yellow-500" : "text-primary"}`} />
-            {hasOwnKey ? (
-              <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">
-                ∞
-              </Badge>
-            ) : (
-              <span className={`tabular-nums ${isExhausted ? "text-destructive" : isLow ? "text-yellow-500" : "text-muted-foreground"}`}>
-                {remaining ?? "..."}/{usage.limit}
-              </span>
-            )}
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="max-w-[220px]">
