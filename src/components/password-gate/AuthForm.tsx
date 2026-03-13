@@ -198,7 +198,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
 
     try {
       const redirectUrl = `${window.location.origin}/`;
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      const { data: signUpData, error: signUpResponseError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -206,8 +206,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         },
       });
 
-      if (signUpError) {
-        if (signUpError.message?.includes("User already registered")) {
+      if (signUpResponseError) {
+        if (signUpResponseError.message?.includes("User already registered")) {
           setSignUpError("This email is already registered. Please sign in instead.");
           toast({
             title: "Account exists",
@@ -215,9 +215,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
             variant: "destructive",
           });
           setIsSignIn(true);
-          throw signUpError;
+          throw signUpResponseError;
         }
-        throw signUpError;
+        throw signUpResponseError;
       }
 
       setProgress(100);
