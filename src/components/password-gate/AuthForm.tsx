@@ -20,6 +20,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   const [progress, setProgress] = useState(0);
   const [isSignIn, setIsSignIn] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [showVerifyPopup, setShowVerifyPopup] = useState(false);
+  const [verifyEmail, setVerifyEmail] = useState("");
   const [paidEmail, setPaidEmail] = useState<string | null>(null);
   const [passwordResetSuccess, setPasswordResetSuccess] = useState(false);
   const [signInError, setSignInError] = useState<string | null>(null);
@@ -224,7 +226,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       clearInterval(interval);
 
       if (signUpData.session) {
-        // Flag so the in-app reminder popup shows after redirect
         sessionStorage.setItem("just_signed_up", "true");
         toast({
           title: "Trial started",
@@ -234,32 +235,11 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         return;
       }
 
-      // If no session (email confirmation still required), also flag and show notice
-      if (signUpData.user && !signUpData.session) {
-        // User created but needs confirmation — try signing in anyway
-        // (will work if confirm is disabled in dashboard)
-        const { data: signInData } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (signInData.session) {
-          sessionStorage.setItem("just_signed_up", "true");
-          toast({
-            title: "Trial started",
-            description: "Your 7-day free trial is now active.",
-          });
-          onAuthenticated();
-          return;
-        }
-      }
-
+      // Email confirmation required — show the verify popup
+      setProgress(100);
       setPassword("");
-      setSignUpNotice("Account created. Check your inbox (and spam) for the verification email, then sign in.");
-      toast({
-        title: "Account created",
-        description: "Check your email to confirm your account, then sign in to start your 7-day free trial.",
-      });
+      setVerifyEmail(email);
+      setShowVerifyPopup(true);
     } catch (error: any) {
       clearInterval(interval);
       setProgress(0);
@@ -288,6 +268,70 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       clearInterval(interval);
     }
   };
+
+  // Email Verification Popup
+  if (showVerifyPopup) {
+    return (
+      <div className="space-y-6 flex flex-col items-center text-center">
+        <div 
+          className="rounded-full p-4 mx-auto"
+          style={{ backgroundColor: '#f0fdf4' }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect width="20" height="16" x="2" y="4" rx="2" />
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+          </svg>
+        </div>
+        
+        <div>
+          <h2 className="text-xl font-bold mb-2" style={{ color: '#000000' }}>Check your email!</h2>
+          <p className="text-sm" style={{ color: '#666666' }}>
+            We've sent a verification link to:
+          </p>
+          <p className="font-semibold mt-1 break-all" style={{ color: '#000000' }}>
+            {verifyEmail}
+          </p>
+        </div>
+        
+        <div 
+          className="w-[80%] rounded-lg p-4"
+          style={{ backgroundColor: '#fffbeb', borderColor: '#fbbf24', border: '1px solid #fbbf24' }}
+        >
+          <p className="text-sm font-medium" style={{ color: '#92400e' }}>
+            Click the link in the email to verify your account, then come back here and sign in to start your <span className="font-bold">7-day free trial</span>.
+          </p>
+        </div>
+        
+        <p className="text-xs" style={{ color: '#9ca3af' }}>
+          Don't see it? Check your spam or junk folder.
+        </p>
+        
+        <Button
+          type="button"
+          className="w-[70%] transition-colors"
+          style={{
+            backgroundColor: '#000000',
+            color: '#ffffff',
+            borderColor: '#000000',
+          }}
+          onClick={() => {
+            setShowVerifyPopup(false);
+            setIsSignIn(true);
+            setEmail(verifyEmail);
+            setPassword("");
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#1f1f1f';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#000000';
+          }}
+        >
+          I've verified — Sign In
+        </Button>
+      </div>
+    );
+  }
 
   // Forgot Password Form
   if (isForgotPassword) {
