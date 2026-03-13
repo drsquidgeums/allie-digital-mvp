@@ -81,8 +81,8 @@ export const useSecurityAnalytics = () => {
     return report;
   }, [calculateSecurityMetrics]);
 
-  const getTopActivities = useCallback((activities: any[]) => {
-    const activityCounts = activities.reduce((acc: any, activity: any) => {
+  const getTopActivities = useCallback((activities: { event: string }[]) => {
+    const activityCounts = activities.reduce<Record<string, number>>((acc, activity) => {
       acc[activity.event] = (acc[activity.event] || 0) + 1;
       return acc;
     }, {});
