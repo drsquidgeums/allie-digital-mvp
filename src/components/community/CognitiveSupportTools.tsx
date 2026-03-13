@@ -7,13 +7,27 @@ import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Brain, Clock, ListChecks, Target, AlertCircle, CheckCircle2 } from "lucide-react";
 
+interface TaskStep {
+  id: number;
+  title: string;
+  duration: string;
+  completed: boolean;
+}
+
+interface TaskBreakdownData {
+  originalTask: string;
+  steps: TaskStep[];
+  totalDuration: string;
+  difficulty: string;
+}
+
 interface TaskBreakdownProps {
   task: string;
-  onBreakdownGenerated: (breakdown: any) => void;
+  onBreakdownGenerated: (breakdown: TaskBreakdownData) => void;
 }
 
 const TaskBreakdown = ({ task, onBreakdownGenerated }: TaskBreakdownProps) => {
-  const [breakdown, setBreakdown] = useState<any>(null);
+  const [breakdown, setBreakdown] = useState<TaskBreakdownData | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
 
   const generateBreakdown = () => {
