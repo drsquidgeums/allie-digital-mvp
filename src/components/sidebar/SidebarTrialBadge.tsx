@@ -44,8 +44,9 @@ export const SidebarTrialBadge: React.FC<SidebarTrialBadgeProps> = ({ daysRemain
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-[9px] font-semibold leading-tight text-foreground">Trial</span>
-          <span className="text-sm font-bold leading-tight text-foreground">{daysRemaining}d</span>
+          <span className="text-xs font-semibold leading-tight text-foreground">Trial</span>
+          <span className="text-base font-bold leading-tight text-foreground">{daysRemaining} days</span>
+          <span className="text-[10px] font-medium leading-tight text-foreground">left</span>
         </div>
       </div>
     </div>
