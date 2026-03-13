@@ -96,7 +96,7 @@ Join our Discord server to get help, share feedback, and connect with other user
 
 ## 📄 Licence
 
-This project is open source. See the Open Source License page on the website and the app site for more details on usages and modifications permissions.
+This project is open source. See the Open Source License page on the website and the app site for more details on usages and modification permissions.
 
 ## 🏢 About
 
