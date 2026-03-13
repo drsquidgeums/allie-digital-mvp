@@ -6,6 +6,7 @@ import { SidebarContent } from "./sidebar/SidebarContent";
 import { ThemeToggle } from "./ThemeToggle";
 import { SidebarButton } from "./sidebar/SidebarButton";
 import { SupportDialog } from "./support/SupportDialog";
+import { SidebarAICredits } from "./sidebar/SidebarAICredits";
 import { Headset } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
