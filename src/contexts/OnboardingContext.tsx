@@ -84,6 +84,20 @@ const defaultTourSteps: OnboardingStep[] = [
     placement: "right"
   },
   {
+    id: "ai-credits",
+    target: "[data-tour='ai-credits']",
+    title: "AI Credits",
+    description: "You get 15 free AI uses per month with our built-in AI features like Simplify, Document AI, and Learning Tools. This badge shows your remaining credits.",
+    placement: "right"
+  },
+  {
+    id: "discord",
+    target: "[data-tour='discord']",
+    title: "Discord Community",
+    description: "Join our Discord community to connect with other users, get tips, share feedback, and stay updated on new features.",
+    placement: "right"
+  },
+  {
     id: "support",
     target: "[data-tour='support']",
     title: "Support",
