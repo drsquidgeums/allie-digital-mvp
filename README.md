@@ -50,7 +50,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/allie-web-app.git
+git clone https://github.com/drsquidgeums/allie-digital-mvp.git
 cd allie-web-app
 
 # Install dependencies
