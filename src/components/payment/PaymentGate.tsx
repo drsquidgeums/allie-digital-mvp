@@ -47,16 +47,8 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete }) =
 
       if (error) throw error;
 
-      if (data?.error === "ALREADY_PAID") {
-        toast({
-          title: "Already paid",
-          description: data.message || "This email already has access. Please sign in.",
-        });
-        return;
-      }
-
       if (data?.url) {
-        // Redirect to Stripe checkout in same tab to avoid popup blockers
+        // Redirect in same tab to avoid popup blockers
         window.location.href = data.url;
       } else {
         throw new Error("No checkout URL received");

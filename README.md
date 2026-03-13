@@ -109,9 +109,10 @@ Feature Suggestions Have an idea for a new feature or improvement? We'd love to 
 
 - Reporting Bugs with Code Context
 - If you've identified a bug and can pinpoint it in the code, open a GitHub Issue with as much technical detail as possible including any relevant error messages or logs.
-Submitting a Pull Request
 
-Fork the repository
+**Submitting a Pull Request**
+
+Fork the repository:
 - Create a new branch for your change (git checkout -b fix/your-fix-name)
 - Make your changes and test them locally
 - Submit a Pull Request with a clear description of what you changed and why
