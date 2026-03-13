@@ -221,7 +221,10 @@ const App = () => {
             path="*"
             element={
               <SecurityProvider>
-                <div className="app-container">
+                <div className={`app-container ${trialActive ? 'pt-8' : ''}`}>
+                  {trialActive && trialDaysRemaining !== null && (
+                    <TrialBanner daysRemaining={trialDaysRemaining} />
+                  )}
                   <AppLogo />
                   <Toaster />
                   <Sonner />
