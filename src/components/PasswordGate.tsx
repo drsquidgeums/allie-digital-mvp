@@ -238,7 +238,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
           <span style={{ fontSize: '12px', lineHeight: 1 }}>Powered by</span>
           <img src={lovableLogo} alt="Lovable" className="h-3" style={{ display: 'inline-block' }} />
         </div>
-        <span className="text-sm">Allie Digital CIC © All Rights Reserved 2026</span>
+        <span className="text-sm">© 2026 Allie Digital CIC · Licensed under <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>AGPL v3</a></span>
       </footer>
     </div>
   );
