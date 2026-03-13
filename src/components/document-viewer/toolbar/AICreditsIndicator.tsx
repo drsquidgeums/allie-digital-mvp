@@ -19,11 +19,14 @@ export const AICreditsIndicator = () => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <button
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => navigate("/settings")}
-            className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-colors hover:bg-accent"
+            className="h-9 w-9 bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            aria-label="AI Credits"
           >
-            <Sparkles className={`h-3.5 w-3.5 ${isExhausted ? "text-destructive" : isLow ? "text-yellow-500" : "text-primary"}`} />
+            <Sparkles className={`h-4 w-4 ${isExhausted ? "text-destructive" : isLow ? "text-yellow-500" : "text-primary"}`} />
             {hasOwnKey ? (
               <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">
                 ∞
