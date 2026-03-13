@@ -90,7 +90,7 @@ src/
 
 ## 🤝 Community
 
-Join our Discord server to get help, share feedback, and connect with other users:
+Join our Discord server to get help, share feedback and report issues or bugs, and connect with other users:
 
 [![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2?logo=discord&logoColor=white)](https://discord.com/invite/wAwjSyqY6a)
 
