@@ -93,6 +93,10 @@ export const AccountSettings = () => {
                 <Badge className="bg-green-500/15 text-green-600 hover:bg-green-500/20 border-green-500/30">
                   {t('settings.account.lifetimeAccess', 'Lifetime Access')}
                 </Badge>
+              ) : subscriptionStatus === 'trial' ? (
+                <Badge className="bg-amber-500/15 text-amber-600 hover:bg-amber-500/20 border-amber-500/30">
+                  7 Day Trial
+                </Badge>
               ) : (
                 <Badge variant="secondary">
                   {t('settings.account.noSubscription', 'No Active Plan')}
