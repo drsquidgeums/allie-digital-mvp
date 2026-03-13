@@ -73,14 +73,25 @@ const Terms = () => {
           </section>
           
           <section className="space-y-3">
-            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>4. Payment and Lifetime Access</h2>
-            <p>The Service operates on a one-time payment model (currently £30) for lifetime access. By completing payment:</p>
+            <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>4. Free Trial and Payment</h2>
+            
+            <h3 className="text-lg font-semibold mt-4" style={{ color: '#000000' }}>Free Trial</h3>
+            <p>New users receive 7 days of full access to the Service at no cost. No payment details are required to start your free trial. At the end of the trial period you will be invited to purchase lifetime access to continue using the Service.</p>
+            
+            <h3 className="text-lg font-semibold mt-4" style={{ color: '#000000' }}>Lifetime Access</h3>
+            <p>The Service operates on a one-time payment of £30 for lifetime access. By completing payment:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>You receive unlimited access to the Service for as long as it remains operational</li>
               <li>Payment is processed securely through Stripe</li>
-              <li>Refunds may be requested within 14 days of purchase if you have not substantially used the Service</li>
               <li>"Lifetime" refers to the operational lifetime of the Service, not the user's lifetime</li>
             </ul>
+            
+            <h3 className="text-lg font-semibold mt-4" style={{ color: '#000000' }}>Refund Policy</h3>
+            <p>As the Service offers a full 7-day free trial prior to purchase, refunds will not be issued once payment has been made. This is because you will have had the opportunity to fully evaluate the Service before committing to purchase. If you experience a technical issue preventing access entirely, please contact us at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a> and we will work to resolve it promptly.</p>
+            
+            <h3 className="text-lg font-semibold mt-4" style={{ color: '#000000' }}>Trial to Paid Transition</h3>
+            <p>At the end of your free trial, access to the Service will be paused until payment is completed. Your data and content will be retained for 30 days following trial expiry, giving you time to decide whether to purchase.</p>
+            
             <h3 className="text-lg font-semibold mt-4" style={{ color: '#000000' }}>Accessibility Commitment</h3>
             <p>As a Community Interest Corporation, we are committed to ensuring cost is not a barrier to access. If you are a student or learner who cannot afford the one-time payment, your educational provider (school, college, university, or training organisation) can purchase access on your behalf. Educational providers interested in bulk or institutional access should contact us directly.</p>
             <p>This approach allows us to maintain the infrastructure and AI services that power the platform, whilst ensuring equitable access for all learners regardless of socioeconomic background.</p>
