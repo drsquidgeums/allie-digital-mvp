@@ -496,6 +496,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
               id="cancellation-acknowledge"
               checked={cancellationAcknowledged}
               onCheckedChange={(checked) => setCancellationAcknowledged(checked === true)}
+              className="h-3.5 w-3.5 mt-0.5"
             />
             <label
               htmlFor="cancellation-acknowledge"
