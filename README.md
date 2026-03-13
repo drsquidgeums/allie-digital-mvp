@@ -1,7 +1,7 @@
 # Allie.ai – Digital Learning Support Web Application
 
 <p align="left">
-  <strong>AI powered assistive learning tools for students with ADHD and comorbid learning differences.</strong>
+  <strong>AI powered assistive learning tool for students with ADHD and comorbid learning differences.</strong>
 </p>
 
 <p align="left">
