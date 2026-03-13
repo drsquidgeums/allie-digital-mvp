@@ -1,69 +1,105 @@
-# Welcome to allie-digital-mvp
+# Allie – Accessible Learning & Literacy Intelligent Environment
 
-## Project info
+<p align="center">
+  <strong>AI-powered assistive learning platform for students with dyslexia, ADHD, and other learning differences.</strong>
+</p>
 
-**URL**: https://lovable.dev/projects/c5bb63db-cbb2-4de7-a8ba-8fee30646c98
+<p align="center">
+  <a href="https://allie.org.uk">Website</a> •
+  <a href="https://discord.com/invite/wAwjSyqY6a">Discord</a> •
+  <a href="https://allie-web-app.lovable.app">Live App</a>
+</p>
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## ✨ Features
 
-**Use Lovable**
+- **Bionic Reading** – Bold the first half of each word to guide the eye and improve reading speed
+- **Beeline Reader** – Apply a colour gradient across lines to reduce line-skipping
+- **Irlen Overlay** – Customisable colour overlays for visual stress relief
+- **Text-to-Speech** – AI-powered voice reading using ElevenLabs
+- **Speech-to-Text** – Dictate notes and documents hands-free
+- **AI Simplify** – Rewordify complex text into plain language (OpenAI)
+- **Document AI Chat** – Ask questions about your documents (Anthropic)
+- **Voice AI Assistant** – Conversational AI tutor
+- **Learning AI** – Generate flashcards, quizzes, and mind maps from documents
+- **Pomodoro Timer** – Built-in focus timer with ambient music
+- **Focus Mode** – Distraction-free reading environment
+- **Mind Maps** – Visual note-taking and concept mapping
+- **PDF & DOCX Support** – Upload and annotate documents in the browser
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c5bb63db-cbb2-4de7-a8ba-8fee30646c98) and start prompting.
+## 🛠 Tech Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18, TypeScript, Vite |
+| Styling | Tailwind CSS, shadcn/ui, Radix UI |
+| Backend | Supabase (Auth, Database, Edge Functions, Storage) |
+| AI | OpenAI, Anthropic, ElevenLabs |
+| Editor | TipTap |
+| Payments | Stripe |
 
-**Use your preferred IDE**
+## 🚀 Getting Started
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Node.js 18+ or Bun
+- A Supabase project (for backend features)
 
-Follow these steps:
+### Installation
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+```bash
+# Clone the repository
+git clone https://github.com/your-org/allie-web-app.git
+cd allie-web-app
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Install dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Environment Variables
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+The app uses Supabase for backend services. Configure your Supabase URL and anon key in the integration client file or via environment variables.
 
-**Use GitHub Codespaces**
+For AI features, users can provide their own API keys (BYOK) in Settings, or use the shared monthly credit system:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+| Provider | Monthly Free Credits |
+|----------|---------------------|
+| OpenAI | 15 |
+| Anthropic | 15 |
+| ElevenLabs | 10 |
 
-## What technologies are used for this project?
+## 📁 Project Structure
 
-This project is built with .
+```
+src/
+├── components/           # UI components
+│   ├── ai/               # AI chat & assistants
+│   ├── document-viewer/   # Document viewer & toolbar
+│   ├── sidebar/           # Navigation sidebar
+│   ├── settings/          # Settings panels
+│   └── ui/                # shadcn/ui primitives
+├── hooks/                 # Custom React hooks
+├── pages/                 # Route pages
+├── integrations/          # Supabase client & types
+└── lib/                   # Utilities
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🤝 Community
 
-## How can I deploy this project?
+Join our Discord server to get help, share feedback, and connect with other users:
 
-Simply open [Lovable](https://lovable.dev/projects/c5bb63db-cbb2-4de7-a8ba-8fee30646c98) and click on Share -> Publish.
+[![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2?logo=discord&logoColor=white)](https://discord.com/invite/wAwjSyqY6a)
 
-## I want to use a custom domain - is that possible?
+## 📄 Licence
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+This project is open source. See the [Open Source Licence](/open-source-license) page in the app for details.
+
+## 🏢 About
+
+Built by **Allie Digital CIC** — a Community Interest Company dedicated to making education accessible for everyone.
+
+© Allie Digital CIC 2026. All Rights Reserved.
