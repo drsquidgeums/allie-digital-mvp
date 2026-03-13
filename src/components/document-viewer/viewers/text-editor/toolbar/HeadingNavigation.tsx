@@ -49,7 +49,7 @@ export const HeadingNavigation: React.FC<HeadingNavigationProps> = ({ editor }) 
             if (text.trim()) {
               extractedHeadings.push({
                 id: `nav-heading-${extractedHeadings.length}`,
-                level: node.attrs.level,
+                level: (node.attrs as Record<string, unknown>)?.level as number,
                 text: text.trim(),
                 position,
                 isActive: false
