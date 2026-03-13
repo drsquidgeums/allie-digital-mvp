@@ -213,7 +213,7 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
           color: '#666666',
         }}
       >
-        Allie Digital CIC © All Rights Reserved 2026
+        © 2026 Allie Digital CIC · Licensed under <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>AGPL v3</a>
       </footer>
     </div>
   );
