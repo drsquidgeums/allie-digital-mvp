@@ -36,20 +36,20 @@ export const HeadingNavigation: React.FC<HeadingNavigationProps> = ({ editor }) 
       const doc = editor.getJSON();
       const extractedHeadings: HeadingNavItem[] = [];
       
-      const extractHeadings = (content: any[], startPos = 0) => {
+      const extractHeadings = (content: Record<string, unknown>[], startPos = 0) => {
         let position = startPos;
         
-        content.forEach((node: any) => {
-          if (node.type === 'heading' && node.content) {
-            const text = node.content
-              .filter((item: any) => item.type === 'text')
-              .map((item: any) => item.text)
+        content.forEach((node: Record<string, unknown>) => {
+          if (node.type === 'heading' && Array.isArray(node.content)) {
+            const text = (node.content as Record<string, unknown>[])
+              .filter((item) => item.type === 'text')
+              .map((item) => item.text as string)
               .join('');
             
             if (text.trim()) {
               extractedHeadings.push({
                 id: `nav-heading-${extractedHeadings.length}`,
-                level: node.attrs.level,
+                level: (node.attrs as Record<string, unknown>)?.level as number,
                 text: text.trim(),
                 position,
                 isActive: false
@@ -57,8 +57,8 @@ export const HeadingNavigation: React.FC<HeadingNavigationProps> = ({ editor }) 
             }
           }
           
-          if (node.content) {
-            extractHeadings(node.content, position);
+          if (Array.isArray(node.content)) {
+            extractHeadings(node.content as Record<string, unknown>[], position);
           }
           
           position++;

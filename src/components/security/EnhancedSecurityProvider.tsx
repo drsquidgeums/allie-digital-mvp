@@ -5,8 +5,17 @@ import { useAccessControl } from '@/hooks/security/useAccessControl';
 import { useSecurityAnalytics } from '@/hooks/security/useSecurityAnalytics';
 import { useSecurityContext } from './SecurityProvider';
 
+interface SecurityMetrics {
+  sessionDuration: number;
+  activityCount: number;
+  securityEventCount: number;
+  downloadCount: number;
+  accessAttempts: number;
+  suspiciousActivityScore: number;
+}
+
 interface EnhancedSecurityContextType {
-  securityMetrics: any;
+  securityMetrics: SecurityMetrics | null;
   exportAuditLogs: () => void;
   exportSecurityReport: () => void;
   validateAccess: () => boolean;

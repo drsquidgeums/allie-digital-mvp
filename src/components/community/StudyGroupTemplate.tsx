@@ -8,8 +8,18 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Clock, Users, BookOpen, Target, CheckCircle } from "lucide-react";
 
+interface StudyGroupData {
+  name: string;
+  subject: string;
+  accommodations: string[];
+  communicationStyle: string;
+  template: typeof STUDY_TEMPLATES[number] | undefined;
+  isNeurodivergentFriendly: boolean;
+  createdAt: Date;
+}
+
 interface StudyGroupTemplateProps {
-  onCreateGroup: (groupData: any) => void;
+  onCreateGroup: (groupData: StudyGroupData) => void;
 }
 
 const STUDY_TEMPLATES = [
