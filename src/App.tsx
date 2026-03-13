@@ -11,6 +11,7 @@ import { usePomodoroTaskListener } from "@/hooks/usePomodoroTaskListener";
 
 import { SecurityProvider } from "@/components/security/SecurityProvider";
 import { StudyBuddy } from "@/components/study-buddy/StudyBuddy";
+import { EmailVerificationReminder } from "@/components/auth/EmailVerificationReminder";
 import { supabase } from "@/integrations/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
 import { usePaymentStatus } from "@/hooks/usePaymentStatus";
