@@ -6,7 +6,7 @@ interface SidebarTrialBadgeProps {
 
 export const SidebarTrialBadge: React.FC<SidebarTrialBadgeProps> = ({ daysRemaining }) => {
   const totalDays = 7;
-  const size = 90;
+  const size = 112;
   const strokeWidth = 10;
   const radius = (size - strokeWidth) / 2;
   const center = size / 2;
