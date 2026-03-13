@@ -222,7 +222,8 @@ const App = () => {
           <Route
             path="*"
             element={
-              <SecurityProvider>
+               <TrialProvider trialActive={!!trialActive} trialDaysRemaining={trialDaysRemaining ?? null}>
+                <SecurityProvider>
                 <div className="app-container flex flex-col h-screen">
                   <AppLogo />
                   <Toaster />
@@ -236,17 +237,13 @@ const App = () => {
                     <AppRoutes />
                   </Suspense>
                   
-                  {/* AI Study Buddy */}
                   <StudyBuddy />
-                  
-                  {/* Email Verification Reminder (shows once after signup) */}
                   <EmailVerificationReminder />
-                  
-                  {/* Onboarding Components */}
                   <WelcomeModal />
                   <OnboardingTour />
                 </div>
-              </SecurityProvider>
+                </SecurityProvider>
+               </TrialProvider>
             }
           />
         </Routes>
