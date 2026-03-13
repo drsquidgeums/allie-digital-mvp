@@ -18,8 +18,11 @@ interface AIUsageData {
   byProvider: ProviderUsage[];
 }
 
+// Module-level cache so data persists across remounts/navigation
+let cachedUsage: AIUsageData | null = null;
+
 export const useAIUsage = () => {
-  const [usage, setUsage] = useState<AIUsageData | null>(null);
+  const [usage, setUsage] = useState<AIUsageData | null>(cachedUsage);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -29,6 +32,7 @@ export const useAIUsage = () => {
         body: { action: "get-usage" },
       });
       if (error) throw error;
+      cachedUsage = data;
       setUsage(data);
     } catch (e) {
       console.error("Failed to fetch AI usage:", e);

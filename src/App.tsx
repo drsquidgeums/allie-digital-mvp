@@ -16,7 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
 import { usePaymentStatus } from "@/hooks/usePaymentStatus";
 import { PaymentRequiredGate } from "@/components/payment/PaymentRequiredGate";
-import { TrialBanner } from "@/components/payment/TrialBanner";
+import { TrialProvider } from "@/contexts/TrialContext";
 import PaymentSuccess from "@/pages/PaymentSuccess";
 import PaymentCanceled from "@/pages/PaymentCanceled";
 import Terms from "@/pages/Terms";
@@ -222,11 +222,9 @@ const App = () => {
           <Route
             path="*"
             element={
-              <SecurityProvider>
+               <TrialProvider trialActive={!!trialActive} trialDaysRemaining={trialDaysRemaining ?? null}>
+                <SecurityProvider>
                 <div className="app-container flex flex-col h-screen">
-                  {trialActive && trialDaysRemaining !== null && (
-                    <TrialBanner daysRemaining={trialDaysRemaining} />
-                  )}
                   <AppLogo />
                   <Toaster />
                   <Sonner />
@@ -239,17 +237,13 @@ const App = () => {
                     <AppRoutes />
                   </Suspense>
                   
-                  {/* AI Study Buddy */}
                   <StudyBuddy />
-                  
-                  {/* Email Verification Reminder (shows once after signup) */}
                   <EmailVerificationReminder />
-                  
-                  {/* Onboarding Components */}
                   <WelcomeModal />
                   <OnboardingTour />
                 </div>
-              </SecurityProvider>
+                </SecurityProvider>
+               </TrialProvider>
             }
           />
         </Routes>

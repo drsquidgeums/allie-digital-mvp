@@ -8,8 +8,10 @@ import { ThemeToggle } from "./ThemeToggle";
 import { SidebarButton } from "./sidebar/SidebarButton";
 import { SupportDialog } from "./support/SupportDialog";
 import { SidebarAICredits } from "./sidebar/SidebarAICredits";
+import { SidebarTrialBadge } from "./sidebar/SidebarTrialBadge";
 import { Headset } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useTrialStatus } from "@/contexts/TrialContext";
 
 interface SidebarProps {
   onColorChange: (color: string) => void;
@@ -21,11 +23,11 @@ export const Sidebar = React.memo(({
   const { t } = useTranslation();
   const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
   const [supportDialogOpen, setSupportDialogOpen] = useState(false);
+  const { trialActive, trialDaysRemaining } = useTrialStatus();
   
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
   
-  // Get user info from localStorage
   React.useEffect(() => {
     const ndaAgreement = localStorage.getItem("nda_agreement");
     if (ndaAgreement) {
@@ -40,7 +42,6 @@ export const Sidebar = React.memo(({
       }
     }
   }, []);
-
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -80,6 +81,9 @@ export const Sidebar = React.memo(({
         <div data-tour="ai-credits">
           <SidebarAICredits />
         </div>
+        {trialActive && trialDaysRemaining !== null && (
+          <SidebarTrialBadge daysRemaining={trialDaysRemaining} />
+        )}
         <div data-tour="discord">
           <a
             href="https://discord.com/invite/wAwjSyqY6a"
