@@ -190,6 +190,7 @@ const App = () => {
                 <PaymentRequiredGate 
                   onPaymentComplete={handlePaymentComplete} 
                   trialExpired={trialExpired}
+                  userEmail={user?.email}
                 />
               } />
             </Routes>

@@ -8,10 +8,11 @@ import stripeLogo from "@/assets/stripe-logo.png";
 
 interface PaymentGateProps {
   onPaymentComplete: () => void;
+  userEmail?: string | null;
 }
 
-export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete }) => {
-  const [email, setEmail] = useState("");
+export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete, userEmail }) => {
+  const [email, setEmail] = useState(userEmail || "");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 

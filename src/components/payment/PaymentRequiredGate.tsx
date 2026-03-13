@@ -7,9 +7,10 @@ const gatewayBackground = "/images/gateway-background.png";
 interface PaymentRequiredGateProps {
   onPaymentComplete: () => void;
   trialExpired?: boolean;
+  userEmail?: string | null;
 }
 
-export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaymentComplete, trialExpired }) => {
+export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaymentComplete, trialExpired, userEmail }) => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [paidEmail, setPaidEmail] = useState<string | null>(null);
 
@@ -221,7 +222,7 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
             </button>
           </div>
         ) : (
-          <PaymentGate onPaymentComplete={onPaymentComplete} />
+          <PaymentGate onPaymentComplete={onPaymentComplete} userEmail={userEmail} />
         )}
       </div>
       <footer 
