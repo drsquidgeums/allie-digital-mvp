@@ -48,13 +48,8 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete }) =
       if (error) throw error;
 
       if (data?.url) {
-        // Open checkout in new tab
-        window.open(data.url, "_blank");
-        
-        toast({
-          title: "Redirecting to payment",
-          description: "Complete your payment in the new tab. Once done, refresh this page.",
-        });
+        // Redirect in same tab to avoid popup blockers
+        window.location.href = data.url;
       } else {
         throw new Error("No checkout URL received");
       }
