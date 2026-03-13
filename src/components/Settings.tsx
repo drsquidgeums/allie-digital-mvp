@@ -31,6 +31,7 @@ export const Settings = () => {
       <Separator className="mb-6" />
       <div className="space-y-6">
         <AccountSettings />
+        <AISettings />
         <LanguageSettings />
         <OnboardingSettings />
         <AccessibilitySettings />
