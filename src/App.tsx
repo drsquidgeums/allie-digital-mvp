@@ -224,9 +224,6 @@ const App = () => {
             element={
               <SecurityProvider>
                 <div className="app-container flex flex-col h-screen">
-                  {trialActive && trialDaysRemaining !== null && (
-                    <TrialBanner daysRemaining={trialDaysRemaining} />
-                  )}
                   <AppLogo />
                   <Toaster />
                   <Sonner />

@@ -32,6 +32,7 @@ export const useAIUsage = () => {
         body: { action: "get-usage" },
       });
       if (error) throw error;
+      cachedUsage = data;
       setUsage(data);
     } catch (e) {
       console.error("Failed to fetch AI usage:", e);
