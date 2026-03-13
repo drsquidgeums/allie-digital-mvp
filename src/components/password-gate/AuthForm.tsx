@@ -271,6 +271,47 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     }
   };
 
+  // Cooldown timer effect
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [resendCooldown]);
+
+  const handleResendVerification = async () => {
+    if (resendCooldown > 0 || isResending) return;
+    setIsResending(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: verifyEmail,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+        },
+      });
+      if (error) throw error;
+      toast({
+        title: "Email Sent",
+        description: "A new verification email has been sent.",
+      });
+      setResendCooldown(60);
+    } catch (error: any) {
+      const isRateLimited =
+        error?.status === 429 ||
+        error?.message?.toLowerCase().includes("rate limit");
+      toast({
+        title: "Error",
+        description: isRateLimited
+          ? "Please wait a bit before requesting another email."
+          : error.message || "Failed to resend. Please try again.",
+        variant: "destructive",
+      });
+      if (isRateLimited) setResendCooldown(60);
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   // Email Verification Popup
   if (showVerifyPopup) {
     return (
@@ -307,6 +348,20 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         <p className="text-xs" style={{ color: '#9ca3af' }}>
           Don't see it? Check your spam or junk folder.
         </p>
+
+        <button
+          type="button"
+          onClick={handleResendVerification}
+          disabled={resendCooldown > 0 || isResending}
+          className="text-sm underline transition-colors hover:opacity-70 disabled:opacity-50 disabled:no-underline disabled:cursor-not-allowed"
+          style={{ color: resendCooldown > 0 ? '#9ca3af' : '#000000' }}
+        >
+          {isResending
+            ? "Sending..."
+            : resendCooldown > 0
+              ? `Resend available in ${resendCooldown}s`
+              : "Resend verification email"}
+        </button>
         
         <Button
           type="button"
