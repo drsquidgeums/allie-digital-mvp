@@ -431,7 +431,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     return (
       <div className="space-y-4 flex flex-col items-center">
         <p className="w-[70%] text-sm text-center" style={{ color: '#666666' }}>
-          New here? Start your <span className="font-semibold">7-day free trial</span> with no payment details required.
+          Enter your details below to sign in.
         </p>
         {passwordResetSuccess && (
           <div 
