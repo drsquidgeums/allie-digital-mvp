@@ -223,7 +223,7 @@ const App = () => {
             path="*"
             element={
               <SecurityProvider>
-                <div className={`app-container ${trialActive ? 'pt-8' : ''}`}>
+                <div className="app-container flex flex-col h-screen">
                   {trialActive && trialDaysRemaining !== null && (
                     <TrialBanner daysRemaining={trialDaysRemaining} />
                   )}
