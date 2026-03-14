@@ -3,6 +3,7 @@ import { Sparkles, Brain, Mic } from "lucide-react";
 import { useAIUsage, ProviderUsage } from "@/hooks/useAIUsage";
 import { useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useTranslation } from "react-i18next";
 
 const providerConfig: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   openai: { label: "OpenAI", icon: Sparkles, color: "text-emerald-500" },
