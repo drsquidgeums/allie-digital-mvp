@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Mic, MicOff, Phone, PhoneOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -87,6 +88,7 @@ export const VoiceAssistant: React.FC = () => {
         signedUrl: data.signed_url,
       });
       setConversationStarted(true);
+      notifyAICreditsUsed();
     } catch (error) {
       console.error("Error starting conversation:", error);
       toast({

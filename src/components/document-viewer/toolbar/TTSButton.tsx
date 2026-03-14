@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTranslation } from "react-i18next";
 import { useEditorContent } from "@/hooks/useEditorContent";
+import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -74,6 +75,7 @@ export const TTSButton = () => {
       }
 
       // Convert base64 to audio blob
+      notifyAICreditsUsed();
       const binaryString = atob(data.audioContent);
       const bytes = new Uint8Array(binaryString.length);
       for (let i = 0; i < binaryString.length; i++) {

@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "./use-toast";
+import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
 
 export interface ProgressData {
   currentStreak: number;
@@ -55,6 +56,7 @@ export const useProgressAI = () => {
         return;
       }
 
+      notifyAICreditsUsed();
       setInsights(prev => ({
         ...prev,
         [type]: { content: data.content, type, loading: false },

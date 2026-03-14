@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { notifyAICreditsUsed } from '@/utils/aiCreditsEvent';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -102,6 +103,7 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
       const audioUrl = `data:audio/mpeg;base64,${data.audioContent}`;
       const audio = new Audio(audioUrl);
       audioRef.current = audio;
+      notifyAICreditsUsed();
 
       await new Promise<void>((resolve, reject) => {
         audio.onended = () => resolve();
@@ -239,6 +241,7 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
           if (error) throw new Error(error.message);
 
           const aiResponse = data?.response;
+          notifyAICreditsUsed();
           const nextHistory = data?.conversationHistory;
 
           if (Array.isArray(nextHistory)) {

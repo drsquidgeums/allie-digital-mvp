@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "./use-toast";
+import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
 
 export type TaskSuggestion = {
   title: string;
@@ -35,6 +36,7 @@ export const useTaskAI = () => {
         return [];
       }
 
+      notifyAICreditsUsed();
       return data?.suggestions || [];
     } catch (error) {
       console.error("Error getting task suggestions:", error);
@@ -69,6 +71,7 @@ export const useTaskAI = () => {
         return "";
       }
 
+      notifyAICreditsUsed();
       return data?.content || "";
     } catch (error) {
       console.error("Error generating schedule:", error);
@@ -103,6 +106,7 @@ export const useTaskAI = () => {
         return "";
       }
 
+      notifyAICreditsUsed();
       return data?.content || "";
     } catch (error) {
       console.error("Error optimizing tasks:", error);

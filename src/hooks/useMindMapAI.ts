@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { notifyAICreditsUsed } from '@/utils/aiCreditsEvent';
 import { MindMapNode } from '@/components/mindmap/types';
 
 interface MindMapStructure {
@@ -33,6 +34,7 @@ export const useMindMapAI = () => {
         return null;
       }
 
+      notifyAICreditsUsed();
       toast.success('Mind map generated!');
       return data as MindMapStructure;
     } catch (error) {
@@ -66,6 +68,7 @@ export const useMindMapAI = () => {
       }
 
       const result = data as NodeExpansion;
+      notifyAICreditsUsed();
       toast.success(`Generated ${result.suggestions.length} suggestions!`);
       return result.suggestions;
     } catch (error) {

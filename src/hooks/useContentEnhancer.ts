@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "./use-toast";
+import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
 
 export type Flashcard = {
   front: string;
@@ -55,6 +56,7 @@ export const useContentEnhancer = () => {
         return [];
       }
 
+      notifyAICreditsUsed();
       toast({
         title: "Success",
         description: `Generated ${data.flashcards?.length || 0} flashcards`,
@@ -103,6 +105,7 @@ export const useContentEnhancer = () => {
         return [];
       }
 
+      notifyAICreditsUsed();
       toast({
         title: "Success",
         description: `Generated ${data.questions?.length || 0} quiz questions`,
@@ -153,6 +156,7 @@ export const useContentEnhancer = () => {
         return [];
       }
 
+      notifyAICreditsUsed();
       toast({
         title: "Success",
         description: `Generated ${data.questions?.length || 0} practice questions`,
