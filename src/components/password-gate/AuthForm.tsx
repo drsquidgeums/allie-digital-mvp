@@ -560,7 +560,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     <div className="space-y-4 flex flex-col items-center">
       <div className="text-center mb-2">
         <p className="text-sm" style={{ color: '#666666' }}>
-          Start with a <span className="font-bold">7 day free trial</span> (no card required). After your trial period, lifetime access is a one off payment of <span className="font-bold">£30</span>.
+          Start with a <span className="font-bold">7 day free trial</span> (no card required). After your trial period, lifetime access is a one off payment of <span className="font-bold">£30</span>. Please see our <a href="/terms" className="underline hover:opacity-80">terms of service</a> for our policy on refunds.
         </p>
       </div>
       
