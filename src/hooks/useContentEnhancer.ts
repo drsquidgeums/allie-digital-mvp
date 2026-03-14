@@ -56,6 +56,7 @@ export const useContentEnhancer = () => {
         return [];
       }
 
+      notifyAICreditsUsed();
       toast({
         title: "Success",
         description: `Generated ${data.flashcards?.length || 0} flashcards`,
