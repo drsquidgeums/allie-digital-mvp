@@ -102,7 +102,6 @@ Allie.ai is an open source project built for the ADHD community, and contributio
 **Non-Technical Contributions**
 
 - Bug Reports & Feedback: There is a support button to submit these directly inside the app when you sign up.
-OR
 - If something isn't working as expected or you have a suggestion, open a GitHub Issue and describe what you experienced. Please include your browser, device, and steps to reproduce the issue where possible.
 
 **Feature Suggestions**
