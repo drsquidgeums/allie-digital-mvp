@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { MindMapNode } from '../types';
 import { Edge } from '@xyflow/react';
 
-export type LayoutType = 'radial' | 'hierarchical' | 'force';
+export type LayoutType = 'radial' | 'hierarchical' | 'force' | 'horizontal' | 'vertical' | 'grid' | 'circular';
 
 export const useAutoLayout = () => {
   const applyRadialLayout = useCallback((nodes: MindMapNode[], edges: Edge[]) => {
