@@ -75,6 +75,34 @@ export const LayoutControls: React.FC<LayoutControlsProps> = React.memo(({
             <Zap className="h-4 w-4 mr-2" />
             Force Layout
           </DropdownMenuItem>
+          <DropdownMenuItem 
+            onClick={() => onApplyLayout('horizontal')}
+            className="transition-colors duration-200"
+          >
+            <ArrowRight className="h-4 w-4 mr-2" />
+            Horizontal Layout
+          </DropdownMenuItem>
+          <DropdownMenuItem 
+            onClick={() => onApplyLayout('vertical')}
+            className="transition-colors duration-200"
+          >
+            <ArrowDown className="h-4 w-4 mr-2" />
+            Vertical Layout
+          </DropdownMenuItem>
+          <DropdownMenuItem 
+            onClick={() => onApplyLayout('grid')}
+            className="transition-colors duration-200"
+          >
+            <Grid3X3 className="h-4 w-4 mr-2" />
+            Grid Layout
+          </DropdownMenuItem>
+          <DropdownMenuItem 
+            onClick={() => onApplyLayout('circular')}
+            className="transition-colors duration-200"
+          >
+            <Circle className="h-4 w-4 mr-2" />
+            Circular Layout
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
