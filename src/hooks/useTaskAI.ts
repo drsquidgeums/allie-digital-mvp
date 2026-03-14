@@ -36,6 +36,7 @@ export const useTaskAI = () => {
         return [];
       }
 
+      notifyAICreditsUsed();
       return data?.suggestions || [];
     } catch (error) {
       console.error("Error getting task suggestions:", error);
