@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Download, FileImage, FileText, Palette } from "lucide-react";
+import { Download, FileImage, FileText } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Card } from "@/components/ui/card";
+import { useTranslation } from 'react-i18next';
 
 interface VisualExportButtonsProps {
   onExportJpg: () => void;
@@ -16,30 +16,32 @@ export const VisualExportButtons: React.FC<VisualExportButtonsProps> = ({
   onExportJson,
   onExportPdf,
 }) => {
+  const { t } = useTranslation();
+
   const exportOptions = [
     {
       type: 'image',
       icon: FileImage,
-      label: 'JPG Image',
+      labelKey: 'mindMap.jpgImage',
       color: 'bg-green-500 hover:bg-green-600',
       action: onExportJpg,
-      description: 'Save as image'
+      descKey: 'mindMap.saveAsImage'
     },
     {
       type: 'pdf',
       icon: FileText,
-      label: 'PDF Document',
+      labelKey: 'mindMap.pdfDocument',
       color: 'bg-red-500 hover:bg-red-600',
       action: onExportPdf,
-      description: 'Save as PDF'
+      descKey: 'mindMap.saveAsPdf'
     },
     {
       type: 'json',
       icon: Download,
-      label: 'JSON Data',
+      labelKey: 'mindMap.jsonData',
       color: 'bg-blue-500 hover:bg-blue-600',
       action: onExportJson,
-      description: 'Save as JSON'
+      descKey: 'mindMap.saveAsJson'
     }
   ];
 
@@ -59,8 +61,8 @@ export const VisualExportButtons: React.FC<VisualExportButtonsProps> = ({
           </TooltipTrigger>
           <TooltipContent side="bottom">
             <div className="text-center">
-              <div className="font-medium">{option.label}</div>
-              <div className="text-xs text-muted-foreground">{option.description}</div>
+              <div className="font-medium">{t(option.labelKey)}</div>
+              <div className="text-xs text-muted-foreground">{t(option.descKey)}</div>
             </div>
           </TooltipContent>
         </Tooltip>
