@@ -41,6 +41,10 @@ export const useAIUsage = () => {
 
   useEffect(() => {
     fetchUsage();
+
+    const handler = () => fetchUsage();
+    window.addEventListener("ai-credits-changed", handler);
+    return () => window.removeEventListener("ai-credits-changed", handler);
   }, [fetchUsage]);
 
   const saveApiKey = async (provider: string, apiKey: string) => {
