@@ -93,7 +93,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
       <div data-tour="learning-ai">
         <ToolItem
           icon={GraduationCap}
-          label="Learning AI"
+          label={t('tools.learningAI')}
           id="learning-tools"
           content={
             <ContentEnhancerTools

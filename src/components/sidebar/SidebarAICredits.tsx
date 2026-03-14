@@ -86,7 +86,7 @@ export const SidebarAICredits = () => {
     >
       <div className="flex items-center gap-1.5 mb-1.5">
         <Sparkles className="h-3.5 w-3.5 text-primary" />
-        <span className="text-xs font-semibold text-foreground">AI Credits</span>
+        <span className="text-xs font-semibold text-foreground">{t('sidebar.aiCredits')}</span>
       </div>
       {providers.map((p) => (
         <CreditBar key={p.name} provider={p} />

@@ -9,7 +9,13 @@
     "settings": "Paramètres",
     "community": "Centre communautaire",
     "myFiles": "Mes fichiers",
-    "support": "Assistance"
+    "support": "Assistance",
+    "progress": "Progrès",
+    "feedback": "Commentaires"
+  },
+  "sidebar": {
+    "aiCredits": "Crédits IA",
+    "aiCreditsLabel": "Crédits IA — cliquez pour gérer dans les Paramètres"
   },
   "support": {
     "title": "Contacter l'assistance",
@@ -39,12 +45,14 @@
     "tts": "Synthèse vocale",
     "stt": "Reconnaissance vocale",
     "bionic": "Lecteur bionique",
-    "color": "Outil couleur",
+    "colour": "Outil couleur",
     "focus": "Mode concentration",
     "beeline": "Beeline Reader",
     "rewordify": "Reformuler",
     "ai": "Assistant IA",
-    "voice": "IA vocale"
+    "voice": "IA vocale",
+    "documentAI": "Document IA",
+    "learningAI": "Apprentissage IA"
   },
   "common": {
     "logout": "Déconnexion",
@@ -54,11 +62,18 @@
     "information": "Information",
     "language": "Sélectionner la langue",
     "noNotifications": "Aucune notification",
-    "loadingText": "Chargement..."
+    "loadingText": "Chargement...",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer"
   },
   "chat": {
     "title": "Allie IA",
-    "inputPlaceholder": "Tapez votre message..."
+    "inputPlaceholder": "Tapez votre message...",
+    "studyBuddyTitle": "Allie - Partenaire d'étude",
+    "studyBuddyDescription": "Assistant d'apprentissage optimisé pour le TDAH"
   },
   "notifications": {
     "empty": "Aucune notification",
@@ -69,7 +84,24 @@
     "pointsEarned": "Vous avez gagné {{points}} points pour avoir terminé cette tâche !",
     "title": "Liste des tâches",
     "empty": "Aucune tâche pour le moment",
-    "addTask": "Ajouter une tâche"
+    "addTask": "Ajouter une tâche",
+    "aiAssistant": "Assistant IA de tâches",
+    "aiDescription": "Obtenez des suggestions intelligentes, des horaires et l'optimisation des tâches",
+    "suggestions": "Suggestions",
+    "schedule": "Emploi du temps",
+    "optimise": "Optimiser",
+    "getSuggestions": "Obtenir des suggestions IA",
+    "generating": "Génération en cours...",
+    "generateSchedule": "Générer un emploi du temps d'étude",
+    "optimiseMyTasks": "Optimiser mes tâches",
+    "analysing": "Analyse en cours...",
+    "currentTasks": "Tâches actuelles",
+    "suggestionsPlaceholder": "Décrivez ce que vous étudiez ou ce pour quoi vous avez besoin d'aide (optionnel)",
+    "schedulePlaceholder": "Décrivez vos objectifs d'étude ou vos préférences d'emploi du temps (optionnel)"
+  },
+  "mindMap": {
+    "title": "Carte mentale",
+    "description": "Visualisez et organisez vos idées"
   },
   "settings": {
     "title": "Paramètres",
@@ -78,6 +110,17 @@
     "selectLanguage": "Sélectionner la langue",
     "languageChanged": "La langue de l'application a été changée en {{language}}",
     "languageChangeError": "Échec du changement de langue. Veuillez réessayer.",
+    "account": {
+      "title": "Compte",
+      "email": "E-mail",
+      "memberSince": "Membre depuis",
+      "plan": "Plan",
+      "lifetimeAccess": "Accès à vie",
+      "noSubscription": "Aucun plan actif",
+      "viewBilling": "Voir l'historique de facturation",
+      "notLoggedIn": "Veuillez vous connecter pour accéder à la facturation",
+      "billingError": "Impossible d'ouvrir le portail de facturation. Veuillez réessayer."
+    },
     "accessibility": {
       "title": "Accessibilité",
       "screenReader": "Support lecteur d'écran",
