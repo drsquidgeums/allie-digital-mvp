@@ -34,6 +34,7 @@ export const useMindMapAI = () => {
         return null;
       }
 
+      notifyAICreditsUsed();
       toast.success('Mind map generated!');
       return data as MindMapStructure;
     } catch (error) {
