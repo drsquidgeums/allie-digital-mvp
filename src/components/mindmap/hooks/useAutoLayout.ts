@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { MindMapNode } from '../types';
 import { Edge } from '@xyflow/react';
 
-export type LayoutType = 'radial' | 'hierarchical' | 'force';
+export type LayoutType = 'radial' | 'hierarchical' | 'force' | 'horizontal' | 'vertical' | 'grid' | 'circular';
 
 export const useAutoLayout = () => {
   const applyRadialLayout = useCallback((nodes: MindMapNode[], edges: Edge[]) => {
@@ -91,7 +91,6 @@ export const useAutoLayout = () => {
       case 'hierarchical':
         return applyHierarchicalLayout(nodes, edges);
       case 'force':
-        // Simple force layout - spread nodes evenly
         return nodes.map((node, index) => ({
           ...node,
           position: {
@@ -99,6 +98,48 @@ export const useAutoLayout = () => {
             y: 200 + Math.floor(index / 4) * 150
           }
         }));
+      case 'horizontal': {
+        const root = nodes.find(n => n.id === '1') || nodes[0];
+        if (!root) return nodes;
+        const others = nodes.filter(n => n.id !== root.id);
+        return nodes.map(node => {
+          if (node.id === root.id) return { ...node, position: { x: 100, y: 300 } };
+          const idx = others.findIndex(n => n.id === node.id);
+          const level = Math.floor(idx / 3) + 1;
+          const row = idx % 3;
+          return { ...node, position: { x: 100 + level * 220, y: 150 + row * 140 } };
+        });
+      }
+      case 'vertical': {
+        const root = nodes.find(n => n.id === '1') || nodes[0];
+        if (!root) return nodes;
+        const others = nodes.filter(n => n.id !== root.id);
+        return nodes.map(node => {
+          if (node.id === root.id) return { ...node, position: { x: 400, y: 50 } };
+          const idx = others.findIndex(n => n.id === node.id);
+          const col = idx % 3;
+          const row = Math.floor(idx / 3) + 1;
+          return { ...node, position: { x: 200 + col * 200, y: 50 + row * 140 } };
+        });
+      }
+      case 'grid': {
+        const cols = Math.ceil(Math.sqrt(nodes.length));
+        return nodes.map((node, index) => ({
+          ...node,
+          position: {
+            x: 100 + (index % cols) * 200,
+            y: 100 + Math.floor(index / cols) * 160
+          }
+        }));
+      }
+      case 'circular': {
+        const cx = 400, cy = 300;
+        const r = Math.max(150, nodes.length * 30);
+        return nodes.map((node, index) => {
+          const angle = (2 * Math.PI * index) / nodes.length;
+          return { ...node, position: { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) } };
+        });
+      }
       default:
         return nodes;
     }
