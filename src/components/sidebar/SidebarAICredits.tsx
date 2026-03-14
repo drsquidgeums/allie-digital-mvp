@@ -82,7 +82,7 @@ export const SidebarAICredits = () => {
     <button
       onClick={() => navigate("/settings")}
       className="w-full rounded-lg border border-border bg-card/50 p-2.5 space-y-2 hover:bg-accent/50 transition-colors text-left"
-      aria-label="AI Credits — click to manage in Settings"
+      aria-label={t('sidebar.aiCreditsLabel')}
     >
       <div className="flex items-center gap-1.5 mb-1.5">
         <Sparkles className="h-3.5 w-3.5 text-primary" />
