@@ -7,7 +7,11 @@ import {
   Zap,
   ZoomIn,
   ZoomOut,
-  Maximize
+  Maximize,
+  ArrowRight,
+  ArrowDown,
+  Grid3X3,
+  Circle
 } from "lucide-react";
 import {
   DropdownMenu,
