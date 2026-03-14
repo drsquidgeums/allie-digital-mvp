@@ -103,6 +103,7 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
       const audioUrl = `data:audio/mpeg;base64,${data.audioContent}`;
       const audio = new Audio(audioUrl);
       audioRef.current = audio;
+      notifyAICreditsUsed();
 
       await new Promise<void>((resolve, reject) => {
         audio.onended = () => resolve();
