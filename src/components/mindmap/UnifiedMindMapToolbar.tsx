@@ -19,6 +19,7 @@ import { MindMapNode } from './types';
 import { SHAPE_CONFIGS } from './constants/shapeConfigs';
 import { ShapeButton } from './toolbar/ShapeButton';
 import { getDarkModeDropdownClasses } from '@/utils/darkModeUtils';
+import { useTranslation } from 'react-i18next';
 
 interface UnifiedMindMapToolbarProps {
   onExportJpg: () => void;
@@ -77,11 +78,12 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
   isExpanding,
   nodes,
 }) => {
+  const { t } = useTranslation();
   const [aiTopic, setAiTopic] = React.useState('');
   const [showAIInput, setShowAIInput] = React.useState(false);
   
   const handleClear = () => {
-    if (confirm("Clear the mind map? This cannot be undone.")) {
+    if (confirm(t('mindMap.clearConfirm'))) {
       onClear();
     }
   };
@@ -90,25 +92,21 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
     try {
       const { jsPDF } = await import('jspdf');
       const element = document.querySelector('.react-flow') as HTMLElement;
-      
       if (!element) return;
-
       const { toPng } = await import('html-to-image');
       const dataUrl = await toPng(element, {
         backgroundColor: '#ffffff',
         width: element.offsetWidth,
         height: element.offsetHeight,
-        pixelRatio: 3, // High quality export (3x resolution)
+        pixelRatio: 3,
         quality: 1.0,
         cacheBust: true,
       });
-
       const pdf = new jsPDF({
         orientation: 'landscape',
         unit: 'px',
         format: [element.offsetWidth, element.offsetHeight]
       });
-
       pdf.addImage(dataUrl, 'PNG', 0, 0, element.offsetWidth, element.offsetHeight);
       pdf.save('mindmap.pdf');
     } catch (error) {
@@ -149,7 +147,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
   const templates = [
     {
       id: 'swot',
-      name: 'SWOT Analysis',
+      name: t('mindMap.swotAnalysis'),
       nodes: [
         { type: 'default', data: { label: 'SWOT Analysis' }, position: { x: 250, y: 50 } },
         { type: 'default', data: { label: 'Strengths' }, position: { x: 100, y: 150 } },
@@ -160,7 +158,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
     },
     {
       id: 'project',
-      name: 'Project Plan',
+      name: t('mindMap.projectPlan'),
       nodes: [
         { type: 'default', data: { label: 'Project Plan' }, position: { x: 250, y: 50 } },
         { type: 'default', data: { label: 'Phase 1' }, position: { x: 100, y: 150 } },
@@ -170,7 +168,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
     },
     {
       id: 'brainstorm',
-      name: 'Brainstorm',
+      name: t('mindMap.brainstorm'),
       nodes: [
         { type: 'default', data: { label: 'Main Idea' }, position: { x: 250, y: 150 } },
         { type: 'default', data: { label: 'Idea 1' }, position: { x: 100, y: 100 } },
@@ -182,9 +180,9 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
   ];
 
   const layouts = [
-    { type: 'radial' as const, name: 'Radial Layout' },
-    { type: 'hierarchical' as const, name: 'Hierarchical Layout' },
-    { type: 'force' as const, name: 'Force Layout' }
+    { type: 'radial' as const, name: t('mindMap.radialLayout') },
+    { type: 'hierarchical' as const, name: t('mindMap.hierarchicalLayout') },
+    { type: 'force' as const, name: t('mindMap.forceLayout') },
   ];
 
   return (
@@ -193,32 +191,20 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
         {/* Undo/Redo */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onUndo}
-              disabled={!canUndo}
-              className="h-9 w-9 p-0"
-            >
+            <Button variant="outline" size="sm" onClick={onUndo} disabled={!canUndo} className="h-9 w-9 p-0">
               <Undo2 className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom">Undo</TooltipContent>
+          <TooltipContent side="bottom">{t('mindMap.undo')}</TooltipContent>
         </Tooltip>
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onRedo}
-              disabled={!canRedo}
-              className="h-9 w-9 p-0"
-            >
+            <Button variant="outline" size="sm" onClick={onRedo} disabled={!canRedo} className="h-9 w-9 p-0">
               <Redo2 className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom">Redo</TooltipContent>
+          <TooltipContent side="bottom">{t('mindMap.redo')}</TooltipContent>
         </Tooltip>
 
         <Separator orientation="vertical" className="h-6 mx-1" />
@@ -233,17 +219,13 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <TooltipContent side="bottom">Templates</TooltipContent>
+            <TooltipContent side="bottom">{t('mindMap.templates')}</TooltipContent>
           </Tooltip>
           <DropdownMenuContent side="bottom" className="w-48">
-            <DropdownMenuLabel>Choose Template</DropdownMenuLabel>
+            <DropdownMenuLabel>{t('mindMap.chooseTemplate')}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {templates.map((template) => (
-              <DropdownMenuItem
-                key={template.id}
-                onClick={() => onLoadTemplate(template.nodes)}
-                className="cursor-pointer"
-              >
+              <DropdownMenuItem key={template.id} onClick={() => onLoadTemplate(template.nodes)} className="cursor-pointer">
                 {template.name}
               </DropdownMenuItem>
             ))}
@@ -262,17 +244,13 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <TooltipContent side="bottom">Layout</TooltipContent>
+            <TooltipContent side="bottom">{t('mindMap.layout')}</TooltipContent>
           </Tooltip>
           <DropdownMenuContent side="bottom" className="w-48">
-            <DropdownMenuLabel>Auto Layout</DropdownMenuLabel>
+            <DropdownMenuLabel>{t('mindMap.autoLayout')}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {layouts.map((layout) => (
-              <DropdownMenuItem
-                key={layout.type}
-                onClick={() => onApplyLayout(layout.type)}
-                className="cursor-pointer"
-              >
+              <DropdownMenuItem key={layout.type} onClick={() => onApplyLayout(layout.type)} className="cursor-pointer">
                 {layout.name}
               </DropdownMenuItem>
             ))}
@@ -287,26 +265,21 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="h-9 w-9 p-0 bg-primary/10 hover:bg-primary/20 border-primary/20"
-                    disabled={isGenerating}
-                  >
+                  <Button variant="outline" size="sm" className="h-9 w-9 p-0 bg-primary/10 hover:bg-primary/20 border-primary/20" disabled={isGenerating}>
                     <Sparkles className="h-4 w-4 text-primary" />
                   </Button>
                 </DropdownMenuTrigger>
               </TooltipTrigger>
-              <TooltipContent side="bottom">AI Generate</TooltipContent>
+              <TooltipContent side="bottom">{t('mindMap.aiGenerate')}</TooltipContent>
             </Tooltip>
             <DropdownMenuContent side="bottom" className="w-64 p-3">
-              <DropdownMenuLabel>Generate Mind Map</DropdownMenuLabel>
+              <DropdownMenuLabel>{t('mindMap.generateMindMap')}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <div className="space-y-2">
-                <Label htmlFor="ai-topic" className="text-sm">Topic</Label>
+                <Label htmlFor="ai-topic" className="text-sm">{t('mindMap.topic')}</Label>
                 <Input
                   id="ai-topic"
-                  placeholder="e.g., Marketing Strategy"
+                  placeholder={t('mindMap.topicPlaceholder')}
                   value={aiTopic}
                   onChange={(e) => setAiTopic(e.target.value)}
                   onKeyDown={(e) => {
@@ -329,7 +302,7 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                   }}
                   disabled={!aiTopic.trim() || isGenerating}
                 >
-                  {isGenerating ? 'Generating...' : 'Generate'}
+                  {isGenerating ? t('mindMap.generating') : t('mindMap.generate')}
                 </Button>
               </div>
             </DropdownMenuContent>
@@ -355,28 +328,23 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">
-              {isExpanding ? 'Expanding...' : 'AI Expand'}
+              {isExpanding ? t('mindMap.expanding') : t('mindMap.aiExpand')}
             </TooltipContent>
           </Tooltip>
         )}
 
         <Separator orientation="vertical" className="h-6 mx-1" />
 
-        {/* Shapes - Horizontal list */}
+        {/* Shapes */}
         <div className="flex flex-row gap-1 items-center">
           {SHAPE_CONFIGS.shapes.map((shape) => (
             <Tooltip key={shape.id}>
               <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onShapeSelect(shape.id, '')}
-                  className="h-9 w-9 p-0"
-                >
+                <Button variant="ghost" size="sm" onClick={() => onShapeSelect(shape.id, '')} className="h-9 w-9 p-0">
                   {React.createElement(shape.icon, { className: "h-4 w-4" })}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">{shape.label}</TooltipContent>
+              <TooltipContent side="bottom">{t(`mindMap.${shape.id}`)}</TooltipContent>
             </Tooltip>
           ))}
           
@@ -385,16 +353,11 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
           {SHAPE_CONFIGS.tools.map((tool) => (
             <Tooltip key={tool.id}>
               <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onShapeSelect(tool.id, '')}
-                  className="h-9 w-9 p-0"
-                >
+                <Button variant="ghost" size="sm" onClick={() => onShapeSelect(tool.id, '')} className="h-9 w-9 p-0">
                   {React.createElement(tool.icon, { className: "h-4 w-4" })}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">{tool.label}</TooltipContent>
+              <TooltipContent side="bottom">{t(`mindMap.${tool.id}`)}</TooltipContent>
             </Tooltip>
           ))}
         </div>
@@ -411,25 +374,16 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <TooltipContent side="bottom">Shape Color</TooltipContent>
+            <TooltipContent side="bottom">{t('mindMap.shapeColour')}</TooltipContent>
           </Tooltip>
           <DropdownMenuContent side="bottom" className={`w-48 ${getDarkModeDropdownClasses()}`}>
-            <DropdownMenuLabel>Shape Color</DropdownMenuLabel>
+            <DropdownMenuLabel>{t('mindMap.shapeColour')}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {shapeColors.map((color) => (
-              <DropdownMenuItem
-                key={color.value}
-                onClick={() => setSelectedColor(color.value)}
-                className="cursor-pointer flex items-center gap-3"
-              >
-                <div 
-                  className="w-5 h-5 rounded-full border border-border"
-                  style={{ backgroundColor: color.color }}
-                />
+              <DropdownMenuItem key={color.value} onClick={() => setSelectedColor(color.value)} className="cursor-pointer flex items-center gap-3">
+                <div className="w-5 h-5 rounded-full border border-border" style={{ backgroundColor: color.color }} />
                 <span>{color.label}</span>
-                {selectedColor === color.value && (
-                  <div className="ml-auto w-2 h-2 bg-primary rounded-full" />
-                )}
+                {selectedColor === color.value && <div className="ml-auto w-2 h-2 bg-primary rounded-full" />}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
@@ -447,11 +401,8 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
               }}
               className="cursor-pointer"
             >
-              <div 
-                className="w-5 h-5 rounded-full border border-border mr-3"
-                style={{ backgroundColor: customColor }}
-              />
-              Custom Color
+              <div className="w-5 h-5 rounded-full border border-border mr-3" style={{ backgroundColor: customColor }} />
+              {t('mindMap.customColour')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -465,27 +416,16 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <TooltipContent side="bottom">Text Color</TooltipContent>
+            <TooltipContent side="bottom">{t('mindMap.textColour')}</TooltipContent>
           </Tooltip>
           <DropdownMenuContent side="bottom" className={`w-48 ${getDarkModeDropdownClasses()}`}>
-            <DropdownMenuLabel>Text Color</DropdownMenuLabel>
+            <DropdownMenuLabel>{t('mindMap.textColour')}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {textColors.map((color) => (
-              <DropdownMenuItem
-                key={color.value}
-                onClick={() => setSelectedTextColor(color.value)}
-                className="cursor-pointer flex items-center gap-3"
-              >
-                <div 
-                  className={`w-5 h-5 rounded-full border border-border ${
-                    color.color === '#ffffff' ? 'border-2' : ''
-                  }`}
-                  style={{ backgroundColor: color.color }}
-                />
+              <DropdownMenuItem key={color.value} onClick={() => setSelectedTextColor(color.value)} className="cursor-pointer flex items-center gap-3">
+                <div className={`w-5 h-5 rounded-full border border-border ${color.color === '#ffffff' ? 'border-2' : ''}`} style={{ backgroundColor: color.color }} />
                 <span>{color.label}</span>
-                {selectedTextColor === color.value && (
-                  <div className="ml-auto w-2 h-2 bg-primary rounded-full" />
-                )}
+                {selectedTextColor === color.value && <div className="ml-auto w-2 h-2 bg-primary rounded-full" />}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
@@ -503,11 +443,8 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
               }}
               className="cursor-pointer"
             >
-              <div 
-                className="w-5 h-5 rounded-full border border-border mr-3"
-                style={{ backgroundColor: customTextColor }}
-              />
-              Custom Text
+              <div className="w-5 h-5 rounded-full border border-border mr-3" style={{ backgroundColor: customTextColor }} />
+              {t('mindMap.customText')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -517,67 +454,43 @@ export const UnifiedMindMapToolbar: React.FC<UnifiedMindMapToolbarProps> = ({
         {/* Zoom Controls */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onZoomOut}
-              className="h-9 w-9 p-0"
-            >
+            <Button variant="ghost" size="sm" onClick={onZoomOut} className="h-9 w-9 p-0">
               <ZoomOut className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom">Zoom Out</TooltipContent>
+          <TooltipContent side="bottom">{t('mindMap.zoomOut')}</TooltipContent>
         </Tooltip>
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onZoomIn}
-              className="h-9 w-9 p-0"
-            >
+            <Button variant="ghost" size="sm" onClick={onZoomIn} className="h-9 w-9 p-0">
               <ZoomIn className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom">Zoom In</TooltipContent>
+          <TooltipContent side="bottom">{t('mindMap.zoomIn')}</TooltipContent>
         </Tooltip>
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onFitView}
-              className="h-9 w-9 p-0"
-            >
+            <Button variant="ghost" size="sm" onClick={onFitView} className="h-9 w-9 p-0">
               <Maximize className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom">Fit View</TooltipContent>
+          <TooltipContent side="bottom">{t('mindMap.fitView')}</TooltipContent>
         </Tooltip>
 
         <Separator orientation="vertical" className="h-6 mx-1" />
 
         {/* Export & Clear */}
-        <VisualExportButtons
-          onExportJpg={onExportJpg}
-          onExportJson={onExportJson}
-          onExportPdf={exportToPDF}
-        />
+        <VisualExportButtons onExportJpg={onExportJpg} onExportJson={onExportJson} onExportPdf={exportToPDF} />
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleClear}
-              className="h-9 w-9 p-0 text-destructive hover:bg-destructive/10 border-destructive/30"
-            >
+            <Button variant="outline" size="sm" onClick={handleClear} className="h-9 w-9 p-0 text-destructive hover:bg-destructive/10 border-destructive/30">
               <Trash2 className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom">Clear Mind Map</TooltipContent>
+          <TooltipContent side="bottom">{t('mindMap.clearMindMap')}</TooltipContent>
         </Tooltip>
       </div>
     </TooltipProvider>
