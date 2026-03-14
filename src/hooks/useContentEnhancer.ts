@@ -105,6 +105,7 @@ export const useContentEnhancer = () => {
         return [];
       }
 
+      notifyAICreditsUsed();
       toast({
         title: "Success",
         description: `Generated ${data.questions?.length || 0} quiz questions`,
