@@ -10,7 +10,12 @@
     "community": "Community Hub",
     "myFiles": "My Files",
     "support": "Support",
-    "progress": "Progress"
+    "progress": "Progress",
+    "feedback": "Feedback"
+  },
+  "sidebar": {
+    "aiCredits": "AI Credits",
+    "aiCreditsLabel": "AI Credits — click to manage in Settings"
   },
   "support": {
     "title": "Contact Support",
@@ -45,7 +50,9 @@
     "beeline": "Beeline Reader",
     "rewordify": "Rewordify",
     "ai": "AI Assistant",
-    "voice": "Voice AI"
+    "voice": "Voice AI",
+    "documentAI": "Document AI",
+    "learningAI": "Learning AI"
   },
   "common": {
     "logout": "Logout",

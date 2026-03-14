@@ -1,50 +1,54 @@
 
 
-## Language Switcher Fix Plan
+# Security Headers Remediation Plan
 
-### The Problem
+## Summary
 
-There are two issues causing labels to remain in English after switching languages:
+Your app has duplicate, conflicting Content Security Policies and several security header meta tags that browsers ignore because they only work as server-sent HTTP headers. This plan consolidates everything into a single, tightened CSP in `index.html` and cleans up the ineffective JS-based headers.
 
-1. **Hardcoded strings not using translation keys** — Several components use plain English strings instead of `t()` calls
-2. **Missing translation keys** — The non-English locale files (`es`, `de`, `fr`) are missing many keys that exist in `en-GB`, so even where `t()` is used, it falls back to English
+---
 
-### Hardcoded Strings to Fix
+## What Will Change
 
-| File | Hardcoded String | Fix |
-|------|-----------------|-----|
-| `ToolbarTools.tsx` (line 64) | `"AI Simplify"` | Use `t('tools.rewordify')` |
-| `ToolbarTools.tsx` (line 73) | `"Document AI"` | Add key `tools.documentAI`, use `t()` |
-| `ToolbarTools.tsx` (line 96) | `"Learning AI"` | Add key `tools.learningAI`, use `t()` |
-| `SidebarTools.tsx` (line 73) | `"Feedback"` | Add key `navigation.feedback`, use `t()` |
-| `SidebarAICredits.tsx` (line 83) | `"AI Credits — click to manage in Settings"` | Add key, use `t()` |
+### 1. Consolidate CSP into `index.html` (single source of truth)
 
-### Missing Translation Keys
+Update the existing CSP meta tag in `index.html` to add the missing `frame-ancestors 'none'` directive and remove `http:` from `img-src`. The final CSP will be:
 
-The `es`, `de`, and `fr` locale files are missing entire sections that exist in `en-GB`:
+- `default-src 'self'`
+- `script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://cdn.gpteng.co https://api.elevenlabs.io https://cdn.elevenlabs.io https://*.elevenlabs.io`
+- `connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.elevenlabs.io wss://api.elevenlabs.io https://*.elevenlabs.io https://fonts.googleapis.com https://fonts.cdnfonts.com`
+- `worker-src 'self' blob:`
+- `child-src 'self' blob:`
+- `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.cdnfonts.com`
+- `font-src 'self' https://fonts.gstatic.com https://fonts.cdnfonts.com data:`
+- `img-src 'self' data: https: blob:` (removed `http:`)
+- `media-src 'self' https: blob: data: https://ice1.somafm.com https://radio.stereoscenic.com https://media-ssl.musicradio.com`
+- `frame-ancestors 'none'` (added -- prevents clickjacking)
 
-- `settings.account.*` (all account-related settings)
-- `tasks.aiAssistant`, `tasks.aiDescription`, `tasks.suggestions`, `tasks.schedule`, `tasks.optimise`, etc.
-- `chat.studyBuddyTitle`, `chat.studyBuddyDescription`
-- `common.cancel`, `common.save`, `common.delete`, `common.edit`, `common.close`
-- `mindMap.*`
-- `navigation.progress`
-- New tool keys: `tools.documentAI`, `tools.learningAI`
-- `tools.colour` is `tools.color` in es/de/fr (key mismatch)
-- `navigation.feedback`
+### 2. Simplify `useSecurityHeaders.ts`
 
-### Key Mismatch: `tools.colour` vs `tools.color`
+Remove the CSP, X-Frame-Options, X-Content-Type-Options, and Permissions-Policy meta tag injections since browsers ignore these as meta tags (they must be HTTP headers). Keep only the referrer policy meta tag, which browsers **do** respect when set via meta tag.
 
-The `en-GB` file uses `tools.colour` but `es`, `de`, `fr` use `tools.color`. Need to standardise to `tools.colour` across all files.
+### 3. Add Referrer Policy to `index.html`
 
-### Implementation Steps
+Move the referrer policy into `index.html` as a static meta tag for reliability:
 
-1. **Fix hardcoded strings in components** — Replace with `t()` calls, adding new translation keys where needed
-2. **Add missing keys to `en-GB/translation.json`** — For new keys like `tools.documentAI`, `tools.learningAI`, `navigation.feedback`
-3. **Update `es/translation.json`** — Add all missing translated keys
-4. **Update `de/translation.json`** — Add all missing translated keys
-5. **Update `fr/translation.json`** — Add all missing translated keys
-6. **Fix the `tools.color` → `tools.colour` key mismatch** in es/de/fr files
+```html
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+```
 
-This will ensure that when a user switches language in Settings, all visible UI labels update correctly.
+---
+
+## Files to Modify
+
+- **`index.html`** -- Update CSP, add referrer policy meta tag
+- **`src/hooks/security/useSecurityHeaders.ts`** -- Strip down to minimal (or remove entirely since all effective headers will be in `index.html`)
+
+---
+
+## Technical Notes
+
+- `X-Frame-Options`, `X-Content-Type-Options`, and `Permissions-Policy` only work as HTTP response headers set by the server. Lovable's hosting infrastructure controls these -- if the pentest flagged them, that would need to be raised with Lovable support.
+- `unsafe-inline` and `unsafe-eval` in `script-src` are required by Vite/React's runtime. Removing them would break the app. This is a known trade-off.
+- `frame-ancestors 'none'` in a meta tag CSP is actually ignored by browsers too (it only works as an HTTP header), but including it does no harm and documents intent. True clickjacking protection requires Lovable's server to send the header.
 

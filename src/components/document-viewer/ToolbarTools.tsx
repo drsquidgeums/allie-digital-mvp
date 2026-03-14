@@ -61,7 +61,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
       <div data-tour="ai-simplify">
         <ToolItem
           icon={Wand2}
-          label="AI Simplify"
+          label={t('tools.rewordify')}
           id="rewordify"
           content={<Rewordify />}
           popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
@@ -70,7 +70,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
       <div data-tour="document-ai">
         <ToolItem
           icon={Sparkles}
-          label="Document AI"
+          label={t('tools.documentAI')}
           id="ai-assistant"
           content={
             <DocumentAIChat
@@ -93,7 +93,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
       <div data-tour="learning-ai">
         <ToolItem
           icon={GraduationCap}
-          label="Learning AI"
+          label={t('tools.learningAI')}
           id="learning-tools"
           content={
             <ContentEnhancerTools

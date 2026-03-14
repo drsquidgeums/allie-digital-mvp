@@ -3,6 +3,7 @@ import { Sparkles, Brain, Mic } from "lucide-react";
 import { useAIUsage, ProviderUsage } from "@/hooks/useAIUsage";
 import { useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useTranslation } from "react-i18next";
 
 const providerConfig: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   openai: { label: "OpenAI", icon: Sparkles, color: "text-emerald-500" },
@@ -68,6 +69,7 @@ const CreditBar = ({ provider }: { provider: ProviderUsage }) => {
 export const SidebarAICredits = () => {
   const { usage } = useAIUsage();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Show placeholder with 0 values when no usage data (e.g. admin/edit mode)
   const providers: ProviderUsage[] = usage?.byProvider ?? [
@@ -80,11 +82,11 @@ export const SidebarAICredits = () => {
     <button
       onClick={() => navigate("/settings")}
       className="w-full rounded-lg border border-border bg-card/50 p-2.5 space-y-2 hover:bg-accent/50 transition-colors text-left"
-      aria-label="AI Credits — click to manage in Settings"
+      aria-label={t('sidebar.aiCreditsLabel')}
     >
       <div className="flex items-center gap-1.5 mb-1.5">
         <Sparkles className="h-3.5 w-3.5 text-primary" />
-        <span className="text-xs font-semibold text-foreground">AI Credits</span>
+        <span className="text-xs font-semibold text-foreground">{t('sidebar.aiCredits')}</span>
       </div>
       {providers.map((p) => (
         <CreditBar key={p.name} provider={p} />

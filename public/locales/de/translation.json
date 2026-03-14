@@ -1,4 +1,3 @@
-
 {
   "navigation": {
     "fileUploader": "Datei-Uploader",
@@ -10,7 +9,13 @@
     "community": "Community Hub",
     "toolbox": "Werkzeugkasten",
     "myFiles": "Meine Dateien",
-    "support": "Support"
+    "support": "Support",
+    "progress": "Fortschritt",
+    "feedback": "Feedback"
+  },
+  "sidebar": {
+    "aiCredits": "KI-Guthaben",
+    "aiCreditsLabel": "KI-Guthaben — klicken zum Verwalten in Einstellungen"
   },
   "support": {
     "title": "Support kontaktieren",
@@ -40,12 +45,14 @@
     "tts": "Text-zu-Sprache",
     "stt": "Sprache-zu-Text",
     "bionic": "Bionic Reader",
-    "color": "Farbwerkzeug",
+    "colour": "Farbwerkzeug",
     "focus": "Fokusmodus",
     "beeline": "Beeline Reader",
     "rewordify": "Umformulieren",
     "ai": "KI-Assistent",
-    "voice": "Sprach-KI"
+    "voice": "Sprach-KI",
+    "documentAI": "Dokument-KI",
+    "learningAI": "Lern-KI"
   },
   "common": {
     "logout": "Abmelden",
@@ -55,11 +62,18 @@
     "information": "Information",
     "language": "Sprache auswählen",
     "noNotifications": "Keine Benachrichtigungen",
-    "loadingText": "Wird geladen..."
+    "loadingText": "Wird geladen...",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen"
   },
   "chat": {
     "title": "Allie KI",
-    "inputPlaceholder": "Nachricht eingeben..."
+    "inputPlaceholder": "Nachricht eingeben...",
+    "studyBuddyTitle": "Allie - Lernpartner",
+    "studyBuddyDescription": "ADHS-optimierter Lernassistent"
   },
   "notifications": {
     "empty": "Keine Benachrichtigungen",
@@ -70,7 +84,24 @@
     "pointsEarned": "Du hast {{points}} Punkte für das Abschließen dieser Aufgabe erhalten!",
     "title": "Aufgabenliste",
     "empty": "Noch keine Aufgaben",
-    "addTask": "Aufgabe hinzufügen"
+    "addTask": "Aufgabe hinzufügen",
+    "aiAssistant": "KI-Aufgabenassistent",
+    "aiDescription": "Erhalte intelligente Vorschläge, Zeitpläne und Aufgabenoptimierung",
+    "suggestions": "Vorschläge",
+    "schedule": "Zeitplan",
+    "optimise": "Optimieren",
+    "getSuggestions": "KI-Vorschläge erhalten",
+    "generating": "Wird generiert...",
+    "generateSchedule": "Lernplan erstellen",
+    "optimiseMyTasks": "Meine Aufgaben optimieren",
+    "analysing": "Wird analysiert...",
+    "currentTasks": "Aktuelle Aufgaben",
+    "suggestionsPlaceholder": "Beschreibe, was du lernst oder wobei du Hilfe brauchst (optional)",
+    "schedulePlaceholder": "Beschreibe deine Lernziele oder Zeitplanpräferenzen (optional)"
+  },
+  "mindMap": {
+    "title": "Mind Map",
+    "description": "Visualisiere und organisiere deine Ideen"
   },
   "settings": {
     "title": "Einstellungen",
@@ -79,6 +110,17 @@
     "selectLanguage": "Sprache auswählen",
     "languageChanged": "Anwendungssprache wurde zu {{language}} geändert",
     "languageChangeError": "Fehler beim Ändern der Sprache. Bitte versuche es erneut.",
+    "account": {
+      "title": "Konto",
+      "email": "E-Mail",
+      "memberSince": "Mitglied seit",
+      "plan": "Plan",
+      "lifetimeAccess": "Lebenslanger Zugang",
+      "noSubscription": "Kein aktiver Plan",
+      "viewBilling": "Abrechnungsverlauf anzeigen",
+      "notLoggedIn": "Bitte melde dich an, um auf die Abrechnung zuzugreifen",
+      "billingError": "Abrechnungsportal konnte nicht geöffnet werden. Bitte versuche es erneut."
+    },
     "accessibility": {
       "title": "Barrierefreiheit",
       "screenReader": "Bildschirmleser-Unterstützung",

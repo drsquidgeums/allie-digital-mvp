@@ -70,7 +70,7 @@ export const SidebarTools = ({
         {onFeedbackClick && (
           <SidebarButton
             icon={MessageSquare}
-            label="Feedback"
+            label={t('navigation.feedback')}
             isActive={false}
             onClick={handleFeedbackClick}
           />
