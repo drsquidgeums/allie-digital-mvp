@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { notifyAICreditsUsed } from '@/utils/aiCreditsEvent';
 
 interface Message {
   role: 'user' | 'assistant';

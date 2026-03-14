@@ -5,6 +5,7 @@ import { Textarea } from "./ui/textarea";
 import { useEditorContent } from "@/hooks/useEditorContent";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
 
 export const Rewordify = () => {
   const [inputText, setInputText] = useState("");

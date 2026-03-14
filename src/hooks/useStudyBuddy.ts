@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
 
 interface Message {
   role: "user" | "assistant";

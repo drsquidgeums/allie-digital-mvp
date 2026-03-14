@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Mic, MicOff, Phone, PhoneOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 

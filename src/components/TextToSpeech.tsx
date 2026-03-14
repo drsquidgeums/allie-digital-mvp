@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
 import { Play, Pause, Square, Volume2, Sparkles } from "lucide-react";
 import { usePersistedText } from "@/hooks/usePersistedText";
 import { useToast } from "@/hooks/use-toast";
