@@ -83,11 +83,13 @@ serve(async (req) => {
     if (profile?.subscription_status === "trial" && profile?.trial_started_at) {
       const trialStart = new Date(profile.trial_started_at);
       const now = new Date();
-      const diffMs = now.getTime() - trialStart.getTime();
-      const diffDays = diffMs / (1000 * 60 * 60 * 24);
-      const daysRemaining = Math.max(0, Math.ceil(TRIAL_DAYS - diffDays));
+      // Use calendar days (UTC) so the countdown ticks over at midnight, not after exactly 24h
+      const startDay = Date.UTC(trialStart.getUTCFullYear(), trialStart.getUTCMonth(), trialStart.getUTCDate());
+      const todayDay = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+      const calendarDaysElapsed = Math.floor((todayDay - startDay) / (1000 * 60 * 60 * 24));
+      const daysRemaining = Math.max(0, TRIAL_DAYS - calendarDaysElapsed);
       
-      if (diffDays < TRIAL_DAYS) {
+      if (calendarDaysElapsed < TRIAL_DAYS) {
         logStep("User is in active trial", { daysRemaining });
         return new Response(JSON.stringify({ 
           hasPaid: true, 
