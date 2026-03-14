@@ -153,7 +153,7 @@ export const useStudyBuddy = (context?: StudyBuddyContext) => {
         }
       }
 
-    } catch (error: any) {
+    notifyAICreditsUsed();
       if (error.name === 'AbortError') {
         console.log('Request aborted');
         return;

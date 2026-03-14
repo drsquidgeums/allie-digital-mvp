@@ -56,6 +56,7 @@ export const useProgressAI = () => {
         return;
       }
 
+      notifyAICreditsUsed();
       setInsights(prev => ({
         ...prev,
         [type]: { content: data.content, type, loading: false },

@@ -88,6 +88,7 @@ export const VoiceAssistant: React.FC = () => {
         signedUrl: data.signed_url,
       });
       setConversationStarted(true);
+      notifyAICreditsUsed();
     } catch (error) {
       console.error("Error starting conversation:", error);
       toast({

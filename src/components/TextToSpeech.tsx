@@ -121,6 +121,7 @@ export const TextToSpeech = () => {
       }
 
       // Convert base64 to audio blob
+      notifyAICreditsUsed();
       const binaryString = atob(data.audioContent);
       const bytes = new Uint8Array(binaryString.length);
       for (let i = 0; i < binaryString.length; i++) {

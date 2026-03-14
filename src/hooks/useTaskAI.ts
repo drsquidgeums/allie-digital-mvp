@@ -106,6 +106,7 @@ export const useTaskAI = () => {
         return "";
       }
 
+      notifyAICreditsUsed();
       return data?.content || "";
     } catch (error) {
       console.error("Error optimizing tasks:", error);

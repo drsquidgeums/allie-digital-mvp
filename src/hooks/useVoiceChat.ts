@@ -241,6 +241,7 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
           if (error) throw new Error(error.message);
 
           const aiResponse = data?.response;
+          notifyAICreditsUsed();
           const nextHistory = data?.conversationHistory;
 
           if (Array.isArray(nextHistory)) {

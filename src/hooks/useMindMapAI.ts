@@ -68,6 +68,7 @@ export const useMindMapAI = () => {
       }
 
       const result = data as NodeExpansion;
+      notifyAICreditsUsed();
       toast.success(`Generated ${result.suggestions.length} suggestions!`);
       return result.suggestions;
     } catch (error) {

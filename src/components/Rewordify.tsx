@@ -49,6 +49,7 @@ export const Rewordify = () => {
 
       if (data?.simplifiedText) {
         setOutputText(data.simplifiedText);
+        notifyAICreditsUsed();
         toast({
           title: "Text simplified",
           description: "Your text has been made easier to read"
