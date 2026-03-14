@@ -70,7 +70,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
       <div data-tour="document-ai">
         <ToolItem
           icon={Sparkles}
-          label="Document AI"
+          label={t('tools.documentAI')}
           id="ai-assistant"
           content={
             <DocumentAIChat
