@@ -69,6 +69,7 @@ const CreditBar = ({ provider }: { provider: ProviderUsage }) => {
 export const SidebarAICredits = () => {
   const { usage } = useAIUsage();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Show placeholder with 0 values when no usage data (e.g. admin/edit mode)
   const providers: ProviderUsage[] = usage?.byProvider ?? [
