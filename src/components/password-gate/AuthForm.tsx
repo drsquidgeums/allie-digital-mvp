@@ -231,7 +231,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         sessionStorage.setItem("just_signed_up", "true");
         toast({
           title: "Trial started",
-          description: "Your 7-day free trial is now active.",
+          description: "Your 7 day free trial is now active.",
         });
         onAuthenticated();
         return;
