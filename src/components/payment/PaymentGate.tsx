@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, Clock, Shield, Database } from "lucide-react";
+import { Loader2, Clock, Shield, Database, LogOut } from "lucide-react";
 import stripeLogo from "@/assets/stripe-logo.png";
 
 interface PaymentGateProps {
@@ -28,7 +28,6 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete, use
       return;
     }
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       toast({
@@ -49,7 +48,6 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete, use
       if (error) throw error;
 
       if (data?.url) {
-        // Redirect in same tab to avoid popup blockers
         window.location.href = data.url;
       } else {
         throw new Error("No checkout URL received");
@@ -64,6 +62,11 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete, use
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/";
   };
 
   return (
@@ -157,7 +160,7 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete, use
       </form>
       
       {/* Footer */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         <p className="text-xs flex items-center justify-center gap-1.5" style={{ color: '#6b7280' }}>
           <span>Secure payment powered by</span>
           <img src={stripeLogo} alt="Stripe" className="h-4" />
@@ -166,6 +169,16 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete, use
           Please see our{' '}
           <a href="/terms" style={{ textDecoration: 'underline' }}>terms of service</a> for our policy on refunds.
         </p>
+        
+        {/* Sign out / back to sign in */}
+        <button
+          onClick={handleSignOut}
+          className="text-sm underline transition-colors hover:opacity-70 flex items-center justify-center gap-1.5 mx-auto"
+          style={{ color: '#6b7280' }}
+        >
+          <LogOut className="w-3.5 h-3.5" />
+          Sign in with a different account
+        </button>
       </div>
     </div>
   );
