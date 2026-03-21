@@ -181,23 +181,8 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
       >
         <WelcomeHeader colors={colors} />
         
-        {trialExpired && (
-          <div className="text-center space-y-2 mb-4">
-            <div 
-              className="p-4 rounded-lg border-2"
-              style={{ backgroundColor: '#fef3c7', borderColor: '#f59e0b' }}
-            >
-              <p className="font-semibold" style={{ color: '#92400e' }}>
-                Your 7-day free trial has ended
-              </p>
-              <p className="text-sm mt-1" style={{ color: '#92400e' }}>
-                Purchase lifetime access for £30 to continue using the service. Your data will be retained for 30 days.
-              </p>
-            </div>
-          </div>
-        )}
 
-        {paidEmail ? (
+        <PaymentGate onPaymentComplete={onPaymentComplete} userEmail={userEmail} />
           <div className="space-y-6 text-center">
             <div 
               className="paid-notice p-4 rounded-lg border-2"
