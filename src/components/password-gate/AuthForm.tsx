@@ -558,10 +558,28 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   // Default: Sign Up Form (starts 7-day trial for new users)
   return (
     <div className="space-y-4 flex flex-col items-center">
-      <div className="text-center mb-2">
-        <p className="text-sm" style={{ color: '#666666' }}>
-          Start with a <span className="font-bold">7 day free trial</span> (no card required). After your trial period, lifetime access is a one off payment of <span className="font-bold">£30</span>. Please see our <a href="/terms" className="underline hover:opacity-80">terms of service</a> for our policy on refunds.
-        </p>
+      {/* Info cards instead of plain text */}
+      <div className="flex flex-col gap-3 text-left w-[85%] mx-auto mb-2">
+        <div 
+          className="flex items-start gap-3 p-3 rounded-lg"
+          style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb' }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+          <div>
+            <p className="text-sm font-medium" style={{ color: '#111827' }}>7 day free trial</p>
+            <p className="text-xs mt-0.5" style={{ color: '#6b7280' }}>No card required to get started</p>
+          </div>
+        </div>
+        <div 
+          className="flex items-start gap-3 p-3 rounded-lg"
+          style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb' }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          <div>
+            <p className="text-sm font-medium" style={{ color: '#111827' }}>Lifetime access for £30</p>
+            <p className="text-xs mt-0.5" style={{ color: '#6b7280' }}>One time payment after your trial ends</p>
+          </div>
+        </div>
       </div>
       
       <form onSubmit={handleSignUpForTrial} className="space-y-4 flex flex-col items-center w-full">
@@ -633,13 +651,14 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
               Creating account...
             </>
           ) : (
-            "Start 7-Day Free Trial"
+            "Start 7 Day Free Trial"
           )}
         </Button>
       </form>
       
       <p className="text-xs" style={{ color: '#9ca3af' }}>
-        Secure payments with Stripe
+        Please see our{' '}
+        <a href="/terms" className="underline hover:opacity-80">terms of service</a> for our policy on refunds.
       </p>
       
       <div className="flex items-center justify-center gap-8 mt-2">
