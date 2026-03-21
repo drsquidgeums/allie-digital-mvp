@@ -173,7 +173,7 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
         }}
       />
       <div 
-        className="w-full max-w-xl space-y-4 p-8 relative z-10"
+        className="w-full max-w-xl space-y-2 p-8 relative z-10"
         style={{
           backgroundColor: 'transparent',
           color: '#000000',
