@@ -342,7 +342,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           style={{ backgroundColor: '#fffbeb', borderColor: '#fbbf24', border: '1px solid #fbbf24' }}
         >
           <p className="text-sm font-medium" style={{ color: '#92400e' }}>
-            Click the link in the email to verify your account, then come back here and sign in to start your <span className="font-bold">7-day free trial</span>.
+            Click the link in the email to verify your account, then come back here and sign in to start your <span className="font-bold">7 day free trial</span>.
           </p>
         </div>
         
