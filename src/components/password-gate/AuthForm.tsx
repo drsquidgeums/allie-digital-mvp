@@ -559,7 +559,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   return (
     <div className="space-y-4 flex flex-col items-center">
       {/* Info cards instead of plain text */}
-      <div className="flex flex-col gap-3 text-left w-[85%] mx-auto mb-2">
+      <div className="flex flex-col gap-3 text-left w-[70%] mx-auto mb-2">
         <div 
           className="flex items-start gap-3 p-3 rounded-lg"
           style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb' }}
