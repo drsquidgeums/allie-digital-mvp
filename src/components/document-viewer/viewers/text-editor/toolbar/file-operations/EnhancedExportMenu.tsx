@@ -116,7 +116,7 @@ export const EnhancedExportMenu: React.FC<EnhancedExportMenuProps> = ({
     setExporting(true);
     try {
       await exportAsDocx(editor.getHTML(), documentTitle);
-      toast({ title: "Document Exported", description: "Word (.docx) file has been downloaded — formatting preserved" });
+      toast({ title: "Document Exported", description: "Word (.docx) file has been downloaded, formatting preserved" });
     } catch (error) {
       console.error('DOCX export error:', error);
       toast({ title: "Export Failed", description: "Could not generate Word document", variant: "destructive" });

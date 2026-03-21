@@ -231,7 +231,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         sessionStorage.setItem("just_signed_up", "true");
         toast({
           title: "Trial started",
-          description: "Your 7-day free trial is now active.",
+          description: "Your 7 day free trial is now active.",
         });
         onAuthenticated();
         return;
@@ -342,7 +342,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           style={{ backgroundColor: '#fffbeb', borderColor: '#fbbf24', border: '1px solid #fbbf24' }}
         >
           <p className="text-sm font-medium" style={{ color: '#92400e' }}>
-            Click the link in the email to verify your account, then come back here and sign in to start your <span className="font-bold">7-day free trial</span>.
+            Click the link in the email to verify your account, then come back here and sign in to start your <span className="font-bold">7 day free trial</span>.
           </p>
         </div>
         
@@ -374,7 +374,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
             setPassword("");
           }}
         >
-          I've verified — Sign In
+          I've verified, Sign In
         </Button>
       </div>
     );
@@ -536,7 +536,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
           }}
           className="text-sm underline transition-colors hover:opacity-70"
         >
-          Don't have an account? Start your 7-day free trial
+          Don't have an account? Start your 7 day free trial
         </a>
         
         <a
@@ -555,11 +555,11 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     );
   }
 
-  // Default: Sign Up Form (starts 7-day trial for new users)
+  // Default: Sign Up Form (starts 7 day trial for new users)
   return (
     <div className="space-y-4 flex flex-col items-center">
       {/* Info cards instead of plain text */}
-      <div className="flex flex-col gap-3 text-left w-[85%] mx-auto mb-2">
+      <div className="flex flex-col gap-3 text-left w-[70%] mx-auto mb-2">
         <div 
           className="flex items-start gap-3 p-3 rounded-lg"
           style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb' }}

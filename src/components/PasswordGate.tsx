@@ -213,7 +213,7 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
       <div className="flex-shrink-0" />
       
       <div 
-        className="w-full max-w-xl space-y-8 p-8 relative z-10"
+        className="w-full max-w-xl space-y-4 p-8 relative z-10"
         style={{
           backgroundColor: 'transparent',
           color: '#000000',
