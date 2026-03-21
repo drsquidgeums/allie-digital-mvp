@@ -79,7 +79,7 @@ const Terms = () => {
             <p>New users receive 7 days of full access to the Service at no cost. No payment details are required to start your free trial. At the end of the trial period you will be invited to purchase lifetime access to continue using the Service.</p>
             
             <h3 className="text-lg font-semibold mt-4" style={{ color: '#000000' }}>Lifetime Access</h3>
-            <p>The Service operates on a one-time payment of £30 for lifetime access. By completing payment:</p>
+            <p>The Service operates on a one time payment of £30 for lifetime access. By completing payment:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>You receive unlimited access to the Service for as long as it remains operational</li>
               <li>Payment is processed securely through Stripe</li>
