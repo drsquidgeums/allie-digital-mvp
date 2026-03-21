@@ -35,7 +35,6 @@ PomodoroTaskListener.displayName = "PomodoroTaskListener";
 
 // Development bypass for Lovable preview environment
 const isDevBypass = window.location.hostname.includes('lovableproject.com') || 
-                    window.location.hostname.includes('lovable.app') ||
                     window.location.hostname === 'localhost';
 
 const App = () => {
