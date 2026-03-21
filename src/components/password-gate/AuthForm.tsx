@@ -374,7 +374,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
             setPassword("");
           }}
         >
-          I've verified — Sign In
+          I've verified, Sign In
         </Button>
       </div>
     );
