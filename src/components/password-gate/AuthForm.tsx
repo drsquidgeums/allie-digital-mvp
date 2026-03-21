@@ -555,7 +555,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     );
   }
 
-  // Default: Sign Up Form (starts 7-day trial for new users)
+  // Default: Sign Up Form (starts 7 day trial for new users)
   return (
     <div className="space-y-4 flex flex-col items-center">
       {/* Info cards instead of plain text */}
