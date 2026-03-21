@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import DOMPurify from 'dompurify';
 import { Editor } from '@tiptap/react';
 import { Button } from '@/components/ui/button';
 import { Printer } from 'lucide-react';
