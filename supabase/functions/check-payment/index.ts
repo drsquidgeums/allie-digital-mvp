@@ -101,7 +101,7 @@ serve(async (req) => {
           status: 200,
         });
       } else {
-        logStep("Trial expired", { diffDays });
+        logStep("Trial expired", { calendarDaysElapsed });
         // Trial expired - check Stripe as fallback
       }
     }
