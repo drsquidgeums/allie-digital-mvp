@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Clock, Shield, Database } from "lucide-react";
 import stripeLogo from "@/assets/stripe-logo.png";
 
 interface PaymentGateProps {
