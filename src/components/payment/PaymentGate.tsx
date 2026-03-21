@@ -69,9 +69,16 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete, use
   return (
     <div className="space-y-6 text-center">
       <div className="space-y-2">
-        <h2 className="text-xl font-semibold">Get Lifetime Access</h2>
-        <p className="text-muted-foreground">
-          One-time payment of <span className="font-bold">£30</span> for unlimited access
+        <h2 className="text-xl font-semibold">Your 7-Day Free Trial Has Ended</h2>
+        <p className="text-sm" style={{ color: '#4b5563' }}>
+          We hope you enjoyed exploring the app during your trial period.
+        </p>
+        <p className="text-sm" style={{ color: '#4b5563' }}>
+          To continue using all features, get lifetime access with a one-time payment of <span className="font-bold">£30</span>.
+        </p>
+        <p className="text-xs mt-1" style={{ color: '#6b7280' }}>
+          Your data has been saved and will be available once you upgrade. Please see our{' '}
+          <a href="/terms" style={{ textDecoration: 'underline' }}>terms of service</a> for our policy on refunds.
         </p>
       </div>
       
