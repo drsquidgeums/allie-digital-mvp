@@ -338,7 +338,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         </div>
         
         <div 
-          className="w-[80%] rounded-lg p-4"
+          className="w-[70%] rounded-lg p-4"
           style={{ backgroundColor: '#fffbeb', borderColor: '#fbbf24', border: '1px solid #fbbf24' }}
         >
           <p className="text-sm font-medium" style={{ color: '#92400e' }}>
