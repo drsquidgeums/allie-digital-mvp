@@ -88,7 +88,7 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete, use
       </div>
 
       {/* Feature cards */}
-      <div className="flex flex-col gap-3 text-left max-w-sm mx-auto">
+      <div className="flex flex-col gap-3 text-left w-[70%] mx-auto">
         <div 
           className="flex items-start gap-3 p-3 rounded-lg"
           style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb' }}
