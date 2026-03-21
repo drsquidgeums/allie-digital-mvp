@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import DOMPurify from 'dompurify';
 import { Editor } from '@tiptap/react';
 import { Button } from '@/components/ui/button';
 import { Printer } from 'lucide-react';
@@ -138,7 +139,7 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
           >
             <h1 className="text-2xl font-bold mb-6 text-black">{documentTitle}</h1>
             <div 
-              dangerouslySetInnerHTML={{ __html: editor.getHTML() }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(editor.getHTML()) }}
               className="prose-p:mb-4 prose-headings:mt-6 prose-headings:mb-3 text-black"
             />
           </div>
