@@ -57,7 +57,7 @@ const CreditBar = ({ provider }: { provider: ProviderUsage }) => {
         <TooltipContent side="right" className="max-w-[200px]">
           <p className="text-xs">
             {provider.hasOwnKey
-              ? `Unlimited — using your own ${config.label} key`
+              ? `Unlimited, using your own ${config.label} key`
               : `${provider.remaining} of ${provider.limit} ${config.label} credits left this month`}
           </p>
         </TooltipContent>

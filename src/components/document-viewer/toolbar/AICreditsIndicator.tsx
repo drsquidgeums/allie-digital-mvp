@@ -32,7 +32,7 @@ export const AICreditsIndicator = () => {
         </TooltipTrigger>
         <TooltipContent side="bottom" className="max-w-[220px]">
           {hasOwnKey ? (
-            <p className="text-xs">Unlimited AI — using your own API key</p>
+            <p className="text-xs">Unlimited AI, using your own API key</p>
           ) : isExhausted ? (
             <p className="text-xs">AI credits used up this month. Click to add your own API key in Settings for unlimited access.</p>
           ) : isLow ? (
