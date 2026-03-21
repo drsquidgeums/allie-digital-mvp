@@ -93,7 +93,7 @@ const Terms = () => {
             <p>At the end of your free trial, access to the Service will be paused until payment is completed. Your data and content will be retained for 30 days following trial expiry, giving you time to decide whether to purchase.</p>
             
             <h3 className="text-lg font-semibold mt-4" style={{ color: '#000000' }}>Accessibility Commitment</h3>
-            <p>As a Community Interest Corporation, we are committed to ensuring cost is not a barrier to access. If you are a student or learner who cannot afford the one-time payment, your educational provider (school, college, university, or training organisation) can purchase access on your behalf. Educational providers interested in bulk or institutional access should contact us directly.</p>
+            <p>As a Community Interest Corporation, we are committed to ensuring cost is not a barrier to access. If you are a student or learner who cannot afford the one time payment, your educational provider (school, college, university, or training organisation) can purchase access on your behalf. Educational providers interested in bulk or institutional access should contact us directly.</p>
             <p>This approach allows us to maintain the infrastructure and AI services that power the platform, whilst ensuring equitable access for all learners regardless of socioeconomic background.</p>
           </section>
           
