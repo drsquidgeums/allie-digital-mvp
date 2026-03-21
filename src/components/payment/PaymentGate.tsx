@@ -74,7 +74,7 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete, use
           We hope you enjoyed exploring the app during your trial period.
         </p>
         <p className="text-sm" style={{ color: '#4b5563' }}>
-          To continue using all features, get lifetime access with a one-time payment of <span className="font-bold">£30</span>.
+          To continue using all features, get lifetime access with a one time payment of <span className="font-bold">£30</span>.
         </p>
         <p className="text-xs mt-1" style={{ color: '#6b7280' }}>
           Your data has been saved and will be available once you upgrade. Please see our{' '}
