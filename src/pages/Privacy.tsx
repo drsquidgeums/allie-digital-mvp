@@ -111,9 +111,9 @@ const Privacy = () => {
             <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>5. AI Processing of Your Content</h2>
             <p>When you use AI-powered features, your content is processed by the following third-party AI providers:</p>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong>OpenAI</strong> — Powers the AI study assistant, text simplification, task suggestions, and content enhancement features</li>
-              <li><strong>Anthropic (Claude)</strong> — Used for document analysis and AI chat capabilities</li>
-              <li><strong>ElevenLabs</strong> — Provides text-to-speech and voice AI functionality</li>
+               <li><strong>OpenAI</strong>: Powers the AI study assistant, text simplification, task suggestions, and content enhancement features</li>
+               <li><strong>Anthropic (Claude)</strong>: Used for document analysis and AI chat capabilities</li>
+               <li><strong>ElevenLabs</strong>: Provides text to speech and voice AI functionality</li>
             </ul>
             <p>When using these AI features:</p>
             <ul className="list-disc pl-6 space-y-2">
