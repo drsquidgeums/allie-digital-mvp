@@ -182,7 +182,7 @@ export const PaymentRequiredGate: React.FC<PaymentRequiredGateProps> = ({ onPaym
         <WelcomeHeader colors={colors} />
         
 
-        <PaymentGate onPaymentComplete={onPaymentComplete} userEmail={userEmail} />
+        {paidEmail ? (
           <div className="space-y-6 text-center">
             <div 
               className="paid-notice p-4 rounded-lg border-2"
