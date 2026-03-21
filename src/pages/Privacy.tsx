@@ -140,12 +140,12 @@ const Privacy = () => {
             <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>7. Data Sharing</h2>
             <p>We do not sell your personal information. We share data with the following third parties who act as data processors on our behalf:</p>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Stripe</strong> (United States) — For secure payment processing</li>
-              <li><strong>Supabase</strong> (United States/EU) — For data storage, authentication, and backend services</li>
-              <li><strong>OpenAI</strong> (United States) — For AI-powered study features</li>
-              <li><strong>Anthropic</strong> (United States) — For AI document analysis and chat</li>
-              <li><strong>ElevenLabs</strong> (United States) — For text-to-speech and voice features</li>
-              <li><strong>Legal Authorities</strong> — If required by law or to protect our rights</li>
+               <li><strong>Stripe</strong> (United States): For secure payment processing</li>
+               <li><strong>Supabase</strong> (United States/EU): For data storage, authentication, and backend services</li>
+               <li><strong>OpenAI</strong> (United States): For AI powered study features</li>
+               <li><strong>Anthropic</strong> (United States): For AI document analysis and chat</li>
+               <li><strong>ElevenLabs</strong> (United States): For text to speech and voice features</li>
+               <li><strong>Legal Authorities</strong>: If required by law or to protect our rights</li>
             </ul>
           </section>
           
