@@ -68,20 +68,47 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete, use
 
   return (
     <div className="space-y-6 text-center">
-      <div className="space-y-2">
-        <h2 className="text-xl font-semibold">Your 7-Day Free Trial Has Ended</h2>
+      {/* Header with icon */}
+      <div className="space-y-3">
+        <div className="flex justify-center">
+          <div 
+            className="w-12 h-12 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: '#fef3c7' }}
+          >
+            <Clock className="w-6 h-6" style={{ color: '#d97706' }} />
+          </div>
+        </div>
+        <h2 className="text-xl font-semibold">Your 7 Day Free Trial Has Ended</h2>
         <p className="text-sm" style={{ color: '#4b5563' }}>
-          We hope you enjoyed exploring the app during your trial period.
-        </p>
-        <p className="text-sm" style={{ color: '#4b5563' }}>
-          To continue using all features, get lifetime access with a one time payment of <span className="font-bold">£30</span>.
-        </p>
-        <p className="text-xs mt-1" style={{ color: '#6b7280' }}>
-          Your data has been saved and will be available once you upgrade. Please see our{' '}
-          <a href="/terms" style={{ textDecoration: 'underline' }}>terms of service</a> for our policy on refunds.
+          We hope you enjoyed exploring the app during your trial.
         </p>
       </div>
+
+      {/* Feature cards */}
+      <div className="flex flex-col gap-3 text-left max-w-sm mx-auto">
+        <div 
+          className="flex items-start gap-3 p-3 rounded-lg"
+          style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb' }}
+        >
+          <Shield className="w-5 h-5 mt-0.5 shrink-0" style={{ color: '#000000' }} />
+          <div>
+            <p className="text-sm font-medium" style={{ color: '#111827' }}>Lifetime access for just £30</p>
+            <p className="text-xs mt-0.5" style={{ color: '#6b7280' }}>One time payment, no subscriptions</p>
+          </div>
+        </div>
+        <div 
+          className="flex items-start gap-3 p-3 rounded-lg"
+          style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb' }}
+        >
+          <Database className="w-5 h-5 mt-0.5 shrink-0" style={{ color: '#000000' }} />
+          <div>
+            <p className="text-sm font-medium" style={{ color: '#111827' }}>Your data is safe</p>
+            <p className="text-xs mt-0.5" style={{ color: '#6b7280' }}>Everything you saved is waiting for you</p>
+          </div>
+        </div>
+      </div>
       
+      {/* Payment form */}
       <form onSubmit={handlePayment} className="space-y-4 flex flex-col items-center">
         <div className="w-[70%]">
           <Input
@@ -129,10 +156,17 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete, use
         </Button>
       </form>
       
-      <p className="text-xs text-muted-foreground flex items-center justify-center gap-1.5">
-        <span>Secure payment powered by</span>
-        <img src={stripeLogo} alt="Stripe" className="h-4" />
-      </p>
+      {/* Footer */}
+      <div className="space-y-2">
+        <p className="text-xs flex items-center justify-center gap-1.5" style={{ color: '#6b7280' }}>
+          <span>Secure payment powered by</span>
+          <img src={stripeLogo} alt="Stripe" className="h-4" />
+        </p>
+        <p className="text-xs" style={{ color: '#9ca3af' }}>
+          Please see our{' '}
+          <a href="/terms" style={{ textDecoration: 'underline' }}>terms of service</a> for our policy on refunds.
+        </p>
+      </div>
     </div>
   );
 };
