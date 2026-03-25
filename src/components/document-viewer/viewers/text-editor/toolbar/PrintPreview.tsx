@@ -30,8 +30,6 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const handlePrint = () => {
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) return;
 
     const content = DOMPurify.sanitize(editor.getHTML());
     const safeTitle = documentTitle
