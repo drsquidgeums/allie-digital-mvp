@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2, Clock, Shield, Database, LogOut } from "lucide-react";
 import stripeLogo from "@/assets/stripe-logo.png";
+import { isSafeRedirectUrl } from "@/utils/sanitize";
 
 interface PaymentGateProps {
   onPaymentComplete: () => void;
@@ -47,8 +48,10 @@ export const PaymentGate: React.FC<PaymentGateProps> = ({ onPaymentComplete, use
 
       if (error) throw error;
 
-      if (data?.url) {
+      if (data?.url && isSafeRedirectUrl(data.url)) {
         window.location.href = data.url;
+      } else if (data?.url) {
+        throw new Error("Unsafe redirect URL received");
       } else {
         throw new Error("No checkout URL received");
       }

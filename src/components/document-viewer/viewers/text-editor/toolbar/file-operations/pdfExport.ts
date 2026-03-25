@@ -1,5 +1,6 @@
 
 import { jsPDF } from 'jspdf';
+import DOMPurify from 'dompurify';
 
 /**
  * Export editor HTML content as a PDF file with formatting preserved
@@ -17,7 +18,7 @@ export async function exportAsPdf(html: string, title: string): Promise<void> {
   container.style.color = '#000000';
   container.style.padding = '40px';
   container.style.boxSizing = 'border-box';
-  container.innerHTML = html;
+  container.innerHTML = DOMPurify.sanitize(html);
   document.body.appendChild(container);
 
   try {
