@@ -1,54 +1,104 @@
 
 
-# Security Headers Remediation Plan
+# Aikido Security Vulnerability Remediation Plan
 
-## Summary
-
-Your app has duplicate, conflicting Content Security Policies and several security header meta tags that browsers ignore because they only work as server-sent HTTP headers. This plan consolidates everything into a single, tightened CSP in `index.html` and cleans up the ineffective JS-based headers.
+This is a large set of findings. I'll categorize them by what we can actually fix in the codebase vs. what requires dependency upgrades vs. what are false positives/accepted risks.
 
 ---
 
-## What Will Change
+## Category 1: Code-Level Fixes (We Can Fix Directly)
 
-### 1. Consolidate CSP into `index.html` (single source of truth)
+### 1.1 Path Traversal in fileService.ts (HIGH)
+**Files:** `src/hooks/file-manager/fileService.ts`, `src/services/fileService.ts`
+Both file services construct storage paths using user-supplied filenames without sanitizing path traversal characters (`../`).
 
-Update the existing CSP meta tag in `index.html` to add the missing `frame-ancestors 'none'` directive and remove `http:` from `img-src`. The final CSP will be:
+**Fix:** Sanitize filenames by stripping path separators and `..` sequences before constructing the storage path. Add a `sanitizeFilename()` utility.
 
-- `default-src 'self'`
-- `script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://cdn.gpteng.co https://api.elevenlabs.io https://cdn.elevenlabs.io https://*.elevenlabs.io`
-- `connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.elevenlabs.io wss://api.elevenlabs.io https://*.elevenlabs.io https://fonts.googleapis.com https://fonts.cdnfonts.com`
-- `worker-src 'self' blob:`
-- `child-src 'self' blob:`
-- `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.cdnfonts.com`
-- `font-src 'self' https://fonts.gstatic.com https://fonts.cdnfonts.com data:`
-- `img-src 'self' data: https: blob:` (removed `http:`)
-- `media-src 'self' https: blob: data: https://ice1.somafm.com https://radio.stereoscenic.com https://media-ssl.musicradio.com`
-- `frame-ancestors 'none'` (added -- prevents clickjacking)
+### 1.2 XSS via `window.location.href` in PaymentGate.tsx (HIGH)
+**File:** `src/components/payment/PaymentGate.tsx`
+`data.url` from the edge function is assigned directly to `window.location.href` without validating the URL scheme, enabling open redirect/XSS if the edge function is compromised.
 
-### 2. Simplify `useSecurityHeaders.ts`
+**Fix:** Validate that `data.url` starts with `https://` before redirecting. Reject `javascript:`, `data:`, and other dangerous schemes.
 
-Remove the CSP, X-Frame-Options, X-Content-Type-Options, and Permissions-Policy meta tag injections since browsers ignore these as meta tags (they must be HTTP headers). Keep only the referrer policy meta tag, which browsers **do** respect when set via meta tag.
+### 1.3 `document.write` in PrintPreview.tsx (HIGH)
+**File:** `src/components/document-viewer/viewers/text-editor/toolbar/PrintPreview.tsx`
+Already partially fixed with DOMPurify, but `printWindow.document.write()` is still flagged. The content is sanitized, so this is low real risk, but we can switch to using a Blob URL approach to eliminate `document.write` entirely.
 
-### 3. Add Referrer Policy to `index.html`
+**Fix:** Replace `document.write` with a Blob-based approach: create an HTML blob, open it as a URL, then print.
 
-Move the referrer policy into `index.html` as a static meta tag for reliability:
+### 1.4 `container.innerHTML = html` in pdfExport.ts (HIGH)
+**File:** `src/components/document-viewer/viewers/text-editor/toolbar/file-operations/pdfExport.ts`
+Raw HTML is set via `innerHTML` without sanitization.
 
-```html
-<meta name="referrer" content="strict-origin-when-cross-origin" />
-```
+**Fix:** Add `DOMPurify.sanitize(html)` before assigning to `innerHTML`.
+
+### 1.5 SSRF in usePdfRenderer.ts and useScreenshot.ts (LOW)
+**Files:** `src/components/document-viewer/viewers/pdf/usePdfRenderer.ts`, screenshot hook
+URLs fetched without validation. 
+
+**Fix:** Add URL validation to ensure only `https://` URLs from trusted domains (e.g., Supabase storage) are fetched.
+
+### 1.6 Timing Attack on Password Comparison (HIGH — edge functions)
+**Files:** Multiple `index.ts` edge functions
+If any edge functions do string comparison for secrets/passwords, they should use constant-time comparison.
+
+**Fix:** Audit edge functions and replace any `===` password/token comparisons with `crypto.timingSafeEqual()`.
 
 ---
 
-## Files to Modify
+## Category 2: Dependency Upgrades
 
-- **`index.html`** -- Update CSP, add referrer policy meta tag
-- **`src/hooks/security/useSecurityHeaders.ts`** -- Strip down to minimal (or remove entirely since all effective headers will be in `index.html`)
+These require bumping package versions. Some may have breaking changes.
+
+| Package | Severity | Fix |
+|---------|----------|-----|
+| `mammoth` | Critical (path traversal) | Upgrade to latest |
+| `jspdf` | High (code injection) | Already at 4.1.0, check for 4.2+ |
+| `flatted` | High (prototype pollution) | Upgrade |
+| `linkifyjs` | High (prototype pollution) | Upgrade |
+| `pdfjs-dist` | High (DoS) | Upgrade from 3.4.120 to latest 3.x or 4.x |
+| `react-pdf` | High (XSS) | Upgrade from 6.2.2 |
+| `underscore` | High (DoS) | Remove if unused, or upgrade |
+| `form-data` | Critical (weak randomness) | Upgrade |
+| `glob` | High (OS command injection) | Upgrade |
+| `dompurify` | Medium (XSS) | Upgrade from 3.3.1 to latest |
+| `react-router-dom` | Medium (open redirect) | Upgrade |
+| `lodash`/`lodash-es` | Medium (prototype pollution) | Upgrade |
+| `nanoid` | Medium (DoS) | Upgrade |
+| `react-hook-form` | Medium (prototype pollution) | Upgrade |
+| Various low-severity | Low | Upgrade where possible |
+
+**Approach:** Batch upgrade all dependencies to latest compatible versions. Test for breaking changes.
 
 ---
 
-## Technical Notes
+## Category 3: Accepted Risks / False Positives
 
-- `X-Frame-Options`, `X-Content-Type-Options`, and `Permissions-Policy` only work as HTTP response headers set by the server. Lovable's hosting infrastructure controls these -- if the pentest flagged them, that would need to be raised with Lovable support.
-- `unsafe-inline` and `unsafe-eval` in `script-src` are required by Vite/React's runtime. Removing them would break the app. This is a known trade-off.
-- `frame-ancestors 'none'` in a meta tag CSP is actually ignored by browsers too (it only works as an HTTP header), but including it does no harm and documents intent. True clickjacking protection requires Lovable's server to send the header.
+### JWT in client.ts / extendedSupabaseClient.ts (HIGH/MEDIUM)
+These are Supabase **anon keys** (publishable). They are designed to be public. This is a false positive — no action needed.
+
+### JWT in supabase.ts (MEDIUM)
+Same re-export of the anon key. False positive.
+
+### "5 exposed secrets" in PasswordGate.tsx (MEDIUM)
+PasswordGate.tsx contains no secrets — likely flagging the color hex codes or CSS values. False positive after inspection.
+
+### "1 exposed secret" in ContactForm.tsx (MEDIUM)
+No ContactForm.tsx exists in the codebase. May be a stale finding or from a deleted file. No action needed.
+
+### `rollup` / `esbuild` / `eslint` / `browserslist` (build tools)
+These are dev dependencies not shipped to production. Low/no real risk.
+
+---
+
+## Implementation Order
+
+1. **Code fixes** (1.1–1.5) — direct security improvements, no breaking changes
+2. **Dependency upgrades** — batch update `package.json`, test for regressions
+3. **Edge function audit** — check timing attack vectors in auth-related functions
+
+## Estimated Scope
+- ~6 files modified for code fixes
+- `package.json` update for dependency upgrades
+- Edge function review (may require additional changes)
 
