@@ -1,6 +1,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { ManagedFile } from './types';
+import { sanitizeFilename } from '@/utils/sanitize';
 
 /**
  * Gets the current user's ID for folder-based file storage
@@ -86,7 +87,8 @@ export const uploadFileToStorage = async (file: File, metadata?: Record<string, 
     console.log('Uploading file to Supabase for user:', userId, file.name);
     
     // Create a unique file path within the user's folder
-    const filePath = `${userId}/${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+    const safeName = sanitizeFilename(file.name.replace(/\s+/g, '_'));
+    const filePath = `${userId}/${Date.now()}_${safeName}`;
     
     // Upload to Supabase storage
     const { data: uploadData, error: uploadError } = await supabase

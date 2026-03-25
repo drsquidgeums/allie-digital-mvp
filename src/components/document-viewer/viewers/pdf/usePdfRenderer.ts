@@ -50,6 +50,15 @@ export const usePdfRenderer = () => {
         const arrayBuffer = await file.arrayBuffer();
         pdfData = new Uint8Array(arrayBuffer);
       } else if (url) {
+        // Validate URL scheme to prevent SSRF
+        try {
+          const parsed = new URL(url);
+          if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+            throw new Error('Invalid URL protocol');
+          }
+        } catch {
+          throw new Error('Invalid PDF URL');
+        }
         const response = await fetch(url);
         const arrayBuffer = await response.arrayBuffer();
         pdfData = new Uint8Array(arrayBuffer);

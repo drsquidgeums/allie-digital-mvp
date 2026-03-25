@@ -98,11 +98,21 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
       </html>
     `;
 
-    printWindow.document.write(printContent);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
+    const blob = new Blob([printContent], { type: 'text/html' });
+    const blobUrl = URL.createObjectURL(blob);
+    const printFrame = document.createElement('iframe');
+    printFrame.style.display = 'none';
+    printFrame.src = blobUrl;
+    document.body.appendChild(printFrame);
+    
+    printFrame.onload = () => {
+      printFrame.contentWindow?.focus();
+      printFrame.contentWindow?.print();
+      setTimeout(() => {
+        document.body.removeChild(printFrame);
+        URL.revokeObjectURL(blobUrl);
+      }, 1000);
+    };
   };
 
   return (
