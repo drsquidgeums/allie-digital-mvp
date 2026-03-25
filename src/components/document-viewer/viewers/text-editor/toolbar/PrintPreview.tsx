@@ -33,12 +33,17 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
-    const content = editor.getHTML();
+    const content = DOMPurify.sanitize(editor.getHTML());
+    const safeTitle = documentTitle
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
     const printContent = `
       <!DOCTYPE html>
       <html>
         <head>
-          <title>${documentTitle}</title>
+          <title>${safeTitle}</title>
           <style>
             body {
               font-family: 'Times New Roman', serif;
@@ -87,7 +92,7 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
           </style>
         </head>
         <body>
-          <h1>${documentTitle}</h1>
+          <h1>${safeTitle}</h1>
           <div>${content}</div>
         </body>
       </html>
