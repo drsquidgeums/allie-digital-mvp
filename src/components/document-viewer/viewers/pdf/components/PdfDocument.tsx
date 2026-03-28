@@ -50,12 +50,9 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
           onItemClick={onLoadingStart}
           options={{
             isEvalSupported: false,
-            // Use unpkg for better worker reliability
             standardFontDataUrl: `https://unpkg.com/pdfjs-dist@4.10.38/standard_fonts/`,
             cMapUrl: `https://unpkg.com/pdfjs-dist@4.10.38/cmaps/`,
             cMapPacked: true,
-            // Configure worker properly
-            workerSrc: `https://unpkg.com/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs`,
           }}
           loading={
             <div 
