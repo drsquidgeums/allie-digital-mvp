@@ -1,7 +1,12 @@
 
 import React from 'react';
-import { Document, Page } from 'react-pdf';
+import { Document, Page, pdfjs } from 'react-pdf';
 import { HighlightLayer } from './HighlightLayer';
+
+// Configure PDF.js worker globally
+if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+}
 
 interface PdfDocumentProps {
   file: string;
