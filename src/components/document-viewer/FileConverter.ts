@@ -4,8 +4,8 @@ import { PDFDocument } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist';
 
 // Configure PDF.js worker with unpkg CDN (more reliable for workers)
-const PDFJS_VERSION = '3.4.120';
-const WORKER_URL = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.js`;
+const PDFJS_VERSION = '4.10.38';
+const WORKER_URL = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.mjs`;
 
 // Only set worker source if it hasn't been set already
 if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {

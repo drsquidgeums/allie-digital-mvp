@@ -1,7 +1,12 @@
 
 import React from 'react';
-import { Document, Page } from 'react-pdf';
+import { Document, Page, pdfjs } from 'react-pdf';
 import { HighlightLayer } from './HighlightLayer';
+
+// Configure PDF.js worker globally
+if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+}
 
 interface PdfDocumentProps {
   file: string;
@@ -50,12 +55,9 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({
           onItemClick={onLoadingStart}
           options={{
             isEvalSupported: false,
-            // Use unpkg for better worker reliability
-            standardFontDataUrl: `https://unpkg.com/pdfjs-dist@3.4.120/standard_fonts/`,
-            cMapUrl: `https://unpkg.com/pdfjs-dist@3.4.120/cmaps/`,
+            standardFontDataUrl: `https://unpkg.com/pdfjs-dist@4.10.38/standard_fonts/`,
+            cMapUrl: `https://unpkg.com/pdfjs-dist@4.10.38/cmaps/`,
             cMapPacked: true,
-            // Configure worker properly
-            workerSrc: `https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js`,
           }}
           loading={
             <div 

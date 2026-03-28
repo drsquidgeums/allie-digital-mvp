@@ -3,7 +3,7 @@ import React from 'react';
 import { Document, Page } from 'react-pdf';
 
 interface PdfDocumentContainerProps {
-  file: { data?: File; url?: string };
+  file: File | string | null;
   pageNumber: number;
   scale: number;
   rotation: number;

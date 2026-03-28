@@ -13,7 +13,7 @@ import '@/styles/pdf/pdf-text-layer.css';
 
 // Configure PDF.js worker with a single, stable configuration
 if (!pdfjs.GlobalWorkerOptions.workerSrc) {
-  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 }
 
 interface SimplePdfViewerProps {

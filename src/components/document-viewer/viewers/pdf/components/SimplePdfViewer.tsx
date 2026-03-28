@@ -12,8 +12,8 @@ import '@/styles/pdf/pdf-highlights.css';
 import '@/styles/pdf/pdf-text-layer.css';
 
 // Configure PDF.js worker with unpkg CDN for better reliability
-const PDFJS_VERSION = '3.4.120';
-const WORKER_URL = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.js`;
+const PDFJS_VERSION = '4.10.38';
+const WORKER_URL = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.mjs`;
 
 if (!pdfjs.GlobalWorkerOptions.workerSrc) {
   pdfjs.GlobalWorkerOptions.workerSrc = WORKER_URL;

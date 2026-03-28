@@ -5,8 +5,8 @@ import * as pdfjsLib from 'pdfjs-dist';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 
 // Configure PDF.js worker using unpkg CDN for better reliability
-const PDFJS_VERSION = '3.4.120';
-const WORKER_URL = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.js`;
+const PDFJS_VERSION = '4.10.38';
+const WORKER_URL = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.mjs`;
 
 // Only set if not already configured
 if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {

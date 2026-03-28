@@ -34,7 +34,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   const { toast } = useToast();
   
   // File source determination - only create one source
-  const pdfSource = file ? { data: file } : url ? { url } : null;
+  const pdfSource = file ? file : url ? url : null;
   
   // Clean up URL object if needed
   useEffect(() => {
@@ -177,8 +177,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
             </div>
           }
           className="pdf-container"
-          role="document"
-          aria-label="PDF document"
         >
           <Page
             pageNumber={pageNumber}
@@ -187,8 +185,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
             renderTextLayer={true}
             renderAnnotationLayer={true}
             className="shadow-lg"
-            role="region"
-            aria-label={`Page ${pageNumber} of ${numPages}`}
           />
         </Document>
       </div>
