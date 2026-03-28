@@ -17,7 +17,7 @@ export const CustomPDFViewer: React.FC<CustomPDFViewerProps> = ({
   selectedColor,
   isHighlighter = true
 }) => {
-  const pdfSource = file ? { data: file } : url ? { url } : null;
+  const pdfSource = file ? file : url ? url : null;
   const { toast } = useToast();
   
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
