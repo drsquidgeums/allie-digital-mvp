@@ -7,7 +7,7 @@ import { HighlightOverlay } from './HighlightOverlay';
 import { useHighlightManager } from '../hooks/useHighlightManager';
 
 interface HighlightableDocumentProps {
-  file: { data?: File; url?: string };
+  file: File | string | null;
   selectedColor: string;
   isHighlighter: boolean;
   onLoadSuccess: ({ numPages }: { numPages: number }) => void;
