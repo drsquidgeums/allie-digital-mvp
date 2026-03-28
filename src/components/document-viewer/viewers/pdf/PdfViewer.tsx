@@ -177,8 +177,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
             </div>
           }
           className="pdf-container"
-          role="document"
-          aria-label="PDF document"
         >
           <Page
             pageNumber={pageNumber}
