@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { encryptApiKey } from "../_shared/crypto.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -142,12 +143,15 @@ serve(async (req) => {
         });
       }
 
+      // Encrypt the API key before storing
+      const encryptedKey = await encryptApiKey(trimmedKey);
+
       const { error } = await supabaseClient
         .from("user_api_keys")
         .upsert({
           user_id: user.id,
           provider,
-          api_key: trimmedKey,
+          api_key: encryptedKey,
         }, { onConflict: "user_id,provider" });
 
       if (error) {

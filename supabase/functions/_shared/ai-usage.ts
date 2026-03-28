@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { decryptApiKey } from "./crypto.ts";
 
 const MONTHLY_LIMIT = 15;
 
@@ -28,6 +29,8 @@ export async function checkAndTrackUsage(
     .maybeSingle();
 
   if (apiKeyData?.api_key) {
+    // Decrypt the stored API key
+    const decryptedKey = await decryptApiKey(apiKeyData.api_key);
     // User has own key - always allowed, no tracking needed for limits
     // Still log for analytics
     await serviceClient.from("ai_feature_usage").insert({
@@ -40,7 +43,7 @@ export async function checkAndTrackUsage(
       allowed: true,
       remaining: -1, // unlimited
       usedCount: 0,
-      userApiKey: apiKeyData.api_key,
+      userApiKey: decryptedKey,
       usingOwnKey: true,
     };
   }
