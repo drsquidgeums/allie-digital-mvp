@@ -66,11 +66,11 @@ const handler = async (req: Request): Promise<Response> => {
     const userEmail = user.email || "unknown";
     console.log("Support ticket from user:", user.id);
 
-    const { subject, issueType, description }: SupportTicketRequest = await req.json();
+    const { issueType, description }: SupportTicketRequest = await req.json();
 
     // Validate required fields
-    if (!subject || !issueType || !description) {
-      console.error("Missing required fields:", { subject, issueType, description });
+    if (!issueType || !description) {
+      console.error("Missing required fields:", { issueType, description });
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
         {
