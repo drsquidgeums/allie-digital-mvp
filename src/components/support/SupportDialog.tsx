@@ -77,28 +77,6 @@ export const SupportDialog = ({ open, onOpenChange }: SupportDialogProps) => {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">{t("support.email", "Your Email")}</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={t("support.emailPlaceholder", "your@email.com")}
-              disabled={isSubmitting}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="subject">{t("support.subject", "Subject")}</Label>
-            <Input
-              id="subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              placeholder={t("support.subjectPlaceholder", "Brief summary of your issue")}
-              disabled={isSubmitting}
-            />
-          </div>
           
           <div className="space-y-2">
             <Label htmlFor="issueType">{t("support.issueType", "Issue Type")}</Label>
