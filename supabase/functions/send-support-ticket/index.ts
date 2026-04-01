@@ -11,7 +11,6 @@ const corsHeaders = {
 };
 
 interface SupportTicketRequest {
-  subject: string;
   issueType: string;
   description: string;
 }
