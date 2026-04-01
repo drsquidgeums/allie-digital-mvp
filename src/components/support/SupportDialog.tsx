@@ -88,8 +88,8 @@ export const SupportDialog = ({ open, onOpenChange }: SupportDialogProps) => {
                 <SelectItem value="bug">{t("support.bugReport", "Bug Report")}</SelectItem>
                 <SelectItem value="feature">{t("support.featureRequest", "Feature Request")}</SelectItem>
                 <SelectItem value="account">{t("support.accountIssue", "Account / Payment Issue")}</SelectItem>
-                <SelectItem value="general">{t("support.generalQuestion", "General Question")}</SelectItem>
                 <SelectItem value="feedback">{t("support.generalFeedback", "General Feedback")}</SelectItem>
+                <SelectItem value="other">{t("support.other", "Other")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
