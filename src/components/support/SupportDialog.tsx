@@ -56,7 +56,6 @@ export const SupportDialog = ({ open, onOpenChange }: SupportDialogProps) => {
       if (error) throw error;
 
       toast.success(t("support.success", "Support ticket submitted successfully!"));
-      setSubject("");
       setIssueType("");
       setDescription("");
       onOpenChange(false);
