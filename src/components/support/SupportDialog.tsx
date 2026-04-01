@@ -38,15 +38,8 @@ export const SupportDialog = ({ open, onOpenChange }: SupportDialogProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email.trim() || !subject.trim() || !issueType || !description.trim()) {
+    if (!issueType || !description.trim()) {
       toast.error(t("support.validationError", "Please fill in all fields"));
-      return;
-    }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.trim())) {
-      toast.error(t("support.invalidEmail", "Please enter a valid email address"));
       return;
     }
 
