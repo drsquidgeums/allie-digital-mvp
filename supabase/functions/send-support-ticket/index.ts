@@ -90,7 +90,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailResponse = await resend.emails.send({
       from: "Allie.ai Support <onboarding@resend.dev>",
-      to: ["fizzeee@pm.me"],
+      to: ["alliedigital@pm.me"],
+      reply_to: "alliedigital@pm.me",
       subject: `[Support Ticket] ${getIssueTypeLabel(sanitizedIssueType)}: ${sanitizedSubject}`,
       html: `
         <!DOCTYPE html>
