@@ -34,18 +34,6 @@ export const SupportDialog = ({ open, onOpenChange }: SupportDialogProps) => {
   const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Pre-fill email if user is logged in
-  React.useEffect(() => {
-    const fetchUserEmail = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user?.email) {
-        setEmail(user.email);
-      }
-    };
-    if (open) {
-      fetchUserEmail();
-    }
-  }, [open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
