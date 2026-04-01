@@ -92,7 +92,7 @@ const handler = async (req: Request): Promise<Response> => {
       from: "Allie.ai Support <onboarding@resend.dev>",
       to: ["alliedigital@pm.me"],
       reply_to: userEmail,
-      subject: `[Support Ticket] ${getIssueTypeLabel(sanitizedIssueType)}: ${sanitizedSubject}`,
+      subject: `[Support Ticket] ${issueLabel}`,
       html: `
         <!DOCTYPE html>
         <html>
