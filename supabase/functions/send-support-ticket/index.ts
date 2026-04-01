@@ -11,7 +11,6 @@ const corsHeaders = {
 };
 
 interface SupportTicketRequest {
-  subject: string;
   issueType: string;
   description: string;
 }
@@ -67,11 +66,11 @@ const handler = async (req: Request): Promise<Response> => {
     const userEmail = user.email || "unknown";
     console.log("Support ticket from user:", user.id);
 
-    const { subject, issueType, description }: SupportTicketRequest = await req.json();
+    const { issueType, description }: SupportTicketRequest = await req.json();
 
     // Validate required fields
-    if (!subject || !issueType || !description) {
-      console.error("Missing required fields:", { subject, issueType, description });
+    if (!issueType || !description) {
+      console.error("Missing required fields:", { issueType, description });
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
         {
@@ -82,17 +81,18 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Sanitize inputs
-    const sanitizedSubject = String(subject).trim().slice(0, 200);
     const sanitizedIssueType = String(issueType).trim().slice(0, 50);
     const sanitizedDescription = String(description).trim().slice(0, 5000);
 
-    console.log("Sending support ticket email:", { subject: sanitizedSubject, issueType: sanitizedIssueType, userEmail });
+    const issueLabel = getIssueTypeLabel(sanitizedIssueType);
+
+    console.log("Sending support ticket email:", { issueType: sanitizedIssueType, userEmail });
 
     const emailResponse = await resend.emails.send({
       from: "Allie.ai Support <onboarding@resend.dev>",
       to: ["alliedigital@pm.me"],
       reply_to: userEmail,
-      subject: `[Support Ticket] ${getIssueTypeLabel(sanitizedIssueType)}: ${sanitizedSubject}`,
+      subject: `[Support Ticket] ${issueLabel}`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -121,11 +121,7 @@ const handler = async (req: Request): Promise<Response> => {
                 </div>
                 <div class="field">
                   <div class="label">Issue Type:</div>
-                  <div class="value">${getIssueTypeLabel(sanitizedIssueType)}</div>
-                </div>
-                <div class="field">
-                  <div class="label">Subject:</div>
-                  <div class="value">${sanitizedSubject}</div>
+                  <div class="value">${issueLabel}</div>
                 </div>
                 <div class="field">
                   <div class="label">Description:</div>

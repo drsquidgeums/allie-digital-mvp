@@ -29,37 +29,17 @@ interface SupportDialogProps {
 
 export const SupportDialog = ({ open, onOpenChange }: SupportDialogProps) => {
   const { t } = useTranslation();
-  const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [issueType, setIssueType] = useState("");
   const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Pre-fill email if user is logged in
-  React.useEffect(() => {
-    const fetchUserEmail = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user?.email) {
-        setEmail(user.email);
-      }
-    };
-    if (open) {
-      fetchUserEmail();
-    }
-  }, [open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email.trim() || !subject.trim() || !issueType || !description.trim()) {
+    if (!issueType || !description.trim()) {
       toast.error(t("support.validationError", "Please fill in all fields"));
-      return;
-    }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.trim())) {
-      toast.error(t("support.invalidEmail", "Please enter a valid email address"));
       return;
     }
 
@@ -68,17 +48,14 @@ export const SupportDialog = ({ open, onOpenChange }: SupportDialogProps) => {
     try {
       const { error } = await supabase.functions.invoke("send-support-ticket", {
         body: {
-          subject: subject.trim(),
           issueType,
           description: description.trim(),
-          userEmail: email.trim(),
         },
       });
 
       if (error) throw error;
 
       toast.success(t("support.success", "Support ticket submitted successfully!"));
-      setSubject("");
       setIssueType("");
       setDescription("");
       onOpenChange(false);
@@ -100,28 +77,6 @@ export const SupportDialog = ({ open, onOpenChange }: SupportDialogProps) => {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">{t("support.email", "Your Email")}</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={t("support.emailPlaceholder", "your@email.com")}
-              disabled={isSubmitting}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="subject">{t("support.subject", "Subject")}</Label>
-            <Input
-              id="subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              placeholder={t("support.subjectPlaceholder", "Brief summary of your issue")}
-              disabled={isSubmitting}
-            />
-          </div>
           
           <div className="space-y-2">
             <Label htmlFor="issueType">{t("support.issueType", "Issue Type")}</Label>
