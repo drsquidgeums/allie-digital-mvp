@@ -81,11 +81,12 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Sanitize inputs
-    const sanitizedSubject = String(subject).trim().slice(0, 200);
     const sanitizedIssueType = String(issueType).trim().slice(0, 50);
     const sanitizedDescription = String(description).trim().slice(0, 5000);
 
-    console.log("Sending support ticket email:", { subject: sanitizedSubject, issueType: sanitizedIssueType, userEmail });
+    const issueLabel = getIssueTypeLabel(sanitizedIssueType);
+
+    console.log("Sending support ticket email:", { issueType: sanitizedIssueType, userEmail });
 
     const emailResponse = await resend.emails.send({
       from: "Allie.ai Support <onboarding@resend.dev>",
