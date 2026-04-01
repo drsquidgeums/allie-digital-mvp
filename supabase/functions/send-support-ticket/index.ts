@@ -121,11 +121,7 @@ const handler = async (req: Request): Promise<Response> => {
                 </div>
                 <div class="field">
                   <div class="label">Issue Type:</div>
-                  <div class="value">${getIssueTypeLabel(sanitizedIssueType)}</div>
-                </div>
-                <div class="field">
-                  <div class="label">Subject:</div>
-                  <div class="value">${sanitizedSubject}</div>
+                  <div class="value">${issueLabel}</div>
                 </div>
                 <div class="field">
                   <div class="label">Description:</div>
