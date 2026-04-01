@@ -48,10 +48,8 @@ export const SupportDialog = ({ open, onOpenChange }: SupportDialogProps) => {
     try {
       const { error } = await supabase.functions.invoke("send-support-ticket", {
         body: {
-          subject: subject.trim(),
           issueType,
           description: description.trim(),
-          userEmail: email.trim(),
         },
       });
 
