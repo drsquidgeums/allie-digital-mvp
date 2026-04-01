@@ -20,7 +20,8 @@ const getIssueTypeLabel = (type: string): string => {
     bug: "Bug Report",
     feature: "Feature Request",
     account: "Account / Payment Issue",
-    general: "General Question",
+    feedback: "General Feedback",
+    other: "Other",
   };
   return labels[type] || type;
 };
