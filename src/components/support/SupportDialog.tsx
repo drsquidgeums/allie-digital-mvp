@@ -29,7 +29,6 @@ interface SupportDialogProps {
 
 export const SupportDialog = ({ open, onOpenChange }: SupportDialogProps) => {
   const { t } = useTranslation();
-  const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [issueType, setIssueType] = useState("");
   const [description, setDescription] = useState("");
