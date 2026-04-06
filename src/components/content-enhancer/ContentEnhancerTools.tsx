@@ -18,6 +18,60 @@ export const ContentEnhancerTools = ({ documentContent }: ContentEnhancerToolsPr
   const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([]);
   const [practiceQuestions, setPracticeQuestions] = useState<PracticeQuestion[]>([]);
   const [activeTab, setActiveTab] = useState("flashcards");
+  const { toast } = useToast();
+
+  const SAVED_KEY = 'saved_learning_content';
+
+  const saveContent = () => {
+    const data = { flashcards, quizQuestions, practiceQuestions, savedAt: new Date().toISOString() };
+    localStorage.setItem(SAVED_KEY, JSON.stringify(data));
+    toast({ title: 'Learning content saved!', description: 'You can access it later even after closing the panel.' });
+  };
+
+  const loadSaved = () => {
+    const saved = localStorage.getItem(SAVED_KEY);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        if (data.flashcards?.length) setFlashcards(data.flashcards);
+        if (data.quizQuestions?.length) setQuizQuestions(data.quizQuestions);
+        if (data.practiceQuestions?.length) setPracticeQuestions(data.practiceQuestions);
+        toast({ title: 'Previous content loaded!' });
+      } catch {}
+    }
+  };
+
+  const exportAsPdf = () => {
+    let text = '# AI Learning Content\n\n';
+    if (flashcards.length) {
+      text += '## Flashcards\n\n';
+      flashcards.forEach((c, i) => { text += `${i + 1}. Q: ${c.front}\n   A: ${c.back}\n   Category: ${c.category}\n\n`; });
+    }
+    if (quizQuestions.length) {
+      text += '## Quiz Questions\n\n';
+      quizQuestions.forEach((q, i) => {
+        text += `${i + 1}. ${q.question}\n`;
+        q.options.forEach((o, j) => { text += `   ${j === q.correctAnswer ? '✓' : ' '} ${String.fromCharCode(65 + j)}) ${o}\n`; });
+        text += `   Explanation: ${q.explanation}\n\n`;
+      });
+    }
+    if (practiceQuestions.length) {
+      text += '## Practice Questions\n\n';
+      practiceQuestions.forEach((q, i) => {
+        text += `${i + 1}. [${q.difficulty}] ${q.question}\n   Suggested: ${q.suggestedAnswer}\n\n`;
+      });
+    }
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'learning-content.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Load saved content on mount
+  useState(() => { loadSaved(); });
 
   const handleGenerateFlashcards = async () => {
     if (!documentContent) return;
