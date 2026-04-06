@@ -25,6 +25,8 @@ import OpenSourceLicense from "@/pages/OpenSourceLicense";
 import { clearFiles as clearGlobalFiles } from "@/store/fileStore";
 import { clearFiles as clearFileManagerFiles } from "@/hooks/file-manager/fileStore";
 import { OnboardingTour, WelcomeModal } from "@/components/onboarding";
+import { VoiceConversationProvider } from "@/contexts/VoiceConversationContext";
+import { FloatingVoiceIndicator } from "@/components/voice/FloatingVoiceIndicator";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
@@ -223,6 +225,7 @@ const App = () => {
             element={
                <TrialProvider trialActive={!!trialActive} trialDaysRemaining={trialDaysRemaining ?? null}>
                 <SecurityProvider>
+                <VoiceConversationProvider>
                 <div className="app-container flex flex-col h-screen">
                   <AppLogo />
                   <Toaster />
@@ -240,7 +243,9 @@ const App = () => {
                   <EmailVerificationReminder />
                   <WelcomeModal />
                   <OnboardingTour />
+                  <FloatingVoiceIndicator />
                 </div>
+                </VoiceConversationProvider>
                 </SecurityProvider>
                </TrialProvider>
             }
