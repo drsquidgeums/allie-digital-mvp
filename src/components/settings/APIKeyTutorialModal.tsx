@@ -237,7 +237,7 @@ const providerTutorials: {
         content: (
           <div className="space-y-3">
             <p className="text-sm text-muted-foreground">
-              ElevenLabs provides realistic voice technology. Create a free account to get started.
+              ElevenLabs provides realistic voice technology. Create a free account to get started. No payment is required for the free tier.
             </p>
             <a
               href="https://elevenlabs.io/"
@@ -249,7 +249,7 @@ const providerTutorials: {
             </a>
             <div className="rounded-lg border border-border bg-muted/50 p-3">
               <p className="text-xs text-muted-foreground">
-                <span className="font-medium text-foreground">Good news:</span> ElevenLabs has a free tier that includes a generous amount of voice generation each month.
+                <span className="font-medium text-foreground">Good news:</span> The free tier includes a generous amount of voice generation each month, similar to what we offer inside the app. No credit card needed!
               </p>
             </div>
           </div>
