@@ -98,6 +98,13 @@ const defaultTourSteps: OnboardingStep[] = [
     placement: "right"
   },
   {
+    id: "keyboard-shortcuts",
+    target: "[data-tour='keyboard-shortcuts']",
+    title: "Keyboard Shortcuts",
+    description: "View all available keyboard shortcuts in one place. Press '?' anytime to quickly toggle the shortcuts panel, or click this button.",
+    placement: "right"
+  },
+  {
     id: "support",
     target: "[data-tour='support']",
     title: "Support",
