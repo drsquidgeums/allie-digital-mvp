@@ -2,16 +2,21 @@ import React, { useState, useCallback } from "react";
 import { useConversation } from "@11labs/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mic, PhoneOff, Loader2, Phone } from "lucide-react";
+import { Mic, PhoneOff, Loader2, Phone, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
 import { Label } from "@/components/ui/label";
+import { useAIUsage } from "@/hooks/useAIUsage";
 
 export const VoiceAssistant: React.FC = () => {
   const { toast } = useToast();
   const [conversationStarted, setConversationStarted] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
+  const { usage } = useAIUsage();
+
+  const elevenlabsUsage = usage?.byProvider?.find(p => p.name === "elevenlabs");
+  const hasCredits = elevenlabsUsage ? (elevenlabsUsage.hasOwnKey || elevenlabsUsage.remaining > 0) : true;
 
   const conversation = useConversation({
     onConnect: () => {
@@ -63,7 +68,27 @@ export const VoiceAssistant: React.FC = () => {
       const { data, error } = await supabase.functions.invoke('elevenlabs-session');
 
       if (error) {
+        // Check for usage limit error
+        const errorBody = typeof error === "object" && error.message ? error.message : String(error);
+        if (errorBody.includes("usage limit") || errorBody.includes("limit reached")) {
+          toast({
+            title: "ElevenLabs credits used up",
+            description: "Add your own ElevenLabs API key in Settings for unlimited Voice AI access.",
+            variant: "destructive",
+          });
+          return;
+        }
         throw new Error(error.message || "Failed to get session URL");
+      }
+
+      // Check if the response indicates a usage limit
+      if (data?.error && (data.error.includes("usage limit") || data.error.includes("limit reached"))) {
+        toast({
+          title: "ElevenLabs credits used up",
+          description: "Add your own ElevenLabs API key in Settings for unlimited Voice AI access.",
+          variant: "destructive",
+        });
+        return;
       }
 
       if (!data?.signed_url) {
@@ -125,9 +150,25 @@ export const VoiceAssistant: React.FC = () => {
               </p>
             </div>
 
+            {!hasCredits && (
+              <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 flex items-start gap-2">
+                <AlertCircle className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-muted-foreground">
+                  Your ElevenLabs credits have been used up this month. Add your own ElevenLabs API key in{" "}
+                  <span className="font-medium text-foreground">Settings → AI Settings</span> for unlimited access.
+                </p>
+              </div>
+            )}
+
+            {elevenlabsUsage && !elevenlabsUsage.hasOwnKey && hasCredits && (
+              <p className="text-xs text-muted-foreground text-center">
+                {elevenlabsUsage.remaining} Voice AI {elevenlabsUsage.remaining === 1 ? "use" : "uses"} remaining this month
+              </p>
+            )}
+
             <Button
               onClick={startConversation}
-              disabled={isConnecting}
+              disabled={isConnecting || !hasCredits}
               className="w-full"
               size="lg"
             >
