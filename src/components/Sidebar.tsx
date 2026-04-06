@@ -16,6 +16,7 @@ import { StudyTimeBadge } from "./sidebar/StudyTimeBadge";
 
 interface SidebarProps {
   onColorChange: (color: string) => void;
+  onOpenShortcuts?: () => void;
 }
 
 export const Sidebar = React.memo(({ 
