@@ -238,7 +238,7 @@ const defaultTourSteps: OnboardingStep[] = [
     id: "external-apis",
     target: "[data-tour='settings']",
     title: "External API Accounts",
-    description: "Some features require separate accounts: ElevenLabs (for Voice AI) and Anthropic/Claude (for advanced AI). You can set these up in Settings by adding your own API keys. OpenAI keys can also be added for unlimited built-in AI access.",
+    description: "Some features like Text to Speech and the AI Study Buddy can be enhanced by adding your own API keys in Settings for unlimited access. OpenAI, Anthropic, and ElevenLabs keys are all optional. Voice AI works out of the box with no setup needed!",
     placement: "right"
   }
 ];

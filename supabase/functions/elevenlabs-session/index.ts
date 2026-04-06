@@ -46,24 +46,10 @@ serve(async (req) => {
 
     console.log("Request from user:", user.id);
 
-    const body = await req.json();
-    const { agentId } = body;
-
-    // Validate agentId
-    if (!agentId || typeof agentId !== 'string') {
-      return new Response(
-        JSON.stringify({ error: "Agent ID is required and must be a string" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    // Sanitize agentId - only allow alphanumeric and basic safe characters
-    const sanitizedAgentId = agentId.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 100);
-    if (sanitizedAgentId !== agentId) {
-      return new Response(
-        JSON.stringify({ error: "Invalid agent ID format" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+    // Use the default system agent ID — no user input needed
+    const DEFAULT_AGENT_ID = Deno.env.get("ELEVENLABS_AGENT_ID");
+    if (!DEFAULT_AGENT_ID) {
+      throw new Error("ELEVENLABS_AGENT_ID is not configured");
     }
 
     const ELEVENLABS_API_KEY = Deno.env.get('ELEVENLABS_API_KEY');
@@ -71,13 +57,13 @@ serve(async (req) => {
       throw new Error("ELEVENLABS_API_KEY is not configured");
     }
 
-    console.log("Requesting ElevenLabs session for agent:", sanitizedAgentId);
+    console.log("Requesting ElevenLabs session for default agent");
 
     const requestHeaders: HeadersInit = new Headers();
     requestHeaders.set("xi-api-key", ELEVENLABS_API_KEY);
 
     const response = await fetch(
-      `https://api.elevenlabs.io/v1/convai/conversation/get_signed_url?agent_id=${encodeURIComponent(sanitizedAgentId)}`,
+      `https://api.elevenlabs.io/v1/convai/conversation/get_signed_url?agent_id=${encodeURIComponent(DEFAULT_AGENT_ID)}`,
       {
         method: "GET",
         headers: requestHeaders,
