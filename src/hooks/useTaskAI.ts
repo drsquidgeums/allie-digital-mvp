@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "./use-toast";
 import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
+import { handleAIUsageLimitError } from "@/utils/aiUsageLimitHandler";
 
 export type TaskSuggestion = {
   title: string;
@@ -25,12 +26,10 @@ export const useTaskAI = () => {
 
       if (error) {
         console.error("Error getting task suggestions:", error);
-        const errMsg = error.message || "Failed to get AI suggestions";
+        if (handleAIUsageLimitError(error)) return [];
         toast({
-          title: errMsg.includes("Monthly AI credits") ? "AI Credits Used Up" : "Error",
-          description: errMsg.includes("Monthly AI credits") 
-            ? "Go to Settings → AI Settings to add your own API key for unlimited access."
-            : errMsg,
+          title: "Error",
+          description: error.message || "Failed to get AI suggestions",
           variant: "destructive"
         });
         return [];
@@ -63,6 +62,7 @@ export const useTaskAI = () => {
 
       if (error) {
         console.error("Error generating schedule:", error);
+        if (handleAIUsageLimitError(error)) return "";
         toast({
           title: "Error",
           description: error.message || "Failed to generate schedule",
@@ -98,6 +98,7 @@ export const useTaskAI = () => {
 
       if (error) {
         console.error("Error optimizing tasks:", error);
+        if (handleAIUsageLimitError(error)) return "";
         toast({
           title: "Error",
           description: error.message || "Failed to optimize tasks",

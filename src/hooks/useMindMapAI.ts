@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { notifyAICreditsUsed } from '@/utils/aiCreditsEvent';
+import { handleAIUsageLimitError } from '@/utils/aiUsageLimitHandler';
 import { MindMapNode } from '@/components/mindmap/types';
 
 interface MindMapStructure {
@@ -27,7 +28,10 @@ export const useMindMapAI = () => {
         body: { type: 'generate', topic }
       });
 
-      if (error) throw error;
+      if (error) {
+        if (handleAIUsageLimitError(error)) return null;
+        throw error;
+      }
 
       if (data.error) {
         toast.error(data.error);
@@ -60,7 +64,10 @@ export const useMindMapAI = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        if (handleAIUsageLimitError(error)) return null;
+        throw error;
+      }
 
       if (data.error) {
         toast.error(data.error);
