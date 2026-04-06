@@ -2,16 +2,14 @@ import React, { useState, useCallback } from "react";
 import { useConversation } from "@11labs/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mic, MicOff, Phone, PhoneOff, Loader2 } from "lucide-react";
+import { Mic, PhoneOff, Loader2, Phone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export const VoiceAssistant: React.FC = () => {
   const { toast } = useToast();
-  const [agentId, setAgentId] = useState("");
   const [conversationStarted, setConversationStarted] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
 
@@ -55,25 +53,14 @@ export const VoiceAssistant: React.FC = () => {
   });
 
   const startConversation = async () => {
-    if (!agentId.trim()) {
-      toast({
-        title: "Agent ID Required",
-        description: "Please enter your ElevenLabs agent ID",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsConnecting(true);
 
     try {
       // Request microphone access first
       await navigator.mediaDevices.getUserMedia({ audio: true });
 
-      // Get signed URL from our edge function
-      const { data, error } = await supabase.functions.invoke('elevenlabs-session', {
-        body: { agentId: agentId.trim() }
-      });
+      // Get signed URL from our edge function (uses built-in agent)
+      const { data, error } = await supabase.functions.invoke('elevenlabs-session');
 
       if (error) {
         throw new Error(error.message || "Failed to get session URL");
@@ -126,29 +113,21 @@ export const VoiceAssistant: React.FC = () => {
           <CardTitle>Voice AI Assistant</CardTitle>
         </div>
         <CardDescription>
-          Have natural voice conversations powered by ElevenLabs AI
+          Have a natural voice conversation about ADHD support, study strategies, and more
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {!conversationStarted ? (
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="agentId">ElevenLabs Agent ID</Label>
-              <Input
-                id="agentId"
-                placeholder="Enter your agent ID"
-                value={agentId}
-                onChange={(e) => setAgentId(e.target.value)}
-                disabled={isConnecting}
-              />
+            <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
               <p className="text-xs text-muted-foreground">
-                You can find this in your ElevenLabs dashboard under Conversational AI
+                Voice AI is powered by our built in assistant trained to help with ADHD related study support. Just click start and begin speaking!
               </p>
             </div>
 
             <Button
               onClick={startConversation}
-              disabled={isConnecting || !agentId.trim()}
+              disabled={isConnecting}
               className="w-full"
               size="lg"
             >
