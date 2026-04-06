@@ -1,5 +1,5 @@
 
-import { Timer, Text, Wand2, Sparkles, Bot, GraduationCap } from "lucide-react";
+import { Timer, Text, Wand2, Sparkles, Bot, GraduationCap, Highlighter } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { PomodoroTimer } from "../PomodoroTimer";
