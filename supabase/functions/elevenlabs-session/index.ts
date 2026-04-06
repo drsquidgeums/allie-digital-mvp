@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { checkAndTrackUsage, getUsageLimitResponse } from "../_shared/ai-usage.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -46,7 +47,13 @@ serve(async (req) => {
 
     console.log("Request from user:", user.id);
 
-    // Use the default system agent ID — no user input needed
+    // Check usage limits (tied to ElevenLabs credits)
+    const usageResult = await checkAndTrackUsage(user.id, "elevenlabs-session");
+    if (!usageResult.allowed) {
+      return getUsageLimitResponse(0);
+    }
+
+    // Use the default system agent ID
     const DEFAULT_AGENT_ID = Deno.env.get("ELEVENLABS_AGENT_ID");
     if (!DEFAULT_AGENT_ID) {
       throw new Error("ELEVENLABS_AGENT_ID is not configured");
