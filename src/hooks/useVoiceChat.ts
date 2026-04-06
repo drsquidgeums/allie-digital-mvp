@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { notifyAICreditsUsed } from '@/utils/aiCreditsEvent';
+import { handleAIUsageLimitError } from '@/utils/aiUsageLimitHandler';
 
 interface Message {
   role: 'user' | 'assistant';
