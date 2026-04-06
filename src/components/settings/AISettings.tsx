@@ -210,6 +210,8 @@ export const AISettings = () => {
           />
         ))}
       </div>
+
+      <APIKeyTutorialModal open={tutorialOpen} onOpenChange={setTutorialOpen} />
     </Card>
   );
 };
