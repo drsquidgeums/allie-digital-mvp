@@ -9,17 +9,19 @@ import { SidebarButton } from "./sidebar/SidebarButton";
 import { SupportDialog } from "./support/SupportDialog";
 import { SidebarAICredits } from "./sidebar/SidebarAICredits";
 import { SidebarTrialBadge } from "./sidebar/SidebarTrialBadge";
-import { Headset } from "lucide-react";
+import { Headset, Keyboard } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useTrialStatus } from "@/contexts/TrialContext";
 import { StudyTimeBadge } from "./sidebar/StudyTimeBadge";
 
 interface SidebarProps {
   onColorChange: (color: string) => void;
+  onOpenShortcuts?: () => void;
 }
 
 export const Sidebar = React.memo(({ 
-  onColorChange
+  onColorChange,
+  onOpenShortcuts,
 }: SidebarProps) => {
   const { t } = useTranslation();
   const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
@@ -104,6 +106,14 @@ export const Sidebar = React.memo(({
               <span>Discord</span>
             </Button>
           </a>
+        </div>
+        <div data-tour="keyboard-shortcuts">
+          <SidebarButton
+            icon={Keyboard}
+            label={t("navigation.keyboardShortcuts", "Keyboard Shortcuts")}
+            isActive={false}
+            onClick={() => onOpenShortcuts?.()}
+          />
         </div>
         <div data-tour="support">
           <SidebarButton
