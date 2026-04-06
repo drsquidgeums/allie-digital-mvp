@@ -9,6 +9,7 @@ import { TaskDashboardHeader } from "@/components/dashboard/TaskDashboardHeader"
 import { TaskAISuggestions } from "@/components/tasks/TaskAISuggestions";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
+import { DailyFocusGoal } from "./DailyFocusGoal";
 
 export const TaskDashboard: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
