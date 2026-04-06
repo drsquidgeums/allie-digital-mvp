@@ -57,7 +57,7 @@ export const QuickNotesPad: React.FC = () => {
   }
 
   return (
-    <div className={`fixed bottom-6 right-6 z-40 bg-card border border-border rounded-lg shadow-xl transition-all ${isMinimized ? 'w-64' : 'w-80'}`}>
+    <div className={`fixed bottom-6 right-24 z-50 bg-card border border-border rounded-lg shadow-xl transition-all ${isMinimized ? 'w-64' : 'w-80'}`}>
       <div className="flex items-center justify-between p-3 border-b border-border">
         <div className="flex items-center gap-2">
           <StickyNote className="h-4 w-4 text-primary" />
