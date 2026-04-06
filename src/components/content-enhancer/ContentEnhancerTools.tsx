@@ -138,7 +138,17 @@ export const ContentEnhancerTools = ({ documentContent }: ContentEnhancerToolsPr
             {isLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : "Practice"}
           </Button>
         </div>
-      </div>
+        </div>
+        {(flashcards.length > 0 || quizQuestions.length > 0 || practiceQuestions.length > 0) && (
+          <div className="flex gap-2 px-4">
+            <Button size="sm" variant="ghost" onClick={saveContent} className="text-xs gap-1">
+              <Save className="h-3 w-3" /> Save
+            </Button>
+            <Button size="sm" variant="ghost" onClick={exportAsPdf} className="text-xs gap-1">
+              <Download className="h-3 w-3" /> Export
+            </Button>
+          </div>
+        )}
 
       <div className="flex-1 overflow-auto">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
