@@ -9,7 +9,7 @@ import { SidebarButton } from "./sidebar/SidebarButton";
 import { SupportDialog } from "./support/SupportDialog";
 import { SidebarAICredits } from "./sidebar/SidebarAICredits";
 import { SidebarTrialBadge } from "./sidebar/SidebarTrialBadge";
-import { Headset } from "lucide-react";
+import { Headset, Keyboard } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useTrialStatus } from "@/contexts/TrialContext";
 import { StudyTimeBadge } from "./sidebar/StudyTimeBadge";
