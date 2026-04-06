@@ -12,6 +12,7 @@ import { SidebarTrialBadge } from "./sidebar/SidebarTrialBadge";
 import { Headset } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useTrialStatus } from "@/contexts/TrialContext";
+import { StudyTimeBadge } from "./sidebar/StudyTimeBadge";
 
 interface SidebarProps {
   onColorChange: (color: string) => void;
@@ -78,6 +79,7 @@ export const Sidebar = React.memo(({
       />
 
       <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
+        <StudyTimeBadge />
         {trialActive && trialDaysRemaining !== null && (
           <SidebarTrialBadge daysRemaining={trialDaysRemaining} />
         )}

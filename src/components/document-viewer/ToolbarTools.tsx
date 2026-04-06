@@ -1,5 +1,5 @@
 
-import { Timer, Text, Wand2, Sparkles, Bot, GraduationCap } from "lucide-react";
+import { Timer, Text, Wand2, Sparkles, Bot, GraduationCap, Highlighter } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { PomodoroTimer } from "../PomodoroTimer";
@@ -14,6 +14,7 @@ import { ContentEnhancerTools } from "../content-enhancer/ContentEnhancerTools";
 import { BionicToggleButton } from "./toolbar/BionicToggleButton";
 import { TTSButton } from "./toolbar/TTSButton";
 import { BeelineToggleButton } from "./toolbar/BeelineToggleButton";
+import { HighlightsSummary } from "../highlights/HighlightsSummary";
 
 interface ToolbarToolsProps {
   documentContent?: string;
@@ -101,6 +102,15 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
             />
           }
           popoverClassName="w-[500px] h-[600px] p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+        />
+      </div>
+      <div data-tour="highlights">
+        <ToolItem
+          icon={Highlighter}
+          label="Highlights"
+          id="highlights"
+          content={<HighlightsSummary documentContent={documentContent} />}
+          popoverClassName="w-96 h-[500px] p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
         />
       </div>
       <div data-tour="ambient">
