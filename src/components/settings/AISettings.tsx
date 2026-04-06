@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Key, Trash2, Eye, EyeOff, ExternalLink, Brain, Mic } from "lucide-react";
+import { Sparkles, Key, Trash2, Eye, EyeOff, ExternalLink, Brain, Mic, BookOpen } from "lucide-react";
 import { useAIUsage, ProviderUsage } from "@/hooks/useAIUsage";
+import { APIKeyTutorialModal } from "./APIKeyTutorialModal";
 
 const providerMeta: Record<string, { label: string; icon: React.ElementType; keyPrefix: string; keyUrl: string; color: string }> = {
   openai: {
