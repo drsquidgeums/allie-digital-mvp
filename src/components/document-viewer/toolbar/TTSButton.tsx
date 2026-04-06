@@ -125,8 +125,14 @@ export const TTSButton = () => {
       setIsLoading(false);
     }
   };
+  // Listen for keyboard shortcut event
+  useEffect(() => {
+    const handler = () => handleClick();
+    window.addEventListener('shortcut:toggle-tts', handler);
+    return () => window.removeEventListener('shortcut:toggle-tts', handler);
+  });
 
-  return (
+
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
