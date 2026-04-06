@@ -190,7 +190,7 @@ const Privacy = () => {
               <li>Telephone: 0303 123 1113</li>
               <li>Post: Information Commissioner's Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF</li>
             </ul>
-            <p>We would appreciate the opportunity to address your concerns before you approach the ICO, so please contact us first at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a>.</p>
+            <p>We would appreciate the opportunity to address your concerns before you approach the ICO, so please contact us first using our <button onClick={() => setSupportOpen(true)} className="underline font-medium cursor-pointer bg-transparent border-none p-0 inline" style={{ color: 'inherit' }}>support</button> feature.</p>
           </section>
 
           <section className="space-y-3">
