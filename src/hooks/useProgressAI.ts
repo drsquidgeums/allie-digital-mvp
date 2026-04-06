@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "./use-toast";
 import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
+import { handleAIUsageLimitError } from "@/utils/aiUsageLimitHandler";
 
 export interface ProgressData {
   currentStreak: number;
@@ -44,6 +45,13 @@ export const useProgressAI = () => {
 
       if (error) {
         console.error(`Error generating ${type}:`, error);
+        if (handleAIUsageLimitError(error)) {
+          setInsights(prev => ({
+            ...prev,
+            [type]: { ...prev[type], loading: false },
+          }));
+          return;
+        }
         toast({
           title: "Error",
           description: error.message || `Failed to generate ${type}`,

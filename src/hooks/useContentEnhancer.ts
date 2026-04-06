@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "./use-toast";
 import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
+import { handleAIUsageLimitError } from "@/utils/aiUsageLimitHandler";
 
 export type Flashcard = {
   front: string;
@@ -48,6 +49,7 @@ export const useContentEnhancer = () => {
 
       if (error) {
         console.error("Error generating flashcards:", error);
+        if (handleAIUsageLimitError(error)) return [];
         toast({
           title: "Error",
           description: error.message || "Failed to generate flashcards",
@@ -97,6 +99,7 @@ export const useContentEnhancer = () => {
 
       if (error) {
         console.error("Error generating quiz:", error);
+        if (handleAIUsageLimitError(error)) return [];
         toast({
           title: "Error",
           description: error.message || "Failed to generate quiz",
@@ -148,6 +151,7 @@ export const useContentEnhancer = () => {
 
       if (error) {
         console.error("Error generating practice questions:", error);
+        if (handleAIUsageLimitError(error)) return [];
         toast({
           title: "Error",
           description: error.message || "Failed to generate practice questions",

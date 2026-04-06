@@ -6,6 +6,7 @@ import { useEditorContent } from "@/hooks/useEditorContent";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
+import { handleAIUsageLimitError } from "@/utils/aiUsageLimitHandler";
 
 export const Rewordify = () => {
   const [inputText, setInputText] = useState("");
@@ -35,16 +36,8 @@ export const Rewordify = () => {
 
       if (error) {
         const errMsg = error.message || "Failed to simplify text";
-        if (errMsg.includes("Monthly AI credits") || errMsg.includes("USAGE_LIMIT_REACHED")) {
-          toast({
-            title: "AI Credits Used Up",
-            description: "Go to Settings → AI Settings to add your own API key for unlimited access.",
-            variant: "destructive"
-          });
-        } else {
-          throw new Error(errMsg);
-        }
-        return;
+        if (handleAIUsageLimitError(error)) return;
+        throw new Error(errMsg);
       }
 
       if (data?.simplifiedText) {

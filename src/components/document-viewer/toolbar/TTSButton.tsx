@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { useTranslation } from "react-i18next";
 import { useEditorContent } from "@/hooks/useEditorContent";
 import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
+import { handleAIUsageLimitError } from "@/utils/aiUsageLimitHandler";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -67,6 +68,7 @@ export const TTSButton = () => {
       });
 
       if (error) {
+        if (handleAIUsageLimitError(error)) return;
         throw new Error(error.message || "Failed to generate speech");
       }
 

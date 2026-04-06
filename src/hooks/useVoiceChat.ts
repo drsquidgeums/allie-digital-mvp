@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { notifyAICreditsUsed } from '@/utils/aiCreditsEvent';
+import { handleAIUsageLimitError } from '@/utils/aiUsageLimitHandler';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -97,8 +98,10 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
         body: { text, voiceId: 'EXAVITQu4vr4xnSDxMaL' },
       });
 
-      if (error) throw new Error(error.message);
-      if (!data?.audioContent) throw new Error('No audio received');
+      if (error) {
+        if (handleAIUsageLimitError(error)) throw new Error("Credits exhausted");
+        throw new Error(error.message);
+      }
 
       const audioUrl = `data:audio/mpeg;base64,${data.audioContent}`;
       const audio = new Audio(audioUrl);
@@ -238,7 +241,10 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
             },
           });
 
-          if (error) throw new Error(error.message);
+          if (error) {
+            if (handleAIUsageLimitError(error)) return;
+            throw new Error(error.message);
+          }
 
           const aiResponse = data?.response;
           notifyAICreditsUsed();
