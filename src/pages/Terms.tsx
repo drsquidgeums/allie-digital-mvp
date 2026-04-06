@@ -89,7 +89,7 @@ const Terms = () => {
             </ul>
             
             <h3 className="text-lg font-semibold mt-4" style={{ color: '#000000' }}>Refund Policy</h3>
-            <p>As the Service offers a full 7 day free trial prior to purchase, refunds will not be issued once payment has been made. This is because you will have had the opportunity to fully evaluate the Service before committing to purchase. If you experience a technical issue preventing access entirely, please contact us at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a> and we will work to resolve it promptly.</p>
+            <p>As the Service offers a full 7 day free trial prior to purchase, refunds will not be issued once payment has been made. This is because you will have had the opportunity to fully evaluate the Service before committing to purchase. If you experience a technical issue preventing access entirely, please contact us using our <button onClick={() => setSupportOpen(true)} className="underline font-medium cursor-pointer bg-transparent border-none p-0 inline" style={{ color: 'inherit' }}>support</button> feature and we will work to resolve it promptly.</p>
             
             <h3 className="text-lg font-semibold mt-4" style={{ color: '#000000' }}>Trial to Paid Transition</h3>
             <p>At the end of your free trial, access to the Service will be paused until payment is completed. Your data and content will be retained for 30 days following trial expiry, giving you time to decide whether to purchase.</p>
