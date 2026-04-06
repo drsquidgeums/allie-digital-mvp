@@ -107,6 +107,14 @@ export const Sidebar = React.memo(({
             </Button>
           </a>
         </div>
+        <div data-tour="keyboard-shortcuts">
+          <SidebarButton
+            icon={Keyboard}
+            label={t("navigation.keyboardShortcuts", "Keyboard Shortcuts")}
+            isActive={false}
+            onClick={() => onOpenShortcuts?.()}
+          />
+        </div>
         <div data-tour="support">
           <SidebarButton
             icon={Headset}
