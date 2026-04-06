@@ -109,7 +109,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
           icon={Highlighter}
           label="Highlights"
           id="highlights"
-          content={<HighlightsSummary documentContent={documentContent} />}
+          content={<HighlightsSummary />}
           popoverClassName="w-96 h-[500px] p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
         />
       </div>
