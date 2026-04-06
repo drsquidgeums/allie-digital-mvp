@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
+import { SupportDialog } from "@/components/support/SupportDialog";
 import { Link } from "react-router-dom";
 
 const gatewayBackground = "/images/gateway-background.png";
