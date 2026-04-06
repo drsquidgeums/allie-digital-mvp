@@ -3,7 +3,7 @@ import mammoth from 'mammoth';
 import { PDFDocument } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Configure PDF.js worker with unpkg CDN (more reliable for workers)
+// Configure PDF.js worker - use CDN worker with fallback to no worker
 const PDFJS_VERSION = '4.10.38';
 const WORKER_URL = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.mjs`;
 
