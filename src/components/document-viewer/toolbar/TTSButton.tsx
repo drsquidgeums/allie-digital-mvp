@@ -133,6 +133,7 @@ export const TTSButton = () => {
   });
 
 
+  return (
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
