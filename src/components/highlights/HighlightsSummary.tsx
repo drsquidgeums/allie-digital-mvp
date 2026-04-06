@@ -1,32 +1,28 @@
 
-import React, { useState, useEffect } from 'react';
-import { Highlighter, Copy, Check } from 'lucide-react';
+import React, { useState, useCallback } from 'react';
+import { Highlighter, Copy, Check, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 
-interface HighlightsSummaryProps {
-  documentContent?: string;
-}
-
-export const HighlightsSummary: React.FC<HighlightsSummaryProps> = ({ documentContent }) => {
+export const HighlightsSummary: React.FC = () => {
   const [highlights, setHighlights] = useState<string[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [scanned, setScanned] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (!documentContent) {
+  const scanHighlights = useCallback(() => {
+    // Query the live TipTap editor DOM for highlighted marks
+    const editorEl = document.querySelector('.ProseMirror');
+    if (!editorEl) {
       setHighlights([]);
+      setScanned(true);
       return;
     }
 
-    // Extract highlighted text from HTML content (TipTap marks)
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(documentContent, 'text/html');
-    
-    const highlightedElements = doc.querySelectorAll('mark, [data-color], .highlight, [style*="background"]');
+    const highlightedElements = editorEl.querySelectorAll('mark, [data-color], .highlight, [style*="background-color"]');
     const extracted: string[] = [];
-    
+
     highlightedElements.forEach((el) => {
       const text = el.textContent?.trim();
       if (text && text.length > 0 && !extracted.includes(text)) {
@@ -35,7 +31,13 @@ export const HighlightsSummary: React.FC<HighlightsSummaryProps> = ({ documentCo
     });
 
     setHighlights(extracted);
-  }, [documentContent]);
+    setScanned(true);
+  }, []);
+
+  // Scan on first render
+  React.useEffect(() => {
+    scanHighlights();
+  }, [scanHighlights]);
 
   const copyToClipboard = async (text: string, index: number) => {
     try {
@@ -64,6 +66,11 @@ export const HighlightsSummary: React.FC<HighlightsSummaryProps> = ({ documentCo
         <p className="text-xs text-muted-foreground mt-1">
           Highlight text in your document to see them collected here for revision
         </p>
+        {scanned && (
+          <Button variant="ghost" size="sm" className="mt-3 text-xs" onClick={scanHighlights}>
+            <RefreshCw className="h-3 w-3 mr-1" /> Rescan
+          </Button>
+        )}
       </div>
     );
   }
@@ -75,9 +82,14 @@ export const HighlightsSummary: React.FC<HighlightsSummaryProps> = ({ documentCo
           <Highlighter className="h-4 w-4 text-primary" />
           <span className="text-sm font-medium">{highlights.length} Highlight{highlights.length !== 1 ? 's' : ''}</span>
         </div>
-        <Button variant="outline" size="sm" className="text-xs" onClick={copyAll}>
-          Copy All
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={scanHighlights} title="Rescan">
+            <RefreshCw className="h-3 w-3" />
+          </Button>
+          <Button variant="outline" size="sm" className="text-xs" onClick={copyAll}>
+            Copy All
+          </Button>
+        </div>
       </div>
       <ScrollArea className="flex-1 p-3">
         <div className="space-y-2">
