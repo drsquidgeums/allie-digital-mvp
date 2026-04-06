@@ -241,7 +241,10 @@ export const useVoiceChat = (options: UseVoiceChatOptions = {}) => {
             },
           });
 
-          if (error) throw new Error(error.message);
+          if (error) {
+            if (handleAIUsageLimitError(error)) return;
+            throw new Error(error.message);
+          }
 
           const aiResponse = data?.response;
           notifyAICreditsUsed();
