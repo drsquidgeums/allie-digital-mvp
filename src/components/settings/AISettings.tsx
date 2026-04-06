@@ -189,6 +189,15 @@ export const AISettings = () => {
         <p className="text-xs text-muted-foreground">
           Add your own API keys for unlimited access. Keys are stored securely and never shared.
         </p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setTutorialOpen(true)}
+          className="w-full"
+        >
+          <BookOpen className="h-4 w-4 mr-2" />
+          How to get API keys (step by step guide)
+        </Button>
 
         {Object.keys(providerMeta).map((provName) => (
           <ProviderKeyInput
