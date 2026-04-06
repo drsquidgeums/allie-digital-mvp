@@ -8,6 +8,7 @@ const lovableLogo = "/images/lovable-logo.png";
 const allieLogo = "/images/allie-digital-logo.png";
 
 const Privacy = () => {
+  const [supportOpen, setSupportOpen] = useState(false);
   return (
     <div 
       className="min-h-screen flex flex-col items-center justify-between relative overflow-hidden py-8 px-4 sm:px-6 lg:px-8"
