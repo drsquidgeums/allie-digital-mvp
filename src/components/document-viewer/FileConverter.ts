@@ -89,55 +89,69 @@ export async function extractPlainTextFromFile(file: File): Promise<string> {
 }
 
 async function extractHtmlFromPdf(file: File): Promise<string> {
-  try {
-    const arrayBuffer = await file.arrayBuffer();
-    
-    if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER_URL;
-    }
-    
-    const loadingTask = pdfjsLib.getDocument({ 
-      data: arrayBuffer,
-      useSystemFonts: true,
-      standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/standard_fonts/`,
-      cMapUrl: `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/cmaps/`,
-      cMapPacked: true,
-    });
-    
-    const pdf = await loadingTask.promise;
-    let htmlContent = '';
-    
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
+  const arrayBuffer = await file.arrayBuffer();
+  
+  // Try with worker first, then fallback to workerless
+  const attempts = [
+    { useWorker: true },
+    { useWorker: false },
+  ];
+
+  for (const attempt of attempts) {
+    try {
+      if (!attempt.useWorker) {
+        console.log('PDF.js: Retrying without worker...');
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+      }
+
+      const loadingTask = pdfjsLib.getDocument({ 
+        data: arrayBuffer.slice(0), // slice to avoid detached buffer on retry
+        useSystemFonts: true,
+        standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/standard_fonts/`,
+        cMapUrl: `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/cmaps/`,
+        cMapPacked: true,
+      });
       
-      htmlContent += `<div style="margin-bottom: 1.5em; padding-bottom: 1em; border-bottom: 1px solid #e5e7eb;">`;
-      htmlContent += `<h2 style="font-size: 0.85em; color: #6b7280; margin-bottom: 0.5em;">Page ${i}</h2>`;
+      const pdf = await loadingTask.promise;
+      let htmlContent = '';
       
-      let currentParagraph = '';
-      for (const item of content.items) {
-        if ('str' in item) {
-          const text = item.str;
-          if (text.trim() === '' && currentParagraph.trim() !== '') {
-            htmlContent += `<p>${currentParagraph.trim()}</p>`;
-            currentParagraph = '';
-          } else {
-            currentParagraph += text + ' ';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        
+        htmlContent += `<div style="margin-bottom: 1.5em; padding-bottom: 1em; border-bottom: 1px solid #e5e7eb;">`;
+        htmlContent += `<h2 style="font-size: 0.85em; color: #6b7280; margin-bottom: 0.5em;">Page ${i}</h2>`;
+        
+        let currentParagraph = '';
+        for (const item of content.items) {
+          if ('str' in item) {
+            const text = item.str;
+            if (text.trim() === '' && currentParagraph.trim() !== '') {
+              htmlContent += `<p>${currentParagraph.trim()}</p>`;
+              currentParagraph = '';
+            } else {
+              currentParagraph += text + ' ';
+            }
           }
         }
-      }
-      if (currentParagraph.trim()) {
-        htmlContent += `<p>${currentParagraph.trim()}</p>`;
+        if (currentParagraph.trim()) {
+          htmlContent += `<p>${currentParagraph.trim()}</p>`;
+        }
+        
+        htmlContent += `</div>`;
       }
       
-      htmlContent += `</div>`;
+      return htmlContent || '<p>No text content found in this PDF.</p>';
+    } catch (error) {
+      console.error(`PDF.js extraction failed (worker=${attempt.useWorker}):`, error);
+      if (!attempt.useWorker) {
+        // Both attempts failed
+        return `<p>Unable to extract text from this PDF. The file may be scanned or image-based. Please try a text-based PDF.</p>`;
+      }
     }
-    
-    return htmlContent || '<p>No text content found in this PDF.</p>';
-  } catch (error) {
-    console.error('Error extracting HTML from PDF:', error);
-    return `<p>PDF loaded successfully (text extraction unavailable in this environment)</p>`;
   }
+
+  return `<p>Unable to extract text from this PDF.</p>`;
 }
 
 async function extractTextFromPdf(file: File): Promise<string> {
