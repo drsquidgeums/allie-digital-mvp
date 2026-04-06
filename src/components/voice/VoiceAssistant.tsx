@@ -16,15 +16,16 @@ export const VoiceAssistant: React.FC = () => {
   const [isConnecting, setIsConnecting] = useState(false);
   const { usage } = useAIUsage();
 
-  const elevenlabsUsage = usage?.byProvider?.find((provider) => provider.name === "elevenlabs");
+  const elevenlabsUsage = usage?.byProvider?.find((p) => p.name === "elevenlabs");
   const hasCredits = elevenlabsUsage
     ? elevenlabsUsage.hasOwnKey || elevenlabsUsage.remaining > 0
     : true;
 
   const conversation = useConversation({
     onConnect: () => {
-      console.log("Voice conversation connected");
+      console.log("Voice conversation connected via WebRTC");
       setConversationStarted(true);
+      setIsConnecting(false);
       toast({
         title: "Connected",
         description: "Voice assistant is ready to chat",
@@ -45,9 +46,10 @@ export const VoiceAssistant: React.FC = () => {
         (error && (error as any).message) ||
         "Failed to connect to voice assistant";
 
-      const helpful = message.includes("AudioWorklet") || message.includes("worklet")
-        ? "Audio module blocked by browser/CSP. Try Chrome desktop or open the app in a new tab (outside the editor preview)."
-        : undefined;
+      const helpful =
+        message.includes("AudioWorklet") || message.includes("worklet")
+          ? "Audio module blocked by browser/CSP. Try Chrome desktop or open the app in a new tab (outside the editor preview)."
+          : undefined;
 
       toast({
         title: "Connection Error",
@@ -66,39 +68,41 @@ export const VoiceAssistant: React.FC = () => {
     setIsConnecting(true);
 
     try {
+      // Request microphone access first
       await navigator.mediaDevices.getUserMedia({ audio: true });
 
+      // Get a WebRTC conversation token from our edge function
       const { data, error } = await supabase.functions.invoke("elevenlabs-session");
 
       if (error) {
-        if (handleAIUsageLimitError(error)) {
-          return;
-        }
+        if (handleAIUsageLimitError(error)) return;
 
-        const rawMessage = error.message || "Failed to get session URL";
-        const friendlyMessage = rawMessage.includes("ElevenLabs authentication failed")
-          ? "Voice AI is still being rejected by ElevenLabs. Re-check the ELEVENLABS_API_KEY secret in Supabase, or add your own ElevenLabs key in Settings → AI Settings."
+        const rawMessage = error.message || "Failed to get session token";
+        const friendlyMessage = rawMessage.includes("authentication failed")
+          ? "Voice AI key was rejected by ElevenLabs. Re-check the ELEVENLABS_API_KEY secret in Supabase, or add your own key in Settings → AI Settings."
           : rawMessage;
 
         throw new Error(friendlyMessage);
       }
 
-      if (!data?.signed_url) {
-        throw new Error("No signed URL received");
+      if (!data?.conversation_token) {
+        throw new Error("No conversation token received");
       }
 
+      // Start the conversation via WebRTC (lower latency, recommended)
       await conversation.startSession({
-        signedUrl: data.signed_url,
+        conversationToken: data.conversation_token,
+        connectionType: "webrtc",
       });
 
-      setConversationStarted(true);
+      // Credit notification fires here — session was initiated
       notifyAICreditsUsed();
-    } catch (error) {
-      console.error("Error starting conversation:", error);
+    } catch (err) {
+      console.error("Error starting conversation:", err);
       setConversationStarted(false);
       toast({
         title: "Connection Failed",
-        description: error instanceof Error ? error.message : "Failed to start conversation",
+        description: err instanceof Error ? err.message : "Failed to start conversation",
         variant: "destructive",
       });
     } finally {
@@ -110,18 +114,21 @@ export const VoiceAssistant: React.FC = () => {
     try {
       await conversation.endSession();
       setConversationStarted(false);
-    } catch (error) {
-      console.error("Error ending conversation:", error);
+    } catch (err) {
+      console.error("Error ending conversation:", err);
     }
   };
 
-  const adjustVolume = useCallback(async (value: number) => {
-    try {
-      await conversation.setVolume({ volume: value });
-    } catch (error) {
-      console.error("Error adjusting volume:", error);
-    }
-  }, [conversation]);
+  const adjustVolume = useCallback(
+    async (value: number) => {
+      try {
+        await conversation.setVolume({ volume: value });
+      } catch (err) {
+        console.error("Error adjusting volume:", err);
+      }
+    },
+    [conversation]
+  );
 
   return (
     <Card className="border-primary/20">
@@ -139,7 +146,8 @@ export const VoiceAssistant: React.FC = () => {
           <div className="space-y-4">
             <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
               <p className="text-xs text-muted-foreground">
-                Voice AI is powered by our built in assistant trained to help with ADHD related study support. Just click start and begin speaking!
+                Voice AI is powered by our built in assistant trained to help with ADHD related
+                study support. Just click start and begin speaking!
               </p>
             </div>
 
@@ -147,15 +155,18 @@ export const VoiceAssistant: React.FC = () => {
               <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 flex items-start gap-2">
                 <AlertCircle className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
                 <p className="text-xs text-muted-foreground">
-                  Your ElevenLabs credits have been used up this month. Add your own ElevenLabs API key in{" "}
-                  <span className="font-medium text-foreground">Settings → AI Settings</span> for unlimited access.
+                  Your ElevenLabs credits have been used up this month. Add your own ElevenLabs
+                  API key in{" "}
+                  <span className="font-medium text-foreground">Settings → AI Settings</span>{" "}
+                  for unlimited access.
                 </p>
               </div>
             )}
 
             {elevenlabsUsage && !elevenlabsUsage.hasOwnKey && hasCredits && (
               <p className="text-xs text-muted-foreground text-center">
-                {elevenlabsUsage.remaining} Voice AI {elevenlabsUsage.remaining === 1 ? "use" : "uses"} remaining this month
+                {elevenlabsUsage.remaining} Voice AI{" "}
+                {elevenlabsUsage.remaining === 1 ? "use" : "uses"} remaining this month
               </p>
             )}
 

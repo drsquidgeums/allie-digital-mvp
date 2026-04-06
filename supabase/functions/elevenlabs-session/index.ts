@@ -4,12 +4,13 @@ import { checkAndTrackUsage, getUsageLimitResponse, trackUsage } from "../_share
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
@@ -50,13 +51,14 @@ serve(async (req) => {
 
     console.log("Request from user:", user.id);
 
+    // Check credits but do NOT track yet — only track after successful token fetch
     const usageResult = await checkAndTrackUsage(user.id, "elevenlabs-session", { track: false });
     if (!usageResult.allowed) {
       return getUsageLimitResponse(0, "ElevenLabs");
     }
 
-    const defaultAgentId = Deno.env.get("ELEVENLABS_AGENT_ID");
-    if (!defaultAgentId) {
+    const agentId = Deno.env.get("ELEVENLABS_AGENT_ID");
+    if (!agentId) {
       throw new Error("ELEVENLABS_AGENT_ID is not configured");
     }
 
@@ -65,12 +67,13 @@ serve(async (req) => {
       throw new Error("ELEVENLABS_API_KEY is not configured");
     }
 
-    console.log("Requesting ElevenLabs session for default agent", {
+    console.log("Requesting ElevenLabs conversation token for agent:", agentId, {
       usingOwnKey: usageResult.usingOwnKey,
     });
 
+    // Fetch a WebRTC conversation token (recommended for lower latency)
     const response = await fetch(
-      `https://api.elevenlabs.io/v1/convai/conversation/get-signed-url?agent_id=${encodeURIComponent(defaultAgentId)}`,
+      `https://api.elevenlabs.io/v1/convai/conversation/token?agent_id=${encodeURIComponent(agentId)}`,
       {
         method: "GET",
         headers: {
@@ -84,20 +87,32 @@ serve(async (req) => {
       console.error("ElevenLabs API error:", response.status, errorText);
 
       if (response.status === 401) {
-        throw new Error("ElevenLabs authentication failed. Please check the API key.");
+        throw new Error(
+          "ElevenLabs authentication failed. Please check the ELEVENLABS_API_KEY secret in Supabase."
+        );
       }
 
       throw new Error(`ElevenLabs API error: ${response.status}`);
     }
 
     const data = await response.json();
+    const conversationToken = data?.token;
+
+    if (!conversationToken) {
+      throw new Error("No conversation token received from ElevenLabs");
+    }
+
+    // Only track usage AFTER successful token fetch
     await trackUsage(user.id, "elevenlabs-session", usageResult.usageSource);
 
-    console.log("ElevenLabs session created successfully");
+    console.log("ElevenLabs conversation token created successfully");
 
-    return new Response(JSON.stringify(data), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ conversation_token: conversationToken, agent_id: agentId }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
     console.error("Error in elevenlabs-session function:", error);
     return new Response(
