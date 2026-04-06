@@ -173,7 +173,7 @@ const Terms = () => {
           
           <section className="space-y-3">
             <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>14. Contact Us</h2>
-            <p>If you have any questions about these Terms of Service, please contact us at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a>.</p>
+            <p>If you have any questions about these Terms of Service, please contact us using our <button onClick={() => setSupportOpen(true)} className="underline font-medium cursor-pointer bg-transparent border-none p-0 inline" style={{ color: 'inherit' }}>support</button> feature.</p>
           </section>
         </div>
       </div>
