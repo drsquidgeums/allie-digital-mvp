@@ -1,9 +1,8 @@
 
-import React, { useRef } from "react";
+import React from "react";
 import { ErrorBoundary } from "../ErrorBoundary";
 import { DocumentPreview } from "./DocumentPreview";
 import { StudySessionTracker } from "../study/StudySessionTracker";
-import { ReadingProgressBar } from "../reading-progress/ReadingProgressBar";
 
 interface DocumentViewerContentProps {
   documentRef: React.RefObject<HTMLDivElement>;
@@ -29,12 +28,9 @@ export const DocumentViewerContent: React.FC<DocumentViewerContentProps> = ({
   isHighlighter,
   documentName
 }) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
   return (
     <div className="flex-1 flex flex-col">
-      <div className="flex-1 p-4 relative overflow-auto" ref={scrollRef}>
-        <ReadingProgressBar containerRef={scrollRef} />
+      <div className="flex-1 p-4 relative overflow-auto">
         <div 
           className="h-full" 
           ref={documentRef}
