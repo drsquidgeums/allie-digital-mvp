@@ -38,16 +38,16 @@ export const QuickNotesPad: React.FC = () => {
 
   if (!isOpen) {
     return (
-      <div className="fixed bottom-6 right-6 z-40">
+      <div className="fixed bottom-6 right-24 z-50">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               onClick={() => setIsOpen(true)}
-              size="icon"
-              className="h-12 w-12 rounded-full shadow-lg bg-primary text-primary-foreground hover:bg-primary/90"
+              size="lg"
+              className="h-14 w-14 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 hover:scale-110 active:scale-95"
               aria-label="Open Quick Notes"
             >
-              <StickyNote className="h-5 w-5" />
+              <StickyNote className="h-6 w-6" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="left">Quick Notes (Alt+N)</TooltipContent>
