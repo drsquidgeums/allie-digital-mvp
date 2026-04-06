@@ -90,6 +90,10 @@ export const TaskDashboard: React.FC = () => {
         )}
 
         <div className="mb-6">
+          <DailyFocusGoal completedTasks={groupedTasks.completed.length} />
+        </div>
+
+        <div className="mb-6">
           <TaskInput 
             selectedDate={selectedDate}
             onAddTask={(text) => handleAddTask(text, selectedDate)}

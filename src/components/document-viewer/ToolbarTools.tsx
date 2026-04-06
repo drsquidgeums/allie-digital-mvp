@@ -104,6 +104,15 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
           popoverClassName="w-[500px] h-[600px] p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
         />
       </div>
+      <div data-tour="highlights">
+        <ToolItem
+          icon={Highlighter}
+          label="Highlights"
+          id="highlights"
+          content={<HighlightsSummary documentContent={documentContent} />}
+          popoverClassName="w-96 h-[500px] p-0 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
+        />
+      </div>
       <div data-tour="ambient">
         <AmbientMusic />
       </div>

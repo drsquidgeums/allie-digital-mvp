@@ -29,9 +29,12 @@ export const DocumentViewerContent: React.FC<DocumentViewerContentProps> = ({
   isHighlighter,
   documentName
 }) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   return (
     <div className="flex-1 flex flex-col">
-      <div className="flex-1 p-4 relative">
+      <div className="flex-1 p-4 relative overflow-auto" ref={scrollRef}>
+        <ReadingProgressBar containerRef={scrollRef} />
         <div 
           className="h-full" 
           ref={documentRef}

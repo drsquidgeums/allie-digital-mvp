@@ -12,6 +12,7 @@ import { SidebarTrialBadge } from "./sidebar/SidebarTrialBadge";
 import { Headset } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useTrialStatus } from "@/contexts/TrialContext";
+import { StudyTimeBadge } from "./sidebar/StudyTimeBadge";
 
 interface SidebarProps {
   onColorChange: (color: string) => void;
