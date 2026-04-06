@@ -179,7 +179,7 @@ const Privacy = () => {
               <li><strong>Right to Object (Article 21):</strong> Object to processing based on legitimate interests</li>
               <li><strong>Right to Withdraw Consent:</strong> Where processing is based on consent, you may withdraw it at any time without affecting the lawfulness of prior processing</li>
             </ul>
-            <p>To exercise these rights, please contact us at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a>. We will respond within one month of your request.</p>
+            <p>To exercise these rights, please contact us using our <button onClick={() => setSupportOpen(true)} className="underline font-medium cursor-pointer bg-transparent border-none p-0 inline" style={{ color: 'inherit' }}>support</button> feature. We will respond within one month of your request.</p>
           </section>
           
           <section className="space-y-3">
