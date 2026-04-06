@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, RotateCcw } from "lucide-react";
 import { usePomodoroContext } from "@/contexts/PomodoroContext";
 
 export const TimerControls = () => {
   const { state, dispatch } = usePomodoroContext();
+
+  // Listen for keyboard shortcut event
+  useEffect(() => {
+    const handler = () => dispatch({ type: 'TOGGLE_TIMER' });
+    window.addEventListener('shortcut:toggle-pomodoro', handler);
+    return () => window.removeEventListener('shortcut:toggle-pomodoro', handler);
+  }, [dispatch]);
 
   return (
     <div className="space-y-3">

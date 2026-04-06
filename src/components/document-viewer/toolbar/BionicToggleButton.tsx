@@ -121,14 +121,12 @@ export const BionicToggleButton: React.FC = () => {
     }
 
     if (isBionicMode) {
-      // Turn off bionic mode - remove strong tags from current content
       const currentHTML = editor.getHTML();
       const cleanedHTML = removeBionicFormatting(currentHTML);
       editor.commands.setContent(cleanedHTML);
       setIsBionicMode(false);
       toast.success('Bionic reading mode disabled');
     } else {
-      // Turn on bionic mode - apply formatting while preserving structure
       const textContent = editor.getText();
       
       if (!textContent.trim()) {
@@ -136,7 +134,6 @@ export const BionicToggleButton: React.FC = () => {
         return;
       }
       
-      // Get HTML and apply bionic formatting while preserving structure
       const currentHTML = editor.getHTML();
       const bionicHTML = applyBionicToHTML(currentHTML);
       
@@ -146,6 +143,13 @@ export const BionicToggleButton: React.FC = () => {
       toast.success('Bionic reading mode enabled');
     }
   };
+
+  // Listen for keyboard shortcut event
+  React.useEffect(() => {
+    const handler = () => toggleBionicMode();
+    window.addEventListener('shortcut:toggle-bionic', handler);
+    return () => window.removeEventListener('shortcut:toggle-bionic', handler);
+  });
 
   return (
     <Tooltip>

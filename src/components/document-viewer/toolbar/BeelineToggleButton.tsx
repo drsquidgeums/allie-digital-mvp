@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -101,8 +101,6 @@ export const BeelineToggleButton = () => {
     const currentHTML = editor.getHTML();
     const selectionFrom = editor.state.selection.from;
 
-    // If user just did "Select all", the editor can stay visually selected after toggling,
-    // making text appear white due to selection styling. Collapse the selection afterward.
     const collapseSelection = () => {
       requestAnimationFrame(() => {
         const maxPos = Math.max(1, editor.state.doc.content.size);
@@ -113,7 +111,6 @@ export const BeelineToggleButton = () => {
     };
 
     if (!isBeelineMode) {
-      // Apply beeline formatting
       const beelineHTML = applyBeelineToHTML(currentHTML);
       editor.commands.setContent(beelineHTML);
       setIsBeelineMode(true);
@@ -123,7 +120,6 @@ export const BeelineToggleButton = () => {
         description: "Color gradient applied to text"
       });
     } else {
-      // Remove beeline formatting
       const cleanHTML = removeBeelineFormatting(currentHTML);
       editor.commands.setContent(cleanHTML);
       setIsBeelineMode(false);
@@ -134,6 +130,13 @@ export const BeelineToggleButton = () => {
       });
     }
   };
+
+  // Listen for keyboard shortcut event
+  useEffect(() => {
+    const handler = () => toggleBeelineMode();
+    window.addEventListener('shortcut:toggle-beeline', handler);
+    return () => window.removeEventListener('shortcut:toggle-beeline', handler);
+  });
 
   return (
     <Tooltip>

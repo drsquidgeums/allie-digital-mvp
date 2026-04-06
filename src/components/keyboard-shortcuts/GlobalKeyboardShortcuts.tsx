@@ -74,6 +74,7 @@ export const GlobalKeyboardShortcuts: React.FC<GlobalKeyboardShortcutsProps> = (
       return;
     }
 
+    // ? - Toggle shortcuts panel
     if (e.key === '?' && !e.ctrlKey && !e.altKey && !e.metaKey) {
       e.preventDefault();
       e.stopPropagation();
@@ -82,6 +83,47 @@ export const GlobalKeyboardShortcuts: React.FC<GlobalKeyboardShortcutsProps> = (
       } else {
         setInternalOpen(prev => !prev);
       }
+      return;
+    }
+
+    // Ctrl+Shift+F - Toggle Focus Mode
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'f') {
+      e.preventDefault();
+      e.stopPropagation();
+      window.dispatchEvent(new CustomEvent('shortcut:toggle-focus-mode'));
+      return;
+    }
+
+    // Ctrl+Shift+P - Start/Stop Pomodoro Timer
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'p') {
+      e.preventDefault();
+      e.stopPropagation();
+      window.dispatchEvent(new CustomEvent('shortcut:toggle-pomodoro'));
+      return;
+    }
+
+    // Alt+B - Toggle Bionic Reader
+    if (e.altKey && e.key.toLowerCase() === 'b') {
+      e.preventDefault();
+      e.stopPropagation();
+      window.dispatchEvent(new CustomEvent('shortcut:toggle-bionic'));
+      return;
+    }
+
+    // Alt+L - Toggle Beeline Reader
+    if (e.altKey && e.key.toLowerCase() === 'l') {
+      e.preventDefault();
+      e.stopPropagation();
+      window.dispatchEvent(new CustomEvent('shortcut:toggle-beeline'));
+      return;
+    }
+
+    // Alt+T - Toggle Text to Speech
+    if (e.altKey && e.key.toLowerCase() === 't') {
+      e.preventDefault();
+      e.stopPropagation();
+      window.dispatchEvent(new CustomEvent('shortcut:toggle-tts'));
+      return;
     }
   }, [isControlled, onExternalOpenChange, open]);
 
