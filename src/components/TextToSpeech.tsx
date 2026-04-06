@@ -114,6 +114,7 @@ export const TextToSpeech = () => {
       });
 
       if (error) {
+        if (handleAIUsageLimitError(error)) return;
         throw new Error(error.message || "Failed to generate speech");
       }
 
