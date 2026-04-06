@@ -1,9 +1,8 @@
 
-import React, { useRef } from "react";
+import React from "react";
 import { ErrorBoundary } from "../ErrorBoundary";
 import { DocumentPreview } from "./DocumentPreview";
 import { StudySessionTracker } from "../study/StudySessionTracker";
-import { ReadingProgressBar } from "../reading-progress/ReadingProgressBar";
 
 interface DocumentViewerContentProps {
   documentRef: React.RefObject<HTMLDivElement>;
