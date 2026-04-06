@@ -218,7 +218,7 @@ const Privacy = () => {
             <p>If you have questions about this Privacy Policy or wish to exercise your data rights, please contact:</p>
             <p><strong>Allie Digital CIC</strong><br />
             Company Number: NI718014<br />
-            Email: <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a></p>
+            Email: contact us via our <button onClick={() => setSupportOpen(true)} className="underline font-medium cursor-pointer bg-transparent border-none p-0 inline" style={{ color: 'inherit' }}>support</button> feature</p>
           </section>
         </div>
       </div>
