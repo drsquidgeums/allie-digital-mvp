@@ -14,6 +14,7 @@ import { ContentEnhancerTools } from "../content-enhancer/ContentEnhancerTools";
 import { BionicToggleButton } from "./toolbar/BionicToggleButton";
 import { TTSButton } from "./toolbar/TTSButton";
 import { BeelineToggleButton } from "./toolbar/BeelineToggleButton";
+import { HighlightsSummary } from "../highlights/HighlightsSummary";
 
 interface ToolbarToolsProps {
   documentContent?: string;
