@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Key, Trash2, Eye, EyeOff, ExternalLink, Brain, Mic } from "lucide-react";
+import { Sparkles, Key, Trash2, Eye, EyeOff, ExternalLink, Brain, Mic, BookOpen } from "lucide-react";
 import { useAIUsage, ProviderUsage } from "@/hooks/useAIUsage";
+import { APIKeyTutorialModal } from "./APIKeyTutorialModal";
 
 const providerMeta: Record<string, { label: string; icon: React.ElementType; keyPrefix: string; keyUrl: string; color: string }> = {
   openai: {
@@ -154,6 +155,7 @@ const ProviderUsageBar = ({ provider }: { provider: ProviderUsage }) => {
 
 export const AISettings = () => {
   const { usage, isLoading, saveApiKey, deleteApiKey } = useAIUsage();
+  const [tutorialOpen, setTutorialOpen] = useState(false);
 
   const ownKeyProviders = usage?.providers ?? [];
 
@@ -187,6 +189,15 @@ export const AISettings = () => {
         <p className="text-xs text-muted-foreground">
           Add your own API keys for unlimited access. Keys are stored securely and never shared.
         </p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setTutorialOpen(true)}
+          className="w-full"
+        >
+          <BookOpen className="h-4 w-4 mr-2" />
+          How to get API keys (step by step guide)
+        </Button>
 
         {Object.keys(providerMeta).map((provName) => (
           <ProviderKeyInput
@@ -199,6 +210,8 @@ export const AISettings = () => {
           />
         ))}
       </div>
+
+      <APIKeyTutorialModal open={tutorialOpen} onOpenChange={setTutorialOpen} />
     </Card>
   );
 };
