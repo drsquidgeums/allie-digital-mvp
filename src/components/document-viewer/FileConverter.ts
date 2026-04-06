@@ -95,6 +95,7 @@ export async function extractPlainTextFromFile(file: File): Promise<string> {
 async function loadPdfWithFallback(arrayBuffer: ArrayBuffer) {
   const docParams = {
     useSystemFonts: true,
+    isEvalSupported: false,
     standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/standard_fonts/`,
     cMapUrl: `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/cmaps/`,
     cMapPacked: true,
@@ -105,9 +106,12 @@ async function loadPdfWithFallback(arrayBuffer: ArrayBuffer) {
     pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER_URL;
   }
 
+  // Use Uint8Array copy to avoid detached ArrayBuffer issues
+  const dataCopy = new Uint8Array(arrayBuffer.slice(0));
+
   try {
     const loadingTask = pdfjsLib.getDocument({
-      data: arrayBuffer.slice(0),
+      data: dataCopy,
       ...docParams,
     });
     return await loadingTask.promise;
@@ -119,8 +123,9 @@ async function loadPdfWithFallback(arrayBuffer: ArrayBuffer) {
     pdfjsLib.GlobalWorkerOptions.workerSrc = '';
     
     try {
+      const dataCopy2 = new Uint8Array(arrayBuffer.slice(0));
       const loadingTask = pdfjsLib.getDocument({
-        data: arrayBuffer.slice(0),
+        data: dataCopy2,
         ...docParams,
       });
       const pdf = await loadingTask.promise;
