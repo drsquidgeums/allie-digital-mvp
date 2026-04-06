@@ -155,40 +155,48 @@ async function extractHtmlFromPdf(file: File): Promise<string> {
 }
 
 async function extractTextFromPdf(file: File): Promise<string> {
-  try {
-    const arrayBuffer = await file.arrayBuffer();
-    
-    // Ensure worker is configured
-    if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER_URL;
+  const arrayBuffer = await file.arrayBuffer();
+  
+  const attempts = [
+    { useWorker: true },
+    { useWorker: false },
+  ];
+
+  for (const attempt of attempts) {
+    try {
+      if (!attempt.useWorker) {
+        console.log('PDF.js plain text: Retrying without worker...');
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+      }
+
+      const loadingTask = pdfjsLib.getDocument({ 
+        data: arrayBuffer.slice(0),
+        useSystemFonts: true,
+        standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/standard_fonts/`,
+        cMapUrl: `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/cmaps/`,
+        cMapPacked: true,
+      });
+      
+      const pdf = await loadingTask.promise;
+      let textContent = '';
+      
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        const strings = content.items.map(item => 'str' in item ? item.str : '');
+        textContent += strings.join(' ') + '\n';
+      }
+      
+      return textContent;
+    } catch (error) {
+      console.error(`PDF text extraction failed (worker=${attempt.useWorker}):`, error);
+      if (!attempt.useWorker) {
+        return 'Unable to extract text from this PDF.';
+      }
     }
-    
-    const loadingTask = pdfjsLib.getDocument({ 
-      data: arrayBuffer,
-      useSystemFonts: true,
-      standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/standard_fonts/`,
-      cMapUrl: `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/cmaps/`,
-      cMapPacked: true,
-    });
-    
-    const pdf = await loadingTask.promise;
-    
-    let textContent = '';
-    
-    // Extract text from each page
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      const strings = content.items.map(item => 'str' in item ? item.str : '');
-      textContent += strings.join(' ') + '\n';
-    }
-    
-    return textContent;
-  } catch (error) {
-    console.error('Error extracting text from PDF:', error);
-    // Return a more user-friendly message instead of failing completely
-    return `PDF loaded successfully (text extraction unavailable in this environment)`;
   }
+
+  return 'Unable to extract text from this PDF.';
 }
 
 function stripHtmlTags(html: string): string {
