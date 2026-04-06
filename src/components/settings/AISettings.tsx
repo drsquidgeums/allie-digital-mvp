@@ -155,6 +155,7 @@ const ProviderUsageBar = ({ provider }: { provider: ProviderUsage }) => {
 
 export const AISettings = () => {
   const { usage, isLoading, saveApiKey, deleteApiKey } = useAIUsage();
+  const [tutorialOpen, setTutorialOpen] = useState(false);
 
   const ownKeyProviders = usage?.providers ?? [];
 
