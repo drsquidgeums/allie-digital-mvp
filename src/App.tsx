@@ -25,6 +25,8 @@ import OpenSourceLicense from "@/pages/OpenSourceLicense";
 import { clearFiles as clearGlobalFiles } from "@/store/fileStore";
 import { clearFiles as clearFileManagerFiles } from "@/hooks/file-manager/fileStore";
 import { OnboardingTour, WelcomeModal } from "@/components/onboarding";
+import { VoiceConversationProvider } from "@/contexts/VoiceConversationContext";
+import { FloatingVoiceIndicator } from "@/components/voice/FloatingVoiceIndicator";
 
 const PomodoroTaskListener = memo(() => {
   usePomodoroTaskListener();
