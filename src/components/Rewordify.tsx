@@ -6,6 +6,7 @@ import { useEditorContent } from "@/hooks/useEditorContent";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
+import { handleAIUsageLimitError } from "@/utils/aiUsageLimitHandler";
 
 export const Rewordify = () => {
   const [inputText, setInputText] = useState("");
