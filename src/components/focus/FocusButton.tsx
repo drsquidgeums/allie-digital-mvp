@@ -35,10 +35,12 @@ export const FocusButton = () => {
     }
   };
 
-  // Debug the focus mode state when component mounts
+  // Listen for keyboard shortcut event
   useEffect(() => {
-    console.log('FocusButton mounted, isActive:', isActive);
-  }, [isActive]);
+    const handler = () => handleToggle();
+    window.addEventListener('shortcut:toggle-focus-mode', handler);
+    return () => window.removeEventListener('shortcut:toggle-focus-mode', handler);
+  });
 
   return (
     <Tooltip>
