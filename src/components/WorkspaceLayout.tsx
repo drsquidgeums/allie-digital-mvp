@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Sidebar } from "@/components/Sidebar";
 import { GlobalKeyboardShortcuts } from "@/components/keyboard-shortcuts/GlobalKeyboardShortcuts";
@@ -10,11 +10,18 @@ interface WorkspaceLayoutProps {
 }
 
 export const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) => {
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
+
+  const handleOpenShortcuts = useCallback(() => {
+    setShortcutsOpen(true);
+  }, []);
+
   return (
     <div className="workspace-modern flex min-h-screen">
       <div className="sticky top-0 h-screen sidebar-modern">
         <Sidebar 
           onColorChange={() => {}}
+          onOpenShortcuts={handleOpenShortcuts}
         />
       </div>
       <div className="flex-1 overflow-y-auto bg-card">
@@ -22,7 +29,10 @@ export const WorkspaceLayout = React.memo(({ children }: WorkspaceLayoutProps) =
           {children}
         </div>
       </div>
-      <GlobalKeyboardShortcuts />
+      <GlobalKeyboardShortcuts 
+        externalOpen={shortcutsOpen} 
+        onExternalOpenChange={setShortcutsOpen} 
+      />
       <QuickNotesPad />
     </div>
   );

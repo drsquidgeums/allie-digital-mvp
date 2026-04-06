@@ -14,9 +14,23 @@ interface ShortcutCategory {
   shortcuts: { keys: string[]; description: string }[];
 }
 
-export const GlobalKeyboardShortcuts: React.FC = () => {
-  const [open, setOpen] = useState(false);
+interface GlobalKeyboardShortcutsProps {
+  externalOpen?: boolean;
+  onExternalOpenChange?: (open: boolean) => void;
+}
+
+export const GlobalKeyboardShortcuts: React.FC<GlobalKeyboardShortcutsProps> = ({
+  externalOpen,
+  onExternalOpenChange,
+}) => {
+  const [internalOpen, setInternalOpen] = useState(false);
   const { t } = useTranslation();
+
+  const isControlled = externalOpen !== undefined;
+  const open = isControlled ? externalOpen : internalOpen;
+  const setOpen = isControlled
+    ? (v: boolean) => onExternalOpenChange?.(v)
+    : setInternalOpen;
 
   const categories: ShortcutCategory[] = [
     {
@@ -62,9 +76,14 @@ export const GlobalKeyboardShortcuts: React.FC = () => {
 
     if (e.key === '?' && !e.ctrlKey && !e.altKey && !e.metaKey) {
       e.preventDefault();
-      setOpen(prev => !prev);
+      e.stopPropagation();
+      if (isControlled) {
+        onExternalOpenChange?.(!open);
+      } else {
+        setInternalOpen(prev => !prev);
+      }
     }
-  }, []);
+  }, [isControlled, onExternalOpenChange, open]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
