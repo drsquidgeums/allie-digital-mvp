@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { useConversation } from "@11labs/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,17 +15,37 @@ export const VoiceAssistant: React.FC = () => {
   const [conversationStarted, setConversationStarted] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const { usage } = useAIUsage();
+  const hasTrackedSessionRef = useRef(false);
 
   const elevenlabsUsage = usage?.byProvider?.find((p) => p.name === "elevenlabs");
   const hasCredits = elevenlabsUsage
     ? elevenlabsUsage.hasOwnKey || elevenlabsUsage.remaining > 0
     : true;
 
+  const trackConnectedSession = useCallback(async () => {
+    if (hasTrackedSessionRef.current) return;
+
+    hasTrackedSessionRef.current = true;
+
+    const { error } = await supabase.functions.invoke("elevenlabs-session", {
+      body: { mode: "track" },
+    });
+
+    if (error) {
+      hasTrackedSessionRef.current = false;
+      console.error("Failed to track connected voice session:", error);
+      return;
+    }
+
+    notifyAICreditsUsed();
+  }, []);
+
   const conversation = useConversation({
     onConnect: () => {
       console.log("Voice conversation connected via WebRTC");
       setConversationStarted(true);
       setIsConnecting(false);
+      void trackConnectedSession();
       toast({
         title: "Connected",
         description: "Voice assistant is ready to chat",
@@ -33,6 +53,7 @@ export const VoiceAssistant: React.FC = () => {
     },
     onDisconnect: () => {
       console.log("Voice conversation disconnected");
+      hasTrackedSessionRef.current = false;
       setConversationStarted(false);
       toast({
         title: "Disconnected",
@@ -49,6 +70,8 @@ export const VoiceAssistant: React.FC = () => {
       const helpful =
         message.includes("AudioWorklet") || message.includes("worklet")
           ? "Audio module blocked by browser/CSP. Try Chrome desktop or open the app in a new tab (outside the editor preview)."
+          : message.includes("LiveKit") || message.includes("rtc") || message.includes("RTCPeerConnection")
+            ? "Realtime voice connection was blocked, so the app will fall back to the more compatible connection mode where possible."
           : undefined;
 
       toast({
@@ -66,13 +89,17 @@ export const VoiceAssistant: React.FC = () => {
 
   const startConversation = async () => {
     setIsConnecting(true);
+    hasTrackedSessionRef.current = false;
 
     try {
       // Request microphone access first
-      await navigator.mediaDevices.getUserMedia({ audio: true });
+      const permissionStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      permissionStream.getTracks().forEach((track) => track.stop());
 
-      // Get a WebRTC conversation token from our edge function
-      const { data, error } = await supabase.functions.invoke("elevenlabs-session");
+      // Get connection credentials from our edge function
+      const { data, error } = await supabase.functions.invoke("elevenlabs-session", {
+        body: { mode: "session" },
+      });
 
       if (error) {
         if (handleAIUsageLimitError(error)) return;
@@ -85,18 +112,79 @@ export const VoiceAssistant: React.FC = () => {
         throw new Error(friendlyMessage);
       }
 
-      if (!data?.conversation_token) {
-        throw new Error("No conversation token received");
+      const sessionAttempts: Array<
+        | {
+            label: "webrtc";
+            options: { conversationToken: string; connectionType: "webrtc" };
+          }
+        | {
+            label: "websocket";
+            options: { signedUrl: string; connectionType: "websocket" };
+          }
+      > = [];
+
+      const isPreviewEnvironment =
+        window.location.hostname.includes("lovableproject.com") ||
+        new URLSearchParams(window.location.search).has("__lovable_token");
+
+      if (isPreviewEnvironment && data?.signed_url) {
+        sessionAttempts.push({
+          label: "websocket",
+          options: {
+            signedUrl: data.signed_url,
+            connectionType: "websocket",
+          },
+        });
       }
 
-      // Start the conversation via WebRTC (lower latency, recommended)
-      await conversation.startSession({
-        conversationToken: data.conversation_token,
-        connectionType: "webrtc",
-      });
+      if (data?.conversation_token) {
+        sessionAttempts.push({
+          label: "webrtc",
+          options: {
+            conversationToken: data.conversation_token,
+            connectionType: "webrtc",
+          },
+        });
+      }
 
-      // Credit notification fires here — session was initiated
-      notifyAICreditsUsed();
+      if (!isPreviewEnvironment && data?.signed_url) {
+        sessionAttempts.push({
+          label: "websocket",
+          options: {
+            signedUrl: data.signed_url,
+            connectionType: "websocket",
+          },
+        });
+      }
+
+      if (!sessionAttempts.length) {
+        throw new Error("No voice session credentials received");
+      }
+
+      let lastConnectionError: unknown = null;
+
+      for (const attempt of sessionAttempts) {
+        try {
+          await conversation.startSession(attempt.options);
+          lastConnectionError = null;
+          break;
+        } catch (sessionError) {
+          lastConnectionError = sessionError;
+          console.error(`Voice ${attempt.label} connection failed:`, sessionError);
+
+          try {
+            await conversation.endSession();
+          } catch {
+            // Ignore cleanup errors between fallback attempts
+          }
+        }
+      }
+
+      if (lastConnectionError) {
+        throw lastConnectionError instanceof Error
+          ? lastConnectionError
+          : new Error("Failed to start voice conversation");
+      }
     } catch (err) {
       console.error("Error starting conversation:", err);
       setConversationStarted(false);

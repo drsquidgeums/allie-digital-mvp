@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
-import { checkAndTrackUsage, getUsageLimitResponse, trackUsage } from "../_shared/ai-usage.ts";
+import { checkAndTrackUsage, getUsageLimitResponse } from "../_shared/ai-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,6 +14,29 @@ serve(async (req) => {
   }
 
   try {
+    const rawBody = req.method === "POST" ? await req.text() : "";
+    let mode: "session" | "track" = "session";
+
+    if (rawBody) {
+      try {
+        const parsedBody = JSON.parse(rawBody);
+
+        if (parsedBody?.mode === "track") {
+          mode = "track";
+        } else if (parsedBody?.mode && parsedBody.mode !== "session") {
+          return new Response(JSON.stringify({ error: "Invalid mode" }), {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+      } catch {
+        return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -49,9 +72,25 @@ serve(async (req) => {
       });
     }
 
-    console.log("Request from user:", user.id);
+    console.log("Request from user:", user.id, { mode });
 
-    // Check credits but do NOT track yet — only track after successful token fetch
+    if (mode === "track") {
+      const usageResult = await checkAndTrackUsage(user.id, "elevenlabs-session");
+      if (!usageResult.allowed) {
+        return getUsageLimitResponse(0, "ElevenLabs");
+      }
+
+      console.log("Tracked successful ElevenLabs conversation", {
+        userId: user.id,
+        usingOwnKey: usageResult.usingOwnKey,
+      });
+
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Check credits but do NOT track yet — only track after a successful client connection
     const usageResult = await checkAndTrackUsage(user.id, "elevenlabs-session", { track: false });
     if (!usageResult.allowed) {
       return getUsageLimitResponse(0, "ElevenLabs");
@@ -67,48 +106,75 @@ serve(async (req) => {
       throw new Error("ELEVENLABS_API_KEY is not configured");
     }
 
-    console.log("Requesting ElevenLabs conversation token for agent:", agentId, {
+    console.log("Requesting ElevenLabs conversation credentials for agent:", agentId, {
       usingOwnKey: usageResult.usingOwnKey,
     });
 
-    // Fetch a WebRTC conversation token (recommended for lower latency)
-    const response = await fetch(
-      `https://api.elevenlabs.io/v1/convai/conversation/token?agent_id=${encodeURIComponent(agentId)}`,
-      {
-        method: "GET",
-        headers: {
-          "xi-api-key": elevenLabsApiKey,
-        },
+    const headers = {
+      "xi-api-key": elevenLabsApiKey,
+    };
+    const encodedAgentId = encodeURIComponent(agentId);
+    const [tokenResult, signedUrlResult] = await Promise.allSettled([
+      fetch(
+        `https://api.elevenlabs.io/v1/convai/conversation/token?agent_id=${encodedAgentId}`,
+        {
+          method: "GET",
+          headers,
+        }
+      ),
+      fetch(
+        `https://api.elevenlabs.io/v1/convai/conversation/get-signed-url?agent_id=${encodedAgentId}`,
+        {
+          method: "GET",
+          headers,
+        }
+      ),
+    ]);
+
+    let conversationToken: string | null = null;
+    let signedUrl: string | null = null;
+
+    if (tokenResult.status === "fulfilled") {
+      if (tokenResult.value.ok) {
+        const data = await tokenResult.value.json();
+        conversationToken = data?.token ?? null;
+      } else {
+        const errorText = await tokenResult.value.text();
+        console.error("ElevenLabs token API error:", tokenResult.value.status, errorText);
+
+        if (tokenResult.value.status === 401) {
+          throw new Error(
+            "ElevenLabs authentication failed. Please check the ELEVENLABS_API_KEY secret in Supabase."
+          );
+        }
       }
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("ElevenLabs API error:", response.status, errorText);
-
-      if (response.status === 401) {
-        throw new Error(
-          "ElevenLabs authentication failed. Please check the ELEVENLABS_API_KEY secret in Supabase."
-        );
-      }
-
-      throw new Error(`ElevenLabs API error: ${response.status}`);
+    } else {
+      console.error("Failed to request ElevenLabs conversation token:", tokenResult.reason);
     }
 
-    const data = await response.json();
-    const conversationToken = data?.token;
-
-    if (!conversationToken) {
-      throw new Error("No conversation token received from ElevenLabs");
+    if (signedUrlResult.status === "fulfilled") {
+      if (signedUrlResult.value.ok) {
+        const data = await signedUrlResult.value.json();
+        signedUrl = data?.signed_url ?? null;
+      } else {
+        const errorText = await signedUrlResult.value.text();
+        console.warn("ElevenLabs signed URL API error:", signedUrlResult.value.status, errorText);
+      }
+    } else {
+      console.warn("Failed to request ElevenLabs signed URL:", signedUrlResult.reason);
     }
 
-    // Only track usage AFTER successful token fetch
-    await trackUsage(user.id, "elevenlabs-session", usageResult.usageSource);
+    if (!conversationToken && !signedUrl) {
+      throw new Error("No voice session credentials received from ElevenLabs");
+    }
 
-    console.log("ElevenLabs conversation token created successfully");
+    console.log("ElevenLabs conversation credentials created successfully", {
+      hasConversationToken: Boolean(conversationToken),
+      hasSignedUrl: Boolean(signedUrl),
+    });
 
     return new Response(
-      JSON.stringify({ conversation_token: conversationToken, agent_id: agentId }),
+      JSON.stringify({ conversation_token: conversationToken, signed_url: signedUrl, agent_id: agentId }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
