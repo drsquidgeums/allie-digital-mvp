@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
+import { SupportDialog } from "@/components/support/SupportDialog";
 import { Link } from "react-router-dom";
 
 const gatewayBackground = "/images/gateway-background.png";
@@ -7,6 +8,7 @@ const lovableLogo = "/images/lovable-logo.png";
 const allieLogo = "/images/allie-digital-logo.png";
 
 const Privacy = () => {
+  const [supportOpen, setSupportOpen] = useState(false);
   return (
     <div 
       className="min-h-screen flex flex-col items-center justify-between relative overflow-hidden py-8 px-4 sm:px-6 lg:px-8"
@@ -56,7 +58,7 @@ const Privacy = () => {
             <p>The data controller responsible for your personal data is:</p>
             <p><strong>Allie Digital CIC</strong><br />
             Company Number: NI718014<br />
-            Email: <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a></p>
+            Email: contact us via our <button onClick={() => setSupportOpen(true)} className="underline font-medium cursor-pointer bg-transparent border-none p-0 inline" style={{ color: 'inherit' }}>support</button> feature</p>
             <p>For the purposes of the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018, Allie Digital CIC is the controller of your personal data.</p>
           </section>
 
@@ -177,7 +179,7 @@ const Privacy = () => {
               <li><strong>Right to Object (Article 21):</strong> Object to processing based on legitimate interests</li>
               <li><strong>Right to Withdraw Consent:</strong> Where processing is based on consent, you may withdraw it at any time without affecting the lawfulness of prior processing</li>
             </ul>
-            <p>To exercise these rights, please contact us at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a>. We will respond within one month of your request.</p>
+            <p>To exercise these rights, please contact us using our <button onClick={() => setSupportOpen(true)} className="underline font-medium cursor-pointer bg-transparent border-none p-0 inline" style={{ color: 'inherit' }}>support</button> feature. We will respond within one month of your request.</p>
           </section>
           
           <section className="space-y-3">
@@ -188,7 +190,7 @@ const Privacy = () => {
               <li>Telephone: 0303 123 1113</li>
               <li>Post: Information Commissioner's Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF</li>
             </ul>
-            <p>We would appreciate the opportunity to address your concerns before you approach the ICO, so please contact us first at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a>.</p>
+            <p>We would appreciate the opportunity to address your concerns before you approach the ICO, so please contact us first using our <button onClick={() => setSupportOpen(true)} className="underline font-medium cursor-pointer bg-transparent border-none p-0 inline" style={{ color: 'inherit' }}>support</button> feature.</p>
           </section>
 
           <section className="space-y-3">
@@ -216,7 +218,7 @@ const Privacy = () => {
             <p>If you have questions about this Privacy Policy or wish to exercise your data rights, please contact:</p>
             <p><strong>Allie Digital CIC</strong><br />
             Company Number: NI718014<br />
-            Email: <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a></p>
+            Email: contact us via our <button onClick={() => setSupportOpen(true)} className="underline font-medium cursor-pointer bg-transparent border-none p-0 inline" style={{ color: 'inherit' }}>support</button> feature</p>
           </section>
         </div>
       </div>
@@ -232,6 +234,7 @@ const Privacy = () => {
         </div>
         <span className="text-sm">© 2026 Allie Digital CIC · Licensed under <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>AGPL v3</a></span>
       </footer>
+      <SupportDialog open={supportOpen} onOpenChange={setSupportOpen} />
     </div>
   );
 };

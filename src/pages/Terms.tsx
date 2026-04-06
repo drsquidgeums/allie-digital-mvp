@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { SupportDialog } from "@/components/support/SupportDialog";
 
 const gatewayBackground = "/images/gateway-background.png";
 const lovableLogo = "/images/lovable-logo.png";
 const allieLogo = "/images/allie-digital-logo.png";
 
 const Terms = () => {
+  const [supportOpen, setSupportOpen] = useState(false);
   return (
     <div 
       className="min-h-screen flex flex-col items-center justify-between relative overflow-hidden py-8 px-4 sm:px-6 lg:px-8"
@@ -87,7 +89,7 @@ const Terms = () => {
             </ul>
             
             <h3 className="text-lg font-semibold mt-4" style={{ color: '#000000' }}>Refund Policy</h3>
-            <p>As the Service offers a full 7 day free trial prior to purchase, refunds will not be issued once payment has been made. This is because you will have had the opportunity to fully evaluate the Service before committing to purchase. If you experience a technical issue preventing access entirely, please contact us at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a> and we will work to resolve it promptly.</p>
+            <p>As the Service offers a full 7 day free trial prior to purchase, refunds will not be issued once payment has been made. This is because you will have had the opportunity to fully evaluate the Service before committing to purchase. If you experience a technical issue preventing access entirely, please contact us using our <button onClick={() => setSupportOpen(true)} className="underline font-medium cursor-pointer bg-transparent border-none p-0 inline" style={{ color: 'inherit' }}>support</button> feature and we will work to resolve it promptly.</p>
             
             <h3 className="text-lg font-semibold mt-4" style={{ color: '#000000' }}>Trial to Paid Transition</h3>
             <p>At the end of your free trial, access to the Service will be paused until payment is completed. Your data and content will be retained for 30 days following trial expiry, giving you time to decide whether to purchase.</p>
@@ -171,7 +173,7 @@ const Terms = () => {
           
           <section className="space-y-3">
             <h2 className="text-xl font-semibold" style={{ color: '#000000' }}>14. Contact Us</h2>
-            <p>If you have any questions about these Terms of Service, please contact us at <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a>.</p>
+            <p>If you have any questions about these Terms of Service, please contact us using our <button onClick={() => setSupportOpen(true)} className="underline font-medium cursor-pointer bg-transparent border-none p-0 inline" style={{ color: 'inherit' }}>support</button> feature.</p>
           </section>
         </div>
       </div>
@@ -187,6 +189,7 @@ const Terms = () => {
         </div>
         <span className="text-sm">© 2026 Allie Digital CIC · Licensed under <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>AGPL v3</a></span>
       </footer>
+      <SupportDialog open={supportOpen} onOpenChange={setSupportOpen} />
     </div>
   );
 };
