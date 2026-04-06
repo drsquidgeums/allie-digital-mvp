@@ -225,6 +225,7 @@ const App = () => {
             element={
                <TrialProvider trialActive={!!trialActive} trialDaysRemaining={trialDaysRemaining ?? null}>
                 <SecurityProvider>
+                <VoiceConversationProvider>
                 <div className="app-container flex flex-col h-screen">
                   <AppLogo />
                   <Toaster />
@@ -242,7 +243,9 @@ const App = () => {
                   <EmailVerificationReminder />
                   <WelcomeModal />
                   <OnboardingTour />
+                  <FloatingVoiceIndicator />
                 </div>
+                </VoiceConversationProvider>
                 </SecurityProvider>
                </TrialProvider>
             }
