@@ -229,8 +229,8 @@ const providerTutorials: {
     label: "ElevenLabs",
     icon: Mic,
     color: "text-violet-500",
-    tagline: "Powers Voice AI for spoken conversations about your studies",
-    features: ["Voice AI (spoken conversations)"],
+    tagline: "Adds unlimited Text to Speech usage for reading documents aloud",
+    features: ["Text to Speech"],
     steps: [
       {
         title: "Create an ElevenLabs account",
