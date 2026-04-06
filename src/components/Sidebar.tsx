@@ -20,7 +20,8 @@ interface SidebarProps {
 }
 
 export const Sidebar = React.memo(({ 
-  onColorChange
+  onColorChange,
+  onOpenShortcuts,
 }: SidebarProps) => {
   const { t } = useTranslation();
   const [activeComponent, setActiveComponent] = React.useState<string | null>(null);
