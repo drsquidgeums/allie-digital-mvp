@@ -287,7 +287,7 @@ const providerTutorials: {
             </p>
             <div className="rounded-lg border border-border bg-muted/50 p-3">
               <p className="text-xs text-muted-foreground">
-                <span className="font-medium text-foreground">All set!</span> Voice AI will now use your own ElevenLabs key for unlimited voice conversations.
+                <span className="font-medium text-foreground">All set!</span> Text to Speech will now use your own ElevenLabs key for unlimited usage.
               </p>
             </div>
           </div>
