@@ -234,6 +234,7 @@ const Privacy = () => {
         </div>
         <span className="text-sm">© 2026 Allie Digital CIC · Licensed under <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>AGPL v3</a></span>
       </footer>
+      <SupportDialog open={supportOpen} onOpenChange={setSupportOpen} />
     </div>
   );
 };
