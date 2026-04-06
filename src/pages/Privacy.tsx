@@ -58,7 +58,7 @@ const Privacy = () => {
             <p>The data controller responsible for your personal data is:</p>
             <p><strong>Allie Digital CIC</strong><br />
             Company Number: NI718014<br />
-            Email: <a href="mailto:alliedigital@pm.me" className="underline">alliedigital@pm.me</a></p>
+            Email: contact us via our <button onClick={() => setSupportOpen(true)} className="underline font-medium cursor-pointer bg-transparent border-none p-0 inline" style={{ color: 'inherit' }}>support</button> feature</p>
             <p>For the purposes of the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018, Allie Digital CIC is the controller of your personal data.</p>
           </section>
 
