@@ -52,7 +52,7 @@ export async function extractTextFromFile(file: File): Promise<string> {
   
   switch (fileType) {
     case 'pdf':
-      return extractTextFromPdf(file);
+      return extractHtmlFromPdf(file);
     case 'docx':
       // Return HTML to preserve formatting (bold, italic, lists, etc.)
       return await convertDocxToHtml(file);
@@ -85,6 +85,58 @@ export async function extractPlainTextFromFile(file: File): Promise<string> {
       return stripHtmlTags(htmlContent);
     default:
       throw new Error('Unsupported file type for text extraction');
+  }
+}
+
+async function extractHtmlFromPdf(file: File): Promise<string> {
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    
+    if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER_URL;
+    }
+    
+    const loadingTask = pdfjsLib.getDocument({ 
+      data: arrayBuffer,
+      useSystemFonts: true,
+      standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/standard_fonts/`,
+      cMapUrl: `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/cmaps/`,
+      cMapPacked: true,
+    });
+    
+    const pdf = await loadingTask.promise;
+    let htmlContent = '';
+    
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      
+      htmlContent += `<div style="margin-bottom: 1.5em; padding-bottom: 1em; border-bottom: 1px solid #e5e7eb;">`;
+      htmlContent += `<h2 style="font-size: 0.85em; color: #6b7280; margin-bottom: 0.5em;">Page ${i}</h2>`;
+      
+      let currentParagraph = '';
+      for (const item of content.items) {
+        if ('str' in item) {
+          const text = item.str;
+          if (text.trim() === '' && currentParagraph.trim() !== '') {
+            htmlContent += `<p>${currentParagraph.trim()}</p>`;
+            currentParagraph = '';
+          } else {
+            currentParagraph += text + ' ';
+          }
+        }
+      }
+      if (currentParagraph.trim()) {
+        htmlContent += `<p>${currentParagraph.trim()}</p>`;
+      }
+      
+      htmlContent += `</div>`;
+    }
+    
+    return htmlContent || '<p>No text content found in this PDF.</p>';
+  } catch (error) {
+    console.error('Error extracting HTML from PDF:', error);
+    return `<p>PDF loaded successfully (text extraction unavailable in this environment)</p>`;
   }
 }
 

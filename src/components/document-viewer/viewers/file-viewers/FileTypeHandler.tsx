@@ -33,7 +33,7 @@ export const FileTypeHandler: React.FC<FileTypeHandlerProps> = ({
     console.log("Detected file type:", fileType);
     
     // For editable text-based file types, use the rich text editor if enabled
-    if (useRichTextEditor && (fileType === 'txt' || fileType === 'html' || fileType === 'docx')) {
+    if (useRichTextEditor && (fileType === 'txt' || fileType === 'html' || fileType === 'docx' || fileType === 'pdf')) {
       return (
         <RichTextEditorWrapper
           file={file}
