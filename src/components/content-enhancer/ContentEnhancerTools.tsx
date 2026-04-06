@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useContentEnhancer, Flashcard, QuizQuestion, PracticeQuestion } from "@/hooks/useContentEnhancer";
 import { Button } from "@/components/ui/button";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Sparkles, Download, Save } from "lucide-react";
 import { FlashcardViewer } from "./FlashcardViewer";
 import { QuizViewer } from "./QuizViewer";
 import { PracticeQuestionsViewer } from "./PracticeQuestionsViewer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
 
 interface ContentEnhancerToolsProps {
   documentContent?: string;
