@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { notifyAICreditsUsed } from "@/utils/aiCreditsEvent";
 import { Label } from "@/components/ui/label";
 import { useAIUsage } from "@/hooks/useAIUsage";
+import { handleAIUsageLimitError } from "@/utils/aiUsageLimitHandler";
 
 export const VoiceAssistant: React.FC = () => {
   const { toast } = useToast();
@@ -15,12 +16,15 @@ export const VoiceAssistant: React.FC = () => {
   const [isConnecting, setIsConnecting] = useState(false);
   const { usage } = useAIUsage();
 
-  const elevenlabsUsage = usage?.byProvider?.find(p => p.name === "elevenlabs");
-  const hasCredits = elevenlabsUsage ? (elevenlabsUsage.hasOwnKey || elevenlabsUsage.remaining > 0) : true;
+  const elevenlabsUsage = usage?.byProvider?.find((provider) => provider.name === "elevenlabs");
+  const hasCredits = elevenlabsUsage
+    ? elevenlabsUsage.hasOwnKey || elevenlabsUsage.remaining > 0
+    : true;
 
   const conversation = useConversation({
     onConnect: () => {
       console.log("Voice conversation connected");
+      setConversationStarted(true);
       toast({
         title: "Connected",
         description: "Voice assistant is ready to chat",
@@ -50,6 +54,7 @@ export const VoiceAssistant: React.FC = () => {
         description: helpful ? `${message} — ${helpful}` : message,
         variant: "destructive",
       });
+      setConversationStarted(false);
       setIsConnecting(false);
     },
     onMessage: (message) => {
@@ -61,48 +66,36 @@ export const VoiceAssistant: React.FC = () => {
     setIsConnecting(true);
 
     try {
-      // Request microphone access first
       await navigator.mediaDevices.getUserMedia({ audio: true });
 
-      // Get signed URL from our edge function (uses built-in agent)
-      const { data, error } = await supabase.functions.invoke('elevenlabs-session');
+      const { data, error } = await supabase.functions.invoke("elevenlabs-session");
 
       if (error) {
-        // Check for usage limit error
-        const errorBody = typeof error === "object" && error.message ? error.message : String(error);
-        if (errorBody.includes("usage limit") || errorBody.includes("limit reached")) {
-          toast({
-            title: "ElevenLabs credits used up",
-            description: "Add your own ElevenLabs API key in Settings for unlimited Voice AI access.",
-            variant: "destructive",
-          });
+        if (handleAIUsageLimitError(error)) {
           return;
         }
-        throw new Error(error.message || "Failed to get session URL");
-      }
 
-      // Check if the response indicates a usage limit
-      if (data?.error && (data.error.includes("usage limit") || data.error.includes("limit reached"))) {
-        toast({
-          title: "ElevenLabs credits used up",
-          description: "Add your own ElevenLabs API key in Settings for unlimited Voice AI access.",
-          variant: "destructive",
-        });
-        return;
+        const rawMessage = error.message || "Failed to get session URL";
+        const friendlyMessage = rawMessage.includes("ElevenLabs authentication failed")
+          ? "Voice AI is still being rejected by ElevenLabs. Re-check the ELEVENLABS_API_KEY secret in Supabase, or add your own ElevenLabs key in Settings → AI Settings."
+          : rawMessage;
+
+        throw new Error(friendlyMessage);
       }
 
       if (!data?.signed_url) {
         throw new Error("No signed URL received");
       }
 
-      // Start the conversation with the signed URL
       await conversation.startSession({
         signedUrl: data.signed_url,
       });
+
       setConversationStarted(true);
       notifyAICreditsUsed();
     } catch (error) {
       console.error("Error starting conversation:", error);
+      setConversationStarted(false);
       toast({
         title: "Connection Failed",
         description: error instanceof Error ? error.message : "Failed to start conversation",

@@ -1,7 +1,29 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { decryptApiKey } from "./crypto.ts";
 
-const MONTHLY_LIMIT = 15;
+const PROVIDER_LIMITS = {
+  openai: 15,
+  anthropic: 15,
+  elevenlabs: 10,
+} as const;
+
+const FEATURE_PROVIDER_MAP: Record<string, keyof typeof PROVIDER_LIMITS> = {
+  "simplify-text": "openai",
+  "document-ai-chat": "openai",
+  "content-enhancer": "openai",
+  "study-buddy-chat": "openai",
+  "task-ai-suggestions": "openai",
+  "mindmap-ai": "openai",
+  "voice-chat": "openai",
+  "progress-ai-insights": "openai",
+  "elevenlabs-tts": "elevenlabs",
+  "elevenlabs-tts-public": "elevenlabs",
+  "elevenlabs-transcribe": "elevenlabs",
+  "elevenlabs-session": "elevenlabs",
+};
+
+type ProviderName = keyof typeof PROVIDER_LIMITS;
+type UsageSource = "shared" | "user_key";
 
 interface UsageCheckResult {
   allowed: boolean;
@@ -9,89 +31,142 @@ interface UsageCheckResult {
   usedCount: number;
   userApiKey?: string;
   usingOwnKey: boolean;
+  provider: ProviderName;
+  usageSource: UsageSource;
+}
+
+function createServiceClient() {
+  return createClient(
+    Deno.env.get("SUPABASE_URL") ?? "",
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+  );
+}
+
+function getFeatureProvider(featureName: string): ProviderName {
+  return FEATURE_PROVIDER_MAP[featureName] ?? "openai";
+}
+
+function getProviderFeatures(provider: ProviderName, featureName: string) {
+  const features = Object.entries(FEATURE_PROVIDER_MAP)
+    .filter(([, mappedProvider]) => mappedProvider === provider)
+    .map(([mappedFeature]) => mappedFeature);
+
+  if (!features.includes(featureName)) {
+    features.push(featureName);
+  }
+
+  return features;
+}
+
+async function resolveUsage(userId: string, featureName: string): Promise<UsageCheckResult> {
+  const serviceClient = createServiceClient();
+  const provider = getFeatureProvider(featureName);
+
+  const { data: apiKeyData, error: apiKeyError } = await serviceClient
+    .from("user_api_keys")
+    .select("api_key")
+    .eq("user_id", userId)
+    .eq("provider", provider)
+    .maybeSingle();
+
+  if (apiKeyError) {
+    throw apiKeyError;
+  }
+
+  if (apiKeyData?.api_key) {
+    const decryptedKey = await decryptApiKey(apiKeyData.api_key);
+
+    return {
+      allowed: true,
+      remaining: -1,
+      usedCount: 0,
+      userApiKey: decryptedKey,
+      usingOwnKey: true,
+      provider,
+      usageSource: "user_key",
+    };
+  }
+
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  const providerFeatures = getProviderFeatures(provider, featureName);
+
+  const { data: usageRecords, error: usageError } = await serviceClient
+    .from("ai_feature_usage")
+    .select("feature_name, usage_data")
+    .eq("user_id", userId)
+    .gte("created_at", monthStart)
+    .in("feature_name", providerFeatures);
+
+  if (usageError) {
+    throw usageError;
+  }
+
+  const usedCount = (usageRecords ?? []).filter((record) => {
+    const source = (record.usage_data as { source?: string } | null)?.source;
+    return source !== "user_key";
+  }).length;
+
+  const remaining = Math.max(0, PROVIDER_LIMITS[provider] - usedCount);
+
+  return {
+    allowed: remaining > 0,
+    remaining,
+    usedCount,
+    usingOwnKey: false,
+    provider,
+    usageSource: "shared",
+  };
+}
+
+export async function trackUsage(
+  userId: string,
+  featureName: string,
+  source: UsageSource,
+) {
+  const serviceClient = createServiceClient();
+  const { error } = await serviceClient.from("ai_feature_usage").insert({
+    user_id: userId,
+    feature_name: featureName,
+    usage_data: { source },
+  });
+
+  if (error) {
+    throw error;
+  }
 }
 
 export async function checkAndTrackUsage(
   userId: string,
-  featureName: string
+  featureName: string,
+  options: { track?: boolean } = {},
 ): Promise<UsageCheckResult> {
-  const serviceClient = createClient(
-    Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
-  );
+  const usage = await resolveUsage(userId, featureName);
 
-  // Check if user has their own OpenAI API key
-  const { data: apiKeyData } = await serviceClient
-    .from("user_api_keys")
-    .select("api_key")
-    .eq("user_id", userId)
-    .eq("provider", "openai")
-    .maybeSingle();
-
-  if (apiKeyData?.api_key) {
-    // Decrypt the stored API key
-    const decryptedKey = await decryptApiKey(apiKeyData.api_key);
-    // User has own key - always allowed, no tracking needed for limits
-    // Still log for analytics
-    await serviceClient.from("ai_feature_usage").insert({
-      user_id: userId,
-      feature_name: featureName,
-      usage_data: { source: "user_key" },
-    });
-
-    return {
-      allowed: true,
-      remaining: -1, // unlimited
-      usedCount: 0,
-      userApiKey: decryptedKey,
-      usingOwnKey: true,
-    };
+  if (!usage.allowed) {
+    return usage;
   }
 
-  // Count this month's usage (shared credits)
-  const now = new Date();
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-
-  const { count, error } = await serviceClient
-    .from("ai_feature_usage")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", userId)
-    .gte("created_at", monthStart)
-    .is("usage_data->source", null); // only count shared-credit usage
-
-  const usedCount = count ?? 0;
-  const remaining = Math.max(0, MONTHLY_LIMIT - usedCount);
-
-  if (remaining <= 0) {
-    return {
-      allowed: false,
-      remaining: 0,
-      usedCount,
-      usingOwnKey: false,
-    };
+  if (options.track === false) {
+    return usage;
   }
 
-  // Log usage
-  await serviceClient.from("ai_feature_usage").insert({
-    user_id: userId,
-    feature_name: featureName,
-    usage_data: { source: "shared" },
-  });
+  await trackUsage(userId, featureName, usage.usageSource);
 
   return {
-    allowed: true,
-    remaining: remaining - 1,
-    usedCount: usedCount + 1,
-    usingOwnKey: false,
+    ...usage,
+    remaining:
+      usage.usageSource === "shared" ? Math.max(0, usage.remaining - 1) : usage.remaining,
+    usedCount: usage.usageSource === "shared" ? usage.usedCount + 1 : usage.usedCount,
   };
 }
 
-export function getUsageLimitResponse(remaining: number) {
+export function getUsageLimitResponse(remaining: number, providerLabel = "OpenAI") {
   return new Response(
     JSON.stringify({
-      error: "Monthly AI credits used up. You can add your own OpenAI API key in Settings for unlimited access. Credits reset on the 1st of each month.",
+      error: `Monthly ${providerLabel} credits used up. You can add your own ${providerLabel} API key in Settings for unlimited access. Credits reset on the 1st of each month.`,
       code: "USAGE_LIMIT_REACHED",
-      remaining: 0,
+      remaining,
     }),
     {
       status: 429,
@@ -131,4 +206,4 @@ export function getAIRequestConfig(userApiKey?: string) {
   };
 }
 
-export const MONTHLY_AI_LIMIT = MONTHLY_LIMIT;
+export const MONTHLY_AI_LIMIT = PROVIDER_LIMITS.openai;
