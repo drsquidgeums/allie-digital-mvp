@@ -52,7 +52,7 @@ export async function extractTextFromFile(file: File): Promise<string> {
   
   switch (fileType) {
     case 'pdf':
-      return extractTextFromPdf(file);
+      return extractHtmlFromPdf(file);
     case 'docx':
       // Return HTML to preserve formatting (bold, italic, lists, etc.)
       return await convertDocxToHtml(file);
