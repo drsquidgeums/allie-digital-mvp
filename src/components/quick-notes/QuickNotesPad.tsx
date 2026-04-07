@@ -1,21 +1,70 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { StickyNote, X, Minimize2, Maximize2 } from 'lucide-react';
+import { StickyNote, X, Minimize2, Maximize2, Loader2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-
-const STORAGE_KEY = 'quick_notes_content';
-const VISIBILITY_KEY = 'quick_notes_visible';
+import { supabase } from '@/integrations/supabase/client';
 
 export const QuickNotesPad: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [content, setContent] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const loadedRef = useRef(false);
 
+  // Load notes from Supabase on mount
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) setContent(saved);
+    const load = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { setIsLoading(false); return; }
+
+      const { data } = await supabase
+        .from('quick_notes')
+        .select('content')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (data) setContent(data.content);
+      loadedRef.current = true;
+      setIsLoading(false);
+    };
+    load();
   }, []);
+
+  // Debounced save to Supabase
+  const saveToSupabase = useCallback(async (text: string) => {
+    setIsSaving(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      await supabase
+        .from('quick_notes')
+        .upsert(
+          { user_id: user.id, content: text, updated_at: new Date().toISOString() },
+          { onConflict: 'user_id' }
+        );
+    } catch (e) {
+      console.error('Failed to save quick notes:', e);
+    } finally {
+      setIsSaving(false);
+    }
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setContent(value);
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => saveToSupabase(value), 800);
+  };
+
+  const handleClear = async () => {
+    setContent('');
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    await saveToSupabase('');
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -30,11 +79,10 @@ export const QuickNotesPad: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    setContent(value);
-    localStorage.setItem(STORAGE_KEY, value);
-  };
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
+  }, []);
 
   if (!isOpen) {
     return (
@@ -86,20 +134,28 @@ export const QuickNotesPad: React.FC = () => {
       </div>
       {!isMinimized && (
         <div className="p-3">
-          <textarea
-            value={content}
-            onChange={handleChange}
-            placeholder="Jot down quick thoughts here... They'll be saved automatically."
-            className="w-full h-48 bg-transparent text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none"
-            aria-label="Quick notes text area"
-          />
+          {isLoading ? (
+            <div className="flex items-center justify-center h-48">
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            </div>
+          ) : (
+            <textarea
+              value={content}
+              onChange={handleChange}
+              placeholder="Jot down quick thoughts here... They'll be saved automatically."
+              className="w-full h-48 bg-transparent text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none"
+              aria-label="Quick notes text area"
+            />
+          )}
           <div className="flex justify-between items-center mt-2">
-            <span className="text-xs text-muted-foreground">Auto-saved</span>
+            <span className="text-xs text-muted-foreground">
+              {isSaving ? 'Saving...' : 'Saved to your account'}
+            </span>
             <Button
               variant="ghost"
               size="sm"
               className="text-xs h-6"
-              onClick={() => { setContent(''); localStorage.removeItem(STORAGE_KEY); }}
+              onClick={handleClear}
             >
               Clear
             </Button>
