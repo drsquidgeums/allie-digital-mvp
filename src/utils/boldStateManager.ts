@@ -33,17 +33,11 @@ class BoldStateManager {
   }
 
   public applyBoldStyling(): void {
-    document.documentElement.style.setProperty('--font-weight', this.isBold ? 'bold' : 'normal');
-    const allTextElements = document.querySelectorAll<HTMLElement>('p, span, a, h1, h2, h3, h4, h5, h6, div, button, label, input, textarea');
-    allTextElements.forEach(element => {
-      // Only apply bold if it's enabled
-      if (this.isBold) {
-        element.style.fontWeight = 'bold';
-      } else {
-        // Remove the inline style to let the default font weight take effect
-        element.style.removeProperty('font-weight');
-      }
-    });
+    if (this.isBold) {
+      document.documentElement.classList.add('global-bold');
+    } else {
+      document.documentElement.classList.remove('global-bold');
+    }
   }
 }
 
