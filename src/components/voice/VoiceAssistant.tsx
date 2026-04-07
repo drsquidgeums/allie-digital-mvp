@@ -136,5 +136,6 @@ export const VoiceAssistant: React.FC = () => {
         )}
       </CardContent>
     </Card>
+    </>
   );
 };

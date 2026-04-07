@@ -90,5 +90,6 @@ export const STTToggleButton: React.FC = () => {
         {isListening ? 'Stop Dictation (recording...)' : t('tools.stt')}
       </TooltipContent>
     </Tooltip>
+    </>
   );
 };
