@@ -3,7 +3,8 @@ import { Timer, Text, Wand2, Sparkles, Bot, GraduationCap, Highlighter } from "l
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { PomodoroTimer } from "../PomodoroTimer";
-import { SpeechToText } from "../SpeechToText";
+import { STTToggleButton } from "./toolbar/STTToggleButton";
+import { Rewordify } from "../Rewordify";
 import { Rewordify } from "../Rewordify";
 import { IrlenOverlay } from "../IrlenOverlay";
 import { AmbientMusic } from "../AmbientMusic";
