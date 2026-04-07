@@ -1,12 +1,20 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { decode as base64Decode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
-import { checkAndTrackUsage, getUsageLimitResponse } from "../_shared/ai-usage.ts";
+import { checkAndTrackUsage, getUsageLimitResponse, trackUsage } from "../_shared/ai-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+};
+
+const getAudioFilename = (mimeType: string) => {
+  if (mimeType.includes("mp4") || mimeType.includes("m4a")) return "speech.m4a";
+  if (mimeType.includes("mpeg") || mimeType.includes("mp3")) return "speech.mp3";
+  if (mimeType.includes("wav")) return "speech.wav";
+  if (mimeType.includes("ogg")) return "speech.ogg";
+  return "speech.webm";
 };
 
 serve(async (req) => {
@@ -69,7 +77,7 @@ serve(async (req) => {
     }
 
     // Check usage and get user's own key if available
-    const usageResult = await checkAndTrackUsage(user.id, "elevenlabs-transcribe");
+    const usageResult = await checkAndTrackUsage(user.id, "elevenlabs-transcribe", { track: false });
     if (!usageResult.allowed) {
       return getUsageLimitResponse(0, "ElevenLabs");
     }
@@ -81,7 +89,7 @@ serve(async (req) => {
 
     const bytes = base64Decode(audioBase64);
     const blob = new Blob([bytes], { type: safeMimeType });
-    const file = new File([blob], "speech.webm", { type: safeMimeType });
+    const file = new File([blob], getAudioFilename(safeMimeType), { type: safeMimeType });
 
     const formData = new FormData();
     formData.append("file", file);
@@ -102,14 +110,16 @@ serve(async (req) => {
     if (!response.ok) {
       const t = await response.text();
       console.error("[ELEVENLABS-TRANSCRIBE] error:", response.status, t);
-      return new Response(JSON.stringify({ error: `Transcription failed: ${response.status}` }), {
-        status: 500,
+      return new Response(JSON.stringify({ error: t || `Transcription failed: ${response.status}` }), {
+        status: response.status,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const data = await response.json();
     const text = typeof data?.text === "string" ? data.text : "";
+
+    await trackUsage(user.id, "elevenlabs-transcribe", usageResult.usageSource);
 
     return new Response(JSON.stringify({ text }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
