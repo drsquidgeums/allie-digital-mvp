@@ -32,10 +32,6 @@ const Terms = () => {
         }}
       />
       
-      {/* Logo - top right */}
-      <div className="absolute top-6 right-6 z-10">
-        <img src={allieLogo} alt="Allie Digital" className="h-[130px]" />
-      </div>
       
       {/* Content */}
       <div className="max-w-3xl w-full relative z-10 flex-grow">
