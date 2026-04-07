@@ -64,6 +64,7 @@ export const TTSButton = () => {
       return;
     }
 
+    triggerPrompt();
     setIsLoading(true);
 
     try {
