@@ -6,6 +6,8 @@ import { useEditorContent } from '@/hooks/useEditorContent';
 import { useInlineDictation } from '@/hooks/useInlineDictation';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import { useElevenLabsBYOKPrompt } from '@/hooks/useElevenLabsBYOKPrompt';
+import { ElevenLabsBYOKPrompt } from '@/components/byok/ElevenLabsBYOKPrompt';
 
 export const STTToggleButton: React.FC = () => {
   const { t } = useTranslation();
