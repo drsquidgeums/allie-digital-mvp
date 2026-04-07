@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { PomodoroTimer } from "../PomodoroTimer";
 import { STTToggleButton } from "./toolbar/STTToggleButton";
 import { Rewordify } from "../Rewordify";
-import { Rewordify } from "../Rewordify";
 import { IrlenOverlay } from "../IrlenOverlay";
 import { AmbientMusic } from "../AmbientMusic";
 import { TextTool } from "./toolbar/TextTool";
