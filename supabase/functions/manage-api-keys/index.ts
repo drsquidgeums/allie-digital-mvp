@@ -8,9 +8,9 @@ const corsHeaders = {
 };
 
 const PROVIDER_LIMITS: Record<string, number> = {
-  openai: 15,
-  anthropic: 15,
-  elevenlabs: 10,
+  openai: 25,
+  anthropic: 25,
+  elevenlabs: 25,
 };
 
 // Map feature names to their provider

@@ -2,9 +2,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { decryptApiKey } from "./crypto.ts";
 
 const PROVIDER_LIMITS = {
-  openai: 15,
-  anthropic: 15,
-  elevenlabs: 10,
+  openai: 25,
+  anthropic: 25,
+  elevenlabs: 25,
 } as const;
 
 const FEATURE_PROVIDER_MAP: Record<string, keyof typeof PROVIDER_LIMITS> = {
