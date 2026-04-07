@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Mic, PhoneOff, Loader2, Phone, AlertCircle } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { useVoiceConversation } from "@/contexts/VoiceConversationContext";
+import { useElevenLabsBYOKPrompt } from "@/hooks/useElevenLabsBYOKPrompt";
+import { ElevenLabsBYOKPrompt } from "@/components/byok/ElevenLabsBYOKPrompt";
 
 export const VoiceAssistant: React.FC = () => {
   const {
