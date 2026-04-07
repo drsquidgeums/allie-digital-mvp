@@ -5,7 +5,7 @@ import { SupportDialog } from "@/components/support/SupportDialog";
 
 const gatewayBackground = "/images/gateway-background.png";
 const lovableLogo = "/images/lovable-logo.png";
-const allieLogo = "/images/allie-digital-logo.png";
+
 
 const Terms = () => {
   const [supportOpen, setSupportOpen] = useState(false);
