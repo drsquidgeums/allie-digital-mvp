@@ -114,7 +114,7 @@ const Privacy = () => {
             <p>When you use AI-powered features, your content is processed by the following third-party AI providers:</p>
             <ul className="list-disc pl-6 space-y-2">
                <li><strong>OpenAI</strong>: Powers the AI study assistant, text simplification, task suggestions, and content enhancement features</li>
-               <li><strong>Anthropic (Claude)</strong>: Used for document analysis and AI chat capabilities</li>
+               
                <li><strong>ElevenLabs</strong>: Provides text to speech and voice AI functionality</li>
             </ul>
             <p>When using these AI features:</p>
