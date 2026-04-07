@@ -11,7 +11,7 @@ export const STTToggleButton: React.FC = () => {
   const { content } = useEditorContent();
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const finalTranscriptRef = useRef('');
+  const shouldRestartRef = useRef(false);
 
   const isSupported =
     typeof window !== 'undefined' &&
@@ -21,11 +21,70 @@ export const STTToggleButton: React.FC = () => {
     (text: string) => {
       const editor = content.editor;
       if (!editor || !text) return;
-
-      editor.chain().focus().insertContent(text).run();
+      // Add a space before inserting so words don't merge
+      editor.chain().focus().insertContent(text + ' ').run();
     },
     [content.editor]
   );
+
+  const createRecognition = useCallback(() => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = navigator.language || 'en-US';
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+          const text = event.results[i][0].transcript;
+          console.log('[STT] Final transcript:', text);
+          insertTextAtCursor(text);
+        }
+      }
+    };
+
+    recognition.onerror = (event) => {
+      console.error('[STT] Error:', event.error);
+
+      if (event.error === 'not-allowed') {
+        shouldRestartRef.current = false;
+        setIsListening(false);
+        toast.error('Microphone access denied – please allow microphone permission');
+      } else if (event.error === 'no-speech') {
+        // No speech detected – will auto-restart via onend
+        console.log('[STT] No speech detected, will restart...');
+      } else if (event.error === 'aborted') {
+        // User stopped it
+      } else {
+        toast.error(`Speech recognition error: ${event.error}`);
+        shouldRestartRef.current = false;
+        setIsListening(false);
+      }
+    };
+
+    recognition.onend = () => {
+      console.log('[STT] Recognition ended, shouldRestart:', shouldRestartRef.current);
+      // Auto-restart if the user hasn't explicitly stopped
+      if (shouldRestartRef.current) {
+        try {
+          const newRecognition = createRecognition();
+          newRecognition.start();
+          recognitionRef.current = newRecognition;
+          console.log('[STT] Auto-restarted');
+        } catch (err) {
+          console.error('[STT] Failed to auto-restart:', err);
+          shouldRestartRef.current = false;
+          setIsListening(false);
+        }
+      } else {
+        setIsListening(false);
+      }
+    };
+
+    return recognition;
+  }, [insertTextAtCursor]);
 
   const startListening = useCallback(() => {
     if (!isSupported) {
@@ -35,62 +94,33 @@ export const STTToggleButton: React.FC = () => {
 
     const editor = content.editor;
     if (!editor) {
-      toast.error('No editor available');
+      toast.error('No editor available – open a document first');
       return;
     }
 
     try {
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognition = new SpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = false;
-      recognition.lang = navigator.language || 'en-US';
-
-      finalTranscriptRef.current = '';
-
-      recognition.onresult = (event: SpeechRecognitionEvent) => {
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          if (event.results[i].isFinal) {
-            const text = event.results[i][0].transcript;
-            insertTextAtCursor(text);
-          }
-        }
-      };
-
-      recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-        setIsListening(false);
-
-        if (event.error === 'not-allowed') {
-          toast.error('Microphone access denied – please allow microphone permission');
-        } else if (event.error !== 'aborted') {
-          toast.error(`Speech recognition error: ${event.error}`);
-        }
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-      };
-
+      shouldRestartRef.current = true;
+      const recognition = createRecognition();
       recognition.start();
       recognitionRef.current = recognition;
       setIsListening(true);
       toast.success('Dictation started – speak now, text goes into editor');
     } catch (error) {
-      console.error('Failed to start speech recognition:', error);
+      console.error('[STT] Failed to start:', error);
+      shouldRestartRef.current = false;
       setIsListening(false);
       toast.error('Failed to start speech recognition');
     }
-  }, [isSupported, content.editor, insertTextAtCursor]);
+  }, [isSupported, content.editor, createRecognition]);
 
   const stopListening = useCallback(() => {
+    shouldRestartRef.current = false;
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       recognitionRef.current = null;
-      setIsListening(false);
-      toast.success('Dictation stopped');
     }
+    setIsListening(false);
+    toast.success('Dictation stopped');
   }, []);
 
   const toggle = useCallback(() => {
@@ -135,7 +165,7 @@ export const STTToggleButton: React.FC = () => {
         side="bottom"
         className="bg-popover text-popover-foreground px-3 py-1.5 text-sm"
       >
-        {isListening ? 'Stop Dictation' : t('tools.stt')}
+        {isListening ? 'Stop Dictation (recording...)' : t('tools.stt')}
       </TooltipContent>
     </Tooltip>
   );
