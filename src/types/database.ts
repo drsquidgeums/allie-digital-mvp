@@ -47,7 +47,6 @@ export interface ExtendedDatabase extends SupabaseDatabase {
       ai_study_materials: SupabaseDatabase['public']['Tables']['ai_study_materials'];
       ai_task_breakdowns: SupabaseDatabase['public']['Tables']['ai_task_breakdowns'];
       user_analytics: SupabaseDatabase['public']['Tables']['user_analytics'];
-      secrets: SupabaseDatabase['public']['Tables']['secrets'];
       teams_config: SupabaseDatabase['public']['Tables']['teams_config'];
       saved_urls: SupabaseDatabase['public']['Tables']['saved_urls'];
       stripe_subscriptions: SupabaseDatabase['public']['Tables']['stripe_subscriptions'];
