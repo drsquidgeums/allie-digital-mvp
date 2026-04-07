@@ -20,21 +20,23 @@ export const PasswordGate = ({ onAuthenticated }: PasswordGateProps) => {
   useEffect(() => {
     const bgImage = new Image();
     const logoImage = new Image();
+    const allieLogo = new Image();
     let loadedCount = 0;
 
     const handleImageLoad = () => {
       loadedCount++;
-      if (loadedCount === 2) {
+      if (loadedCount === 3) {
         setImagesLoaded(true);
       }
     };
 
     bgImage.onload = handleImageLoad;
     logoImage.onload = handleImageLoad;
+    allieLogo.onload = handleImageLoad;
 
-    // Preload the actual imported images
     bgImage.src = gatewayBackground;
     logoImage.src = lovableLogo;
+    allieLogo.src = "/lovable-uploads/3a3ef3bc-dbfb-441c-88cd-8b91d4891d61.png";
   }, []);
 
   // Inject CSS styles to override theme styles with maximum specificity
