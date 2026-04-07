@@ -10,12 +10,11 @@ import { useTranslation } from 'react-i18next';
 export const STTToggleButton: React.FC = () => {
   const { t } = useTranslation();
   const { content } = useEditorContent();
+  const editor = content?.editor ?? null;
 
   const insertTextAtCursor = useCallback(
     (text: string) => {
-      const editor = content.editor;
       const cleanText = text.trim();
-
       if (!editor || !cleanText) return;
 
       editor
@@ -24,11 +23,11 @@ export const STTToggleButton: React.FC = () => {
         .insertContent({ type: 'text', text: `${cleanText} ` })
         .run();
     },
-    [content.editor]
+    [editor]
   );
 
   const { isListening, isSupported, startListening, stopListening } = useInlineDictation({
-    editor: content.editor,
+    editor,
     insertText: insertTextAtCursor,
   });
 
