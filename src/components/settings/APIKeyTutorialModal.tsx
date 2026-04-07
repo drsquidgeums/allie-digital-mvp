@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Sparkles,
-  Brain,
   Mic,
   ExternalLink,
   ChevronLeft,
@@ -127,96 +126,6 @@ const providerTutorials: {
             <div className="rounded-lg border border-border bg-muted/50 p-3">
               <p className="text-xs text-muted-foreground">
                 <span className="font-medium text-foreground">That's it!</span> Your built in AI features will now use your own key with no monthly limit. Your credits will show as unlimited.
-              </p>
-            </div>
-          </div>
-        ),
-      },
-    ],
-  },
-  {
-    id: "anthropic",
-    label: "Anthropic (Claude)",
-    icon: Brain,
-    color: "text-orange-500",
-    tagline: "Powers the AI Study Buddy for conversational learning support",
-    features: ["AI Study Buddy chat"],
-    steps: [
-      {
-        title: "Create an Anthropic account",
-        content: (
-          <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              Anthropic makes Claude, the AI that powers the Study Buddy. Create a free account to get started.
-            </p>
-            <a
-              href="https://console.anthropic.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline font-medium"
-            >
-              Go to Anthropic Console <ExternalLink className="h-3.5 w-3.5" />
-            </a>
-          </div>
-        ),
-      },
-      {
-        title: "Add billing to your account",
-        content: (
-          <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              Like OpenAI, Anthropic requires a payment method. You only pay for what you use.
-            </p>
-            <a
-              href="https://console.anthropic.com/settings/billing"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline font-medium"
-            >
-              Go to Anthropic billing <ExternalLink className="h-3.5 w-3.5" />
-            </a>
-            <div className="rounded-lg border border-border bg-muted/50 p-3">
-              <p className="text-xs text-muted-foreground">
-                <span className="font-medium text-foreground">Tip:</span> Anthropic offers $5 of free credits when you first sign up, which should last a long time for Study Buddy conversations.
-              </p>
-            </div>
-          </div>
-        ),
-      },
-      {
-        title: "Generate your API key",
-        content: (
-          <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              Create a new API key for Allie to use.
-            </p>
-            <ol className="text-sm text-muted-foreground space-y-2 list-decimal list-inside">
-              <li>Click the link below to go to your API keys page</li>
-              <li>Click <span className="font-medium text-foreground">"Create Key"</span></li>
-              <li>Name it <span className="font-medium text-foreground">"Allie"</span></li>
-              <li>Copy the key (it starts with <code className="px-1 py-0.5 rounded bg-muted text-xs">sk-ant-</code>)</li>
-            </ol>
-            <a
-              href="https://console.anthropic.com/settings/keys"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline font-medium"
-            >
-              Go to Anthropic API keys <ExternalLink className="h-3.5 w-3.5" />
-            </a>
-          </div>
-        ),
-      },
-      {
-        title: "Paste it into Allie",
-        content: (
-          <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              Find the <span className="font-medium text-foreground">Anthropic</span> field under "Your Own API Keys" in AI Settings and paste your key, then click <span className="font-medium text-foreground">Save</span>.
-            </p>
-            <div className="rounded-lg border border-border bg-muted/50 p-3">
-              <p className="text-xs text-muted-foreground">
-                <span className="font-medium text-foreground">Done!</span> The AI Study Buddy will now use your own Anthropic key with unlimited access.
               </p>
             </div>
           </div>

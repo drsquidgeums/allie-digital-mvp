@@ -3,7 +3,6 @@ import { decryptApiKey } from "./crypto.ts";
 
 const PROVIDER_LIMITS = {
   openai: 25,
-  anthropic: 25,
   elevenlabs: 25,
 } as const;
 

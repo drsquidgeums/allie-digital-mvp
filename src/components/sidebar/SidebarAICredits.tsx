@@ -1,5 +1,5 @@
 import React from "react";
-import { Sparkles, Brain, Mic } from "lucide-react";
+import { Sparkles, Mic } from "lucide-react";
 import { useAIUsage, ProviderUsage } from "@/hooks/useAIUsage";
 import { useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 
 const providerConfig: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   openai: { label: "OpenAI", icon: Sparkles, color: "text-emerald-500" },
-  anthropic: { label: "Anthropic", icon: Brain, color: "text-orange-500" },
   elevenlabs: { label: "ElevenLabs", icon: Mic, color: "text-violet-500" },
 };
 
@@ -73,9 +72,8 @@ export const SidebarAICredits = () => {
 
   // Show placeholder with 0 values when no usage data (e.g. admin/edit mode)
   const providers: ProviderUsage[] = usage?.byProvider ?? [
-    { name: "openai", used: 0, limit: 15, remaining: 0, hasOwnKey: false },
-    { name: "anthropic", used: 0, limit: 15, remaining: 0, hasOwnKey: false },
-    { name: "elevenlabs", used: 0, limit: 10, remaining: 0, hasOwnKey: false },
+    { name: "openai", used: 0, limit: 25, remaining: 0, hasOwnKey: false },
+    { name: "elevenlabs", used: 0, limit: 25, remaining: 0, hasOwnKey: false },
   ];
 
   return (

@@ -9,7 +9,6 @@ const corsHeaders = {
 
 const PROVIDER_LIMITS: Record<string, number> = {
   openai: 25,
-  anthropic: 25,
   elevenlabs: 25,
 };
 
@@ -81,7 +80,7 @@ serve(async (req) => {
         .gte("created_at", monthStart);
 
       // Count usage per provider
-      const providerUsage: Record<string, number> = { openai: 0, anthropic: 0, elevenlabs: 0 };
+      const providerUsage: Record<string, number> = { openai: 0, elevenlabs: 0 };
       for (const record of usageRecords ?? []) {
         const source = (record.usage_data as any)?.source;
         if (source === "user_key") continue; // Don't count BYOK usage against limits
@@ -128,7 +127,7 @@ serve(async (req) => {
         });
       }
 
-      if (!["openai", "anthropic", "elevenlabs"].includes(provider)) {
+      if (!["openai", "elevenlabs"].includes(provider)) {
         return new Response(JSON.stringify({ error: "Invalid provider" }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },

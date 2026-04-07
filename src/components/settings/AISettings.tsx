@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Key, Trash2, Eye, EyeOff, ExternalLink, Brain, Mic, BookOpen } from "lucide-react";
+import { Sparkles, Key, Trash2, Eye, EyeOff, ExternalLink, Mic, BookOpen } from "lucide-react";
 import { useAIUsage, ProviderUsage } from "@/hooks/useAIUsage";
 import { APIKeyTutorialModal } from "./APIKeyTutorialModal";
 
@@ -17,14 +17,6 @@ const providerMeta: Record<string, { label: string; icon: React.ElementType; key
     keyUrl: "https://platform.openai.com/api-keys",
     color: "text-emerald-500",
     features: ["Text Simplifier", "Document Chat", "Content Enhancer", "Study Buddy", "Task AI", "Mind Map AI", "Progress Insights"],
-  },
-  anthropic: {
-    label: "Anthropic",
-    icon: Brain,
-    keyPrefix: "sk-ant-",
-    keyUrl: "https://console.anthropic.com/settings/keys",
-    color: "text-orange-500",
-    features: ["Voice Chat (text generation)"],
   },
   elevenlabs: {
     label: "ElevenLabs",
