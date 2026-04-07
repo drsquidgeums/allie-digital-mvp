@@ -245,7 +245,7 @@ const defaultTourSteps: OnboardingStep[] = [
     id: "external-apis",
     target: "[data-tour='settings']",
     title: "External API Accounts",
-    description: "Some features like Text to Speech and the AI Study Buddy can be enhanced by adding your own API keys in Settings for unlimited access. OpenAI, Anthropic, and ElevenLabs keys are all optional. Voice AI works out of the box with no setup needed!",
+    description: "Some features like Text to Speech and the AI Study Buddy can be enhanced by adding your own API keys in Settings for unlimited access. OpenAI and ElevenLabs keys are both optional. Voice AI works out of the box with no setup needed!",
     placement: "right"
   }
 ];

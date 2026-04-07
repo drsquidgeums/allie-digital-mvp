@@ -127,7 +127,7 @@ serve(async (req) => {
         });
       }
 
-      if (!["openai", "anthropic", "elevenlabs"].includes(provider)) {
+      if (!["openai", "elevenlabs"].includes(provider)) {
         return new Response(JSON.stringify({ error: "Invalid provider" }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },

@@ -18,14 +18,6 @@ const providerMeta: Record<string, { label: string; icon: React.ElementType; key
     color: "text-emerald-500",
     features: ["Text Simplifier", "Document Chat", "Content Enhancer", "Study Buddy", "Task AI", "Mind Map AI", "Progress Insights"],
   },
-  anthropic: {
-    label: "Anthropic",
-    icon: Brain,
-    keyPrefix: "sk-ant-",
-    keyUrl: "https://console.anthropic.com/settings/keys",
-    color: "text-orange-500",
-    features: ["Voice Chat (text generation)"],
-  },
   elevenlabs: {
     label: "ElevenLabs",
     icon: Mic,
