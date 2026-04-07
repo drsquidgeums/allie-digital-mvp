@@ -64,9 +64,9 @@ export const STTToggleButton: React.FC = () => {
           aria-label={isListening ? 'Stop Dictation' : t('tools.stt')}
         >
           {isListening ? (
-            <CaptionsOff className="h-4 w-4" />
+            <MicOff className="h-4 w-4" />
           ) : (
-            <Captions className="h-4 w-4" />
+            <AudioLines className="h-4 w-4" />
           )}
           {isListening && (
             <div
