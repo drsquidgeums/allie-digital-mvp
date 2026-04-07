@@ -179,3 +179,21 @@ body {
     --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
   }
 }
+
+/* Global bold toggle */
+html.global-bold p,
+html.global-bold span,
+html.global-bold a,
+html.global-bold h1,
+html.global-bold h2,
+html.global-bold h3,
+html.global-bold h4,
+html.global-bold h5,
+html.global-bold h6,
+html.global-bold div,
+html.global-bold button,
+html.global-bold label,
+html.global-bold input,
+html.global-bold textarea {
+  font-weight: bold !important;
+}
