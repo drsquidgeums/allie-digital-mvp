@@ -20,7 +20,16 @@ export const VoiceAssistant: React.FC = () => {
     adjustVolume,
   } = useVoiceConversation();
 
+  const { showPrompt, triggerPrompt, dismissPrompt } = useElevenLabsBYOKPrompt();
+
+  const handleStart = () => {
+    triggerPrompt();
+    startConversation();
+  };
+
   return (
+    <>
+    <ElevenLabsBYOKPrompt open={showPrompt} onDismiss={dismissPrompt} />
     <Card className="border-primary/20">
       <CardHeader>
         <div className="flex items-center gap-2">
