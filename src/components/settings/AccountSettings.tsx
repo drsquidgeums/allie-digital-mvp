@@ -164,30 +164,28 @@ export const AccountSettings = () => {
         </div>
 
         {/* Data Management */}
-        <div className="flex flex-col gap-3 pt-2">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleExportData}
-              disabled={isExporting}
-              className="gap-2"
-            >
-              {isExporting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Download className="h-4 w-4" />
-              )}
-              {t('settings.account.exportData', 'Export My Data')}
-            </Button>
-          </div>
+        <div className="flex items-center gap-2 pt-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportData}
+            disabled={isExporting}
+            className="gap-2"
+          >
+            {isExporting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4" />
+            )}
+            {t('settings.account.exportData', 'Export My Data')}
+          </Button>
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
                 variant="outline"
                 size="sm"
-                className="gap-2 text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive w-fit"
+                className="gap-2 text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
                 disabled={isDeleting}
               >
                 {isDeleting ? (
