@@ -8,7 +8,15 @@ import { handleAIUsageLimitError } from '@/utils/aiUsageLimitHandler';
 const SPEECH_THRESHOLD = 0.03;
 const SILENCE_MS_TO_COMMIT = 900;
 const MIN_RECORD_MS = 500;
+const MIN_AUDIO_BLOB_SIZE = 800;
 const HANDLED_ERROR = '__DICTATION_HANDLED_ERROR__';
+const RECORDER_MIME_TYPES = [
+  'audio/webm;codecs=opus',
+  'audio/webm',
+  'audio/mp4',
+  'audio/ogg;codecs=opus',
+  'audio/ogg',
+];
 
 type DictationMode = 'browser' | 'elevenlabs';
 
@@ -16,6 +24,19 @@ interface UseInlineDictationOptions {
   editor: Editor | null;
   insertText: (text: string) => void;
 }
+
+const getSupportedRecorderMimeType = () => {
+  if (
+    typeof MediaRecorder === 'undefined' ||
+    typeof MediaRecorder.isTypeSupported !== 'function'
+  ) {
+    return '';
+  }
+
+  return (
+    RECORDER_MIME_TYPES.find((mimeType) => MediaRecorder.isTypeSupported(mimeType)) ?? ''
+  );
+};
 
 const blobToBase64 = (blob: Blob): Promise<{ base64: string; mimeType: string }> =>
   new Promise((resolve, reject) => {
@@ -58,6 +79,7 @@ export const useInlineDictation = ({
   const analyserRef = useRef<AnalyserNode | null>(null);
   const vadRafRef = useRef<number | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
+  const recorderMimeTypeRef = useRef('');
   const chunksRef = useRef<Blob[]>([]);
   const recordingRef = useRef(false);
   const isProcessingRef = useRef(false);
@@ -160,31 +182,46 @@ export const useInlineDictation = ({
 
     if (!recorder) return;
 
-    try {
-      if (recorder.state !== 'inactive') {
-        recorder.stop();
-      }
-    } catch {
+    if (recorder.state === 'inactive') {
       recordingRef.current = false;
-    }
-  }, []);
-
-  const startRecording = useCallback(() => {
-    if (!streamRef.current || recordingRef.current || isProcessingRef.current || !shouldContinueRef.current) {
+      isProcessingRef.current = false;
       return;
     }
 
-    // Set flag synchronously to prevent race condition where VAD loop
-    // calls startRecording multiple times before onstart fires
+    isProcessingRef.current = true;
+
+    try {
+      recorder.stop();
+    } catch {
+      recordingRef.current = false;
+      isProcessingRef.current = false;
+
+      if (!shouldContinueRef.current) {
+        teardownAudioResources();
+        setIsListening(false);
+      }
+    }
+  }, [teardownAudioResources]);
+
+  const startRecording = useCallback(() => {
+    if (
+      !streamRef.current ||
+      recordingRef.current ||
+      isProcessingRef.current ||
+      !shouldContinueRef.current
+    ) {
+      return;
+    }
+
     recordingRef.current = true;
 
     try {
       chunksRef.current = [];
 
-      const preferredMimeType = 'audio/webm;codecs=opus';
-      const mimeSupported = typeof MediaRecorder.isTypeSupported === 'function'
-        && MediaRecorder.isTypeSupported(preferredMimeType);
-      const recorder = mimeSupported
+      const preferredMimeType = getSupportedRecorderMimeType();
+      recorderMimeTypeRef.current = preferredMimeType;
+
+      const recorder = preferredMimeType
         ? new MediaRecorder(streamRef.current, { mimeType: preferredMimeType })
         : new MediaRecorder(streamRef.current);
 
@@ -196,6 +233,7 @@ export const useInlineDictation = ({
 
       recorder.onerror = () => {
         recordingRef.current = false;
+        isProcessingRef.current = false;
         shouldContinueRef.current = false;
         teardownAudioResources();
         setIsListening(false);
@@ -210,15 +248,24 @@ export const useInlineDictation = ({
       recorder.onstop = async () => {
         recordingRef.current = false;
 
-        const blob = new Blob(chunksRef.current, { type: recorder.mimeType || 'audio/webm' });
+        const blobType =
+          recorder.mimeType ||
+          recorderMimeTypeRef.current ||
+          chunksRef.current[0]?.type ||
+          'audio/webm';
+        const blob = new Blob(chunksRef.current, { type: blobType });
         chunksRef.current = [];
 
-        if (blob.size < 800) {
-          // Too small to transcribe – just continue listening
+        if (blob.size < MIN_AUDIO_BLOB_SIZE) {
+          isProcessingRef.current = false;
+
+          if (!shouldContinueRef.current) {
+            teardownAudioResources();
+            setIsListening(false);
+          }
+
           return;
         }
-
-        isProcessingRef.current = true;
 
         try {
           const text = await transcribeBlob(blob);
@@ -241,7 +288,11 @@ export const useInlineDictation = ({
           setIsListening(false);
         } finally {
           isProcessingRef.current = false;
-          // Don't stop listening – the VAD loop will pick up new speech
+
+          if (!shouldContinueRef.current) {
+            teardownAudioResources();
+            setIsListening(false);
+          }
         }
       };
 
@@ -249,6 +300,7 @@ export const useInlineDictation = ({
       recorder.start();
     } catch (error) {
       recordingRef.current = false;
+      isProcessingRef.current = false;
       console.error('[STT] Failed to start recorder:', error);
       shouldContinueRef.current = false;
       teardownAudioResources();
@@ -497,7 +549,6 @@ export const useInlineDictation = ({
     modeRef.current = null;
 
     clearBrowserRecognition();
-    teardownAudioResources();
 
     if (recorderRef.current && recorderRef.current.state !== 'inactive') {
       stopRecording();
@@ -505,6 +556,7 @@ export const useInlineDictation = ({
     }
 
     abortRecorder();
+    teardownAudioResources();
     setIsListening(false);
   }, [abortRecorder, clearBrowserRecognition, stopRecording, teardownAudioResources]);
 
@@ -512,6 +564,8 @@ export const useInlineDictation = ({
     return () => {
       shouldContinueRef.current = false;
       modeRef.current = null;
+      isProcessingRef.current = false;
+      recorderMimeTypeRef.current = '';
       clearBrowserRecognition();
       abortRecorder();
       teardownAudioResources();
