@@ -28,6 +28,8 @@ export const STTToggleButton: React.FC = () => {
     [editor]
   );
 
+  const { showPrompt, triggerPrompt, dismissPrompt } = useElevenLabsBYOKPrompt();
+
   const { isListening, isSupported, startListening, stopListening } = useInlineDictation({
     editor,
     insertText: insertTextAtCursor,
