@@ -6,6 +6,8 @@ import { useEditorContent } from '@/hooks/useEditorContent';
 import { useInlineDictation } from '@/hooks/useInlineDictation';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import { useElevenLabsBYOKPrompt } from '@/hooks/useElevenLabsBYOKPrompt';
+import { ElevenLabsBYOKPrompt } from '@/components/byok/ElevenLabsBYOKPrompt';
 
 export const STTToggleButton: React.FC = () => {
   const { t } = useTranslation();
@@ -26,6 +28,8 @@ export const STTToggleButton: React.FC = () => {
     [editor]
   );
 
+  const { showPrompt, triggerPrompt, dismissPrompt } = useElevenLabsBYOKPrompt();
+
   const { isListening, isSupported, startListening, stopListening } = useInlineDictation({
     editor,
     insertText: insertTextAtCursor,
@@ -36,6 +40,7 @@ export const STTToggleButton: React.FC = () => {
       stopListening();
       toast.success('Dictation stopped');
     } else {
+      triggerPrompt();
       void startListening().then((mode) => {
         if (mode === 'elevenlabs') {
           toast.success('Dictation started – pause briefly and text will appear in the editor');
@@ -49,6 +54,8 @@ export const STTToggleButton: React.FC = () => {
   if (!isSupported) return null;
 
   return (
+    <>
+    <ElevenLabsBYOKPrompt open={showPrompt} onDismiss={dismissPrompt} />
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
@@ -83,5 +90,6 @@ export const STTToggleButton: React.FC = () => {
         {isListening ? 'Stop Dictation (recording...)' : t('tools.stt')}
       </TooltipContent>
     </Tooltip>
+    </>
   );
 };

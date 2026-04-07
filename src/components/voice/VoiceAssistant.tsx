@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Mic, PhoneOff, Loader2, Phone, AlertCircle } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { useVoiceConversation } from "@/contexts/VoiceConversationContext";
+import { useElevenLabsBYOKPrompt } from "@/hooks/useElevenLabsBYOKPrompt";
+import { ElevenLabsBYOKPrompt } from "@/components/byok/ElevenLabsBYOKPrompt";
 
 export const VoiceAssistant: React.FC = () => {
   const {
@@ -18,7 +20,16 @@ export const VoiceAssistant: React.FC = () => {
     adjustVolume,
   } = useVoiceConversation();
 
+  const { showPrompt, triggerPrompt, dismissPrompt } = useElevenLabsBYOKPrompt();
+
+  const handleStart = () => {
+    triggerPrompt();
+    startConversation();
+  };
+
   return (
+    <>
+    <ElevenLabsBYOKPrompt open={showPrompt} onDismiss={dismissPrompt} />
     <Card className="border-primary/20">
       <CardHeader>
         <div className="flex items-center gap-2">
@@ -59,7 +70,7 @@ export const VoiceAssistant: React.FC = () => {
             )}
 
             <Button
-              onClick={startConversation}
+              onClick={handleStart}
               disabled={isConnecting || !hasCredits}
               className="w-full"
               size="lg"
@@ -125,5 +136,6 @@ export const VoiceAssistant: React.FC = () => {
         )}
       </CardContent>
     </Card>
+    </>
   );
 };

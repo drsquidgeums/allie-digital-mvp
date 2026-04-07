@@ -8,6 +8,8 @@ import { handleAIUsageLimitError } from "@/utils/aiUsageLimitHandler";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useElevenLabsBYOKPrompt } from "@/hooks/useElevenLabsBYOKPrompt";
+import { ElevenLabsBYOKPrompt } from "@/components/byok/ElevenLabsBYOKPrompt";
 
 const ELEVENLABS_VOICE_ID = "EXAVITQu4vr4xnSDxMaL"; // Sarah - Warm & Clear
 
@@ -18,6 +20,7 @@ export const TTSButton = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { showPrompt, triggerPrompt, dismissPrompt } = useElevenLabsBYOKPrompt();
 
   // Cleanup audio on unmount
   useEffect(() => {
@@ -61,6 +64,7 @@ export const TTSButton = () => {
       return;
     }
 
+    triggerPrompt();
     setIsLoading(true);
 
     try {
@@ -134,6 +138,8 @@ export const TTSButton = () => {
 
 
   return (
+    <>
+    <ElevenLabsBYOKPrompt open={showPrompt} onDismiss={dismissPrompt} />
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
@@ -172,5 +178,6 @@ export const TTSButton = () => {
         )}
       </TooltipContent>
     </Tooltip>
+    </>
   );
 };
