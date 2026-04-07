@@ -68,11 +68,14 @@ export const GlobalKeyboardShortcuts: React.FC<GlobalKeyboardShortcutsProps> = (
   ];
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    // Ignore if typing in an input/textarea
     const target = e.target as HTMLElement;
-    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
-      return;
-    }
+    const isInFormField = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+    
+    // For simple key shortcuts (like ?), ignore if in any editable area
+    // For modifier shortcuts (Alt+, Ctrl+Shift+), only ignore in form fields
+    const isModifierShortcut = e.altKey || (e.ctrlKey && e.shiftKey);
+    if (isInFormField) return;
+    if (target.isContentEditable && !isModifierShortcut) return;
 
     // ? - Toggle shortcuts panel
     if (e.key === '?' && !e.ctrlKey && !e.altKey && !e.metaKey) {
