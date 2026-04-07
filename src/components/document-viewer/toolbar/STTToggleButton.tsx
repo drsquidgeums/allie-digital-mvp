@@ -54,6 +54,8 @@ export const STTToggleButton: React.FC = () => {
   if (!isSupported) return null;
 
   return (
+    <>
+    <ElevenLabsBYOKPrompt open={showPrompt} onDismiss={dismissPrompt} />
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
