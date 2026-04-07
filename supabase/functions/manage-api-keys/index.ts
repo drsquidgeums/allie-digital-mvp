@@ -9,7 +9,6 @@ const corsHeaders = {
 
 const PROVIDER_LIMITS: Record<string, number> = {
   openai: 25,
-  anthropic: 25,
   elevenlabs: 25,
 };
 
