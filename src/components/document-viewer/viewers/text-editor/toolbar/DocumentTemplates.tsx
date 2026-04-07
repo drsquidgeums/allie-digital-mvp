@@ -1022,6 +1022,18 @@ export const DocumentTemplates: React.FC<DocumentTemplatesProps> = ({ editor }) 
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-72 max-h-96 overflow-y-auto">
+        <DropdownMenuItem
+          onClick={() => {
+            editor.commands.setContent('<p></p>');
+            toast({ title: "Blank Document", description: "Editor cleared – start fresh" });
+            setIsOpen(false);
+          }}
+          className="cursor-pointer font-medium"
+        >
+          <FileText className="h-4 w-4 mr-2" />
+          Blank Document
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         {categories.map((category, categoryIndex) => {
           const categoryTemplates = groupedTemplates[category] || [];
           if (categoryTemplates.length === 0) return null;
