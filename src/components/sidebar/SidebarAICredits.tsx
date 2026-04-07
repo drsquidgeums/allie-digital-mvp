@@ -1,5 +1,5 @@
 import React from "react";
-import { Sparkles, Brain, Mic } from "lucide-react";
+import { Sparkles, Mic } from "lucide-react";
 import { useAIUsage, ProviderUsage } from "@/hooks/useAIUsage";
 import { useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
