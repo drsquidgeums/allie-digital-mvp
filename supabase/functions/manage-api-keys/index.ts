@@ -80,7 +80,7 @@ serve(async (req) => {
         .gte("created_at", monthStart);
 
       // Count usage per provider
-      const providerUsage: Record<string, number> = { openai: 0, anthropic: 0, elevenlabs: 0 };
+      const providerUsage: Record<string, number> = { openai: 0, elevenlabs: 0 };
       for (const record of usageRecords ?? []) {
         const source = (record.usage_data as any)?.source;
         if (source === "user_key") continue; // Don't count BYOK usage against limits
