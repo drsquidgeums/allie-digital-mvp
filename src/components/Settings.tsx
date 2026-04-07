@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { AccountSettings } from "./settings/AccountSettings";
 import { LanguageSettings } from "./settings/LanguageSettings";
+import { NotificationSettings } from "./settings/NotificationSettings";
 import { DisplaySettings } from "./settings/DisplaySettings";
 import { PrivacySettings } from "./settings/PrivacySettings";
 import { KeyboardSettings } from "./settings/KeyboardSettings";
