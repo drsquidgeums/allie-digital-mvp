@@ -40,6 +40,7 @@ export const STTToggleButton: React.FC = () => {
       stopListening();
       toast.success('Dictation stopped');
     } else {
+      triggerPrompt();
       void startListening().then((mode) => {
         if (mode === 'elevenlabs') {
           toast.success('Dictation started – pause briefly and text will appear in the editor');
