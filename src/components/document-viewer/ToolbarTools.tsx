@@ -3,7 +3,7 @@ import { Timer, Text, Wand2, Sparkles, Bot, GraduationCap, Highlighter } from "l
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { PomodoroTimer } from "../PomodoroTimer";
-import { SpeechToText } from "../SpeechToText";
+import { STTToggleButton } from "./toolbar/STTToggleButton";
 import { Rewordify } from "../Rewordify";
 import { IrlenOverlay } from "../IrlenOverlay";
 import { AmbientMusic } from "../AmbientMusic";
@@ -36,13 +36,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
         <TTSButton />
       </div>
       <div data-tour="stt">
-        <ToolItem
-          icon={Text}
-          label={t('tools.stt')}
-          id="stt"
-          content={<SpeechToText />}
-          popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
-        />
+        <STTToggleButton />
       </div>
       <div data-tour="pomodoro">
         <ToolItem
