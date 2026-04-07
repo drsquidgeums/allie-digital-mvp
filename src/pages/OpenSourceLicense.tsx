@@ -117,7 +117,7 @@ const OpenSourceLicense = () => {
           <span style={{ fontSize: '12px', lineHeight: 1 }}>Powered by</span>
           <img src={lovableLogo} alt="Lovable" className="h-3" style={{ display: 'inline-block' }} />
         </div>
-        <span className="text-sm"><span className="text-sm">© Allie Digital CIC 2026. Registered in Northern Ireland. Company No. NI718014. Licensed under <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>AGPL v3</a></span></span>
+        <span className="text-sm">© Allie Digital CIC 2026. Registered in Northern Ireland. Company No. NI718014. Licensed under <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>AGPL v3</a></span>
       </footer>
     </div>
   );
