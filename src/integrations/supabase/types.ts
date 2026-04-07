@@ -226,27 +226,6 @@ export type Database = {
         }
         Relationships: []
       }
-      secrets: {
-        Row: {
-          created_at: string | null
-          id: string
-          name: string
-          secret: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          name: string
-          secret: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          name?: string
-          secret?: string
-        }
-        Relationships: []
-      }
       stripe_subscriptions: {
         Row: {
           created_at: string
