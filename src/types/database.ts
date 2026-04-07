@@ -55,6 +55,12 @@ export interface ExtendedDatabase extends SupabaseDatabase {
       
       profiles: SupabaseDatabase['public']['Tables']['profiles'];
       user_roles: SupabaseDatabase['public']['Tables']['user_roles'];
+      quick_notes: {
+        Row: { id: string; user_id: string; content: string; created_at: string; updated_at: string; };
+        Insert: { id?: string; user_id: string; content?: string; created_at?: string; updated_at?: string; };
+        Update: { id?: string; user_id?: string; content?: string; created_at?: string; updated_at?: string; };
+        Relationships: [];
+      };
     };
     Views: SupabaseDatabase['public']['Views'];
     Functions: SupabaseDatabase['public']['Functions'];
