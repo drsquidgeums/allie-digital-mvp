@@ -3,9 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { AccountSettings } from "./settings/AccountSettings";
 import { LanguageSettings } from "./settings/LanguageSettings";
-import { AccessibilitySettings } from "./settings/AccessibilitySettings";
 import { NotificationSettings } from "./settings/NotificationSettings";
-import { PerformanceSettings } from "./settings/PerformanceSettings";
 import { DisplaySettings } from "./settings/DisplaySettings";
 import { PrivacySettings } from "./settings/PrivacySettings";
 import { KeyboardSettings } from "./settings/KeyboardSettings";
@@ -34,10 +32,8 @@ export const Settings = () => {
         <AISettings />
         <LanguageSettings />
         <OnboardingSettings />
-        <AccessibilitySettings />
         <DisplaySettings />
         <NotificationSettings />
-        <PerformanceSettings />
         <PrivacySettings />
         <KeyboardSettings />
         <StorageSettings />

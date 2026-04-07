@@ -1,5 +1,5 @@
 import React from "react";
-import { Sparkles, Mic } from "lucide-react";
+import { Sparkles, Mic, AlertTriangle } from "lucide-react";
 import { useAIUsage, ProviderUsage } from "@/hooks/useAIUsage";
 import { useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -73,22 +73,39 @@ export const SidebarAICredits = () => {
   // Show placeholder with 0 values when no usage data (e.g. admin/edit mode)
   const providers: ProviderUsage[] = usage?.byProvider ?? [
     { name: "openai", used: 0, limit: 25, remaining: 0, hasOwnKey: false },
-    { name: "elevenlabs", used: 0, limit: 25, remaining: 0, hasOwnKey: false },
+    { name: "elevenlabs", used: 0, limit: 10, remaining: 0, hasOwnKey: false },
   ];
 
+  // Check if ElevenLabs credits are low (≤3) and user doesn't have their own key
+  const elevenlabs = providers.find((p) => p.name === "elevenlabs");
+  const showElevenLabsNudge = elevenlabs && !elevenlabs.hasOwnKey && elevenlabs.remaining <= 3 && elevenlabs.remaining > 0;
+
   return (
-    <button
-      onClick={() => navigate("/settings")}
-      className="w-full rounded-lg border border-border bg-card/50 p-2.5 space-y-2 hover:bg-accent/50 transition-colors text-left"
-      aria-label={t('sidebar.aiCreditsLabel')}
-    >
-      <div className="flex items-center gap-1.5 mb-1.5">
-        <Sparkles className="h-3.5 w-3.5 text-primary" />
-        <span className="text-xs font-semibold text-foreground">{t('sidebar.aiCredits')}</span>
-      </div>
-      {providers.map((p) => (
-        <CreditBar key={p.name} provider={p} />
-      ))}
-    </button>
+    <div className="space-y-1.5">
+      <button
+        onClick={() => navigate("/settings")}
+        className="w-full rounded-lg border border-border bg-card/50 p-2.5 space-y-2 hover:bg-accent/50 transition-colors text-left"
+        aria-label={t('sidebar.aiCreditsLabel')}
+      >
+        <div className="flex items-center gap-1.5 mb-1.5">
+          <Sparkles className="h-3.5 w-3.5 text-primary" />
+          <span className="text-xs font-semibold text-foreground">{t('sidebar.aiCredits')}</span>
+        </div>
+        {providers.map((p) => (
+          <CreditBar key={p.name} provider={p} />
+        ))}
+      </button>
+      {showElevenLabsNudge && (
+        <button
+          onClick={() => navigate("/settings")}
+          className="w-full flex items-start gap-2 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-2 text-left hover:bg-yellow-500/15 transition-colors"
+        >
+          <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-yellow-500 mt-0.5" />
+          <span className="text-[10px] leading-tight text-yellow-600 dark:text-yellow-400">
+            ElevenLabs credits running low — add your own API key in Settings for unlimited voice features
+          </span>
+        </button>
+      )}
+    </div>
   );
 };
