@@ -70,7 +70,7 @@ export const VoiceAssistant: React.FC = () => {
             )}
 
             <Button
-              onClick={startConversation}
+              onClick={handleStart}
               disabled={isConnecting || !hasCredits}
               className="w-full"
               size="lg"
