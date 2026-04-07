@@ -174,11 +174,17 @@ export const useInlineDictation = ({
       return;
     }
 
+    // Set flag synchronously to prevent race condition where VAD loop
+    // calls startRecording multiple times before onstart fires
+    recordingRef.current = true;
+
     try {
       chunksRef.current = [];
 
       const preferredMimeType = 'audio/webm;codecs=opus';
-      const recorder = MediaRecorder.isTypeSupported?.(preferredMimeType)
+      const mimeSupported = typeof MediaRecorder.isTypeSupported === 'function'
+        && MediaRecorder.isTypeSupported(preferredMimeType);
+      const recorder = mimeSupported
         ? new MediaRecorder(streamRef.current, { mimeType: preferredMimeType })
         : new MediaRecorder(streamRef.current);
 
@@ -189,6 +195,7 @@ export const useInlineDictation = ({
       };
 
       recorder.onerror = () => {
+        recordingRef.current = false;
         shouldContinueRef.current = false;
         teardownAudioResources();
         setIsListening(false);
@@ -196,7 +203,6 @@ export const useInlineDictation = ({
       };
 
       recorder.onstart = () => {
-        recordingRef.current = true;
         recordStartedAtRef.current = Date.now();
         lastVoiceAtRef.current = Date.now();
       };
@@ -208,9 +214,7 @@ export const useInlineDictation = ({
         chunksRef.current = [];
 
         if (blob.size < 800) {
-          if (!shouldContinueRef.current) {
-            setIsListening(false);
-          }
+          // Too small to transcribe – just continue listening
           return;
         }
 
@@ -237,16 +241,14 @@ export const useInlineDictation = ({
           setIsListening(false);
         } finally {
           isProcessingRef.current = false;
-
-          if (!shouldContinueRef.current) {
-            setIsListening(false);
-          }
+          // Don't stop listening – the VAD loop will pick up new speech
         }
       };
 
       recorderRef.current = recorder;
       recorder.start();
     } catch (error) {
+      recordingRef.current = false;
       console.error('[STT] Failed to start recorder:', error);
       shouldContinueRef.current = false;
       teardownAudioResources();
