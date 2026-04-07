@@ -117,6 +117,13 @@ const ProviderKeyInput = ({
       >
         Get a {meta.label} key <ExternalLink className="h-3 w-3" />
       </a>
+      <div className="flex flex-wrap gap-1 mt-1">
+        {meta.features.map((feature) => (
+          <Badge key={feature} variant="outline" className="text-[10px] font-normal text-muted-foreground">
+            {feature}
+          </Badge>
+        ))}
+      </div>
     </div>
   );
 };
