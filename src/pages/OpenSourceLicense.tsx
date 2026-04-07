@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const gatewayBackground = "/images/gateway-background.png";
 const lovableLogo = "/images/lovable-logo.png";
-const allieLogo = "/images/allie-digital-logo.png";
+
 
 const OpenSourceLicense = () => {
   return (
