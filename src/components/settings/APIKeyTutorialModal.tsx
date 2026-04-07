@@ -139,7 +139,7 @@ const providerTutorials: {
     icon: Mic,
     color: "text-violet-500",
     tagline: "Adds unlimited Text to Speech usage for reading documents aloud",
-    features: ["Text to Speech"],
+    features: ["Voice Assistant", "Text to Speech", "Transcription"],
     steps: [
       {
         title: "Create an ElevenLabs account",
