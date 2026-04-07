@@ -10,7 +10,7 @@ import { PasswordRequirements, isPasswordValid } from "@/components/password-gat
 
 const gatewayBackground = "/images/gateway-background.png";
 const lovableLogo = "/images/lovable-logo.png";
-const allieLogo = "/images/allie-digital-logo.png";
+
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
