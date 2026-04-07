@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 
 const providerConfig: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   openai: { label: "OpenAI", icon: Sparkles, color: "text-emerald-500" },
-  anthropic: { label: "Anthropic", icon: Brain, color: "text-orange-500" },
   elevenlabs: { label: "ElevenLabs", icon: Mic, color: "text-violet-500" },
 };
 
