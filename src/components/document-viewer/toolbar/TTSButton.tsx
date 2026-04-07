@@ -138,6 +138,8 @@ export const TTSButton = () => {
 
 
   return (
+    <>
+    <ElevenLabsBYOKPrompt open={showPrompt} onDismiss={dismissPrompt} />
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
