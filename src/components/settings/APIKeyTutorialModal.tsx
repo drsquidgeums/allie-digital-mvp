@@ -138,7 +138,7 @@ const providerTutorials: {
     label: "ElevenLabs",
     icon: Mic,
     color: "text-violet-500",
-    tagline: "Adds unlimited Text to Speech usage for reading documents aloud",
+    tagline: "Powers Text to Speech, Voice Assistant, and Transcription features",
     features: ["Voice Assistant", "Text to Speech", "Transcription"],
     steps: [
       {
