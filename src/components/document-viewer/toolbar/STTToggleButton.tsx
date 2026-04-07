@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Captions, CaptionsOff } from 'lucide-react';
+import { AudioLines, MicOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useEditorContent } from '@/hooks/useEditorContent';
