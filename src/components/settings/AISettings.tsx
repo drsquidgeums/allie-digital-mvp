@@ -9,13 +9,14 @@ import { Sparkles, Key, Trash2, Eye, EyeOff, ExternalLink, Brain, Mic, BookOpen 
 import { useAIUsage, ProviderUsage } from "@/hooks/useAIUsage";
 import { APIKeyTutorialModal } from "./APIKeyTutorialModal";
 
-const providerMeta: Record<string, { label: string; icon: React.ElementType; keyPrefix: string; keyUrl: string; color: string }> = {
+const providerMeta: Record<string, { label: string; icon: React.ElementType; keyPrefix: string; keyUrl: string; color: string; features: string[] }> = {
   openai: {
     label: "OpenAI",
     icon: Sparkles,
     keyPrefix: "sk-",
     keyUrl: "https://platform.openai.com/api-keys",
     color: "text-emerald-500",
+    features: ["Text Simplifier", "Document Chat", "Content Enhancer", "Study Buddy", "Task AI", "Mind Map AI", "Progress Insights"],
   },
   anthropic: {
     label: "Anthropic",
@@ -23,6 +24,7 @@ const providerMeta: Record<string, { label: string; icon: React.ElementType; key
     keyPrefix: "sk-ant-",
     keyUrl: "https://console.anthropic.com/settings/keys",
     color: "text-orange-500",
+    features: ["Voice Chat (text generation)"],
   },
   elevenlabs: {
     label: "ElevenLabs",
@@ -30,6 +32,7 @@ const providerMeta: Record<string, { label: string; icon: React.ElementType; key
     keyPrefix: "",
     keyUrl: "https://elevenlabs.io/app/settings/api-keys",
     color: "text-violet-500",
+    features: ["Voice Assistant", "Text-to-Speech", "Transcription"],
   },
 };
 
