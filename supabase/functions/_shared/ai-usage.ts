@@ -3,7 +3,7 @@ import { decryptApiKey } from "./crypto.ts";
 
 const PROVIDER_LIMITS = {
   openai: 25,
-  elevenlabs: 20,
+  elevenlabs: 10,
 } as const;
 
 const FEATURE_PROVIDER_MAP: Record<string, keyof typeof PROVIDER_LIMITS> = {
