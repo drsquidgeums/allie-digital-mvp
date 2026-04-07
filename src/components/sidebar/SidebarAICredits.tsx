@@ -73,7 +73,7 @@ export const SidebarAICredits = () => {
   // Show placeholder with 0 values when no usage data (e.g. admin/edit mode)
   const providers: ProviderUsage[] = usage?.byProvider ?? [
     { name: "openai", used: 0, limit: 25, remaining: 0, hasOwnKey: false },
-    { name: "elevenlabs", used: 0, limit: 25, remaining: 0, hasOwnKey: false },
+    { name: "elevenlabs", used: 0, limit: 10, remaining: 0, hasOwnKey: false },
   ];
 
   return (

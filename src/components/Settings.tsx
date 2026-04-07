@@ -31,10 +31,8 @@ export const Settings = () => {
         <AISettings />
         <LanguageSettings />
         <OnboardingSettings />
-        <AccessibilitySettings />
         <DisplaySettings />
         <NotificationSettings />
-        <PerformanceSettings />
         <PrivacySettings />
         <KeyboardSettings />
         <StorageSettings />
