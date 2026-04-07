@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { encode as base64Encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
+import { checkAndTrackUsage, getUsageLimitResponse } from "../_shared/ai-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,7 +15,6 @@ serve(async (req) => {
   }
 
   try {
-    // Authentication check
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -48,11 +48,6 @@ serve(async (req) => {
 
     console.log("[ELEVENLABS-TTS-PUBLIC] Request from user:", user.id);
 
-    const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
-    if (!ELEVENLABS_API_KEY) {
-      throw new Error("ELEVENLABS_API_KEY is not configured");
-    }
-
     const body = await req.json().catch(() => ({}));
     const text = (body as any)?.text;
     const voiceId = (body as any)?.voiceId;
@@ -78,14 +73,25 @@ serve(async (req) => {
       if (sanitizedVoiceId) selectedVoiceId = sanitizedVoiceId;
     }
 
-    console.log("[ELEVENLABS-TTS-PUBLIC] chars:", sanitizedText.length);
+    // Check usage and get user's own key if available
+    const usageResult = await checkAndTrackUsage(user.id, "elevenlabs-tts-public");
+    if (!usageResult.allowed) {
+      return getUsageLimitResponse(0, "ElevenLabs");
+    }
+
+    const elevenLabsApiKey = usageResult.userApiKey ?? Deno.env.get("ELEVENLABS_API_KEY");
+    if (!elevenLabsApiKey) {
+      throw new Error("ELEVENLABS_API_KEY is not configured");
+    }
+
+    console.log("[ELEVENLABS-TTS-PUBLIC] chars:", sanitizedText.length, "usingOwnKey:", usageResult.usingOwnKey);
 
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(selectedVoiceId)}?output_format=mp3_44100_128`,
       {
         method: "POST",
         headers: {
-          "xi-api-key": ELEVENLABS_API_KEY,
+          "xi-api-key": elevenLabsApiKey,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({

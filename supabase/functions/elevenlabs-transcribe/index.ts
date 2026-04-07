@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { decode as base64Decode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
+import { checkAndTrackUsage, getUsageLimitResponse } from "../_shared/ai-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,7 +15,6 @@ serve(async (req) => {
   }
 
   try {
-    // Authentication check
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -48,11 +48,6 @@ serve(async (req) => {
 
     console.log("[ELEVENLABS-TRANSCRIBE] Request from user:", user.id);
 
-    const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
-    if (!ELEVENLABS_API_KEY) {
-      throw new Error("ELEVENLABS_API_KEY is not configured");
-    }
-
     const body = await req.json().catch(() => ({}));
     const audioBase64 = (body as any)?.audioBase64;
     const mimeType = (body as any)?.mimeType;
@@ -73,6 +68,17 @@ serve(async (req) => {
       });
     }
 
+    // Check usage and get user's own key if available
+    const usageResult = await checkAndTrackUsage(user.id, "elevenlabs-transcribe");
+    if (!usageResult.allowed) {
+      return getUsageLimitResponse(0, "ElevenLabs");
+    }
+
+    const elevenLabsApiKey = usageResult.userApiKey ?? Deno.env.get("ELEVENLABS_API_KEY");
+    if (!elevenLabsApiKey) {
+      throw new Error("ELEVENLABS_API_KEY is not configured");
+    }
+
     const bytes = base64Decode(audioBase64);
     const blob = new Blob([bytes], { type: safeMimeType });
     const file = new File([blob], "speech.webm", { type: safeMimeType });
@@ -83,12 +89,12 @@ serve(async (req) => {
     formData.append("diarize", "false");
     formData.append("tag_audio_events", "false");
 
-    console.log("[ELEVENLABS-TRANSCRIBE] bytes:", bytes.length, "type:", safeMimeType);
+    console.log("[ELEVENLABS-TRANSCRIBE] bytes:", bytes.length, "type:", safeMimeType, "usingOwnKey:", usageResult.usingOwnKey);
 
     const response = await fetch("https://api.elevenlabs.io/v1/speech-to-text", {
       method: "POST",
       headers: {
-        "xi-api-key": ELEVENLABS_API_KEY,
+        "xi-api-key": elevenLabsApiKey,
       },
       body: formData,
     });
