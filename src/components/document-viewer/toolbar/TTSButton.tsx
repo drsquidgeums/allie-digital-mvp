@@ -8,6 +8,8 @@ import { handleAIUsageLimitError } from "@/utils/aiUsageLimitHandler";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useElevenLabsBYOKPrompt } from "@/hooks/useElevenLabsBYOKPrompt";
+import { ElevenLabsBYOKPrompt } from "@/components/byok/ElevenLabsBYOKPrompt";
 
 const ELEVENLABS_VOICE_ID = "EXAVITQu4vr4xnSDxMaL"; // Sarah - Warm & Clear
 
