@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const gatewayBackground = "/images/gateway-background.png";
 const lovableLogo = "/images/lovable-logo.png";
-const allieLogo = "/images/allie-digital-logo.png";
+
 
 const OpenSourceLicense = () => {
   return (
@@ -29,9 +29,6 @@ const OpenSourceLicense = () => {
         }}
       />
       
-      <div className="absolute top-6 right-6 z-10">
-        <img src={allieLogo} alt="Allie Digital" className="h-[130px]" />
-      </div>
       
       <div className="max-w-3xl w-full relative z-10 flex-grow">
         <Link 
