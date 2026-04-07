@@ -1,10 +1,9 @@
 
-import { Timer, Text, Wand2, Sparkles, Bot, GraduationCap, Highlighter } from "lucide-react";
+import { Timer, Text, Sparkles, Bot, GraduationCap, Highlighter } from "lucide-react";
 import { ToolItem } from "./toolbar/ToolItem";
 import { useTranslation } from "react-i18next";
 import { PomodoroTimer } from "../PomodoroTimer";
 import { STTToggleButton } from "./toolbar/STTToggleButton";
-import { Rewordify } from "../Rewordify";
 import { IrlenOverlay } from "../IrlenOverlay";
 import { AmbientMusic } from "../AmbientMusic";
 import { TextTool } from "./toolbar/TextTool";
@@ -14,6 +13,7 @@ import { ContentEnhancerTools } from "../content-enhancer/ContentEnhancerTools";
 import { BionicToggleButton } from "./toolbar/BionicToggleButton";
 import { TTSButton } from "./toolbar/TTSButton";
 import { BeelineToggleButton } from "./toolbar/BeelineToggleButton";
+import { SimplifyButton } from "./toolbar/SimplifyButton";
 import { HighlightsSummary } from "../highlights/HighlightsSummary";
 
 interface ToolbarToolsProps {
@@ -54,13 +54,7 @@ export const ToolbarTools = ({ documentContent, documentName }: ToolbarToolsProp
         <TextTool />
       </div>
       <div data-tour="ai-simplify">
-        <ToolItem
-          icon={Wand2}
-          label={t('tools.rewordify')}
-          id="rewordify"
-          content={<Rewordify />}
-          popoverClassName="w-80 p-4 shadow-md bg-popover text-popover-foreground border-border dark:bg-workspace-dark dark:border dark:border-[#FAFAFA]/20 dark:text-[#FAFAFA]"
-        />
+        <SimplifyButton />
       </div>
       <div data-tour="document-ai">
         <ToolItem
