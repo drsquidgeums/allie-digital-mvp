@@ -196,30 +196,25 @@ export const MfaSettings = () => {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">Two-Factor Authentication</h3>
-      <div className="space-y-4">
-        {/* Status */}
-        <div className="flex items-center gap-3">
-          <Shield className="h-4 w-4 text-muted-foreground" />
-          <div className="space-y-0.5">
-            <Label className="text-sm text-muted-foreground">Status</Label>
-            <div className="flex items-center gap-2">
-              {isEnrolled ? (
-                <>
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <Badge className="bg-green-500/15 text-green-600 hover:bg-green-500/20 border-green-500/30">
-                    Enabled
-                  </Badge>
-                </>
-              ) : (
-                <>
-                  <XCircle className="h-4 w-4 text-muted-foreground" />
-                  <Badge variant="secondary">Disabled</Badge>
-                </>
-              )}
-            </div>
-          </div>
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-medium">Two-Factor Authentication</h3>
+        <div className="flex items-center gap-2">
+          {isEnrolled ? (
+            <>
+              <CheckCircle className="h-4 w-4 text-green-500" />
+              <Badge className="bg-green-500/15 text-green-600 hover:bg-green-500/20 border-green-500/30">
+                Enabled
+              </Badge>
+            </>
+          ) : (
+            <>
+              <XCircle className="h-4 w-4 text-muted-foreground" />
+              <Badge variant="secondary">Disabled</Badge>
+            </>
+          )}
         </div>
+      </div>
+      <div className="space-y-4">
 
         <p className="text-sm text-muted-foreground">
           {isEnrolled
