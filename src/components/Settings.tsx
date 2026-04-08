@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { AccountSettings } from "./settings/AccountSettings";
 import { LanguageSettings } from "./settings/LanguageSettings";
 import { StorageSettings } from "./settings/StorageSettings";
+import { PrivacySettings } from "./settings/PrivacySettings";
 import { MfaSettings } from "./settings/MfaSettings";
 import { AISettings } from "./settings/AISettings";
 import { OnboardingSettings } from "./onboarding/OnboardingSettings";
@@ -29,12 +30,8 @@ export const Settings = () => {
         <AISettings />
         <LanguageSettings />
         <OnboardingSettings />
-        <DisplaySettings />
-        <NotificationSettings />
         <PrivacySettings />
-        <KeyboardSettings />
         <StorageSettings />
-        <IntegrationSettings />
       </div>
     </div>
   );
