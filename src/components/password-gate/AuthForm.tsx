@@ -147,6 +147,15 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
         title: "Success",
         description: "Welcome back!",
       });
+
+      // Remind user to enable MFA if not enrolled
+      setTimeout(() => {
+        toast({
+          title: "🔒 Enhance your security",
+          description: "Enable Two-Factor Authentication in Settings to protect your account.",
+          duration: 8000,
+        });
+      }, 2000);
       
       onAuthenticated();
     } catch (error: any) {
