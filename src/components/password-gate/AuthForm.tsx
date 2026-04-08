@@ -30,6 +30,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   const [signUpNotice, setSignUpNotice] = useState<string | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [isResending, setIsResending] = useState(false);
+  const [mfaFactorId, setMfaFactorId] = useState<string | null>(null);
   const { toast } = useToast();
 
   // Check if user just paid and came back, or just reset their password
