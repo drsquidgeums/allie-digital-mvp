@@ -330,6 +330,27 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     }
   };
 
+  // MFA Verification Screen
+  if (mfaFactorId) {
+    return (
+      <MfaVerification
+        factorId={mfaFactorId}
+        onVerified={() => {
+          setMfaFactorId(null);
+          toast({
+            title: "Success",
+            description: "Welcome back!",
+          });
+          onAuthenticated();
+        }}
+        onCancel={async () => {
+          setMfaFactorId(null);
+          await supabase.auth.signOut();
+        }}
+      />
+    );
+  }
+
   // Email Verification Popup
   if (showVerifyPopup) {
     return (
