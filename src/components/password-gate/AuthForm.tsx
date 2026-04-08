@@ -116,13 +116,28 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     }, 100);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
         throw error;
+      }
+
+      // Check if user has MFA enrolled
+      const { data: factorsData } = await supabase.auth.mfa.listFactors();
+      const verifiedFactor = factorsData?.totp?.find(
+        (f) => f.status === "verified"
+      );
+
+      if (verifiedFactor) {
+        // User has MFA - show verification screen
+        clearInterval(interval);
+        setProgress(0);
+        setIsLoading(false);
+        setMfaFactorId(verifiedFactor.id);
+        return;
       }
 
       setProgress(100);
