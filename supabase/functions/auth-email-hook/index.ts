@@ -36,7 +36,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "allie-web-app"
+const SITE_NAME = "Allie.ai"
 const SENDER_DOMAIN = "notify.allie.org.uk"
 const ROOT_DOMAIN = "allie.org.uk"
 const FROM_DOMAIN = "allie.org.uk" // Domain shown in From address (may be root or sender subdomain)
