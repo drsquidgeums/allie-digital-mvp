@@ -34,7 +34,7 @@ export const EmailChangeEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Img
-          src="https://allie-web-app.lovable.app/images/email-logo.png"
+          src="https://allie-web-app.lovable.app/lovable-uploads/3a3ef3bc-dbfb-441c-88cd-8b91d4891d61.png"
           alt="Allie.ai"
           width="60"
           height="60"
