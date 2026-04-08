@@ -24,7 +24,7 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
     <Body style={main}>
       <Container style={container}>
         <Img
-          src="https://frvjnuuqacrrrvrhzhuj.supabase.co/storage/v1/object/sign/files/Allie.ai%20OS%20Logo_for_emails.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80ZjEyOTIxOC0yOTEyLTRkYmQtYjAxZC1lYmRmNWJhMjMzMDYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmaWxlcy9BbGxpZS5haSBPUyBMb2dvX2Zvcl9lbWFpbHMucG5nIiwiaWF0IjoxNzc1NjM4MjEwLCJleHAiOjE4MDcxNzQyMTB9.kEMqnfo7nXZuQFxfqjY5QrLNzBaSQto6SNx5M1IFymU"
+          src="https://allie-web-app.lovable.app/lovable-uploads/3a3ef3bc-dbfb-441c-88cd-8b91d4891d61.png"
           alt="Allie.ai"
           width="60"
           height="60"
