@@ -9,6 +9,7 @@ import { PrivacySettings } from "./settings/PrivacySettings";
 import { KeyboardSettings } from "./settings/KeyboardSettings";
 import { StorageSettings } from "./settings/StorageSettings";
 import { IntegrationSettings } from "./settings/IntegrationSettings";
+import { MfaSettings } from "./settings/MfaSettings";
 import { AISettings } from "./settings/AISettings";
 import { OnboardingSettings } from "./onboarding/OnboardingSettings";
 import { useTranslation } from "react-i18next";
