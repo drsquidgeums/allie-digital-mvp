@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { PasswordRequirements, isPasswordValid } from "./PasswordRequirements";
+import { MfaVerification } from "@/components/auth/MfaVerification";
 
 interface AuthFormProps {
   onAuthenticated: () => void;
@@ -29,6 +30,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   const [signUpNotice, setSignUpNotice] = useState<string | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [isResending, setIsResending] = useState(false);
+  const [mfaFactorId, setMfaFactorId] = useState<string | null>(null);
   const { toast } = useToast();
 
   // Check if user just paid and came back, or just reset their password
@@ -114,13 +116,28 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
     }, 100);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
         throw error;
+      }
+
+      // Check if user has MFA enrolled
+      const { data: factorsData } = await supabase.auth.mfa.listFactors();
+      const verifiedFactor = factorsData?.totp?.find(
+        (f) => f.status === "verified"
+      );
+
+      if (verifiedFactor) {
+        // User has MFA - show verification screen
+        clearInterval(interval);
+        setProgress(0);
+        setIsLoading(false);
+        setMfaFactorId(verifiedFactor.id);
+        return;
       }
 
       setProgress(100);
@@ -312,6 +329,27 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       setIsResending(false);
     }
   };
+
+  // MFA Verification Screen
+  if (mfaFactorId) {
+    return (
+      <MfaVerification
+        factorId={mfaFactorId}
+        onVerified={() => {
+          setMfaFactorId(null);
+          toast({
+            title: "Success",
+            description: "Welcome back!",
+          });
+          onAuthenticated();
+        }}
+        onCancel={async () => {
+          setMfaFactorId(null);
+          await supabase.auth.signOut();
+        }}
+      />
+    );
+  }
 
   // Email Verification Popup
   if (showVerifyPopup) {
