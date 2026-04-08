@@ -9,6 +9,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Shield, Loader2, CheckCircle, XCircle, Copy } from "lucide-react";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -26,7 +33,6 @@ export const MfaSettings = () => {
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [factorId, setFactorId] = useState<string | null>(null);
 
-  // Enrollment state
   const [isEnrolling, setIsEnrolling] = useState(false);
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [secret, setSecret] = useState<string | null>(null);
@@ -34,7 +40,6 @@ export const MfaSettings = () => {
   const [enrollError, setEnrollError] = useState<string | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
 
-  // Unenroll state
   const [isUnenrolling, setIsUnenrolling] = useState(false);
 
   useEffect(() => {
@@ -46,7 +51,6 @@ export const MfaSettings = () => {
     try {
       const { data, error } = await supabase.auth.mfa.listFactors();
       if (error) throw error;
-
       const verifiedFactor = data.totp.find((f) => f.status === "verified");
       if (verifiedFactor) {
         setIsEnrolled(true);
@@ -70,9 +74,7 @@ export const MfaSettings = () => {
         factorType: "totp",
         friendlyName: "Allie.ai Authenticator",
       });
-
       if (error) throw error;
-
       setQrCode(data.totp.qr_code);
       setSecret(data.totp.secret);
       setFactorId(data.id);
@@ -90,33 +92,26 @@ export const MfaSettings = () => {
   const handleVerifyEnrollment = async (e: React.FormEvent) => {
     e.preventDefault();
     setEnrollError(null);
-
     if (!verifyCode || verifyCode.length !== 6 || !factorId) {
       setEnrollError("Please enter a 6-digit code.");
       return;
     }
-
     setIsVerifying(true);
     try {
       const { data: challenge, error: challengeError } =
         await supabase.auth.mfa.challenge({ factorId });
-
       if (challengeError) throw challengeError;
-
       const { error: verifyError } = await supabase.auth.mfa.verify({
         factorId,
         challengeId: challenge.id,
         code: verifyCode,
       });
-
       if (verifyError) throw verifyError;
-
       setIsEnrolled(true);
       setIsEnrolling(false);
       setQrCode(null);
       setSecret(null);
       setVerifyCode("");
-
       toast({
         title: "MFA enabled",
         description: "Two-factor authentication is now active on your account.",
@@ -133,20 +128,17 @@ export const MfaSettings = () => {
   };
 
   const handleCancelEnrollment = async () => {
-    // Unenroll the pending factor
-    if (factorId) {
+    if (factorId && !isEnrolled) {
       try {
         await supabase.auth.mfa.unenroll({ factorId });
-      } catch {
-        // Ignore errors on cancel
-      }
+      } catch {}
     }
     setIsEnrolling(false);
     setQrCode(null);
     setSecret(null);
     setVerifyCode("");
     setEnrollError(null);
-    setFactorId(null);
+    if (!isEnrolled) setFactorId(null);
   };
 
   const handleUnenroll = async () => {
@@ -155,10 +147,8 @@ export const MfaSettings = () => {
     try {
       const { error } = await supabase.auth.mfa.unenroll({ factorId });
       if (error) throw error;
-
       setIsEnrolled(false);
       setFactorId(null);
-
       toast({
         title: "MFA disabled",
         description: "Two-factor authentication has been removed from your account.",
@@ -214,34 +204,91 @@ export const MfaSettings = () => {
           )}
         </div>
       </div>
-      <div className="space-y-4">
 
-        <p className="text-sm text-muted-foreground">
-          {isEnrolled
-            ? "Your account is protected with an authenticator app. You'll need to enter a code from your app each time you sign in."
-            : "Add an extra layer of security by requiring a code from an authenticator app (like Google Authenticator or Microsoft Authenticator) when signing in."}
-        </p>
+      <p className="text-sm text-muted-foreground">
+        {isEnrolled
+          ? "Your account is protected with an authenticator app. You'll need to enter a code from your app each time you sign in."
+          : "Add an extra layer of security by requiring a code from an authenticator app (like Google Authenticator or Microsoft Authenticator) when signing in."}
+      </p>
 
-        {/* Enrollment flow */}
-        {isEnrolling && qrCode ? (
-          <div className="space-y-4 rounded-lg border p-4 bg-muted/30">
-            <div className="text-center space-y-3">
-              <p className="text-sm font-medium">
-                Scan this QR code with your authenticator app:
-              </p>
-              <div className="flex justify-center">
+      <div className="flex gap-2">
+        {isEnrolled ? (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
+                disabled={isUnenrolling}
+              >
+                {isUnenrolling ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <XCircle className="h-4 w-4" />
+                )}
+                Disable MFA
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Disable Two-Factor Authentication?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will remove the extra security layer from your account.
+                  You can re-enable it at any time.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleUnenroll}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  Yes, disable MFA
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleStartEnrollment}
+            className="gap-2"
+          >
+            <Shield className="h-4 w-4" />
+            Enable MFA
+          </Button>
+        )}
+      </div>
+
+      {/* MFA Enrollment Dialog */}
+      <Dialog open={isEnrolling && !!qrCode} onOpenChange={(open) => { if (!open) handleCancelEnrollment(); }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" />
+              Set Up Two-Factor Authentication
+            </DialogTitle>
+            <DialogDescription>
+              Scan the QR code below with your authenticator app (Google Authenticator, Microsoft Authenticator, etc.), then enter the 6-digit code to confirm.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-5">
+            <div className="flex flex-col items-center gap-3">
+              <div className="rounded-xl border bg-white p-3">
                 <img
-                  src={qrCode}
+                  src={qrCode!}
                   alt="MFA QR Code"
-                  className="w-48 h-48 rounded-lg border bg-white p-2"
+                  className="w-48 h-48"
                 />
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1 text-center">
                 <p className="text-xs text-muted-foreground">
                   Can't scan? Enter this key manually:
                 </p>
                 <div className="flex items-center justify-center gap-2">
-                  <code className="text-xs bg-muted px-2 py-1 rounded font-mono break-all">
+                  <code className="text-xs bg-muted px-2 py-1 rounded font-mono break-all max-w-[220px]">
                     {secret}
                   </code>
                   <Button
@@ -259,7 +306,7 @@ export const MfaSettings = () => {
             <form onSubmit={handleVerifyEnrollment} className="space-y-3">
               <div>
                 <Label className="text-sm">
-                  Enter the 6-digit code from your app to confirm:
+                  Enter the 6-digit code from your app:
                 </Label>
                 {enrollError && (
                   <p className="text-sm text-destructive mt-1">{enrollError}</p>
@@ -276,11 +323,19 @@ export const MfaSettings = () => {
                     setVerifyCode(val);
                     setEnrollError(null);
                   }}
-                  className="mt-2 text-center text-lg tracking-widest font-mono max-w-[200px]"
+                  className="mt-2 text-center text-lg tracking-widest font-mono max-w-[200px] mx-auto"
                   autoFocus
                 />
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 justify-end">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCancelEnrollment}
+                >
+                  Cancel
+                </Button>
                 <Button
                   type="submit"
                   size="sm"
@@ -294,69 +349,12 @@ export const MfaSettings = () => {
                   )}
                   Verify & Enable
                 </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={handleCancelEnrollment}
-                >
-                  Cancel
-                </Button>
               </div>
             </form>
           </div>
-        ) : (
-          <div className="flex gap-2">
-            {isEnrolled ? (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-2 text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
-                    disabled={isUnenrolling}
-                  >
-                    {isUnenrolling ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <XCircle className="h-4 w-4" />
-                    )}
-                    Disable MFA
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Disable Two-Factor Authentication?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This will remove the extra security layer from your account.
-                      You can re-enable it at any time.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={handleUnenroll}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
-                      Yes, disable MFA
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleStartEnrollment}
-                className="gap-2"
-              >
-                <Shield className="h-4 w-4" />
-                Enable MFA
-              </Button>
-            )}
-          </div>
-        )}
-      </div>
+        </DialogContent>
+      </Dialog>
+
       <Separator />
     </div>
   );
