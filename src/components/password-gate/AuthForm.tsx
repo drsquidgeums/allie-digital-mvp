@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { PasswordRequirements, isPasswordValid } from "./PasswordRequirements";
+import { MfaVerification } from "@/components/auth/MfaVerification";
 
 interface AuthFormProps {
   onAuthenticated: () => void;
