@@ -3,12 +3,8 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { AccountSettings } from "./settings/AccountSettings";
 import { LanguageSettings } from "./settings/LanguageSettings";
-import { NotificationSettings } from "./settings/NotificationSettings";
-import { DisplaySettings } from "./settings/DisplaySettings";
-import { PrivacySettings } from "./settings/PrivacySettings";
-import { KeyboardSettings } from "./settings/KeyboardSettings";
 import { StorageSettings } from "./settings/StorageSettings";
-import { IntegrationSettings } from "./settings/IntegrationSettings";
+import { PrivacySettings } from "./settings/PrivacySettings";
 import { MfaSettings } from "./settings/MfaSettings";
 import { AISettings } from "./settings/AISettings";
 import { OnboardingSettings } from "./onboarding/OnboardingSettings";
@@ -34,12 +30,8 @@ export const Settings = () => {
         <AISettings />
         <LanguageSettings />
         <OnboardingSettings />
-        <DisplaySettings />
-        <NotificationSettings />
         <PrivacySettings />
-        <KeyboardSettings />
         <StorageSettings />
-        <IntegrationSettings />
       </div>
     </div>
   );
