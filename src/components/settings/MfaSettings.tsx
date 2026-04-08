@@ -264,19 +264,19 @@ export const MfaSettings = () => {
       {/* MFA Enrollment Dialog */}
       <Dialog open={isEnrolling && !!qrCode} onOpenChange={(open) => { if (!open) handleCancelEnrollment(); }}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+          <DialogHeader className="text-center sm:text-center">
+            <DialogTitle className="flex items-center justify-center gap-2">
               <Shield className="h-5 w-5 text-primary" />
               Set Up Two-Factor Authentication
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-center">
               Scan the QR code below with your authenticator app (Google Authenticator, Microsoft Authenticator, etc.), then enter the 6-digit code to confirm.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-5">
             <div className="flex flex-col items-center gap-3">
-              <div className="rounded-xl border bg-white p-3">
+              <div className="rounded-xl border bg-white p-4">
                 <img
                   src={qrCode!}
                   alt="MFA QR Code"
@@ -303,8 +303,8 @@ export const MfaSettings = () => {
               </div>
             </div>
 
-            <form onSubmit={handleVerifyEnrollment} className="space-y-3">
-              <div>
+            <form onSubmit={handleVerifyEnrollment} className="space-y-4">
+              <div className="text-center">
                 <Label className="text-sm">
                   Enter the 6-digit code from your app:
                 </Label>
@@ -323,11 +323,11 @@ export const MfaSettings = () => {
                     setVerifyCode(val);
                     setEnrollError(null);
                   }}
-                  className="mt-2 text-center text-lg tracking-widest font-mono max-w-[200px] mx-auto"
+                  className="mt-2 text-center text-lg tracking-widest font-mono max-w-[220px] mx-auto"
                   autoFocus
                 />
               </div>
-              <div className="flex gap-2 justify-end">
+              <div className="flex gap-2 justify-center">
                 <Button
                   type="button"
                   variant="outline"
